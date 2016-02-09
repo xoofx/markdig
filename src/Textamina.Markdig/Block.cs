@@ -10,16 +10,16 @@ namespace Textamina.Markdig
     {
         protected List<StringBuilder> lines;
 
-        protected Block(IBlockFactory factory, Block parent)
+        protected Block(BlockMatcher matcher, Block parent)
         {
-            Factory = factory;
+            Matcher = matcher;
             Parent = parent;
             IsOpen = true;
         }
 
         internal bool IsOpen;
 
-        public IBlockFactory Factory { get; }
+        public BlockMatcher Matcher { get; }
 
         public Block Parent { get; }
 
@@ -33,18 +33,18 @@ namespace Textamina.Markdig
         }
     }
 
-    public interface IBlockFactory
+    public abstract class BlockMatcher
     {
-        bool Match(ref StringLiner liner);
+        public abstract MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext);
 
-        Block New(Block parent);
+        public abstract Block New(Block parent);
     }
 
 
     public abstract class BlockContainer : Block
     {
 
-        protected BlockContainer(IBlockFactory factory, Block parent) : base(factory, parent)
+        protected BlockContainer(BlockMatcher matcher, Block parent) : base(matcher, parent)
         {
             Children = new List<Block>();
         }
@@ -52,9 +52,11 @@ namespace Textamina.Markdig
         public List<Block> Children { get; }
     }
 
-    public abstract class BlockLeaf
+    public abstract class BlockLeaf : Block
     {
-        
+        protected BlockLeaf(BlockMatcher matcher, Block parent) : base(matcher, parent)
+        {
+        }
     }
 
 
@@ -64,10 +66,16 @@ namespace Textamina.Markdig
 
         public int Column;
 
+        public char Current;
+
+        private bool? isBlankLine;
+
+
+
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
         {
-            return Column < Text.Length ? Text[Column++] : (char)0;
+            return Current = (Column < Text.Length ? Text[Column++] : (char)0);
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -75,59 +83,53 @@ namespace Textamina.Markdig
         {
             Column = 0;
         }
-    }
 
-
-    public class BlockQuote : BlockContainer
-    {
-        public static readonly IBlockFactory DefaultFactory = new FactoryInternal();
-
-        public BlockQuote(Block parent) : base(DefaultFactory, parent)
+        public bool IsBlankLine()
         {
+            if (isBlankLine.HasValue)
+            {
+                return isBlankLine.Value;
+            }
+
+            int columnSave = Column;
+            while (Charset.IsSpace(Current) || Charset.IsTab(Current))
+            {
+                NextChar();
+            }
+
+            isBlankLine = IsEol;
+
+            Column = columnSave;
+            if (Column - 1 < Text.Length)
+            {
+                Current = Text[Column - 1];
+            }
+
+            return isBlankLine.Value;
         }
 
-        private class FactoryInternal : IBlockFactory
-        {
-            public bool Match(ref StringLiner liner)
-            {
-                // 5.1 Block quotes 
-                // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
+        public bool IsEol => Column == Text.Length;
 
-                var c = liner.NextChar();
+        public bool SkipLeadingSpaces3()
+        {
+            // TODO: Handle correctly 2.2 Tabs 
+            var c = NextChar();
+            if (Charset.IsSpace(c))
+            {
+                c = NextChar();
                 if (Charset.IsSpace(c))
                 {
-                    c = liner.NextChar();
+                    c = NextChar();
                     if (Charset.IsSpace(c))
                     {
-                        c = liner.NextChar();
-                        if (Charset.IsSpace(c))
-                        {
-                            c = liner.NextChar();
-                        }
+                        c = NextChar();
                     }
-                }
-
-                if (c != '>')
-                {
-                    return false;
-                }
-
-                c = liner.NextChar();
-                if (Charset.IsSpace(c))
-                {
-                    liner.NextChar();
                 }
                 return true;
             }
-
-            public Block New(Block parent)
-            {
-                return new BlockQuote(parent);
-            }
+            return false;
         }
     }
-
-
 
     public class Document : BlockContainer
     {
@@ -136,19 +138,13 @@ namespace Textamina.Markdig
         }
     }
 
-
-
-
-
-
-
     public class BlockParser
     {
         private StringLiner liner;
         private char? peekChar = null;
         private bool isEof;
 
-        private List<IBlockFactory> blockFactories;
+        private List<BlockMatcher> blockMatchers;
         private Stack<Block> blocks;
 
 
@@ -183,47 +179,52 @@ namespace Textamina.Markdig
                     break;
                 }
 
-                int previousColumn = 0;
-                foreach (var block in blocks)
-                {
-                    if (block.IsOpen)
-                    {
-                        if (block.Factory.Match(ref liner))
-                        {
+                // Skip leading spaces
+                liner.SkipLeadingSpaces3();
+
+                //int previousColumn = 0;
+                //foreach (var block in blocks)
+                //{
+                //    if (block.IsOpen)
+                //    {
+                //        int minMatch = block.Matcher.Match(ref liner, TODO, ref TODO);
+                //        if (minMatch >= 0)
+                //        {
                             
-                        }
-                        else if (block is BlockContainer)
-                        {
-                            block.IsOpen = false;
-                        }
-                        // Leave the block open
-                    }
-                    else
-                    {
-                        liner.Column = previousColumn;
-                    }
+                //        }
+                //        else if (block is BlockContainer)
+                //        {
+                //            block.IsOpen = false;
+                //        }
+                //        // Leave the block open
+                //    }
+                //    else
+                //    {
+                //        liner.Column = previousColumn;
+                //    }
 
-                    previousColumn = liner.Column;
-                }
+                //    previousColumn = liner.Column;
+                //}
 
-                // Take the last block
-                var currentBlock = blocks.Peek();
-                foreach (var blockFactory in blockFactories)
-                {
-                    if (blockFactory.Match(ref liner))
-                    {
-                        if (currentBlock.Factory != blockFactory)
-                        {
-                            var newBlock = blockFactory.New(currentBlock);
-                            blocks.Push(newBlock);
-                            currentBlock = newBlock;
-                        }
+                //// Take the last block
+                //var currentBlock = blocks.Peek();
+                //foreach (var blockFactory in blockMatchers)
+                //{
+                //    int minMatch = blockFactory.Match(ref liner, TODO, ref TODO);
+                //    if (minMatch >= 0)
+                //    {
+                //        if (currentBlock.Matcher != blockFactory)
+                //        {
+                //            var newBlock = blockFactory.New(currentBlock);
+                //            blocks.Push(newBlock);
+                //            currentBlock = newBlock;
+                //        }
 
-                    }
+                //    }
 
 
 
-                }
+                //}
 
 
 
@@ -273,12 +274,8 @@ namespace Textamina.Markdig
                     c = (char) nextChar;
                 }
 
-                if (c == '\0')
-                {
-                    // 2.3 Insecure characters
-                    // For security reasons, the Unicode character U+0000 must be replaced with the REPLACEMENT CHARACTER (U+FFFD).
-                    c = '\ufffd';
-                }
+                // 2.3 Insecure characters
+                c = Charset.EscapeInsecure(c);
 
                 switch (c)
                 {
@@ -314,11 +311,39 @@ namespace Textamina.Markdig
         }
 
         [MethodImpl((MethodImplOptions)256)]
+        public static bool IsEof(char c)
+        {
+            return c == '\0';
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
         public static bool IsSpace(char c)
         {
             // 2.1 Characters and lines 
             // A space is U+0020.
             return c == ' ';
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
+        public static bool IsTab(char c)
+        {
+            // 2.1 Characters and lines 
+            // A space is U+0009.
+            return c == '\t';
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
+        public static bool IsSpaceOrTab(char c)
+        {
+            return IsSpace(c) || IsTab(c);
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
+        public static char EscapeInsecure(char c)
+        {
+            // 2.3 Insecure characters
+            // For security reasons, the Unicode character U+0000 must be replaced with the REPLACEMENT CHARACTER (U+FFFD).
+            return c == '\0' ? '\ufffd' : c;
         }
 
         public static bool IsASCIIPunctuation(char c)
@@ -364,11 +389,4 @@ namespace Textamina.Markdig
             return false;
         }
     }
-
-
-
-
-
-
-
 }
