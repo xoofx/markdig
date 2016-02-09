@@ -20,7 +20,7 @@ namespace Textamina.Markdig
             {
                 // 4.4 Indented code blocks 
                 var c = liner.Current;
-                if (liner.Column == 4 && Charset.IsSpace(c))
+                if (liner.Column == 4 && Charset.IsSpace(c) && !liner.IsBlankLine())
                 {
                     liner.NextChar();
                     return MatchLineState.Continue;
