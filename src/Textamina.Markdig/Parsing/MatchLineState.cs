@@ -1,8 +1,10 @@
-﻿namespace Textamina.Markdig
+﻿namespace Textamina.Markdig.Parsing
 {
     public enum MatchLineState
     {
         None,
+
+        Discard,
 
         Continue,
 
@@ -12,6 +14,5 @@
 
         BreakAndKeepOnlyIfEof,
 
-        Discard,
     }
 }

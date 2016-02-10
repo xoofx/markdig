@@ -1,4 +1,6 @@
-﻿namespace Textamina.Markdig
+﻿using Textamina.Markdig.Parsing;
+
+namespace Textamina.Markdig.Syntax
 {
     /// <summary>
     /// Repressents a thematic break.
@@ -7,15 +9,16 @@
     {
         public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
 
-        public Break(Block parent) : base(DefaultMatcher, parent)
+        public Break() : base(DefaultMatcher)
         {
-            IsOpen = false;
         }
 
         private class MatcherInternal : BlockMatcher
         {
             public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
             {
+                liner.SkipLeadingSpaces3();
+
                 // 4.1 Thematic breaks 
                 // A line consisting of 0-3 spaces of indentation, followed by a sequence of three or more matching -, _, or * characters, each followed optionally by any number of spaces
                 var c = liner.Current;
@@ -29,7 +32,7 @@
                         matchChar = c;
                         count++;
                     }
-                    else if (c != matchChar && !Charset.IsSpace(c))
+                    else if (c != matchChar && !Utility.IsSpace(c))
                     {
                         return MatchLineState.Discard;
                     }
@@ -39,9 +42,9 @@
                 return MatchLineState.BreakAndKeepCurrent;
             }
 
-            public override Block New(Block parent)
+            public override Block New()
             {
-                return new Break(parent);
+                return new Break();
             }
         }
     }

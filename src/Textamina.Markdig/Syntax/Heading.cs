@@ -1,4 +1,6 @@
-﻿namespace Textamina.Markdig
+﻿using Textamina.Markdig.Parsing;
+
+namespace Textamina.Markdig.Syntax
 {
     /// <summary>
     /// Repressents a thematic break.
@@ -7,7 +9,7 @@
     {
         public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
 
-        public Heading(Block parent) : base(DefaultMatcher, parent)
+        public Heading() : base(DefaultMatcher)
         {
         }
 
@@ -15,6 +17,8 @@
         {
             public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
             {
+                liner.SkipLeadingSpaces3();
+
                 // 4.2 ATX headings
                 // An ATX heading consists of a string of characters, parsed as inline content, 
                 // between an opening sequence of 1–6 unescaped # characters and an optional 
@@ -30,7 +34,7 @@
                 int leadingCount = 0;
                 for (; !liner.IsEol && leadingCount <= 6; leadingCount++)
                 {
-                    if (c != '#' && Charset.IsSpace(c))
+                    if (c != '#' && Utility.IsSpace(c))
                     {
                         break;
                     }
@@ -41,18 +45,17 @@
                 // closing # will be handled later, because anyway we have matched 
 
                 // A space is required after leading #
-                if (Charset.IsSpace(c))
+                if (Utility.IsSpace(c))
                 {
-                    liner.NextChar();
                     return MatchLineState.BreakAndKeepCurrent;
                 }
 
                 return MatchLineState.Discard;
             }
 
-            public override Block New(Block parent)
+            public override Block New()
             {
-                return new Heading(parent);
+                return new Heading();
             }
         }
     }

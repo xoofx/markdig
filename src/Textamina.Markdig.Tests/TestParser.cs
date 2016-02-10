@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
+using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Tests
 {
@@ -18,6 +19,17 @@ namespace Textamina.Markdig.Tests
         private const string InputFilePattern = "*.txt";
         private const string OutputEndFileExtension = ".out.txt";
 
+        [Test]
+        public void TestSimple()
+        {
+            var reader = new StringReader(@"toto tata
+titi toto
+");
+            var parser = new MarkdownParser(reader);
+
+
+            var document = parser.Parse();
+        }
 
         //[TestCaseSource("TestFiles")]
         public void Test(TestFilePath testFilePath)

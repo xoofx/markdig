@@ -1,6 +1,9 @@
 
 
-namespace Textamina.Markdig
+
+using Textamina.Markdig.Parsing;
+
+namespace Textamina.Markdig.Syntax
 {
     /// <summary>
     /// Repressents a paragraph.
@@ -12,7 +15,7 @@ namespace Textamina.Markdig
     {
         public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
 
-        public Paragraph(Block parent) : base(DefaultMatcher, parent)
+        public Paragraph() : base(DefaultMatcher)
         {
         }
 
@@ -21,32 +24,29 @@ namespace Textamina.Markdig
             public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState,
                 ref object matchContext)
             {
+                liner.SkipLeadingSpaces3();
 
-                var isNotSpaceOrTab = !Charset.IsSpaceOrTab(liner.Current);
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
                 if (matchLineState == MatchLineState.None)
                 {
-                    if (isNotSpaceOrTab || !isBlankLine)
+                    if (isBlankLine)
                     {
-                        return MatchLineState.Continue;
+                        return MatchLineState.Discard;
                     }
-
-                    return MatchLineState.Discard;
                 }
-
-                if (isNotSpaceOrTab)
+                else if (isBlankLine)
                 {
-                    return MatchLineState.Continue;
+                    return MatchLineState.Break;
                 }
 
-                return isBlankLine ? MatchLineState.Break : MatchLineState.Continue;
+                return MatchLineState.Continue;
             }
 
-            public override Block New(Block parent)
+            public override Block New()
             {
-                return new Paragraph(parent);
+                return new Paragraph();
             }
         }
     }

@@ -1,6 +1,9 @@
 
 
-namespace Textamina.Markdig
+
+using Textamina.Markdig.Parsing;
+
+namespace Textamina.Markdig.Syntax
 {
     /// <summary>
     /// Repressents a fenced code block.
@@ -12,7 +15,7 @@ namespace Textamina.Markdig
     {
         public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
 
-        public FencedCodeBlock(Block parent) : base(DefaultMatcher, parent)
+        public FencedCodeBlock() : base(DefaultMatcher)
         {
         }
 
@@ -20,6 +23,8 @@ namespace Textamina.Markdig
         {
             public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
             {
+                liner.SkipLeadingSpaces3();
+
                 if (matchLineState == MatchLineState.Continue)
                 {
                     var match = (MatchContext) matchContext;
@@ -77,9 +82,9 @@ namespace Textamina.Markdig
                 }
             }
 
-            public override Block New(Block parent)
+            public override Block New()
             {
-                return new Heading(parent);
+                return new FencedCodeBlock();
             }
 
             private class MatchContext

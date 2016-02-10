@@ -34,21 +34,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="BlockQuote.cs" />
-    <Compile Include="Break.cs" />
-    <Compile Include="CodeBlock.cs" />
-    <Compile Include="FencedCodeBlock.cs" />
-    <Compile Include="Heading.cs" />
-    <Compile Include="MatchLineState.cs" />
+    <Compile Include="Syntax\Block.cs" />
+    <Compile Include="Syntax\BlockContainer.cs" />
+    <Compile Include="Syntax\BlockLeaf.cs" />
+    <Compile Include="Syntax\BlockMatcher.cs" />
+    <Compile Include="Parsing\MarkdownParser.cs" />
+    <Compile Include="Syntax\BlockQuote.cs" />
+    <Compile Include="Syntax\Break.cs" />
+    <Compile Include="Parsing\Utility.cs" />
+    <Compile Include="Syntax\CodeBlock.cs" />
+    <Compile Include="Syntax\Document.cs" />
+    <Compile Include="Syntax\FencedCodeBlock.cs" />
+    <Compile Include="Syntax\Heading.cs" />
+    <Compile Include="Parsing\MatchLineState.cs" />
     <Compile Include="MethodImplOptionPortable.cs" />
-    <Compile Include="Paragraph.cs" />
+    <Compile Include="Syntax\Paragraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextPosition.cs" />
+    <Compile Include="Parsing\StringLiner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

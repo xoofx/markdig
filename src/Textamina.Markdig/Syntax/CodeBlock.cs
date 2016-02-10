@@ -1,4 +1,7 @@
-namespace Textamina.Markdig
+using System;
+using Textamina.Markdig.Parsing;
+
+namespace Textamina.Markdig.Syntax
 {
     /// <summary>
     /// Repressents a indented code block.
@@ -10,7 +13,7 @@ namespace Textamina.Markdig
     {
         public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
 
-        public CodeBlock(Block parent) : base(DefaultMatcher, parent)
+        public CodeBlock() : base(DefaultMatcher)
         {
         }
 
@@ -18,9 +21,14 @@ namespace Textamina.Markdig
         {
             public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
             {
+                int position = liner.Column;
+                liner.SkipLeadingSpaces3();
+
                 // 4.4 Indented code blocks 
                 var c = liner.Current;
-                if (liner.Column == 4 && Charset.IsSpace(c) && !liner.IsBlankLine())
+                var isTab = Utility.IsTab(c);
+                var isSpace = Utility.IsSpace(c);
+                if ((isTab || (isSpace && (liner.Column - position) == 3)) && !liner.IsBlankLine())
                 {
                     liner.NextChar();
                     return MatchLineState.Continue;
@@ -31,9 +39,9 @@ namespace Textamina.Markdig
                     : MatchLineState.Discard;
             }
 
-            public override Block New(Block parent)
+            public override Block New()
             {
-                return new Heading(parent);
+                return new CodeBlock();
             }
         }
     }
