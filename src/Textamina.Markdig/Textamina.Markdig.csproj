@@ -37,7 +37,7 @@
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\BlockContainer.cs" />
     <Compile Include="Syntax\BlockLeaf.cs" />
-    <Compile Include="Syntax\BlockBuilder.cs" />
+    <Compile Include="Parsing\BlockParser.cs" />
     <Compile Include="Parsing\MarkdownParser.cs" />
     <Compile Include="Syntax\BlockQuote.cs" />
     <Compile Include="Syntax\Break.cs" />
@@ -46,7 +46,7 @@
     <Compile Include="Syntax\Document.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />
     <Compile Include="Syntax\Heading.cs" />
-    <Compile Include="Parsing\MatchLineState.cs" />
+    <Compile Include="Parsing\MatchLineResult.cs" />
     <Compile Include="MethodImplOptionPortable.cs" />
     <Compile Include="Syntax\Paragraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

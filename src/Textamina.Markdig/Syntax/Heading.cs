@@ -7,13 +7,13 @@ namespace Textamina.Markdig.Syntax
     /// </summary>
     public class Heading : BlockLeaf
     {
-        public static readonly BlockBuilder Builder = new BuilderInternal();
+        public static readonly BlockParser Parser = new ParserInternal();
 
         public int Level { get; set; }
 
-        private class BuilderInternal : BlockBuilder
+        private class ParserInternal : BlockParser
         {
-            public override bool Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
@@ -46,10 +46,10 @@ namespace Textamina.Markdig.Syntax
                 if (Utility.IsSpace(c))
                 {
                     block = new Heading() {Level = leadingCount};
-                    return true;
+                    return MatchLineResult.Last;
                 }
 
-                return false;
+                return MatchLineResult.None;
             }
         }
     }

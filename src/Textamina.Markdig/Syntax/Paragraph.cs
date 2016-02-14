@@ -13,11 +13,11 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class Paragraph : BlockLeaf
     {
-        public static readonly BlockBuilder Builder = new BuilderInternal();
+        public static readonly BlockParser Parser = new ParserInternal();
 
-        private class BuilderInternal : BlockBuilder
+        private class ParserInternal : BlockParser
         {
-            public override bool Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 

@@ -13,15 +13,17 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class FencedCodeBlock : BlockLeaf
     {
-        public static readonly BlockBuilder Builder = new BuilderInternal();
+        public static readonly BlockParser Parser = new ParserInternal();
 
         private int fencedCharCount;
 
         private char fencedChar;
 
-        private class BuilderInternal : BlockBuilder
+        private bool hasFencedEnd;
+
+        private class ParserInternal : BlockParser
         {
-            public override bool Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
@@ -41,7 +43,8 @@ namespace Textamina.Markdig.Syntax
                                 break;
                             }
 
-                            return false;
+                            fenced.hasFencedEnd = true;
+                            return MatchLineResult.Last;
                         }
                         c = liner.NextChar();
                         count--;
@@ -49,7 +52,7 @@ namespace Textamina.Markdig.Syntax
 
                     // TODO: It is unclear how to handle this correctly
                     // Break only if Eof
-                    return true;
+                    return MatchLineResult.Continue;
                 }
                 else
                 {
@@ -76,13 +79,13 @@ namespace Textamina.Markdig.Syntax
                                 fencedChar = matchChar,
                                 fencedCharCount = count
                             };
-                            return true;
+                            return MatchLineResult.Continue;
                         }
                         c = liner.NextChar();
                         count++;
                     }
 
-                    return false;
+                    return MatchLineResult.None;
                 }
             }
         }

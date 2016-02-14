@@ -4,11 +4,11 @@ namespace Textamina.Markdig.Syntax
 {
     public class BlockQuote : BlockContainer
     {
-        public static readonly BlockBuilder Builder = new BuilderInternal();
+        public static readonly BlockParser Parser = new ParserInternal();
 
-        private class BuilderInternal : BlockBuilder
+        private class ParserInternal : BlockParser
         {
-            public override bool Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Syntax
                 var c = liner.Current;
                 if (c != '>')
                 {
-                    return false;
+                    return MatchLineResult.None;
                 }
 
                 c = liner.NextChar();
@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Syntax
                     block = new BlockQuote();
                 }
 
-                return true;
+                return MatchLineResult.Continue;
             }
         }
     }
