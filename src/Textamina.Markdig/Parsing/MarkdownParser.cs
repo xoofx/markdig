@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Parsing
         private StringLiner liner;
         private bool isEof;
 
-        private readonly List<BlockParser> parsers;
+        private readonly List<BlockParser> blockParsers;
         private readonly List<BlockState> blockStack;
         private readonly Document document;
         private readonly Stack<BlockState> cachedBlockStates;
@@ -19,11 +19,11 @@ namespace Textamina.Markdig.Parsing
         {
             document = new Document();
             Reader = reader;
-            parsers = new List<BlockParser>();
+            blockParsers = new List<BlockParser>();
             liner = new StringLiner() {Text = new StringBuilder()};
             blockStack = new List<BlockState>();
             cachedBlockStates = new Stack<BlockState>();
-            parsers = new List<BlockParser>()
+            blockParsers = new List<BlockParser>()
             {
                 BlockQuote.Parser,
                 //Break.Parser,
@@ -153,20 +153,27 @@ namespace Textamina.Markdig.Parsing
                 Liner = liner,
             };
 
-            for (int j = 0; j < parsers.Count; j++)
+            for (int j = 0; j < blockParsers.Count; j++)
             {
-                var builder = parsers[j];
+                var blockParser = blockParsers[j];
                 if (liner.IsEol)
                 {
                     continueProcessLiner = false;
                     break;
                 }
 
-                bool isParsingParagraph = builder == Paragraph.Parser;
+                // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
+                // we can skip this parser
+                if (previousParagraph != null && !blockParser.CanInterruptParagraph)
+                {
+                    continue;
+                }
+
+                bool isParsingParagraph = blockParser == Paragraph.Parser;
                 state.Block = isParsingParagraph ? previousParagraph : null;
 
                 var saveLiner = liner.Save();
-                var result = builder.Match(ref state);
+                var result = blockParser.Match(ref state);
                 if (result == MatchLineResult.None)
                 {
                     // If we have reached a blank line after trying to parse a paragraph
@@ -213,8 +220,8 @@ namespace Textamina.Markdig.Parsing
                     block.Parent = container;
                 }
 
-                // Add a block blockStack to the stack
-                var blockState = NewBlockState(builder, block);
+                // Add a block blockStack to the stack (and leave it opened)
+                var blockState = NewBlockState(blockParser, block);
                 blockState.IsOpen = true;
                 blockStack.Add(blockState);
 
