@@ -22,8 +22,8 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var reader = new StringReader(@"toto tata
-titi toto
+            var reader = new StringReader(@"> > toto tata
+> titi toto
 ");
             var parser = new MarkdownParser(reader);
 

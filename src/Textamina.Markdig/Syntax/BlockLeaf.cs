@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Syntax
 {
     public abstract class BlockLeaf : Block
     {
-        protected BlockLeaf(BlockMatcher matcher) : base(matcher)
+        protected BlockLeaf()
         {
         }
 

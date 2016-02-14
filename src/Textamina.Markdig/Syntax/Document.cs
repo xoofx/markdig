@@ -2,8 +2,5 @@
 {
     public class Document : BlockContainer
     {
-        public Document() : base(null)
-        {
-        }
     }
 }

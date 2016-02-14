@@ -4,20 +4,11 @@ namespace Textamina.Markdig.Syntax
 {
     public class BlockQuote : BlockContainer
     {
-        public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
+        public static readonly BlockBuilder Builder = new BuilderInternal();
 
-        public BlockQuote() : base(DefaultMatcher)
+        private class BuilderInternal : BlockBuilder
         {
-        }
-
-        private class MatcherInternal : BlockMatcher
-        {
-            public MatcherInternal()
-            {
-                IsContainer = true;
-            }
-
-            public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
+            public override bool Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
@@ -26,9 +17,7 @@ namespace Textamina.Markdig.Syntax
                 var c = liner.Current;
                 if (c != '>')
                 {
-                    return matchLineState == MatchLineState.Continue
-                        ? MatchLineState.Break
-                        : MatchLineState.Discard;
+                    return false;
                 }
 
                 c = liner.NextChar();
@@ -37,12 +26,12 @@ namespace Textamina.Markdig.Syntax
                     liner.NextChar();
                 }
 
-                return MatchLineState.Continue;
-            }
+                if (block == null)
+                {
+                    block = new BlockQuote();
+                }
 
-            public override Block New()
-            {
-                return new BlockQuote();
+                return true;
             }
         }
     }

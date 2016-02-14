@@ -3,11 +3,10 @@ using System.Diagnostics;
 
 namespace Textamina.Markdig.Syntax
 {
-    [DebuggerDisplay("Count = {Children.Count}")]
+    [DebuggerDisplay("Container: {GetType().Name} Count = {Children.Count}")]
     public abstract class BlockContainer : Block
     {
-
-        protected BlockContainer(BlockMatcher matcher) : base(matcher)
+        protected BlockContainer()
         {
             Children = new List<Block>();
         }

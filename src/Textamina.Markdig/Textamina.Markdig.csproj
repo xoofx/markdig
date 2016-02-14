@@ -37,7 +37,7 @@
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\BlockContainer.cs" />
     <Compile Include="Syntax\BlockLeaf.cs" />
-    <Compile Include="Syntax\BlockMatcher.cs" />
+    <Compile Include="Syntax\BlockBuilder.cs" />
     <Compile Include="Parsing\MarkdownParser.cs" />
     <Compile Include="Syntax\BlockQuote.cs" />
     <Compile Include="Syntax\Break.cs" />

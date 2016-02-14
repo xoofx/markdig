@@ -67,7 +67,7 @@ namespace Textamina.Markdig.Parsing
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        internal void Initialize(bool blankLine)
+        internal void Initialize()
         {
             Column = 0;
             VirtualColumn = 0;

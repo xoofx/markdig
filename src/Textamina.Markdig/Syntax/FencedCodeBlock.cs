@@ -13,26 +13,25 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class FencedCodeBlock : BlockLeaf
     {
-        public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
+        public static readonly BlockBuilder Builder = new BuilderInternal();
 
-        public FencedCodeBlock() : base(DefaultMatcher)
-        {
-        }
+        private int fencedCharCount;
 
-        private class MatcherInternal : BlockMatcher
+        private char fencedChar;
+
+        private class BuilderInternal : BlockBuilder
         {
-            public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
+            public override bool Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
-                if (matchLineState == MatchLineState.Continue)
+                var fenced = block as FencedCodeBlock;
+                if (fenced != null)
                 {
-                    var match = (MatchContext) matchContext;
-
                     var c = liner.Current;
 
-                    int count = match.Count;
-                    var matchChar = match.FencedChar;
+                    int count = fenced.fencedCharCount;
+                    var matchChar = fenced.fencedChar;
                     while (!liner.IsEol)
                     {
                         if (c != matchChar || count < 0)
@@ -42,14 +41,15 @@ namespace Textamina.Markdig.Syntax
                                 break;
                             }
 
-                            return MatchLineState.Break;
+                            return false;
                         }
                         c = liner.NextChar();
                         count--;
                     }
 
                     // TODO: It is unclear how to handle this correctly
-                    return MatchLineState.BreakAndKeepOnlyIfEof;
+                    // Break only if Eof
+                    return true;
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace Textamina.Markdig.Syntax
                     var matchChar = (char)0;
                     while (!liner.IsEol)
                     {
-                        if (count == 0 && (c == '-' || c == '_' || c == '*'))
+                        if (count == 0 && (c == '`' || c == '~'))
                         {
                             matchChar = c;
                         }
@@ -71,33 +71,19 @@ namespace Textamina.Markdig.Syntax
                             }
 
                             // Store the number of matched string into the context
-                            matchContext = new MatchContext(matchChar, count);
-                            return MatchLineState.Continue;
+                            block = new FencedCodeBlock()
+                            {
+                                fencedChar = matchChar,
+                                fencedCharCount = count
+                            };
+                            return true;
                         }
                         c = liner.NextChar();
                         count++;
                     }
 
-                    return MatchLineState.Discard;
+                    return false;
                 }
-            }
-
-            public override Block New()
-            {
-                return new FencedCodeBlock();
-            }
-
-            private class MatchContext
-            {
-                public MatchContext(char fencedChar, int count)
-                {
-                    FencedChar = fencedChar;
-                    Count = count;
-                }
-
-                public char FencedChar;
-
-                public int Count;
             }
         }
     }

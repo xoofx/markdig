@@ -13,40 +13,35 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class Paragraph : BlockLeaf
     {
-        public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
+        public static readonly BlockBuilder Builder = new BuilderInternal();
 
-        public Paragraph() : base(DefaultMatcher)
+        private class BuilderInternal : BlockBuilder
         {
-        }
-
-        private class MatcherInternal : BlockMatcher
-        {
-            public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState,
-                ref object matchContext)
+            public override bool Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
-                if (matchLineState == MatchLineState.None)
+                if (block == null)
                 {
                     if (isBlankLine)
                     {
-                        return MatchLineState.Discard;
+                        return false;
                     }
                 }
                 else if (isBlankLine)
                 {
-                    return MatchLineState.Break;
+                    return false;
                 }
 
-                return MatchLineState.Continue;
-            }
+                if (block == null)
+                {
+                    block = new Paragraph();
+                }
 
-            public override Block New()
-            {
-                return new Paragraph();
+                return true;
             }
         }
     }

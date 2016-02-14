@@ -7,15 +7,11 @@ namespace Textamina.Markdig.Syntax
     /// </summary>
     public class Break : BlockLeaf
     {
-        public static readonly BlockMatcher DefaultMatcher = new MatcherInternal();
+        public static readonly BlockBuilder Builder = new BuilderInternal();
 
-        public Break() : base(DefaultMatcher)
+        private class BuilderInternal : BlockBuilder
         {
-        }
-
-        private class MatcherInternal : BlockMatcher
-        {
-            public override MatchLineState Match(ref StringLiner liner, MatchLineState matchLineState, ref object matchContext)
+            public override bool Match(ref StringLiner liner, ref Block block)
             {
                 liner.SkipLeadingSpaces3();
 
@@ -34,17 +30,13 @@ namespace Textamina.Markdig.Syntax
                     }
                     else if (c != matchChar && !Utility.IsSpace(c))
                     {
-                        return MatchLineState.Discard;
+                        return false;
                     }
                     c = liner.NextChar();
                 }
 
-                return MatchLineState.BreakAndKeepCurrent;
-            }
-
-            public override Block New()
-            {
-                return new Break();
+                block = new Break();
+                return true;
             }
         }
     }
