@@ -11,8 +11,9 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref MatchLineState state)
             {
+                var liner = state.Liner;
                 liner.SkipLeadingSpaces3();
 
                 // 4.1 Thematic breaks 
@@ -35,7 +36,7 @@ namespace Textamina.Markdig.Syntax
                     c = liner.NextChar();
                 }
 
-                block = new Break();
+                state.Block = new Break();
                 return MatchLineResult.Last;
             }
         }

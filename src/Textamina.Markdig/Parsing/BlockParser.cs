@@ -4,6 +4,17 @@ namespace Textamina.Markdig.Parsing
 {
     public abstract class BlockParser
     {
-        public abstract MatchLineResult Match(ref StringLiner liner, ref Block block);
+        protected BlockParser()
+        {
+            // By default, all blocks can interrupt a paragraph except:
+            // - setext heading
+            // - indented code block
+            // - a special HTML blocks
+            CanInterruptParagraph = true;
+        }
+
+        public bool CanInterruptParagraph { get; protected set; }
+
+        public abstract MatchLineResult Match(ref MatchLineState state);
     }
 }

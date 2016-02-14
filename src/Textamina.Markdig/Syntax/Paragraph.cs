@@ -17,31 +17,74 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref MatchLineState state)
             {
+                var liner = state.Liner;
                 liner.SkipLeadingSpaces3();
 
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
-                if (block == null)
+                if (state.Block == null)
                 {
                     if (isBlankLine)
                     {
-                        return false;
+                        return MatchLineResult.None;
                     }
                 }
                 else if (isBlankLine)
                 {
-                    return false;
+                    return MatchLineResult.None;
                 }
-
-                if (block == null)
+                else
                 {
-                    block = new Paragraph();
+                    var headingChar = (char) 0;
+                    bool checkForSpaces = false;
+                    for (int i = liner.Start; i < liner.End; i++)
+                    {
+                        var c = liner[i];
+                        if (headingChar == 0)
+                        {
+                            if (c == '=' || c == '-')
+                            {
+                                headingChar = c;
+                                continue;
+                            }
+                            break;
+                        }
+
+                        if (checkForSpaces)
+                        {
+                            if (!Utility.IsSpaceOrTab(c))
+                            {
+                                headingChar = (char)0;
+                                break;
+                            }
+                        }
+                        else if (c != headingChar)
+                        {
+                            if (Utility.IsSpaceOrTab(c))
+                            {
+                                checkForSpaces = true;
+                            }
+                        }
+                    }
+
+                    if (headingChar != 0)
+                    {
+                        var level = headingChar == '=' ? 1 : 2;
+
+                        state.Block = new Heading() {Level = level};
+                        return MatchLineResult.LastDiscard;
+                    }
                 }
 
-                return true;
+                if (state.Block == null)
+                {
+                    state.Block = new Paragraph();
+                }
+
+                return MatchLineResult.Continue;
             }
         }
     }

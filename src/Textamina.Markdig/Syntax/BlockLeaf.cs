@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Textamina.Markdig.Parsing;
+﻿using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -9,15 +8,15 @@ namespace Textamina.Markdig.Syntax
         {
         }
 
-        protected List<StringLiner> lines;
+        public Inline Inline { get; set; }
 
         internal void Append(StringLiner line)
         {
-            if (lines == null)
+            if (Inline == null)
             {
-                lines = new List<StringLiner>();
+                Inline = new Inline();
             }
-            lines.Add(line);
+            Inline.Add(line);
         }
     }
 }

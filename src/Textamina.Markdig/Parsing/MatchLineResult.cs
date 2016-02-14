@@ -7,5 +7,7 @@
         Continue,
 
         Last,
+
+        LastDiscard
     }
 }

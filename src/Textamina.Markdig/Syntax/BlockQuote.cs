@@ -8,8 +8,10 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref MatchLineState state)
             {
+                var liner = state.Liner;
+
                 liner.SkipLeadingSpaces3();
 
                 // 5.1 Block quotes 
@@ -26,9 +28,9 @@ namespace Textamina.Markdig.Syntax
                     liner.NextChar();
                 }
 
-                if (block == null)
+                if (state.Block == null)
                 {
-                    block = new BlockQuote();
+                    state.Block = new BlockQuote();
                 }
 
                 return MatchLineResult.Continue;

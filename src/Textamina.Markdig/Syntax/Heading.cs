@@ -13,8 +13,9 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref MatchLineState state)
             {
+                var liner = state.Liner;
                 liner.SkipLeadingSpaces3();
 
                 // 4.2 ATX headings
@@ -45,7 +46,7 @@ namespace Textamina.Markdig.Syntax
                 // A space is required after leading #
                 if (Utility.IsSpace(c))
                 {
-                    block = new Heading() {Level = leadingCount};
+                    state.Block = new Heading() {Level = leadingCount};
                     return MatchLineResult.Last;
                 }
 

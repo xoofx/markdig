@@ -11,9 +11,9 @@ namespace Textamina.Markdig.Syntax
     /// <remarks>
     /// Related to CommonMark spec: 4.5 Fenced code blocks
     /// </remarks>
-    public class FencedCodeBlock : BlockLeaf
+    public class FencedCodeBlock : CodeBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
 
         private int fencedCharCount;
 
@@ -23,11 +23,12 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public override MatchLineResult Match(ref MatchLineState state)
             {
+                var liner = state.Liner;
                 liner.SkipLeadingSpaces3();
 
-                var fenced = block as FencedCodeBlock;
+                var fenced = state.Block as FencedCodeBlock;
                 if (fenced != null)
                 {
                     var c = liner.Current;
@@ -74,7 +75,7 @@ namespace Textamina.Markdig.Syntax
                             }
 
                             // Store the number of matched string into the context
-                            block = new FencedCodeBlock()
+                            state.Block = new FencedCodeBlock()
                             {
                                 fencedChar = matchChar,
                                 fencedCharCount = count

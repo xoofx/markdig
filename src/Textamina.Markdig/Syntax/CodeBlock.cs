@@ -16,21 +16,27 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(ref StringLiner liner, ref Block block)
+            public ParserInternal()
             {
-                int position = liner.Column;
+                CanInterruptParagraph = false;
+            }
+
+            public override MatchLineResult Match(ref MatchLineState state)
+            {
+                var liner = state.Liner;
+                int position = liner.Start;
                 liner.SkipLeadingSpaces3();
 
                 // 4.4 Indented code blocks 
                 var c = liner.Current;
                 var isTab = Utility.IsTab(c);
                 var isSpace = Utility.IsSpace(c);
-                if ((isTab || (isSpace && (liner.Column - position) == 3)) && !liner.IsBlankLine())
+                if ((isTab || (isSpace && (liner.Start - position) == 3)) && !liner.IsBlankLine())
                 {
                     liner.NextChar();
-                    if (block == null)
+                    if (state.Block == null)
                     {
-                        block = new CodeBlock();
+                        state.Block = new CodeBlock();
                     }
                     return MatchLineResult.Continue;
                 }

@@ -1,35 +1,52 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Textamina.Markdig.Parsing
 {
-    public struct StringLiner
+
+    public class StringLiner
     {
         public StringBuilder Text;
 
-        public int Column { get; private set; }
+        public int Start { get; private set; }
+
+        public int End { get; private set; }
 
         public int VirtualColumn { get; private set; }
 
         public char Current { get; private set; }
         
-        public bool IsEol => Column == Text.Length;
+        public bool IsEol => Start == Text.Length;
 
         private bool isBlankLine;
 
         public void ToEol()
         {
-            Column = Text.Length;
+            Start = Text.Length;
             Current = '\0';
+        }
+
+        public char this[int index] => Text[index];
+
+
+        public State Save()
+        {
+            return new State(Start, VirtualColumn, Current);
+        }
+
+        public void Restore(ref State state)
+        {
+            Start = state.Start;
+            VirtualColumn = state.VirtualColumn;
+            Current = state.Current;
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
         {
-            Column++;
-            if (Column < Text.Length)
+            Start++;
+            if (Start < Text.Length)
             {
                 // If previous character was a tab make the VirtualColumn += 4
                 VirtualColumn++;
@@ -37,11 +54,11 @@ namespace Textamina.Markdig.Parsing
                 {
                     VirtualColumn += 3;
                 }
-                Current = Text[Column];
+                Current = Text[Start];
             }
             else
             {
-                Column = Text.Length;
+                Start = Text.Length;
                 Current = (char) 0;
             }
             return Current;
@@ -55,7 +72,7 @@ namespace Textamina.Markdig.Parsing
                 return true;
             }
 
-            for (int i = Column; i < Text.Length; i++)
+            for (int i = Start; i < Text.Length; i++)
             {
                 if (!Utility.IsSpace(Text[i]))
                 {
@@ -69,9 +86,10 @@ namespace Textamina.Markdig.Parsing
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         internal void Initialize()
         {
-            Column = 0;
+            Start = 0;
             VirtualColumn = 0;
             Current = Text.Length > 0 ? Text[0] : (char) 0;
+            End = Text.Length - 1;
         }
 
         public bool SkipLeadingSpaces3()
@@ -90,7 +108,24 @@ namespace Textamina.Markdig.Parsing
 
         public override string ToString()
         {
-            return Column < Text.Length ? Text.ToString().Substring(Column) : string.Empty;
+            return Start < Text.Length ? Text.ToString().Substring(Start) : string.Empty;
+        }
+
+
+        public struct State
+        {
+            public State(int start, int virtualColumn, char current)
+            {
+                Start = start;
+                VirtualColumn = virtualColumn;
+                Current = current;
+            }
+
+            public readonly int Start;
+
+            public readonly int VirtualColumn;
+
+            public readonly char Current;
         }
     }
 }
