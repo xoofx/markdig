@@ -20,7 +20,6 @@ namespace Textamina.Markdig.Parsing
             document = new Document();
             Reader = reader;
             blockParsers = new List<BlockParser>();
-            liner = new StringLiner() {Text = new StringBuilder()};
             blockStack = new List<BlockState>();
             cachedBlockStates = new Stack<BlockState>();
             blockParsers = new List<BlockParser>()
@@ -261,7 +260,7 @@ namespace Textamina.Markdig.Parsing
 
         private void ReadLine()
         {
-            liner.Text = new StringBuilder();
+            liner = new StringLiner {Text = new StringBuilder()};
             var sb = liner.Text;
             while (true)
             {
