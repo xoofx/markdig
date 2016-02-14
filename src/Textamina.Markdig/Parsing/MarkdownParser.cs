@@ -74,7 +74,7 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 // Close blocks that are no longer opened
-                TerminateBlocksNotOpened();
+                CloseBlocks();
             }
 
             // Close opened blocks
@@ -203,7 +203,7 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 // Close any previous blocks not opened
-                TerminateBlocksNotOpened();
+                CloseBlocks();
 
                 // If previous block is a container, add the new block as a children of the previous block
                 var container = LastBlock as BlockContainer;
@@ -234,7 +234,7 @@ namespace Textamina.Markdig.Parsing
             return continueProcessLiner;
         }
 
-        private void TerminateBlocksNotOpened()
+        private void CloseBlocks()
         {
             // Close any previous blocks not opened
             for (int i = blockStack.Count - 1; i >= 1; i--)
