@@ -11,7 +11,7 @@ namespace Textamina.Markdig.Syntax
     /// <remarks>
     /// Related to CommonMark spec: 4.5 Fenced code blocks
     /// </remarks>
-    public class Paragraph : BlockLeaf
+    public class ParagraphBlock : LeafBlock
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
@@ -74,14 +74,14 @@ namespace Textamina.Markdig.Syntax
                     {
                         var level = headingChar == '=' ? 1 : 2;
 
-                        state.Block = new Heading() {Level = level};
+                        state.Block = new HeadingBlock() {Level = level};
                         return MatchLineResult.LastDiscard;
                     }
                 }
 
                 if (state.Block == null)
                 {
-                    state.Block = new Paragraph();
+                    state.Block = new ParagraphBlock();
                 }
 
                 return MatchLineResult.Continue;

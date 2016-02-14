@@ -36,21 +36,21 @@
   <ItemGroup>
     <Compile Include="Parsing\MatchLineState.cs" />
     <Compile Include="Syntax\Block.cs" />
-    <Compile Include="Syntax\BlockContainer.cs" />
-    <Compile Include="Syntax\BlockLeaf.cs" />
+    <Compile Include="Syntax\ContainerBlock.cs" />
+    <Compile Include="Syntax\LeafBlock.cs" />
     <Compile Include="Parsing\BlockParser.cs" />
     <Compile Include="Parsing\MarkdownParser.cs" />
-    <Compile Include="Syntax\BlockQuote.cs" />
-    <Compile Include="Syntax\Break.cs" />
+    <Compile Include="Syntax\QuoteBlock.cs" />
+    <Compile Include="Syntax\BreakBlock.cs" />
     <Compile Include="Parsing\Utility.cs" />
     <Compile Include="Syntax\CodeBlock.cs" />
     <Compile Include="Syntax\Document.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />
-    <Compile Include="Syntax\Heading.cs" />
+    <Compile Include="Syntax\HeadingBlock.cs" />
     <Compile Include="Parsing\MatchLineResult.cs" />
     <Compile Include="MethodImplOptionPortable.cs" />
     <Compile Include="Syntax\Inline.cs" />
-    <Compile Include="Syntax\Paragraph.cs" />
+    <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsing\StringLiner.cs" />
   </ItemGroup>

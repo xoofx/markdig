@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Syntax
     /// <summary>
     /// Repressents a thematic break.
     /// </summary>
-    public class Break : BlockLeaf
+    public class BreakBlock : LeafBlock
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
@@ -36,7 +36,7 @@ namespace Textamina.Markdig.Syntax
                     c = liner.NextChar();
                 }
 
-                state.Block = new Break();
+                state.Block = new BreakBlock();
                 return MatchLineResult.Last;
             }
         }

@@ -2,7 +2,7 @@
 
 namespace Textamina.Markdig.Syntax
 {
-    public class BlockQuote : BlockContainer
+    public class QuoteBlock : ContainerBlock
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
@@ -30,7 +30,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (state.Block == null)
                 {
-                    state.Block = new BlockQuote();
+                    state.Block = new QuoteBlock();
                 }
 
                 return MatchLineResult.Continue;

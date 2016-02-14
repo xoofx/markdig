@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Syntax
     /// <summary>
     /// Repressents a thematic break.
     /// </summary>
-    public class Heading : BlockLeaf
+    public class HeadingBlock : LeafBlock
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
@@ -46,7 +46,7 @@ namespace Textamina.Markdig.Syntax
                 // A space is required after leading #
                 if (Utility.IsSpace(c))
                 {
-                    state.Block = new Heading() {Level = leadingCount};
+                    state.Block = new HeadingBlock() {Level = leadingCount};
                     return MatchLineResult.Last;
                 }
 

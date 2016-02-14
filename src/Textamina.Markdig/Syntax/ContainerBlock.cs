@@ -4,9 +4,9 @@ using System.Diagnostics;
 namespace Textamina.Markdig.Syntax
 {
     [DebuggerDisplay("Container: {GetType().Name} Count = {Children.Count}")]
-    public abstract class BlockContainer : Block
+    public abstract class ContainerBlock : Block
     {
-        protected BlockContainer()
+        protected ContainerBlock()
         {
             Children = new List<Block>();
         }

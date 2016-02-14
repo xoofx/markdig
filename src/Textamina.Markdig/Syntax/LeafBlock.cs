@@ -2,9 +2,9 @@
 
 namespace Textamina.Markdig.Syntax
 {
-    public abstract class BlockLeaf : Block
+    public abstract class LeafBlock : Block
     {
-        protected BlockLeaf()
+        protected LeafBlock()
         {
         }
 

@@ -24,12 +24,12 @@ namespace Textamina.Markdig.Parsing
             cachedBlockStates = new Stack<BlockState>();
             blockParsers = new List<BlockParser>()
             {
-                BlockQuote.Parser,
+                QuoteBlock.Parser,
                 //Break.Parser,
                 //CodeBlock.Parser, 
                 //FencedCodeBlock.Parser,
                 //Heading.Parser,
-                Paragraph.Parser,
+                ParagraphBlock.Parser,
             };
 
             blockStack.Add(new BlockState() { Block = document});
@@ -122,7 +122,7 @@ namespace Textamina.Markdig.Parsing
                 blockState.IsOpen = result == MatchLineResult.Continue;
 
                 // If it is a leaf content, we need to grab the content
-                var leaf = lineState.Block as BlockLeaf;
+                var leaf = lineState.Block as LeafBlock;
                 if (leaf != null)
                 {
                     // If the match doesn't require to add this line to the Inline content, we can discard it
@@ -145,7 +145,7 @@ namespace Textamina.Markdig.Parsing
 
         private bool ParseNewBlocks(bool continueProcessLiner)
         {
-            var previousParagraph = LastBlock as Paragraph;
+            var previousParagraph = LastBlock as ParagraphBlock;
 
             var state = new MatchLineState
             {
@@ -168,7 +168,7 @@ namespace Textamina.Markdig.Parsing
                     continue;
                 }
 
-                bool isParsingParagraph = blockParser == Paragraph.Parser;
+                bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
                 state.Block = isParsingParagraph ? previousParagraph : null;
 
                 var saveLiner = liner.Save();
@@ -190,7 +190,7 @@ namespace Textamina.Markdig.Parsing
                 var block = state.Block;
 
                 // We have a MatchLineResult.Break
-                var leaf = block as BlockLeaf;
+                var leaf = block as LeafBlock;
                 if (leaf != null)
                 {
                     continueProcessLiner = false;
@@ -212,7 +212,7 @@ namespace Textamina.Markdig.Parsing
                 CloseBlocks();
 
                 // If previous block is a container, add the new block as a children of the previous block
-                var container = LastBlock as BlockContainer;
+                var container = LastBlock as ContainerBlock;
                 if (container != null)
                 {
                     container.Children.Add(block);
