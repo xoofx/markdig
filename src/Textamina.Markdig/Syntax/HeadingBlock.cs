@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Syntax
                 int leadingCount = 0;
                 for (; !liner.IsEol && leadingCount <= 6; leadingCount++)
                 {
-                    if (c != '#' && Utility.IsSpace(c))
+                    if (c != '#')
                     {
                         break;
                     }
@@ -44,8 +44,9 @@ namespace Textamina.Markdig.Syntax
                 // closing # will be handled later, because anyway we have matched 
 
                 // A space is required after leading #
-                if (Utility.IsSpace(c))
+                if (leadingCount > 0 && leadingCount <=6 && Utility.IsSpace(c))
                 {
+                    liner.NextChar();
                     state.Block = new HeadingBlock() {Level = leadingCount};
                     return MatchLineResult.Last;
                 }

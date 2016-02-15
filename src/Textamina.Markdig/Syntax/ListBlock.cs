@@ -10,6 +10,8 @@ namespace Textamina.Markdig.Syntax
 
         public char BulletChar { get; set; }
 
+        private int consecutiveBlankLines;
+
         private class ParserInternal : BlockParser
         {
             public override MatchLineResult Match(ref MatchLineState state)
@@ -25,13 +27,31 @@ namespace Textamina.Markdig.Syntax
                 if (state.Block != null)
                 {
                     var listItem = (ListItemBlock) state.Block;
+                    var list = (ListBlock) listItem.Parent;
+
+                    // Allow all blanks lines if the last block is a fenced code block
+                    // Allow 1 blank line inside a list
+                    // If > 1 blank line, terminate this list
+                    var isBlankLine = liner.IsBlankLine();
+                    if (isBlankLine && !(state.LastBlock is FencedCodeBlock))
+                    {
+                        list.consecutiveBlankLines++;
+                        if (list.consecutiveBlankLines > 1)
+                        {
+                            return MatchLineResult.LastDiscard;
+                        }
+
+                        return MatchLineResult.Continue;
+                    }
+
+                    list.consecutiveBlankLines = 0;
 
                     var c = liner.Current;
                     var startPosition = liner.Column;
                     while (Utility.IsSpaceOrTab(c))
                     {
-                        var endPosition = liner.Column;
                         c = liner.NextChar();
+                        var endPosition = liner.Column;
                         if ((endPosition - startPosition) >= listItem.NumberOfSpaces)
                         {
                             return MatchLineResult.Continue;
@@ -55,23 +75,18 @@ namespace Textamina.Markdig.Syntax
                 {
                     var listType = c;
 
-                    c = liner.NextChar();
-
-                    var startPosition = liner.Column;
-
-                    // A space or tab is required after a list item
-                    if (!Utility.IsSpaceOrTab(c))
-                    {
-                        return MatchLineResult.None;
-                    }
-
-                    var endPosition = startPosition;
-                    for (int i = 0; i < 5; i++)
+                    var startPosition = 0;
+                    var endPosition = 0;
+                    for (int i = 0; i < 4; i++)
                     {
                         c = liner.NextChar();
                         if (!Utility.IsSpaceOrTab(c))
                         {
                             break;
+                        }
+                        if (i == 0)
+                        {
+                            startPosition = liner.Column;
                         }
                         endPosition = liner.Column;
                     }

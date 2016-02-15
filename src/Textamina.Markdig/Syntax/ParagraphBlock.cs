@@ -77,6 +77,15 @@ namespace Textamina.Markdig.Syntax
                         state.Block = new HeadingBlock() {Level = level};
                         return MatchLineResult.LastDiscard;
                     }
+                    else
+                    {
+                        // Remove leading spaces from paragraph
+                        var c = liner.Current;
+                        while (Utility.IsSpaceOrTab(c))
+                        {
+                            c = liner.NextChar();
+                        }
+                    }
                 }
 
                 if (state.Block == null)

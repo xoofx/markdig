@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
+using Textamina.Markdig.Formatters;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Tests
@@ -22,9 +23,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var reader = new StringReader(@"- Test
-- Test2
-");
+            var reader = new StringReader(@"####### foo");
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");
@@ -32,35 +31,38 @@ namespace Textamina.Markdig.Tests
 
 
             var document = parser.Parse();
+
+            var output = new StringWriter();
+            var formatter = new HtmlFormatter(output);
+            formatter.Write(document);
+            output.Flush();
+
+            var result = output.ToString();
+            Console.WriteLine(result);
         }
 
         //[TestCaseSource("TestFiles")]
-        public void Test(TestFilePath testFilePath)
+        public static void TestSpec(string inputText, string expectedOutputText)
         {
-            var inputName = testFilePath.FilePath;
-            var baseDir = Path.GetFullPath(Path.Combine(BaseDirectory, RelativeBasePath));
+            var reader = new StringReader(inputText);
+            var parser = new MarkdownParser(reader);
+            var document = parser.Parse();
 
-            var inputFile = Path.Combine(baseDir, inputName);
-            var inputText = File.ReadAllText(inputFile);
+            var output = new StringWriter();
+            var formatter = new HtmlFormatter(output);
+            formatter.Write(document);
+            output.Flush();
 
-            var expectedOutputFile = Path.ChangeExtension(inputFile, OutputEndFileExtension);
-            Assert.True(File.Exists(expectedOutputFile), $"Expecting output result file [{expectedOutputFile}] for input file [{inputName}]");
-            var expectedOutputText = File.ReadAllText(expectedOutputFile, Encoding.UTF8);
+            var result = output.ToString().TrimEnd();
 
-            var result = string.Empty;
-
-            //try
-            //{
-            //    var obj = Json.Deserialize(inputText);
-            //    result = Json.Serialize(obj);
-            //}
-            //catch (JsonParsingException exception)
-            //{
-            //    result = exception.ToString();
-            //}
-
-            Console.Write(result);
-
+            Console.WriteLine("``````````````````` Source");
+            Console.WriteLine(inputText.Replace("\\t", "→"));
+            Console.WriteLine("``````````````````` Result");
+            Console.WriteLine(result);
+            Console.WriteLine("``````````````````` Expected");
+            Console.WriteLine(expectedOutputText.Replace("\\t", "→"));
+            Console.WriteLine("```````````````````");
+            Console.WriteLine();
             TextAssert.AreEqual(expectedOutputText, result);
         }
 

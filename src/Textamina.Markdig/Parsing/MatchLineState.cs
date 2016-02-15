@@ -10,5 +10,7 @@ namespace Textamina.Markdig.Parsing
         public StringLiner Liner;
 
         public Block Block;
+
+        public Block LastBlock;
     }
 }

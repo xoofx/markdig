@@ -29,11 +29,20 @@ namespace Textamina.Markdig.Syntax
                         matchChar = c;
                         count++;
                     }
-                    else if (c != matchChar && !Utility.IsSpace(c))
+                    else if (c == matchChar)
+                    {
+                        count++;
+                    }
+                    else if (!Utility.IsSpace(c))
                     {
                         return MatchLineResult.None;
                     }
                     c = liner.NextChar();
+                }
+
+                if (count < 3)
+                {
+                    return MatchLineResult.None;
                 }
 
                 state.Block = new BreakBlock();

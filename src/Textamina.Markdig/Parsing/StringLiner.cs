@@ -108,7 +108,7 @@ namespace Textamina.Markdig.Parsing
 
         public override string ToString()
         {
-            return Start < Text.Length ? Text.ToString().Substring(Start) : string.Empty;
+            return Start <= End ? Text.ToString().Substring(Start, End - Start + 1) : string.Empty;
         }
 
 

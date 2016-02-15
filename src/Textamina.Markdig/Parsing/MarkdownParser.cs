@@ -26,10 +26,11 @@ namespace Textamina.Markdig.Parsing
             {
                 QuoteBlock.Parser,
                 ListBlock.Parser,
-                //Break.Parser,
-                //CodeBlock.Parser, 
-                //FencedCodeBlock.Parser,
-                //Heading.Parser,
+
+                HeadingBlock.Parser,
+                BreakBlock.Parser,
+                CodeBlock.Parser, 
+                FencedCodeBlock.Parser,
                 ParagraphBlock.Parser,
             };
 
@@ -104,9 +105,15 @@ namespace Textamina.Markdig.Parsing
                 // Else tries to match the Parser with the current line
                 var parser = blockState.Parser;
                 lineState.Block = blockState.Block;
+                if (lineState.Block is ParagraphBlock)
+                {
+                    break;
+                }
 
                 var saveLiner = liner.Save();
+
                 // If we have a discard, we can remove it from the current state
+                lineState.LastBlock = LastBlock;
                 var result = parser.Match(ref lineState);
                 if (result == MatchLineResult.None)
                 {
@@ -157,9 +164,10 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                if (liner.IsEol)
+                if (result == MatchLineResult.LastDiscard || liner.IsEol)
                 {
                     processLiner = false;
+                    break;
                 }
             }
 
@@ -168,7 +176,6 @@ namespace Textamina.Markdig.Parsing
 
         private bool ParseNewBlocks(bool continueProcessLiner)
         {
-            var previousParagraph = LastBlock as ParagraphBlock;
 
             var state = new MatchLineState
             {
@@ -186,6 +193,7 @@ namespace Textamina.Markdig.Parsing
 
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
+                var previousParagraph = LastBlock as ParagraphBlock;
                 if (previousParagraph != null && !blockParser.CanInterruptParagraph)
                 {
                     continue;

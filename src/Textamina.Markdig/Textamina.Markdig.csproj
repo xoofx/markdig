@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Formatters\HtmlFormatter.cs" />
     <Compile Include="Parsing\MatchLineState.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />
