@@ -48,6 +48,12 @@ namespace Textamina.Markdig.Parsing
             return c == '\0' ? '\ufffd' : c;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsBulletListMarker(char c)
+        {
+            return c == '-' || c == '+' || c == '*';
+        }
+
         public static bool IsASCIIPunctuation(char c)
         {
             // 2.1 Characters and lines 

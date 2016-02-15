@@ -40,6 +40,8 @@
     <Compile Include="Syntax\LeafBlock.cs" />
     <Compile Include="Parsing\BlockParser.cs" />
     <Compile Include="Parsing\MarkdownParser.cs" />
+    <Compile Include="Syntax\ListBlock.cs" />
+    <Compile Include="Syntax\ListItemBlock.cs" />
     <Compile Include="Syntax\QuoteBlock.cs" />
     <Compile Include="Syntax\BreakBlock.cs" />
     <Compile Include="Parsing\Utility.cs" />

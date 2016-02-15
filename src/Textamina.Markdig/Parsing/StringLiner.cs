@@ -12,7 +12,7 @@ namespace Textamina.Markdig.Parsing
 
         public int End { get; private set; }
 
-        public int VirtualColumn { get; private set; }
+        public int Column { get; private set; }
 
         public char Current { get; private set; }
         
@@ -31,13 +31,13 @@ namespace Textamina.Markdig.Parsing
 
         public State Save()
         {
-            return new State(Start, VirtualColumn, Current);
+            return new State(Start, Column, Current);
         }
 
         public void Restore(ref State state)
         {
             Start = state.Start;
-            VirtualColumn = state.VirtualColumn;
+            Column = state.VirtualColumn;
             Current = state.Current;
         }
 
@@ -45,19 +45,20 @@ namespace Textamina.Markdig.Parsing
         public char NextChar()
         {
             Start++;
-            if (Start < Text.Length)
+            if (Start <= End)
             {
-                // If previous character was a tab make the VirtualColumn += 4
-                VirtualColumn++;
+                // If previous character was a tab make the Column += 4
+                Column++;
                 if (Utility.IsTab(Current))
                 {
-                    VirtualColumn += 3;
+                    // Align the tab on a column
+                    Column = ((Column + 3) / 4) * 4;
                 }
                 Current = Text[Start];
             }
             else
             {
-                Start = Text.Length;
+                Start = End + 1;
                 Current = (char) 0;
             }
             return Current;
@@ -86,7 +87,7 @@ namespace Textamina.Markdig.Parsing
         internal void Initialize()
         {
             Start = 0;
-            VirtualColumn = 0;
+            Column = 0;
             Current = Text.Length > 0 ? Text[0] : (char) 0;
             End = Text.Length - 1;
         }

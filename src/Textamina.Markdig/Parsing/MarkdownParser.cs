@@ -25,6 +25,7 @@ namespace Textamina.Markdig.Parsing
             blockParsers = new List<BlockParser>()
             {
                 QuoteBlock.Parser,
+                ListBlock.Parser,
                 //Break.Parser,
                 //CodeBlock.Parser, 
                 //FencedCodeBlock.Parser,
@@ -115,7 +116,29 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 // The parser could modify the block, so we restore it here.
+                var previousBlock = blockState.Block;
                 blockState.Block = lineState.Block;
+
+                // If we have a new block, we need to add it to the closest parent
+                if (previousBlock != blockState.Block)
+                {
+                    for (int j = i - 1; j >= 0; j--)
+                    {
+                        var containerBlock = blockStack[j].Block as ContainerBlock;
+                        if (containerBlock != null)
+                        {
+                            AddToParent(blockState.Block, containerBlock);
+                            break;
+                        }
+                    }
+
+                    // If there are any child blocks but we are the current block by another
+                    // we need to close the next blocks
+                    for (int j = blockStack.Count - 1; j >= i + 1; j--)
+                    {
+                        blockStack.RemoveAt(j);
+                    }
+                }
 
                 // A block is open only if it has a Continue state.
                 // otherwise it is a Last state, and we don't keep it opened
@@ -215,8 +238,7 @@ namespace Textamina.Markdig.Parsing
                 var container = LastBlock as ContainerBlock;
                 if (container != null)
                 {
-                    container.Children.Add(block);
-                    block.Parent = container;
+                    AddToParent(block, container);
                 }
 
                 // Add a block blockStack to the stack (and leave it opened)
@@ -238,6 +260,20 @@ namespace Textamina.Markdig.Parsing
             }
 
             return continueProcessLiner;
+        }
+
+        private void AddToParent(Block block, ContainerBlock parent)
+        {
+            while (block.Parent != null)
+            {
+                block = block.Parent;
+            }
+
+            if (!(block is Document))
+            {
+                parent.Children.Add(block);
+                block.Parent = parent;
+            }
         }
 
         private void CloseBlocks()
