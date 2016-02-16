@@ -1,14 +1,25 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Text;
+using Textamina.Markdig.Parsing;
 
-namespace Textamina.Markdig.Parsing
+namespace Textamina.Markdig.Syntax
 {
     public sealed class StringLine
     {
-        public StringBuilder Text;
+        public StringLine(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            Text = text;
+            Start = 0;
+            End = Text.Length - 1;
+            Column = 0;
+            SpaceHeaderCount = 0;
+            Current = End >= 0 ? Text[0] : (char)0;
+        }
+        
+        public string Text { get; private set; }
 
-        public int Start { get; private set; }
+        public int Start { get; set; }
 
         public int End { get; set; }
 
@@ -18,15 +29,9 @@ namespace Textamina.Markdig.Parsing
 
         public char Current { get; private set; }
         
-        public bool IsEol => Start == Text.Length;
+        public bool IsEol => Start > End;
 
         private bool isBlankLine;
-
-        public void ToEol()
-        {
-            Start = Text.Length;
-            Current = '\0';
-        }
 
         public char this[int index] => Text[index];
 
@@ -149,7 +154,7 @@ namespace Textamina.Markdig.Parsing
                 return true;
             }
 
-            for (int i = Start; i < Text.Length; i++)
+            for (int i = Start; i <= End; i++)
             {
                 if (!Utility.IsSpace(Text[i]))
                 {
@@ -159,17 +164,7 @@ namespace Textamina.Markdig.Parsing
             isBlankLine = true;
             return true;
         }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        internal void Initialize()
-        {
-            Start = 0;
-            Column = 0;
-            SpaceHeaderCount = 0;
-            Current = Text.Length > 0 ? Text[0] : (char) 0;
-            End = Text.Length - 1;
-        }
-
+        
         public void SkipLeadingSpaces3()
         {
             for (int i = 0; i < 3; i++)
@@ -184,7 +179,7 @@ namespace Textamina.Markdig.Parsing
 
         public override string ToString()
         {
-            return Start <= End ? Text.ToString().Substring(Start, End - Start + 1) : string.Empty;
+            return Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;
         }
 
         public struct State

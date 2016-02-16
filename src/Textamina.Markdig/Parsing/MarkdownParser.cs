@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Textamina.Markdig.Syntax;
@@ -14,6 +15,7 @@ namespace Textamina.Markdig.Parsing
         private readonly List<BlockState> blockStack;
         private readonly Document document;
         private readonly Stack<BlockState> cachedBlockStates;
+        private readonly StringBuilder tempBuilder;
 
         public MarkdownParser(TextReader reader)
         {
@@ -22,6 +24,7 @@ namespace Textamina.Markdig.Parsing
             blockParsers = new List<BlockParser>();
             blockStack = new List<BlockState>();
             cachedBlockStates = new Stack<BlockState>();
+            tempBuilder = new StringBuilder();
             blockParsers = new List<BlockParser>()
             {
                 BreakBlock.Parser,
@@ -314,8 +317,7 @@ namespace Textamina.Markdig.Parsing
 
         private void ReadLine()
         {
-            line = new StringLine {Text = new StringBuilder()};
-            var sb = line.Text;
+            tempBuilder.Clear();
             while (true)
             {
                 var nextChar = Reader.Read();
@@ -341,10 +343,9 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                sb.Append(c);
+                tempBuilder.Append(c);
             }
-
-            line.Initialize();
+            line = new StringLine(tempBuilder.ToString());
         }
 
         private BlockState NewBlockState(BlockParser parser, Block block)
