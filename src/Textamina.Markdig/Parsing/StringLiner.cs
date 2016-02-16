@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Parsing
 
         public int Start { get; private set; }
 
-        public int End { get; private set; }
+        public int End { get; set; }
 
         public int SpaceHeaderCount { get; set; }
 

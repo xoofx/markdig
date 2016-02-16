@@ -78,7 +78,7 @@ namespace Textamina.Markdig.Parsing
                 CloseBlocks();
             }
 
-            CloseBlocks();
+            CloseBlocks(true);
             // Close opened blocks
 
             //ProcessPendingBlocks(true);
@@ -106,10 +106,12 @@ namespace Textamina.Markdig.Parsing
                 // Else tries to match the Parser with the current line
                 var parser = blockState.Parser;
                 lineState.Block = blockState.Block;
-                //if (lineState.Block is ParagraphBlock)
-                //{
-                //    break;
-                //}
+
+                // If we have a paragraph block, we want to try to match over blocks before trying the Paragraph
+                if (lineState.Block is ParagraphBlock)
+                {
+                    break;
+                }
 
                 var saveLiner = liner.Save();
 
@@ -286,7 +288,7 @@ namespace Textamina.Markdig.Parsing
             }
         }
 
-        private void CloseBlocks()
+        private void CloseBlocks(bool force = false)
         {
             // Close any previous blocks not opened
             for (int i = blockStack.Count - 1; i >= 1; i--)
@@ -294,7 +296,7 @@ namespace Textamina.Markdig.Parsing
                 var blockState = blockStack[i];
 
                 // Stop on the first open block
-                if (blockState.IsOpen)
+                if (!force && blockState.IsOpen)
                 {
                     break;
                 }

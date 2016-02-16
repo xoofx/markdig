@@ -44,14 +44,59 @@ namespace Textamina.Markdig.Syntax
                 // closing # will be handled later, because anyway we have matched 
 
                 // A space is required after leading #
-                if (leadingCount > 0 && leadingCount <=6 && Utility.IsSpace(c))
+                if (leadingCount > 0 && leadingCount <=6 && (Utility.IsSpace(c) || liner.IsEol))
                 {
                     liner.NextChar();
                     state.Block = new HeadingBlock() {Level = leadingCount};
+
+
+                    // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
+                    int endState = 0;
+                    int countClosingTags = 0;
+                    for (int i = liner.End; i >= liner.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
+                    {
+                        c = liner[i];
+                        if (endState == 0)
+                        {
+                            if (Utility.IsSpace(c)) // TODO: Not clear if it is a space or space+tab in the specs
+                            {
+                                continue;
+                            }
+                            endState = 1;
+                        }
+                        if (endState == 1)
+                        {
+                            if (c == '#')
+                            {
+                                countClosingTags++;
+                                continue;
+                            }
+
+                            if (countClosingTags > 0)
+                            {
+                                if (Utility.IsSpace(c))
+                                {
+                                    liner.End = i - 1;
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+
                     return MatchLineResult.Last;
                 }
 
                 return MatchLineResult.None;
+            }
+
+            public override void Close(Block block)
+            {
+                var heading = (HeadingBlock) block;
+                heading.Inline?.Trim();
             }
         }
     }

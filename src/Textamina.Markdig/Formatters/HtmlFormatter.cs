@@ -100,19 +100,22 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(ContainerBlock container, bool simplifyFirstParagraph = false)
         {
+            if (container.Children.Count == 1 && simplifyFirstParagraph)
+            {
+                var paragraph = container.Children[0] as ParagraphBlock;
+                if (paragraph != null && paragraph.Inline.Count == 1)
+                {
+                    Write((LeafBlock)paragraph);
+                    return;
+                }
+            }
+
             foreach (var child in container.Children)
             {
                 Action<object> writerAction;
                 if (registeredWriters.TryGetValue(child.GetType(), out writerAction))
                 {
-                    if (simplifyFirstParagraph && child is ParagraphBlock)
-                    {
-                        Write((LeafBlock)child);
-                    }
-                    else
-                    {
-                        writerAction(child);
-                    }
+                    writerAction(child);
                 }
             }
         }

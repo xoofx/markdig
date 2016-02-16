@@ -26,12 +26,14 @@ namespace Textamina.Markdig.Syntax
             public override MatchLineResult Match(ref MatchLineState state)
             {
                 var liner = state.Liner;
-                liner.SkipLeadingSpaces3();
 
                 var fenced = state.Block as FencedCodeBlock;
                 if (fenced != null)
                 {
                     var c = liner.Current;
+
+                    var saveLiner = liner.Save();
+                    liner.SkipLeadingSpaces3();
 
                     int count = fenced.fencedCharCount;
                     var matchChar = fenced.fencedChar;
@@ -45,13 +47,13 @@ namespace Textamina.Markdig.Syntax
                         count--;
                     }
 
-
-
                     if (count <= 0)
                     {
                         fenced.hasFencedEnd = true;
                         return MatchLineResult.Last;
                     }
+
+                    liner.Restore(ref saveLiner);
 
                     // TODO: It is unclear how to handle this correctly
                     // Break only if Eof
