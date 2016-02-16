@@ -16,7 +16,7 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
 
                 // 5.2 List items 
                 // TODO: Check with specs, it is not clear that list marker or bullet marker must be followed by at least 1 space
@@ -65,7 +65,7 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult TryParseListItem(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
 
                 var preStartPosition = liner.Start;
                 liner.SkipLeadingSpaces3();

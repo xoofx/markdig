@@ -13,7 +13,7 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
                 liner.SkipLeadingSpaces3();
 
                 // 4.1 Thematic breaks 

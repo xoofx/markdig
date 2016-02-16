@@ -59,7 +59,8 @@
     <Compile Include="Syntax\Inline.cs" />
     <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parsing\StringLiner.cs" />
+    <Compile Include="Parsing\StringLine.cs" />
+    <Compile Include="Syntax\StringLineList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

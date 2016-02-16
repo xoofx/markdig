@@ -96,7 +96,7 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult MatchStart(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
                 int index = 0;
 
                 for (int i = 0; i < 3; i++)
@@ -190,7 +190,7 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult MatchEnd(ref MatchLineState state, HtmlBlock htmlBlock)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
 
                 // Early exit if it is not starting by an HTML tag
                 var c = liner.Current;

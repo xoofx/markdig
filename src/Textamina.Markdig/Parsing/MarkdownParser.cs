@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Parsing
 {
     public class MarkdownParser
     {
-        private StringLiner liner;
+        private StringLine line;
         private bool isEof;
 
         private readonly List<BlockParser> blockParsers;
@@ -62,7 +62,7 @@ namespace Textamina.Markdig.Parsing
                 ReadLine();
 
                 // If this is the end of file and the last line is empty
-                if (isEof && liner.IsEol)
+                if (isEof && line.IsEol)
                 {
                     break;
                 }
@@ -97,7 +97,7 @@ namespace Textamina.Markdig.Parsing
             }
 
             // Create the line state that will be used by all parser
-            var lineState = new MatchLineState {Liner = liner};
+            var lineState = new MatchLineState {Line = line};
 
             // Process any current block potentially opened
             for (int i = 1; i < blockStack.Count; i++)
@@ -114,15 +114,15 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                var saveLiner = liner.Save();
+                var saveLiner = line.Save();
 
                 // If we have a discard, we can remove it from the current state
                 lineState.LastBlock = LastBlock;
                 var result = parser.Match(ref lineState);
                 if (result == MatchLineResult.None)
                 {
-                    // Restore the liner where it was
-                    liner.Restore(ref saveLiner);
+                    // Restore the Line where it was
+                    line.Restore(ref saveLiner);
                     break;
                 }
 
@@ -163,13 +163,13 @@ namespace Textamina.Markdig.Parsing
                     // If the match doesn't require to add this line to the Inline content, we can discard it
                     if (result != MatchLineResult.LastDiscard)
                     {
-                        leaf.Append(liner);
+                        leaf.Append(line);
                     }
                     processLiner = false;
                     break;
                 }
 
-                if (result == MatchLineResult.LastDiscard || liner.IsEol)
+                if (result == MatchLineResult.LastDiscard || line.IsEol)
                 {
                     processLiner = false;
                     break;
@@ -184,13 +184,13 @@ namespace Textamina.Markdig.Parsing
 
             var state = new MatchLineState
             {
-                Liner = liner,
+                Line = line,
             };
 
             for (int j = 0; j < blockParsers.Count; j++)
             {
                 var blockParser = blockParsers[j];
-                if (liner.IsEol)
+                if (line.IsEol)
                 {
                     continueProcessLiner = false;
                     break;
@@ -207,19 +207,19 @@ namespace Textamina.Markdig.Parsing
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
                 state.Block = isParsingParagraph ? previousParagraph : null;
 
-                var saveLiner = liner.Save();
+                var saveLiner = line.Save();
                 var result = blockParser.Match(ref state);
                 if (result == MatchLineResult.None)
                 {
                     // If we have reached a blank line after trying to parse a paragraph
                     // we can ignore it
-                    if (isParsingParagraph && liner.IsBlankLine())
+                    if (isParsingParagraph && line.IsBlankLine())
                     {
                         continueProcessLiner = false;
                         break;
                     }
 
-                    liner.Restore(ref saveLiner);
+                    line.Restore(ref saveLiner);
                     continue;
                 }
 
@@ -230,7 +230,7 @@ namespace Textamina.Markdig.Parsing
                 if (leaf != null)
                 {
                     continueProcessLiner = false;
-                    leaf.Append(liner);
+                    leaf.Append(line);
 
                     // We have just found a lazy continuation for a paragraph, early exit
                     if (leaf == previousParagraph)
@@ -314,8 +314,8 @@ namespace Textamina.Markdig.Parsing
 
         private void ReadLine()
         {
-            liner = new StringLiner {Text = new StringBuilder()};
-            var sb = liner.Text;
+            line = new StringLine {Text = new StringBuilder()};
+            var sb = line.Text;
             while (true)
             {
                 var nextChar = Reader.Read();
@@ -344,7 +344,7 @@ namespace Textamina.Markdig.Parsing
                 sb.Append(c);
             }
 
-            liner.Initialize();
+            line.Initialize();
         }
 
         private BlockState NewBlockState(BlockParser parser, Block block)

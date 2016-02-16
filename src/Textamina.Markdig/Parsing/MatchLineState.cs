@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Parsing
 {
     public struct MatchLineState
     {
-        public StringLiner Liner;
+        public StringLine Line;
 
         public Block Block;
 

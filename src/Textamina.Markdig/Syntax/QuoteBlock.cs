@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
 
                 liner.SkipLeadingSpaces3();
 

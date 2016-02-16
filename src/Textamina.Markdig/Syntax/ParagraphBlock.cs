@@ -19,7 +19,7 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
                 liner.SkipLeadingSpaces3();
 
                 // Else it is a continue, we don't break on blank lines

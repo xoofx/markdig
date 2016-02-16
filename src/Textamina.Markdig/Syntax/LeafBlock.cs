@@ -6,17 +6,16 @@ namespace Textamina.Markdig.Syntax
     {
         protected LeafBlock()
         {
+            Lines = new StringLineList();
         }
+
+        public StringLineList Lines { get; set; }
 
         public Inline Inline { get; set; }
 
-        internal void Append(StringLiner line)
+        internal void Append(StringLine line)
         {
-            if (Inline == null)
-            {
-                Inline = new Inline();
-            }
-            Inline.Add(line);
+            Lines.Add(line);
         }
     }
 }

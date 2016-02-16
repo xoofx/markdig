@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Textamina.Markdig.Parsing
 {
-    public sealed class StringLiner
+    public sealed class StringLine
     {
         public StringBuilder Text;
 

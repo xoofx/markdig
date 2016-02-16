@@ -25,7 +25,7 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(ref MatchLineState state)
             {
-                var liner = state.Liner;
+                var liner = state.Line;
 
                 var fenced = state.Block as FencedCodeBlock;
                 if (fenced != null)
@@ -97,10 +97,10 @@ namespace Textamina.Markdig.Syntax
             public override void Close(Block block)
             {
                 var fenced = (FencedCodeBlock) block;
-                fenced.Inline.RemoveAt(0);
+                fenced.Lines.RemoveAt(0);
                 if (fenced.hasFencedEnd)
                 {
-                    fenced.Inline.RemoveAt(fenced.Inline.Count - 1);
+                    fenced.Lines.RemoveAt(fenced.Lines.Count - 1);
                 }
             }
         }

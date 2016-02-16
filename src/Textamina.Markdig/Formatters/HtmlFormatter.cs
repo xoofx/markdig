@@ -105,9 +105,20 @@ namespace Textamina.Markdig.Formatters
 
         protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines)
         {
-            if (leafBlock.Inline != null)
+            // TEMP: Should call Write(Inline)
+            var lines = leafBlock.Lines;
+            for (int i = 0; i < lines.Count; i++)
             {
-                Write(leafBlock.Inline, writeEndOfLines);
+                if (!writeEndOfLines && i > 0)
+                {
+                    writer.WriteLine();
+                }
+                var line = lines[i];
+                writer.WriteConstant(line.ToString());
+                if (writeEndOfLines)
+                {
+                    writer.WriteLine();
+                }
             }
         }
 
@@ -116,7 +127,7 @@ namespace Textamina.Markdig.Formatters
             if (container.Children.Count == 1 && simplifyFirstParagraph)
             {
                 var paragraph = container.Children[0] as ParagraphBlock;
-                if (paragraph != null && paragraph.Inline.Count == 1)
+                if (paragraph != null && paragraph.Lines.Count == 1)
                 {
                     WriteLeaf((LeafBlock)paragraph, false);
                     return;
@@ -135,19 +146,19 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(Inline inline, bool writeEndOfLines)
         {
-            for (int i = 0; i < inline.Count; i++)
-            {
-                if (!writeEndOfLines && i > 0)
-                {
-                    writer.WriteLine();
-                }
-                var line = inline[i];
-                writer.WriteConstant(line.ToString());
-                if (writeEndOfLines)
-                {
-                    writer.WriteLine();
-                }
-            }
+            //for (int i = 0; i < inline.Count; i++)
+            //{
+            //    if (!writeEndOfLines && i > 0)
+            //    {
+            //        writer.WriteLine();
+            //    }
+            //    var line = inline[i];
+            //    writer.WriteConstant(line.ToString());
+            //    if (writeEndOfLines)
+            //    {
+            //        writer.WriteLine();
+            //    }
+            //}
         }
     }
 }
