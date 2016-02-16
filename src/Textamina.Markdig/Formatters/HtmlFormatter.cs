@@ -25,6 +25,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(BreakBlock)] = o => Write((BreakBlock)o),
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
                 [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
+                [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
             };
         }
 
@@ -59,6 +60,11 @@ namespace Textamina.Markdig.Formatters
             writer.Write("\n</code></pre>\n");
         }
 
+        protected void Write(HtmlBlock codeBlock)
+        {
+            Write((LeafBlock)codeBlock);
+            writer.Write("\n");
+        }
 
         protected void Write(HeadingBlock headingBlock)
         {

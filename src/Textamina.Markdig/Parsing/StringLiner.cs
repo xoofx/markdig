@@ -36,6 +36,11 @@ namespace Textamina.Markdig.Parsing
             return new State(Start, End, Column, SpaceHeaderCount, Current);
         }
 
+        public void Restore(State state)
+        {
+            Restore(ref state);
+        }
+
         public void Restore(ref State state)
         {
             Start = state.Start;
@@ -69,6 +74,46 @@ namespace Textamina.Markdig.Parsing
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public char PeekChar(int offset)
+        {
+            var index = Start + offset;
+            return index <= End ? Text[index] : (char) 0;
+        }
+
+        public bool Match(string text, int offset = 0)
+        {
+            return Match(text, End, offset);
+        }
+
+        public bool Match(string text, int end, int offset)
+        {
+            var index = Start;
+            int i = 0;
+            for (; index <= end && i < text.Length; i++, index++)
+            {
+                if (text[i] != Text[index])
+                {
+                    return false;
+                }
+            }
+
+            return i == text.Length;
+        }
+
+        public bool Search(string text, int offset = 0)
+        {
+            var end = End - text.Length;
+            for (int i = Start; i <= end; i++)
+            {
+                if (Match(text, End, i))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public bool IsBlankLine()
         {
             if (isBlankLine)
@@ -97,18 +142,16 @@ namespace Textamina.Markdig.Parsing
             End = Text.Length - 1;
         }
 
-        public bool SkipLeadingSpaces3()
+        public void SkipLeadingSpaces3()
         {
-            var maxLength = Math.Min(3, Text.Length);
-            for (int i = 0; i < maxLength; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (!Utility.IsSpace(Current))
                 {
-                    return false;
+                    break;
                 }
                 NextChar();
             }
-            return true;
         }
 
         public override string ToString()

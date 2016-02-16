@@ -54,6 +54,18 @@ namespace Textamina.Markdig.Parsing
             return c == '-' || c == '+' || c == '*';
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsAlphaUpper(char c)
+        {
+            return c >= 'A' && c <= 'Z';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsAlphaNumeric(char c)
+        {
+            return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+        }
+
         public static bool IsASCIIPunctuation(char c)
         {
             // 2.1 Characters and lines 

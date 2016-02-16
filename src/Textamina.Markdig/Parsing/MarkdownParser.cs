@@ -29,6 +29,7 @@ namespace Textamina.Markdig.Parsing
                 QuoteBlock.Parser,
                 ListBlock.Parser,
 
+                HtmlBlock.Parser,
                 CodeBlock.Parser, 
                 FencedCodeBlock.Parser,
                 ParagraphBlock.Parser,
