@@ -12,6 +12,8 @@ namespace Textamina.Markdig.Parsing
 
         public int End { get; private set; }
 
+        public int SpaceHeaderCount { get; set; }
+
         public int Column { get; private set; }
 
         public char Current { get; private set; }
@@ -31,13 +33,15 @@ namespace Textamina.Markdig.Parsing
 
         public State Save()
         {
-            return new State(Start, Column, Current);
+            return new State(Start, End, Column, SpaceHeaderCount, Current);
         }
 
         public void Restore(ref State state)
         {
             Start = state.Start;
-            Column = state.VirtualColumn;
+            End = state.End;
+            Column = state.Column;
+            SpaceHeaderCount = state.SpaceHeaderCount;
             Current = state.Current;
         }
 
@@ -88,6 +92,7 @@ namespace Textamina.Markdig.Parsing
         {
             Start = 0;
             Column = 0;
+            SpaceHeaderCount = 0;
             Current = Text.Length > 0 ? Text[0] : (char) 0;
             End = Text.Length - 1;
         }
@@ -111,19 +116,24 @@ namespace Textamina.Markdig.Parsing
             return Start <= End ? Text.ToString().Substring(Start, End - Start + 1) : string.Empty;
         }
 
-
         public struct State
         {
-            public State(int start, int virtualColumn, char current)
+            public State(int start, int end, int column, int spaceHeaderCount, char current)
             {
                 Start = start;
-                VirtualColumn = virtualColumn;
+                End = end;
+                Column = column;
+                SpaceHeaderCount = spaceHeaderCount;
                 Current = current;
             }
 
             public readonly int Start;
 
-            public readonly int VirtualColumn;
+            public readonly int End;
+
+            public readonly int Column;
+
+            public readonly int SpaceHeaderCount;
 
             public readonly char Current;
         }

@@ -75,8 +75,10 @@ namespace Textamina.Markdig.Syntax
                 {
                     var listType = c;
 
-                    var startPosition = 0;
-                    var endPosition = 0;
+                    var startPosition = -1;
+                    var endPosition = -1;
+                    var tabToSpacesCount = 0;
+                    int deltaPositions = 0;
                     for (int i = 0; i < 4; i++)
                     {
                         c = liner.NextChar();
@@ -89,10 +91,24 @@ namespace Textamina.Markdig.Syntax
                             startPosition = liner.Column;
                         }
                         endPosition = liner.Column;
+
+                        deltaPositions = endPosition - startPosition;
+                        if (deltaPositions >= 4)
+                        {
+                            liner.SpaceHeaderCount = deltaPositions - 4;
+                            deltaPositions = 4;
+                            break;
+                        }
+                    }
+
+                    // If we haven't matched any spaces, early exit
+                    if (startPosition < 0)
+                    {
+                        return MatchLineResult.None;
                     }
 
                     // Number of spaces required for the following content to be part of this list item
-                    var numberOfSpaces = endPosition - startPosition + 1 + preIndent;
+                    var numberOfSpaces = deltaPositions + 1 + preIndent;
 
                     var listItem = new ListItemBlock() {NumberOfSpaces = numberOfSpaces};
                     var parentList = (state.Block as ListItemBlock)?.Parent as ListBlock;

@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         count++;
                     }
-                    else if (!Utility.IsSpace(c))
+                    else if (!Utility.IsSpace(c) || count == 0)
                     {
                         return MatchLineResult.None;
                     }

@@ -24,11 +24,11 @@ namespace Textamina.Markdig.Parsing
             cachedBlockStates = new Stack<BlockState>();
             blockParsers = new List<BlockParser>()
             {
+                BreakBlock.Parser,
+                HeadingBlock.Parser,
                 QuoteBlock.Parser,
                 ListBlock.Parser,
 
-                HeadingBlock.Parser,
-                BreakBlock.Parser,
                 CodeBlock.Parser, 
                 FencedCodeBlock.Parser,
                 ParagraphBlock.Parser,
@@ -78,6 +78,7 @@ namespace Textamina.Markdig.Parsing
                 CloseBlocks();
             }
 
+            CloseBlocks();
             // Close opened blocks
 
             //ProcessPendingBlocks(true);
@@ -105,10 +106,10 @@ namespace Textamina.Markdig.Parsing
                 // Else tries to match the Parser with the current line
                 var parser = blockState.Parser;
                 lineState.Block = blockState.Block;
-                if (lineState.Block is ParagraphBlock)
-                {
-                    break;
-                }
+                //if (lineState.Block is ParagraphBlock)
+                //{
+                //    break;
+                //}
 
                 var saveLiner = liner.Save();
 
@@ -143,7 +144,8 @@ namespace Textamina.Markdig.Parsing
                     // we need to close the next blocks
                     for (int j = blockStack.Count - 1; j >= i + 1; j--)
                     {
-                        blockStack.RemoveAt(j);
+                        var blockStateToClose = blockStack[j];
+                        CloseBlock(blockStateToClose, j);
                     }
                 }
 
@@ -296,10 +298,15 @@ namespace Textamina.Markdig.Parsing
                 {
                     break;
                 }
-
-                ReleaseBlockState(blockState);
-                blockStack.RemoveAt(i);
+                CloseBlock(blockState, i);
             }
+        }
+
+        private void CloseBlock(BlockState blockState, int index)
+        {
+            blockState.Parser.Close(blockState.Block);
+            ReleaseBlockState(blockState);
+            blockStack.RemoveAt(index);
         }
 
         private void ReadLine()

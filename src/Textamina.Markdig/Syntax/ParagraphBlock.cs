@@ -74,7 +74,19 @@ namespace Textamina.Markdig.Syntax
                     {
                         var level = headingChar == '=' ? 1 : 2;
 
-                        state.Block = new HeadingBlock() {Level = level};
+                        var paragraph = (ParagraphBlock) state.Block;
+                        var heading = new HeadingBlock
+                        {
+                            Level = level,
+                            Inline = paragraph.Inline,
+                            Parent = paragraph.Parent
+                        };
+                        state.Block = heading;
+
+                        // Replace the children in the parent
+                        var parent = (ContainerBlock) paragraph.Parent;
+                        parent.Children[parent.Children.Count - 1] = heading;
+
                         return MatchLineResult.LastDiscard;
                     }
                     else

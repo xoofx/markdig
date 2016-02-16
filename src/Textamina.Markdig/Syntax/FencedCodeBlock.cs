@@ -39,16 +39,18 @@ namespace Textamina.Markdig.Syntax
                     {
                         if (c != matchChar || count < 0)
                         {
-                            if (count > 0)
-                            {
-                                break;
-                            }
-
-                            fenced.hasFencedEnd = true;
-                            return MatchLineResult.Last;
+                            break;
                         }
                         c = liner.NextChar();
                         count--;
+                    }
+
+
+
+                    if (count <= 0)
+                    {
+                        fenced.hasFencedEnd = true;
+                        return MatchLineResult.Last;
                     }
 
                     // TODO: It is unclear how to handle this correctly
@@ -69,24 +71,34 @@ namespace Textamina.Markdig.Syntax
                         }
                         else if (c != matchChar)
                         {
-                            if (count < 3)
-                            {
-                                break;
-                            }
-
-                            // Store the number of matched string into the context
-                            state.Block = new FencedCodeBlock()
-                            {
-                                fencedChar = matchChar,
-                                fencedCharCount = count
-                            };
-                            return MatchLineResult.Continue;
+                            break;
                         }
                         c = liner.NextChar();
                         count++;
                     }
 
+                    if (count >= 3)
+                    {
+                        // Store the number of matched string into the context
+                        state.Block = new FencedCodeBlock()
+                        {
+                            fencedChar = matchChar,
+                            fencedCharCount = count
+                        };
+                        return MatchLineResult.Continue;
+                    }
+
                     return MatchLineResult.None;
+                }
+            }
+
+            public override void Close(Block block)
+            {
+                var fenced = (FencedCodeBlock) block;
+                fenced.Inline.RemoveAt(0);
+                if (fenced.hasFencedEnd)
+                {
+                    fenced.Inline.RemoveAt(fenced.Inline.Count - 1);
                 }
             }
         }
