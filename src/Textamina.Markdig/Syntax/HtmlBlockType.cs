@@ -10,7 +10,7 @@
 
         ProcessingInstruction,
 
-        InterruptingBlockWithEmptyLines,
+        ScriptPreOrStyle,
 
         InterruptingBlock,
 

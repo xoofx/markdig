@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Formatters\HtmlFormatter.cs" />
+    <Compile Include="Formatters\HtmlTextWriter.cs" />
     <Compile Include="Parsing\MatchLineState.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />

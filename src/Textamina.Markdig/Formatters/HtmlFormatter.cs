@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Textamina.Markdig.Syntax;
 
@@ -7,14 +8,15 @@ namespace Textamina.Markdig.Formatters
 {
     public class HtmlFormatter
     {
-        private readonly TextWriter writer;
+        private readonly HtmlTextWriter writer;
 
         private readonly Dictionary<Type, Action<object>> registeredWriters;
 
         public HtmlFormatter(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
-            this.writer = writer;
+            writer.NewLine = "\n";
+            this.writer = new HtmlTextWriter(writer);
             registeredWriters = new Dictionary<Type, Action<object>>
             {
                 [typeof(ListBlock)] = o => Write((ListBlock)o),
@@ -31,21 +33,23 @@ namespace Textamina.Markdig.Formatters
 
         public void Write(Document document)
         {
-            Write((ContainerBlock) document);
+            WriteContainer((ContainerBlock) document);
         }
 
         protected void Write(ListBlock listBlock)
         {
-            writer.Write("<ul>\n");
-            Write((ContainerBlock)listBlock);
-            writer.Write("</ul>\n");
+            writer.EnsureLine();
+            writer.WriteLineConstant("<ul>");
+            WriteContainer(listBlock);
+            writer.WriteLineConstant("</ul>");
         }
 
         protected void Write(ListItemBlock listBlockItem)
         {
-            writer.Write("<li>");
-            Write((ContainerBlock)listBlockItem, true);
-            writer.Write("</li>\n");
+            writer.EnsureLine();
+            writer.WriteConstant("<li>");
+            WriteContainer(listBlockItem, true);
+            writer.WriteLineConstant("</li>");
         }
 
         protected void Write(FencedCodeBlock fencedCodeBlock)
@@ -55,63 +59,66 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(CodeBlock codeBlock)
         {
-            writer.Write("<pre><code>");
-            Write((LeafBlock) codeBlock);
-            writer.Write("\n</code></pre>\n");
+            writer.EnsureLine();
+            writer.WriteConstant("<pre><code>");
+            WriteLeaf(codeBlock, true);
+            writer.WriteLineConstant("</code></pre>");
         }
 
         protected void Write(HtmlBlock codeBlock)
         {
-            Write((LeafBlock)codeBlock);
-            writer.Write("\n");
+            WriteLeaf(codeBlock, true);
         }
 
         protected void Write(HeadingBlock headingBlock)
         {
-            writer.Write("<h");
-            writer.Write(headingBlock.Level);
-            writer.Write(">");
-            Write((LeafBlock)headingBlock);
-            writer.Write("</h");
-            writer.Write(headingBlock.Level);
-            writer.Write(">\n");
+            var heading = headingBlock.Level.ToString(CultureInfo.InvariantCulture);
+            writer.WriteConstant("<h");
+            writer.WriteConstant(heading);
+            writer.WriteConstant(">");
+            WriteLeaf(headingBlock, false);
+            writer.WriteConstant("</h");
+            writer.WriteConstant(heading);
+            writer.WriteLineConstant(">");
         }
 
         protected void Write(BreakBlock breakBlock)
         {
-            writer.Write("<hr />\n");
+            writer.WriteLineConstant("<hr />");
         }
 
         protected void Write(QuoteBlock quoteBlock)
         {
-            writer.Write("<blockquote>\n");
-            Write((ContainerBlock) quoteBlock);
-            writer.Write("</blockquote>\n");
+            writer.EnsureLine();
+            writer.WriteLineConstant("<blockquote>");
+            WriteContainer(quoteBlock);
+            writer.WriteLineConstant("</blockquote>");
         }
 
         protected void Write(ParagraphBlock paragraph)
         {
-            writer.Write("<p>");
-            Write((LeafBlock)paragraph);
-            writer.Write("</p>\n");
+            writer.EnsureLine();
+            writer.WriteConstant("<p>");
+            WriteLeaf(paragraph, false);
+            writer.WriteLineConstant("</p>");
         }
 
-        protected void Write(LeafBlock leafBlock)
+        protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines)
         {
             if (leafBlock.Inline != null)
             {
-                Write(leafBlock.Inline);
+                Write(leafBlock.Inline, writeEndOfLines);
             }
         }
 
-        protected void Write(ContainerBlock container, bool simplifyFirstParagraph = false)
+        protected void WriteContainer(ContainerBlock container, bool simplifyFirstParagraph = false)
         {
             if (container.Children.Count == 1 && simplifyFirstParagraph)
             {
                 var paragraph = container.Children[0] as ParagraphBlock;
                 if (paragraph != null && paragraph.Inline.Count == 1)
                 {
-                    Write((LeafBlock)paragraph);
+                    WriteLeaf((LeafBlock)paragraph, false);
                     return;
                 }
             }
@@ -126,16 +133,20 @@ namespace Textamina.Markdig.Formatters
             }
         }
 
-        protected void Write(Inline inline)
+        protected void Write(Inline inline, bool writeEndOfLines)
         {
             for (int i = 0; i < inline.Count; i++)
             {
-                if (i > 0)
+                if (!writeEndOfLines && i > 0)
                 {
-                    writer.Write("\n");
+                    writer.WriteLine();
                 }
                 var line = inline[i];
-                writer.Write(line);
+                writer.WriteConstant(line.ToString());
+                if (writeEndOfLines)
+                {
+                    writer.WriteLine();
+                }
             }
         }
     }

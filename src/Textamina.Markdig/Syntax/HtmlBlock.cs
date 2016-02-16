@@ -82,7 +82,13 @@ namespace Textamina.Markdig.Syntax
                 var htmlBlock = state.Block as HtmlBlock;
                 if (htmlBlock == null)
                 {
-                    return MatchStart(ref state);
+                    var result = MatchStart(ref state);
+                    // An end-tag can occur on the same line
+                    if (result == MatchLineResult.Continue)
+                    {
+                        return MatchEnd(ref state, (HtmlBlock) state.Block);
+                    }
+                    return result;
                 }
 
                 return MatchEnd(ref state, htmlBlock);
@@ -152,7 +158,7 @@ namespace Textamina.Markdig.Syntax
                     tag[count] = char.ToLowerInvariant(c);
                 }
 
-                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || Utility.IsWhiteSpace(c) || liner.IsEol))
+                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || Utility.IsWhiteSpace(c) || c == '\0'))
                 {
                     return MatchLineResult.None;
                 }
@@ -176,7 +182,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         return MatchLineResult.None;
                     }
-                    return CreateHtmlBlock(ref state, HtmlBlockType.InterruptingBlockWithEmptyLines);
+                    return CreateHtmlBlock(ref state, HtmlBlockType.ScriptPreOrStyle);
                 }
 
                 return CreateHtmlBlock(ref state, HtmlBlockType.InterruptingBlock);
@@ -214,10 +220,11 @@ namespace Textamina.Markdig.Syntax
                             return MatchLineResult.Last;
                         }
                         break;
-                    case HtmlBlockType.InterruptingBlockWithEmptyLines:
-                        if (liner.IsBlankLine())
+                    case HtmlBlockType.ScriptPreOrStyle:
+                        // TODO: could be optimized with a dedicated parser
+                        if (liner.SearchLowercase("</script>") || liner.SearchLowercase("</pre>") || liner.SearchLowercase("</style>"))
                         {
-                            return MatchLineResult.LastDiscard;
+                            return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.InterruptingBlock:

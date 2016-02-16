@@ -256,7 +256,7 @@ namespace Textamina.Markdig.Parsing
 
                 // Add a block blockStack to the stack (and leave it opened)
                 var blockState = NewBlockState(blockParser, block);
-                blockState.IsOpen = true;
+                blockState.IsOpen = result == MatchLineResult.Continue;
                 blockStack.Add(blockState);
 
                 // If we have a container, we can retry to match against all types of block.

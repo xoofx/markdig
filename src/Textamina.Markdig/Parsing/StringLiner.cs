@@ -87,7 +87,7 @@ namespace Textamina.Markdig.Parsing
 
         public bool Match(string text, int end, int offset)
         {
-            var index = Start;
+            var index = Start + offset;
             int i = 0;
             for (; index <= end && i < text.Length; i++, index++)
             {
@@ -100,12 +100,40 @@ namespace Textamina.Markdig.Parsing
             return i == text.Length;
         }
 
+        public bool MatchLowercase(string text, int end, int offset)
+        {
+            var index = Start + offset;
+            int i = 0;
+            for (; index <= end && i < text.Length; i++, index++)
+            {
+                if (text[i] != char.ToLowerInvariant(Text[index]))
+                {
+                    return false;
+                }
+            }
+
+            return i == text.Length;
+        }
+
         public bool Search(string text, int offset = 0)
         {
-            var end = End - text.Length;
+            var end = End - text.Length + 1;
             for (int i = Start; i <= end; i++)
             {
                 if (Match(text, End, i))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool SearchLowercase(string text, int offset = 0)
+        {
+            var end = End - text.Length + 1;
+            for (int i = Start; i <= end; i++)
+            {
+                if (MatchLowercase(text, End, i))
                 {
                     return true;
                 }
