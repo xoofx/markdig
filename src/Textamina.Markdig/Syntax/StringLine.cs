@@ -177,6 +177,11 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
+        public StringSlice ToSlice()
+        {
+            return new StringSlice(Text, Start, End);
+        }
+
         public override string ToString()
         {
             return Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;
