@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Textamina.Markdig.Formatters;
 using Textamina.Markdig.Parsing;
@@ -53,18 +54,41 @@ namespace Textamina.Markdig.Tests
             formatter.Write(document);
             output.Flush();
 
-            var result = output.ToString().TrimEnd();
+            var result = Compact(output.ToString());
+            expectedOutputText = Compact(expectedOutputText);
 
             Console.WriteLine("``````````````````` Source");
-            Console.WriteLine(inputText.Replace("\\t", "→"));
+            Console.WriteLine(DisplaySpaceAndTabs(inputText));
             Console.WriteLine("``````````````````` Result");
-            Console.WriteLine(result);
+            Console.WriteLine(DisplaySpaceAndTabs(result));
             Console.WriteLine("``````````````````` Expected");
-            Console.WriteLine(expectedOutputText.Replace("\\t", "→"));
+            Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
             Console.WriteLine("```````````````````");
             Console.WriteLine();
             TextAssert.AreEqual(expectedOutputText, result);
         }
+
+        private static string DisplaySpaceAndTabs(string text)
+        {
+            return text.Replace("\\t", "→").Replace(' ', '·');
+        }
+
+        private static string Compact(string html)
+        {
+            html = html.Replace("\r", "").Trim();
+
+            // collapse spaces and newlines before </li> and after <li>
+            html = Regex.Replace(html, @"\s+</li>", "</li>");
+            html = Regex.Replace(html, @"<li>\s+", "<li>");
+
+            // needed to compare UTF-32 characters
+            html = html.Normalize(NormalizationForm.FormKD);
+            return html;
+        }
+
+
+
+
 
         public static IEnumerable<object[]> TestFiles
         {
