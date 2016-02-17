@@ -13,6 +13,12 @@ namespace Textamina.Markdig.Parsing
         }
 
         [MethodImpl((MethodImplOptions)256)]
+        public static bool IsNewLine(char c)
+        {
+            return c == '\n';
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
         public static bool IsEof(char c)
         {
             return c == '\0';

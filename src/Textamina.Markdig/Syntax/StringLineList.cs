@@ -49,7 +49,7 @@ namespace Textamina.Markdig.Syntax
                     ColumnPosition = -1;
                     LinePosition++;
                     currentLine = LinePosition < Count ? this[LinePosition] : null;
-                    Current = '\n';
+                    Current = currentLine != null ? '\n' : '\0';
                 }
             }
             else

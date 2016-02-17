@@ -30,6 +30,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
                 [typeof(EscapeInline)] = o => Write((EscapeInline)o),
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
+                [typeof(CodeInline)] = o => Write((CodeInline)o),
             };
         }
 
@@ -115,18 +116,45 @@ namespace Textamina.Markdig.Formatters
             writer.WriteConstant(escape.EscapedChar);
         }
 
+        protected void Write(CodeInline code)
+        {
+            writer.WriteConstant("<code>");
+            writer.WriteConstant(code.Content);
+            writer.WriteConstant("</code>");
+        }
+
         protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines)
         {
             var inline = leafBlock.Inline;
-            while (inline != null)
+            if (inline != null)
             {
-                Action<object> writerAction;
-                if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
+                while (inline != null)
                 {
-                    writerAction(inline);
-                }
+                    Action<object> writerAction;
+                    if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
+                    {
+                        writerAction(inline);
+                    }
 
-                inline = inline.NextSibling;
+                    inline = inline.NextSibling;
+                }
+            }
+            else
+            {
+                var lines = leafBlock.Lines;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    if (!writeEndOfLines && i > 0)
+                    {
+                        writer.WriteLine();
+                    }
+                    var line = lines[i];
+                    writer.WriteConstant(line.ToString());
+                    if (writeEndOfLines)
+                    {
+                        writer.WriteLine();
+                    }
+                }
             }
         }
 
@@ -150,23 +178,6 @@ namespace Textamina.Markdig.Formatters
                     writerAction(child);
                 }
             }
-        }
-
-        protected void Write(Inline inline, bool writeEndOfLines)
-        {
-            //for (int i = 0; i < inline.Count; i++)
-            //{
-            //    if (!writeEndOfLines && i > 0)
-            //    {
-            //        writer.WriteLine();
-            //    }
-            //    var line = inline[i];
-            //    writer.WriteConstant(line.ToString());
-            //    if (writeEndOfLines)
-            //    {
-            //        writer.WriteLine();
-            //    }
-            //}
         }
     }
 }

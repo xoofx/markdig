@@ -7,6 +7,12 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
+        public HtmlBlock()
+        {
+            // We don't process inline of an html block, as we will copy the content as-is
+            NoInline = true; 
+        }
+
         public HtmlBlockType Type { get; set; }
 
 

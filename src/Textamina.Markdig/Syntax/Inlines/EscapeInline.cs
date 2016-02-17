@@ -12,16 +12,19 @@ namespace Textamina.Markdig.Syntax
         {
             public ParserInternal()
             {
-                FirstChar = '\\';
+                FirstChars = new[] {'\\'};
             }
 
             public override bool Match(ref MatchInlineState state)
             {
                 var lines = state.Lines;
 
-                if (!Utility.IsASCIIPunctuation(lines.Current))
+                // Go to escape character
+                lines.NextChar();
+                if (Utility.IsASCIIPunctuation(lines.Current))
                 {
                     state.Inline = new EscapeInline() {EscapedChar = lines.Current};
+                    lines.NextChar();
                     return true;
                 }
                 return false;

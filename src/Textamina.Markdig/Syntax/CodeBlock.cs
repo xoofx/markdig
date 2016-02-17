@@ -13,6 +13,10 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
+        public CodeBlock()
+        {
+            NoInline = true;
+        }
 
         private class ParserInternal : BlockParser
         {

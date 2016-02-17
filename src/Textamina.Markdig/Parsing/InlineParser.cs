@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Parsing
 {
     public abstract class InlineParser
     {
-        public char? FirstChar { get; protected set; }
+        public char[] FirstChars { get; protected set; }
 
         public abstract bool Match(ref MatchInlineState state);
 

@@ -41,6 +41,7 @@
     <Compile Include="Parsing\MatchInlineState.cs" />
     <Compile Include="Parsing\MatchLineState.cs" />
     <Compile Include="Syntax\Inlines\AutoLinkInline.cs" />
+    <Compile Include="Syntax\Inlines\CodeInline.cs" />
     <Compile Include="Syntax\Inlines\ContainerInline.cs" />
     <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
     <Compile Include="Syntax\Inlines\EscapeInline.cs" />

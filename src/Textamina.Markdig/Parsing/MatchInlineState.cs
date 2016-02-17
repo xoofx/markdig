@@ -15,7 +15,5 @@ namespace Textamina.Markdig.Parsing
         public Inline Inline;
 
         public StringBuilder Builder;
-
-        public InlineParser Parser;
     }
 }
