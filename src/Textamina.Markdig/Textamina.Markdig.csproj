@@ -37,7 +37,20 @@
   <ItemGroup>
     <Compile Include="Formatters\HtmlFormatter.cs" />
     <Compile Include="Formatters\HtmlTextWriter.cs" />
+    <Compile Include="Parsing\InlineParser.cs" />
+    <Compile Include="Parsing\MatchInlineState.cs" />
     <Compile Include="Parsing\MatchLineState.cs" />
+    <Compile Include="Syntax\Inlines\AutoLinkInline.cs" />
+    <Compile Include="Syntax\Inlines\ContainerInline.cs" />
+    <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
+    <Compile Include="Syntax\Inlines\EscapeInline.cs" />
+    <Compile Include="Syntax\Inlines\HtmlEscapeInline.cs" />
+    <Compile Include="Syntax\Inlines\ImageInline.cs" />
+    <Compile Include="Syntax\Inlines\LeafInline.cs" />
+    <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
+    <Compile Include="Syntax\Inlines\LinkInline.cs" />
+    <Compile Include="Syntax\Inlines\LiteralInline.cs" />
+    <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
     <Compile Include="Syntax\StringSlice.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />
@@ -58,7 +71,7 @@
     <Compile Include="Syntax\HeadingBlock.cs" />
     <Compile Include="Parsing\MatchLineResult.cs" />
     <Compile Include="MethodImplOptionPortable.cs" />
-    <Compile Include="Syntax\Inline.cs" />
+    <Compile Include="Syntax\Inlines\Inline.cs" />
     <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\StringLine.cs" />

@@ -13,6 +13,8 @@ namespace Textamina.Markdig.Syntax
 
         public Inline Inline { get; set; }
 
+        public bool ProcessInlines { get; set; }
+
         internal void Append(StringLine line)
         {
             Lines.Add(line);

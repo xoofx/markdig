@@ -15,6 +15,11 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
+        public ParagraphBlock()
+        {
+            ProcessInlines = true;
+        }
+
         private class ParserInternal : BlockParser
         {
             public override MatchLineResult Match(ref MatchLineState state)

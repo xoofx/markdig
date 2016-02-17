@@ -28,6 +28,8 @@ namespace Textamina.Markdig.Formatters
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
                 [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
                 [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
+                [typeof(EscapeInline)] = o => Write((EscapeInline)o),
+                [typeof(LiteralInline)] = o => Write((LiteralInline)o),
             };
         }
 
@@ -103,22 +105,28 @@ namespace Textamina.Markdig.Formatters
             writer.WriteLineConstant("</p>");
         }
 
+        protected void Write(LiteralInline literal)
+        {
+            writer.WriteConstant(literal.Content);
+        }
+
+        protected void Write(EscapeInline escape)
+        {
+            writer.WriteConstant(escape.EscapedChar);
+        }
+
         protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines)
         {
-            // TEMP: Should call Write(Inline)
-            var lines = leafBlock.Lines;
-            for (int i = 0; i < lines.Count; i++)
+            var inline = leafBlock.Inline;
+            while (inline != null)
             {
-                if (!writeEndOfLines && i > 0)
+                Action<object> writerAction;
+                if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
                 {
-                    writer.WriteLine();
+                    writerAction(inline);
                 }
-                var line = lines[i];
-                writer.WriteConstant(line.ToString());
-                if (writeEndOfLines)
-                {
-                    writer.WriteLine();
-                }
+
+                inline = inline.NextSibling;
             }
         }
 

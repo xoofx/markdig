@@ -55,6 +55,15 @@ namespace Textamina.Markdig.Formatters
         /// <summary>
         /// Writes a value that is known not to contain any newlines.
         /// </summary>
+        public void WriteConstant(char value)
+        {
+            this._last = 'c';
+            this._inner.Write(value);
+        }
+
+        /// <summary>
+        /// Writes a value that is known not to contain any newlines.
+        /// </summary>
         public void WriteConstant(char[] value, int startIndex, int length)
         {
             this._last = 'c';
