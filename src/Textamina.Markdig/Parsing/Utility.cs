@@ -13,13 +13,19 @@ namespace Textamina.Markdig.Parsing
         }
 
         [MethodImpl((MethodImplOptions)256)]
+        public static bool IsWhiteSpaceOrZero(char c)
+        {
+            return IsWhiteSpace(c) || IsZero(c);
+        }
+
+        [MethodImpl((MethodImplOptions)256)]
         public static bool IsNewLine(char c)
         {
             return c == '\n';
         }
 
         [MethodImpl((MethodImplOptions)256)]
-        public static bool IsEof(char c)
+        public static bool IsZero(char c)
         {
             return c == '\0';
         }

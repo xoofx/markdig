@@ -1,3 +1,4 @@
+using System;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -15,18 +16,87 @@ namespace Textamina.Markdig.Syntax
                 FirstChars = new[] { '*', '_' };
             }
 
-            public override bool Match(ref MatchInlineState state)
+            public override bool Match(MatchInlineState state)
             {
                 var lines = state.Lines;
 
-                // Go to escape character
-                lines.NextChar();
-                if (Utility.IsASCIIPunctuation(lines.Current))
+                // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
+                // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
+                // is not preceded or followed by a _ character.
+
+                var pc = lines.PreviousChar1;
+                var delimiterRun = lines.Current;
+
+                int delimiterCount = 0;
+                char c;
+                do
                 {
-                    state.Inline = new EscapeInline() { EscapedChar = lines.Current };
-                    lines.NextChar();
+                    delimiterCount++;
+                    c = lines.NextChar();
+                } while (c == delimiterRun);
+
+
+                // A left-flanking delimiter run is a delimiter run that is 
+                // (a) not followed by Unicode whitespace, and
+                // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
+                // or a punctuation character. 
+                // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
+                var afterIsPunctuation = Utility.IsASCIIPunctuation(c);
+                bool canOpen = !Utility.IsWhiteSpaceOrZero(c) &&
+                                (!afterIsPunctuation ||
+                                !Utility.IsWhiteSpaceOrZero(pc) ||
+                                !Utility.IsASCIIPunctuation(pc));
+
+
+                // A right-flanking delimiter run is a delimiter run that is 
+                // (a) not preceded by Unicode whitespace, and 
+                // (b) either not preceded by a punctuation character, or followed by Unicode whitespace 
+                // or a punctuation character. 
+                // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
+                var beforeIsPunctuation = Utility.IsASCIIPunctuation(pc);
+                bool canClose = !Utility.IsWhiteSpaceOrZero(pc) &&
+                                (!beforeIsPunctuation ||
+                                    !Utility.IsWhiteSpaceOrZero(c) ||
+                                    !Utility.IsASCIIPunctuation(c));
+
+                if (delimiterRun == '_')
+                {
+                    var temp = canOpen;
+                    // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
+                    // (a) not part of a right-flanking delimiter run or 
+                    // (b) part of a right-flanking delimiter run preceded by punctuation.
+                    canOpen = canOpen && (!canClose || beforeIsPunctuation);
+
+                    // A single _ character can close emphasis iff it is part of a right-flanking delimiter run and either
+                    // (a) not part of a left-flanking delimiter run or 
+                    // (b) part of a left-flanking delimiter run followed by punctuation.
+                    canClose = canClose && (!temp || afterIsPunctuation);
+                }
+
+                // If we can close, try to find a matching open
+                if (canClose && state.Inline != null)
+                {
+                    var matching = DelimiterInline.FindMatchingOpen(state.Inline, 0, delimiterRun, delimiterCount);
+
+                    // transform matching into
+
                     return true;
                 }
+
+                // We have potentially an open or close emphasis
+                if (canOpen || canClose)
+                {
+                    var delimiter = new DelimiterInline()
+                    {
+                        DelimiterChar = delimiterRun,
+                        DelimiterCount = delimiterCount
+                    };
+
+                    state.Inline = delimiter;
+                    return true;
+                }
+
+                // We don't have an emphasis
                 return false;
             }
         }

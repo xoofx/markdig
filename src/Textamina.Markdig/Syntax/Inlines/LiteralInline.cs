@@ -11,9 +11,16 @@ namespace Textamina.Markdig.Syntax
 
         public string Content;
 
+        protected internal override void Close(MatchInlineState state)
+        {
+            Content = tempBuilder.ToString();
+            state.Builder = tempBuilder;
+            tempBuilder = null;
+        }
+
         private class ParserInternal : InlineParser
         {
-            public override bool Match(ref MatchInlineState state)
+            public override bool Match(MatchInlineState state)
             {
                 // A literal will always match
                 var literal = state.Inline as LiteralInline;
@@ -33,13 +40,6 @@ namespace Textamina.Markdig.Syntax
                     state.Lines.NextChar();
                 }
                 return true;
-            }
-
-            public override void Close(ref MatchInlineState state, Inline inline)
-            {
-                var literal = (LiteralInline)inline;
-                literal.Content = literal.tempBuilder.ToString();
-                state.Builder = literal.tempBuilder;
             }
         }
     }

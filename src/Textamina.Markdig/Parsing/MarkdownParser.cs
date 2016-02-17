@@ -19,7 +19,6 @@ namespace Textamina.Markdig.Parsing
         private readonly Document document;
         private readonly Stack<BlockState> cachedBlockStates;
         private readonly StringBuilder tempBuilder;
-        private readonly Stack<InlineState> inlineStack;
 
         public MarkdownParser(TextReader reader)
         {
@@ -30,7 +29,6 @@ namespace Textamina.Markdig.Parsing
             inlineWithFirstCharParsers = new Dictionary<char, InlineParser>();
             regularInlineParsers = new List<InlineParser>();
             blockStack = new List<BlockState>();
-            inlineStack = new Stack<InlineState>();
             cachedBlockStates = new Stack<BlockState>();
             tempBuilder = new StringBuilder();
             blockParsers = new List<BlockParser>()
@@ -423,13 +421,12 @@ namespace Textamina.Markdig.Parsing
 
             var state = new MatchInlineState(lines) {Builder = new StringBuilder() };
 
-            inlineStack.Clear();
+            var opened = new List<Inline>();
 
+            Inline previousInline = null;
             while (!lines.IsEndOfLines)
             {
                 var saveLines = lines.Save();
-
-                var previousInline = state.Inline;
 
                 if (state.Builder == null)
                 {
@@ -441,7 +438,7 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 InlineParser inlineParser = null;
-                if (!inlineWithFirstCharParsers.TryGetValue(lines.Current, out inlineParser) || !inlineParser.Match(ref state))
+                if (!inlineWithFirstCharParsers.TryGetValue(lines.Current, out inlineParser) || !inlineParser.Match(state))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
                     {
@@ -449,7 +446,7 @@ namespace Textamina.Markdig.Parsing
 
                         inlineParser = regularInlineParsers[i];
 
-                        if (inlineParser.Match(ref state))
+                        if (inlineParser.Match(state))
                         {
                             break;
                         }
@@ -465,18 +462,27 @@ namespace Textamina.Markdig.Parsing
 
                 if (previousInline != state.Inline)
                 {
-                    if (inlineStack.Count > 0)
+                    if (previousInline is LeafInline)
                     {
-                        var previousInlineState = inlineStack.Pop();
-                        previousInlineState.Parser.Close(ref state, previousInline);
+                        opened.Remove(previousInline);
+                        previousInline.Close(state);
+                        previousInline.InsertAfter(state.Inline);
+                        opened.Add(state.Inline);
                     }
-
-                    if (previousInline != null)
+                    else if (previousInline != null)
                     {
-                        previousInline.NextSibling = state.Inline;
-                    }
+                        var container = (ContainerInline) previousInline;
 
-                    inlineStack.Push(new InlineState(inlineParser, state.Inline));
+                        if (container.IsClosed)
+                        {
+                            opened.Remove(previousInline);
+                            container.InsertAfter(state.Inline);
+                        }
+                        else
+                        {
+                            container.AppendChild(state.Inline);
+                        }
+                    }
 
                     // Store first inline
                     if (leafBlock.Inline == null)
@@ -484,14 +490,19 @@ namespace Textamina.Markdig.Parsing
                         leafBlock.Inline = state.Inline;
                     }
                 }
+
+                previousInline = state.Inline;
             }
 
+
+            // TODO: Close opened inlines
+
             // Close last inline
-            while (inlineStack.Count > 0)
-            {
-                var inlineState = inlineStack.Pop();
-                inlineState.Parser.Close(ref state, inlineState.Inline);
-            }
+            //while (inlineStack.Count > 0)
+            //{
+            //    var inlineState = inlineStack.Pop();
+            //    inlineState.Parser.Close(state, inlineState.Inline);
+            //}
         }
 
         private class BlockState

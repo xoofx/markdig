@@ -3,9 +3,9 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
 {
-    public struct MatchInlineState
+    public class MatchInlineState
     {
-        public MatchInlineState(StringLineList lines) : this()
+        public MatchInlineState(StringLineList lines)
         {
             Lines = lines;
         }
