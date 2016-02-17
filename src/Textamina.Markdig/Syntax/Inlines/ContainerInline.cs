@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -45,7 +46,6 @@ namespace Textamina.Markdig.Syntax
             }
             return null;
         }
-
 
         protected override void OnChildInsert(Inline child)
         {

@@ -25,7 +25,7 @@ namespace Textamina.Markdig.Syntax
                 // is not preceded or followed by a _ character.
 
                 var pc = lines.PreviousChar1;
-                var delimiterRun = lines.Current;
+                var delimiterChar = lines.Current;
 
                 int delimiterCount = 0;
                 char c;
@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Syntax
                 {
                     delimiterCount++;
                     c = lines.NextChar();
-                } while (c == delimiterRun);
+                } while (c == delimiterChar);
 
 
                 // A left-flanking delimiter run is a delimiter run that is 
@@ -59,7 +59,7 @@ namespace Textamina.Markdig.Syntax
                                     !Utility.IsWhiteSpaceOrZero(c) ||
                                     !Utility.IsASCIIPunctuation(c));
 
-                if (delimiterRun == '_')
+                if (delimiterChar == '_')
                 {
                     var temp = canOpen;
                     // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
@@ -73,23 +73,25 @@ namespace Textamina.Markdig.Syntax
                     canClose = canClose && (!temp || afterIsPunctuation);
                 }
 
-                // If we can close, try to find a matching open
-                if (canClose && state.Inline != null)
-                {
-                    var matching = DelimiterInline.FindMatchingOpen(state.Inline, 0, delimiterRun, delimiterCount);
+                //// If we can close, try to find a matching open
+                //if (canClose && state.Inline != null)
+                //{
+                //    var matching = DelimiterInline.FindMatchingOpen(state.Inline, 0, delimiterRun, delimiterCount);
 
-                    // transform matching into
+                //    // transform matching into
 
-                    return true;
-                }
+                //    return true;
+                //}
 
                 // We have potentially an open or close emphasis
                 if (canOpen || canClose)
                 {
-                    var delimiter = new DelimiterInline()
+                    var delimiter = new EmphasisDelimiterInline(this)
                     {
-                        DelimiterChar = delimiterRun,
-                        DelimiterCount = delimiterCount
+                        DelimiterChar = delimiterChar,
+                        DelimiterCount = delimiterCount,
+                        CanOpen = canOpen,
+                        CanClose = canClose,
                     };
 
                     state.Inline = delimiter;

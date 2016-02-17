@@ -44,6 +44,8 @@
     <Compile Include="Syntax\Inlines\CodeInline.cs" />
     <Compile Include="Syntax\Inlines\ContainerInline.cs" />
     <Compile Include="Syntax\Inlines\DelimiterInline.cs" />
+    <Compile Include="Syntax\Inlines\DelimiterType.cs" />
+    <Compile Include="Syntax\Inlines\EmphasisDelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
     <Compile Include="Syntax\Inlines\EscapeInline.cs" />
     <Compile Include="Syntax\Inlines\HtmlEscapeInline.cs" />
@@ -51,7 +53,8 @@
     <Compile Include="Syntax\Inlines\InlineStack.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
-    <Compile Include="Syntax\Inlines\LinkInline.cs" />
+    <Compile Include="Syntax\Inlines\ContainerLinkInline.cs" />
+    <Compile Include="Syntax\Inlines\LinkDelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\LiteralInline.cs" />
     <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
     <Compile Include="Syntax\StringSlice.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -36,6 +37,30 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
+        public void InsertBefore(Inline previous)
+        {
+            if (previous == null) throw new ArgumentNullException(nameof(previous));
+            if (previous.Parent != null)
+            {
+                throw new ArgumentException("Inline has already a parent", nameof(previous));
+            }
+
+            var previousSibling = PreviousSibling;
+            if (previousSibling != null)
+            {
+                previousSibling.NextSibling = previous;
+            }
+
+            PreviousSibling = previous;
+            previous.NextSibling = this;
+
+            if (Parent != null)
+            {
+                Parent.OnChildInsert(previous);
+                previous.Parent = Parent;
+            }
+        }
+
         /// <summary>
         /// Removes this instance from the current list and its parent
         /// </summary>
@@ -58,6 +83,63 @@ namespace Textamina.Markdig.Syntax
                 PreviousSibling = null;
                 NextSibling = null;
                 Parent = null;
+            }
+        }
+
+        public void ReplaceBy(Inline inline)
+        {
+            if (inline == null) throw new ArgumentNullException(nameof(inline));
+
+            // Save sibling
+            var parent = Parent;
+            var previousSibling = PreviousSibling;
+            var nextSibling = NextSibling;
+            Remove();
+
+            if (previousSibling != null)
+            {
+                previousSibling.InsertAfter(inline);
+            }
+            else if (nextSibling != null)
+            {
+                nextSibling.InsertBefore(inline);
+            }
+            else if (Parent != null)
+            {
+                ((ContainerInline)Parent).AppendChild(inline);
+            }
+        }
+
+        public bool ContainsParentOfType<T>() where T : Inline
+        {
+            var delimiter = this as T;
+            if (delimiter != null)
+            {
+                return true;
+            }
+
+            if (Parent != null)
+            {
+                return Parent.ContainsParentOfType<T>();
+            }
+
+            return false;
+        }
+
+        public IEnumerable<T> FindParentOfType<T>() where T : Inline
+        {
+            var delimiter = this as T;
+            if (delimiter != null)
+            {
+                yield return delimiter;
+            }
+
+            if (Parent != null)
+            {
+                foreach (var parent in Parent.FindParentOfType<T>())
+                {
+                    yield return parent;
+                }
             }
         }
 

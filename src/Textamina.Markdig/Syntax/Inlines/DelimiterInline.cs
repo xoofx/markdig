@@ -1,41 +1,37 @@
+using System;
+using System.Collections.Generic;
+using Textamina.Markdig.Parsing;
+
 namespace Textamina.Markdig.Syntax
 {
-    public class DelimiterInline : ContainerInline
+    public abstract class DelimiterInline : ContainerInline
     {
-        public DelimiterInline()
+        protected DelimiterInline(InlineParser parser)
         {
-            Active = true;
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
+            Parser = parser;
         }
 
-        /// <summary>
-        /// The delimiter character found.
-        /// </summary>
-        public char DelimiterChar { get; set; }
+        public InlineParser Parser { get; }
 
-        /// <summary>
-        /// The number of delimiter characters found for this delimiter.
-        /// </summary>
-        public int DelimiterCount { get; set; }
+        public DelimiterType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the priority of this delimiter.
         /// </summary>
         public int Priority { get; set; }
 
-        public bool Active { get; set; }
-
-        public static Inline FindMatchingOpen(Inline inline, int priority, char delimiterChar, int delimiterCount)
+        public static IEnumerable<Inline> FindMatchingOpen<T>(Inline inline) where T : DelimiterInline
         {
-            var delimiter = inline as DelimiterInline;
-            if (delimiter != null && delimiter.Active && !delimiter.IsClosed && priority >= delimiter.Priority && delimiter.DelimiterChar == delimiterChar &&
-                delimiterCount <= delimiter.DelimiterCount)
+            var delimiter = inline as T;
+            if (delimiter != null)
             {
-                return delimiter;
+                yield return delimiter;
             }
 
             if (inline.Parent != null)
             {
-                return FindMatchingOpen(inline.Parent, priority, delimiterChar, delimiterCount);
+                return FindMatchingOpen(inline.Parent);
             }
 
             return null;
