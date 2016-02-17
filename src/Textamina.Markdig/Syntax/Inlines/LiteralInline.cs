@@ -13,9 +13,12 @@ namespace Textamina.Markdig.Syntax
 
         protected internal override void Close(MatchInlineState state)
         {
-            Content = tempBuilder.ToString();
-            state.Builder = tempBuilder;
-            tempBuilder = null;
+            if (Content == null && tempBuilder != null)
+            {
+                Content = tempBuilder.ToString();
+                state.Builder = tempBuilder;
+                tempBuilder = null;
+            }
         }
 
         private class ParserInternal : InlineParser

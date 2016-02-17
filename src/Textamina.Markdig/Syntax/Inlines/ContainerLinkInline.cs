@@ -74,6 +74,9 @@ namespace Textamina.Markdig.Syntax
                                 var literal = new LiteralInline() {Content = firstParent.IsImage ? "![" : "["};
                                 firstParent.ReplaceBy(literal);
 
+
+                                // TODO: This part is not efficient as it is using child.Remove()
+                                // We need a method to quickly move all children without having to mess Next/Prev sibling
                                 var child = firstParent.FirstChild;
                                 var lastChild = child;
                                 while (child != null)
@@ -89,9 +92,18 @@ namespace Textamina.Markdig.Syntax
                             }
                             else
                             {
+                                var link = firstParent.IsImage ? (ContainerLinkInline)new ImageLinkInline() : new TextLinkInline();
+
+                                // 1. Process all delimiters inside firstParent to convert them to inlines
+                                // 2. Replace firstParent with link, and move all child to this one
 
                                 // TODO: continue parsing of ]
-                                
+
+                                if (state.Inline == firstParent)
+                                {
+                                    state.Inline = link;
+                                }
+
                             }
                             return true;
                         }
@@ -112,17 +124,5 @@ namespace Textamina.Markdig.Syntax
                 return false;
             }
         }
-    }
-
-
-    public class TextLinkInline : ContainerLinkInline
-    {
-        
-    }
-
-
-    public class ImageLinkInline : ContainerLinkInline
-    {
-        
     }
 }
