@@ -16,7 +16,7 @@ namespace Textamina.Markdig.Syntax
             if (Content == null && tempBuilder != null)
             {
                 Content = tempBuilder.ToString();
-                state.Builder = tempBuilder;
+                state.StringBuilders.Release(tempBuilder);
                 tempBuilder = null;
             }
         }
@@ -29,9 +29,7 @@ namespace Textamina.Markdig.Syntax
                 var literal = state.Inline as LiteralInline;
                 if (literal == null)
                 {
-                    literal = new LiteralInline {tempBuilder = state.Builder};
-                    // We take ownership of the string builder
-                    state.Builder = null;
+                    literal = new LiteralInline {tempBuilder = state.StringBuilders.Get()};
                     state.Inline = literal;
                 }
 

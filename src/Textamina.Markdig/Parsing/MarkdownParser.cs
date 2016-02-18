@@ -22,6 +22,8 @@ namespace Textamina.Markdig.Parsing
         private readonly Stack<BlockState> cachedBlockStates;
         private readonly StringBuilder tempBuilder;
         private readonly MatchLineState lineState;
+        private readonly MatchInlineState inlineState;
+        private readonly StringBuilderCache stringBuilderCache;
 
         public MarkdownParser(TextReader reader)
         {
@@ -34,7 +36,9 @@ namespace Textamina.Markdig.Parsing
             blockStack = new List<BlockState>();
             cachedBlockStates = new Stack<BlockState>();
             tempBuilder = new StringBuilder();
-            lineState = new MatchLineState();
+            stringBuilderCache  = new StringBuilderCache();
+            inlineState = new MatchInlineState(stringBuilderCache);
+            lineState = new MatchLineState(stringBuilderCache);
             blockParsers = new List<BlockParser>()
             {
                 BreakBlock.Parser,
@@ -420,28 +424,16 @@ namespace Textamina.Markdig.Parsing
             var lines = leafBlock.Lines;
 
             leafBlock.Inline = new ContainerInline();
-            var state = new MatchInlineState(lines)
-            {
-                Builder = new StringBuilder(),
-                Inline = leafBlock.Inline
-            };
+            inlineState.Lines = lines;
+            inlineState.Inline = leafBlock.Inline;
 
             var previousInline = leafBlock.Inline;
             while (!lines.IsEndOfLines)
             {
                 var saveLines = lines.Save();
 
-                if (state.Builder == null)
-                {
-                    state.Builder = new StringBuilder();
-                }
-                else
-                {
-                    state.Builder.Clear();
-                }
-
                 InlineParser inlineParser = null;
-                if (!inlineWithFirstCharParsers.TryGetValue(lines.Current, out inlineParser) || !inlineParser.Match(state))
+                if (!inlineWithFirstCharParsers.TryGetValue(lines.Current, out inlineParser) || !inlineParser.Match(inlineState))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
                     {
@@ -449,7 +441,7 @@ namespace Textamina.Markdig.Parsing
 
                         inlineParser = regularInlineParsers[i];
 
-                        if (inlineParser.Match(state))
+                        if (inlineParser.Match(inlineState))
                         {
                             break;
                         }
@@ -463,13 +455,13 @@ namespace Textamina.Markdig.Parsing
                     }
                 }
 
-                var nextInline = state.Inline;
+                var nextInline = inlineState.Inline;
 
                 if (previousInline != nextInline)
                 {
                     if (previousInline is LeafInline)
                     {
-                        previousInline.Close(state);
+                        previousInline.Close(inlineState);
                         previousInline.IsClosed = true;
                         if (nextInline.Parent == null)
                         {
@@ -496,7 +488,7 @@ namespace Textamina.Markdig.Parsing
 
             while (previousInline != null)
             {
-                previousInline.Close(state);
+                previousInline.Close(inlineState);
                 previousInline = previousInline.Parent;
             }
 
@@ -515,8 +507,6 @@ namespace Textamina.Markdig.Parsing
             public BlockParser Parser;
 
             public Block Block;
-
-            public object Context;
 
             public bool IsOpen;
 

@@ -27,7 +27,9 @@ namespace Textamina.Markdig.Syntax
                     lines.NextChar();
                 }
 
-                var builder = state.Builder;
+                bool isMatching = false;
+
+                var builder = state.StringBuilders.Get();
                 int countClosedSticks = 0;
                 var c = lines.Current;
                 bool lastWhiteSpace = false;
@@ -76,10 +78,12 @@ namespace Textamina.Markdig.Syntax
                     builder.Length = newLength;
 
                     state.Inline = new CodeInline() { Content = builder.ToString() };
-                    return true;
+                    isMatching = true;
                 }
 
-                return false;
+                // Release the builder if not used
+                state.StringBuilders.Release(builder);
+                return isMatching;
             }
         }
     }

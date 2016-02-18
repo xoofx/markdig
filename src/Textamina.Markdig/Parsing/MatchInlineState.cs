@@ -1,19 +1,20 @@
 using System.Text;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
 {
     public class MatchInlineState
     {
-        public MatchInlineState(StringLineGroup lines)
+        public MatchInlineState(StringBuilderCache stringBuilders)
         {
-            Lines = lines;
+            StringBuilders = stringBuilders;
         }
 
-        public readonly StringLineGroup Lines;
+        public StringLineGroup Lines;
 
         public Inline Inline;
 
-        public StringBuilder Builder;
+        public StringBuilderCache StringBuilders { get;  }
     }
 }
