@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Parsing
 {
     internal class Utility
     {
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhiteSpace(char c)
         {
             // 2.1 Characters and lines 
@@ -12,25 +12,31 @@ namespace Textamina.Markdig.Parsing
             return c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsControl(char c)
+        {
+            return c < ' ' || char.IsControl(c);
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhiteSpaceOrZero(char c)
         {
             return IsWhiteSpace(c) || IsZero(c);
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsNewLine(char c)
         {
             return c == '\n';
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsZero(char c)
         {
             return c == '\0';
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsSpace(char c)
         {
             // 2.1 Characters and lines 
@@ -38,7 +44,7 @@ namespace Textamina.Markdig.Parsing
             return c == ' ';
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsTab(char c)
         {
             // 2.1 Characters and lines 
@@ -46,13 +52,13 @@ namespace Textamina.Markdig.Parsing
             return c == '\t';
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsSpaceOrTab(char c)
         {
             return IsSpace(c) || IsTab(c);
         }
 
-        [MethodImpl((MethodImplOptions)256)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static char EscapeInsecure(char c)
         {
             // 2.3 Insecure characters

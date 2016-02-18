@@ -4,7 +4,7 @@ using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
-    public class StringLineList : List<StringLine>
+    public class StringLineGroup : List<StringLine>
     {
         private StringLine currentLine;
 

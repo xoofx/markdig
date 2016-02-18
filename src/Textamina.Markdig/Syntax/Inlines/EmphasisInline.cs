@@ -86,12 +86,21 @@ namespace Textamina.Markdig.Syntax
                 // We have potentially an open or close emphasis
                 if (canOpen || canClose)
                 {
+                    var delimiterType = DelimiterType.None;
+                    if (canOpen)
+                    {
+                        delimiterType |= DelimiterType.Open;
+                    }
+                    if (canClose)
+                    {
+                        delimiterType |= DelimiterType.Close;
+                    }
+
                     var delimiter = new EmphasisDelimiterInline(this)
                     {
                         DelimiterChar = delimiterChar,
                         DelimiterCount = delimiterCount,
-                        CanOpen = canOpen,
-                        CanClose = canClose,
+                        Type = delimiterType,
                     };
 
                     state.Inline = delimiter;

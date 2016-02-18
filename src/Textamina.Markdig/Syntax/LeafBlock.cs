@@ -6,10 +6,10 @@ namespace Textamina.Markdig.Syntax
     {
         protected LeafBlock()
         {
-            Lines = new StringLineList();
+            Lines = new StringLineGroup();
         }
 
-        public StringLineList Lines { get; set; }
+        public StringLineGroup Lines { get; set; }
 
         public Inline Inline { get; set; }
 

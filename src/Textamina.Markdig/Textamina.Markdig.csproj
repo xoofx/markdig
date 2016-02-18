@@ -53,7 +53,7 @@
     <Compile Include="Syntax\Inlines\InlineStack.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
-    <Compile Include="Syntax\Inlines\ContainerLinkInline.cs" />
+    <Compile Include="Syntax\Inlines\LinkInline.cs" />
     <Compile Include="Syntax\Inlines\LinkDelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\LiteralInline.cs" />
     <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\StringLine.cs" />
-    <Compile Include="Syntax\StringLineList.cs" />
+    <Compile Include="Syntax\StringLineGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

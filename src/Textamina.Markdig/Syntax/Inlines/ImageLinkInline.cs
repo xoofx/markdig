@@ -1,6 +1,6 @@
 namespace Textamina.Markdig.Syntax
 {
-    public class ImageLinkInline : ContainerLinkInline
+    public class ImageLinkInline : LinkInline
     {
         
     }

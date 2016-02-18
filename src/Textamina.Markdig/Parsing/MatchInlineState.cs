@@ -5,12 +5,12 @@ namespace Textamina.Markdig.Parsing
 {
     public class MatchInlineState
     {
-        public MatchInlineState(StringLineList lines)
+        public MatchInlineState(StringLineGroup lines)
         {
             Lines = lines;
         }
 
-        public readonly StringLineList Lines;
+        public readonly StringLineGroup Lines;
 
         public Inline Inline;
 

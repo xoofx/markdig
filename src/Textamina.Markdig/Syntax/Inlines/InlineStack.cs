@@ -43,7 +43,7 @@ namespace Textamina.Markdig.Syntax
         /// The position in the <see cref="Buffer"/> where this inline element was found.
         /// Used only if the specific parser requires this information.
         /// </summary>
-        public StringLineList.State StartPosition;
+        public StringLineGroup.State StartPosition;
 
         /// <summary>
         /// The flags set for this stack entry.

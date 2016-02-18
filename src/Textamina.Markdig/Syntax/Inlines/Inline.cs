@@ -86,7 +86,7 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        public void ReplaceBy(Inline inline)
+        public Inline ReplaceBy(Inline inline)
         {
             if (inline == null) throw new ArgumentNullException(nameof(inline));
 
@@ -108,6 +108,35 @@ namespace Textamina.Markdig.Syntax
             {
                 ((ContainerInline)Parent).AppendChild(inline);
             }
+
+            var container = this as ContainerInline;
+            if (container != null)
+            {
+                var newContainer = inline as ContainerInline;
+                // TODO: This part is not efficient as it is using child.Remove()
+                // We need a method to quickly move all children without having to mess Next/Prev sibling
+                var child = container.FirstChild;
+                var lastChild = child;
+                while (child != null)
+                {
+                    lastChild = child;
+                    var nextChild = child.NextSibling;
+                    child.Remove();
+                    if (newContainer != null)
+                    {
+                        newContainer.AppendChild(child);
+                    }
+                    else
+                    {
+                        inline.InsertAfter(child);
+                    }
+                    child = nextChild;
+                }
+
+                return lastChild;
+            }
+
+            return inline;
         }
 
         public bool ContainsParentOfType<T>() where T : Inline
