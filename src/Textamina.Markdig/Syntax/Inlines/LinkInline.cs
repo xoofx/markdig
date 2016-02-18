@@ -10,9 +10,6 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly InlineParser Parser = new ParserInternal();
 
-        [ThreadStatic]
-        private static readonly StringBuilder TempBuilder = new StringBuilder();
-
         public static bool TryParseUrlAndTitle(StringLineGroup text, out string link, out string title)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
@@ -79,7 +76,7 @@ namespace Textamina.Markdig.Syntax
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             bool isValid = false;
-            var buffer = TempBuilder;
+            var buffer = StringBuilderCache.Local();
             buffer.Clear();
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
@@ -149,7 +146,7 @@ namespace Textamina.Markdig.Syntax
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             bool isValid = false;
-            var buffer = TempBuilder;
+            var buffer = StringBuilderCache.Local();
             buffer.Clear();
 
             var c = text.Current;

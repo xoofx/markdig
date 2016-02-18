@@ -53,8 +53,6 @@ namespace Textamina.Markdig.Helpers
             "XMLRPC.BEEP", "XMLRPC.BEEPS", "XMPP", "XRI", "YMSGR", "Z39.50R", "Z39.50S"
         };
 
-        [ThreadStatic] private static readonly StringBuilder TempBuilder = new StringBuilder();
-
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
         /// </summary>
@@ -67,7 +65,7 @@ namespace Textamina.Markdig.Helpers
             int match;
             char c;
             char[] search = new[] {'\\', '&'};
-            var sb = TempBuilder;
+            var sb = StringBuilderCache.Local();
             sb.Clear();
 
             while ((searchPos = url.IndexOfAny(search, searchPos)) != -1)

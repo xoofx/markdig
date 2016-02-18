@@ -10,7 +10,13 @@ namespace Textamina.Markdig.Helpers
         /// A StringBuilder that can be used locally in a method body only.
         /// </summary>
         [ThreadStatic]
-        public static readonly StringBuilder Local = new StringBuilder();
+        private static readonly StringBuilder local = new StringBuilder();
+
+        public static StringBuilder Local()
+        {
+            local.Clear();
+            return local;
+        }
 
         private readonly Stack<StringBuilder> builders;
 
