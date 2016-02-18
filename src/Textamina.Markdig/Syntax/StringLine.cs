@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -63,7 +64,7 @@ namespace Textamina.Markdig.Syntax
             {
                 // If previous character was a tab make the Column += 4
                 Column++;
-                if (Utility.IsTab(Current))
+                if (CharHelper.IsTab(Current))
                 {
                     // Align the tab on a column
                     Column = ((Column + 3) / 4) * 4;
@@ -156,7 +157,7 @@ namespace Textamina.Markdig.Syntax
 
             for (int i = Start; i <= End; i++)
             {
-                if (!Utility.IsSpace(Text[i]))
+                if (!CharHelper.IsSpace(Text[i]))
                 {
                     return false;
                 }
@@ -169,7 +170,7 @@ namespace Textamina.Markdig.Syntax
         {
             for (int i = 0; i < 3; i++)
             {
-                if (!Utility.IsSpace(Current))
+                if (!CharHelper.IsSpace(Current))
                 {
                     break;
                 }
@@ -186,7 +187,7 @@ namespace Textamina.Markdig.Syntax
         {
             // Strip leading spaces
             var c = Current;
-            while (Utility.IsSpace(c))
+            while (CharHelper.IsSpace(c))
             {
                 c = NextChar();
             }
@@ -197,7 +198,7 @@ namespace Textamina.Markdig.Syntax
             for (int i = End; i >= Start; i--)
             {
                 End = i;
-                if (!Utility.IsSpace(this[i]))
+                if (!CharHelper.IsSpace(this[i]))
                 {
                     break;
                 }

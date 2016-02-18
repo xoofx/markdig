@@ -1,4 +1,5 @@
 ﻿using System;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -107,7 +108,7 @@ namespace Textamina.Markdig.Syntax
 
                 for (int i = 0; i < 3; i++)
                 {
-                    if (!Utility.IsSpace(liner.PeekChar(index)))
+                    if (!CharHelper.IsSpace(liner.PeekChar(index)))
                     {
                         break;
                     }
@@ -129,7 +130,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         return CreateHtmlBlock(ref state, HtmlBlockType.Comment); // group 2
                     }
-                    if (Utility.IsAlphaUpper(c))
+                    if (CharHelper.IsAlphaUpper(c))
                     {
                         return CreateHtmlBlock(ref state, HtmlBlockType.DocumentType); // group 4
                     }
@@ -157,14 +158,14 @@ namespace Textamina.Markdig.Syntax
                 for (; count < tag.Length; index++, count++)
                 {
                     c = liner.PeekChar(index);
-                    if (!Utility.IsAlphaNumeric(c))
+                    if (!CharHelper.IsAlphaNumeric(c))
                     {
                         break;
                     }
                     tag[count] = char.ToLowerInvariant(c);
                 }
 
-                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || Utility.IsWhitespace(c) || c == '\0'))
+                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || CharHelper.IsWhitespace(c) || c == '\0'))
                 {
                     return MatchLineResult.None;
                 }

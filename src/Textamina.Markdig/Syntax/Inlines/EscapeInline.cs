@@ -1,3 +1,4 @@
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -21,7 +22,7 @@ namespace Textamina.Markdig.Syntax
 
                 // Go to escape character
                 lines.NextChar();
-                if (Utility.IsASCIIPunctuation(lines.Current))
+                if (CharHelper.IsAsciiPunctuation(lines.Current))
                 {
                     state.Inline = new EscapeInline() {EscapedChar = lines.Current};
                     lines.NextChar();

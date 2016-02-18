@@ -1,4 +1,5 @@
 using System;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -33,8 +34,8 @@ namespace Textamina.Markdig.Syntax
 
                 // 4.4 Indented code blocks 
                 var c = liner.Current;
-                var isTab = Utility.IsTab(c);
-                var isSpace = Utility.IsSpace(c);
+                var isTab = CharHelper.IsTab(c);
+                var isSpace = CharHelper.IsSpace(c);
                 if ((isTab || (isSpace && (liner.Start - position) == 3)) && !liner.IsBlankLine())
                 {
                     liner.NextChar();

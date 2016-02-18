@@ -35,11 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Formatters\EntityDecoder.cs" />
+    <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Formatters\HtmlFormatter.cs" />
-    <Compile Include="Formatters\HtmlHelper.cs" />
+    <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Formatters\HtmlTextWriter.cs" />
-    <Compile Include="Formatters\Scanner.cs" />
     <Compile Include="Parsing\InlineParser.cs" />
     <Compile Include="Parsing\MatchInlineState.cs" />
     <Compile Include="Parsing\MatchLineState.cs" />
@@ -74,7 +73,7 @@
     <Compile Include="Syntax\ListItemBlock.cs" />
     <Compile Include="Syntax\QuoteBlock.cs" />
     <Compile Include="Syntax\BreakBlock.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Helpers\CharHelper.cs" />
     <Compile Include="Syntax\CodeBlock.cs" />
     <Compile Include="Syntax\Document.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />

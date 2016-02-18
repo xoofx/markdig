@@ -1,6 +1,7 @@
 
 
 
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -55,7 +56,7 @@ namespace Textamina.Markdig.Syntax
 
                         if (checkForSpaces)
                         {
-                            if (!Utility.IsSpaceOrTab(c))
+                            if (!CharHelper.IsSpaceOrTab(c))
                             {
                                 headingChar = (char)0;
                                 break;
@@ -63,7 +64,7 @@ namespace Textamina.Markdig.Syntax
                         }
                         else if (c != headingChar)
                         {
-                            if (Utility.IsSpaceOrTab(c))
+                            if (CharHelper.IsSpaceOrTab(c))
                             {
                                 checkForSpaces = true;
                             }
@@ -93,7 +94,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         // Remove leading spaces from paragraph
                         var c = liner.Current;
-                        while (Utility.IsSpaceOrTab(c))
+                        while (CharHelper.IsSpaceOrTab(c))
                         {
                             c = liner.NextChar();
                         }

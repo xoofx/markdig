@@ -1,4 +1,5 @@
 using System;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -41,11 +42,11 @@ namespace Textamina.Markdig.Syntax
                 // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
                 // or a punctuation character. 
                 // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-                var afterIsPunctuation = Utility.IsASCIIPunctuation(c);
-                bool canOpen = !Utility.IsWhiteSpaceOrZero(c) &&
+                var afterIsPunctuation = CharHelper.IsAsciiPunctuation(c);
+                bool canOpen = !CharHelper.IsWhiteSpaceOrZero(c) &&
                                 (!afterIsPunctuation ||
-                                !Utility.IsWhiteSpaceOrZero(pc) ||
-                                !Utility.IsASCIIPunctuation(pc));
+                                !CharHelper.IsWhiteSpaceOrZero(pc) ||
+                                !CharHelper.IsAsciiPunctuation(pc));
 
 
                 // A right-flanking delimiter run is a delimiter run that is 
@@ -53,11 +54,11 @@ namespace Textamina.Markdig.Syntax
                 // (b) either not preceded by a punctuation character, or followed by Unicode whitespace 
                 // or a punctuation character. 
                 // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-                var beforeIsPunctuation = Utility.IsASCIIPunctuation(pc);
-                bool canClose = !Utility.IsWhiteSpaceOrZero(pc) &&
+                var beforeIsPunctuation = CharHelper.IsAsciiPunctuation(pc);
+                bool canClose = !CharHelper.IsWhiteSpaceOrZero(pc) &&
                                 (!beforeIsPunctuation ||
-                                    !Utility.IsWhiteSpaceOrZero(c) ||
-                                    !Utility.IsASCIIPunctuation(c));
+                                    !CharHelper.IsWhiteSpaceOrZero(c) ||
+                                    !CharHelper.IsAsciiPunctuation(c));
 
                 if (delimiterChar == '_')
                 {

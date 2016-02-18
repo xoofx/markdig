@@ -1,5 +1,7 @@
 
 
+
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -48,7 +50,7 @@ namespace Textamina.Markdig.Syntax
 
                     var c = liner.Current;
                     var startPosition = liner.Column;
-                    while (Utility.IsSpaceOrTab(c))
+                    while (CharHelper.IsSpaceOrTab(c))
                     {
                         c = liner.NextChar();
                         var endPosition = liner.Column;
@@ -71,7 +73,7 @@ namespace Textamina.Markdig.Syntax
                 liner.SkipLeadingSpaces3();
                 var preIndent = liner.Start - preStartPosition;
                 var c = liner.Current;
-                if (Utility.IsBulletListMarker(c))
+                if (CharHelper.IsBulletListMarker(c))
                 {
                     var listType = c;
 
@@ -82,7 +84,7 @@ namespace Textamina.Markdig.Syntax
                     for (int i = 0; i < 4; i++)
                     {
                         c = liner.NextChar();
-                        if (!Utility.IsSpaceOrTab(c))
+                        if (!CharHelper.IsSpaceOrTab(c))
                         {
                             break;
                         }

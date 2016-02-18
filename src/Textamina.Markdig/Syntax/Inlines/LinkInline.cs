@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Textamina.Markdig.Formatters;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -113,7 +114,7 @@ namespace Textamina.Markdig.Syntax
                         break;
                     }
 
-                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
+                    if (hasEscape && !CharHelper.IsAsciiPunctuation(c))
                     {
                         buffer.Append('\\');
                     }
@@ -173,7 +174,7 @@ namespace Textamina.Markdig.Syntax
                         break;
                     }
 
-                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
+                    if (hasEscape && !CharHelper.IsAsciiPunctuation(c))
                     {
                         buffer.Append('\\');
                     }
@@ -186,7 +187,7 @@ namespace Textamina.Markdig.Syntax
 
                     hasEscape = false;
 
-                    if (Utility.IsWhitespace(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (CharHelper.IsWhitespace(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
                         break;
                     }
@@ -231,7 +232,7 @@ namespace Textamina.Markdig.Syntax
                         }
                     }
 
-                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
+                    if (hasEscape && !CharHelper.IsAsciiPunctuation(c))
                     {
                         buffer.Append('\\');
                     }
@@ -246,7 +247,7 @@ namespace Textamina.Markdig.Syntax
 
                     hasEscape = false;
 
-                    if (Utility.IsSpaceOrTab(c) || Utility.IsControl(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (CharHelper.IsSpaceOrTab(c) || CharHelper.IsControl(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
                         isValid = true;
                         break;

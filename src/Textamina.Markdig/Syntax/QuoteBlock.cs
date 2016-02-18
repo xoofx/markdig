@@ -1,4 +1,5 @@
-﻿using Textamina.Markdig.Parsing;
+﻿using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -23,7 +24,7 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 c = liner.NextChar();
-                if (Utility.IsSpace(c))
+                if (CharHelper.IsSpace(c))
                 {
                     liner.NextChar();
                 }

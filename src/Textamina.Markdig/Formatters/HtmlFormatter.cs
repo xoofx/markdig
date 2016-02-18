@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Formatters

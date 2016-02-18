@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Formatters;
 
-namespace Textamina.Markdig.Formatters
+namespace Textamina.Markdig.Helpers
 {
     internal static class HtmlHelper
     {
@@ -31,8 +31,29 @@ namespace Textamina.Markdig.Formatters
             true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
         };
 
-        [ThreadStatic]
-        private static readonly StringBuilder TempBuilder = new StringBuilder();
+        /// <summary>
+        /// List of valid schemes of an URL. The array must be sorted.
+        /// </summary>
+        private static readonly string[] SchemeArray = new[]
+        {
+            "AAA", "AAAS", "ABOUT", "ACAP", "ADIUMXTRA", "AFP", "AFS", "AIM", "APT", "ATTACHMENT", "AW", "BESHARE",
+            "BITCOIN", "BOLO", "CALLTO", "CAP", "CHROME", "CHROME-EXTENSION", "CID", "COAP", "COM-EVENTBRITE-ATTENDEE",
+            "CONTENT", "CRID", "CVS", "DATA", "DAV", "DICT", "DLNA-PLAYCONTAINER", "DLNA-PLAYSINGLE", "DNS", "DOI",
+            "DTN", "DVB", "ED2K", "FACETIME", "FEED", "FILE", "FINGER", "FISH", "FTP", "GEO", "GG", "GIT",
+            "GIZMOPROJECT", "GO", "GOPHER", "GTALK", "H323", "HCP", "HTTP", "HTTPS", "IAX", "ICAP", "ICON", "IM", "IMAP",
+            "INFO", "IPN", "IPP", "IRC", "IRC6", "IRCS", "IRIS", "IRIS.BEEP", "IRIS.LWZ", "IRIS.XPC", "IRIS.XPCS",
+            "ITMS", "JAR", "JAVASCRIPT", "JMS", "KEYPARC", "LASTFM", "LDAP", "LDAPS", "MAGNET", "MAILTO", "MAPS",
+            "MARKET", "MESSAGE", "MID", "MMS", "MS-HELP", "MSNIM", "MSRP", "MSRPS", "MTQP", "MUMBLE", "MUPDATE", "MVN",
+            "NEWS", "NFS", "NI", "NIH", "NNTP", "NOTES", "OID", "OPAQUELOCKTOKEN", "PALM", "PAPARAZZI", "PLATFORM",
+            "POP", "PRES", "PROXY", "PSYC", "QUERY", "RES", "RESOURCE", "RMI", "RSYNC", "RTMP", "RTSP", "SECONDLIFE",
+            "SERVICE", "SESSION", "SFTP", "SGN", "SHTTP", "SIEVE", "SIP", "SIPS", "SKYPE", "SMB", "SMS", "SNMP",
+            "SOAP.BEEP", "SOAP.BEEPS", "SOLDAT", "SPOTIFY", "SSH", "STEAM", "SVN", "TAG", "TEAMSPEAK", "TEL", "TELNET",
+            "TFTP", "THINGS", "THISMESSAGE", "TIP", "TN3270", "TV", "UDP", "UNREAL", "URN", "UT2004", "VEMMI",
+            "VENTRILO", "VIEW-SOURCE", "WEBCAL", "WS", "WSS", "WTAI", "WYCIWYG", "XCON", "XCON-USERID", "XFIRE",
+            "XMLRPC.BEEP", "XMLRPC.BEEPS", "XMPP", "XRI", "YMSGR", "Z39.50R", "Z39.50S"
+        };
+
+        [ThreadStatic] private static readonly StringBuilder TempBuilder = new StringBuilder();
 
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
@@ -45,7 +66,7 @@ namespace Textamina.Markdig.Formatters
             int lastPos = 0;
             int match;
             char c;
-            char[] search = new[] { '\\', '&' };
+            char[] search = new[] {'\\', '&'};
             var sb = TempBuilder;
             sb.Clear();
 
@@ -60,7 +81,7 @@ namespace Textamina.Markdig.Formatters
                         break;
 
                     c = url[searchPos];
-                    if (Utility.IsEscapableSymbol(c))
+                    if (CharHelper.IsEscapableSymbol(c))
                     {
                         sb.Append(url, lastPos, searchPos - lastPos - 1);
                         lastPos = searchPos;
@@ -70,7 +91,8 @@ namespace Textamina.Markdig.Formatters
                 {
                     string namedEntity;
                     int numericEntity;
-                    match = Scanner.scan_entity(url, searchPos, url.Length - searchPos, out namedEntity, out numericEntity);
+                    match = scan_entity(url, searchPos, url.Length - searchPos, out namedEntity,
+                        out numericEntity);
                     if (match == 0)
                     {
                         searchPos++;
@@ -81,7 +103,7 @@ namespace Textamina.Markdig.Formatters
 
                         if (namedEntity != null)
                         {
-                            var decoded = EntityDecoder.DecodeEntity(namedEntity);
+                            var decoded = EntityHelper.DecodeEntity(namedEntity);
                             if (decoded != null)
                             {
                                 sb.Append(url, lastPos, searchPos - match - lastPos);
@@ -91,7 +113,7 @@ namespace Textamina.Markdig.Formatters
                         }
                         else if (numericEntity > 0)
                         {
-                            var decoded = EntityDecoder.DecodeEntity(numericEntity);
+                            var decoded = EntityHelper.DecodeEntity(numericEntity);
                             if (decoded != null)
                             {
                                 sb.Append(url, lastPos, searchPos - match - lastPos);
@@ -122,7 +144,7 @@ namespace Textamina.Markdig.Formatters
         /// Escapes special URL characters.
         /// </summary>
         /// <remarks>Orig: escape_html(inp, preserve_entities)</remarks>
-        internal static void EscapeUrl(string input, HtmlTextWriter target)
+        public static void EscapeUrl(string input, HtmlTextWriter target)
         {
             if (input == null)
                 return;
@@ -188,7 +210,7 @@ namespace Textamina.Markdig.Formatters
         /// Escapes special HTML characters.
         /// </summary>
         /// <remarks>Orig: escape_html(inp, preserve_entities)</remarks>
-        internal static void EscapeHtml(string input, HtmlTextWriter target)
+        public static void EscapeHtml(string input, HtmlTextWriter target)
         {
             if (input.Length == 0)
                 return;
@@ -230,6 +252,7 @@ namespace Textamina.Markdig.Formatters
 
             target.Write(buffer, lastPos, input.Length - lastPos);
         }
+
         /*
 
         /// <summary>
@@ -282,5 +305,121 @@ namespace Textamina.Markdig.Formatters
             }
         }
         */
+
+        /// <summary>
+        /// Scans an entity.
+        /// Returns number of chars matched.
+        /// </summary>
+        public static int scan_entity(string s, int pos, int length, out string namedEntity, out int numericEntity)
+        {
+            /*!re2c
+                  [&] ([#] ([Xx][A-Fa-f0-9]{1,8}|[0-9]{1,8}) |[A-Za-z][A-Za-z0-9]{1,31} ) [;]
+                     { return (p - start); }
+                  .? { return 0; }
+                */
+
+            var lastPos = pos + length;
+
+            namedEntity = null;
+            numericEntity = 0;
+
+            if (pos + 3 >= lastPos)
+                return 0;
+
+            if (s[pos] != '&')
+                return 0;
+
+            char c;
+            int i;
+            int counter = 0;
+            if (s[pos + 1] == '#')
+            {
+                c = s[pos + 2];
+                if (c == 'x' || c == 'X')
+                {
+                    // expect 1-8 hex digits starting from pos+3
+                    for (i = pos + 3; i < lastPos; i++)
+                    {
+                        c = s[i];
+                        if (c >= '0' && c <= '9')
+                        {
+                            if (++counter == 9) return 0;
+                            numericEntity = numericEntity*16 + (c - '0');
+                            continue;
+                        }
+                        else if (c >= 'A' && c <= 'F')
+                        {
+                            if (++counter == 9) return 0;
+                            numericEntity = numericEntity*16 + (c - 'A' + 10);
+                            continue;
+                        }
+                        else if (c >= 'a' && c <= 'f')
+                        {
+                            if (++counter == 9) return 0;
+                            numericEntity = numericEntity*16 + (c - 'a' + 10);
+                            continue;
+                        }
+
+                        if (c == ';')
+                            return counter == 0 ? 0 : i - pos + 1;
+
+                        return 0;
+                    }
+                }
+                else
+                {
+                    // expect 1-8 digits starting from pos+2
+                    for (i = pos + 2; i < lastPos; i++)
+                    {
+                        c = s[i];
+                        if (c >= '0' && c <= '9')
+                        {
+                            if (++counter == 9) return 0;
+                            numericEntity = numericEntity*10 + (c - '0');
+                            continue;
+                        }
+
+                        if (c == ';')
+                            return counter == 0 ? 0 : i - pos + 1;
+
+                        return 0;
+                    }
+                }
+            }
+            else
+            {
+                // expect a letter and 1-31 letters or digits
+                c = s[pos + 1];
+                if ((c < 'A' || c > 'Z') && (c < 'a' && c > 'z'))
+                    return 0;
+
+                for (i = pos + 2; i < lastPos; i++)
+                {
+                    c = s[i];
+                    if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                    {
+                        if (++counter == 32)
+                            return 0;
+
+                        continue;
+                    }
+
+                    if (c == ';')
+                    {
+                        namedEntity = s.Substring(pos + 1, counter + 1);
+                        return counter == 0 ? 0 : i - pos + 1;
+                    }
+
+                    return 0;
+                }
+            }
+
+            return 0;
+        }
+
+        public static bool IsUrlScheme(string scheme)
+        {
+            return Array.BinarySearch(SchemeArray, scheme, StringComparer.Ordinal) >= 0;
+        }
     }
 }

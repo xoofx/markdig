@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
@@ -381,7 +382,7 @@ namespace Textamina.Markdig.Parsing
                 var c = (char) nextChar;
 
                 // 2.3 Insecure characters
-                c = Utility.EscapeInsecure(c);
+                c = CharHelper.EscapeInsecure(c);
 
                 // Go to next char, expecting most likely a \n, otherwise skip it
                 // TODO: Should we treat it as an error in no \n is following?

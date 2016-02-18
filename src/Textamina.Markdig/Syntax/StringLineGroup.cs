@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Text;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -124,7 +125,7 @@ namespace Textamina.Markdig.Syntax
         public bool SkipWhiteSpaces()
         {
             bool hasWhitespaces = false;
-            while (Utility.IsWhitespace(Current))
+            while (CharHelper.IsWhitespace(Current))
             {
                 NextChar();
                 hasWhitespaces = true;

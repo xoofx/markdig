@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Textamina.Markdig.Formatters
+namespace Textamina.Markdig.Helpers
 {
-    internal static class EntityDecoder
+    public static class EntityHelper
     {
         /// <summary>
         /// Decodes the given HTML entity to the matching Unicode characters.
