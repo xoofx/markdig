@@ -28,9 +28,9 @@ namespace Textamina.Markdig.Tests
         private static string ToString(StringLineGroup text)
         {
             var chars = new StringBuilder();
-            while (text.Current != '\0')
+            while (text.CurrentChar != '\0')
             {
-                chars.Append(text.Current);
+                chars.Append(text.CurrentChar);
                 text.NextChar();
             }
             return chars.ToString();
@@ -53,12 +53,12 @@ namespace Textamina.Markdig.Tests
             text.NextChar(); // D
             text.NextChar(); // \n
             text.NextChar();
-            Assert.AreEqual('E', text.Current);
+            Assert.AreEqual('E', text.CurrentChar);
             Assert.AreEqual(1, text.LinePosition);
             Assert.AreEqual(0, text.ColumnPosition);
 
             text.Restore(ref save);
-            Assert.AreEqual('B', text.Current);
+            Assert.AreEqual('B', text.CurrentChar);
             Assert.AreEqual(0, text.LinePosition);
             Assert.AreEqual(1, text.ColumnPosition);
         }
@@ -69,7 +69,7 @@ namespace Textamina.Markdig.Tests
             var text = new StringLineGroup("             ABC");
             Assert.True(text.SkipWhiteSpaces());
             Assert.False(text.SkipWhiteSpaces());
-            Assert.AreEqual('A', text.Current);
+            Assert.AreEqual('A', text.CurrentChar);
         }
 
         [Test]

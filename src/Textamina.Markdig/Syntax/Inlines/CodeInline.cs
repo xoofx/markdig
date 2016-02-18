@@ -21,7 +21,7 @@ namespace Textamina.Markdig.Syntax
                 var lines = state.Lines;
 
                 int countSticks = 0;
-                while (lines.Current == '`')
+                while (lines.CurrentChar == '`')
                 {
                     countSticks++;
                     lines.NextChar();
@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Syntax
 
                 var builder = state.StringBuilders.Get();
                 int countClosedSticks = 0;
-                var c = lines.Current;
+                var c = lines.CurrentChar;
                 bool lastWhiteSpace = false;
                 while (c != '\0')
                 {

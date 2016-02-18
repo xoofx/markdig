@@ -39,6 +39,7 @@
     <Compile Include="Formatters\HtmlFormatter.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Formatters\HtmlTextWriter.cs" />
+    <Compile Include="Helpers\LinkHelper.cs" />
     <Compile Include="Helpers\StringBuilderCache.cs" />
     <Compile Include="Parsing\InlineParser.cs" />
     <Compile Include="Parsing\MatchInlineState.cs" />

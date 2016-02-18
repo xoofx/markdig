@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 var builder = literal.tempBuilder;
-                var c = state.Lines.Current;
+                var c = state.Lines.CurrentChar;
                 if (c != '\0')
                 {
                     builder.Append(c);

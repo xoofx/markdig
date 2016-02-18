@@ -1,42 +1,40 @@
-﻿using System.Text;
-using Textamina.Markdig.Parsing;
+﻿using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Syntax
 {
     public class LinkReferenceDefinitionBlock : LeafBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
-
-        private StringBuilder label;
-        private StringBuilder url;
-        private StringBuilder title;
-
-        private class ParserInternal : BlockParser
+        public LinkReferenceDefinitionBlock()
         {
-            public override MatchLineResult Match(MatchLineState state)
+        }
+
+        public LinkReferenceDefinitionBlock(string label, string url, string title)
+        {
+            Label = label;
+            Url = url;
+            Title = title;
+        }
+
+        public string Label { get; set; }
+
+        public string Url { get; set; }
+
+        public string Title { get; set; }
+
+        public static bool TryParse(StringLineGroup lines, out LinkReferenceDefinitionBlock block)
+        {
+            block = null;
+            string label;
+            string url;
+            string title;
+
+            if (!LinkHelper.TryParseLabelUrlAndTitle(lines, out label, out url, out title))
             {
-                var line = state.Line;
-                line.SkipLeadingSpaces3();
-
-                var c = line.Current;
-
-                if (c != '[')
-                {
-                    return MatchLineResult.None;
-                }
-
-
-
-
-
-
-
-
-
-
-                return MatchLineResult.None;
-
+                return false;
             }
+
+            block = new LinkReferenceDefinitionBlock(label, url, title);
+            return true;
         }
     }
 }

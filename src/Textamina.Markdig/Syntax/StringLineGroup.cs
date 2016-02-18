@@ -24,7 +24,9 @@ namespace Textamina.Markdig.Syntax
 
         public int ColumnPosition { get; private set; }
 
-        public char Current { get; private set; }
+        public StringLine Current => currentLine;
+
+        public char CurrentChar { get; private set; }
 
         public char PreviousChar1 { get; private set; }
 
@@ -74,11 +76,11 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        public bool IsEndOfLines => Current == '\0';
+        public bool IsEndOfLines => CurrentChar == '\0';
 
         public State Save()
         {
-            return new State(currentLine, LinePosition, ColumnPosition, Current, PreviousChar1, PreviousChar2);
+            return new State(currentLine, LinePosition, ColumnPosition, CurrentChar, PreviousChar1, PreviousChar2);
         }
 
         public void Restore(ref State state)
@@ -86,7 +88,7 @@ namespace Textamina.Markdig.Syntax
             currentLine = state.CurrentLine;
             LinePosition = state.LinePosition;
             ColumnPosition = state.ColumnPosition;
-            Current = state.Current;
+            CurrentChar = state.Current;
             PreviousChar1 = state.PreviousChar1;
             PreviousChar2 = state.PreviousChar2;
         }
@@ -94,13 +96,13 @@ namespace Textamina.Markdig.Syntax
         public char NextChar()
         {
             PreviousChar2 = PreviousChar1;
-            PreviousChar1 = Current;
+            PreviousChar1 = CurrentChar;
             if (currentLine != null)
             {
                 ColumnPosition++;
                 if (ColumnPosition <= currentLine.End)
                 {
-                    Current = currentLine[ColumnPosition];
+                    CurrentChar = currentLine[ColumnPosition];
                 }
                 else
                 {
@@ -111,21 +113,21 @@ namespace Textamina.Markdig.Syntax
                     {
                         ColumnPosition = currentLine.Start - 1;
                     }
-                    Current = currentLine != null ? '\n' : '\0';
+                    CurrentChar = currentLine != null ? '\n' : '\0';
                 }
             }
             else
             {
-                Current = '\0';
+                CurrentChar = '\0';
             }
 
-            return Current;
+            return CurrentChar;
         }
 
         public bool SkipWhiteSpaces()
         {
             bool hasWhitespaces = false;
-            while (CharHelper.IsWhitespace(Current))
+            while (CharHelper.IsWhitespace(CurrentChar))
             {
                 NextChar();
                 hasWhitespaces = true;

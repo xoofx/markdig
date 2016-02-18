@@ -433,7 +433,7 @@ namespace Textamina.Markdig.Parsing
                 var saveLines = lines.Save();
 
                 InlineParser inlineParser = null;
-                if (!inlineWithFirstCharParsers.TryGetValue(lines.Current, out inlineParser) || !inlineParser.Match(inlineState))
+                if (!inlineWithFirstCharParsers.TryGetValue(lines.CurrentChar, out inlineParser) || !inlineParser.Match(inlineState))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
                     {

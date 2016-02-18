@@ -22,9 +22,9 @@ namespace Textamina.Markdig.Syntax
 
                 // Go to escape character
                 lines.NextChar();
-                if (CharHelper.IsAsciiPunctuation(lines.Current))
+                if (CharHelper.IsAsciiPunctuation(lines.CurrentChar))
                 {
-                    state.Inline = new EscapeInline() {EscapedChar = lines.Current};
+                    state.Inline = new EscapeInline() {EscapedChar = lines.CurrentChar};
                     lines.NextChar();
                     return true;
                 }

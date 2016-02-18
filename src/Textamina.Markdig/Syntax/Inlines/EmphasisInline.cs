@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Syntax
                 // is not preceded or followed by a _ character.
 
                 var pc = lines.PreviousChar1;
-                var delimiterChar = lines.Current;
+                var delimiterChar = lines.CurrentChar;
 
                 int delimiterCount = 0;
                 char c;
