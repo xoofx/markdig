@@ -80,7 +80,7 @@ namespace Textamina.Markdig.Tests
             var text = new StringLineGroup(@"(http://google.com 'this is a title')ABC");
             string link;
             string title;
-            Assert.True(LinkInline.TryParseLinkAndTitle(text, out link, out title));
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
             Assert.AreEqual("http://google.com", link);
             Assert.AreEqual("this is a title", title);
             Assert.AreEqual('A', text.Current);
@@ -92,7 +92,7 @@ namespace Textamina.Markdig.Tests
             var text = new StringLineGroup(@"(<>)A");
             string link;
             string title;
-            Assert.True(LinkInline.TryParseLinkAndTitle(text, out link, out title));
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
             Assert.AreEqual(string.Empty, link);
             Assert.AreEqual(string.Empty, title);
             Assert.AreEqual('A', text.Current);
@@ -104,7 +104,7 @@ namespace Textamina.Markdig.Tests
             var text = new StringLineGroup(@"( <> )A");
             string link;
             string title;
-            Assert.True(LinkInline.TryParseLinkAndTitle(text, out link, out title));
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
             Assert.AreEqual(string.Empty, link);
             Assert.AreEqual(string.Empty, title);
             Assert.AreEqual('A', text.Current);
@@ -117,12 +117,23 @@ namespace Textamina.Markdig.Tests
             var text = new StringLineGroup(@"(   <>      'toto'       )A");
             string link;
             string title;
-            Assert.True(LinkInline.TryParseLinkAndTitle(text, out link, out title));
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
             Assert.AreEqual(string.Empty, link);
             Assert.AreEqual("toto", title);
             Assert.AreEqual('A', text.Current);
         }
 
+        [Test]
+        public void TestLinkEmpty()
+        {
+            var text = new StringLineGroup(@"()A");
+            string link;
+            string title;
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
+            Assert.AreEqual(string.Empty, link);
+            Assert.AreEqual(string.Empty, title);
+            Assert.AreEqual('A', text.Current);
+        }
 
         [Test]
         public void TestMultipleLines()
@@ -135,7 +146,7 @@ namespace Textamina.Markdig.Tests
             };
             string link;
             string title;
-            Assert.True(LinkInline.TryParseLinkAndTitle(text, out link, out title));
+            Assert.True(LinkInline.TryParseUrlAndTitle(text, out link, out title));
             Assert.AreEqual("http://google.com", link);
             Assert.AreEqual("toto", title);
             Assert.AreEqual('A', text.Current);

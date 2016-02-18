@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Syntax
                 while (c != '\0')
                 {
                     // Skip new lines
-                    var isWhitespace = Utility.IsWhiteSpace(c);
+                    var isWhitespace = Utility.IsWhitespace(c);
                     if (!(Utility.IsNewLine(c) || (builder.Length == 0 && isWhitespace) || (lastWhiteSpace && isWhitespace)))
                     {
                         if (c == '`')
@@ -62,7 +62,7 @@ namespace Textamina.Markdig.Syntax
                     int newLength = builder.Length;
                     for (int i = builder.Length - 1; i >= 0; i--)
                     {
-                        if (Utility.IsWhiteSpace(builder[i]))
+                        if (Utility.IsWhitespace(builder[i]))
                         {
                             newLength--;
                         }

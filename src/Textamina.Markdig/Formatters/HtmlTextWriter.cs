@@ -3,7 +3,7 @@
 namespace Textamina.Markdig.Formatters
 {
     /// <summary>
-    /// A wrapper for <see cref="HtmlFormatterSlim"/> that keeps track if the last symbol has been a newline.
+    /// A wrapper for <see cref="HtmlHelper"/> that keeps track if the last symbol has been a newline.
     /// </summary>
     internal sealed class HtmlTextWriter
     {
@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Formatters
 
         /// <summary>
         /// A reusable char buffer. This is used internally in <see cref="Write(Syntax.StringPart)"/> (and thus will modify the buffer)
-        /// but can also be used from <see cref="HtmlFormatterSlim"/> class.
+        /// but can also be used from <see cref="HtmlHelper"/> class.
         /// </summary>
         internal char[] Buffer = new char[256];
 

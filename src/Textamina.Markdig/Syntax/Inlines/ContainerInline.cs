@@ -10,8 +10,6 @@ namespace Textamina.Markdig.Syntax
 
         public Inline LastChild { get; private set; }
 
-        public bool IsClosed { get; set; }
-
         public virtual void AppendChild(Inline child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));

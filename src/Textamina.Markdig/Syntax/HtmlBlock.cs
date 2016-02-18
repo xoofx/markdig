@@ -164,7 +164,7 @@ namespace Textamina.Markdig.Syntax
                     tag[count] = char.ToLowerInvariant(c);
                 }
 
-                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || Utility.IsWhiteSpace(c) || c == '\0'))
+                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || Utility.IsWhitespace(c) || c == '\0'))
                 {
                     return MatchLineResult.None;
                 }

@@ -12,6 +12,8 @@ namespace Textamina.Markdig.Syntax
 
         public Inline NextSibling { get; internal set; }
 
+        public bool IsClosed { get; set; }
+
         public void InsertAfter(Inline next)
         {
             if (next == null) throw new ArgumentNullException(nameof(next));
@@ -104,9 +106,9 @@ namespace Textamina.Markdig.Syntax
             {
                 nextSibling.InsertBefore(inline);
             }
-            else if (Parent != null)
+            else if (parent != null)
             {
-                ((ContainerInline)Parent).AppendChild(inline);
+                ((ContainerInline)parent).AppendChild(inline);
             }
 
             var container = this as ContainerInline;

@@ -31,7 +31,8 @@ namespace Textamina.Markdig.Formatters
                 [typeof(EscapeInline)] = o => Write((EscapeInline)o),
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
-                [typeof(ContainerInline)] = o => Write((ContainerInline)o),
+                [typeof(TextLinkInline)] = o => Write((TextLinkInline)o),
+                [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
         }
 
@@ -109,7 +110,7 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(LiteralInline literal)
         {
-            writer.WriteConstant(literal.Content);
+            HtmlHelper.EscapeHtml(literal.Content, writer);
         }
 
         protected void Write(EscapeInline escape)
@@ -124,7 +125,23 @@ namespace Textamina.Markdig.Formatters
             writer.WriteConstant("</code>");
         }
 
-        protected void Write(ContainerInline containerInline)
+        protected void Write(TextLinkInline link)
+        {
+            writer.WriteConstant("<a href=\"");
+            HtmlHelper.EscapeUrl(link.Url, writer);
+            writer.WriteConstant("\"");
+            if (!string.IsNullOrEmpty(link.Title))
+            {
+                writer.WriteConstant(" title=\"");
+                HtmlHelper.EscapeHtml(link.Title, writer);
+                writer.WriteConstant("\"");
+            }
+            writer.WriteConstant(">");
+            WriteChildren((ContainerInline)link);
+            writer.WriteConstant("</a>");
+        }
+
+        protected void WriteChildren(ContainerInline containerInline)
         {
             var inline = containerInline.FirstChild;
             while (inline != null)

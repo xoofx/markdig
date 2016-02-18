@@ -47,6 +47,7 @@ namespace Textamina.Markdig.Parsing
 
             inlineParsers = new List<InlineParser>()
             {
+                LinkInline.Parser,
                 EscapeInline.Parser,
                 CodeInline.Parser,
                 LiteralInline.Parser,
@@ -470,6 +471,7 @@ namespace Textamina.Markdig.Parsing
                     if (previousInline is LeafInline)
                     {
                         previousInline.Close(state);
+                        previousInline.IsClosed = true;
                         if (nextInline.Parent == null)
                         {
                             previousInline.InsertAfter(nextInline);

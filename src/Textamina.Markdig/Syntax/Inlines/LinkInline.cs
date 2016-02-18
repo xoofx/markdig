@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Textamina.Markdig.Formatters;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -11,7 +12,7 @@ namespace Textamina.Markdig.Syntax
         [ThreadStatic]
         private static readonly StringBuilder TempBuilder = new StringBuilder();
 
-        public static bool TryParseLinkAndTitle(StringLineGroup text, out string link, out string title)
+        public static bool TryParseUrlAndTitle(StringLineGroup text, out string link, out string title)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
 
@@ -112,7 +113,7 @@ namespace Textamina.Markdig.Syntax
                         break;
                     }
 
-                    if (hasEscape)
+                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
                     {
                         buffer.Append('\\');
                     }
@@ -156,31 +157,36 @@ namespace Textamina.Markdig.Syntax
             // that contains no spaces, line breaks, or unescaped < or > characters, or
             if (c == '<')
             {
-                bool nextEscape = false;
+                bool hasEscape = false;
                 do
                 {
                     c = text.NextChar();
-                    if (!nextEscape && c == '>')
+                    if (!hasEscape && c == '>')
                     {
                         text.NextChar();
                         isValid = true;
                         break;
                     }
 
-                    if (!nextEscape && c == '<')
+                    if (!hasEscape && c == '<')
                     {
                         break;
                     }
 
+                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
+                    {
+                        buffer.Append('\\');
+                    }
+
                     if (c == '\\')
                     {
-                        nextEscape = true;
+                        hasEscape = true;
                         continue;
                     }
 
-                    nextEscape = false;
+                    hasEscape = false;
 
-                    if (Utility.IsWhiteSpace(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (Utility.IsWhitespace(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
                         break;
                     }
@@ -188,8 +194,6 @@ namespace Textamina.Markdig.Syntax
                     buffer.Append(c);
 
                 } while (c != '\0');
-
-                link = isValid ? buffer.ToString() : null;
             }
             else
             {
@@ -197,14 +201,14 @@ namespace Textamina.Markdig.Syntax
                 // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
                 // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
                 // parentheses. 
-                bool isEscaped = false;
+                bool hasEscape = false;
                 int openedParent = 0;
                 while (c != '\0')
                 {
                     // Match opening and closing parenthesis
                     if (c == '(')
                     {
-                        if (!isEscaped)
+                        if (!hasEscape)
                         {
                             if (openedParent > 0)
                             {
@@ -216,7 +220,7 @@ namespace Textamina.Markdig.Syntax
 
                     if (c == ')')
                     {
-                        if (!isEscaped)
+                        if (!hasEscape)
                         {
                             openedParent--;
                             if (openedParent < 0)
@@ -227,7 +231,7 @@ namespace Textamina.Markdig.Syntax
                         }
                     }
 
-                    if (isEscaped)
+                    if (hasEscape && !Utility.IsASCIIPunctuation(c))
                     {
                         buffer.Append('\\');
                     }
@@ -235,11 +239,12 @@ namespace Textamina.Markdig.Syntax
                     // If we have an escape
                     if (c == '\\')
                     {
-                        isEscaped = true;
+                        hasEscape = true;
+                        c = text.NextChar();
                         continue;
                     }
 
-                    isEscaped = false;
+                    hasEscape = false;
 
                     if (Utility.IsSpaceOrTab(c) || Utility.IsControl(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
@@ -251,11 +256,9 @@ namespace Textamina.Markdig.Syntax
 
                     c = text.NextChar();
                 }
-
-                isValid = isValid && buffer.Length > 0;
-                link = isValid ? buffer.ToString() : null;
             }
 
+            link = isValid ? buffer.ToString() : null;
             buffer.Clear();
             return isValid;
         }
@@ -286,6 +289,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (c == '[')
                 {
+                    text.NextChar();
                     state.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
@@ -296,6 +300,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (c == ']')
                 {
+                    text.NextChar();
                     if (state.Inline != null)
                     {
                         return TryParseEndOfLinkOrImage(ref state.Inline, text);
@@ -324,48 +329,39 @@ namespace Textamina.Markdig.Syntax
 
                     var savePoint = text.Save();
 
-                    var link = string.Empty;
+                    var url = string.Empty;
                     var title = string.Empty;
                     if (text.Current == '(')
                     {
-                        if (TryParseLinkAndTitle(text, out link, out title))
+                        if (TryParseUrlAndTitle(text, out url, out title))
                         {
                             // Inline Link
-                        }
-                        else
-                        {
-                            text.Restore(ref savePoint);
+                            var link = new TextLinkInline()
+                            {
+                                Url = HtmlHelper.Unescape(url),
+                                Title = HtmlHelper.Unescape(title),
+                                IsClosed = true,                                
+                            };
+                            firstParent.ReplaceBy(link);
+                            current = link;
+                            return true;
                         }
                     }
 
-
-
-
-                }
-                else {
                     // We have a nested [ ]
                     // firstParent.Remove();
                     // The opening [ will be transformed to a literal followed by all the childrens of the [ 
 
                     var literal = new LiteralInline() { Content = firstParent.IsImage ? "![" : "[" };
                     current = firstParent.ReplaceBy(literal);
-
-                    return true;
+                    return false;
                 }
-
-
-
-
-
 
                 return false;
             }
 
-
             private bool TryParseLinkTitle(MatchInlineState state)
             {
-
-
                 return false;
             }
 

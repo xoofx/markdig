@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Parsing
     internal class Utility
     {
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public static bool IsWhiteSpace(char c)
+        public static bool IsWhitespace(char c)
         {
             // 2.1 Characters and lines 
             // A whitespace character is a space(U + 0020), tab(U + 0009), newline(U + 000A), line tabulation (U + 000B), form feed (U + 000C), or carriage return (U + 000D).
@@ -19,9 +19,16 @@ namespace Textamina.Markdig.Parsing
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsEscapableSymbol(char c)
+        {
+            // char.IsSymbol also works with Unicode symbols that cannot be escaped based on the specification.
+            return (c > ' ' && c < '0') || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z' && c < 127) || c == '•';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhiteSpaceOrZero(char c)
         {
-            return IsWhiteSpace(c) || IsZero(c);
+            return IsWhitespace(c) || IsZero(c);
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]

@@ -117,12 +117,7 @@ namespace Textamina.Markdig.Syntax
                     var lineCount = lines.Count;
                     for (int i = 0; i < lineCount; i++)
                     {
-                        var line = lines[i];
-                        line.TrimStart();
-                    }
-                    if (lineCount > 0)
-                    {
-                        lines[lineCount - 1].TrimEnd();
+                        lines[i].Trim();
                     }
                 }
             }
