@@ -25,7 +25,7 @@ namespace Textamina.Markdig.Syntax
                 CanInterruptParagraph = false;
             }
 
-            public override MatchLineResult Match(ref MatchLineState state)
+            public override MatchLineResult Match(MatchLineState state)
             {
                 var liner = state.Line;
                 int position = liner.Start;

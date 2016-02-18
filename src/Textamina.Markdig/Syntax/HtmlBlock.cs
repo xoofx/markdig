@@ -83,7 +83,7 @@ namespace Textamina.Markdig.Syntax
                 "ul",          // 60
             };
            
-            public override MatchLineResult Match(ref MatchLineState state)
+            public override MatchLineResult Match(MatchLineState state)
             {
                 var htmlBlock = state.Block as HtmlBlock;
                 if (htmlBlock == null)

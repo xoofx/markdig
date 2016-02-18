@@ -20,6 +20,7 @@ namespace Textamina.Markdig.Parsing
         private readonly Document document;
         private readonly Stack<BlockState> cachedBlockStates;
         private readonly StringBuilder tempBuilder;
+        private readonly MatchLineState lineState;
 
         public MarkdownParser(TextReader reader)
         {
@@ -32,6 +33,7 @@ namespace Textamina.Markdig.Parsing
             blockStack = new List<BlockState>();
             cachedBlockStates = new Stack<BlockState>();
             tempBuilder = new StringBuilder();
+            lineState = new MatchLineState();
             blockParsers = new List<BlockParser>()
             {
                 BreakBlock.Parser,
@@ -154,7 +156,7 @@ namespace Textamina.Markdig.Parsing
             }
 
             // Create the line state that will be used by all parser
-            var lineState = new MatchLineState {Line = line};
+            lineState.Reset(line);
 
             // Process any current block potentially opened
             for (int i = 1; i < blockStack.Count; i++)
@@ -175,7 +177,7 @@ namespace Textamina.Markdig.Parsing
 
                 // If we have a discard, we can remove it from the current state
                 lineState.LastBlock = LastBlock;
-                var result = parser.Match(ref lineState);
+                var result = parser.Match(lineState);
                 if (result == MatchLineResult.None)
                 {
                     // Restore the Line where it was
@@ -238,11 +240,7 @@ namespace Textamina.Markdig.Parsing
 
         private bool ParseNewBlocks(bool continueProcessLiner)
         {
-
-            var state = new MatchLineState
-            {
-                Line = line,
-            };
+            lineState.Reset(line);
 
             for (int j = 0; j < blockParsers.Count; j++)
             {
@@ -262,10 +260,10 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
-                state.Block = isParsingParagraph ? previousParagraph : null;
+                lineState.Block = isParsingParagraph ? previousParagraph : null;
 
                 var saveLiner = line.Save();
-                var result = blockParser.Match(ref state);
+                var result = blockParser.Match(lineState);
                 if (result == MatchLineResult.None)
                 {
                     // If we have reached a blank line after trying to parse a paragraph
@@ -280,7 +278,7 @@ namespace Textamina.Markdig.Parsing
                     continue;
                 }
 
-                var block = state.Block;
+                var block = lineState.Block;
 
                 // We have a MatchLineResult.Break
                 var leaf = block as LeafBlock;
@@ -516,6 +514,8 @@ namespace Textamina.Markdig.Parsing
             public BlockParser Parser;
 
             public Block Block;
+
+            public object Context;
 
             public bool IsOpen;
 
