@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
@@ -417,13 +418,15 @@ namespace Textamina.Markdig.Parsing
         private void ProcessInlines(LeafBlock leafBlock)
         {
             var lines = leafBlock.Lines;
-            lines.Initialize();
 
-            var state = new MatchInlineState(lines) {Builder = new StringBuilder() };
+            leafBlock.Inline = new ContainerInline();
+            var state = new MatchInlineState(lines)
+            {
+                Builder = new StringBuilder(),
+                Inline = leafBlock.Inline
+            };
 
-            var opened = new List<Inline>();
-
-            Inline previousInline = null;
+            var previousInline = leafBlock.Inline;
             while (!lines.IsEndOfLines)
             {
                 var saveLines = lines.Save();
@@ -460,14 +463,17 @@ namespace Textamina.Markdig.Parsing
                     }
                 }
 
-                if (previousInline != state.Inline)
+                var nextInline = state.Inline;
+
+                if (previousInline != nextInline)
                 {
                     if (previousInline is LeafInline)
                     {
-                        opened.Remove(previousInline);
                         previousInline.Close(state);
-                        previousInline.InsertAfter(state.Inline);
-                        opened.Add(state.Inline);
+                        if (nextInline.Parent == null)
+                        {
+                            previousInline.InsertAfter(nextInline);
+                        }
                     }
                     else if (previousInline != null)
                     {
@@ -475,25 +481,23 @@ namespace Textamina.Markdig.Parsing
 
                         if (container.IsClosed)
                         {
-                            opened.Remove(previousInline);
-                            container.InsertAfter(state.Inline);
+                            container.InsertAfter(nextInline);
                         }
                         else
                         {
-                            container.AppendChild(state.Inline);
+                            container.AppendChild(nextInline);
                         }
-                    }
-
-                    // Store first inline
-                    if (leafBlock.Inline == null)
-                    {
-                        leafBlock.Inline = state.Inline;
                     }
                 }
 
-                previousInline = state.Inline;
+                previousInline = nextInline;
             }
 
+            while (previousInline != null)
+            {
+                previousInline.Close(state);
+                previousInline = previousInline.Parent;
+            }
 
             // TODO: Close opened inlines
 

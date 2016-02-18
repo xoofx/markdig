@@ -182,6 +182,34 @@ namespace Textamina.Markdig.Syntax
             return new StringSlice(Text, Start, End);
         }
 
+        public void TrimStart()
+        {
+            // Strip leading spaces
+            var c = Current;
+            while (Utility.IsSpace(c))
+            {
+                c = NextChar();
+            }
+        }
+
+        public void TrimEnd()
+        {
+            for (int i = End; i >= Start; i--)
+            {
+                End = i;
+                if (!Utility.IsSpace(this[i]))
+                {
+                    break;
+                }
+            }
+        }
+
+        public void Trim()
+        {
+            TrimStart();
+            TrimEnd();
+        }
+
         public override string ToString()
         {
             return Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;

@@ -4,7 +4,7 @@ using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
-    public abstract class ContainerInline : Inline
+    public class ContainerInline : Inline
     {
         public Inline FirstChild { get; private set; }
 

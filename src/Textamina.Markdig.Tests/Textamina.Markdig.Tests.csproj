@@ -57,6 +57,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Specs.tt</DependentUpon>
     </Compile>
+    <Compile Include="TestLinkInline.cs" />
+    <Compile Include="TestStringLine.cs" />
     <Compile Include="TextAssert.cs" />
     <Compile Include="TestParser.cs" />
   </ItemGroup>

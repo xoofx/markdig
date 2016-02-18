@@ -107,6 +107,25 @@ namespace Textamina.Markdig.Syntax
 
                 return MatchLineResult.Continue;
             }
+
+            public override void Close(Block block)
+            {
+                var paragraph = block as ParagraphBlock;
+                if (paragraph != null)
+                {
+                    var lines = paragraph.Lines;
+                    var lineCount = lines.Count;
+                    for (int i = 0; i < lineCount; i++)
+                    {
+                        var line = lines[i];
+                        line.TrimStart();
+                    }
+                    if (lineCount > 0)
+                    {
+                        lines[lineCount - 1].TrimEnd();
+                    }
+                }
+            }
         }
     }
 }

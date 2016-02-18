@@ -1,12 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
-    public class StringLineGroup : List<StringLine>
+    public class StringLineGroup : Collection<StringLine>
     {
         private StringLine currentLine;
+
+        public StringLineGroup()
+        {
+        }
+
+        public StringLineGroup(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            Add(new StringLine(text));
+        }
 
         public int LinePosition { get; private set; }
 
@@ -18,11 +29,48 @@ namespace Textamina.Markdig.Syntax
 
         public char PreviousChar2 { get; private set; }
 
-        internal void Initialize()
+        public void Reset()
         {
             ColumnPosition = -1;
             currentLine = Count > 0 ? this[0] : null;
+            if (currentLine != null)
+            {
+                ColumnPosition = currentLine.Start - 1;
+            }
             NextChar();
+        }
+
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+            Reset();
+        }
+
+        protected override void InsertItem(int index, StringLine item)
+        {
+            base.InsertItem(index, item);
+            if (index == 0)
+            {
+                Reset();
+            }
+        }
+
+        protected override void SetItem(int index, StringLine item)
+        {
+            base.SetItem(index, item);
+            if (index == 0)
+            {
+                Reset();
+            }
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            base.RemoveItem(index);
+            if (index == 0)
+            {
+                Reset();
+            }
         }
 
         public bool IsEndOfLines => Current == '\0';
@@ -55,9 +103,13 @@ namespace Textamina.Markdig.Syntax
                 }
                 else
                 {
-                    ColumnPosition = -1;
                     LinePosition++;
                     currentLine = LinePosition < Count ? this[LinePosition] : null;
+                    ColumnPosition = -1;
+                    if (currentLine != null)
+                    {
+                        ColumnPosition = currentLine.Start - 1;
+                    }
                     Current = currentLine != null ? '\n' : '\0';
                 }
             }
@@ -69,6 +121,17 @@ namespace Textamina.Markdig.Syntax
             return Current;
         }
 
+        public bool SkipWhiteSpaces()
+        {
+            bool hasWhitespaces = false;
+            while (Utility.IsWhiteSpace(Current))
+            {
+                NextChar();
+                hasWhitespaces = true;
+            }
+            return hasWhitespaces;
+        }
+
         public void TrimStart()
         {
             if (Count == 0)
@@ -77,11 +140,8 @@ namespace Textamina.Markdig.Syntax
             }
 
             // Strip leading and 
-            var liner = this[0];
-            while (Utility.IsSpace(liner.Current))
-            {
-                liner.NextChar();
-            }
+            this[0].TrimStart();
+            Reset();
         }
 
         public void TrimEnd()
@@ -91,15 +151,8 @@ namespace Textamina.Markdig.Syntax
                 return;
             }
 
-            var liner = this[Count - 1];
-            for (int i = liner.End; i >= liner.Start; i--)
-            {
-                liner.End = i;
-                if (!Utility.IsSpace(liner[i]))
-                {
-                    break;
-                }
-            }
+            this[Count - 1].TrimEnd();
+            Reset();
         }
 
         public void Trim()
@@ -108,6 +161,21 @@ namespace Textamina.Markdig.Syntax
             TrimEnd();
         }
 
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            bool firstLine = true;
+            foreach (var line in this)
+            {
+                if (!firstLine)
+                {
+                    stringBuilder.Append('\n');
+                }
+                stringBuilder.Append(line);
+                firstLine = false;
+            }
+            return stringBuilder.ToString();
+        }
 
         public class State
         {

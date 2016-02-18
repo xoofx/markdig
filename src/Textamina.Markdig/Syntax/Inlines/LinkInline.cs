@@ -11,134 +11,144 @@ namespace Textamina.Markdig.Syntax
         [ThreadStatic]
         private static readonly StringBuilder TempBuilder = new StringBuilder();
 
-        private class ParserInternal : InlineParser
-        {
-            public ParserInternal()
-            {
-                FirstChars = new[] {'[', ']', '!'};
-            }
-
-            public override bool Match(MatchInlineState state)
-            {
-                var lines = state.Lines;
-
-                var c = lines.Current;
-
-                bool isImage = false;
-                if (c == '!')
-                {
-                    isImage = true;
-                    c = lines.NextChar();
-                    if (c != '[')
-                    {
-                        return false;
-                    }
-                }
-
-                if (c == '[')
-                {
-                    state.Inline = new LinkDelimiterInline(this)
-                    {
-                        Type = DelimiterType.Open,
-                        IsImage = isImage
-                    };
-                    return true;
-                }
-                else if (c == ']')
-                {
-                    if (state.Inline != null)
-                    {
-                        LinkDelimiterInline firstParent = null;
-                        foreach (var parent in state.Inline.FindParentOfType<LinkDelimiterInline>())
-                        {
-                            firstParent = parent;
-                            break;
-                        }
-
-                        // This will be matched as a literal
-                        if (firstParent != null)
-                        {
-                            // TODO: continue parsing of ]
-
-                            // We have a nested [ ]
-                            // firstParent.Remove();
-                            // The opening [ will be transformed to a literal followed by all the childrens of the [ 
-
-                            var literal = new LiteralInline() {Content = firstParent.IsImage ? "![" : "["};
-                            state.Inline = firstParent.ReplaceBy(literal);
-
-                            return true;
-                        }
-                        //else
-                        //{
-                        //    var link = firstParent.IsImage
-                        //        ? (LinkInline) new ImageLinkInline()
-                        //        : new TextLinkInline();
-
-                        //    // 1. Process all delimiters inside firstParent to convert them to inlines
-                        //    // 2. Replace firstParent with link, and move all child to this one
-
-                        //    // TODO: continue parsing of ]
-
-                        //    if (state.Inline == firstParent)
-                        //    {
-                        //        state.Inline = link;
-                        //    }
-                        //}
-                    }
-                    return false;
-
-                    // Match a close tag
-                }
-
-
-                // We don't have an emphasis
-                return false;
-            }
-
-            private bool TryParseLinkUrl(MatchInlineState state)
-            {
-
-
-                return false;
-            }
-
-
-            private bool TryParseLinkTitle(MatchInlineState state)
-            {
-
-
-                return false;
-            }
-
-        }
-
-
-        public static bool TryParseLinkTitle(StringLineGroup text, out string title)
+        public static bool TryParseLinkAndTitle(StringLineGroup text, out string link, out string title)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
-            // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
-            // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
-            // a sequence of zero or more characters between matching parentheses ((...)), including a ) character only if it is backslash-escaped.
+
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 3. an optional link destination, 
+            // 4. an optional link title separated from the link destination by whitespace, 
+            // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 6. and a right parenthesis )
+            bool isValid = false;
+            var c = text.Current;
+            link = null;
             title = null;
 
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            if (c == '(')
+            {
+                text.NextChar();
+                text.SkipWhiteSpaces();
+
+                if (TryParseLink(text, out link))
+                {
+                    var hasWhiteSpaces = text.SkipWhiteSpaces();
+
+                    c = text.Current;
+                    if (c == ')')
+                    {
+                        isValid = true;
+                    }
+                    else if (hasWhiteSpaces)
+                    {
+                        c = text.Current;
+                        if (c == ')')
+                        {
+                            isValid = true;
+                        }
+                        else if (TryParseTitle(text, out title))
+                        {
+                            text.SkipWhiteSpaces();
+                            c = text.Current;
+
+                            if (c == ')')
+                            {
+                                isValid = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (isValid)
+            {
+                // Skip ')'
+                text.NextChar();
+                title = title ?? string.Empty;
+            }
+
+            return isValid;
+        }
+
+        public static bool TryParseTitle(StringLineGroup text, out string title)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+
+            bool isValid = false;
+            var buffer = TempBuilder;
+            buffer.Clear();
+
+            // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
+            // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
             var c = text.Current;
             if (c == '\'' || c == '"')
             {
-                
+                var quote = c;
+                bool hasEscape = false;
+
+                while (true)
+                {
+                    c = text.NextChar();
+
+                    if (c == '\0')
+                    {
+                        break;
+                    }
+
+                    if (c == quote)
+                    {
+                        if (hasEscape)
+                        {
+                            buffer.Append(quote);
+                            hasEscape = false;
+                            continue;
+                        }
+
+                        // Skip last quote
+                        text.NextChar();
+                        isValid = true;
+                        break;
+                    }
+
+                    if (hasEscape)
+                    {
+                        buffer.Append('\\');
+                    }
+
+                    if (c == '\\')
+                    {
+                        hasEscape = true;
+                        continue;
+                    }
+
+                    hasEscape = false;
+
+                    buffer.Append(c);
+                }
+            }
+            else
+            {
+                // a sequence of zero or more characters between matching parentheses ((...)), including a ) character only if it is backslash-escaped.
+                // TODO
+
+                isValid = true;
             }
 
-            return false;
+            title = isValid ? buffer.ToString() : null;
+            buffer.Clear();
+            return isValid;
         }
 
 
-        public static bool TryParseLinkDestination(StringLineGroup text, out string link)
+        public static bool TryParseLink(StringLineGroup text, out string link)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
 
-            var destination = TempBuilder;
-            destination.Clear();
-            link = null;
+            bool isValid = false;
+            var buffer = TempBuilder;
+            buffer.Clear();
 
             var c = text.Current;
 
@@ -152,9 +162,9 @@ namespace Textamina.Markdig.Syntax
                     c = text.NextChar();
                     if (!nextEscape && c == '>')
                     {
-                        link = destination.ToString();
-                        destination.Clear();
-                        return true;
+                        text.NextChar();
+                        isValid = true;
+                        break;
                     }
 
                     if (!nextEscape && c == '<')
@@ -175,9 +185,11 @@ namespace Textamina.Markdig.Syntax
                         break;
                     }
 
-                    destination.Append(c);
+                    buffer.Append(c);
 
                 } while (c != '\0');
+
+                link = isValid ? buffer.ToString() : null;
             }
             else
             {
@@ -187,10 +199,8 @@ namespace Textamina.Markdig.Syntax
                 // parentheses. 
                 bool isEscaped = false;
                 int openedParent = 0;
-                do
+                while (c != '\0')
                 {
-                    c = text.NextChar();
-
                     // Match opening and closing parenthesis
                     if (c == '(')
                     {
@@ -211,9 +221,15 @@ namespace Textamina.Markdig.Syntax
                             openedParent--;
                             if (openedParent < 0)
                             {
+                                isValid = true;
                                 break;
                             }
                         }
+                    }
+
+                    if (isEscaped)
+                    {
+                        buffer.Append('\\');
                     }
 
                     // If we have an escape
@@ -225,26 +241,134 @@ namespace Textamina.Markdig.Syntax
 
                     isEscaped = false;
 
-                    var isSpace = Utility.IsSpaceOrTab(c);
-                    if (isSpace || Utility.IsControl(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (Utility.IsSpaceOrTab(c) || Utility.IsControl(c)) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
-                        if (isSpace && destination.Length > 0)
-                        {
-                            link = destination.ToString();
-                            destination.Clear();
-                            return true;
-                        }
+                        isValid = true;
                         break;
                     }
 
-                    destination.Append(c);
+                    buffer.Append(c);
 
-                } while (c != '\0');
+                    c = text.NextChar();
+                }
+
+                isValid = isValid && buffer.Length > 0;
+                link = isValid ? buffer.ToString() : null;
             }
 
-            // Clear the StringBuilder even after in order to avoid storing things around after using it
-            destination.Clear();
-            return false;
+            buffer.Clear();
+            return isValid;
+        }
+
+        private class ParserInternal : InlineParser
+        {
+            public ParserInternal()
+            {
+                FirstChars = new[] {'[', ']', '!'};
+            }
+
+            public override bool Match(MatchInlineState state)
+            {
+                var text = state.Lines;
+
+                var c = text.Current;
+
+                bool isImage = false;
+                if (c == '!')
+                {
+                    isImage = true;
+                    c = text.NextChar();
+                    if (c != '[')
+                    {
+                        return false;
+                    }
+                }
+
+                if (c == '[')
+                {
+                    state.Inline = new LinkDelimiterInline(this)
+                    {
+                        Type = DelimiterType.Open,
+                        IsImage = isImage
+                    };
+                    return true;
+                }
+
+                if (c == ']')
+                {
+                    if (state.Inline != null)
+                    {
+                        return TryParseEndOfLinkOrImage(ref state.Inline, text);
+                    }
+                    return false;
+                    // Match a close tag
+                }
+
+                // We don't have an emphasis
+                return false;
+            }
+
+            private bool TryParseEndOfLinkOrImage(ref Inline current, StringLineGroup text)
+            {
+                LinkDelimiterInline firstParent = null;
+                foreach (var parent in current.FindParentOfType<LinkDelimiterInline>())
+                {
+                    firstParent = parent;
+                    break;
+                }
+
+                // This will be matched as a literal
+                if (firstParent != null)
+                {
+                    // TODO: continue parsing of ]
+
+                    var savePoint = text.Save();
+
+                    var link = string.Empty;
+                    var title = string.Empty;
+                    if (text.Current == '(')
+                    {
+                        if (TryParseLinkAndTitle(text, out link, out title))
+                        {
+                            // Inline Link
+                        }
+                        else
+                        {
+                            text.Restore(ref savePoint);
+                        }
+                    }
+
+
+
+
+                }
+                else {
+                    // We have a nested [ ]
+                    // firstParent.Remove();
+                    // The opening [ will be transformed to a literal followed by all the childrens of the [ 
+
+                    var literal = new LiteralInline() { Content = firstParent.IsImage ? "![" : "[" };
+                    current = firstParent.ReplaceBy(literal);
+
+                    return true;
+                }
+
+
+
+
+
+
+                return false;
+            }
+
+
+            private bool TryParseLinkTitle(MatchInlineState state)
+            {
+
+
+                return false;
+            }
+
         }
     }
 }
