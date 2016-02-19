@@ -287,6 +287,8 @@ namespace Textamina.Markdig.Parsing
 
                 // We have a MatchLineResult.Break
                 var leaf = block as LeafBlock;
+                var container = LastBlock as ContainerBlock;
+
                 if (leaf != null)
                 {
                     continueProcessLiner = false;
@@ -307,17 +309,24 @@ namespace Textamina.Markdig.Parsing
                 // Close any previous blocks not opened
                 CloseBlocks();
 
-                // If previous block is a container, add the new block as a children of the previous block
-                var container = LastBlock as ContainerBlock;
-                if (container != null)
+                if (block != null)
                 {
-                    AddToParent(block, container);
-                }
+                    // If previous block is a container, add the new block as a children of the previous block
+                    if (container != null)
+                    {
+                        AddToParent(block, container);
+                    }
 
-                // Add a block blockStack to the stack (and leave it opened)
-                var blockState = NewBlockState(blockParser, block);
-                blockState.IsOpen = result == MatchLineResult.Continue;
-                blockStack.Add(blockState);
+                    // Add a block blockStack to the stack (and leave it opened)
+                    var blockState = NewBlockState(blockParser, block);
+                    blockState.IsOpen = result == MatchLineResult.Continue;
+                    blockStack.Add(blockState);
+                }
+                else
+                {
+                    continueProcessLiner = false;
+                    break;
+                }
 
                 // If we have a container, we can retry to match against all types of block.
                 if (leaf == null)
@@ -337,6 +346,11 @@ namespace Textamina.Markdig.Parsing
 
         private void AddToParent(Block block, ContainerBlock parent)
         {
+            if (block == null)
+            {
+                return;
+            }
+
             while (block.Parent != null)
             {
                 block = block.Parent;

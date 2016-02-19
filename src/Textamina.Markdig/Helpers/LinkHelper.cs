@@ -191,7 +191,7 @@ namespace Textamina.Markdig.Helpers
                 // parentheses. 
                 bool hasEscape = false;
                 int openedParent = 0;
-                while (c != '\0')
+                while (true)
                 {
                     // Match opening and closing parenthesis
                     if (c == '(')
@@ -234,7 +234,7 @@ namespace Textamina.Markdig.Helpers
 
                     hasEscape = false;
 
-                    if (c.IsSpaceOrTab() || c.IsControl()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (c == '\0' || c.IsSpaceOrTab() || c.IsControl()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
                     {
                         isValid = true;
                         break;

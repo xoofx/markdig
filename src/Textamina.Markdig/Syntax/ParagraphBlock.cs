@@ -1,6 +1,7 @@
 
 
 
+using System;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
@@ -16,6 +17,9 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
+        [ThreadStatic]
+        private static StringLineGroup TempLineGroup = new StringLineGroup();
+
         private class ParserInternal : BlockParser
         {
             public override MatchLineResult Match(MatchLineState state)
@@ -26,87 +30,122 @@ namespace Textamina.Markdig.Syntax
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
-                if (state.Block == null)
+                var paragraph = state.Block as ParagraphBlock;
+
+                var localLineGroup = TempLineGroup;
+                localLineGroup.Clear();
+
+                if (paragraph == null)
                 {
                     if (isBlankLine)
                     {
                         return MatchLineResult.None;
                     }
                 }
-                else if (isBlankLine)
+                else
                 {
-                    return MatchLineResult.None;
+                    foreach (var line in paragraph.Lines)
+                    {
+                        localLineGroup.Add(line);
+                    }
+                }
+
+                if (!isBlankLine)
+                {
+                    localLineGroup.Add(liner);
+                }
+
+                // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                LinkReferenceDefinitionBlock linkReferenceDefinition;
+                if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
+                {
+                    // Remove the pending paragraph
+                    if (paragraph != null)
+                    {
+                        var parent = (ContainerBlock)paragraph.Parent;
+                        parent.Children.RemoveAt(parent.Children.Count - 1);
+                    }
+
+                    if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
+                    {
+                        state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                    }
+
+                    state.Block = null;
+
+                    localLineGroup.Clear();
+                    return MatchLineResult.LastDiscard;
+                }
+                localLineGroup.Clear();
+
+                // We continue trying to match by default
+                var result = MatchLineResult.Continue;
+                if (paragraph == null)
+                {
+                    state.Block =  new ParagraphBlock();
                 }
                 else
                 {
-                    var headingChar = (char) 0;
-                    bool checkForSpaces = false;
-                    for (int i = liner.Start; i < liner.End; i++)
+                    if (isBlankLine)
                     {
-                        var c = liner[i];
-                        if (headingChar == 0)
-                        {
-                            if (c == '=' || c == '-')
-                            {
-                                headingChar = c;
-                                continue;
-                            }
-                            break;
-                        }
-
-                        if (checkForSpaces)
-                        {
-                            if (!CharHelper.IsSpaceOrTab(c))
-                            {
-                                headingChar = (char)0;
-                                break;
-                            }
-                        }
-                        else if (c != headingChar)
-                        {
-                            if (CharHelper.IsSpaceOrTab(c))
-                            {
-                                checkForSpaces = true;
-                            }
-                        }
-                    }
-
-                    if (headingChar != 0)
-                    {
-                        var level = headingChar == '=' ? 1 : 2;
-
-                        var paragraph = (ParagraphBlock) state.Block;
-                        var heading = new HeadingBlock
-                        {
-                            Level = level,
-                            Inline = paragraph.Inline,
-                            Parent = paragraph.Parent
-                        };
-                        state.Block = heading;
-
-                        // Replace the children in the parent
-                        var parent = (ContainerBlock) paragraph.Parent;
-                        parent.Children[parent.Children.Count - 1] = heading;
-
-                        return MatchLineResult.LastDiscard;
+                        result = MatchLineResult.None;
                     }
                     else
                     {
-                        // Remove leading spaces from paragraph
-                        var c = liner.Current;
-                        while (CharHelper.IsSpaceOrTab(c))
+                        var headingChar = (char) 0;
+                        bool checkForSpaces = false;
+                        for (int i = liner.Start; i < liner.End; i++)
                         {
-                            c = liner.NextChar();
+                            var c = liner[i];
+                            if (headingChar == 0)
+                            {
+                                if (c == '=' || c == '-')
+                                {
+                                    headingChar = c;
+                                    continue;
+                                }
+                                break;
+                            }
+
+                            if (checkForSpaces)
+                            {
+                                if (!c.IsSpaceOrTab())
+                                {
+                                    headingChar = (char) 0;
+                                    break;
+                                }
+                            }
+                            else if (c != headingChar)
+                            {
+                                if (c.IsSpaceOrTab())
+                                {
+                                    checkForSpaces = true;
+                                }
+                            }
+                        }
+
+                        if (headingChar != 0)
+                        {
+                            var level = headingChar == '=' ? 1 : 2;
+
+                            var heading = new HeadingBlock
+                            {
+                                Level = level,
+                                Inline = paragraph.Inline,
+                                Parent = paragraph.Parent
+                            };
+                            state.Block = heading;
+
+                            // Replace the children in the parent
+                            var parent = (ContainerBlock) paragraph.Parent;
+                            parent.Children[parent.Children.Count - 1] = heading;
+
+                            return MatchLineResult.LastDiscard;
                         }
                     }
                 }
 
-                if (state.Block == null)
-                {
-                    state.Block = new ParagraphBlock();
-                }
-
-                return MatchLineResult.Continue;
+                return result;
             }
 
             public override void Close(Block block)
