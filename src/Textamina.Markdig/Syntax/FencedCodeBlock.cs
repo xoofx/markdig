@@ -61,6 +61,8 @@ namespace Textamina.Markdig.Syntax
                 }
                 else
                 {
+                    // TODO: We need to count the number of leading space to remove them on each line
+                    liner.SkipLeadingSpaces3();
                     var c = liner.Current;
 
                     int count = 0;
