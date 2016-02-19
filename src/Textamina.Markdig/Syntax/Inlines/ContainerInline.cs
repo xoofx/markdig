@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -45,6 +46,30 @@ namespace Textamina.Markdig.Syntax
             return null;
         }
 
+        public IEnumerable<T> FindDescendants<T>() where T : Inline
+        {
+            var child = FirstChild;
+            while (child != null)
+            {
+                var next = child.NextSibling;
+
+                if (child  is T)
+                {
+                    yield return (T)child;
+                }
+
+                if (child is ContainerInline)
+                {
+                    foreach (var subChild in ((ContainerInline) child).FindDescendants<T>())
+                    {
+                        yield return subChild;
+                    }
+                }
+               
+                child = next;
+            }
+        }
+
         protected override void OnChildInsert(Inline child)
         {
             if (child.PreviousSibling == FirstChild && FirstChild == LastChild)
@@ -77,9 +102,13 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        protected internal override void Close(MatchInlineState state)
+        protected override void DumpChildTo(TextWriter writer, int level)
         {
-            IsClosed = true;
+            if (FirstChild != null)
+            {
+                level++;
+                FirstChild.DumpTo(writer, level);
+            }
         }
     }
 }

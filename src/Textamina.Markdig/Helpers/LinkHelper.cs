@@ -270,7 +270,7 @@ namespace Textamina.Markdig.Helpers
 
             // Skip any whitespaces before the url
             text.SkipWhiteSpaces();
-            if (!TryParseUrl(text, out url))
+            if (!TryParseUrl(text, out url) || string.IsNullOrEmpty(url))
             {
                 return false;
             }
@@ -286,27 +286,19 @@ namespace Textamina.Markdig.Helpers
                 }
             }
 
-            // Check that the current line has trailing spaces
-            var currentLine = text.Current;
-            if (currentLine != null && text.CurrentChar != '\n')
+            // Check that the current line has only trailing spaces
+            var c = text.CurrentChar;
+            while (c.IsSpaceOrTab())
             {
-                bool hasTrailingNonWhitespace = false;
-                for (int i = text.ColumnPosition; i < currentLine.End; i++)
-                {
-                    if (!currentLine[i].IsWhitespace())
-                    {
-                        hasTrailingNonWhitespace = true;
-                        break;
-                    }
-                }
+                c = text.NextChar();
+            }
 
-                if (hasTrailingNonWhitespace)
-                {
-                    label = null;
-                    url = null;
-                    title = null;
-                    return false;
-                }
+            if (c != '\0' && c != '\n')
+            {
+                label = null;
+                url = null;
+                title = null;
+                return false;
             }
 
             return true;

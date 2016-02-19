@@ -9,5 +9,10 @@ namespace Textamina.Markdig.Syntax
         }
 
         public bool IsImage;
+
+        public override string ToString()
+        {
+            return IsImage ? "![" : "[";
+        }
     }
 }

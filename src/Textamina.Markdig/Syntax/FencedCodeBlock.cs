@@ -96,9 +96,9 @@ namespace Textamina.Markdig.Syntax
                 }
             }
 
-            public override void Close(Block block)
+            public override void Close(MatchLineState state)
             {
-                var fenced = (FencedCodeBlock) block;
+                var fenced = (FencedCodeBlock) state.Block;
                 fenced.Lines.RemoveAt(0);
                 if (fenced.hasFencedEnd)
                 {

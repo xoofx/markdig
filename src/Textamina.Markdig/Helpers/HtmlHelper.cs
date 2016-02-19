@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Textamina.Markdig.Formatters;
 
@@ -59,6 +60,11 @@ namespace Textamina.Markdig.Helpers
         /// <param name="url">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
         public static string Unescape(string url)
         {
+            if (url == null)
+            {
+                return string.Empty;
+            }
+
             // remove backslashes before punctuation chars:
             int searchPos = 0;
             int lastPos = 0;

@@ -94,9 +94,9 @@ namespace Textamina.Markdig.Syntax
                 return MatchLineResult.None;
             }
 
-            public override void Close(Block block)
+            public override void Close(MatchLineState state)
             {
-                var heading = (HeadingBlock) block;
+                var heading = (HeadingBlock) state.Block;
                 heading.Lines.Trim();
             }
         }

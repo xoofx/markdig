@@ -35,6 +35,7 @@ namespace Textamina.Markdig.Syntax
         public void Reset()
         {
             ColumnPosition = -1;
+            LinePosition = 0;
             currentLine = Count > 0 ? this[0] : null;
             if (currentLine != null)
             {
@@ -107,7 +108,16 @@ namespace Textamina.Markdig.Syntax
                 else
                 {
                     LinePosition++;
-                    currentLine = LinePosition < Count ? this[LinePosition] : null;
+                    if (LinePosition < Count)
+                    {
+                        currentLine = this[LinePosition];
+                    }
+                    else
+                    {
+                        currentLine = null;
+                        LinePosition = Count;
+                    }
+
                     ColumnPosition = -1;
                     if (currentLine != null)
                     {

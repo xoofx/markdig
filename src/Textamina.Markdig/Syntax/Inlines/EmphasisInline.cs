@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
@@ -8,7 +10,117 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly InlineParser Parser = new ParserInternal();
 
-        public char EscapedChar;
+        public char DelimiterChar { get; set; }
+
+        public bool Strong { get; set; }
+
+        public override string ToString()
+        {
+            return Strong ? "<strong>" : "<em>";
+        }
+
+        public static void ProcessEmphasis(Inline root)
+        {
+            var container = root as ContainerInline;
+            if (container == null)
+            {
+                return;
+            }
+
+            var delimiters = new Stack<EmphasisDelimiterInline>();
+            ProcessEmphasis(container, delimiters);
+        }
+
+        private static void ProcessEmphasis(ContainerInline inline, Stack<EmphasisDelimiterInline> delimiters)
+        {
+            // Move current_position forward in the delimiter stack (if needed) until 
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            var child = inline.FirstChild;
+            while (child != null)
+            {
+                var next = child.NextSibling;
+
+                var delimiter = child as EmphasisDelimiterInline;
+                if (delimiter != null)
+                {
+                    if ((delimiter.Type & DelimiterType.Close) != 0 && delimiter.DelimiterCount > 0)
+                    {
+                        var closeDelimiter = delimiter;
+                        while (true)
+                        {
+                            // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
+                            // for the first matching potential opener (“matching” means same delimiter).
+                            EmphasisDelimiterInline openDelimiter = null;
+                            foreach (var parentDelimiter in delimiters)
+                            {
+                                if (parentDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
+                                    (parentDelimiter.Type & DelimiterType.Open) != 0 && parentDelimiter.DelimiterCount > 0)
+                                {
+                                    openDelimiter = parentDelimiter;
+                                    break;
+                                }
+                            }
+
+                            if (openDelimiter != null)
+                            {
+                                process_delims:
+                                bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2;
+
+                                // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
+
+                                var emphasis = new EmphasisInline()
+                                {
+                                    DelimiterChar = closeDelimiter.DelimiterChar,
+                                    Strong = isStrong
+                                };
+                                openDelimiter.FinalEmphasisInlines.Add(emphasis);
+
+                                openDelimiter.DelimiterCount -= isStrong ? 2 : 1;
+                                closeDelimiter.DelimiterCount -= isStrong ? 2 : 1;
+
+                                if (closeDelimiter.DelimiterCount == 0)
+                                {
+                                    break;
+                                }
+                                if (openDelimiter.DelimiterCount > 0)
+                                {
+                                    goto process_delims;
+                                }
+                                else
+                                {
+                                    // TODO ?
+                                    // openDelimiter
+                                }
+                            }
+                            else
+                            {
+                                // TODO ?
+                                break;
+                            }
+                        }
+                    }
+
+                    delimiters.Push(delimiter);
+                }
+
+                if (child is ContainerInline)
+                {
+                    ProcessEmphasis((ContainerInline) child, delimiters);
+                }
+
+                if (delimiter != null)
+                {
+                    delimiters.Pop();
+                }
+
+                child = next;
+            }
+        }
+
+
+
+
+
 
         private class ParserInternal : InlineParser
         {

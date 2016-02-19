@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
@@ -6,14 +7,20 @@ namespace Textamina.Markdig.Parsing
 {
     public class MatchInlineState
     {
-        public MatchInlineState(StringBuilderCache stringBuilders)
+        public MatchInlineState(StringBuilderCache stringBuilders, Document document)
         {
             StringBuilders = stringBuilders;
+            Document = document;
+            OpenedInlines = new HashSet<Inline>();
         }
 
         public StringLineGroup Lines;
 
-        public Inline Inline;
+        public Inline Inline { get; set; }
+
+        public readonly HashSet<Inline> OpenedInlines;
+
+        public readonly Document Document;
 
         public StringBuilderCache StringBuilders { get;  }
     }

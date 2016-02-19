@@ -32,9 +32,6 @@ namespace Textamina.Markdig.Syntax
 
                 var paragraph = state.Block as ParagraphBlock;
 
-                var localLineGroup = TempLineGroup;
-                localLineGroup.Clear();
-
                 if (paragraph == null)
                 {
                     if (isBlankLine)
@@ -42,41 +39,6 @@ namespace Textamina.Markdig.Syntax
                         return MatchLineResult.None;
                     }
                 }
-                else
-                {
-                    foreach (var line in paragraph.Lines)
-                    {
-                        localLineGroup.Add(line);
-                    }
-                }
-
-                if (!isBlankLine)
-                {
-                    localLineGroup.Add(liner);
-                }
-
-                // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
-                LinkReferenceDefinitionBlock linkReferenceDefinition;
-                if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
-                {
-                    // Remove the pending paragraph
-                    if (paragraph != null)
-                    {
-                        var parent = (ContainerBlock)paragraph.Parent;
-                        parent.Children.RemoveAt(parent.Children.Count - 1);
-                    }
-
-                    if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
-                    {
-                        state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
-                    }
-
-                    state.Block = null;
-
-                    localLineGroup.Clear();
-                    return MatchLineResult.LastDiscard;
-                }
-                localLineGroup.Clear();
 
                 // We continue trying to match by default
                 var result = MatchLineResult.Continue;
@@ -86,6 +48,19 @@ namespace Textamina.Markdig.Syntax
                 }
                 else
                 {
+                    var localLineGroup = TempLineGroup;
+                    localLineGroup.Clear();
+
+                    foreach (var line in paragraph.Lines)
+                    {
+                        localLineGroup.Add(line);
+                    }
+
+                    if (!isBlankLine)
+                    {
+                        localLineGroup.Add(liner);
+                    }
+
                     if (isBlankLine)
                     {
                         result = MatchLineResult.None;
@@ -126,12 +101,20 @@ namespace Textamina.Markdig.Syntax
 
                         if (headingChar != 0)
                         {
+                            // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
+                            // lines are empty, we can early exit and remove the paragraph
+                            if (TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0)
+                            {
+                                RemoveParagraph(paragraph, state);
+                                return MatchLineResult.LastDiscard;
+                            }
+
                             var level = headingChar == '=' ? 1 : 2;
 
                             var heading = new HeadingBlock
                             {
                                 Level = level,
-                                Inline = paragraph.Inline,
+                                Lines = paragraph.Lines,
                                 Parent = paragraph.Parent
                             };
                             state.Block = heading;
@@ -148,12 +131,76 @@ namespace Textamina.Markdig.Syntax
                 return result;
             }
 
-            public override void Close(Block block)
+            private void RemoveParagraph(ParagraphBlock paragraph, MatchLineState state)
             {
-                var paragraph = block as ParagraphBlock;
+                // Remove the pending paragraph
+                if (paragraph != null)
+                {
+                    var parent = (ContainerBlock)paragraph.Parent;
+                    parent.Children.RemoveAt(parent.Children.Count - 1);
+                }
+                state.Block = null;
+            }
+
+            private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, MatchLineState state)
+            {
+                bool atLeastOneFound = false;
+
+                while (true)
+                {
+                    // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                    var saved = localLineGroup.Save();
+                    LinkReferenceDefinitionBlock linkReferenceDefinition;
+                    if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
+                    {
+                        if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
+                        {
+                            state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                        }
+                        atLeastOneFound = true;
+
+                        // Remove lines that have been matched
+                        if (localLineGroup.LinePosition == localLineGroup.Count)
+                        {
+                            localLineGroup.Clear();
+                        }
+                        else
+                        {
+                            for (int i = localLineGroup.LinePosition - 1; i >= 0; i--)
+                            {
+                                localLineGroup.RemoveAt(i);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!atLeastOneFound)
+                        {
+                            localLineGroup.Restore(ref saved);
+                        }
+                        break;
+                    }
+                }
+
+                return atLeastOneFound;
+            }
+
+            public override void Close(MatchLineState state)
+            {
+                var paragraph = state.Block as ParagraphBlock;
                 if (paragraph != null)
                 {
                     var lines = paragraph.Lines;
+
+                    TryMatchLinkReferenceDefinition(lines, state);
+
+                    // If Paragraph is empty, we can discard it
+                    if (lines.Count == 0)
+                    {
+                        state.Block = null;
+                        return;
+                    }
+
                     var lineCount = lines.Count;
                     for (int i = 0; i < lineCount; i++)
                     {

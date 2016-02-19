@@ -47,6 +47,7 @@ namespace Textamina.Markdig.Tests
         {
             var reader = new StringReader(inputText);
             var parser = new MarkdownParser(reader);
+            MarkdownParser.Log = Console.Out;
             var document = parser.Parse();
 
             var output = new StringWriter();

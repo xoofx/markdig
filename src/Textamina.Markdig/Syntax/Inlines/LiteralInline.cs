@@ -7,18 +7,15 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly InlineParser Parser = new ParserInternal();
 
-        private StringBuilder tempBuilder;
+        public StringBuilder ContentBuilder { get; set; }
 
-        public string Content;
+        public string Content { get; set; }
 
-        protected internal override void Close(MatchInlineState state)
+        protected override void Close(MatchInlineState state)
         {
-            if (Content == null && tempBuilder != null)
-            {
-                Content = tempBuilder.ToString();
-                state.StringBuilders.Release(tempBuilder);
-                tempBuilder = null;
-            }
+            Content = ContentBuilder.ToString();
+            state.StringBuilders.Release(ContentBuilder);
+            ContentBuilder = null;
         }
 
         private class ParserInternal : InlineParser
@@ -29,11 +26,11 @@ namespace Textamina.Markdig.Syntax
                 var literal = state.Inline as LiteralInline;
                 if (literal == null)
                 {
-                    literal = new LiteralInline {tempBuilder = state.StringBuilders.Get()};
+                    literal = new LiteralInline {ContentBuilder = state.StringBuilders.Get()};
                     state.Inline = literal;
                 }
 
-                var builder = literal.tempBuilder;
+                var builder = literal.ContentBuilder;
                 var c = state.Lines.CurrentChar;
                 if (c != '\0')
                 {
@@ -42,6 +39,11 @@ namespace Textamina.Markdig.Syntax
                 }
                 return true;
             }
+        }
+
+        public override string ToString()
+        {
+            return Content;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(EscapeInline)] = o => Write((EscapeInline)o),
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
-                [typeof(TextLinkInline)] = o => Write((TextLinkInline)o),
+                [typeof(LinkInline)] = o => Write((LinkInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
         }
@@ -126,20 +126,35 @@ namespace Textamina.Markdig.Formatters
             writer.WriteConstant("</code>");
         }
 
-        protected void Write(TextLinkInline link)
+        protected void Write(LinkInline link)
         {
-            writer.WriteConstant("<a href=\"");
+            writer.WriteConstant(link.IsImage ? "<img src=\"" : "<a href=\"");
             HtmlHelper.EscapeUrl(link.Url, writer);
             writer.WriteConstant("\"");
+            if (link.IsImage)
+            {
+                writer.WriteConstant(" alt=\"");
+                WriteChildren(link);
+                writer.WriteConstant("\"");
+            }
+
             if (!string.IsNullOrEmpty(link.Title))
             {
                 writer.WriteConstant(" title=\"");
                 HtmlHelper.EscapeHtml(link.Title, writer);
                 writer.WriteConstant("\"");
             }
-            writer.WriteConstant(">");
-            WriteChildren((ContainerInline)link);
-            writer.WriteConstant("</a>");
+
+            if (link.IsImage)
+            {
+                writer.WriteConstant(" />");
+            }
+            else
+            {
+                writer.WriteConstant(">");
+                WriteChildren(link);
+                writer.WriteConstant("</a>");
+            }
         }
 
         protected void WriteChildren(ContainerInline containerInline)

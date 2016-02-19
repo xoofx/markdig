@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Parsing
             cachedBlockStates = new Stack<BlockState>();
             tempBuilder = new StringBuilder();
             stringBuilderCache  = new StringBuilderCache();
-            inlineState = new MatchInlineState(stringBuilderCache);
+            inlineState = new MatchInlineState(stringBuilderCache, document);
             lineState = new MatchLineState(stringBuilderCache, document);
             blockParsers = new List<BlockParser>()
             {
@@ -56,6 +56,7 @@ namespace Textamina.Markdig.Parsing
             inlineParsers = new List<InlineParser>()
             {
                 LinkInline.Parser,
+                EmphasisInline.Parser,
                 EscapeInline.Parser,
                 CodeInline.Parser,
                 LiteralInline.Parser,
@@ -399,9 +400,20 @@ namespace Textamina.Markdig.Parsing
 
         private void CloseBlock(BlockState blockState, int index)
         {
-            blockState.Parser.Close(blockState.Block);
+            var saveBlock = lineState.Block;
+            lineState.Block = blockState.Block;
+            blockState.Parser.Close(lineState);
+            if (lineState.Block == null)
+            {
+                var parent = blockState.Block.Parent as ContainerBlock;
+                if (parent != null)
+                {
+                    parent.Children.RemoveAt(parent.Children.Count - 1);
+                }
+            }
             ReleaseBlockState(blockState);
             blockStack.RemoveAt(index);
+            lineState.Block = saveBlock;
         }
 
         private void ReadLine()
@@ -459,7 +471,6 @@ namespace Textamina.Markdig.Parsing
             inlineState.Lines = lines;
             inlineState.Inline = leafBlock.Inline;
 
-            var previousInline = leafBlock.Inline;
             while (!lines.IsEndOfLines)
             {
                 var saveLines = lines.Save();
@@ -487,43 +498,48 @@ namespace Textamina.Markdig.Parsing
                     }
                 }
 
-                var nextInline = inlineState.Inline;
-
-                if (previousInline != nextInline)
+                // Get deepest container
+                var container = (ContainerInline)leafBlock.Inline;
+                while (true)
                 {
-                    if (previousInline is LeafInline)
+                    var nextContainer = container.LastChild as ContainerInline;
+                    if (nextContainer != null)
                     {
-                        previousInline.Close(inlineState);
-                        previousInline.IsClosed = true;
-                        if (nextInline.Parent == null)
-                        {
-                            previousInline.InsertAfter(nextInline);
-                        }
+                        container = nextContainer;
                     }
-                    else if (previousInline != null)
+                    else
                     {
-                        var container = (ContainerInline) previousInline;
-
-                        if (container.IsClosed)
-                        {
-                            container.InsertAfter(nextInline);
-                        }
-                        else
-                        {
-                            container.AppendChild(nextInline);
-                        }
+                        break;
                     }
                 }
 
-                previousInline = nextInline;
+                var nextInline = inlineState.Inline;
+
+                if (nextInline.Parent == null)
+                {
+                    container.AppendChild(nextInline);
+                }
+
+                if (nextInline != null)
+                {
+                    inlineState.OpenedInlines.Add(nextInline);
+                }
             }
 
-            while (previousInline != null)
+            // Close all inlines not closed
+            inlineState.Inline = null;
+            foreach (var inline in inlineState.OpenedInlines)
             {
-                previousInline.Close(inlineState);
-                previousInline = previousInline.Parent;
+                inline.CloseInternal(inlineState);
             }
+            inlineState.OpenedInlines.Clear();
 
+            if (Log != null)
+            {
+                EmphasisInline.ProcessEmphasis(leafBlock.Inline);
+
+                leafBlock.Inline.DumpTo(Log);
+            }
             // TODO: Close opened inlines
 
             // Close last inline
@@ -532,6 +548,14 @@ namespace Textamina.Markdig.Parsing
             //    var inlineState = inlineStack.Pop();
             //    inlineState.Parser.Close(state, inlineState.Inline);
             //}
+        }
+
+        public static TextWriter Log;
+
+        private void CloseInline(MatchInlineState state, Inline inline)
+        {
+            state.OpenedInlines.Remove(inline);
+            inline.CloseInternal(inlineState);
         }
 
         private class BlockState

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -6,7 +7,7 @@ namespace Textamina.Markdig.Syntax
     {
         public Document()
         {
-            LinkReferenceDefinitions = new Dictionary<string, LinkReferenceDefinitionBlock>();
+            LinkReferenceDefinitions = new Dictionary<string, LinkReferenceDefinitionBlock>(StringComparer.OrdinalIgnoreCase);
         }
 
         public Dictionary<string, LinkReferenceDefinitionBlock> LinkReferenceDefinitions { get; }

@@ -53,7 +53,6 @@
     <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
     <Compile Include="Syntax\Inlines\EscapeInline.cs" />
     <Compile Include="Syntax\Inlines\HtmlEscapeInline.cs" />
-    <Compile Include="Syntax\Inlines\ImageLinkInline.cs" />
     <Compile Include="Syntax\Inlines\InlineStack.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Syntax\Inlines\LinkDelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\LiteralInline.cs" />
     <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
-    <Compile Include="Syntax\Inlines\TextLinkInline.cs" />
     <Compile Include="Syntax\StringSlice.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />

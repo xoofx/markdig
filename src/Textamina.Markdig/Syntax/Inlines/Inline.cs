@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -108,7 +109,7 @@ namespace Textamina.Markdig.Syntax
             }
             else if (parent != null)
             {
-                ((ContainerInline)parent).AppendChild(inline);
+                ((ContainerInline) parent).AppendChild(inline);
             }
 
             var container = this as ContainerInline;
@@ -118,10 +119,9 @@ namespace Textamina.Markdig.Syntax
                 // TODO: This part is not efficient as it is using child.Remove()
                 // We need a method to quickly move all children without having to mess Next/Prev sibling
                 var child = container.FirstChild;
-                var lastChild = child;
+                var lastChild = inline;
                 while (child != null)
                 {
-                    lastChild = child;
                     var nextChild = child.NextSibling;
                     child.Remove();
                     if (newContainer != null)
@@ -130,8 +130,9 @@ namespace Textamina.Markdig.Syntax
                     }
                     else
                     {
-                        inline.InsertAfter(child);
+                        lastChild.InsertAfter(child);
                     }
+                    lastChild = child;
                     child = nextChild;
                 }
 
@@ -159,31 +160,68 @@ namespace Textamina.Markdig.Syntax
 
         public IEnumerable<T> FindParentOfType<T>() where T : Inline
         {
+            var parent = Parent;
             var delimiter = this as T;
             if (delimiter != null)
             {
                 yield return delimiter;
             }
 
-            if (Parent != null)
+            if (parent != null)
             {
-                foreach (var parent in Parent.FindParentOfType<T>())
+                foreach (var previous in parent.FindParentOfType<T>())
                 {
-                    yield return parent;
+                    yield return previous;
                 }
             }
         }
 
         protected virtual void OnChildRemove(Inline child)
         {
-            
+
         }
 
         protected virtual void OnChildInsert(Inline child)
         {
         }
 
-        protected internal virtual void Close(MatchInlineState state)
+        internal void CloseInternal(MatchInlineState state)
+        {
+            if (!IsClosed)
+            {
+                Close(state);
+                IsClosed = true;
+            }
+        }
+
+        protected virtual void Close(MatchInlineState state)
+        {
+        }
+
+        public void DumpTo(TextWriter writer)
+        {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            DumpTo(writer, 0);
+        }
+
+        public void DumpTo(TextWriter writer, int level)
+        {
+            for (int i = 0; i < level; i++)
+            {
+                writer.Write(' ');
+            }
+
+            writer.WriteLine("-> " + this.GetType().Name + " = " + this);
+
+            DumpChildTo(writer, level + 1);
+
+            if (NextSibling != null)
+            {
+                NextSibling.DumpTo(writer, level);
+            }
+        }
+
+        protected virtual void DumpChildTo(TextWriter writer, int level)
         {
         }
     }

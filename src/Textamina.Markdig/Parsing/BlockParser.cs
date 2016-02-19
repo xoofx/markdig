@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Parsing
 
         public abstract MatchLineResult Match(MatchLineState state);
 
-        public virtual void Close(Block block)
+        public virtual void Close(MatchLineState state)
         {
         }
     }
