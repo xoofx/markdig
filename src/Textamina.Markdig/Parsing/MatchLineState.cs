@@ -8,9 +8,10 @@ namespace Textamina.Markdig.Parsing
 {
     public class MatchLineState
     {
-        public MatchLineState(StringBuilderCache stringBuilders)
+        public MatchLineState(StringBuilderCache stringBuilders, Document root)
         {
             StringBuilders = stringBuilders;
+            Root = root;
         }
 
         public StringLine Line;
@@ -19,7 +20,7 @@ namespace Textamina.Markdig.Parsing
 
         public Block LastBlock;
 
-        public object Context;
+        public readonly Document Root;
 
         public StringBuilderCache StringBuilders { get; }
 

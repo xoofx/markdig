@@ -28,7 +28,7 @@ namespace Textamina.Markdig.Syntax
             string url;
             string title;
 
-            if (!LinkHelper.TryParseLabelUrlAndTitle(lines, out label, out url, out title))
+            if (!LinkHelper.TryParseLinkReferenceDefinition(lines, out label, out url, out title))
             {
                 return false;
             }

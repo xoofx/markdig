@@ -81,7 +81,7 @@ namespace Textamina.Markdig.Syntax
                     var title = string.Empty;
                     if (text.CurrentChar == '(')
                     {
-                        if (LinkHelper.TryParseUrlAndTitle(text, out url, out title))
+                        if (LinkHelper.TryParseInlineLink(text, out url, out title))
                         {
                             // Inline Link
                             var link = new TextLinkInline()

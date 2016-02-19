@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Helpers
 {
     public static class LinkHelper
     {
-        public static bool TryParseUrlAndTitle(StringLineGroup text, out string link, out string title)
+        public static bool TryParseInlineLink(StringLineGroup text, out string link, out string title)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
 
@@ -80,9 +80,9 @@ namespace Textamina.Markdig.Helpers
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
             var c = text.CurrentChar;
-            if (c == '\'' || c == '"')
+            if (c == '\'' || c == '"' || c == '(')
             {
-                var quote = c;
+                var closingQuote = c == '(' ? ')' : c;
                 bool hasEscape = false;
 
                 while (true)
@@ -94,11 +94,11 @@ namespace Textamina.Markdig.Helpers
                         break;
                     }
 
-                    if (c == quote)
+                    if (c == closingQuote)
                     {
                         if (hasEscape)
                         {
-                            buffer.Append(quote);
+                            buffer.Append(closingQuote);
                             hasEscape = false;
                             continue;
                         }
@@ -124,13 +124,6 @@ namespace Textamina.Markdig.Helpers
 
                     buffer.Append(c);
                 }
-            }
-            else
-            {
-                // a sequence of zero or more characters between matching parentheses ((...)), including a ) character only if it is backslash-escaped.
-                // TODO
-
-                isValid = true;
             }
 
             title = isValid ? buffer.ToString() : null;
@@ -258,28 +251,64 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseLabelUrlAndTitle(StringLineGroup lines, out string label, out string url,
+        public static bool TryParseLinkReferenceDefinition(StringLineGroup text, out string label, out string url,
             out string title)
         {
             url = null;
             title = null;
-            if (!TryParseLabel(lines, out label))
+            if (!TryParseLabel(text, out label))
             {
                 return false;
             }
 
-            if (lines.CurrentChar != ':')
+            if (text.CurrentChar != ':')
             {
                 label = null;
                 return false;
             }
-            lines.NextChar(); // Skip ':'
+            text.NextChar(); // Skip ':'
 
-            if (!TryParseUrlAndTitle(lines, out url, out title))
+            // Skip any whitespaces before the url
+            text.SkipWhiteSpaces();
+            if (!TryParseUrl(text, out url))
             {
-                label = null;
                 return false;
             }
+
+            var hasWhiteSpaces = text.SkipWhiteSpaces();
+
+            if (TryParseTitle(text, out title))
+            {
+                // If we have a title, it requires a whitespace after the url
+                if (!hasWhiteSpaces)
+                {
+                    return false;
+                }
+            }
+
+            // Check that the current line has trailing spaces
+            var currentLine = text.Current;
+            if (currentLine != null && text.CurrentChar != '\n')
+            {
+                bool hasTrailingNonWhitespace = false;
+                for (int i = text.ColumnPosition; i < currentLine.End; i++)
+                {
+                    if (!currentLine[i].IsWhitespace())
+                    {
+                        hasTrailingNonWhitespace = true;
+                        break;
+                    }
+                }
+
+                if (hasTrailingNonWhitespace)
+                {
+                    label = null;
+                    url = null;
+                    title = null;
+                    return false;
+                }
+            }
+
             return true;
         }
 

@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Parsing
             tempBuilder = new StringBuilder();
             stringBuilderCache  = new StringBuilderCache();
             inlineState = new MatchInlineState(stringBuilderCache);
-            lineState = new MatchLineState(stringBuilderCache);
+            lineState = new MatchLineState(stringBuilderCache, document);
             blockParsers = new List<BlockParser>()
             {
                 BreakBlock.Parser,
