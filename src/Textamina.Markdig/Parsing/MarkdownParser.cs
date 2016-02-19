@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -90,6 +91,22 @@ namespace Textamina.Markdig.Parsing
             {
                 var count = blockStack.Count;
                 return count > 0 ? blockStack[count - 1].Block : null;
+            }
+        }
+
+        private ContainerBlock LastContainer
+        {
+            get
+            {
+                for (int i = blockStack.Count - 1; i >= 0; i--)
+                {
+                    var container = blockStack[i].Block as ContainerBlock;
+                    if (container != null)
+                    {
+                        return container;
+                    }
+                }
+                return null;
             }
         }
 
@@ -287,7 +304,6 @@ namespace Textamina.Markdig.Parsing
 
                 // We have a MatchLineResult.Break
                 var leaf = block as LeafBlock;
-                var container = LastBlock as ContainerBlock;
 
                 if (leaf != null)
                 {
@@ -312,6 +328,7 @@ namespace Textamina.Markdig.Parsing
                 if (block != null)
                 {
                     // If previous block is a container, add the new block as a children of the previous block
+                    var container = LastContainer;
                     if (container != null)
                     {
                         AddToParent(block, container);
@@ -324,6 +341,7 @@ namespace Textamina.Markdig.Parsing
                 }
                 else
                 {
+                    Debug.Assert(result == MatchLineResult.LastDiscard);
                     continueProcessLiner = false;
                     break;
                 }
