@@ -68,13 +68,13 @@ namespace Textamina.Markdig.Formatters
         {
             writer.EnsureLine();
             writer.WriteConstant("<pre><code>");
-            WriteLeaf(codeBlock, true);
+            WriteLeaf(codeBlock, true, true);
             writer.WriteLineConstant("</code></pre>");
         }
 
         protected void Write(HtmlBlock codeBlock)
         {
-            WriteLeaf(codeBlock, true);
+            WriteLeaf(codeBlock, true, false);
         }
 
         protected void Write(HeadingBlock headingBlock)
@@ -83,7 +83,7 @@ namespace Textamina.Markdig.Formatters
             writer.WriteConstant("<h");
             writer.WriteConstant(heading);
             writer.WriteConstant(">");
-            WriteLeaf(headingBlock, false);
+            WriteLeaf(headingBlock, false, false);
             writer.WriteConstant("</h");
             writer.WriteConstant(heading);
             writer.WriteLineConstant(">");
@@ -106,7 +106,7 @@ namespace Textamina.Markdig.Formatters
         {
             writer.EnsureLine();
             writer.WriteConstant("<p>");
-            WriteLeaf(paragraph, false);
+            WriteLeaf(paragraph, false, false);
             writer.WriteLineConstant("</p>");
         }
 
@@ -189,7 +189,7 @@ namespace Textamina.Markdig.Formatters
             }
         }
 
-        protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines)
+        protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
             var inline = leafBlock.Inline;
             if (inline != null)
@@ -215,7 +215,14 @@ namespace Textamina.Markdig.Formatters
                         writer.WriteLine();
                     }
                     var line = lines[i];
-                    writer.WriteConstant(line.ToString());
+                    if (escape)
+                    {
+                        HtmlHelper.EscapeHtml(line.ToString(), writer);
+                    }
+                    else
+                    {
+                        writer.WriteConstant(line.ToString());
+                    }
                     if (writeEndOfLines)
                     {
                         writer.WriteLine();
@@ -231,7 +238,7 @@ namespace Textamina.Markdig.Formatters
                 var paragraph = container.Children[0] as ParagraphBlock;
                 if (paragraph != null && paragraph.Lines.Count == 1)
                 {
-                    WriteLeaf((LeafBlock)paragraph, false);
+                    WriteLeaf((LeafBlock)paragraph, false, false);
                     return;
                 }
             }

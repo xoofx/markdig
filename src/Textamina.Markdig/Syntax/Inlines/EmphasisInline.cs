@@ -123,8 +123,9 @@ namespace Textamina.Markdig.Syntax
                             else
                             {
                                 // Remove the open delimiter if it is also empty
-                                openDelimiter.MoveChildrenAfter(openDelimiter.NextSibling ?? openDelimiter.Parent);
-                                openDelimiter.Remove();
+                                var firstChild = openDelimiter.FirstChild;
+                                firstChild.Remove();
+                                openDelimiter.ReplaceBy(firstChild);
                                 delimiters.RemoveAt(openDelimiterIndex);
                                 i--;
                             }
