@@ -46,9 +46,6 @@ using NUnit.Framework;
 
 namespace Textamina.Markdig.Tests
 {
-    [TestFixture]
-    public class Specs
-    {
 <#
 foreach (var item in ReadSpecs(specFile))
 {
@@ -80,10 +77,10 @@ foreach (var item in ReadSpecs(specFile))
         emptyLines = false;
         displayEmptyLines = false;
 #>
+    [TestFixture]
+    public partial class Test<#= spec.SecHeadingCompact #>
+    {
         [Test]
-        //[Test(Description="Example <#= spec.Example #> - <#= spec.SecHeading #>")]
-        //[Timeout(1000)]
-		[Category("<#= spec.SecHeading #>")]
         public void <#= spec.Name #>()
         {
             // Example <#= spec.Example #>
@@ -98,12 +95,11 @@ foreach (var item in ReadSpecs(specFile))
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, <#= spec.Example #>, "<#= Escape(spec.SecHeading) #>");
 			TestParser.TestSpec("<#= Escape(spec.CommonMark) #>", "<#= Escape(spec.Html) #>");
         }
-
+    }
 <#
     }
 }
 #>
-    }
 }
 <#+
 private class Item
@@ -115,6 +111,7 @@ private class Spec
     public int Example { get; set; }
     public int Number { get; set; }
     public string SecHeading { get; set; }
+	public string SecHeadingCompact {get; set;}
     public string SectionId { get; set; }
     public string CommonMark { get; set; }
     public string Html { get; set; }
@@ -190,12 +187,15 @@ private IEnumerable<object> ReadSpecs(string fileName)
                     sectionSpecNumbers[sectionId] = 1;
                 }
 
+				var heading = string.Join(" ", sectionHeadings.Reverse()).Replace("\\","\\\\");
+				var headingCompact = Regex.Replace(heading, "[^A-Za-z0-9]+", string.Empty);
                 example++;
                 yield return new Spec
                 {
                     Example = example,
                     Number = sectionSpecNumbers[sectionId],
-                    SecHeading = string.Join(" ", sectionHeadings.Reverse()).Replace("\\","\\\\"),
+                    SecHeading = heading,
+					SecHeadingCompact = headingCompact,
                     SectionId = sectionId,
                     CommonMark = commonMark,
                     Html = html

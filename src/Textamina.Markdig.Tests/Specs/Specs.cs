@@ -8,9 +8,6 @@ using NUnit.Framework;
 
 namespace Textamina.Markdig.Tests
 {
-    [TestFixture]
-    public class Specs
-    {
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
@@ -274,10 +271,10 @@ namespace Textamina.Markdig.Tests
         // in contexts where indentation is significant for the
         // document's structure, tabs behave as if they were replaced
         // by spaces with a tab stop of 4 characters.
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 1 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example001()
         {
             // Example 1
@@ -293,11 +290,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Preliminaries Tabs");
 			TestParser.TestSpec("\tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 2 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example002()
         {
             // Example 2
@@ -313,11 +310,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Preliminaries Tabs");
 			TestParser.TestSpec("  \tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 3 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example003()
         {
             // Example 3
@@ -335,11 +332,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Preliminaries Tabs");
 			TestParser.TestSpec("    a\ta\n    ὐ\ta", "<pre><code>a\ta\nὐ\ta\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 4 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example004()
         {
             // Example 4
@@ -361,11 +358,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Preliminaries Tabs");
 			TestParser.TestSpec("  - foo\n\n\tbar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 5 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example005()
         {
             // Example 5
@@ -388,11 +385,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Preliminaries Tabs");
 			TestParser.TestSpec("- foo\n\n\t\tbar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 6 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example006()
         {
             // Example 6
@@ -410,11 +407,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Preliminaries Tabs");
 			TestParser.TestSpec(">\t\tfoo", "<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 7 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example007()
         {
             // Example 7
@@ -434,11 +431,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Preliminaries Tabs");
 			TestParser.TestSpec("-\t\tfoo", "<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 8 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example008()
         {
             // Example 8
@@ -456,11 +453,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Preliminaries Tabs");
 			TestParser.TestSpec("    foo\n\tbar", "<pre><code>foo\nbar\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestPreliminariesTabs
+    {
         [Test]
-        //[Test(Description="Example 9 - Preliminaries Tabs")]
-        //[Timeout(1000)]
-		[Category("Preliminaries Tabs")]
         public void Example009()
         {
             // Example 9
@@ -487,7 +484,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Preliminaries Tabs");
 			TestParser.TestSpec(" - foo\n   - bar\n\t - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
         // ## Insecure characters
         //
         // For security reasons, the Unicode character `U+0000` must be replaced
@@ -507,10 +504,10 @@ namespace Textamina.Markdig.Tests
         // Indicators of block structure always take precedence over indicators
         // of inline structure.  So, for example, the following is a list with
         // two items, not a list with one item containing a code span:
+    [TestFixture]
+    public partial class TestBlocksandinlinesPrecedence
+    {
         [Test]
-        //[Test(Description="Example 10 - Blocks and inlines Precedence")]
-        //[Timeout(1000)]
-		[Category("Blocks and inlines Precedence")]
         public void Example010()
         {
             // Example 10
@@ -529,7 +526,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Blocks and inlines Precedence");
 			TestParser.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>");
         }
-
+    }
         // This means that parsing can proceed in two steps:  first, the block
         // structure of the document can be discerned; second, text lines inside
         // paragraphs, headings, and other block constructs can be parsed for inline
@@ -557,10 +554,10 @@ namespace Textamina.Markdig.Tests
         // of three or more matching `-`, `_`, or `*` characters, each followed
         // optionally by any number of spaces, forms a
         // [thematic break](@).
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 11 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example011()
         {
             // Example 11
@@ -579,12 +576,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />");
         }
-
+    }
         // Wrong characters:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 12 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example012()
         {
             // Example 12
@@ -599,11 +596,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("+++", "<p>+++</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 13 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example013()
         {
             // Example 13
@@ -618,12 +615,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("===", "<p>===</p>");
         }
-
+    }
         // Not enough characters:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 14 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example014()
         {
             // Example 14
@@ -642,12 +639,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("--\n**\n__", "<p>--\n**\n__</p>");
         }
-
+    }
         // One to three spaces indent are allowed:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 15 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example015()
         {
             // Example 15
@@ -666,12 +663,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />");
         }
-
+    }
         // Four spaces is too many:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 16 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example016()
         {
             // Example 16
@@ -687,11 +684,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("    ***", "<pre><code>***\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 17 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example017()
         {
             // Example 17
@@ -708,12 +705,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("Foo\n    ***", "<p>Foo\n***</p>");
         }
-
+    }
         // More than three characters may be used:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 18 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example018()
         {
             // Example 18
@@ -728,12 +725,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("_____________________________________", "<hr />");
         }
-
+    }
         // Spaces are allowed between the characters:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 19 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example019()
         {
             // Example 19
@@ -748,11 +745,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec(" - - -", "<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 20 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example020()
         {
             // Example 20
@@ -767,11 +764,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 20, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec(" **  * ** * ** * **", "<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 21 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example021()
         {
             // Example 21
@@ -786,12 +783,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 21, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("-     -      -      -", "<hr />");
         }
-
+    }
         // Spaces are allowed at the end:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 22 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example022()
         {
             // Example 22
@@ -806,12 +803,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("- - - -    ", "<hr />");
         }
-
+    }
         // However, no other characters may occur in the line:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 23 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example023()
         {
             // Example 23
@@ -832,13 +829,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 23, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>");
         }
-
+    }
         // It is required that all of the [non-whitespace characters] be the same.
         // So, this is not a thematic break:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 24 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example024()
         {
             // Example 24
@@ -853,12 +850,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 24, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec(" *-*", "<p><em>-</em></p>");
         }
-
+    }
         // Thematic breaks do not need blank lines before or after:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 25 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example025()
         {
             // Example 25
@@ -881,12 +878,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 25, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>");
         }
-
+    }
         // Thematic breaks can interrupt a paragraph:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 26 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example026()
         {
             // Example 26
@@ -905,16 +902,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 26, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>");
         }
-
+    }
         // If a line of dashes that meets the above conditions for being a
         // thematic break could also be interpreted as the underline of a [setext
         // heading], the interpretation as a
         // [setext heading] takes precedence. Thus, for example,
         // this is a setext heading, not a paragraph followed by a thematic break:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 27 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example027()
         {
             // Example 27
@@ -932,13 +929,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 27, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>");
         }
-
+    }
         // When both a thematic break and a list item are possible
         // interpretations of a line, the thematic break takes precedence:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 28 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example028()
         {
             // Example 28
@@ -961,12 +958,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 28, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>");
         }
-
+    }
         // If you want a thematic break in a list item, use a different bullet:
+    [TestFixture]
+    public partial class TestLeafblocksThematicbreaks
+    {
         [Test]
-        //[Test(Description="Example 29 - Leaf blocks Thematic breaks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Thematic breaks")]
         public void Example029()
         {
             // Example 29
@@ -987,7 +984,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 29, "Leaf blocks Thematic breaks");
 			TestParser.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>");
         }
-
+    }
         // ## ATX headings
         //
         // An [ATX heading](@)
@@ -1003,10 +1000,10 @@ namespace Textamina.Markdig.Tests
         // characters in the opening sequence.
         //
         // Simple headings:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 30 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example030()
         {
             // Example 30
@@ -1031,12 +1028,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 30, "Leaf blocks ATX headings");
 			TestParser.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>");
         }
-
+    }
         // More than six `#` characters is not a heading:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 31 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example031()
         {
             // Example 31
@@ -1051,7 +1048,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 31, "Leaf blocks ATX headings");
 			TestParser.TestSpec("####### foo", "<p>####### foo</p>");
         }
-
+    }
         // At least one space is required between the `#` characters and the
         // heading's contents, unless the heading is empty.  Note that many
         // implementations currently do not require the space.  However, the
@@ -1059,10 +1056,10 @@ namespace Textamina.Markdig.Tests
         // [original ATX implementation](http://www.aaronsw.com/2002/atx/atx.py),
         // and it helps prevent things like the following from being parsed as
         // headings:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 32 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example032()
         {
             // Example 32
@@ -1080,12 +1077,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 32, "Leaf blocks ATX headings");
 			TestParser.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>");
         }
-
+    }
         // A tab will not work:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 33 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example033()
         {
             // Example 33
@@ -1100,12 +1097,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 33, "Leaf blocks ATX headings");
 			TestParser.TestSpec("#\tfoo", "<p>#\tfoo</p>");
         }
-
+    }
         // This is not a heading, because the first `#` is escaped:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 34 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example034()
         {
             // Example 34
@@ -1120,12 +1117,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 34, "Leaf blocks ATX headings");
 			TestParser.TestSpec("\\## foo", "<p>## foo</p>");
         }
-
+    }
         // Contents are parsed as inlines:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 35 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example035()
         {
             // Example 35
@@ -1140,12 +1137,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 35, "Leaf blocks ATX headings");
 			TestParser.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>");
         }
-
+    }
         // Leading and trailing blanks are ignored in parsing inline content:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 36 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example036()
         {
             // Example 36
@@ -1160,12 +1157,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 36, "Leaf blocks ATX headings");
 			TestParser.TestSpec("#                  foo                     ", "<h1>foo</h1>");
         }
-
+    }
         // One to three spaces indentation are allowed:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 37 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example037()
         {
             // Example 37
@@ -1184,12 +1181,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 37, "Leaf blocks ATX headings");
 			TestParser.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>");
         }
-
+    }
         // Four spaces are too much:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 38 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example038()
         {
             // Example 38
@@ -1205,11 +1202,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 38, "Leaf blocks ATX headings");
 			TestParser.TestSpec("    # foo", "<pre><code># foo\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 39 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example039()
         {
             // Example 39
@@ -1226,12 +1223,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 39, "Leaf blocks ATX headings");
 			TestParser.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>");
         }
-
+    }
         // A closing sequence of `#` characters is optional:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 40 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example040()
         {
             // Example 40
@@ -1248,12 +1245,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 40, "Leaf blocks ATX headings");
 			TestParser.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>");
         }
-
+    }
         // It need not be the same length as the opening sequence:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 41 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example041()
         {
             // Example 41
@@ -1270,12 +1267,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 41, "Leaf blocks ATX headings");
 			TestParser.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>");
         }
-
+    }
         // Spaces are allowed after the closing sequence:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 42 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example042()
         {
             // Example 42
@@ -1290,14 +1287,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 42, "Leaf blocks ATX headings");
 			TestParser.TestSpec("### foo ###     ", "<h3>foo</h3>");
         }
-
+    }
         // A sequence of `#` characters with anything but [spaces] following it
         // is not a closing sequence, but counts as part of the contents of the
         // heading:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 43 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example043()
         {
             // Example 43
@@ -1312,12 +1309,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 43, "Leaf blocks ATX headings");
 			TestParser.TestSpec("### foo ### b", "<h3>foo ### b</h3>");
         }
-
+    }
         // The closing sequence must be preceded by a space:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 44 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example044()
         {
             // Example 44
@@ -1332,13 +1329,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 44, "Leaf blocks ATX headings");
 			TestParser.TestSpec("# foo#", "<h1>foo#</h1>");
         }
-
+    }
         // Backslash-escaped `#` characters do not count as part
         // of the closing sequence:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 45 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example045()
         {
             // Example 45
@@ -1357,13 +1354,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 45, "Leaf blocks ATX headings");
 			TestParser.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>");
         }
-
+    }
         // ATX headings need not be separated from surrounding content by blank
         // lines, and they can interrupt paragraphs:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 46 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example046()
         {
             // Example 46
@@ -1382,11 +1379,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 46, "Leaf blocks ATX headings");
 			TestParser.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 47 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example047()
         {
             // Example 47
@@ -1405,12 +1402,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 47, "Leaf blocks ATX headings");
 			TestParser.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>");
         }
-
+    }
         // ATX headings can be empty:
+    [TestFixture]
+    public partial class TestLeafblocksATXheadings
+    {
         [Test]
-        //[Test(Description="Example 48 - Leaf blocks ATX headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks ATX headings")]
         public void Example048()
         {
             // Example 48
@@ -1429,7 +1426,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 48, "Leaf blocks ATX headings");
 			TestParser.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>");
         }
-
+    }
         // ## Setext headings
         //
         // A [setext heading](@) consists of one or more
@@ -1461,10 +1458,10 @@ namespace Textamina.Markdig.Tests
         // them.
         //
         // Simple examples:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 49 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example049()
         {
             // Example 49
@@ -1484,12 +1481,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 49, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>");
         }
-
+    }
         // The content of the header may span more than one line:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 50 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example050()
         {
             // Example 50
@@ -1507,12 +1504,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 50, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>");
         }
-
+    }
         // The underlining can be any length:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 51 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example051()
         {
             // Example 51
@@ -1532,13 +1529,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 51, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>");
         }
-
+    }
         // The heading content can be indented up to three spaces, and need
         // not line up with the underlining:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 52 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example052()
         {
             // Example 52
@@ -1562,12 +1559,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 52, "Leaf blocks Setext headings");
 			TestParser.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>");
         }
-
+    }
         // Four spaces indent is too much:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 53 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example053()
         {
             // Example 53
@@ -1591,13 +1588,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 53, "Leaf blocks Setext headings");
 			TestParser.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />");
         }
-
+    }
         // The setext heading underline can be indented up to three spaces, and
         // may have trailing spaces:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 54 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example054()
         {
             // Example 54
@@ -1613,12 +1610,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 54, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>");
         }
-
+    }
         // Four spaces is too much:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 55 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example055()
         {
             // Example 55
@@ -1635,12 +1632,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 55, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\n    ---", "<p>Foo\n---</p>");
         }
-
+    }
         // The setext heading underline cannot contain internal spaces:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 56 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example056()
         {
             // Example 56
@@ -1662,12 +1659,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 56, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />");
         }
-
+    }
         // Trailing spaces in the content line do not cause a line break:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 57 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example057()
         {
             // Example 57
@@ -1683,12 +1680,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 57, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo  \n-----", "<h2>Foo</h2>");
         }
-
+    }
         // Nor does a backslash at the end:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 58 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example058()
         {
             // Example 58
@@ -1704,13 +1701,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 58, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>");
         }
-
+    }
         // Since indicators of block structure take precedence over
         // indicators of inline structure, the following are setext headings:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 59 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example059()
         {
             // Example 59
@@ -1734,13 +1731,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 59, "Leaf blocks Setext headings");
 			TestParser.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>");
         }
-
+    }
         // The setext heading underline cannot be a [lazy continuation
         // line] in a list item or block quote:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 60 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example060()
         {
             // Example 60
@@ -1759,11 +1756,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 60, "Leaf blocks Setext headings");
 			TestParser.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 61 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example061()
         {
             // Example 61
@@ -1784,11 +1781,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 61, "Leaf blocks Setext headings");
 			TestParser.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 62 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example062()
         {
             // Example 62
@@ -1807,14 +1804,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 62, "Leaf blocks Setext headings");
 			TestParser.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />");
         }
-
+    }
         // A blank line is needed between a paragraph and a following
         // setext heading, since otherwise the paragraph becomes part
         // of the heading's content:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 63 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example063()
         {
             // Example 63
@@ -1832,13 +1829,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 63, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>");
         }
-
+    }
         // But in general a blank line is not required before or after
         // setext headings:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 64 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example064()
         {
             // Example 64
@@ -1861,12 +1858,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 64, "Leaf blocks Setext headings");
 			TestParser.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>");
         }
-
+    }
         // Setext headings cannot be empty:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 65 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example065()
         {
             // Example 65
@@ -1881,14 +1878,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 65, "Leaf blocks Setext headings");
 			TestParser.TestSpec("====", "<p>====</p>");
         }
-
+    }
         // Setext heading text lines must not be interpretable as block
         // constructs other than paragraphs.  So, the line of dashes
         // in these examples gets interpreted as a thematic break:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 66 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example066()
         {
             // Example 66
@@ -1905,11 +1902,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 66, "Leaf blocks Setext headings");
 			TestParser.TestSpec("---\n---", "<hr />\n<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 67 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example067()
         {
             // Example 67
@@ -1928,11 +1925,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 67, "Leaf blocks Setext headings");
 			TestParser.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 68 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example068()
         {
             // Example 68
@@ -1950,11 +1947,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 68, "Leaf blocks Setext headings");
 			TestParser.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 69 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example069()
         {
             // Example 69
@@ -1973,13 +1970,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 69, "Leaf blocks Setext headings");
 			TestParser.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />");
         }
-
+    }
         // If you want a heading with `> foo` as its literal text, you can
         // use backslash escapes:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 70 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example070()
         {
             // Example 70
@@ -1995,7 +1992,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 70, "Leaf blocks Setext headings");
 			TestParser.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>");
         }
-
+    }
         // **Compatibility note:**  Most existing Markdown implementations
         // do not allow the text of setext headings to span multiple lines.
         // But there is no consensus about how to interpret
@@ -2018,10 +2015,10 @@ namespace Textamina.Markdig.Tests
         // increases the expressive power of CommonMark, by allowing
         // multiline headings.  Authors who want interpretation 1 can
         // put a blank line after the first paragraph:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 71 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example071()
         {
             // Example 71
@@ -2042,13 +2039,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 71, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>");
         }
-
+    }
         // Authors who want interpretation 2 can put blank lines around
         // the thematic break,
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 72 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example072()
         {
             // Example 72
@@ -2071,13 +2068,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 72, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>");
         }
-
+    }
         // or use a thematic break that cannot count as a [setext heading
         // underline], such as
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 73 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example073()
         {
             // Example 73
@@ -2098,12 +2095,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 73, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>");
         }
-
+    }
         // Authors who want interpretation 3 can use backslash escapes:
+    [TestFixture]
+    public partial class TestLeafblocksSetextheadings
+    {
         [Test]
-        //[Test(Description="Example 74 - Leaf blocks Setext headings")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Setext headings")]
         public void Example074()
         {
             // Example 74
@@ -2124,7 +2121,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 74, "Leaf blocks Setext headings");
 			TestParser.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>");
         }
-
+    }
         // ## Indented code blocks
         //
         // An [indented code block](@) is composed of one or more
@@ -2139,10 +2136,10 @@ namespace Textamina.Markdig.Tests
         // a blank line between a paragraph and a following indented code block.
         // (A blank line is not needed, however, between a code block and a following
         // paragraph.)
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 75 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example075()
         {
             // Example 75
@@ -2160,14 +2157,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 75, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>");
         }
-
+    }
         // If there is any ambiguity between an interpretation of indentation
         // as a code block and as indicating that material belongs to a [list
         // item][list items], the list item interpretation takes precedence:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 76 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example076()
         {
             // Example 76
@@ -2189,11 +2186,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 76, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 77 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example077()
         {
             // Example 77
@@ -2217,13 +2214,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 77, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>");
         }
-
+    }
         // The contents of a code block are literal text, and do not get parsed
         // as Markdown:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 78 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example078()
         {
             // Example 78
@@ -2245,12 +2242,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 78, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>");
         }
-
+    }
         // Here we have three chunks separated by blank lines:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 79 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example079()
         {
             // Example 79
@@ -2278,13 +2275,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 79, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>");
         }
-
+    }
         // Any initial spaces beyond four will be included in the content, even
         // in interior blank lines:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 80 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example080()
         {
             // Example 80
@@ -2304,13 +2301,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 80, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>");
         }
-
+    }
         // An indented code block cannot interrupt a paragraph.  (This
         // allows hanging indents and the like.)
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 81 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example081()
         {
             // Example 81
@@ -2328,14 +2325,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 81, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>");
         }
-
+    }
         // However, any non-blank line with fewer than four leading spaces ends
         // the code block immediately.  So a paragraph may occur immediately
         // after indented code:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 82 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example082()
         {
             // Example 82
@@ -2353,13 +2350,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 82, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>");
         }
-
+    }
         // And indented code can occur immediately before and after other kinds of
         // blocks:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 83 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example083()
         {
             // Example 83
@@ -2385,12 +2382,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 83, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />");
         }
-
+    }
         // The first line can be indented more than four spaces:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 84 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example084()
         {
             // Example 84
@@ -2408,13 +2405,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 84, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>");
         }
-
+    }
         // Blank lines preceding or following an indented code block
         // are not included in it:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 85 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example085()
         {
             // Example 85
@@ -2433,12 +2430,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 85, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    \n    foo\n    \n", "<pre><code>foo\n</code></pre>");
         }
-
+    }
         // Trailing spaces are included in the code block's content:
+    [TestFixture]
+    public partial class TestLeafblocksIndentedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 86 - Leaf blocks Indented code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Indented code blocks")]
         public void Example086()
         {
             // Example 86
@@ -2454,7 +2451,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 86, "Leaf blocks Indented code blocks");
 			TestParser.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>");
         }
-
+    }
         // ## Fenced code blocks
         //
         // A [code fence](@) is a sequence
@@ -2500,10 +2497,10 @@ namespace Textamina.Markdig.Tests
         // particular treatment of the [info string].
         //
         // Here is a simple example with backticks:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 87 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example087()
         {
             // Example 87
@@ -2523,12 +2520,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 87, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>");
         }
-
+    }
         // With tildes:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 88 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example088()
         {
             // Example 88
@@ -2548,13 +2545,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 88, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>");
         }
-
+    }
         // The closing code fence must use the same character as the opening
         // fence:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 89 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example089()
         {
             // Example 89
@@ -2574,11 +2571,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 89, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 90 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example090()
         {
             // Example 90
@@ -2598,12 +2595,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 90, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>");
         }
-
+    }
         // The closing code fence must be at least as long as the opening fence:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 91 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example091()
         {
             // Example 91
@@ -2623,11 +2620,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 91, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 92 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example092()
         {
             // Example 92
@@ -2647,13 +2644,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 92, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>");
         }
-
+    }
         // Unclosed code blocks are closed by the end of the document
         // (or the enclosing [block quote][block quotes] or [list item][list items]):
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 93 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example093()
         {
             // Example 93
@@ -2668,11 +2665,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 93, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```", "<pre><code></code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 94 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example094()
         {
             // Example 94
@@ -2693,11 +2690,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 94, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 95 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example095()
         {
             // Example 95
@@ -2719,12 +2716,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 95, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>");
         }
-
+    }
         // A code block can have all empty lines as its content:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 96 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example096()
         {
             // Example 96
@@ -2744,12 +2741,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 96, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>");
         }
-
+    }
         // A code block can be empty:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 97 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example097()
         {
             // Example 97
@@ -2765,14 +2762,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 97, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\n```", "<pre><code></code></pre>");
         }
-
+    }
         // Fences can be indented.  If the opening fence is indented,
         // content lines will have equivalent opening indentation removed,
         // if present:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 98 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example098()
         {
             // Example 98
@@ -2792,11 +2789,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 98, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 99 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example099()
         {
             // Example 99
@@ -2818,11 +2815,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 99, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 100 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example100()
         {
             // Example 100
@@ -2844,12 +2841,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 100, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>");
         }
-
+    }
         // Four spaces indentation produces an indented code block:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 101 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example101()
         {
             // Example 101
@@ -2869,13 +2866,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 101, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>");
         }
-
+    }
         // Closing fences may be indented by 0-3 spaces, and their indentation
         // need not match that of the opening fence:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 102 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example102()
         {
             // Example 102
@@ -2893,11 +2890,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 102, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 103 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example103()
         {
             // Example 103
@@ -2915,12 +2912,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 103, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>");
         }
-
+    }
         // This is not a closing fence, because it is indented 4 spaces:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 104 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example104()
         {
             // Example 104
@@ -2939,12 +2936,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 104, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>");
         }
-
+    }
         // Code fences (opening and closing) cannot contain internal spaces:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 105 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example105()
         {
             // Example 105
@@ -2961,11 +2958,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 105, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("``` ```\naaa", "<p><code></code>\naaa</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 106 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example106()
         {
             // Example 106
@@ -2984,13 +2981,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 106, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>");
         }
-
+    }
         // Fenced code blocks can interrupt paragraphs, and can be followed
         // directly by paragraphs, without a blank line between:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 107 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example107()
         {
             // Example 107
@@ -3012,13 +3009,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 107, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>");
         }
-
+    }
         // Other blocks can also occur before and after fenced code blocks
         // without an intervening blank line:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 108 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example108()
         {
             // Example 108
@@ -3041,15 +3038,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 108, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>");
         }
-
+    }
         // An [info string] can be provided after the opening code fence.
         // Opening and closing spaces will be stripped, and the first word, prefixed
         // with `language-`, is used as the value for the `class` attribute of the
         // `code` element within the enclosing `pre` element.
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 109 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example109()
         {
             // Example 109
@@ -3071,11 +3068,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 109, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 110 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example110()
         {
             // Example 110
@@ -3097,11 +3094,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 110, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 111 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example111()
         {
             // Example 111
@@ -3117,12 +3114,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 111, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>");
         }
-
+    }
         // [Info strings] for backtick code blocks cannot contain backticks:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 112 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example112()
         {
             // Example 112
@@ -3139,12 +3136,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 112, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>");
         }
-
+    }
         // Closing code fences cannot have [info strings]:
+    [TestFixture]
+    public partial class TestLeafblocksFencedcodeblocks
+    {
         [Test]
-        //[Test(Description="Example 113 - Leaf blocks Fenced code blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Fenced code blocks")]
         public void Example113()
         {
             // Example 113
@@ -3162,7 +3159,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 113, "Leaf blocks Fenced code blocks");
 			TestParser.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>");
         }
-
+    }
         // ## HTML blocks
         //
         // An [HTML block](@) is a group of lines that is treated
@@ -3225,10 +3222,10 @@ namespace Textamina.Markdig.Tests
         //
         // Some simple examples follow.  Here are some basic HTML blocks
         // of type 6:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 114 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example114()
         {
             // Example 114
@@ -3258,11 +3255,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 114, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 115 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example115()
         {
             // Example 115
@@ -3281,12 +3278,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 115, "Leaf blocks HTML blocks");
 			TestParser.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>");
         }
-
+    }
         // A block can also start with a closing tag:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 116 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example116()
         {
             // Example 116
@@ -3303,12 +3300,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 116, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("</div>\n*foo*", "</div>\n*foo*");
         }
-
+    }
         // Here we have two HTML blocks with a Markdown paragraph between them:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 117 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example117()
         {
             // Example 117
@@ -3329,13 +3326,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 117, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>");
         }
-
+    }
         // The tag on the first line can be partial, as long
         // as it is split where there would be whitespace:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 118 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example118()
         {
             // Example 118
@@ -3354,11 +3351,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 118, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 119 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example119()
         {
             // Example 119
@@ -3377,12 +3374,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 119, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>");
         }
-
+    }
         // An open tag need not be closed:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 120 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example120()
         {
             // Example 120
@@ -3402,13 +3399,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 120, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>");
         }
-
+    }
         // A partial tag need not even be completed (garbage
         // in, garbage out):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 121 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example121()
         {
             // Example 121
@@ -3425,11 +3422,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 121, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 122 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example122()
         {
             // Example 122
@@ -3446,13 +3443,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 122, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div class\nfoo", "<div class\nfoo");
         }
-
+    }
         // The initial tag doesn't even need to be a valid
         // tag, as long as it starts like one:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 123 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example123()
         {
             // Example 123
@@ -3469,13 +3466,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 123, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*");
         }
-
+    }
         // In type 6 blocks, the initial tag need not be on a line by
         // itself:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 124 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example124()
         {
             // Example 124
@@ -3490,11 +3487,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 124, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 125 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example125()
         {
             // Example 125
@@ -3513,16 +3510,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 125, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>");
         }
-
+    }
         // Everything until the next blank line or end of document
         // gets included in the HTML block.  So, in the following
         // example, what looks like a Markdown code block
         // is actually part of the HTML block, which continues until a blank
         // line or the end of the document is reached:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 126 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example126()
         {
             // Example 126
@@ -3543,14 +3540,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 126, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```");
         }
-
+    }
         // To start an [HTML block] with a tag that is *not* in the
         // list of block-level tags in (6), you must put the tag by
         // itself on the first line (and it must be complete):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 127 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example127()
         {
             // Example 127
@@ -3569,12 +3566,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 127, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>");
         }
-
+    }
         // In type 7 blocks, the [tag name] can be anything:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 128 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example128()
         {
             // Example 128
@@ -3593,11 +3590,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 128, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 129 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example129()
         {
             // Example 129
@@ -3616,11 +3613,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 129, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 130 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example130()
         {
             // Example 130
@@ -3637,16 +3634,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 130, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("</ins>\n*bar*", "</ins>\n*bar*");
         }
-
+    }
         // These rules are designed to allow us to work with tags that
         // can function as either block-level or inline-level tags.
         // The `<del>` tag is a nice example.  We can surround content with
         // `<del>` tags in three different ways.  In this case, we get a raw
         // HTML block, because the `<del>` tag is on a line by itself:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 131 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example131()
         {
             // Example 131
@@ -3665,14 +3662,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 131, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>");
         }
-
+    }
         // In this case, we get a raw HTML block that just includes
         // the `<del>` tag (because it ends with the following blank
         // line).  So the contents get interpreted as CommonMark:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 132 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example132()
         {
             // Example 132
@@ -3693,15 +3690,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 132, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>");
         }
-
+    }
         // Finally, in this case, the `<del>` tags are interpreted
         // as [raw HTML] *inside* the CommonMark paragraph.  (Because
         // the tag is not on a line by itself, we get inline HTML
         // rather than an [HTML block].)
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 133 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example133()
         {
             // Example 133
@@ -3716,7 +3713,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 133, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>");
         }
-
+    }
         // HTML tags designed to contain literal content
         // (`script`, `style`, `pre`), comments, processing instructions,
         // and declarations are treated somewhat differently.
@@ -3725,10 +3722,10 @@ namespace Textamina.Markdig.Tests
         // As a result, these blocks can contain blank lines:
         //
         // A pre tag (type 1):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 134 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example134()
         {
             // Example 134
@@ -3753,12 +3750,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 134, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>");
         }
-
+    }
         // A script tag (type 1):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 135 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example135()
         {
             // Example 135
@@ -3781,12 +3778,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 135, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>");
         }
-
+    }
         // A style tag (type 1):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 136 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example136()
         {
             // Example 136
@@ -3811,14 +3808,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 136, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>");
         }
-
+    }
         // If there is no matching end tag, the block will end at the
         // end of the document (or the enclosing [block quote][block quotes]
         // or [list item][list items]):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 137 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example137()
         {
             // Example 137
@@ -3839,11 +3836,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 137, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 138 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example138()
         {
             // Example 138
@@ -3865,11 +3862,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 138, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 139 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example139()
         {
             // Example 139
@@ -3890,12 +3887,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 139, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>");
         }
-
+    }
         // The end tag can occur on the same line as the start tag:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 140 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example140()
         {
             // Example 140
@@ -3912,11 +3909,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 140, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 141 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example141()
         {
             // Example 141
@@ -3933,13 +3930,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 141, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>");
         }
-
+    }
         // Note that anything on the last line after the
         // end tag will be included in the [HTML block]:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 142 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example142()
         {
             // Example 142
@@ -3958,12 +3955,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 142, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*");
         }
-
+    }
         // A comment (type 2):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 143 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example143()
         {
             // Example 143
@@ -3984,12 +3981,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 143, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->", "<!-- Foo\n\nbar\n   baz -->");
         }
-
+    }
         // A processing instruction (type 3):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 144 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example144()
         {
             // Example 144
@@ -4012,12 +4009,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 144, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>", "<?php\n\n  echo '>';\n\n?>");
         }
-
+    }
         // A declaration (type 4):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 145 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example145()
         {
             // Example 145
@@ -4032,12 +4029,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 145, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>");
         }
-
+    }
         // CDATA (type 5):
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 146 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example146()
         {
             // Example 146
@@ -4074,12 +4071,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 146, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>");
         }
-
+    }
         // The opening tag can be indented 1-3 spaces, but not 4:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 147 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example147()
         {
             // Example 147
@@ -4098,11 +4095,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 147, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 148 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example148()
         {
             // Example 148
@@ -4121,13 +4118,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 148, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>");
         }
-
+    }
         // An HTML block of types 1--6 can interrupt a paragraph, and need not be
         // preceded by a blank line.
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 149 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example149()
         {
             // Example 149
@@ -4148,13 +4145,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 149, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>");
         }
-
+    }
         // However, a following blank line is needed, except at the end of
         // a document, and except for blocks of types 1--5, above:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 150 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example150()
         {
             // Example 150
@@ -4175,12 +4172,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 150, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*");
         }
-
+    }
         // HTML blocks of type 7 cannot interrupt a paragraph:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 151 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example151()
         {
             // Example 151
@@ -4199,7 +4196,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 151, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>");
         }
-
+    }
         // This rule differs from John Gruber's original Markdown syntax
         // specification, which says:
         //
@@ -4229,10 +4226,10 @@ namespace Textamina.Markdig.Tests
         // simply separate the Markdown from the HTML using blank lines:
         //
         // Compare:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 152 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example152()
         {
             // Example 152
@@ -4253,11 +4250,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 152, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 153 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example153()
         {
             // Example 153
@@ -4276,7 +4273,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 153, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>");
         }
-
+    }
         // Some Markdown implementations have adopted a convention of
         // interpreting content inside tags as text if the open tag has
         // the attribute `markdown=1`.  The rule given above seems a simpler and
@@ -4287,10 +4284,10 @@ namespace Textamina.Markdig.Tests
         // blocks into Markdown documents with 100% reliability.  However,
         // *in most cases* this will work fine, because the blank lines in
         // HTML are usually followed by HTML block tags.  For example:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 154 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example154()
         {
             // Example 154
@@ -4321,14 +4318,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 154, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>");
         }
-
+    }
         // There are problems, however, if the inner tags are indented
         // *and* separated by spaces, as then they will be interpreted as
         // an indented code block:
+    [TestFixture]
+    public partial class TestLeafblocksHTMLblocks
+    {
         [Test]
-        //[Test(Description="Example 155 - Leaf blocks HTML blocks")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks HTML blocks")]
         public void Example155()
         {
             // Example 155
@@ -4360,7 +4357,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 155, "Leaf blocks HTML blocks");
 			TestParser.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>");
         }
-
+    }
         // Fortunately, blank lines are usually not necessary and can be
         // deleted.  The exception is inside `<pre>` tags, but as described
         // above, raw HTML blocks starting with `<pre>` *can* contain blank
@@ -4384,10 +4381,10 @@ namespace Textamina.Markdig.Tests
         // and reference-style [images] elsewhere in the document.  [Link
         // reference definitions] can come either before or after the links that use
         // them.
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 156 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example156()
         {
             // Example 156
@@ -4404,11 +4401,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 156, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 157 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example157()
         {
             // Example 157
@@ -4427,11 +4424,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 157, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 158 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example158()
         {
             // Example 158
@@ -4448,11 +4445,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 158, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 159 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example159()
         {
             // Example 159
@@ -4471,12 +4468,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 159, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[Foo bar]:\n<my%20url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>");
         }
-
+    }
         // The title may extend over multiple lines:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 160 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example160()
         {
             // Example 160
@@ -4501,12 +4498,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 160, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>");
         }
-
+    }
         // However, it may not contain a [blank line]:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 161 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example161()
         {
             // Example 161
@@ -4527,12 +4524,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 161, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>");
         }
-
+    }
         // The title may be omitted:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 162 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example162()
         {
             // Example 162
@@ -4550,12 +4547,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 162, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>");
         }
-
+    }
         // The link destination may not be omitted:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 163 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example163()
         {
             // Example 163
@@ -4573,13 +4570,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 163, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>");
         }
-
+    }
         // Both title and destination can contain backslash escapes
         // and literal backslashes:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 164 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example164()
         {
             // Example 164
@@ -4596,12 +4593,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 164, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>");
         }
-
+    }
         // A link can come before its corresponding definition:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 165 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example165()
         {
             // Example 165
@@ -4618,13 +4615,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 165, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>");
         }
-
+    }
         // If there are several matching definitions, the first one takes
         // precedence:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 166 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example166()
         {
             // Example 166
@@ -4642,13 +4639,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 166, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>");
         }
-
+    }
         // As noted in the section on [Links], matching of labels is
         // case-insensitive (see [matches]).
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 167 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example167()
         {
             // Example 167
@@ -4665,11 +4662,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 167, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 168 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example168()
         {
             // Example 168
@@ -4686,13 +4683,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 168, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>");
         }
-
+    }
         // Here is a link reference definition with no corresponding link.
         // It contributes nothing to the document.
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 169 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example169()
         {
             // Example 169
@@ -4707,12 +4704,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 169, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url", "");
         }
-
+    }
         // Here is another one:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 170 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example170()
         {
             // Example 170
@@ -4730,13 +4727,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 170, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>");
         }
-
+    }
         // This is not a link reference definition, because there are
         // [non-whitespace characters] after the title:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 171 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example171()
         {
             // Example 171
@@ -4751,12 +4748,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 171, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>");
         }
-
+    }
         // This is a link reference definition, but it has no title:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 172 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example172()
         {
             // Example 172
@@ -4772,13 +4769,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 172, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>");
         }
-
+    }
         // This is not a link reference definition, because it is indented
         // four spaces:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 173 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example173()
         {
             // Example 173
@@ -4797,13 +4794,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 173, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>");
         }
-
+    }
         // This is not a link reference definition, because it occurs inside
         // a code block:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 174 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example174()
         {
             // Example 174
@@ -4824,12 +4821,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 174, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>");
         }
-
+    }
         // A [link reference definition] cannot interrupt a paragraph.
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 175 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example175()
         {
             // Example 175
@@ -4849,13 +4846,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 175, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>");
         }
-
+    }
         // However, it can directly follow other block elements, such as headings
         // and thematic breaks, and it need not be followed by a blank line.
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 176 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example176()
         {
             // Example 176
@@ -4875,13 +4872,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 176, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>");
         }
-
+    }
         // Several [link reference definitions]
         // can occur one after another, without intervening blank lines.
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 177 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example177()
         {
             // Example 177
@@ -4905,15 +4902,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 177, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>");
         }
-
+    }
         // [Link reference definitions] can occur
         // inside block containers, like lists and block quotations.  They
         // affect the entire document, not just the container in which they
         // are defined:
+    [TestFixture]
+    public partial class TestLeafblocksLinkreferencedefinitions
+    {
         [Test]
-        //[Test(Description="Example 178 - Leaf blocks Link reference definitions")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Link reference definitions")]
         public void Example178()
         {
             // Example 178
@@ -4932,7 +4929,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 178, "Leaf blocks Link reference definitions");
 			TestParser.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>");
         }
-
+    }
         // ## Paragraphs
         //
         // A sequence of non-blank lines that cannot be interpreted as other
@@ -4943,10 +4940,10 @@ namespace Textamina.Markdig.Tests
         // [whitespace].
         //
         // A simple example with two paragraphs:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 179 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example179()
         {
             // Example 179
@@ -4964,12 +4961,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 179, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>");
         }
-
+    }
         // Paragraphs can contain multiple lines, but no blank lines:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 180 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example180()
         {
             // Example 180
@@ -4991,12 +4988,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 180, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>");
         }
-
+    }
         // Multiple blank lines between paragraph have no effect:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 181 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example181()
         {
             // Example 181
@@ -5015,12 +5012,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 181, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>");
         }
-
+    }
         // Leading spaces are skipped:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 182 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example182()
         {
             // Example 182
@@ -5037,13 +5034,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 182, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>");
         }
-
+    }
         // Lines after the first may be indented any amount, since indented
         // code blocks cannot interrupt paragraphs.
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 183 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example183()
         {
             // Example 183
@@ -5062,13 +5059,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 183, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>");
         }
-
+    }
         // However, the first line may be indented at most three spaces,
         // or an indented code block will be triggered:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 184 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example184()
         {
             // Example 184
@@ -5085,11 +5082,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 184, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 185 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example185()
         {
             // Example 185
@@ -5107,14 +5104,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 185, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>");
         }
-
+    }
         // Final spaces are stripped before inline parsing, so a paragraph
         // that ends with two or more spaces will not end with a [hard line
         // break]:
+    [TestFixture]
+    public partial class TestLeafblocksParagraphs
+    {
         [Test]
-        //[Test(Description="Example 186 - Leaf blocks Paragraphs")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Paragraphs")]
         public void Example186()
         {
             // Example 186
@@ -5131,7 +5128,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 186, "Leaf blocks Paragraphs");
 			TestParser.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>");
         }
-
+    }
         // ## Blank lines
         //
         // [Blank lines] between block-level elements are ignored,
@@ -5139,10 +5136,10 @@ namespace Textamina.Markdig.Tests
         // is [tight] or [loose].
         //
         // Blank lines at the beginning and end of the document are also ignored.
+    [TestFixture]
+    public partial class TestLeafblocksBlanklines
+    {
         [Test]
-        //[Test(Description="Example 187 - Leaf blocks Blank lines")]
-        //[Timeout(1000)]
-		[Category("Leaf blocks Blank lines")]
         public void Example187()
         {
             // Example 187
@@ -5165,7 +5162,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 187, "Leaf blocks Blank lines");
 			TestParser.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>");
         }
-
+    }
         // # Container blocks
         //
         // A [container block] is a block that has other
@@ -5215,10 +5212,10 @@ namespace Textamina.Markdig.Tests
         // Nothing else counts as a [block quote](#block-quotes).
         //
         // Here is a simple example:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 188 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example188()
         {
             // Example 188
@@ -5239,12 +5236,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 188, "Container blocks Block quotes");
 			TestParser.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>");
         }
-
+    }
         // The spaces after the `>` characters can be omitted:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 189 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example189()
         {
             // Example 189
@@ -5265,12 +5262,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 189, "Container blocks Block quotes");
 			TestParser.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>");
         }
-
+    }
         // The `>` characters can be indented 1-3 spaces:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 190 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example190()
         {
             // Example 190
@@ -5291,12 +5288,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 190, "Container blocks Block quotes");
 			TestParser.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>");
         }
-
+    }
         // Four spaces gives us a code block:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 191 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example191()
         {
             // Example 191
@@ -5316,13 +5313,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 191, "Container blocks Block quotes");
 			TestParser.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>");
         }
-
+    }
         // The Laziness clause allows us to omit the `>` before a
         // paragraph continuation line:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 192 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example192()
         {
             // Example 192
@@ -5343,13 +5340,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 192, "Container blocks Block quotes");
 			TestParser.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>");
         }
-
+    }
         // A block quote can contain some lazy and some non-lazy
         // continuation lines:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 193 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example193()
         {
             // Example 193
@@ -5370,7 +5367,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 193, "Container blocks Block quotes");
 			TestParser.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>");
         }
-
+    }
         // Laziness only applies to lines that would have been continuations of
         // paragraphs had they been prepended with [block quote markers].
         // For example, the `> ` cannot be omitted in the second line of
@@ -5381,10 +5378,10 @@ namespace Textamina.Markdig.Tests
         // ```
         //
         // without changing the meaning:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 194 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example194()
         {
             // Example 194
@@ -5403,7 +5400,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 194, "Container blocks Block quotes");
 			TestParser.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />");
         }
-
+    }
         // Similarly, if we omit the `> ` in the second line of
         //
         // ``` markdown
@@ -5412,10 +5409,10 @@ namespace Textamina.Markdig.Tests
         // ```
         //
         // then the block quote ends after the first line:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 195 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example195()
         {
             // Example 195
@@ -5438,13 +5435,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 195, "Container blocks Block quotes");
 			TestParser.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>");
         }
-
+    }
         // For the same reason, we can't omit the `> ` in front of
         // subsequent lines of an indented or fenced code block:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 196 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example196()
         {
             // Example 196
@@ -5465,11 +5462,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 196, "Container blocks Block quotes");
 			TestParser.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 197 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example197()
         {
             // Example 197
@@ -5490,13 +5487,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 197, "Container blocks Block quotes");
 			TestParser.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>");
         }
-
+    }
         // Note that in the following case, we have a paragraph
         // continuation line:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 198 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example198()
         {
             // Example 198
@@ -5515,7 +5512,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 198, "Container blocks Block quotes");
 			TestParser.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>");
         }
-
+    }
         // To see why, note that in
         //
         // ```markdown
@@ -5528,10 +5525,10 @@ namespace Textamina.Markdig.Tests
         // interrupt paragraphs, so it is a [paragraph continuation line].
         //
         // A block quote can be empty:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 199 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example199()
         {
             // Example 199
@@ -5547,11 +5544,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 199, "Container blocks Block quotes");
 			TestParser.TestSpec(">", "<blockquote>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 200 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example200()
         {
             // Example 200
@@ -5569,12 +5566,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 200, "Container blocks Block quotes");
 			TestParser.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>");
         }
-
+    }
         // A block quote can have initial or final blank lines:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 201 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example201()
         {
             // Example 201
@@ -5593,12 +5590,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 201, "Container blocks Block quotes");
 			TestParser.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>");
         }
-
+    }
         // A blank line always separates block quotes:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 202 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example202()
         {
             // Example 202
@@ -5620,7 +5617,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 202, "Container blocks Block quotes");
 			TestParser.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>");
         }
-
+    }
         // (Most current Markdown implementations, including John Gruber's
         // original `Markdown.pl`, will parse this example as a single block quote
         // with two paragraphs.  But it seems better to allow the author to decide
@@ -5628,10 +5625,10 @@ namespace Textamina.Markdig.Tests
         //
         // Consecutiveness means that if we put these block quotes together,
         // we get a single block quote:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 203 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example203()
         {
             // Example 203
@@ -5650,12 +5647,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 203, "Container blocks Block quotes");
 			TestParser.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>");
         }
-
+    }
         // To get a block quote with two paragraphs, use:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 204 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example204()
         {
             // Example 204
@@ -5675,12 +5672,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 204, "Container blocks Block quotes");
 			TestParser.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>");
         }
-
+    }
         // Block quotes can interrupt paragraphs:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 205 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example205()
         {
             // Example 205
@@ -5699,13 +5696,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 205, "Container blocks Block quotes");
 			TestParser.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>");
         }
-
+    }
         // In general, blank lines are not needed before or after block
         // quotes:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 206 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example206()
         {
             // Example 206
@@ -5728,13 +5725,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 206, "Container blocks Block quotes");
 			TestParser.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>");
         }
-
+    }
         // However, because of laziness, a blank line is needed between
         // a block quote and a following paragraph:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 207 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example207()
         {
             // Example 207
@@ -5753,11 +5750,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 207, "Container blocks Block quotes");
 			TestParser.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 208 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example208()
         {
             // Example 208
@@ -5777,11 +5774,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 208, "Container blocks Block quotes");
 			TestParser.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 209 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example209()
         {
             // Example 209
@@ -5801,14 +5798,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 209, "Container blocks Block quotes");
 			TestParser.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>");
         }
-
+    }
         // It is a consequence of the Laziness rule that any number
         // of initial `>`s may be omitted on a continuation line of a
         // nested block quote:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 210 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example210()
         {
             // Example 210
@@ -5831,11 +5828,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 210, "Container blocks Block quotes");
 			TestParser.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 211 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example211()
         {
             // Example 211
@@ -5860,15 +5857,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 211, "Container blocks Block quotes");
 			TestParser.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>");
         }
-
+    }
         // When including an indented code block in a block quote,
         // remember that the [block quote marker] includes
         // both the `>` and a following space.  So *five spaces* are needed after
         // the `>`:
+    [TestFixture]
+    public partial class TestContainerblocksBlockquotes
+    {
         [Test]
-        //[Test(Description="Example 212 - Container blocks Block quotes")]
-        //[Timeout(1000)]
-		[Category("Container blocks Block quotes")]
         public void Example212()
         {
             // Example 212
@@ -5891,7 +5888,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 212, "Container blocks Block quotes");
 			TestParser.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>");
         }
-
+    }
         // ## List items
         //
         // A [list marker](@) is a
@@ -5920,10 +5917,10 @@ namespace Textamina.Markdig.Tests
         // number, based on the ordered list marker.
         //
         // For example, let *Ls* be the lines
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 213 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example213()
         {
             // Example 213
@@ -5949,14 +5946,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 213, "Container blocks List items");
 			TestParser.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>");
         }
-
+    }
         // And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
         // that the following is an ordered list item with start number 1,
         // and the same contents as *Ls*:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 214 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example214()
         {
             // Example 214
@@ -5986,7 +5983,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 214, "Container blocks List items");
 			TestParser.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // The most important thing to notice is that the position of
         // the text after the list marker determines how much indentation
         // is needed in subsequent blocks in the list item.  If the list
@@ -5997,10 +5994,10 @@ namespace Textamina.Markdig.Tests
         //
         // Here are some examples showing how far content must be indented to be
         // put under the list item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 215 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example215()
         {
             // Example 215
@@ -6020,11 +6017,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 215, "Container blocks List items");
 			TestParser.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 216 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example216()
         {
             // Example 216
@@ -6046,11 +6043,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 216, "Container blocks List items");
 			TestParser.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 217 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example217()
         {
             // Example 217
@@ -6071,11 +6068,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 217, "Container blocks List items");
 			TestParser.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 218 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example218()
         {
             // Example 218
@@ -6097,7 +6094,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 218, "Container blocks List items");
 			TestParser.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>");
         }
-
+    }
         // It is tempting to think of this in terms of columns:  the continuation
         // blocks must be indented at least to the column of the first
         // [non-whitespace character] after the list marker. However, that is not quite right.
@@ -6105,10 +6102,10 @@ namespace Textamina.Markdig.Tests
         // is needed.  Which column this indentation reaches will depend on
         // how the list item is embedded in other constructions, as shown by
         // this example:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 219 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example219()
         {
             // Example 219
@@ -6134,7 +6131,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 219, "Container blocks List items");
 			TestParser.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>");
         }
-
+    }
         // Here `two` occurs in the same column as the list marker `1.`,
         // but is actually contained in the list item, because there is
         // sufficient indentation after the last containing blockquote marker.
@@ -6143,10 +6140,10 @@ namespace Textamina.Markdig.Tests
         // occurs far to the right of the initial text of the list item, `one`, but
         // it is not considered part of the list item, because it is not indented
         // far enough past the blockquote marker:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 220 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example220()
         {
             // Example 220
@@ -6170,13 +6167,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 220, "Container blocks List items");
 			TestParser.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>");
         }
-
+    }
         // Note that at least one space is needed between the list marker and
         // any following content, so these are not list items:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 221 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example221()
         {
             // Example 221
@@ -6194,14 +6191,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 221, "Container blocks List items");
 			TestParser.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>");
         }
-
+    }
         // A list item may not contain blocks that are separated by more than
         // one blank line.  Thus, two blank lines will end a list, unless the
         // two blanks are contained in a [fenced code block].
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 222 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example222()
         {
             // Example 222
@@ -6269,12 +6266,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 222, "Container blocks List items");
 			TestParser.TestSpec("- foo\n\n  bar\n\n- foo\n\n\n  bar\n\n- ```\n  foo\n\n\n  bar\n  ```\n\n- baz\n\n  + ```\n    foo\n\n\n    bar\n    ```", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<p>bar</p>\n<ul>\n<li>\n<pre><code>foo\n\n\nbar\n</code></pre>\n</li>\n<li>\n<p>baz</p>\n<ul>\n<li>\n<pre><code>foo\n\n\nbar\n</code></pre>\n</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
         // A list item may contain any kind of block:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 223 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example223()
         {
             // Example 223
@@ -6307,15 +6304,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 223, "Container blocks List items");
 			TestParser.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // A list item that contains an indented code block will preserve
         // empty lines within the code block verbatim, unless there are two
         // or more empty lines in a row (since as described above, two
         // blank lines end the list):
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 224 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example224()
         {
             // Example 224
@@ -6342,11 +6339,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 224, "Container blocks List items");
 			TestParser.TestSpec("- Foo\n\n      bar\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\nbaz\n</code></pre>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 225 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example225()
         {
             // Example 225
@@ -6374,12 +6371,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 225, "Container blocks List items");
 			TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n<pre><code>  baz\n</code></pre>");
         }
-
+    }
         // Note that ordered list start numbers must be nine digits or less:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 226 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example226()
         {
             // Example 226
@@ -6396,11 +6393,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 226, "Container blocks List items");
 			TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 227 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example227()
         {
             // Example 227
@@ -6415,12 +6412,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 227, "Container blocks List items");
 			TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>");
         }
-
+    }
         // A start number may begin with 0s:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 228 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example228()
         {
             // Example 228
@@ -6437,11 +6434,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 228, "Container blocks List items");
 			TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 229 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example229()
         {
             // Example 229
@@ -6458,12 +6455,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 229, "Container blocks List items");
 			TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>");
         }
-
+    }
         // A start number may not be negative:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 230 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example230()
         {
             // Example 230
@@ -6478,7 +6475,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 230, "Container blocks List items");
 			TestParser.TestSpec("-1. not ok", "<p>-1. not ok</p>");
         }
-
+    }
         // 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
         // constitute a sequence of blocks *Bs* starting with an indented code
         // block and not separated from each other by more than one blank line,
@@ -6494,10 +6491,10 @@ namespace Textamina.Markdig.Tests
         // An indented code block will have to be indented four spaces beyond
         // the edge of the region where text will be included in the list item.
         // In the following case that is 6 spaces:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 231 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example231()
         {
             // Example 231
@@ -6520,12 +6517,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 231, "Container blocks List items");
 			TestParser.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>");
         }
-
+    }
         // And in this case it is 11 spaces:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 232 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example232()
         {
             // Example 232
@@ -6548,14 +6545,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 232, "Container blocks List items");
 			TestParser.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>");
         }
-
+    }
         // If the *first* block in the list item is an indented code block,
         // then by rule #2, the contents must be indented *one* space after the
         // list marker:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 233 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example233()
         {
             // Example 233
@@ -6578,11 +6575,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 233, "Container blocks List items");
 			TestParser.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 234 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example234()
         {
             // Example 234
@@ -6609,13 +6606,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 234, "Container blocks List items");
 			TestParser.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>");
         }
-
+    }
         // Note that an additional space indent is interpreted as space
         // inside the code block:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 235 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example235()
         {
             // Example 235
@@ -6642,7 +6639,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 235, "Container blocks List items");
 			TestParser.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>");
         }
-
+    }
         // Note that rules #1 and #2 only apply to two cases:  (a) cases
         // in which the lines to be included in a list item begin with a
         // [non-whitespace character], and (b) cases in which
@@ -6650,10 +6647,10 @@ namespace Textamina.Markdig.Tests
         // block.  In a case like the following, where the first block begins with
         // a three-space indent, the rules do not allow us to form a list item by
         // indenting the whole thing and prepending a list marker:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 236 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example236()
         {
             // Example 236
@@ -6671,11 +6668,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 236, "Container blocks List items");
 			TestParser.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 237 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example237()
         {
             // Example 237
@@ -6695,15 +6692,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 237, "Container blocks List items");
 			TestParser.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>");
         }
-
+    }
         // This is not a significant restriction, because when a block begins
         // with 1-3 spaces indent, the indentation can always be removed without
         // a change in interpretation, allowing rule #1 to be applied.  So, in
         // the above case:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 238 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example238()
         {
             // Example 238
@@ -6725,7 +6722,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 238, "Container blocks List items");
 			TestParser.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>");
         }
-
+    }
         // 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
         // starting with a single [blank line] constitute a (possibly empty)
         // sequence of blocks *Bs*, not separated from each other by more than
@@ -6739,10 +6736,10 @@ namespace Textamina.Markdig.Tests
         // start number, based on the ordered list marker.
         //
         // Here are some list items that start with a blank line but are not empty:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 239 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example239()
         {
             // Example 239
@@ -6774,14 +6771,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 239, "Container blocks List items");
 			TestParser.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>");
         }
-
+    }
         // A list item can begin with at most one blank line.
         // In the following example, `foo` is not part of the list
         // item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 240 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example240()
         {
             // Example 240
@@ -6801,12 +6798,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 240, "Container blocks List items");
 			TestParser.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>");
         }
-
+    }
         // Here is an empty bullet list item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 241 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example241()
         {
             // Example 241
@@ -6827,12 +6824,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 241, "Container blocks List items");
 			TestParser.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>");
         }
-
+    }
         // It does not matter whether there are spaces following the [list marker]:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 242 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example242()
         {
             // Example 242
@@ -6853,12 +6850,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 242, "Container blocks List items");
 			TestParser.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>");
         }
-
+    }
         // Here is an empty ordered list item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 243 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example243()
         {
             // Example 243
@@ -6879,12 +6876,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 243, "Container blocks List items");
 			TestParser.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>");
         }
-
+    }
         // A list may start or end with an empty list item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 244 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example244()
         {
             // Example 244
@@ -6901,7 +6898,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 244, "Container blocks List items");
 			TestParser.TestSpec("*", "<ul>\n<li></li>\n</ul>");
         }
-
+    }
         // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
         // according to rule #1, #2, or #3, then the result of indenting each line
         // of *Ls* by 1-3 spaces (the same for each line) also constitutes a
@@ -6909,10 +6906,10 @@ namespace Textamina.Markdig.Tests
         // empty, then it need not be indented.
         //
         // Indented one space:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 245 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example245()
         {
             // Example 245
@@ -6942,12 +6939,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 245, "Container blocks List items");
 			TestParser.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // Indented two spaces:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 246 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example246()
         {
             // Example 246
@@ -6977,12 +6974,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 246, "Container blocks List items");
 			TestParser.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // Indented three spaces:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 247 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example247()
         {
             // Example 247
@@ -7012,12 +7009,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 247, "Container blocks List items");
 			TestParser.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // Four spaces indent gives a code block:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 248 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example248()
         {
             // Example 248
@@ -7043,7 +7040,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 248, "Container blocks List items");
 			TestParser.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>");
         }
-
+    }
         // 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
         // item](#list-items) with contents *Bs*, then the result of deleting
         // some or all of the indentation from one or more lines in which the
@@ -7054,10 +7051,10 @@ namespace Textamina.Markdig.Tests
         // [lazy continuation line](@)s.
         //
         // Here is an example with [lazy continuation lines]:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 249 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example249()
         {
             // Example 249
@@ -7087,12 +7084,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 249, "Container blocks List items");
 			TestParser.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>");
         }
-
+    }
         // Indentation can be partially deleted:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 250 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example250()
         {
             // Example 250
@@ -7111,12 +7108,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 250, "Container blocks List items");
 			TestParser.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>");
         }
-
+    }
         // These examples show how laziness can work in nested structures:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 251 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example251()
         {
             // Example 251
@@ -7141,11 +7138,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 251, "Container blocks List items");
 			TestParser.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 252 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example252()
         {
             // Example 252
@@ -7170,7 +7167,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 252, "Container blocks List items");
 			TestParser.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>");
         }
-
+    }
         // 6.  **That's all.** Nothing that is not counted as a list item by rules
         // #1--5 counts as a [list item](#list-items).
         //
@@ -7179,10 +7176,10 @@ namespace Textamina.Markdig.Tests
         // in order to be included in the list item.
         //
         // So, in this case we need two spaces indent:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 253 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example253()
         {
             // Example 253
@@ -7209,12 +7206,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 253, "Container blocks List items");
 			TestParser.TestSpec("- foo\n  - bar\n    - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
         // One is not enough:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 254 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example254()
         {
             // Example 254
@@ -7235,12 +7232,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 254, "Container blocks List items");
 			TestParser.TestSpec("- foo\n - bar\n  - baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n</ul>");
         }
-
+    }
         // Here we need four, because the list marker is wider:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 255 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example255()
         {
             // Example 255
@@ -7262,12 +7259,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 255, "Container blocks List items");
 			TestParser.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>");
         }
-
+    }
         // Three is not enough:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 256 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example256()
         {
             // Example 256
@@ -7288,12 +7285,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 256, "Container blocks List items");
 			TestParser.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>");
         }
-
+    }
         // A list may be the first block in a list item:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 257 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example257()
         {
             // Example 257
@@ -7314,11 +7311,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 257, "Container blocks List items");
 			TestParser.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 258 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example258()
         {
             // Example 258
@@ -7343,12 +7340,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 258, "Container blocks List items");
 			TestParser.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>");
         }
-
+    }
         // A list item can contain a heading:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
         [Test]
-        //[Test(Description="Example 259 - Container blocks List items")]
-        //[Timeout(1000)]
-		[Category("Container blocks List items")]
         public void Example259()
         {
             // Example 259
@@ -7373,7 +7370,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 259, "Container blocks List items");
 			TestParser.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>");
         }
-
+    }
         // ### Motivation
         //
         // John Gruber's Markdown spec says the following about list items:
@@ -7593,10 +7590,10 @@ namespace Textamina.Markdig.Tests
         // wrapped in `<p>` tags, while paragraphs in a tight list are not.)
         //
         // Changing the bullet or ordered list delimiter starts a new list:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 260 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example260()
         {
             // Example 260
@@ -7619,11 +7616,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 260, "Container blocks Lists");
 			TestParser.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 261 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example261()
         {
             // Example 261
@@ -7646,14 +7643,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 261, "Container blocks Lists");
 			TestParser.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>");
         }
-
+    }
         // In CommonMark, a list can interrupt a paragraph. That is,
         // no blank line is needed to separate a paragraph from a following
         // list:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 262 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example262()
         {
             // Example 262
@@ -7674,13 +7671,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 262, "Container blocks Lists");
 			TestParser.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>");
         }
-
+    }
         // `Markdown.pl` does not allow this, through fear of triggering a list
         // via a numeral in a hard-wrapped line:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 263 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example263()
         {
             // Example 263
@@ -7699,7 +7696,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 263, "Container blocks Lists");
 			TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol start=\"14\">\n<li>The number of doors is 6.</li>\n</ol>");
         }
-
+    }
         // Oddly, `Markdown.pl` *does* allow a blockquote to interrupt a paragraph,
         // even though the same considerations might apply.  We think that the two
         // cases should be treated the same.  Here are two reasons for allowing
@@ -7754,10 +7751,10 @@ namespace Textamina.Markdig.Tests
         //
         // There can be blank lines between items, but two blank lines end
         // a list:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 264 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example264()
         {
             // Example 264
@@ -7787,14 +7784,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 264, "Container blocks Lists");
 			TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>");
         }
-
+    }
         // As illustrated above in the section on [list items],
         // two blank lines between blocks *within* a list item will also end a
         // list:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 265 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example265()
         {
             // Example 265
@@ -7819,12 +7816,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 265, "Container blocks Lists");
 			TestParser.TestSpec("- foo\n\n\n  bar\n- baz", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>\n<ul>\n<li>baz</li>\n</ul>");
         }
-
+    }
         // Indeed, two blank lines will end *all* containing lists:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 266 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example266()
         {
             // Example 266
@@ -7856,15 +7853,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 266, "Container blocks Lists");
 			TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<pre><code>  bim\n</code></pre>");
         }
-
+    }
         // Thus, two blank lines can be used to separate consecutive lists of
         // the same type, or to separate a list from an indented code block
         // that would otherwise be parsed as a subparagraph of the final list
         // item:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 267 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example267()
         {
             // Example 267
@@ -7891,11 +7888,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 267, "Container blocks Lists");
 			TestParser.TestSpec("- foo\n- bar\n\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 268 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example268()
         {
             // Example 268
@@ -7927,15 +7924,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 268, "Container blocks Lists");
 			TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<pre><code>code\n</code></pre>");
         }
-
+    }
         // List items need not be indented to the same level.  The following
         // list items will be treated as items at the same list level,
         // since none is indented enough to belong to the previous list
         // item:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 269 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example269()
         {
             // Example 269
@@ -7968,11 +7965,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 269, "Container blocks Lists");
 			TestParser.TestSpec("- a\n - b\n  - c\n   - d\n    - e\n   - f\n  - g\n - h\n- i", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n<li>h</li>\n<li>i</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 270 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example270()
         {
             // Example 270
@@ -8001,13 +7998,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 270, "Container blocks Lists");
 			TestParser.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>");
         }
-
+    }
         // This is a loose list, because there is a blank line between
         // two of the list items:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 271 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example271()
         {
             // Example 271
@@ -8035,12 +8032,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 271, "Container blocks Lists");
 			TestParser.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>");
         }
-
+    }
         // So is this, with a empty second item:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 272 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example272()
         {
             // Example 272
@@ -8066,14 +8063,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 272, "Container blocks Lists");
 			TestParser.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>");
         }
-
+    }
         // These are loose lists, even though there is no space between the items,
         // because one of the items directly contains two block-level elements
         // with a blank line between them:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 273 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example273()
         {
             // Example 273
@@ -8103,11 +8100,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 273, "Container blocks Lists");
 			TestParser.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 274 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example274()
         {
             // Example 274
@@ -8136,12 +8133,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 274, "Container blocks Lists");
 			TestParser.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>");
         }
-
+    }
         // This is a tight list, because the blank lines are in a code block:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 275 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example275()
         {
             // Example 275
@@ -8171,14 +8168,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 275, "Container blocks Lists");
 			TestParser.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>");
         }
-
+    }
         // This is a tight list, because the blank line is between two
         // paragraphs of a sublist.  So the sublist is loose while
         // the outer list is tight:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 276 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example276()
         {
             // Example 276
@@ -8207,13 +8204,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 276, "Container blocks Lists");
 			TestParser.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>");
         }
-
+    }
         // This is a tight list, because the blank line is inside the
         // block quote:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 277 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example277()
         {
             // Example 277
@@ -8238,13 +8235,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 277, "Container blocks Lists");
 			TestParser.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>");
         }
-
+    }
         // This list is tight, because the consecutive block elements
         // are not separated by blank lines:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 278 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example278()
         {
             // Example 278
@@ -8273,12 +8270,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 278, "Container blocks Lists");
 			TestParser.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>");
         }
-
+    }
         // A single-paragraph list is tight:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 279 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example279()
         {
             // Example 279
@@ -8295,11 +8292,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 279, "Container blocks Lists");
 			TestParser.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 280 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example280()
         {
             // Example 280
@@ -8321,13 +8318,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 280, "Container blocks Lists");
 			TestParser.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
         // This list is loose, because of the blank line between the
         // two block elements in the list item:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 281 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example281()
         {
             // Example 281
@@ -8352,12 +8349,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 281, "Container blocks Lists");
 			TestParser.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>");
         }
-
+    }
         // Here the outer list is loose, the inner list tight:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 282 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example282()
         {
             // Example 282
@@ -8383,11 +8380,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 282, "Container blocks Lists");
 			TestParser.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
         [Test]
-        //[Test(Description="Example 283 - Container blocks Lists")]
-        //[Timeout(1000)]
-		[Category("Container blocks Lists")]
         public void Example283()
         {
             // Example 283
@@ -8423,16 +8420,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 283, "Container blocks Lists");
 			TestParser.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>");
         }
-
+    }
         // # Inlines
         //
         // Inlines are parsed sequentially from the beginning of the character
         // stream to the end (left to right, in left-to-right languages).
         // Thus, for example, in
+    [TestFixture]
+    public partial class TestInlines
+    {
         [Test]
-        //[Test(Description="Example 284 - Inlines")]
-        //[Timeout(1000)]
-		[Category("Inlines")]
         public void Example284()
         {
             // Example 284
@@ -8447,17 +8444,17 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 284, "Inlines");
 			TestParser.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>");
         }
-
+    }
         // `hi` is parsed as code, leaving the backtick at the end as a literal
         // backtick.
         //
         // ## Backslash escapes
         //
         // Any ASCII punctuation character may be backslash-escaped:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 285 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example285()
         {
             // Example 285
@@ -8472,13 +8469,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 285, "Inlines Backslash escapes");
 			TestParser.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>");
         }
-
+    }
         // Backslashes before other characters are treated as literal
         // backslashes:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 286 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example286()
         {
             // Example 286
@@ -8493,13 +8490,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 286, "Inlines Backslash escapes");
 			TestParser.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>");
         }
-
+    }
         // Escaped characters are treated as regular characters and do
         // not have their usual Markdown meanings:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 287 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example287()
         {
             // Example 287
@@ -8528,12 +8525,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 287, "Inlines Backslash escapes");
 			TestParser.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;</p>");
         }
-
+    }
         // If a backslash is itself escaped, the following character is not:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 288 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example288()
         {
             // Example 288
@@ -8548,12 +8545,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 288, "Inlines Backslash escapes");
 			TestParser.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>");
         }
-
+    }
         // A backslash at the end of the line is a [hard line break]:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 289 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example289()
         {
             // Example 289
@@ -8570,13 +8567,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 289, "Inlines Backslash escapes");
 			TestParser.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>");
         }
-
+    }
         // Backslash escapes do not work in code blocks, code spans, autolinks, or
         // raw HTML:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 290 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example290()
         {
             // Example 290
@@ -8591,11 +8588,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 290, "Inlines Backslash escapes");
 			TestParser.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 291 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example291()
         {
             // Example 291
@@ -8611,11 +8608,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 291, "Inlines Backslash escapes");
 			TestParser.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 292 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example292()
         {
             // Example 292
@@ -8633,11 +8630,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 292, "Inlines Backslash escapes");
 			TestParser.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 293 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example293()
         {
             // Example 293
@@ -8652,11 +8649,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 293, "Inlines Backslash escapes");
 			TestParser.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 294 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example294()
         {
             // Example 294
@@ -8671,13 +8668,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 294, "Inlines Backslash escapes");
 			TestParser.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">");
         }
-
+    }
         // But they work in all other contexts, including URLs and link titles,
         // link references, and [info strings] in [fenced code blocks]:
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 295 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example295()
         {
             // Example 295
@@ -8692,11 +8689,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 295, "Inlines Backslash escapes");
 			TestParser.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 296 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example296()
         {
             // Example 296
@@ -8713,11 +8710,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 296, "Inlines Backslash escapes");
 			TestParser.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesBackslashescapes
+    {
         [Test]
-        //[Test(Description="Example 297 - Inlines Backslash escapes")]
-        //[Timeout(1000)]
-		[Category("Inlines Backslash escapes")]
         public void Example297()
         {
             // Example 297
@@ -8735,7 +8732,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 297, "Inlines Backslash escapes");
 			TestParser.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>");
         }
-
+    }
         // ## Entity and numeric character references
         //
         // All valid HTML entity references and numeric character
@@ -8751,10 +8748,10 @@ namespace Textamina.Markdig.Tests
         // document <https://html.spec.whatwg.org/multipage/entities.json>
         // is used as an authoritative source for the valid entity
         // references and their corresponding code points.
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 298 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example298()
         {
             // Example 298
@@ -8773,7 +8770,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 298, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>");
         }
-
+    }
         // [Decimal numeric character
         // references](@)
         // consist of `&#` + a string of 1--8 arabic digits + `;`. A
@@ -8781,10 +8778,10 @@ namespace Textamina.Markdig.Tests
         // Unicode character. Invalid Unicode code points will be replaced by
         // the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
         // the code point `U+0000` will also be replaced by `U+FFFD`.
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 299 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example299()
         {
             // Example 299
@@ -8799,16 +8796,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 299, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&#35; &#1234; &#992; &#98765432; &#0;", "<p># Ӓ Ϡ � �</p>");
         }
-
+    }
         // [Hexadecimal numeric character
         // references](@) consist of `&#` +
         // either `X` or `x` + a string of 1-8 hexadecimal digits + `;`.
         // They too are parsed as the corresponding Unicode character (this
         // time specified with a hexadecimal numeral instead of decimal).
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 300 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example300()
         {
             // Example 300
@@ -8823,12 +8820,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 300, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>");
         }
-
+    }
         // Here are some nonentities:
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 301 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example301()
         {
             // Example 301
@@ -8845,14 +8842,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 301, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&nbsp &x; &#; &#x;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;ThisIsNotDefined; &amp;hi?;</p>");
         }
-
+    }
         // Although HTML5 does accept some entity references
         // without a trailing semicolon (such as `&copy`), these are not
         // recognized here, because it makes the grammar too ambiguous:
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 302 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example302()
         {
             // Example 302
@@ -8867,13 +8864,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 302, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&copy", "<p>&amp;copy</p>");
         }
-
+    }
         // Strings that are not on the list of HTML5 named entities are not
         // recognized as entity references either:
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 303 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example303()
         {
             // Example 303
@@ -8888,14 +8885,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 303, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>");
         }
-
+    }
         // Entity and numeric character references are recognized in any
         // context besides code spans or code blocks, including
         // URLs, [link titles], and [fenced code block][] [info strings]:
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 304 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example304()
         {
             // Example 304
@@ -8910,11 +8907,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 304, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 305 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example305()
         {
             // Example 305
@@ -8929,11 +8926,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 305, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 306 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example306()
         {
             // Example 306
@@ -8950,11 +8947,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 306, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 307 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example307()
         {
             // Example 307
@@ -8972,13 +8969,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 307, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>");
         }
-
+    }
         // Entity and numeric character references are treated as literal
         // text in code spans and code blocks:
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 308 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example308()
         {
             // Example 308
@@ -8993,11 +8990,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 308, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEntityandnumericcharacterreferences
+    {
         [Test]
-        //[Test(Description="Example 309 - Inlines Entity and numeric character references")]
-        //[Timeout(1000)]
-		[Category("Inlines Entity and numeric character references")]
         public void Example309()
         {
             // Example 309
@@ -9013,7 +9010,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 309, "Inlines Entity and numeric character references");
 			TestParser.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>");
         }
-
+    }
         // ## Code spans
         //
         // A [backtick string](@)
@@ -9027,10 +9024,10 @@ namespace Textamina.Markdig.Tests
         // [whitespace] collapsed to single spaces.
         //
         // This is a simple code span:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 310 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example310()
         {
             // Example 310
@@ -9045,13 +9042,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 310, "Inlines Code spans");
 			TestParser.TestSpec("`foo`", "<p><code>foo</code></p>");
         }
-
+    }
         // Here two backticks are used, because the code contains a backtick.
         // This example also illustrates stripping of leading and trailing spaces:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 311 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example311()
         {
             // Example 311
@@ -9066,13 +9063,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 311, "Inlines Code spans");
 			TestParser.TestSpec("`` foo ` bar  ``", "<p><code>foo ` bar</code></p>");
         }
-
+    }
         // This example shows the motivation for stripping leading and trailing
         // spaces:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 312 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example312()
         {
             // Example 312
@@ -9087,12 +9084,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 312, "Inlines Code spans");
 			TestParser.TestSpec("` `` `", "<p><code>``</code></p>");
         }
-
+    }
         // [Line endings] are treated like spaces:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 313 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example313()
         {
             // Example 313
@@ -9109,13 +9106,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 313, "Inlines Code spans");
 			TestParser.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>");
         }
-
+    }
         // Interior spaces and [line endings] are collapsed into
         // single spaces, just as they would be by a browser:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 314 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example314()
         {
             // Example 314
@@ -9131,7 +9128,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 314, "Inlines Code spans");
 			TestParser.TestSpec("`foo   bar\n  baz`", "<p><code>foo bar baz</code></p>");
         }
-
+    }
         // Q: Why not just leave the spaces, since browsers will collapse them
         // anyway?  A:  Because we might be targeting a non-HTML format, and we
         // shouldn't rely on HTML-specific rendering assumptions.
@@ -9144,10 +9141,10 @@ namespace Textamina.Markdig.Tests
         // span will cause an unintended line break in the output.  Others just
         // leave internal spaces as they are, which is fine if only HTML is being
         // targeted.)
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 315 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example315()
         {
             // Example 315
@@ -9162,13 +9159,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 315, "Inlines Code spans");
 			TestParser.TestSpec("`foo `` bar`", "<p><code>foo `` bar</code></p>");
         }
-
+    }
         // Note that backslash escapes do not work in code spans. All backslashes
         // are treated literally:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 316 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example316()
         {
             // Example 316
@@ -9183,7 +9180,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 316, "Inlines Code spans");
 			TestParser.TestSpec("`foo\\`bar`", "<p><code>foo\\</code>bar`</p>");
         }
-
+    }
         // Backslash escapes are never needed, because one can always choose a
         // string of *n* backtick characters as delimiters, where the code does
         // not contain any strings of exactly *n* backtick characters.
@@ -9192,10 +9189,10 @@ namespace Textamina.Markdig.Tests
         // constructs except HTML tags and autolinks.  Thus, for example, this is
         // not parsed as emphasized text, since the second `*` is part of a code
         // span:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 317 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example317()
         {
             // Example 317
@@ -9210,12 +9207,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 317, "Inlines Code spans");
 			TestParser.TestSpec("*foo`*`", "<p>*foo<code>*</code></p>");
         }
-
+    }
         // And this is not parsed as a link:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 318 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example318()
         {
             // Example 318
@@ -9230,13 +9227,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 318, "Inlines Code spans");
 			TestParser.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>");
         }
-
+    }
         // Code spans, HTML tags, and autolinks have the same precedence.
         // Thus, this is code:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 319 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example319()
         {
             // Example 319
@@ -9251,12 +9248,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 319, "Inlines Code spans");
 			TestParser.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>");
         }
-
+    }
         // But this is an HTML tag:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 320 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example320()
         {
             // Example 320
@@ -9271,12 +9268,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 320, "Inlines Code spans");
 			TestParser.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>");
         }
-
+    }
         // And this is code:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 321 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example321()
         {
             // Example 321
@@ -9291,12 +9288,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 321, "Inlines Code spans");
 			TestParser.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>");
         }
-
+    }
         // But this is an autolink:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 322 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example322()
         {
             // Example 322
@@ -9311,13 +9308,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 322, "Inlines Code spans");
 			TestParser.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>");
         }
-
+    }
         // When a backtick string is not closed by a matching backtick string,
         // we just have literal backticks:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 323 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example323()
         {
             // Example 323
@@ -9332,11 +9329,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 323, "Inlines Code spans");
 			TestParser.TestSpec("```foo``", "<p>```foo``</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
         [Test]
-        //[Test(Description="Example 324 - Inlines Code spans")]
-        //[Timeout(1000)]
-		[Category("Inlines Code spans")]
         public void Example324()
         {
             // Example 324
@@ -9351,7 +9348,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 324, "Inlines Code spans");
 			TestParser.TestSpec("`foo", "<p>`foo</p>");
         }
-
+    }
         // ## Emphasis and strong emphasis
         //
         // John Gruber's original [Markdown syntax
@@ -9554,10 +9551,10 @@ namespace Textamina.Markdig.Tests
         // These rules can be illustrated through a series of examples.
         //
         // Rule 1:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 325 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example325()
         {
             // Example 325
@@ -9572,13 +9569,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 325, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo bar*", "<p><em>foo bar</em></p>");
         }
-
+    }
         // This is not emphasis, because the opening `*` is followed by
         // whitespace, and hence not part of a [left-flanking delimiter run]:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 326 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example326()
         {
             // Example 326
@@ -9593,14 +9590,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 326, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("a * foo bar*", "<p>a * foo bar*</p>");
         }
-
+    }
         // This is not emphasis, because the opening `*` is preceded
         // by an alphanumeric and followed by punctuation, and hence
         // not part of a [left-flanking delimiter run]:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 327 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example327()
         {
             // Example 327
@@ -9615,12 +9612,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 327, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>");
         }
-
+    }
         // Unicode nonbreaking spaces count as whitespace, too:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 328 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example328()
         {
             // Example 328
@@ -9635,12 +9632,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 328, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("* a *", "<p>* a *</p>");
         }
-
+    }
         // Intraword emphasis with `*` is permitted:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 329 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example329()
         {
             // Example 329
@@ -9655,11 +9652,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 329, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 330 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example330()
         {
             // Example 330
@@ -9674,12 +9671,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 330, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>");
         }
-
+    }
         // Rule 2:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 331 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example331()
         {
             // Example 331
@@ -9694,13 +9691,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 331, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>");
         }
-
+    }
         // This is not emphasis, because the opening `_` is followed by
         // whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 332 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example332()
         {
             // Example 332
@@ -9715,13 +9712,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 332, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>");
         }
-
+    }
         // This is not emphasis, because the opening `_` is preceded
         // by an alphanumeric and followed by punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 333 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example333()
         {
             // Example 333
@@ -9736,12 +9733,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 333, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>");
         }
-
+    }
         // Emphasis with `_` is not allowed inside words:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 334 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example334()
         {
             // Example 334
@@ -9756,11 +9753,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 334, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 335 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example335()
         {
             // Example 335
@@ -9775,11 +9772,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 335, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("5_6_78", "<p>5_6_78</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 336 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example336()
         {
             // Example 336
@@ -9794,13 +9791,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 336, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>");
         }
-
+    }
         // Here `_` does not generate emphasis, because the first delimiter run
         // is right-flanking and the second left-flanking:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 337 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example337()
         {
             // Example 337
@@ -9815,14 +9812,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 337, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>");
         }
-
+    }
         // This is emphasis, even though the opening delimiter is
         // both left- and right-flanking, because it is preceded by
         // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 338 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example338()
         {
             // Example 338
@@ -9837,15 +9834,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 338, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>");
         }
-
+    }
         // Rule 3:
         //
         // This is not emphasis, because the closing delimiter does
         // not match the opening delimiter:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 339 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example339()
         {
             // Example 339
@@ -9860,13 +9857,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 339, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo*", "<p>_foo*</p>");
         }
-
+    }
         // This is not emphasis, because the closing `*` is preceded by
         // whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 340 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example340()
         {
             // Example 340
@@ -9881,12 +9878,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 340, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>");
         }
-
+    }
         // A newline also counts as whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 341 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example341()
         {
             // Example 341
@@ -9905,14 +9902,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 341, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar</p>\n<ul>\n<li></li>\n</ul>");
         }
-
+    }
         // This is not emphasis, because the second `*` is
         // preceded by punctuation and followed by an alphanumeric
         // (hence it is not part of a [right-flanking delimiter run]:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 342 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example342()
         {
             // Example 342
@@ -9927,13 +9924,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 342, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>");
         }
-
+    }
         // The point of this restriction is more easily appreciated
         // with this example:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 343 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example343()
         {
             // Example 343
@@ -9948,12 +9945,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 343, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>");
         }
-
+    }
         // Intraword emphasis with `*` is allowed:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 344 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example344()
         {
             // Example 344
@@ -9968,15 +9965,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 344, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>");
         }
-
+    }
         // Rule 4:
         //
         // This is not emphasis, because the closing `_` is preceded by
         // whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 345 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example345()
         {
             // Example 345
@@ -9991,13 +9988,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 345, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo bar _", "<p>_foo bar _</p>");
         }
-
+    }
         // This is not emphasis, because the second `_` is
         // preceded by punctuation and followed by an alphanumeric:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 346 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example346()
         {
             // Example 346
@@ -10012,12 +10009,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 346, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>");
         }
-
+    }
         // This is emphasis within emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 347 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example347()
         {
             // Example 347
@@ -10032,12 +10029,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 347, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>");
         }
-
+    }
         // Intraword emphasis is disallowed for `_`:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 348 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example348()
         {
             // Example 348
@@ -10052,11 +10049,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 348, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 349 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example349()
         {
             // Example 349
@@ -10071,11 +10068,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 349, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 350 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example350()
         {
             // Example 350
@@ -10090,14 +10087,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 350, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>");
         }
-
+    }
         // This is emphasis, even though the closing delimiter is
         // both left- and right-flanking, because it is followed by
         // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 351 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example351()
         {
             // Example 351
@@ -10112,12 +10109,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 351, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>");
         }
-
+    }
         // Rule 5:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 352 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example352()
         {
             // Example 352
@@ -10132,13 +10129,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 352, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>");
         }
-
+    }
         // This is not strong emphasis, because the opening delimiter is
         // followed by whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 353 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example353()
         {
             // Example 353
@@ -10153,14 +10150,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 353, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>");
         }
-
+    }
         // This is not strong emphasis, because the opening `**` is preceded
         // by an alphanumeric and followed by punctuation, and hence
         // not part of a [left-flanking delimiter run]:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 354 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example354()
         {
             // Example 354
@@ -10175,12 +10172,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 354, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>");
         }
-
+    }
         // Intraword strong emphasis with `**` is permitted:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 355 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example355()
         {
             // Example 355
@@ -10195,12 +10192,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 355, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>");
         }
-
+    }
         // Rule 6:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 356 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example356()
         {
             // Example 356
@@ -10215,13 +10212,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 356, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>");
         }
-
+    }
         // This is not strong emphasis, because the opening delimiter is
         // followed by whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 357 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example357()
         {
             // Example 357
@@ -10236,12 +10233,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 357, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>");
         }
-
+    }
         // A newline counts as whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 358 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example358()
         {
             // Example 358
@@ -10258,13 +10255,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 358, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>");
         }
-
+    }
         // This is not strong emphasis, because the opening `__` is preceded
         // by an alphanumeric and followed by punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 359 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example359()
         {
             // Example 359
@@ -10279,12 +10276,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 359, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>");
         }
-
+    }
         // Intraword strong emphasis is forbidden with `__`:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 360 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example360()
         {
             // Example 360
@@ -10299,11 +10296,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 360, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 361 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example361()
         {
             // Example 361
@@ -10318,11 +10315,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 361, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("5__6__78", "<p>5__6__78</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 362 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example362()
         {
             // Example 362
@@ -10337,11 +10334,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 362, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 363 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example363()
         {
             // Example 363
@@ -10356,14 +10353,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 363, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>");
         }
-
+    }
         // This is strong emphasis, even though the opening delimiter is
         // both left- and right-flanking, because it is preceded by
         // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 364 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example364()
         {
             // Example 364
@@ -10378,15 +10375,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 364, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>");
         }
-
+    }
         // Rule 7:
         //
         // This is not strong emphasis, because the closing delimiter is preceded
         // by whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 365 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example365()
         {
             // Example 365
@@ -10401,16 +10398,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 365, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo bar **", "<p>**foo bar **</p>");
         }
-
+    }
         // (Nor can it be interpreted as an emphasized `*foo bar *`, because of
         // Rule 11.)
         //
         // This is not strong emphasis, because the second `**` is
         // preceded by punctuation and followed by an alphanumeric:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 366 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example366()
         {
             // Example 366
@@ -10425,13 +10422,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 366, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**(**foo)", "<p>**(**foo)</p>");
         }
-
+    }
         // The point of this restriction is more easily appreciated
         // with these examples:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 367 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example367()
         {
             // Example 367
@@ -10446,11 +10443,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 367, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 368 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example368()
         {
             // Example 368
@@ -10467,11 +10464,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 368, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 369 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example369()
         {
             // Example 369
@@ -10486,12 +10483,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 369, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>");
         }
-
+    }
         // Intraword emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 370 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example370()
         {
             // Example 370
@@ -10506,15 +10503,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 370, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>");
         }
-
+    }
         // Rule 8:
         //
         // This is not strong emphasis, because the closing delimiter is
         // preceded by whitespace:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 371 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example371()
         {
             // Example 371
@@ -10529,13 +10526,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 371, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo bar __", "<p>__foo bar __</p>");
         }
-
+    }
         // This is not strong emphasis, because the second `__` is
         // preceded by punctuation and followed by an alphanumeric:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 372 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example372()
         {
             // Example 372
@@ -10550,13 +10547,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 372, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>");
         }
-
+    }
         // The point of this restriction is more easily appreciated
         // with this example:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 373 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example373()
         {
             // Example 373
@@ -10571,12 +10568,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 373, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>");
         }
-
+    }
         // Intraword strong emphasis is forbidden with `__`:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 374 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example374()
         {
             // Example 374
@@ -10591,11 +10588,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 374, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 375 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example375()
         {
             // Example 375
@@ -10610,11 +10607,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 375, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 376 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example376()
         {
             // Example 376
@@ -10629,14 +10626,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 376, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>");
         }
-
+    }
         // This is strong emphasis, even though the closing delimiter is
         // both left- and right-flanking, because it is followed by
         // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 377 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example377()
         {
             // Example 377
@@ -10651,15 +10648,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 377, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>");
         }
-
+    }
         // Rule 9:
         //
         // Any nonempty sequence of inline elements can be the contents of an
         // emphasized span.
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 378 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example378()
         {
             // Example 378
@@ -10674,11 +10671,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 378, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 379 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example379()
         {
             // Example 379
@@ -10695,13 +10692,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 379, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>");
         }
-
+    }
         // In particular, emphasis and strong emphasis can be nested
         // inside emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 380 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example380()
         {
             // Example 380
@@ -10716,11 +10713,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 380, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 381 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example381()
         {
             // Example 381
@@ -10735,11 +10732,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 381, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 382 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example382()
         {
             // Example 382
@@ -10754,11 +10751,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 382, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 383 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example383()
         {
             // Example 383
@@ -10773,11 +10770,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 383, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 384 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example384()
         {
             // Example 384
@@ -10792,12 +10789,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 384, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>");
         }
-
+    }
         // But note:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 385 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example385()
         {
             // Example 385
@@ -10812,13 +10809,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 385, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo</em><em>bar</em><em>baz</em></p>");
         }
-
+    }
         // The difference is that in the preceding case, the internal delimiters
         // [can close emphasis], while in the cases with spaces, they cannot.
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 386 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example386()
         {
             // Example 386
@@ -10833,11 +10830,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 386, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 387 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example387()
         {
             // Example 387
@@ -10852,14 +10849,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 387, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>");
         }
-
+    }
         // Note, however, that in the following case we get no strong
         // emphasis, because the opening delimiter is closed by the first
         // `*` before `bar`:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 388 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example388()
         {
             // Example 388
@@ -10874,12 +10871,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 388, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo**bar***", "<p><em>foo</em><em>bar</em>**</p>");
         }
-
+    }
         // Indefinite levels of nesting are possible:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 389 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example389()
         {
             // Example 389
@@ -10894,11 +10891,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 389, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 390 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example390()
         {
             // Example 390
@@ -10913,12 +10910,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 390, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>");
         }
-
+    }
         // There can be no empty emphasis or strong emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 391 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example391()
         {
             // Example 391
@@ -10933,11 +10930,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 391, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 392 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example392()
         {
             // Example 392
@@ -10952,15 +10949,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 392, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>");
         }
-
+    }
         // Rule 10:
         //
         // Any nonempty sequence of inline elements can be the contents of an
         // strongly emphasized span.
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 393 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example393()
         {
             // Example 393
@@ -10975,11 +10972,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 393, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 394 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example394()
         {
             // Example 394
@@ -10996,13 +10993,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 394, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>");
         }
-
+    }
         // In particular, emphasis and strong emphasis can be nested
         // inside strong emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 395 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example395()
         {
             // Example 395
@@ -11017,11 +11014,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 395, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 396 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example396()
         {
             // Example 396
@@ -11036,11 +11033,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 396, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 397 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example397()
         {
             // Example 397
@@ -11055,11 +11052,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 397, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 398 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example398()
         {
             // Example 398
@@ -11074,11 +11071,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 398, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 399 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example399()
         {
             // Example 399
@@ -11093,12 +11090,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 399, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>");
         }
-
+    }
         // But note:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 400 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example400()
         {
             // Example 400
@@ -11113,13 +11110,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 400, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo*bar*baz**", "<p><em><em>foo</em>bar</em>baz**</p>");
         }
-
+    }
         // The difference is that in the preceding case, the internal delimiters
         // [can close emphasis], while in the cases with spaces, they cannot.
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 401 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example401()
         {
             // Example 401
@@ -11134,11 +11131,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 401, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 402 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example402()
         {
             // Example 402
@@ -11153,12 +11150,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 402, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>");
         }
-
+    }
         // Indefinite levels of nesting are possible:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 403 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example403()
         {
             // Example 403
@@ -11175,11 +11172,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 403, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 404 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example404()
         {
             // Example 404
@@ -11194,12 +11191,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 404, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>");
         }
-
+    }
         // There can be no empty emphasis or strong emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 405 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example405()
         {
             // Example 405
@@ -11214,11 +11211,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 405, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 406 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example406()
         {
             // Example 406
@@ -11233,12 +11230,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 406, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>");
         }
-
+    }
         // Rule 11:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 407 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example407()
         {
             // Example 407
@@ -11253,11 +11250,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 407, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo ***", "<p>foo ***</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 408 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example408()
         {
             // Example 408
@@ -11272,11 +11269,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 408, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 409 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example409()
         {
             // Example 409
@@ -11291,11 +11288,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 409, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 410 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example410()
         {
             // Example 410
@@ -11310,11 +11307,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 410, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo *****", "<p>foo *****</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 411 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example411()
         {
             // Example 411
@@ -11329,11 +11326,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 411, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 412 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example412()
         {
             // Example 412
@@ -11348,14 +11345,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 412, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>");
         }
-
+    }
         // Note that when delimiters do not match evenly, Rule 11 determines
         // that the excess literal `*` characters will appear outside of the
         // emphasis, rather than inside it:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 413 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example413()
         {
             // Example 413
@@ -11370,11 +11367,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 413, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 414 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example414()
         {
             // Example 414
@@ -11389,11 +11386,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 414, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 415 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example415()
         {
             // Example 415
@@ -11408,11 +11405,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 415, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 416 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example416()
         {
             // Example 416
@@ -11427,11 +11424,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 416, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 417 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example417()
         {
             // Example 417
@@ -11446,11 +11443,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 417, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 418 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example418()
         {
             // Example 418
@@ -11465,12 +11462,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 418, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>");
         }
-
+    }
         // Rule 12:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 419 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example419()
         {
             // Example 419
@@ -11485,11 +11482,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 419, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo ___", "<p>foo ___</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 420 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example420()
         {
             // Example 420
@@ -11504,11 +11501,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 420, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 421 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example421()
         {
             // Example 421
@@ -11523,11 +11520,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 421, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 422 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example422()
         {
             // Example 422
@@ -11542,11 +11539,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 422, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo _____", "<p>foo _____</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 423 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example423()
         {
             // Example 423
@@ -11561,11 +11558,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 423, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 424 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example424()
         {
             // Example 424
@@ -11580,11 +11577,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 424, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 425 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example425()
         {
             // Example 425
@@ -11599,14 +11596,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 425, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>");
         }
-
+    }
         // Note that when delimiters do not match evenly, Rule 12 determines
         // that the excess literal `_` characters will appear outside of the
         // emphasis, rather than inside it:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 426 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example426()
         {
             // Example 426
@@ -11621,11 +11618,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 426, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 427 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example427()
         {
             // Example 427
@@ -11640,11 +11637,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 427, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 428 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example428()
         {
             // Example 428
@@ -11659,11 +11656,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 428, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 429 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example429()
         {
             // Example 429
@@ -11678,11 +11675,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 429, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 430 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example430()
         {
             // Example 430
@@ -11697,13 +11694,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 430, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>");
         }
-
+    }
         // Rule 13 implies that if you want emphasis nested directly inside
         // emphasis, you must use different delimiters:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 431 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example431()
         {
             // Example 431
@@ -11718,11 +11715,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 431, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 432 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example432()
         {
             // Example 432
@@ -11737,11 +11734,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 432, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 433 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example433()
         {
             // Example 433
@@ -11756,11 +11753,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 433, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 434 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example434()
         {
             // Example 434
@@ -11775,13 +11772,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 434, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>");
         }
-
+    }
         // However, strong emphasis within strong emphasis is possible without
         // switching delimiters:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 435 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example435()
         {
             // Example 435
@@ -11796,11 +11793,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 435, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 436 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example436()
         {
             // Example 436
@@ -11815,13 +11812,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 436, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>");
         }
-
+    }
         // Rule 13 can be applied to arbitrarily long sequences of
         // delimiters:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 437 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example437()
         {
             // Example 437
@@ -11836,12 +11833,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 437, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>");
         }
-
+    }
         // Rule 14:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 438 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example438()
         {
             // Example 438
@@ -11856,11 +11853,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 438, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("***foo***", "<p><strong><em>foo</em></strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 439 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example439()
         {
             // Example 439
@@ -11875,12 +11872,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 439, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_____foo_____", "<p><strong><strong><em>foo</em></strong></strong></p>");
         }
-
+    }
         // Rule 15:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 440 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example440()
         {
             // Example 440
@@ -11895,11 +11892,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 440, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 441 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example441()
         {
             // Example 441
@@ -11914,11 +11911,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 441, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo*bar**", "<p><em><em>foo</em>bar</em>*</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 442 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example442()
         {
             // Example 442
@@ -11933,12 +11930,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 442, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>");
         }
-
+    }
         // Rule 16:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 443 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example443()
         {
             // Example 443
@@ -11953,11 +11950,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 443, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 444 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example444()
         {
             // Example 444
@@ -11972,12 +11969,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 444, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>");
         }
-
+    }
         // Rule 17:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 445 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example445()
         {
             // Example 445
@@ -11992,11 +11989,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 445, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 446 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example446()
         {
             // Example 446
@@ -12011,11 +12008,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 446, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 447 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example447()
         {
             // Example 447
@@ -12030,11 +12027,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 447, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 448 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example448()
         {
             // Example 448
@@ -12049,11 +12046,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 448, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 449 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example449()
         {
             // Example 449
@@ -12068,11 +12065,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 449, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 450 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example450()
         {
             // Example 450
@@ -12087,11 +12084,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 450, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 451 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example451()
         {
             // Example 451
@@ -12106,11 +12103,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 451, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 452 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example452()
         {
             // Example 452
@@ -12125,11 +12122,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 452, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**a<http://foo.bar/?q=**>", "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
         [Test]
-        //[Test(Description="Example 453 - Inlines Emphasis and strong emphasis")]
-        //[Timeout(1000)]
-		[Category("Inlines Emphasis and strong emphasis")]
         public void Example453()
         {
             // Example 453
@@ -12144,7 +12141,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 453, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__a<http://foo.bar/?q=__>", "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>");
         }
-
+    }
         // ## Links
         //
         // A link contains [link text] (the visible text), a [link destination]
@@ -12216,10 +12213,10 @@ namespace Textamina.Markdig.Tests
         // above.
         //
         // Here is a simple inline link:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 454 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example454()
         {
             // Example 454
@@ -12234,12 +12231,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 454, "Inlines Links");
 			TestParser.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>");
         }
-
+    }
         // The title may be omitted:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 455 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example455()
         {
             // Example 455
@@ -12254,12 +12251,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 455, "Inlines Links");
 			TestParser.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>");
         }
-
+    }
         // Both the title and the destination may be omitted:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 456 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example456()
         {
             // Example 456
@@ -12274,11 +12271,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 456, "Inlines Links");
 			TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 457 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example457()
         {
             // Example 457
@@ -12293,13 +12290,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 457, "Inlines Links");
 			TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>");
         }
-
+    }
         // The destination cannot contain spaces or line breaks,
         // even if enclosed in pointy brackets:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 458 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example458()
         {
             // Example 458
@@ -12314,11 +12311,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 458, "Inlines Links");
 			TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 459 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example459()
         {
             // Example 459
@@ -12333,11 +12330,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 459, "Inlines Links");
 			TestParser.TestSpec("[link](</my uri>)", "<p>[link](&lt;/my uri&gt;)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 460 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example460()
         {
             // Example 460
@@ -12354,11 +12351,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 460, "Inlines Links");
 			TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 461 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example461()
         {
             // Example 461
@@ -12375,12 +12372,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 461, "Inlines Links");
 			TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>");
         }
-
+    }
         // Parentheses inside the link destination may be escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 462 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example462()
         {
             // Example 462
@@ -12395,12 +12392,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 462, "Inlines Links");
 			TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>");
         }
-
+    }
         // One level of balanced parentheses is allowed without escaping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 463 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example463()
         {
             // Example 463
@@ -12415,13 +12412,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 463, "Inlines Links");
 			TestParser.TestSpec("[link]((foo)and(bar))", "<p><a href=\"(foo)and(bar)\">link</a></p>");
         }
-
+    }
         // However, if you have parentheses within parentheses, you need to escape
         // or use the `<...>` form:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 464 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example464()
         {
             // Example 464
@@ -12436,11 +12433,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 464, "Inlines Links");
 			TestParser.TestSpec("[link](foo(and(bar)))", "<p>[link](foo(and(bar)))</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 465 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example465()
         {
             // Example 465
@@ -12455,11 +12452,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 465, "Inlines Links");
 			TestParser.TestSpec("[link](foo(and\\(bar\\)))", "<p><a href=\"foo(and(bar))\">link</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 466 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example466()
         {
             // Example 466
@@ -12474,13 +12471,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 466, "Inlines Links");
 			TestParser.TestSpec("[link](<foo(and(bar))>)", "<p><a href=\"foo(and(bar))\">link</a></p>");
         }
-
+    }
         // Parentheses and other symbols can also be escaped, as usual
         // in Markdown:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 467 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example467()
         {
             // Example 467
@@ -12495,12 +12492,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 467, "Inlines Links");
 			TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>");
         }
-
+    }
         // A link can contain fragment identifiers and queries:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 468 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example468()
         {
             // Example 468
@@ -12521,13 +12518,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 468, "Inlines Links");
 			TestParser.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>");
         }
-
+    }
         // Note that a backslash before a non-escapable character is
         // just a backslash:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 469 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example469()
         {
             // Example 469
@@ -12542,7 +12539,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 469, "Inlines Links");
 			TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>");
         }
-
+    }
         // URL-escaping should be left alone inside the destination, as all
         // URL-escaped characters are also valid URL characters. Entity and
         // numerical character references in the destination will be parsed
@@ -12551,10 +12548,10 @@ namespace Textamina.Markdig.Tests
         // does not enforce any particular policy for rendering URLs in
         // HTML or other formats.  Renderers may make different decisions
         // about how to escape or normalize URLs in the output.
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 470 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example470()
         {
             // Example 470
@@ -12569,14 +12566,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 470, "Inlines Links");
 			TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>");
         }
-
+    }
         // Note that, because titles can often be parsed as destinations,
         // if you try to omit the destination and keep the title, you'll
         // get unexpected results:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 471 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example471()
         {
             // Example 471
@@ -12591,12 +12588,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 471, "Inlines Links");
 			TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>");
         }
-
+    }
         // Titles may be in single quotes, double quotes, or parentheses:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 472 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example472()
         {
             // Example 472
@@ -12615,13 +12612,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 472, "Inlines Links");
 			TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>");
         }
-
+    }
         // Backslash escapes and entity and numeric character references
         // may be used in titles:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 473 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example473()
         {
             // Example 473
@@ -12636,12 +12633,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 473, "Inlines Links");
 			TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>");
         }
-
+    }
         // Nested balanced quotes are not allowed without escaping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 474 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example474()
         {
             // Example 474
@@ -12656,12 +12653,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 474, "Inlines Links");
 			TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>");
         }
-
+    }
         // But it is easy to work around this by using a different quote type:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 475 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example475()
         {
             // Example 475
@@ -12676,7 +12673,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 475, "Inlines Links");
 			TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>");
         }
-
+    }
         // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
         // title, and its test suite included a test demonstrating this.
         // But it is hard to see a good rationale for the extra complexity this
@@ -12693,10 +12690,10 @@ namespace Textamina.Markdig.Tests
         // the same way in inline links and link reference definitions.)
         //
         // [Whitespace] is allowed around the destination and title:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 476 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example476()
         {
             // Example 476
@@ -12712,13 +12709,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 476, "Inlines Links");
 			TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>");
         }
-
+    }
         // But it is not allowed between the link text and the
         // following parenthesis:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 477 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example477()
         {
             // Example 477
@@ -12733,13 +12730,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 477, "Inlines Links");
 			TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>");
         }
-
+    }
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 478 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example478()
         {
             // Example 478
@@ -12754,11 +12751,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 478, "Inlines Links");
 			TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 479 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example479()
         {
             // Example 479
@@ -12773,11 +12770,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 479, "Inlines Links");
 			TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 480 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example480()
         {
             // Example 480
@@ -12792,11 +12789,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 480, "Inlines Links");
 			TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 481 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example481()
         {
             // Example 481
@@ -12811,12 +12808,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 481, "Inlines Links");
 			TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>");
         }
-
+    }
         // The link text may contain inline content:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 482 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example482()
         {
             // Example 482
@@ -12831,11 +12828,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 482, "Inlines Links");
 			TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 483 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example483()
         {
             // Example 483
@@ -12850,12 +12847,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 483, "Inlines Links");
 			TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>");
         }
-
+    }
         // However, links may not contain other links, at any level of nesting.
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 484 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example484()
         {
             // Example 484
@@ -12870,11 +12867,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 484, "Inlines Links");
 			TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 485 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example485()
         {
             // Example 485
@@ -12889,11 +12886,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 485, "Inlines Links");
 			TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 486 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example486()
         {
             // Example 486
@@ -12908,13 +12905,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 486, "Inlines Links");
 			TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>");
         }
-
+    }
         // These cases illustrate the precedence of link text grouping over
         // emphasis grouping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 487 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example487()
         {
             // Example 487
@@ -12929,11 +12926,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 487, "Inlines Links");
 			TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 488 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example488()
         {
             // Example 488
@@ -12948,13 +12945,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 488, "Inlines Links");
 			TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>");
         }
-
+    }
         // Note that brackets that *aren't* part of links do not take
         // precedence:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 489 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example489()
         {
             // Example 489
@@ -12969,13 +12966,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 489, "Inlines Links");
 			TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>");
         }
-
+    }
         // These cases illustrate the precedence of HTML tags, code spans,
         // and autolinks over link grouping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 490 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example490()
         {
             // Example 490
@@ -12990,11 +12987,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 490, "Inlines Links");
 			TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 491 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example491()
         {
             // Example 491
@@ -13009,11 +13006,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 491, "Inlines Links");
 			TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 492 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example492()
         {
             // Example 492
@@ -13028,7 +13025,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 492, "Inlines Links");
 			TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>");
         }
-
+    }
         // There are three kinds of [reference link](@)s:
         // [full](#full-reference-link), [collapsed](#collapsed-reference-link),
         // and [shortcut](#shortcut-reference-link).
@@ -13056,10 +13053,10 @@ namespace Textamina.Markdig.Tests
         // matching [link reference definition].
         //
         // Here is a simple example:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 493 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example493()
         {
             // Example 493
@@ -13076,16 +13073,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 493, "Inlines Links");
 			TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
         // The rules for the [link text] are the same as with
         // [inline links].  Thus:
         //
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 494 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example494()
         {
             // Example 494
@@ -13102,11 +13099,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 494, "Inlines Links");
 			TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 495 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example495()
         {
             // Example 495
@@ -13123,12 +13120,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 495, "Inlines Links");
 			TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>");
         }
-
+    }
         // The link text may contain inline content:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 496 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example496()
         {
             // Example 496
@@ -13145,11 +13142,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 496, "Inlines Links");
 			TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 497 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example497()
         {
             // Example 497
@@ -13166,12 +13163,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 497, "Inlines Links");
 			TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>");
         }
-
+    }
         // However, links may not contain other links, at any level of nesting.
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 498 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example498()
         {
             // Example 498
@@ -13188,11 +13185,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 498, "Inlines Links");
 			TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 499 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example499()
         {
             // Example 499
@@ -13209,16 +13206,16 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 499, "Inlines Links");
 			TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>");
         }
-
+    }
         // (In the examples above, we have two [shortcut reference links]
         // instead of one [full reference link].)
         //
         // The following cases illustrate the precedence of link text grouping over
         // emphasis grouping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 500 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example500()
         {
             // Example 500
@@ -13235,11 +13232,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 500, "Inlines Links");
 			TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 501 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example501()
         {
             // Example 501
@@ -13256,13 +13253,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 501, "Inlines Links");
 			TestParser.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>");
         }
-
+    }
         // These cases illustrate the precedence of HTML tags, code spans,
         // and autolinks over link grouping:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 502 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example502()
         {
             // Example 502
@@ -13279,11 +13276,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 502, "Inlines Links");
 			TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 503 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example503()
         {
             // Example 503
@@ -13300,11 +13297,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 503, "Inlines Links");
 			TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 504 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example504()
         {
             // Example 504
@@ -13321,12 +13318,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 504, "Inlines Links");
 			TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>");
         }
-
+    }
         // Matching is case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 505 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example505()
         {
             // Example 505
@@ -13343,12 +13340,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 505, "Inlines Links");
 			TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
         // Unicode case fold is used:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 506 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example506()
         {
             // Example 506
@@ -13365,13 +13362,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 506, "Inlines Links");
 			TestParser.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>");
         }
-
+    }
         // Consecutive internal [whitespace] is treated as one space for
         // purposes of determining matching:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 507 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example507()
         {
             // Example 507
@@ -13389,13 +13386,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 507, "Inlines Links");
 			TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>");
         }
-
+    }
         // No [whitespace] is allowed between the [link text] and the
         // [link label]:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 508 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example508()
         {
             // Example 508
@@ -13412,11 +13409,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 508, "Inlines Links");
 			TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 509 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example509()
         {
             // Example 509
@@ -13435,7 +13432,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 509, "Inlines Links");
 			TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>");
         }
-
+    }
         // This is a departure from John Gruber's original Markdown syntax
         // description, which explicitly allows whitespace between the link
         // text and the link label.  It brings reference links in line with
@@ -13465,10 +13462,10 @@ namespace Textamina.Markdig.Tests
         //
         // When there are multiple matching [link reference definitions],
         // the first is used:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 510 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example510()
         {
             // Example 510
@@ -13487,14 +13484,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 510, "Inlines Links");
 			TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>");
         }
-
+    }
         // Note that matching is performed on normalized strings, not parsed
         // inline content.  So the following does not match, even though the
         // labels define equivalent inline content:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 511 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example511()
         {
             // Example 511
@@ -13511,13 +13508,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 511, "Inlines Links");
 			TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>");
         }
-
+    }
         // [Link labels] cannot contain brackets, unless they are
         // backslash-escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 512 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example512()
         {
             // Example 512
@@ -13535,11 +13532,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 512, "Inlines Links");
 			TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 513 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example513()
         {
             // Example 513
@@ -13557,11 +13554,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 513, "Inlines Links");
 			TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 514 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example514()
         {
             // Example 514
@@ -13579,11 +13576,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 514, "Inlines Links");
 			TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 515 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example515()
         {
             // Example 515
@@ -13600,12 +13597,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 515, "Inlines Links");
 			TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>");
         }
-
+    }
         // Note that in this example `]` is not backslash-escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 516 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example516()
         {
             // Example 516
@@ -13622,12 +13619,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 516, "Inlines Links");
 			TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>");
         }
-
+    }
         // A [link label] must contain at least one [non-whitespace character]:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 517 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example517()
         {
             // Example 517
@@ -13645,11 +13642,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 517, "Inlines Links");
 			TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 518 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example518()
         {
             // Example 518
@@ -13671,7 +13668,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 518, "Inlines Links");
 			TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>");
         }
-
+    }
         // A [collapsed reference link](@)
         // consists of a [link label] that [matches] a
         // [link reference definition] elsewhere in the
@@ -13680,10 +13677,10 @@ namespace Textamina.Markdig.Tests
         // which are used as the link's text.  The link's URI and title are
         // provided by the matching reference link definition.  Thus,
         // `[foo][]` is equivalent to `[foo][foo]`.
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 519 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example519()
         {
             // Example 519
@@ -13700,11 +13697,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 519, "Inlines Links");
 			TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 520 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example520()
         {
             // Example 520
@@ -13721,12 +13718,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 520, "Inlines Links");
 			TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>");
         }
-
+    }
         // The link labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 521 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example521()
         {
             // Example 521
@@ -13743,13 +13740,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 521, "Inlines Links");
 			TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>");
         }
-
+    }
         // As with full reference links, [whitespace] is not
         // allowed between the two sets of brackets:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 522 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example522()
         {
             // Example 522
@@ -13768,7 +13765,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 522, "Inlines Links");
 			TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>");
         }
-
+    }
         // A [shortcut reference link](@)
         // consists of a [link label] that [matches] a
         // [link reference definition] elsewhere in the
@@ -13777,10 +13774,10 @@ namespace Textamina.Markdig.Tests
         // which are used as the link's text.  the link's URI and title
         // are provided by the matching link reference definition.
         // Thus, `[foo]` is equivalent to `[foo][]`.
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 523 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example523()
         {
             // Example 523
@@ -13797,11 +13794,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 523, "Inlines Links");
 			TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 524 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example524()
         {
             // Example 524
@@ -13818,11 +13815,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 524, "Inlines Links");
 			TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 525 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example525()
         {
             // Example 525
@@ -13839,11 +13836,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 525, "Inlines Links");
 			TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 526 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example526()
         {
             // Example 526
@@ -13860,12 +13857,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 526, "Inlines Links");
 			TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>");
         }
-
+    }
         // The link labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 527 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example527()
         {
             // Example 527
@@ -13882,12 +13879,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 527, "Inlines Links");
 			TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>");
         }
-
+    }
         // A space after the link text should be preserved:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 528 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example528()
         {
             // Example 528
@@ -13904,13 +13901,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 528, "Inlines Links");
 			TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>");
         }
-
+    }
         // If you just want bracketed text, you can backslash-escape the
         // opening bracket to avoid links:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 529 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example529()
         {
             // Example 529
@@ -13927,13 +13924,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 529, "Inlines Links");
 			TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>");
         }
-
+    }
         // Note that this is a link, because a link label ends with the first
         // following closing bracket:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 530 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example530()
         {
             // Example 530
@@ -13950,12 +13947,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 530, "Inlines Links");
 			TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>");
         }
-
+    }
         // Full references take precedence over shortcut references:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 531 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example531()
         {
             // Example 531
@@ -13973,13 +13970,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 531, "Inlines Links");
 			TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>");
         }
-
+    }
         // In the following case `[bar][baz]` is parsed as a reference,
         // `[foo]` as normal text:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 532 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example532()
         {
             // Example 532
@@ -13996,13 +13993,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 532, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>");
         }
-
+    }
         // Here, though, `[foo][bar]` is parsed as a reference, since
         // `[bar]` is defined:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 533 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example533()
         {
             // Example 533
@@ -14020,13 +14017,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 533, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>");
         }
-
+    }
         // Here `[foo]` is not parsed as a shortcut reference, because it
         // is followed by a link label (even though `[bar]` is not defined):
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
         [Test]
-        //[Test(Description="Example 534 - Inlines Links")]
-        //[Timeout(1000)]
-		[Category("Inlines Links")]
         public void Example534()
         {
             // Example 534
@@ -14044,7 +14041,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 534, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>");
         }
-
+    }
         // ## Images
         //
         // Syntax for images is like the syntax for links, with one
@@ -14056,10 +14053,10 @@ namespace Textamina.Markdig.Tests
         // An image description has inline elements
         // as its contents.  When an image is rendered to HTML,
         // this is standardly used as the image's `alt` attribute.
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 535 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example535()
         {
             // Example 535
@@ -14074,11 +14071,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 535, "Inlines Images");
 			TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 536 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example536()
         {
             // Example 536
@@ -14095,11 +14092,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 536, "Inlines Images");
 			TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 537 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example537()
         {
             // Example 537
@@ -14114,11 +14111,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 537, "Inlines Images");
 			TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 538 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example538()
         {
             // Example 538
@@ -14133,17 +14130,17 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 538, "Inlines Images");
 			TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>");
         }
-
+    }
         // Though this spec is concerned with parsing, not rendering, it is
         // recommended that in rendering to HTML, only the plain string content
         // of the [image description] be used.  Note that in
         // the above example, the alt attribute's value is `foo bar`, not `foo
         // [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string
         // content is rendered, without formatting.
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 539 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example539()
         {
             // Example 539
@@ -14160,11 +14157,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 539, "Inlines Images");
 			TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 540 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example540()
         {
             // Example 540
@@ -14181,11 +14178,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 540, "Inlines Images");
 			TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 541 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example541()
         {
             // Example 541
@@ -14200,11 +14197,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 541, "Inlines Images");
 			TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 542 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example542()
         {
             // Example 542
@@ -14219,11 +14216,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 542, "Inlines Images");
 			TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 543 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example543()
         {
             // Example 543
@@ -14238,11 +14235,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 543, "Inlines Images");
 			TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 544 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example544()
         {
             // Example 544
@@ -14257,12 +14254,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 544, "Inlines Images");
 			TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>");
         }
-
+    }
         // Reference-style:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 545 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example545()
         {
             // Example 545
@@ -14279,11 +14276,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 545, "Inlines Images");
 			TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 546 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example546()
         {
             // Example 546
@@ -14300,12 +14297,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 546, "Inlines Images");
 			TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>");
         }
-
+    }
         // Collapsed:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 547 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example547()
         {
             // Example 547
@@ -14322,11 +14319,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 547, "Inlines Images");
 			TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 548 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example548()
         {
             // Example 548
@@ -14343,12 +14340,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 548, "Inlines Images");
 			TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>");
         }
-
+    }
         // The labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 549 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example549()
         {
             // Example 549
@@ -14365,13 +14362,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 549, "Inlines Images");
 			TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>");
         }
-
+    }
         // As with reference links, [whitespace] is not allowed
         // between the two sets of brackets:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 550 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example550()
         {
             // Example 550
@@ -14390,12 +14387,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 550, "Inlines Images");
 			TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>");
         }
-
+    }
         // Shortcut:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 551 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example551()
         {
             // Example 551
@@ -14412,11 +14409,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 551, "Inlines Images");
 			TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 552 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example552()
         {
             // Example 552
@@ -14433,12 +14430,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 552, "Inlines Images");
 			TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>");
         }
-
+    }
         // Note that link labels cannot contain unescaped brackets:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 553 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example553()
         {
             // Example 553
@@ -14456,12 +14453,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 553, "Inlines Images");
 			TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>");
         }
-
+    }
         // The link labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 554 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example554()
         {
             // Example 554
@@ -14478,13 +14475,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 554, "Inlines Images");
 			TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>");
         }
-
+    }
         // If you just want bracketed text, you can backslash-escape the
         // opening `!` and `[`:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 555 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example555()
         {
             // Example 555
@@ -14501,13 +14498,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 555, "Inlines Images");
 			TestParser.TestSpec("\\!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>");
         }
-
+    }
         // If you want a link after a literal `!`, backslash-escape the
         // `!`:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
         [Test]
-        //[Test(Description="Example 556 - Inlines Images")]
-        //[Timeout(1000)]
-		[Category("Inlines Images")]
         public void Example556()
         {
             // Example 556
@@ -14524,7 +14521,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 556, "Inlines Images");
 			TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>");
         }
-
+    }
         // ## Autolinks
         //
         // [Autolink](@)s are absolute URIs and email addresses inside
@@ -14548,10 +14545,10 @@ namespace Textamina.Markdig.Tests
         // ("+"), period ("."), or hyphen ("-").
         //
         // Here are some valid autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 557 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example557()
         {
             // Example 557
@@ -14566,11 +14563,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 557, "Inlines Autolinks");
 			TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 558 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example558()
         {
             // Example 558
@@ -14585,11 +14582,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 558, "Inlines Autolinks");
 			TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 559 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example559()
         {
             // Example 559
@@ -14604,12 +14601,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 559, "Inlines Autolinks");
 			TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>");
         }
-
+    }
         // Uppercase is also fine:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 560 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example560()
         {
             // Example 560
@@ -14624,15 +14621,15 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 560, "Inlines Autolinks");
 			TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>");
         }
-
+    }
         // Note that many strings that count as [absolute URIs] for
         // purposes of this spec are not valid URIs, because their
         // schemes are not registered or because of other problems
         // with their syntax:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 561 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example561()
         {
             // Example 561
@@ -14647,11 +14644,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 561, "Inlines Autolinks");
 			TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 562 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example562()
         {
             // Example 562
@@ -14666,11 +14663,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 562, "Inlines Autolinks");
 			TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 563 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example563()
         {
             // Example 563
@@ -14685,11 +14682,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 563, "Inlines Autolinks");
 			TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 564 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example564()
         {
             // Example 564
@@ -14704,12 +14701,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 564, "Inlines Autolinks");
 			TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>");
         }
-
+    }
         // Spaces are not allowed in autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 565 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example565()
         {
             // Example 565
@@ -14724,12 +14721,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 565, "Inlines Autolinks");
 			TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>");
         }
-
+    }
         // Backslash-escapes do not work inside autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 566 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example566()
         {
             // Example 566
@@ -14744,7 +14741,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 566, "Inlines Autolinks");
 			TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>");
         }
-
+    }
         // An [email autolink](@)
         // consists of `<`, followed by an [email address],
         // followed by `>`.  The link's label is the email address,
@@ -14759,10 +14756,10 @@ namespace Textamina.Markdig.Tests
         // (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
         //
         // Examples of email autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 567 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example567()
         {
             // Example 567
@@ -14777,11 +14774,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 567, "Inlines Autolinks");
 			TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 568 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example568()
         {
             // Example 568
@@ -14796,12 +14793,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 568, "Inlines Autolinks");
 			TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>");
         }
-
+    }
         // Backslash-escapes do not work inside email autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 569 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example569()
         {
             // Example 569
@@ -14816,12 +14813,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 569, "Inlines Autolinks");
 			TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>");
         }
-
+    }
         // These are not autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 570 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example570()
         {
             // Example 570
@@ -14836,11 +14833,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 570, "Inlines Autolinks");
 			TestParser.TestSpec("<>", "<p>&lt;&gt;</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 571 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example571()
         {
             // Example 571
@@ -14855,11 +14852,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 571, "Inlines Autolinks");
 			TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 572 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example572()
         {
             // Example 572
@@ -14874,11 +14871,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 572, "Inlines Autolinks");
 			TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 573 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example573()
         {
             // Example 573
@@ -14893,11 +14890,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 573, "Inlines Autolinks");
 			TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 574 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example574()
         {
             // Example 574
@@ -14912,11 +14909,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 574, "Inlines Autolinks");
 			TestParser.TestSpec("http://example.com", "<p>http://example.com</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
         [Test]
-        //[Test(Description="Example 575 - Inlines Autolinks")]
-        //[Timeout(1000)]
-		[Category("Inlines Autolinks")]
         public void Example575()
         {
             // Example 575
@@ -14931,7 +14928,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 575, "Inlines Autolinks");
 			TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>");
         }
-
+    }
         // ## Raw HTML
         //
         // Text between `<` and `>` that looks like an HTML tag is parsed as a
@@ -15006,10 +15003,10 @@ namespace Textamina.Markdig.Tests
         // or a [CDATA section].
         //
         // Here are some simple open tags:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 576 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example576()
         {
             // Example 576
@@ -15024,12 +15021,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 576, "Inlines Raw HTML");
 			TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>");
         }
-
+    }
         // Empty elements:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 577 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example577()
         {
             // Example 577
@@ -15044,12 +15041,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 577, "Inlines Raw HTML");
 			TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>");
         }
-
+    }
         // [Whitespace] is allowed:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 578 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example578()
         {
             // Example 578
@@ -15066,12 +15063,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 578, "Inlines Raw HTML");
 			TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>");
         }
-
+    }
         // With attributes:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 579 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example579()
         {
             // Example 579
@@ -15088,12 +15085,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 579, "Inlines Raw HTML");
 			TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>");
         }
-
+    }
         // Custom tag names can be used:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 580 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example580()
         {
             // Example 580
@@ -15108,12 +15105,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 580, "Inlines Raw HTML");
 			TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>");
         }
-
+    }
         // Illegal tag names, not parsed as HTML:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 581 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example581()
         {
             // Example 581
@@ -15128,12 +15125,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 581, "Inlines Raw HTML");
 			TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>");
         }
-
+    }
         // Illegal attribute names:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 582 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example582()
         {
             // Example 582
@@ -15148,12 +15145,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 582, "Inlines Raw HTML");
 			TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>");
         }
-
+    }
         // Illegal attribute values:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 583 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example583()
         {
             // Example 583
@@ -15168,12 +15165,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 583, "Inlines Raw HTML");
 			TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>");
         }
-
+    }
         // Illegal [whitespace]:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 584 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example584()
         {
             // Example 584
@@ -15190,12 +15187,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 584, "Inlines Raw HTML");
 			TestParser.TestSpec("< a><\nfoo><bar/ >", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;</p>");
         }
-
+    }
         // Missing [whitespace]:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 585 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example585()
         {
             // Example 585
@@ -15210,12 +15207,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 585, "Inlines Raw HTML");
 			TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>");
         }
-
+    }
         // Closing tags:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 586 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example586()
         {
             // Example 586
@@ -15230,12 +15227,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 586, "Inlines Raw HTML");
 			TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>");
         }
-
+    }
         // Illegal attributes in closing tag:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 587 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example587()
         {
             // Example 587
@@ -15250,12 +15247,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 587, "Inlines Raw HTML");
 			TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>");
         }
-
+    }
         // Comments:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 588 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example588()
         {
             // Example 588
@@ -15272,11 +15269,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 588, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 589 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example589()
         {
             // Example 589
@@ -15291,12 +15288,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 589, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>");
         }
-
+    }
         // Not comments:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 590 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example590()
         {
             // Example 590
@@ -15314,12 +15311,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 590, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>");
         }
-
+    }
         // Processing instructions:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 591 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example591()
         {
             // Example 591
@@ -15334,12 +15331,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 591, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>");
         }
-
+    }
         // Declarations:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 592 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example592()
         {
             // Example 592
@@ -15354,12 +15351,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 592, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>");
         }
-
+    }
         // CDATA sections:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 593 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example593()
         {
             // Example 593
@@ -15374,13 +15371,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 593, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>");
         }
-
+    }
         // Entity and numeric character references are preserved in HTML
         // attributes:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 594 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example594()
         {
             // Example 594
@@ -15395,12 +15392,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 594, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>");
         }
-
+    }
         // Backslash escapes do not work in HTML attributes:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 595 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example595()
         {
             // Example 595
@@ -15415,11 +15412,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 595, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
         [Test]
-        //[Test(Description="Example 596 - Inlines Raw HTML")]
-        //[Timeout(1000)]
-		[Category("Inlines Raw HTML")]
         public void Example596()
         {
             // Example 596
@@ -15434,17 +15431,17 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 596, "Inlines Raw HTML");
 			TestParser.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>");
         }
-
+    }
         // ## Hard line breaks
         //
         // A line break (not in a code span or HTML tag) that is preceded
         // by two or more spaces and does not occur at the end of a block
         // is parsed as a [hard line break](@) (rendered
         // in HTML as a `<br />` tag):
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 597 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example597()
         {
             // Example 597
@@ -15461,13 +15458,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 597, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>");
         }
-
+    }
         // For a more visible alternative, a backslash before the
         // [line ending] may be used instead of two spaces:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 598 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example598()
         {
             // Example 598
@@ -15484,12 +15481,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 598, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>");
         }
-
+    }
         // More than two spaces can be used:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 599 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example599()
         {
             // Example 599
@@ -15506,12 +15503,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 599, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>");
         }
-
+    }
         // Leading spaces at the beginning of the next line are ignored:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 600 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example600()
         {
             // Example 600
@@ -15528,11 +15525,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 600, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 601 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example601()
         {
             // Example 601
@@ -15549,13 +15546,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 601, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>");
         }
-
+    }
         // Line breaks can occur inside emphasis, links, and other constructs
         // that allow inline content:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 602 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example602()
         {
             // Example 602
@@ -15572,11 +15569,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 602, "Inlines Hard line breaks");
 			TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 603 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example603()
         {
             // Example 603
@@ -15593,12 +15590,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 603, "Inlines Hard line breaks");
 			TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>");
         }
-
+    }
         // Line breaks do not occur inside code spans
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 604 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example604()
         {
             // Example 604
@@ -15614,11 +15611,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 604, "Inlines Hard line breaks");
 			TestParser.TestSpec("`code  \nspan`", "<p><code>code span</code></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 605 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example605()
         {
             // Example 605
@@ -15634,12 +15631,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 605, "Inlines Hard line breaks");
 			TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>");
         }
-
+    }
         // or HTML tags:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 606 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example606()
         {
             // Example 606
@@ -15656,11 +15653,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 606, "Inlines Hard line breaks");
 			TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 607 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example607()
         {
             // Example 607
@@ -15677,14 +15674,14 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 607, "Inlines Hard line breaks");
 			TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>");
         }
-
+    }
         // Hard line breaks are for separating inline content within a block.
         // Neither syntax for hard line breaks works at the end of a paragraph or
         // other block element:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 608 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example608()
         {
             // Example 608
@@ -15699,11 +15696,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 608, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo\\", "<p>foo\\</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 609 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example609()
         {
             // Example 609
@@ -15718,11 +15715,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 609, "Inlines Hard line breaks");
 			TestParser.TestSpec("foo  ", "<p>foo</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 610 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example610()
         {
             // Example 610
@@ -15737,11 +15734,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 610, "Inlines Hard line breaks");
 			TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 611 - Inlines Hard line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Hard line breaks")]
         public void Example611()
         {
             // Example 611
@@ -15756,7 +15753,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 611, "Inlines Hard line breaks");
 			TestParser.TestSpec("### foo  ", "<h3>foo</h3>");
         }
-
+    }
         // ## Soft line breaks
         //
         // A regular line break (not in a code span or HTML tag) that is not
@@ -15764,10 +15761,10 @@ namespace Textamina.Markdig.Tests
         // softbreak.  (A softbreak may be rendered in HTML either as a
         // [line ending] or as a space. The result will be the same in
         // browsers. In the examples here, a [line ending] will be used.)
+    [TestFixture]
+    public partial class TestInlinesSoftlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 612 - Inlines Soft line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Soft line breaks")]
         public void Example612()
         {
             // Example 612
@@ -15784,13 +15781,13 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 612, "Inlines Soft line breaks");
 			TestParser.TestSpec("foo\nbaz", "<p>foo\nbaz</p>");
         }
-
+    }
         // Spaces at the end of the line and beginning of the next line are
         // removed:
+    [TestFixture]
+    public partial class TestInlinesSoftlinebreaks
+    {
         [Test]
-        //[Test(Description="Example 613 - Inlines Soft line breaks")]
-        //[Timeout(1000)]
-		[Category("Inlines Soft line breaks")]
         public void Example613()
         {
             // Example 613
@@ -15807,7 +15804,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 613, "Inlines Soft line breaks");
 			TestParser.TestSpec("foo \n baz", "<p>foo\nbaz</p>");
         }
-
+    }
         // A conforming parser may render a soft line break in HTML either as a
         // line break or as a space.
         //
@@ -15818,10 +15815,10 @@ namespace Textamina.Markdig.Tests
         //
         // Any characters not given an interpretation by the above rules will
         // be parsed as plain textual content.
+    [TestFixture]
+    public partial class TestInlinesTextualcontent
+    {
         [Test]
-        //[Test(Description="Example 614 - Inlines Textual content")]
-        //[Timeout(1000)]
-		[Category("Inlines Textual content")]
         public void Example614()
         {
             // Example 614
@@ -15836,11 +15833,11 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 614, "Inlines Textual content");
 			TestParser.TestSpec("hello $.;'there", "<p>hello $.;'there</p>");
         }
-
+    }
+    [TestFixture]
+    public partial class TestInlinesTextualcontent
+    {
         [Test]
-        //[Test(Description="Example 615 - Inlines Textual content")]
-        //[Timeout(1000)]
-		[Category("Inlines Textual content")]
         public void Example615()
         {
             // Example 615
@@ -15855,12 +15852,12 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 615, "Inlines Textual content");
 			TestParser.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>");
         }
-
+    }
         // Internal spaces are preserved verbatim:
+    [TestFixture]
+    public partial class TestInlinesTextualcontent
+    {
         [Test]
-        //[Test(Description="Example 616 - Inlines Textual content")]
-        //[Timeout(1000)]
-		[Category("Inlines Textual content")]
         public void Example616()
         {
             // Example 616
@@ -15875,7 +15872,7 @@ namespace Textamina.Markdig.Tests
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 616, "Inlines Textual content");
 			TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>");
         }
-
+    }
         // # Appendix: A parsing strategy
         //
         // In this appendix we describe some features of the parsing strategy
@@ -16211,5 +16208,4 @@ namespace Textamina.Markdig.Tests
         //
         // After we're done, we remove all delimiters above `stack_bottom` from the
         // delimiter stack.
-    }
 }
