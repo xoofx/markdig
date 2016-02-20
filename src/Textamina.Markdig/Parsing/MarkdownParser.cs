@@ -517,10 +517,17 @@ namespace Textamina.Markdig.Parsing
 
                 if (nextInline.Parent == null)
                 {
-                    container.AppendChild(nextInline);
+                    if (container.IsClosed)
+                    {
+                        container.InsertAfter(nextInline);
+                    }
+                    else
+                    {
+                        container.AppendChild(nextInline);
+                    }
                 }
 
-                if (nextInline != null)
+                if (nextInline != null && !nextInline.IsClosed)
                 {
                     inlineState.OpenedInlines.Add(nextInline);
                 }
