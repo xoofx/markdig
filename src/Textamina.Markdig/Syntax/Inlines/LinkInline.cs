@@ -58,9 +58,10 @@ namespace Textamina.Markdig.Syntax
                             (text.CurrentChar != '(' && text.CurrentChar != '['))
                         {
                             var previousInline = state.Inline;
-                            ProcessLinkReference(state, label, isImage);
-
-                            ReplaceParentIfNotImage(isImage, previousInline);
+                            if (ProcessLinkReference(state, label, isImage))
+                            {
+                                ReplaceParentIfNotImage(isImage, previousInline);
+                            }
                             return true;
                         }
                         text.Restore(ref saved);
@@ -82,6 +83,7 @@ namespace Textamina.Markdig.Syntax
                             if (TryProcessLinkOrImage(ref inline, text, state))
                             {
                                 state.Inline = inline;
+                                return true;
                             }
                         }
 
@@ -94,8 +96,9 @@ namespace Textamina.Markdig.Syntax
                 return false;
             }
 
-            private void ProcessLinkReference(MatchInlineState state, string label, bool isImage, Inline child = null)
+            private bool ProcessLinkReference(MatchInlineState state, string label, bool isImage, Inline child = null)
             {
+                bool isValidLink = false;
                 LinkReferenceDefinitionBlock linkRef;
                 if (state.Document.LinkReferenceDefinitions.TryGetValue(label, out linkRef))
                 {
@@ -125,6 +128,7 @@ namespace Textamina.Markdig.Syntax
                         child = child.NextSibling;
                     }
                     state.Inline = link;
+                    isValidLink = true;
                 }
                 else
                 {
@@ -136,6 +140,7 @@ namespace Textamina.Markdig.Syntax
                     };
                     state.Inline = literal;
                 }
+                return isValidLink;
             }
 
             private bool TryProcessLinkOrImage(ref Inline current, StringLineGroup text, MatchInlineState inlineState)
@@ -166,14 +171,16 @@ namespace Textamina.Markdig.Syntax
                                 {
                                     Url = HtmlHelper.Unescape(url),
                                     Title = HtmlHelper.Unescape(title),
+                                    IsImage = openParent.IsImage,
                                     IsClosed = true
                                 };
-
 
                                 // TODO: Process emphasis on openParent content
                                 inlineState.OpenedInlines.Remove(openParent);
                                 openParent.ReplaceBy(link);
                                 current = link;
+
+                                EmphasisInline.ProcessEmphasis(link);
 
                                 ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
 
@@ -185,12 +192,15 @@ namespace Textamina.Markdig.Syntax
                             if (LinkHelper.TryParseLabel(text, out label))
                             {
                                 // TODO: Process emphasis on openParent content
-                                ProcessLinkReference(inlineState, label, openParent.IsImage, openParent.FirstChild);
+                                bool isValid = ProcessLinkReference(inlineState, label, openParent.IsImage, openParent.FirstChild);
 
                                 // Remove the open parent
                                 openParent.Remove();
 
-                                ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+                                if (isValid)
+                                {
+                                    ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+                                }
                                 return true;
                             }
                             break;

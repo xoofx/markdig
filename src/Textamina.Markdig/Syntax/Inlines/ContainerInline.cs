@@ -70,15 +70,54 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
+        public void MoveChildrenAfter(Inline parent)
+        {
+            var child = FirstChild;
+            var nextSibliing = parent;
+            while (child != null)
+            {
+                var next = child.NextSibling;
+                // TODO: optimize this
+                child.Remove();
+                nextSibliing.InsertAfter(child);
+                nextSibliing = child;
+                child = next;
+            }
+        }
+
+        public void EmbraceChildrenBy(ContainerInline container)
+        {
+            var child = FirstChild;
+            while (child != null)
+            {
+                var next = child.NextSibling;
+                // TODO: optimize this
+                child.Remove();
+                container.AppendChild(child);
+                child = next;
+            }
+            AppendChild(container);
+        }
+
         protected override void OnChildInsert(Inline child)
         {
-            if (child.PreviousSibling == FirstChild && FirstChild == LastChild)
+            // A child is inserted before the FirstChild
+            if (child.PreviousSibling == null && child.NextSibling == FirstChild)
+            {
+                FirstChild = child;
+            }
+            else if (child.NextSibling == null && child.PreviousSibling == LastChild)
             {
                 LastChild = child;
             }
-            else if (child.PreviousSibling == LastChild)
+
+            if (LastChild == null)
             {
-                LastChild = child;
+                LastChild = FirstChild;
+            }
+            else if (FirstChild == null)
+            {
+                FirstChild = LastChild;
             }
         }
 

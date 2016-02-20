@@ -83,6 +83,7 @@ foreach (var item in ReadSpecs(specFile))
         [Test]
         //[Test(Description="Example <#= spec.Example #> - <#= spec.SecHeading #>")]
         //[Timeout(1000)]
+		[Category("<#= spec.SecHeading #>")]
         public void <#= spec.Name #>()
         {
             // Example <#= spec.Example #>
@@ -194,7 +195,7 @@ private IEnumerable<object> ReadSpecs(string fileName)
                 {
                     Example = example,
                     Number = sectionSpecNumbers[sectionId],
-                    SecHeading = string.Join(" - ", sectionHeadings.Reverse()).Replace("\\","\\\\"),
+                    SecHeading = string.Join(" ", sectionHeadings.Reverse()).Replace("\\","\\\\"),
                     SectionId = sectionId,
                     CommonMark = commonMark,
                     Html = html

@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Helpers
 {
     public static class CharHelper
     {
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhitespace(this char c)
         {
             // 2.1 Characters and lines 
@@ -25,11 +25,46 @@ namespace Textamina.Markdig.Helpers
             return (c > ' ' && c < '0') || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z' && c < 127) || c == '•';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhiteSpaceOrZero(this char c)
         {
             return IsWhitespace(c) || IsZero(c);
         }
+
+        public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
+        {
+            // CODE from CommonMark.NET
+
+            // This method does the same as would calling the two built-in methods:
+            // // space = char.IsWhiteSpace(c);
+            // // punctuation = char.IsPunctuation(c);
+            //
+            // The performance benefit for using this method is ~50% when calling only on ASCII characters
+            // and ~12% when calling only on Unicode characters.
+
+            if (c <= 'ÿ')
+            {
+                space = c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085';
+                punctuation = c == '\0' || (c >= 33 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+            }
+            else
+            {
+                var category = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                space = category == System.Globalization.UnicodeCategory.SpaceSeparator
+                    || category == System.Globalization.UnicodeCategory.LineSeparator
+                    || category == System.Globalization.UnicodeCategory.ParagraphSeparator;
+                punctuation = !space &&
+                    (category == System.Globalization.UnicodeCategory.ConnectorPunctuation
+                    || category == System.Globalization.UnicodeCategory.DashPunctuation
+                    || category == System.Globalization.UnicodeCategory.OpenPunctuation
+                    || category == System.Globalization.UnicodeCategory.ClosePunctuation
+                    || category == System.Globalization.UnicodeCategory.InitialQuotePunctuation
+                    || category == System.Globalization.UnicodeCategory.FinalQuotePunctuation
+                    || category == System.Globalization.UnicodeCategory.OtherPunctuation);
+            }
+        }
+
+
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsNewLine(this char c)

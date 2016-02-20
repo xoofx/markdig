@@ -27,100 +27,143 @@ namespace Textamina.Markdig.Syntax
                 return;
             }
 
-            var delimiters = new Stack<EmphasisDelimiterInline>();
-            ProcessEmphasis(container, delimiters);
-        }
+            var delimiters = new List<EmphasisDelimiterInline>();
 
-        private static void ProcessEmphasis(ContainerInline inline, Stack<EmphasisDelimiterInline> delimiters)
-        {
+            if (container is EmphasisDelimiterInline)
+            {
+                delimiters.Add((EmphasisDelimiterInline)container);
+            }
+
             // Move current_position forward in the delimiter stack (if needed) until 
             // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
-            var child = inline.FirstChild;
+            var child = container.LastChild;
             while (child != null)
             {
-                var next = child.NextSibling;
-
                 var delimiter = child as EmphasisDelimiterInline;
                 if (delimiter != null)
                 {
-                    if ((delimiter.Type & DelimiterType.Close) != 0 && delimiter.DelimiterCount > 0)
+                    delimiters.Add(delimiter);
+                }
+                child = (child as ContainerInline)?.LastChild;
+            }
+
+            ProcessEmphasis(delimiters);
+        }
+
+        private static void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
+        {
+            // Move current_position forward in the delimiter stack (if needed) until 
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            for (int i = 0; i < delimiters.Count; i++)
+            {
+                var closeDelimiter = delimiters[i];
+                if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount > 0)
+                {
+                    while (true)
                     {
-                        var closeDelimiter = delimiter;
-                        while (true)
+                        // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
+                        // for the first matching potential opener (“matching” means same delimiter).
+                        EmphasisDelimiterInline openDelimiter = null;
+                        int openDelimiterIndex = -1;
+                        for (int j = i - 1; j >= 0; j--)
                         {
-                            // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
-                            // for the first matching potential opener (“matching” means same delimiter).
-                            EmphasisDelimiterInline openDelimiter = null;
-                            foreach (var parentDelimiter in delimiters)
+                            var previousOpenDelimiter = delimiters[j];
+                            if (previousOpenDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
+                                (previousOpenDelimiter.Type & DelimiterType.Open) != 0 &&
+                                previousOpenDelimiter.DelimiterCount > 0)
                             {
-                                if (parentDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
-                                    (parentDelimiter.Type & DelimiterType.Open) != 0 && parentDelimiter.DelimiterCount > 0)
-                                {
-                                    openDelimiter = parentDelimiter;
-                                    break;
-                                }
-                            }
-
-                            if (openDelimiter != null)
-                            {
-                                process_delims:
-                                bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2;
-
-                                // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
-
-                                var emphasis = new EmphasisInline()
-                                {
-                                    DelimiterChar = closeDelimiter.DelimiterChar,
-                                    Strong = isStrong
-                                };
-                                openDelimiter.FinalEmphasisInlines.Add(emphasis);
-
-                                openDelimiter.DelimiterCount -= isStrong ? 2 : 1;
-                                closeDelimiter.DelimiterCount -= isStrong ? 2 : 1;
-
-                                if (closeDelimiter.DelimiterCount == 0)
-                                {
-                                    break;
-                                }
-                                if (openDelimiter.DelimiterCount > 0)
-                                {
-                                    goto process_delims;
-                                }
-                                else
-                                {
-                                    // TODO ?
-                                    // openDelimiter
-                                }
-                            }
-                            else
-                            {
-                                // TODO ?
+                                openDelimiter = previousOpenDelimiter;
+                                openDelimiterIndex = j;
                                 break;
                             }
                         }
+
+                        if (openDelimiter != null)
+                        {
+                            process_delims:
+                            bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2;
+
+                            // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
+
+                            var emphasis = new EmphasisInline()
+                            {
+                                DelimiterChar = closeDelimiter.DelimiterChar,
+                                Strong = isStrong
+                            };
+
+                            // Embrace all delimiters
+                            openDelimiter.EmbraceChildrenBy(emphasis);
+
+                            openDelimiter.DelimiterCount -= isStrong ? 2 : 1;
+                            closeDelimiter.DelimiterCount -= isStrong ? 2 : 1;
+
+                            if (closeDelimiter.DelimiterCount == 0)
+                            {
+                                closeDelimiter.MoveChildrenAfter(emphasis);
+                                closeDelimiter.Remove();
+                                delimiters.RemoveAt(i);
+                                i--;
+
+                                // Remove the open delimiter if it is also empty
+                                if (openDelimiter.DelimiterCount == 0)
+                                {
+                                    openDelimiter.MoveChildrenAfter(openDelimiter);
+                                    openDelimiter.Remove();
+                                    delimiters.RemoveAt(openDelimiterIndex);
+                                    i--;
+                                }
+                                break;
+                            }
+
+                            // The current delimiters are matching
+                            if (openDelimiter.DelimiterCount > 0)
+                            {
+                                goto process_delims;
+                            }
+                            else
+                            {
+                                // Remove the open delimiter if it is also empty
+                                openDelimiter.MoveChildrenAfter(openDelimiter.NextSibling ?? openDelimiter.Parent);
+                                openDelimiter.Remove();
+                                delimiters.RemoveAt(openDelimiterIndex);
+                                i--;
+                            }
+                        }
+                        else if ((closeDelimiter.Type & DelimiterType.Open) == 0)
+                        {
+                            var literal = new LiteralInline()
+                            {
+                                Content = closeDelimiter.ToLiteral(),
+                                IsClosed = true
+                            };
+
+                            closeDelimiter.ReplaceBy(literal);
+                            delimiters.RemoveAt(i);
+                            i--;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-
-                    delimiters.Push(delimiter);
                 }
-
-                if (child is ContainerInline)
-                {
-                    ProcessEmphasis((ContainerInline) child, delimiters);
-                }
-
-                if (delimiter != null)
-                {
-                    delimiters.Pop();
-                }
-
-                child = next;
             }
+
+            // Any delimiters left must be literal
+            for (int i = 0; i < delimiters.Count; i++)
+            {
+                var delimiter = delimiters[i];
+                var literal = new LiteralInline()
+                {
+                    Content = delimiter.ToLiteral(),
+                    IsClosed = true
+                };
+
+                delimiter.ReplaceBy(literal);
+            }
+            delimiters.Clear();
         }
-
-
-
-
-
 
         private class ParserInternal : InlineParser
         {
@@ -138,6 +181,11 @@ namespace Textamina.Markdig.Syntax
                 // is not preceded or followed by a _ character.
 
                 var pc = lines.PreviousChar1;
+                if (FirstChars.Contains(pc))
+                {
+                    return false;
+                }
+
                 var delimiterChar = lines.CurrentChar;
 
                 int delimiterCount = 0;
@@ -154,11 +202,15 @@ namespace Textamina.Markdig.Syntax
                 // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
                 // or a punctuation character. 
                 // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-                var afterIsPunctuation = CharHelper.IsAsciiPunctuation(c);
-                bool canOpen = !CharHelper.IsWhiteSpaceOrZero(c) &&
-                                (!afterIsPunctuation ||
-                                !CharHelper.IsWhiteSpaceOrZero(pc) ||
-                                !CharHelper.IsAsciiPunctuation(pc));
+                bool nextIsPunctuation;
+                bool nextIsWhiteSpace;
+                bool prevIsPunctuation;
+                bool prevIsWhiteSpace;
+                pc.CheckUnicodeCategory(out prevIsWhiteSpace, out prevIsPunctuation);
+                c.CheckUnicodeCategory(out nextIsWhiteSpace, out nextIsPunctuation);
+
+                bool canOpen = !nextIsWhiteSpace &&
+                               (!nextIsPunctuation || prevIsWhiteSpace || prevIsPunctuation);
 
 
                 // A right-flanking delimiter run is a delimiter run that is 
@@ -166,11 +218,8 @@ namespace Textamina.Markdig.Syntax
                 // (b) either not preceded by a punctuation character, or followed by Unicode whitespace 
                 // or a punctuation character. 
                 // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-                var beforeIsPunctuation = CharHelper.IsAsciiPunctuation(pc);
-                bool canClose = !CharHelper.IsWhiteSpaceOrZero(pc) &&
-                                (!beforeIsPunctuation ||
-                                    !CharHelper.IsWhiteSpaceOrZero(c) ||
-                                    !CharHelper.IsAsciiPunctuation(c));
+                bool canClose = !prevIsWhiteSpace &&
+                                (!prevIsPunctuation || nextIsWhiteSpace || nextIsPunctuation);
 
                 if (delimiterChar == '_')
                 {
@@ -178,12 +227,12 @@ namespace Textamina.Markdig.Syntax
                     // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
                     // (a) not part of a right-flanking delimiter run or 
                     // (b) part of a right-flanking delimiter run preceded by punctuation.
-                    canOpen = canOpen && (!canClose || beforeIsPunctuation);
+                    canOpen = canOpen && (!canClose || prevIsPunctuation);
 
                     // A single _ character can close emphasis iff it is part of a right-flanking delimiter run and either
                     // (a) not part of a left-flanking delimiter run or 
                     // (b) part of a left-flanking delimiter run followed by punctuation.
-                    canClose = canClose && (!temp || afterIsPunctuation);
+                    canClose = canClose && (!temp || nextIsPunctuation);
                 }
 
                 //// If we can close, try to find a matching open

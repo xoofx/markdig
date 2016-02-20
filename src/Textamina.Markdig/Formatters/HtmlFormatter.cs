@@ -33,6 +33,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
+                [typeof(EmphasisInline)] = o => Write((EmphasisInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
         }
@@ -154,6 +155,22 @@ namespace Textamina.Markdig.Formatters
                 writer.WriteConstant(">");
                 WriteChildren(link);
                 writer.WriteConstant("</a>");
+            }
+        }
+
+        protected void Write(EmphasisInline emphasisInline)
+        {
+            if (emphasisInline.Strong)
+            {
+                writer.WriteConstant("<strong>");
+                WriteChildren(emphasisInline);
+                writer.WriteConstant("</strong>");
+            }
+            else
+            {
+                writer.WriteConstant("<em>");
+                WriteChildren(emphasisInline);
+                writer.WriteConstant("</em>");
             }
         }
 

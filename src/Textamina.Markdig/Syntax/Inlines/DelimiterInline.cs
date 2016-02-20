@@ -20,5 +20,12 @@ namespace Textamina.Markdig.Syntax
         /// Gets or sets the priority of this delimiter.
         /// </summary>
         public int Priority { get; set; }
+
+        public abstract string ToLiteral();
+
+        public override string ToString()
+        {
+            return $"{ToLiteral()} {Type}";
+        }
     }
 }

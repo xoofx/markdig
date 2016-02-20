@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -8,7 +7,6 @@ namespace Textamina.Markdig.Syntax
     {
         public EmphasisDelimiterInline(InlineParser parser) : base(parser)
         {
-            FinalEmphasisInlines = new List<EmphasisInline>();
         }
 
         /// <summary>
@@ -21,12 +19,9 @@ namespace Textamina.Markdig.Syntax
         /// </summary>
         public int DelimiterCount { get; set; }
 
-        public List<EmphasisInline> FinalEmphasisInlines { get; set; }
-
-        public override string ToString()
+        public override string ToLiteral()
         {
-            var str = string.Join(", ", FinalEmphasisInlines);
-            return $"Emphasis: {DelimiterChar} [{str}]";
+            return DelimiterCount > 0 ? new string(DelimiterChar, DelimiterCount) : string.Empty;
         }
     }
 }

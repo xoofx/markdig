@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Syntax
 {
     public abstract class Inline
     {
-        public Inline Parent { get; internal set; }
+        public ContainerInline Parent { get; internal set; }
 
         public Inline PreviousSibling { get; private set; }
 

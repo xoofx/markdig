@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax
 
         public bool IsImage;
 
-        public override string ToString()
+        public override string ToLiteral()
         {
             return IsImage ? "![" : "[";
         }
