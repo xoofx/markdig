@@ -58,7 +58,7 @@ namespace Textamina.Markdig.Helpers
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
         /// </summary>
         /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
-        public static string Unescape(string text)
+        public static string Unescape(string text, bool removeBackSlash = true)
         {
             if (text == null)
             {
@@ -70,14 +70,14 @@ namespace Textamina.Markdig.Helpers
             int lastPos = 0;
             int match;
             char c;
-            char[] search = new[] {'\\', '&'};
+            char[] search = removeBackSlash ? new[] {'\\', '&'} : new[] {'&'};
             var sb = StringBuilderCache.Local();
             sb.Clear();
 
             while ((searchPos = text.IndexOfAny(search, searchPos)) != -1)
             {
                 c = text[searchPos];
-                if (c == '\\')
+                if (removeBackSlash && c == '\\')
                 {
                     searchPos++;
 

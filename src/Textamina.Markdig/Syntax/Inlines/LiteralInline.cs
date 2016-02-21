@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Syntax
 
         protected override void Close(MatchInlineState state)
         {
-            Content = HtmlHelper.Unescape(ContentBuilder.ToString());
+            Content = HtmlHelper.Unescape(ContentBuilder.ToString(), false);
             state.StringBuilders.Release(ContentBuilder);
             ContentBuilder = null;
         }
