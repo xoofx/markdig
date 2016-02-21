@@ -131,7 +131,7 @@ namespace Textamina.Markdig.Formatters
         protected void Write(CodeInline code)
         {
             writer.WriteConstant("<code>");
-            writer.WriteConstant(code.Content);
+            HtmlHelper.EscapeHtml(code.Content, writer);
             writer.WriteConstant("</code>");
         }
 

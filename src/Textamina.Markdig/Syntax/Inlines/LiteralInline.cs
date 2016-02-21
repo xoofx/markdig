@@ -1,4 +1,5 @@
 using System.Text;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -13,7 +14,7 @@ namespace Textamina.Markdig.Syntax
 
         protected override void Close(MatchInlineState state)
         {
-            Content = ContentBuilder.ToString();
+            Content = HtmlHelper.Unescape(ContentBuilder.ToString());
             state.StringBuilders.Release(ContentBuilder);
             ContentBuilder = null;
         }

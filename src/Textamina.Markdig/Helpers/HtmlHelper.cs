@@ -57,10 +57,10 @@ namespace Textamina.Markdig.Helpers
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
         /// </summary>
-        /// <param name="url">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
-        public static string Unescape(string url)
+        /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
+        public static string Unescape(string text)
         {
-            if (url == null)
+            if (text == null)
             {
                 return string.Empty;
             }
@@ -74,20 +74,20 @@ namespace Textamina.Markdig.Helpers
             var sb = StringBuilderCache.Local();
             sb.Clear();
 
-            while ((searchPos = url.IndexOfAny(search, searchPos)) != -1)
+            while ((searchPos = text.IndexOfAny(search, searchPos)) != -1)
             {
-                c = url[searchPos];
+                c = text[searchPos];
                 if (c == '\\')
                 {
                     searchPos++;
 
-                    if (url.Length == searchPos)
+                    if (text.Length == searchPos)
                         break;
 
-                    c = url[searchPos];
+                    c = text[searchPos];
                     if (CharHelper.IsEscapableSymbol(c))
                     {
-                        sb.Append(url, lastPos, searchPos - lastPos - 1);
+                        sb.Append(text, lastPos, searchPos - lastPos - 1);
                         lastPos = searchPos;
                     }
                 }
@@ -95,7 +95,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     string namedEntity;
                     int numericEntity;
-                    match = scan_entity(url, searchPos, url.Length - searchPos, out namedEntity,
+                    match = scan_entity(text, searchPos, text.Length - searchPos, out namedEntity,
                         out numericEntity);
                     if (match == 0)
                     {
@@ -110,23 +110,29 @@ namespace Textamina.Markdig.Helpers
                             var decoded = EntityHelper.DecodeEntity(namedEntity);
                             if (decoded != null)
                             {
-                                sb.Append(url, lastPos, searchPos - match - lastPos);
+                                sb.Append(text, lastPos, searchPos - match - lastPos);
                                 sb.Append(decoded);
                                 lastPos = searchPos;
                             }
                         }
-                        else if (numericEntity > 0)
+                        else if (numericEntity >= 0)
                         {
-                            var decoded = EntityHelper.DecodeEntity(numericEntity);
-                            if (decoded != null)
+                            sb.Append(text, lastPos, searchPos - match - lastPos);
+                            if (numericEntity == 0)
                             {
-                                sb.Append(url, lastPos, searchPos - match - lastPos);
-                                sb.Append(decoded);
+                                sb.Append('\0');
                             }
                             else
                             {
-                                sb.Append(url, lastPos, searchPos - match - lastPos);
-                                sb.Append('\uFFFD');
+                                var decoded = EntityHelper.DecodeEntity(numericEntity);
+                                if (decoded != null)
+                                {
+                                    sb.Append(decoded);
+                                }
+                                else
+                                {
+                                    sb.Append('\uFFFD');
+                                }
                             }
 
                             lastPos = searchPos;
@@ -136,9 +142,9 @@ namespace Textamina.Markdig.Helpers
             }
 
             if (sb.Length == 0)
-                return url;
+                return text;
 
-            sb.Append(url, lastPos, url.Length - lastPos);
+            sb.Append(text, lastPos, text.Length - lastPos);
             var result = sb.ToString();
             sb.Clear();
             return result;
