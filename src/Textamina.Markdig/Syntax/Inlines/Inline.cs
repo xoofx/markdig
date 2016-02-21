@@ -116,6 +116,11 @@ namespace Textamina.Markdig.Syntax
             if (container != null)
             {
                 var newContainer = inline as ContainerInline;
+                // Don't append to a closed container
+                if (newContainer != null && newContainer.IsClosed)
+                {
+                    newContainer = null;
+                }
                 // TODO: This part is not efficient as it is using child.Remove()
                 // We need a method to quickly move all children without having to mess Next/Prev sibling
                 var child = container.FirstChild;

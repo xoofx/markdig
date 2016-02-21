@@ -97,6 +97,22 @@ namespace Textamina.Markdig.Syntax
                             openDelimiter.DelimiterCount -= isStrong ? 2 : 1;
                             closeDelimiter.DelimiterCount -= isStrong ? 2 : 1;
 
+                            // Remove any intermediate emphasis
+                            for (int k = openDelimiterIndex - 1; k > i; k--)
+                            {
+                                var literalDelimiter = delimiters[k];
+                                var literal = new LiteralInline()
+                                {
+                                    Content = literalDelimiter.ToLiteral(),
+                                    IsClosed = true
+                                };
+
+                                literalDelimiter.ReplaceBy(literal);
+                                delimiters.RemoveAt(k);
+                                i--;
+                                openDelimiterIndex--;
+                            }
+
                             if (closeDelimiter.DelimiterCount == 0)
                             {
                                 closeDelimiter.MoveChildrenAfter(emphasis);

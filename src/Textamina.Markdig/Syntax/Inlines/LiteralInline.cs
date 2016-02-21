@@ -24,6 +24,7 @@ namespace Textamina.Markdig.Syntax
             {
                 // A literal will always match
                 var literal = state.Inline as LiteralInline;
+                var text = state.Lines;
                 if (literal == null)
                 {
                     literal = new LiteralInline {ContentBuilder = state.StringBuilders.Get()};
@@ -31,11 +32,11 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 var builder = literal.ContentBuilder;
-                var c = state.Lines.CurrentChar;
+                var c = text.CurrentChar;
                 if (c != '\0')
                 {
                     builder.Append(c);
-                    state.Lines.NextChar();
+                    text.NextChar();
                 }
                 return true;
             }
@@ -43,7 +44,7 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
-            return Content;
+            return Content ?? (ContentBuilder != null ? ContentBuilder.ToString() : string.Empty);
         }
     }
 }

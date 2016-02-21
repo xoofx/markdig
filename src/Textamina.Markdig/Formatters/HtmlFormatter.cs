@@ -33,6 +33,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
+                [typeof(AutolinkInline)] = o => Write((AutolinkInline)o),
                 [typeof(EmphasisInline)] = o => Write((EmphasisInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
@@ -113,6 +114,19 @@ namespace Textamina.Markdig.Formatters
         protected void Write(LiteralInline literal)
         {
             HtmlHelper.EscapeHtml(literal.Content, writer);
+        }
+
+        protected void Write(AutolinkInline autolink)
+        {
+            writer.WriteConstant("<a href=\"");
+            if (autolink.IsEmail)
+            {
+                writer.WriteConstant("mailto:");
+            }
+            HtmlHelper.EscapeUrl(autolink.Url, writer);
+            writer.WriteConstant("\">");
+            HtmlHelper.EscapeHtml(autolink.Url, writer);
+            writer.WriteConstant("</a>");
         }
 
         protected void Write(EscapeInline escape)

@@ -8,6 +8,203 @@ namespace Textamina.Markdig.Helpers
 {
     public static class LinkHelper
     {
+        public static bool TryParseAutolink(StringLineGroup text, out string link, out bool isEmail)
+        {
+            link = null;
+            isEmail = false;
+
+            var c = text.CurrentChar;
+            if (c != '<')
+            {
+                return false;
+            }
+
+            // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
+            // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
+            // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
+
+            // a scheme is any sequence of 2–32 characters 
+            // beginning with an ASCII letter 
+            // and followed by any combination of ASCII letters, digits, or the symbols plus (”+”), period (”.”), or hyphen (”-”).
+
+            // An email address, for these purposes, is anything that matches the non-normative regex from the HTML5 spec:
+            // /^
+            // [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+
+            // @
+            // [a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
+            // (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
+            c = text.NextChar();
+
+            // -1: scan email
+            //  0: scan uri or email
+            // +1: scan uri
+            int state = 0;
+
+            if (!c.IsAlpha())
+            {
+                // We may have an email char?
+                if (c.IsDigit() || CharHelper.IsEmailUsernameSpecialChar(c))
+                {
+                    state = -1;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            var builder = StringBuilderCache.Local();
+
+            // ****************************
+            // 1. Scan scheme or user email
+            // ****************************
+            builder.Append(c);
+            while (true)
+            {
+                c = text.NextChar();
+
+                // Chars valid for both scheme and email
+                var isSpecialChar = c == '+' || c == '.' || c == '-';
+                var isValidChar = c.IsAlphaNumeric() || isSpecialChar;
+                if (state <= 0 && CharHelper.IsEmailUsernameSpecialChar(c))
+                {
+                    isValidChar = true;
+                    // If this is not a special char valid also for url scheme, then we have an email
+                    if (!isSpecialChar)
+                    {
+                        state = -1;
+                    }
+                }
+
+                if (isValidChar)
+                {
+                    // a scheme is any sequence of 2–32 characters 
+                    if (state > 0 && builder.Length >= 32)
+                    {
+                        builder.Clear();
+                        return false;
+                    }
+                    builder.Append(c);
+                }
+                else if (c == ':')
+                {
+                    if (state < 0 || builder.Length <= 2)
+                    {
+                        builder.Clear();
+                        return false;
+                    }
+                    state = 1;
+                    break;
+                } else if (c == '@')
+                {
+                    if (state > 0)
+                    {
+                        builder.Clear();
+                        return false;
+                    }
+                    state = -1;
+                    break;
+                }
+                else
+                {
+                    builder.Clear();
+                    return false;
+                }
+            }
+
+            // append ':' or '@' 
+            builder.Append(c); 
+
+            if (state < 0)
+            {
+                isEmail = true;
+
+                // scan an email
+                // [a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
+                // (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+                bool hasMinus = false;
+                int domainCharCount = 0;
+                char pc = '\0';
+                while (true)
+                {
+                    c = text.NextChar();
+                    if (c == '>')
+                    {
+                        if (domainCharCount == 0 || hasMinus)
+                        {
+                            break;
+                        }
+
+                        text.NextChar();
+                        link = builder.ToString();
+                        builder.Clear();
+                        return true;
+                    }
+
+                    if (c.IsAlphaNumeric() || (domainCharCount > 0 && (hasMinus = c == '-')))
+                    {
+                        domainCharCount++;
+                        if (domainCharCount > 63)
+                        {
+                            break;
+                        }
+                    }
+                    else if (c == '.')
+                    {
+                        if (pc == '.' || pc == '-')
+                        {
+                            break;
+                        }
+                        domainCharCount = 0;
+                        hasMinus = false;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    builder.Append(c);
+                }
+            }
+            else
+            {
+                // scan an uri            
+                // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
+                // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
+                // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
+
+                while (true)
+                {
+                    c = text.NextChar();
+                    if (c == '\0')
+                    {
+                        break;
+                    }
+
+                    if (c == '>')
+                    {
+                        text.NextChar();
+                        link = builder.ToString();
+                        builder.Clear();
+                        return true;
+                    }
+
+                    // Chars valid for both scheme and email
+                    if (c > ' ' && c < 127 && c != '<')
+                    {
+                        builder.Append(c);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            builder.Clear();
+            return false;
+        }
+
         public static bool TryParseInlineLink(StringLineGroup text, out string link, out string title)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
@@ -275,7 +472,8 @@ namespace Textamina.Markdig.Helpers
                 return false;
             }
 
-            var hasWhiteSpaces = text.SkipWhiteSpaces();
+            int newLineCount;
+            var hasWhiteSpaces = text.SkipWhiteSpaces(out newLineCount);
 
             if (TryParseTitle(text, out title))
             {
@@ -283,6 +481,13 @@ namespace Textamina.Markdig.Helpers
                 if (!hasWhiteSpaces)
                 {
                     return false;
+                }
+            }
+            else
+            {
+                if (text.CurrentChar == '\0' || newLineCount > 0)
+                {
+                    return true;
                 }
             }
 

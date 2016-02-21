@@ -213,5 +213,38 @@ namespace Textamina.Markdig.Tests
             Assert.AreEqual(@"/toto", url);
             Assert.AreEqual(@"title", title);
         }
+
+        [Test]
+        public void TestAutoLinkUrlSimple()
+        {
+            var text = new StringLineGroup(@"<http://google.com>");
+            string url;
+            bool isEmail;
+            Assert.True(LinkHelper.TryParseAutolink(text, out url, out isEmail));
+            Assert.False(isEmail);
+            Assert.AreEqual("http://google.com", url);
+        }
+
+        [Test]
+        public void TestAutoLinkEmailSimple()
+        {
+            var text = new StringLineGroup(@"<user@host.com>");
+            string email;
+            bool isEmail;
+            Assert.True(LinkHelper.TryParseAutolink(text, out email, out isEmail));
+            Assert.True(isEmail);
+            Assert.AreEqual("user@host.com", email);
+        }
+
+        [Test]
+        public void TestAutolinkInvalid()
+        {
+            string text;
+            bool isEmail;
+            Assert.False(LinkHelper.TryParseAutolink(new StringLineGroup(@""), out text, out isEmail));
+            Assert.False(LinkHelper.TryParseAutolink(new StringLineGroup(@"<"), out text, out isEmail));
+            Assert.False(LinkHelper.TryParseAutolink(new StringLineGroup(@"<ab"), out text, out isEmail));
+            Assert.False(LinkHelper.TryParseAutolink(new StringLineGroup(@"<user@>"), out text, out isEmail));
+        }
     }
 }

@@ -132,12 +132,12 @@ namespace Textamina.Markdig.Syntax
                 }
                 else
                 {
-                    FirstChild = child.NextSibling;
+                    FirstChild = child.NextSibling ?? LastChild;
                 }
             }
             else if (child == LastChild)
             {
-                LastChild = child.NextSibling;
+                LastChild = child.PreviousSibling ?? FirstChild;
             }
         }
 

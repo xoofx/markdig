@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Textamina.Markdig.Helpers
 {
@@ -15,7 +17,7 @@ namespace Textamina.Markdig.Helpers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsControl(this char c)
         {
-            return c < ' ' || char.IsControl(c);
+            return c < ' ' || Char.IsControl(c);
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -49,18 +51,18 @@ namespace Textamina.Markdig.Helpers
             }
             else
             {
-                var category = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-                space = category == System.Globalization.UnicodeCategory.SpaceSeparator
-                    || category == System.Globalization.UnicodeCategory.LineSeparator
-                    || category == System.Globalization.UnicodeCategory.ParagraphSeparator;
+                var category = CharUnicodeInfo.GetUnicodeCategory(c);
+                space = category == UnicodeCategory.SpaceSeparator
+                    || category == UnicodeCategory.LineSeparator
+                    || category == UnicodeCategory.ParagraphSeparator;
                 punctuation = !space &&
-                    (category == System.Globalization.UnicodeCategory.ConnectorPunctuation
-                    || category == System.Globalization.UnicodeCategory.DashPunctuation
-                    || category == System.Globalization.UnicodeCategory.OpenPunctuation
-                    || category == System.Globalization.UnicodeCategory.ClosePunctuation
-                    || category == System.Globalization.UnicodeCategory.InitialQuotePunctuation
-                    || category == System.Globalization.UnicodeCategory.FinalQuotePunctuation
-                    || category == System.Globalization.UnicodeCategory.OtherPunctuation);
+                    (category == UnicodeCategory.ConnectorPunctuation
+                    || category == UnicodeCategory.DashPunctuation
+                    || category == UnicodeCategory.OpenPunctuation
+                    || category == UnicodeCategory.ClosePunctuation
+                    || category == UnicodeCategory.InitialQuotePunctuation
+                    || category == UnicodeCategory.FinalQuotePunctuation
+                    || category == UnicodeCategory.OtherPunctuation);
             }
         }
 
@@ -121,9 +123,21 @@ namespace Textamina.Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsAlpha(this char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsAlphaNumeric(this char c)
         {
-            return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+            return IsAlpha(c) || IsDigit(c);
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsDigit(this char c)
+        {
+            return c >= '0' && c <= '9';
         }
 
         public static bool IsAsciiPunctuation(this char c)
@@ -167,6 +181,12 @@ namespace Textamina.Markdig.Helpers
                     return true;
             }
             return false;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsEmailUsernameSpecialChar(char c)
+        {
+            return ".!#$%&'*+/=?^_`{|}~-+.~".IndexOf(c) >= 0;
         }
     }
 }

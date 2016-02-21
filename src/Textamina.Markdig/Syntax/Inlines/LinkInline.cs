@@ -79,10 +79,8 @@ namespace Textamina.Markdig.Syntax
                         text.NextChar();
                         if (state.Inline != null)
                         {
-                            var inline = state.Inline;
-                            if (TryProcessLinkOrImage(ref inline, text, state))
+                            if (TryProcessLinkOrImage(state, text))
                             {
-                                state.Inline = inline;
                                 return true;
                             }
                         }
@@ -108,7 +106,6 @@ namespace Textamina.Markdig.Syntax
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         IsImage = isImage,
-                        IsClosed = true,
                     };
 
                     if (child == null)
@@ -118,15 +115,19 @@ namespace Textamina.Markdig.Syntax
                             Content = label,
                             IsClosed = true
                         };
-                    }
-
-                    // Insert all child into the link
-                    while (child != null)
-                    {
-                        child.Remove();
                         link.AppendChild(child);
-                        child = child.NextSibling;
                     }
+                    else
+                    {
+                        // Insert all child into the link
+                        while (child != null)
+                        {
+                            child.Remove();
+                            link.AppendChild(child);
+                            child = child.NextSibling;
+                        }
+                    }
+                    link.IsClosed = true;
                     state.Inline = link;
                     isValidLink = true;
                 }
@@ -143,10 +144,10 @@ namespace Textamina.Markdig.Syntax
                 return isValidLink;
             }
 
-            private bool TryProcessLinkOrImage(ref Inline current, StringLineGroup text, MatchInlineState inlineState)
+            private bool TryProcessLinkOrImage(MatchInlineState inlineState, StringLineGroup text)
             {
                 LinkDelimiterInline openParent = null;
-                foreach (var parent in current.FindParentOfType<LinkDelimiterInline>())
+                foreach (var parent in inlineState.Inline.FindParentOfType<LinkDelimiterInline>())
                 {
                     openParent = parent;
                     break;
@@ -156,9 +157,7 @@ namespace Textamina.Markdig.Syntax
                 if (openParent != null)
                 {
                     // TODO: continue parsing of ]
-
                     var parentDelimiter = openParent.Parent;
-
                     switch (text.CurrentChar)
                     {
                         case '(':
@@ -166,23 +165,32 @@ namespace Textamina.Markdig.Syntax
                             string title;
                             if (LinkHelper.TryParseInlineLink(text, out url, out title))
                             {
+                                //if (nestedDelimiter)
+                                //{
+                                //    // Remove entirely links inside other links
+                                //    openParent.Remove();
+                                //    inlineState.Inline = null;
+                                //    return true;
+                                //}
+
                                 // Inline Link
                                 var link = new LinkInline()
                                 {
                                     Url = HtmlHelper.Unescape(url),
                                     Title = HtmlHelper.Unescape(title),
                                     IsImage = openParent.IsImage,
-                                    IsClosed = true
                                 };
 
                                 // TODO: Process emphasis on openParent content
                                 inlineState.OpenedInlines.Remove(openParent);
                                 openParent.ReplaceBy(link);
-                                current = link;
+                                inlineState.Inline = link;
 
                                 EmphasisInline.ProcessEmphasis(link);
 
                                 ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+
+                                link.IsClosed = true;
 
                                 return true;
                             }
@@ -191,6 +199,14 @@ namespace Textamina.Markdig.Syntax
                             string label;
                             if (LinkHelper.TryParseLabel(text, out label))
                             {
+                                //if (nestedDelimiter)
+                                //{
+                                //    // Remove entirely links inside other links
+                                //    openParent.Remove();
+                                //    inlineState.Inline = null;
+                                //    return true;
+                                //}
+
                                 // TODO: Process emphasis on openParent content
                                 bool isValid = ProcessLinkReference(inlineState, label, openParent.IsImage, openParent.FirstChild);
 
@@ -217,7 +233,7 @@ namespace Textamina.Markdig.Syntax
 
                     inlineState.OpenedInlines.Remove(openParent);
                     inlineState.OpenedInlines.Add(literal);
-                    current = openParent.ReplaceBy(literal);
+                    inlineState.Inline = openParent.ReplaceBy(literal);
                     return false;
                 }
 

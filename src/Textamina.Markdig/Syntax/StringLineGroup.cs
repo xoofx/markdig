@@ -137,8 +137,24 @@ namespace Textamina.Markdig.Syntax
         public bool SkipWhiteSpaces()
         {
             bool hasWhitespaces = false;
-            while (CharHelper.IsWhitespace(CurrentChar))
+            while (CurrentChar.IsWhitespace())
             {
+                NextChar();
+                hasWhitespaces = true;
+            }
+            return hasWhitespaces;
+        }
+
+        public bool SkipWhiteSpaces(out int newLineCount)
+        {
+            bool hasWhitespaces = false;
+            newLineCount = 0;
+            while (CurrentChar.IsWhitespace())
+            {
+                if (CurrentChar == '\n')
+                {
+                    newLineCount++;
+                }
                 NextChar();
                 hasWhitespaces = true;
             }

@@ -59,6 +59,7 @@ namespace Textamina.Markdig.Parsing
                 EmphasisInline.Parser,
                 EscapeInline.Parser,
                 CodeInline.Parser,
+                AutolinkInline.Parser,
                 LiteralInline.Parser,
             };
             InitializeInlineParsers();
@@ -467,13 +468,15 @@ namespace Textamina.Markdig.Parsing
         {
             var lines = leafBlock.Lines;
 
-            leafBlock.Inline = new ContainerInline();
+            leafBlock.Inline = new ContainerInline() {IsClosed = false};
             inlineState.Lines = lines;
             inlineState.Inline = leafBlock.Inline;
 
             while (!lines.IsEndOfLines)
             {
                 var saveLines = lines.Save();
+
+                var currentChar = lines.CurrentChar;
 
                 InlineParser inlineParser = null;
                 if (!inlineWithFirstCharParsers.TryGetValue(lines.CurrentChar, out inlineParser) || !inlineParser.Match(inlineState))
@@ -498,39 +501,57 @@ namespace Textamina.Markdig.Parsing
                     }
                 }
 
-                // Get deepest container
-                var container = (ContainerInline)leafBlock.Inline;
-                while (true)
-                {
-                    var nextContainer = container.LastChild as ContainerInline;
-                    if (nextContainer != null)
-                    {
-                        container = nextContainer;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
                 var nextInline = inlineState.Inline;
 
-                if (nextInline.Parent == null)
+                if (nextInline != null)
                 {
-                    if (container.IsClosed)
+                    if (nextInline.Parent == null)
                     {
-                        container.InsertAfter(nextInline);
-                    }
-                    else
-                    {
+                        // Get deepest container
+                        var container = (ContainerInline)leafBlock.Inline;
+                        while (true)
+                        {
+                            var nextContainer = container.LastChild as ContainerInline;
+                            if (nextContainer != null && !nextContainer.IsClosed)
+                            {
+                                container = nextContainer;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
                         container.AppendChild(nextInline);
                     }
+
+                    if (!nextInline.IsClosed)
+                    {
+                        inlineState.OpenedInlines.Add(nextInline);
+                    }
+                }
+                else
+                {
+                    // Get deepest container
+                    var container = (ContainerInline)leafBlock.Inline;
+                    while (true)
+                    {
+                        var nextContainer = container.LastChild as ContainerInline;
+                        if (nextContainer != null && !nextContainer.IsClosed)
+                        {
+                            container = nextContainer;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    inlineState.Inline = container.LastChild is LeafInline ? container.LastChild : container;
                 }
 
-                if (nextInline != null && !nextInline.IsClosed)
-                {
-                    inlineState.OpenedInlines.Add(nextInline);
-                }
+                Log.WriteLine($"** Dump: char '{currentChar}");
+                leafBlock.Inline.DumpTo(Log);
             }
 
             // Close all inlines not closed
@@ -543,8 +564,12 @@ namespace Textamina.Markdig.Parsing
 
             if (Log != null)
             {
+                Log.WriteLine("** Dump before Emphasis:");
+                leafBlock.Inline.DumpTo(Log);
                 EmphasisInline.ProcessEmphasis(leafBlock.Inline);
 
+                Log.WriteLine();
+                Log.WriteLine("** Dump after Emphasis:");
                 leafBlock.Inline.DumpTo(Log);
             }
             // TODO: Close opened inlines
