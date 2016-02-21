@@ -44,7 +44,12 @@ namespace Textamina.Markdig.Syntax
                 {
                     delimiters.Add(delimiter);
                 }
-                child = (child as ContainerInline)?.LastChild;
+                var subContainer = child as ContainerInline;
+                child = subContainer?.LastChild;
+                if (delimiter == null && subContainer is DelimiterInline)
+                {
+                    subContainer.ReplaceBy(new LiteralInline() {Content = ((DelimiterInline)subContainer).ToLiteral(), IsClosed = true});
+                }
             }
 
             ProcessEmphasis(delimiters);

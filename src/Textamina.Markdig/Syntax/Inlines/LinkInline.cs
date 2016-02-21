@@ -61,8 +61,8 @@ namespace Textamina.Markdig.Syntax
                             if (ProcessLinkReference(state, label, isImage))
                             {
                                 ReplaceParentIfNotImage(isImage, previousInline);
+                                return true;
                             }
-                            return true;
                         }
                         text.Restore(ref saved);
 
@@ -122,25 +122,29 @@ namespace Textamina.Markdig.Syntax
                         // Insert all child into the link
                         while (child != null)
                         {
+                            var next = child.NextSibling;
                             child.Remove();
                             link.AppendChild(child);
-                            child = child.NextSibling;
+                            child = next;
                         }
                     }
                     link.IsClosed = true;
+
+                    EmphasisInline.ProcessEmphasis(link);
+
                     state.Inline = link;
                     isValidLink = true;
                 }
-                else
-                {
-                    // Else output a literal, leave it opened as we may have literals after
-                    // that could be append to this one
-                    var literal = new LiteralInline()
-                    {
-                        ContentBuilder = state.StringBuilders.Get().Append('[').Append(label).Append(']')
-                    };
-                    state.Inline = literal;
-                }
+                //else
+                //{
+                //    // Else output a literal, leave it opened as we may have literals after
+                //    // that could be append to this one
+                //    var literal = new LiteralInline()
+                //    {
+                //        ContentBuilder = state.StringBuilders.Get().Append('[').Append(label).Append(']')
+                //    };
+                //    state.Inline = literal;
+                //}
                 return isValidLink;
             }
 
@@ -216,6 +220,16 @@ namespace Textamina.Markdig.Syntax
                                 if (isValid)
                                 {
                                     ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+                                }
+                                else
+                                {
+                                    // Else output a literal, leave it opened as we may have literals after
+                                    // that could be append to this one
+                                    var literal2 = new LiteralInline()
+                                    {
+                                        ContentBuilder = inlineState.StringBuilders.Get().Append('[').Append(label).Append(']')
+                                    };
+                                    inlineState.Inline = literal2;
                                 }
                                 return true;
                             }
