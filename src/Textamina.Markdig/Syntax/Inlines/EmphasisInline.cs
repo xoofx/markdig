@@ -96,14 +96,31 @@ namespace Textamina.Markdig.Syntax
                                 Strong = isStrong
                             };
 
+
+                            var embracer = (ContainerInline)openDelimiter;
+
+                            // Go down to the first emphasis with a lower level
+                            while (true)
+                            {
+                                var previousEmphasis = embracer.FirstChild as EmphasisInline;
+                                if (previousEmphasis != null && previousEmphasis.Strong && !isStrong)
+                                {
+                                    embracer = previousEmphasis;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
                             // Embrace all delimiters
-                            openDelimiter.EmbraceChildrenBy(emphasis);
+                            embracer.EmbraceChildrenBy(emphasis);
 
                             openDelimiter.DelimiterCount -= isStrong ? 2 : 1;
                             closeDelimiter.DelimiterCount -= isStrong ? 2 : 1;
 
                             // Remove any intermediate emphasis
-                            for (int k = openDelimiterIndex - 1; k > i; k--)
+                            for (int k = i - 1; k >= openDelimiterIndex + 1; k--)
                             {
                                 var literalDelimiter = delimiters[k];
                                 var literal = new LiteralInline()
@@ -115,7 +132,6 @@ namespace Textamina.Markdig.Syntax
                                 literalDelimiter.ReplaceBy(literal);
                                 delimiters.RemoveAt(k);
                                 i--;
-                                openDelimiterIndex--;
                             }
 
                             if (closeDelimiter.DelimiterCount == 0)
@@ -147,6 +163,9 @@ namespace Textamina.Markdig.Syntax
                                 var firstChild = openDelimiter.FirstChild;
                                 firstChild.Remove();
                                 openDelimiter.ReplaceBy(firstChild);
+                                firstChild.IsClosed = true;
+                                closeDelimiter.Remove();
+                                firstChild.InsertAfter(closeDelimiter);
                                 delimiters.RemoveAt(openDelimiterIndex);
                                 i--;
                             }
@@ -202,13 +221,12 @@ namespace Textamina.Markdig.Syntax
                 // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
                 // is not preceded or followed by a _ character.
 
+                var delimiterChar = lines.CurrentChar;
                 var pc = lines.PreviousChar1;
-                if (FirstChars.Contains(pc))
+                if (delimiterChar == pc && lines.PreviousChar2 != '\\')
                 {
                     return false;
                 }
-
-                var delimiterChar = lines.CurrentChar;
 
                 int delimiterCount = 0;
                 char c;

@@ -89,7 +89,7 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        public Inline ReplaceBy(Inline inline)
+        public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
             if (inline == null) throw new ArgumentNullException(nameof(inline));
 
@@ -113,7 +113,7 @@ namespace Textamina.Markdig.Syntax
             }
 
             var container = this as ContainerInline;
-            if (container != null)
+            if (copyChildren && container != null)
             {
                 var newContainer = inline as ContainerInline;
                 // Don't append to a closed container
