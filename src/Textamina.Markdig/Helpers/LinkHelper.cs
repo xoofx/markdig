@@ -533,7 +533,7 @@ namespace Textamina.Markdig.Helpers
 
                 if (hasEscape)
                 {
-                    if (c != '[' && c != ']')
+                    if (c != '[' && c != ']' && c != '\\')
                     {
                         break;
                     }
@@ -578,7 +578,7 @@ namespace Textamina.Markdig.Helpers
                     c = ' ';
                 }
 
-                if (c == '\\')
+                if (!hasEscape && c == '\\')
                 {
                     hasEscape = true;
                 }
