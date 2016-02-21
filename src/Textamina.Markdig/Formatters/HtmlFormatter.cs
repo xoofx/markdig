@@ -29,7 +29,6 @@ namespace Textamina.Markdig.Formatters
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
                 [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
                 [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
-                [typeof(EscapeInline)] = o => Write((EscapeInline)o),
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
@@ -127,11 +126,6 @@ namespace Textamina.Markdig.Formatters
             writer.WriteConstant("\">");
             HtmlHelper.EscapeHtml(autolink.Url, writer);
             writer.WriteConstant("</a>");
-        }
-
-        protected void Write(EscapeInline escape)
-        {
-            writer.WriteConstant(escape.EscapedChar);
         }
 
         protected void Write(CodeInline code)

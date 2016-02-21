@@ -3,11 +3,13 @@ using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
-    public class EscapeInline : LeafInline
+    /// <summary>
+    /// There is actually no EscapeInline inheriting from Inline, as 
+    /// the parser will transform it to a LiteralInline
+    /// </summary>
+    public static class EscapeInline
     {
         public static readonly InlineParser Parser = new ParserInternal();
-
-        public char EscapedChar;
 
         private class ParserInternal : InlineParser
         {
@@ -22,9 +24,12 @@ namespace Textamina.Markdig.Syntax
 
                 // Go to escape character
                 lines.NextChar();
-                if (CharHelper.IsAsciiPunctuation(lines.CurrentChar))
+                if (lines.CurrentChar.IsAsciiPunctuation())
                 {
-                    state.Inline = new EscapeInline() {EscapedChar = lines.CurrentChar};
+                    var literal = state.Inline as LiteralInline ??
+                                  new LiteralInline() {ContentBuilder = state.StringBuilders.Get()};
+                    literal.ContentBuilder.Append(lines.CurrentChar);
+                    state.Inline = literal;
                     lines.NextChar();
                     return true;
                 }
