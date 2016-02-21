@@ -511,6 +511,12 @@ namespace Textamina.Markdig.Helpers
 
         public static bool TryParseLabel(StringLineGroup lines, out string label)
         {
+            return TryParseLabel(lines, false, out label);
+        }
+
+
+        public static bool TryParseLabel(StringLineGroup lines, bool allowEmpty, out string label)
+        {
             label = null;
             char c = lines.CurrentChar;
             if (c != '[')
@@ -548,7 +554,7 @@ namespace Textamina.Markdig.Helpers
                     if (c == ']')
                     {
                         lines.NextChar(); // Skip ]
-                        if (hasNonWhiteSpace)
+                        if (allowEmpty || hasNonWhiteSpace)
                         {
                             // Remove trailing spaces
                             for (int i = buffer.Length - 1; i >= 0; i--)
