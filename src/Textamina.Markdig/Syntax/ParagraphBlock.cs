@@ -121,6 +121,11 @@ namespace Textamina.Markdig.Syntax
                                 Level = level,
                                 Lines = paragraph.Lines,
                             };
+                            foreach (var line in heading.Lines)
+                            {
+                                line.Trim();
+                            }
+
                             state.Block = heading;
 
                             // Replace the children in the parent
@@ -209,8 +214,29 @@ namespace Textamina.Markdig.Syntax
                     var lineCount = lines.Count;
                     for (int i = 0; i < lineCount; i++)
                     {
-                        lines[i].Trim();
+                        var line = lines[i];
+                        line.TrimStart();
+
+                        int endSpaces = 0;
+                        for (int j = line.End; j >= line.Start; j--)
+                        {
+                            if (line[j].IsSpace())
+                            {
+                                endSpaces++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        // Remove single trailing space
+                        if (endSpaces == 1)
+                        {
+                            line.End = line.End - 1;
+                        }
                     }
+                    lines[lineCount - 1].TrimEnd();
                 }
                 else if (heading?.Lines.Count > 1)
                 {

@@ -34,6 +34,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
                 [typeof(AutolinkInline)] = o => Write((AutolinkInline)o),
                 [typeof(EmphasisInline)] = o => Write((EmphasisInline)o),
+                [typeof(HardlineBreakInline)] = o => Write((HardlineBreakInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
         }
@@ -197,6 +198,11 @@ namespace Textamina.Markdig.Formatters
                 WriteChildren(emphasisInline);
                 writer.WriteConstant("</em>");
             }
+        }
+
+        protected void Write(HardlineBreakInline hardlineBreak)
+        {
+            writer.WriteConstant("<br />");
         }
 
         protected void WriteChildren(ContainerInline containerInline)

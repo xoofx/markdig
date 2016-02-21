@@ -60,6 +60,7 @@ namespace Textamina.Markdig.Parsing
                 EscapeInline.Parser,
                 CodeInline.Parser,
                 AutolinkInline.Parser,
+                HardlineBreakInline.Parser,
                 LiteralInline.Parser,
             };
             InitializeInlineParsers();
@@ -472,6 +473,7 @@ namespace Textamina.Markdig.Parsing
             leafBlock.Inline = new ContainerInline() {IsClosed = false};
             inlineState.Lines = lines;
             inlineState.Inline = leafBlock.Inline;
+            inlineState.Block = leafBlock;
 
             while (!lines.IsEndOfLines)
             {

@@ -14,6 +14,8 @@ namespace Textamina.Markdig.Parsing
             OpenedInlines = new HashSet<Inline>();
         }
 
+        public LeafBlock Block { get; internal set; }
+
         public StringLineGroup Lines;
 
         public Inline Inline { get; set; }
