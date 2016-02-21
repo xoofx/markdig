@@ -44,6 +44,15 @@ namespace Textamina.Markdig.Syntax
             NextChar();
         }
 
+        public char PeekCharOnSameLine()
+        {
+            if (Current != null && (ColumnPosition+1) <= Current.End)
+            {
+                return Current[ColumnPosition + 1];
+            }
+            return (char)0;
+        }
+
         protected override void ClearItems()
         {
             base.ClearItems();

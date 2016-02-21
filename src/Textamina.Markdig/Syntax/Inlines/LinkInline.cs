@@ -54,14 +54,11 @@ namespace Textamina.Markdig.Syntax
                         string label;
 
                         // If the label is followed by either a ( or a [, this is not a shortcut
-                        if (LinkHelper.TryParseLabel(text, out label) &&
-                            (text.CurrentChar != '(' && text.CurrentChar != '['))
+                        if (LinkHelper.TryParseLabel(text, out label))
                         {
-                            var previousInline = state.Inline;
-                            if (ProcessLinkReference(state, label, isImage))
+                            if (!state.Document.LinkReferenceDefinitions.ContainsKey(label))
                             {
-                                ReplaceParentIfNotImage(isImage, previousInline);
-                                return true;
+                                label = null;
                             }
                         }
                         text.Restore(ref saved);
@@ -71,6 +68,7 @@ namespace Textamina.Markdig.Syntax
                         state.Inline = new LinkDelimiterInline(this)
                         {
                             Type = DelimiterType.Open,
+                            Label = label,
                             IsImage = isImage
                         };
                         return true;
@@ -160,7 +158,6 @@ namespace Textamina.Markdig.Syntax
                 // This will be matched as a literal
                 if (openParent != null)
                 {
-                    // TODO: continue parsing of ]
                     var parentDelimiter = openParent.Parent;
                     switch (text.CurrentChar)
                     {
@@ -169,14 +166,6 @@ namespace Textamina.Markdig.Syntax
                             string title;
                             if (LinkHelper.TryParseInlineLink(text, out url, out title))
                             {
-                                //if (nestedDelimiter)
-                                //{
-                                //    // Remove entirely links inside other links
-                                //    openParent.Remove();
-                                //    inlineState.Inline = null;
-                                //    return true;
-                                //}
-
                                 // Inline Link
                                 var link = new LinkInline()
                                 {
@@ -185,7 +174,6 @@ namespace Textamina.Markdig.Syntax
                                     IsImage = openParent.IsImage,
                                 };
 
-                                // TODO: Process emphasis on openParent content
                                 inlineState.OpenedInlines.Remove(openParent);
                                 openParent.ReplaceBy(link);
                                 inlineState.Inline = link;
@@ -199,37 +187,36 @@ namespace Textamina.Markdig.Syntax
                                 return true;
                             }
                             break;
-                        case '[':
-                            string label;
-                            if (LinkHelper.TryParseLabel(text, out label))
+                        default:
+
+                            string label = null;
+                            // Handle Collapsed links
+                            if (text.CurrentChar == '[')
                             {
-                                //if (nestedDelimiter)
-                                //{
-                                //    // Remove entirely links inside other links
-                                //    openParent.Remove();
-                                //    inlineState.Inline = null;
-                                //    return true;
-                                //}
-
-                                // TODO: Process emphasis on openParent content
-                                bool isValid = ProcessLinkReference(inlineState, label, openParent.IsImage, openParent.FirstChild);
-
-                                // Remove the open parent
-                                openParent.Remove();
-
-                                if (isValid)
+                                if (text.PeekCharOnSameLine() == ']')
                                 {
+                                    label = openParent.Label;
+                                    text.NextChar(); // Skip [
+                                    text.NextChar(); // Skip ]
+                                }
+                            }
+                            else
+                            {
+                                label = openParent.Label;
+                            }
+
+                            if (label != null || LinkHelper.TryParseLabel(text, true, out label))
+                            {
+                                if (ProcessLinkReference(inlineState, label, openParent.IsImage,
+                                    openParent.FirstChild))
+                                {
+                                    // Remove the open parent
+                                    openParent.Remove();
                                     ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
                                 }
                                 else
                                 {
-                                    // Else output a literal, leave it opened as we may have literals after
-                                    // that could be append to this one
-                                    var literal2 = new LiteralInline()
-                                    {
-                                        ContentBuilder = inlineState.StringBuilders.Get().Append('[').Append(label).Append(']')
-                                    };
-                                    inlineState.Inline = literal2;
+                                    return false;
                                 }
                                 return true;
                             }
