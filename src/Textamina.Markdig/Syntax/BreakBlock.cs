@@ -28,6 +28,8 @@ namespace Textamina.Markdig.Syntax
 
                 int count = 0;
                 var matchChar = (char)0;
+                bool hasSpacesSinceLastMatch = false;
+                bool hasInnerSpaces = false;
                 while (!liner.IsEol)
                 {
                     if (count == 0 && (c == '-' || c == '_' || c == '*'))
@@ -37,16 +39,26 @@ namespace Textamina.Markdig.Syntax
                     }
                     else if (c == matchChar)
                     {
+                        if (hasSpacesSinceLastMatch)
+                        {
+                            hasInnerSpaces = true;
+                        }
+
                         count++;
                     }
-                    else if (!CharHelper.IsSpace(c) || count == 0)
+                    else if (!c.IsSpace() || count == 0)
                     {
                         return MatchLineResult.None;
+                    }
+                    else if (c.IsSpace())
+                    {
+                        hasSpacesSinceLastMatch = true;
                     }
                     c = liner.NextChar();
                 }
 
-                if (count < 3)
+                // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it
+                if (count < 3 || (state.LastBlock is ParagraphBlock && matchChar == '-' && !hasInnerSpaces))
                 {
                     return MatchLineResult.None;
                 }

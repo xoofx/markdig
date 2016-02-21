@@ -285,6 +285,7 @@ namespace Textamina.Markdig.Parsing
 
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
                 lineState.Block = isParsingParagraph ? previousParagraph : null;
+                lineState.LastBlock = LastBlock;
 
                 var saveLiner = line.Save();
                 var result = blockParser.Match(lineState);

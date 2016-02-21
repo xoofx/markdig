@@ -69,7 +69,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         var headingChar = (char) 0;
                         bool checkForSpaces = false;
-                        for (int i = liner.Start; i < liner.End; i++)
+                        for (int i = liner.Start; i <= liner.End; i++)
                         {
                             var c = liner[i];
                             if (headingChar == 0)
@@ -96,6 +96,11 @@ namespace Textamina.Markdig.Syntax
                                 {
                                     checkForSpaces = true;
                                 }
+                                else
+                                {
+                                    headingChar = (char)0;
+                                    break;
+                                }
                             }
                         }
 
@@ -115,13 +120,12 @@ namespace Textamina.Markdig.Syntax
                             {
                                 Level = level,
                                 Lines = paragraph.Lines,
-                                Parent = paragraph.Parent
                             };
                             state.Block = heading;
 
                             // Replace the children in the parent
                             var parent = (ContainerBlock) paragraph.Parent;
-                            parent.Children[parent.Children.Count - 1] = heading;
+                            parent.Children.RemoveAt(parent.Children.Count - 1);
 
                             return MatchLineResult.LastDiscard;
                         }
@@ -188,6 +192,7 @@ namespace Textamina.Markdig.Syntax
             public override void Close(MatchLineState state)
             {
                 var paragraph = state.Block as ParagraphBlock;
+                var heading = state.Block as HeadingBlock;
                 if (paragraph != null)
                 {
                     var lines = paragraph.Lines;
@@ -206,6 +211,10 @@ namespace Textamina.Markdig.Syntax
                     {
                         lines[i].Trim();
                     }
+                }
+                else if (heading?.Lines.Count > 1)
+                {
+                    heading.Lines.RemoveAt(heading.Lines.Count - 1);
                 }
             }
         }
