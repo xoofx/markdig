@@ -34,19 +34,50 @@ namespace Textamina.Markdig.Syntax
 
                 // 4.4 Indented code blocks 
                 var c = liner.Current;
-                var isTab = CharHelper.IsTab(c);
-                var isSpace = CharHelper.IsSpace(c);
-                if ((isTab || (isSpace && (liner.Start - position) == 3)) && !liner.IsBlankLine())
+                var isTab = c.IsTab();
+                var isSpace = c.IsSpace();
+                var isBlankLine = liner.IsBlankLine();
+                var codeBlock = state.Block as CodeBlock;
+                // && !isBlankLine) || (isBlankLine && codeBlock != null && !codeBlock.Lines[codeBlock.Lines.Count - 1].IsBlankLine())
+                if ((codeBlock != null && isBlankLine) || (isTab || (isSpace && (liner.Start - position) == 3)))
+                //if (((isTab || (isSpace && (liner.Start - position) == 3)) && !isBlankLine))
                 {
                     liner.NextChar();
                     if (state.Block == null)
                     {
+                        if (isBlankLine)
+                        {
+                            return MatchLineResult.None;
+                        }
+
                         state.Block = new CodeBlock();
                     }
                     return MatchLineResult.Continue;
                 }
 
                 return MatchLineResult.None;
+            }
+
+            public override void Close(MatchLineState state)
+            {
+                var codeBlock = state.Block as CodeBlock;
+                if (codeBlock != null)
+                {
+                    var lines = codeBlock.Lines;
+                    // Remove trailing blankline
+                    for (int i = lines.Count - 1; i >= 0; i--)
+                    {
+                        if (lines[i].IsBlankLine())
+                        {
+                            lines.RemoveAt(i);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+
             }
         }
     }

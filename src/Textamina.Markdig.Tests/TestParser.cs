@@ -71,7 +71,7 @@ namespace Textamina.Markdig.Tests
 
         private static string DisplaySpaceAndTabs(string text)
         {
-            return text.Replace("\\t", "→").Replace(' ', '·');
+            return text.Replace('\t', '→').Replace(' ', '·');
         }
 
         private static string Compact(string html)

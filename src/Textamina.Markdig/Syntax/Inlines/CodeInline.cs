@@ -36,8 +36,8 @@ namespace Textamina.Markdig.Syntax
                 while (c != '\0')
                 {
                     // Skip new lines
-                    var isWhitespace = CharHelper.IsWhitespace(c);
-                    if (!(CharHelper.IsNewLine(c) || (builder.Length == 0 && isWhitespace) || (lastWhiteSpace && isWhitespace)))
+                    var isWhitespace = c.IsWhitespace();
+                    if (!(c.IsNewLine() || (builder.Length == 0 && isWhitespace) || (lastWhiteSpace && isWhitespace)))
                     {
                         if (c == '`')
                         {
@@ -45,11 +45,6 @@ namespace Textamina.Markdig.Syntax
                         }
                         else
                         {
-                            if (countClosedSticks == countSticks)
-                            {
-                                break;
-                            }
-
                             countClosedSticks = 0;
                         }
                         lastWhiteSpace = isWhitespace;
@@ -57,6 +52,11 @@ namespace Textamina.Markdig.Syntax
                         builder.Append(c);
                     }
                     c = lines.NextChar();
+
+                    if (countClosedSticks == countSticks)
+                    {
+                        break;
+                    }
                 }
 
                 if (countClosedSticks == countSticks)
@@ -65,7 +65,7 @@ namespace Textamina.Markdig.Syntax
                     int newLength = builder.Length;
                     for (int i = builder.Length - 1; i >= 0; i--)
                     {
-                        if (CharHelper.IsWhitespace(builder[i]))
+                        if (builder[i].IsWhitespace())
                         {
                             newLength--;
                         }

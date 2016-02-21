@@ -183,22 +183,23 @@ namespace Textamina.Markdig.Syntax
             return new StringSlice(Text, Start, End);
         }
 
-        public void TrimStart()
+        public void TrimStart(bool includeTabs = false)
         {
             // Strip leading spaces
             var c = Current;
-            while (CharHelper.IsSpace(c))
+            while (includeTabs ? c.IsSpaceOrTab() :c.IsSpace())
             {
                 c = NextChar();
             }
         }
 
-        public void TrimEnd()
+        public void TrimEnd(bool includeTabs = false)
         {
             for (int i = End; i >= Start; i--)
             {
                 End = i;
-                if (!CharHelper.IsSpace(this[i]))
+                var c = this[i];
+                if (!(includeTabs ? c.IsSpaceOrTab() : c.IsSpace()))
                 {
                     break;
                 }

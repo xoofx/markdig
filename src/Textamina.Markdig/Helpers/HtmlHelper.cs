@@ -60,7 +60,7 @@ namespace Textamina.Markdig.Helpers
         /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
         public static string Unescape(string text, bool removeBackSlash = true)
         {
-            if (text == null)
+            if (string.IsNullOrEmpty(text))
             {
                 return string.Empty;
             }

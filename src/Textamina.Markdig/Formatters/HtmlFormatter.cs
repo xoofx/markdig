@@ -61,16 +61,33 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(FencedCodeBlock fencedCodeBlock)
         {
-            Write((CodeBlock) fencedCodeBlock);
+            Write(fencedCodeBlock, fencedCodeBlock.Language, fencedCodeBlock.Arguments);
         }
 
         protected void Write(CodeBlock codeBlock)
         {
+            Write(codeBlock, null, null);
+        }
+
+        protected void Write(CodeBlock codeBlock, string language, string arguments)
+        {
             writer.EnsureLine();
-            writer.WriteConstant("<pre><code>");
+            // class="language-ruby
+            writer.WriteConstant("<pre><code");
+            if (string.IsNullOrEmpty(language))
+            {
+                writer.WriteConstant(">");
+            }
+            else
+            {
+                writer.WriteConstant(" class=\"language-");
+                HtmlHelper.EscapeHtml(language, writer);
+                writer.WriteConstant("\">");
+            }
             WriteLeaf(codeBlock, true, true);
             writer.WriteLineConstant("</code></pre>");
         }
+
 
         protected void Write(HtmlBlock codeBlock)
         {
