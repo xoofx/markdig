@@ -33,6 +33,7 @@ namespace Textamina.Markdig.Syntax
                 int countClosedSticks = 0;
                 var c = lines.CurrentChar;
                 bool lastWhiteSpace = false;
+                bool hasBackslash = false;
                 while (c != '\0')
                 {
                     // Skip new lines
@@ -49,9 +50,19 @@ namespace Textamina.Markdig.Syntax
                         }
                         lastWhiteSpace = isWhitespace;
 
+                        hasBackslash = c == '\\';
                         builder.Append(c);
                     }
                     c = lines.NextChar();
+
+                    if (hasBackslash)
+                    {
+                        if (c == '\n')
+                        {
+                            c = ' ';
+                        }
+                        hasBackslash = false;
+                    }
 
                     if (countClosedSticks == countSticks)
                     {
