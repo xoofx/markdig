@@ -20,11 +20,15 @@ namespace Textamina.Markdig.Syntax
                 var c = liner.Current;
                 if (c != '>')
                 {
+                    if (state.Block != null && liner.IsBlankLine())
+                    {
+                        return MatchLineResult.LastDiscard;
+                    }
                     return MatchLineResult.None;
                 }
 
                 c = liner.NextChar();
-                if (CharHelper.IsSpace(c))
+                if (c.IsSpace())
                 {
                     liner.NextChar();
                 }

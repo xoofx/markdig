@@ -59,6 +59,7 @@ namespace Textamina.Markdig.Syntax
 
                 // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it
                 var previousParagraphBlock = state.LastBlock as ParagraphBlock;
+                // !(previousParagraphBlock.Parent is QuoteBlock || previousParagraphBlock.Parent is ListItemBlock) 
                 if (count < 3 || (previousParagraphBlock != null && !(previousParagraphBlock.Parent is QuoteBlock || previousParagraphBlock.Parent is ListItemBlock) && matchChar == '-' && !hasInnerSpaces))
                 //if (count < 3 || (previousParagraphBlock != null && matchChar == '-' && !hasInnerSpaces))
                 {

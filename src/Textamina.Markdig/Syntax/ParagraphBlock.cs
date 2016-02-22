@@ -65,7 +65,7 @@ namespace Textamina.Markdig.Syntax
                     {
                         result = MatchLineResult.None;
                     }
-                    else if (!(paragraph.Parent is QuoteBlock || paragraph.Parent is ListItemBlock))
+                    else if (!(paragraph.Parent is QuoteBlock))
                     {
                         var headingChar = (char) 0;
                         bool checkForSpaces = false;

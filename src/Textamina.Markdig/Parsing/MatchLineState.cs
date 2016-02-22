@@ -18,6 +18,8 @@ namespace Textamina.Markdig.Parsing
 
         public Block Block;
 
+        public ContainerBlock CurrentContainer;
+
         public Block LastBlock;
 
         public readonly Document Root;

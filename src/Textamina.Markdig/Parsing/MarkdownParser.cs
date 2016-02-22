@@ -134,6 +134,20 @@ namespace Textamina.Markdig.Parsing
 
                 bool continueProcessLiner = ProcessPendingBlocks();
 
+                // If we have already reached eol and the last block was a paragraph
+                // we close it
+                if (blockStack.Count > 0 && line.IsEol)
+                {
+                    int index = blockStack.Count - 1;
+                    var lastBlock = blockStack[index];
+                    if (lastBlock.Block is ParagraphBlock)
+                    {
+                        CloseBlock(lastBlock, index);
+                        continue;
+                    }
+                }
+
+
                 // If the line was not entirely processed by pending blocks, try to process it with any new block
                 while (continueProcessLiner)
                 {
@@ -201,6 +215,7 @@ namespace Textamina.Markdig.Parsing
                 var saveLiner = line.Save();
 
                 // If we have a discard, we can remove it from the current state
+                lineState.CurrentContainer = LastContainer;
                 lineState.LastBlock = LastBlock;
                 var result = parser.Match(lineState);
                 if (result == MatchLineResult.None)
@@ -253,7 +268,7 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                if (result == MatchLineResult.LastDiscard || line.IsEol)
+                if (result == MatchLineResult.LastDiscard)
                 {
                     processLiner = false;
                     break;
@@ -286,6 +301,7 @@ namespace Textamina.Markdig.Parsing
 
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
                 lineState.Block = isParsingParagraph ? previousParagraph : null;
+                lineState.CurrentContainer = LastContainer;
                 lineState.LastBlock = LastBlock;
 
                 var saveLiner = line.Save();

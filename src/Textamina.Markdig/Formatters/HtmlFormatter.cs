@@ -13,6 +13,8 @@ namespace Textamina.Markdig.Formatters
 
         private readonly Dictionary<Type, Action<object>> registeredWriters;
 
+        private bool implicitParagraph;
+
         public HtmlFormatter(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -21,7 +23,6 @@ namespace Textamina.Markdig.Formatters
             registeredWriters = new Dictionary<Type, Action<object>>
             {
                 [typeof(ListBlock)] = o => Write((ListBlock)o),
-                [typeof(ListItemBlock)] = o => Write((ListItemBlock)o),
                 [typeof(FencedCodeBlock)] = o => Write((FencedCodeBlock)o),
                 [typeof(CodeBlock)] = o => Write((CodeBlock)o),
                 [typeof(HeadingBlock)] = o => Write((HeadingBlock)o),
@@ -48,16 +49,37 @@ namespace Textamina.Markdig.Formatters
         protected void Write(ListBlock listBlock)
         {
             writer.EnsureLine();
-            writer.WriteLineConstant("<ul>");
-            WriteContainer(listBlock);
-            writer.WriteLineConstant("</ul>");
+            if (listBlock.IsOrdered)
+            {
+                writer.WriteConstant("<ol");
+                if (listBlock.OrderedStart != 1)
+                {
+                    writer.WriteConstant(" start=\"");
+                    writer.WriteConstant(listBlock.OrderedStart.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteConstant("\"");
+                }
+                writer.WriteLineConstant(">");
+            }
+            else
+            {
+                writer.WriteLineConstant("<ul>");
+            }
+            foreach (var item in listBlock.Children)
+            {
+                var listItem = (ListItemBlock) item;
+                var previousImplicit = implicitParagraph;
+                implicitParagraph = !listBlock.IsLoose;
+                Write(listItem, listBlock.IsLoose);
+                implicitParagraph = previousImplicit;
+            }
+            writer.WriteLineConstant(listBlock.IsOrdered ? "</ol>": "</ul>");
         }
 
-        protected void Write(ListItemBlock listBlockItem)
+        protected void Write(ListItemBlock listBlockItem, bool isLoose)
         {
             writer.EnsureLine();
             writer.WriteConstant("<li>");
-            WriteContainer(listBlockItem, true);
+            WriteContainer(listBlockItem);
             writer.WriteLineConstant("</li>");
         }
 
@@ -122,16 +144,25 @@ namespace Textamina.Markdig.Formatters
         {
             writer.EnsureLine();
             writer.WriteLineConstant("<blockquote>");
+            var savedImplicitParagraph = implicitParagraph;
+            implicitParagraph = false;
             WriteContainer(quoteBlock);
+            implicitParagraph = savedImplicitParagraph;
             writer.WriteLineConstant("</blockquote>");
         }
 
         protected void Write(ParagraphBlock paragraph)
         {
             writer.EnsureLine();
-            writer.WriteConstant("<p>");
+            if (!implicitParagraph)
+            {
+                writer.WriteConstant("<p>");
+            }
             WriteLeaf(paragraph, false, false);
-            writer.WriteLineConstant("</p>");
+            if (!implicitParagraph)
+            {
+                writer.WriteLineConstant("</p>");
+            }
         }
 
         protected void Write(LiteralInline literal)
@@ -268,18 +299,8 @@ namespace Textamina.Markdig.Formatters
             }
         }
 
-        protected void WriteContainer(ContainerBlock container, bool simplifyFirstParagraph = false)
+        protected void WriteContainer(ContainerBlock container)
         {
-            if (container.Children.Count == 1 && simplifyFirstParagraph)
-            {
-                var paragraph = container.Children[0] as ParagraphBlock;
-                if (paragraph != null && paragraph.Lines.Count == 1)
-                {
-                    WriteLeaf((LeafBlock)paragraph, false, false);
-                    return;
-                }
-            }
-
             foreach (var child in container.Children)
             {
                 Action<object> writerAction;
