@@ -18,76 +18,80 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(MatchInlineState state)
             {
-                var lines = state.Lines;
+                var text = state.Lines;
 
-                int countSticks = 0;
-                while (lines.CurrentChar == '`')
+                int openSticks = 0;
+                if (text.PreviousChar1 == '`')
                 {
-                    countSticks++;
-                    lines.NextChar();
+                    return false;
+                }
+
+                while (text.CurrentChar == '`')
+                {
+                    openSticks++;
+                    text.NextChar();
                 }
 
                 bool isMatching = false;
 
                 var builder = state.StringBuilders.Get();
-                int countClosedSticks = 0;
-                var c = lines.CurrentChar;
-                bool lastWhiteSpace = false;
-                bool hasBackslash = false;
+                int closeSticks = 0;
+                var c = text.CurrentChar;
+
+                // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
+                // A code span begins with a backtick string and ends with a backtick string of equal length. 
+                // The contents of the code span are the characters between the two backtick strings, with leading and trailing spaces and line endings removed, and whitespace collapsed to single spaces.
+                var pc = ' ';
+
                 while (c != '\0')
                 {
-                    // Skip new lines
-                    var isWhitespace = c.IsWhitespace();
-                    if (!(c.IsNewLine() || (builder.Length == 0 && isWhitespace) || (lastWhiteSpace && isWhitespace)))
+                    // Transform '\n' into a single space
+                    if (c == '\n')
                     {
-                        if (c == '`')
-                        {
-                            countClosedSticks++;
-                        }
-                        else
-                        {
-                            countClosedSticks = 0;
-                        }
-                        lastWhiteSpace = isWhitespace;
+                        c = ' ';
+                    }
 
-                        hasBackslash = c == '\\';
+                    if (c != '`' && (c != ' ' || pc != ' '))
+                    {
                         builder.Append(c);
                     }
-                    c = lines.NextChar();
-
-                    if (hasBackslash)
+                    else
                     {
-                        if (c == '\n')
+                        while (c == '`')
                         {
-                            c = ' ';
+                            closeSticks++;
+                            pc = c;
+                            c = text.NextChar();
                         }
-                        hasBackslash = false;
-                    }
 
-                    if (countClosedSticks == countSticks)
-                    {
-                        break;
-                    }
-                }
-
-                if (countClosedSticks == countSticks)
-                {
-                    builder.Length = builder.Length - countSticks;
-                    int newLength = builder.Length;
-                    for (int i = builder.Length - 1; i >= 0; i--)
-                    {
-                        if (builder[i].IsWhitespace())
-                        {
-                            newLength--;
-                        }
-                        else
+                        if (openSticks == closeSticks)
                         {
                             break;
                         }
                     }
 
-                    builder.Length = newLength;
+                    if (closeSticks > 0)
+                    {
+                        builder.Append('`', closeSticks);
+                        closeSticks = 0;
+                    }
+                    else
+                    {
+                        pc = c;
+                        c = text.NextChar();
+                    }
+                }
 
+                if (closeSticks == openSticks)
+                {
+                    // Remove trailing space
+                    if (builder.Length > 0)
+                    {
+                        if (builder[builder.Length - 1].IsWhitespace())
+                        {
+                            builder.Length--;
+                        }
+                    }
                     state.Inline = new CodeInline() { Content = builder.ToString() };
                     isMatching = true;
                 }
