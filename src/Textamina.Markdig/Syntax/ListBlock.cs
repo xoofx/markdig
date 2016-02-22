@@ -22,8 +22,6 @@ namespace Textamina.Markdig.Syntax
 
         private int consecutiveBlankLines;
 
-        private int blankLinesSinceLastItem;
-
         private class ParserInternal : BlockParser
         {
             public override MatchLineResult Match(MatchLineState state)
@@ -64,12 +62,13 @@ namespace Textamina.Markdig.Syntax
                         if (!(state.LastBlock is FencedCodeBlock))
                         {
                             list.consecutiveBlankLines++;
-                            list.blankLinesSinceLastItem++;
+
+                            if (list.consecutiveBlankLines == 1 && list.Children.Count == 1)
+                            {
+                                listItem.IsFollowedByBlankLine = true;
+                            }
                         }
 
-                        // A list is loose if any of its constituent list items are separated by blank lines, 
-                        // or if any of its constituent list items directly contain two block-level elements with a blank line between them. 
-                        // Otherwise a list is tight. (The difference in HTML output is that paragraphs in a loose list are wrapped in <p> tags, while paragraphs in a tight list are not.)
                         if (list.consecutiveBlankLines > 1)
                         {
                             // TODO: Close all lists and not only this one
@@ -78,10 +77,6 @@ namespace Textamina.Markdig.Syntax
 
                         return MatchLineResult.Continue;
                     }
-
-                    bool hasConsecutiveBlankLines = list.consecutiveBlankLines > 0;
-
-                    list.consecutiveBlankLines = 0;
 
                     var c = liner.Current;
                     var startPosition = liner.Column;
@@ -111,6 +106,7 @@ namespace Textamina.Markdig.Syntax
                         if (countSpaces == expectedCount)
                         {
                             listItem.NumberOfSpaces = countSpaces;
+                            list.consecutiveBlankLines = 0;
                             return MatchLineResult.Continue;
                         }
                     }
@@ -122,10 +118,7 @@ namespace Textamina.Markdig.Syntax
                             var countSpaces = preIndent + liner.Column - startPosition;
                             if (countSpaces >= listItem.NumberOfSpaces)
                             {
-                                if (hasConsecutiveBlankLines)
-                                {
-                                    list.IsLoose = true;
-                                }
+                                list.consecutiveBlankLines = 0;
                                 return MatchLineResult.Continue;
                             }
                         }
@@ -243,6 +236,7 @@ namespace Textamina.Markdig.Syntax
                 {
                     NumberOfSpaces = numberOfSpaces
                 };
+
                 var parentList = (state.Block as ListItemBlock)?.Parent as ListBlock;
 
                 // Reset the list if it is a new list or a new type of bullet
@@ -259,19 +253,39 @@ namespace Textamina.Markdig.Syntax
                     };
                 }
 
-                if (parentList.blankLinesSinceLastItem > 0)
+                // A list is loose if any of its constituent list items are separated by blank lines, 
+                // or if any of its constituent list items directly contain two block-level elements with a blank line between them. 
+                // Otherwise a list is tight. (The difference in HTML output is that paragraphs in a loose list are wrapped in <p> tags, while paragraphs in a tight list are not.)
+                if (parentList.consecutiveBlankLines > 0)
                 {
                     parentList.IsLoose = true;
+                    parentList.consecutiveBlankLines = 0;
                 }
 
-                parentList.consecutiveBlankLines = 0;
-                parentList.blankLinesSinceLastItem = numberOfSpaces < 0 ? 1 : 0;
+                // A list item can begin with at most one blank line
+                if (numberOfSpaces < 0)
+                {
+                    parentList.consecutiveBlankLines = 1;
+                }
+
                 parentList.Children.Add(listItem);
                 listItem.Parent = parentList;
 
                 state.Block = listItem;
 
                 return MatchLineResult.Continue;
+            }
+
+            public override void Close(MatchLineState state)
+            {
+                var listItem = state.Block as ListItemBlock;
+                if (listItem != null)
+                {
+                    if (listItem.Children.Count > 1 && listItem.IsFollowedByBlankLine)
+                    {
+                        ((ListBlock)listItem.Parent).IsLoose = true;
+                    }
+                }
             }
         }
     }
