@@ -433,7 +433,7 @@ namespace Textamina.Markdig.Parsing
                 var c = (char) nextChar;
 
                 // 2.3 Insecure characters
-                c = CharHelper.EscapeInsecure(c);
+                c = c.EscapeInsecure();
 
                 // Go to next char, expecting most likely a \n, otherwise skip it
                 // TODO: Should we treat it as an error in no \n is following?

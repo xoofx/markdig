@@ -83,6 +83,7 @@ namespace Textamina.Markdig.Helpers
                 case '?':
                     return TryParseHtmlTagProcessingInstruction(text, builder);
                 case '!':
+                    builder.Append(c);
                     c = text.NextChar();
                     if (c == '-')
                     {
@@ -257,11 +258,79 @@ namespace Textamina.Markdig.Helpers
 
         private static bool TryParseHtmlTagDeclaration(StringLineGroup text, StringBuilder builder)
         {
-            return false;
+            var c = text.CurrentChar;
+            bool hasAlpha = false;
+            while (c.IsAlphaUpper())
+            {
+                builder.Append(c);
+                c = text.NextChar();
+                hasAlpha = true;
+            }
+
+            if (!hasAlpha || !c.IsWhitespace())
+            {
+                return false;
+            }
+
+            // Regexp: "\\![A-Z]+\\s+[^>\\x00]*>"
+            while (true)
+            {
+                builder.Append(c);
+                c = text.NextChar();
+                if (c == '\0')
+                {
+                    return false;
+                }
+
+                if (c == '>')
+                {
+                    text.NextChar();
+                    builder.Append('>');
+                    return true;
+                }
+            }
         }
 
         private static bool TryParseHtmlTagCData(StringLineGroup text, StringBuilder builder)
         {
+            builder.Append('[');
+            var c = text.NextChar();
+            if (c == 'C' &&
+                text.NextChar() == 'D' &&
+                text.NextChar() == 'A' &&
+                text.NextChar() == 'T' &&
+                text.NextChar() == 'A' && 
+                (c = text.NextChar()) == '[')
+            {
+                builder.Append("CDATA[");
+                while (true)
+                {
+                    var pc = c;
+                    c = text.NextChar();
+                    if (c == '\0')
+                    {
+                        return false;
+                    }
+
+                    if (c == ']' && pc == ']')
+                    {
+                        builder.Append(']');
+                        c = text.NextChar();
+                        if (c == '>')
+                        {
+                            builder.Append('>');
+                            text.NextChar();
+                            return true;
+                        }
+
+                        if (c == '\0')
+                        {
+                            return false;
+                        }
+                    }
+                    builder.Append(c);
+                }
+            }
             return false;
         }
 
@@ -312,12 +381,63 @@ namespace Textamina.Markdig.Helpers
 
         private static bool TryParseHtmlTagHtmlComment(StringLineGroup text, StringBuilder builder)
         {
-            return false;
+            var c = text.NextChar();
+            if (c != '-')
+            {
+                return false;
+            }
+            builder.Append('-');
+            builder.Append('-');
+            if (text.PeekCharOnSameLine() == '>')
+            {
+                return false;
+            }
+
+            var countHyphen = 0;
+            while (true)
+            {
+                c = text.NextChar();
+                if (c == '\0')
+                {
+                    return false;
+                }
+
+                if (countHyphen == 2)
+                {
+                    if (c == '>')
+                    {
+                        builder.Append('>');
+                        text.NextChar();
+                        return true;
+                    }
+                    return false;
+                }
+                countHyphen = c == '-' ? countHyphen + 1 : 0;
+                builder.Append(c);
+            }
         }
 
         private static bool TryParseHtmlTagProcessingInstruction(StringLineGroup text, StringBuilder builder)
         {
-            return false;
+            builder.Append('?');
+            var prevChar = '\0';
+            while (true)
+            {
+                var c = text.NextChar();
+                if (c == '\0')
+                {
+                    return false;
+                }
+
+                if (c == '>' && prevChar == '?')
+                {
+                    builder.Append('>');
+                    text.NextChar();
+                    return true;
+                }
+                prevChar = c;
+                builder.Append(c);
+            }
         }
 
         /// <summary>
@@ -361,7 +481,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     string namedEntity;
                     int numericEntity;
-                    match = scan_entity(text, searchPos, text.Length - searchPos, out namedEntity,
+                    match = ScanEntity(text, searchPos, text.Length - searchPos, out namedEntity,
                         out numericEntity);
                     if (match == 0)
                     {
@@ -386,7 +506,7 @@ namespace Textamina.Markdig.Helpers
                             sb.Append(text, lastPos, searchPos - match - lastPos);
                             if (numericEntity == 0)
                             {
-                                sb.Append('\0');
+                                sb.Append('\0'.EscapeInsecure());
                             }
                             else
                             {
@@ -586,7 +706,7 @@ namespace Textamina.Markdig.Helpers
         /// Scans an entity.
         /// Returns number of chars matched.
         /// </summary>
-        public static int scan_entity(string s, int pos, int length, out string namedEntity, out int numericEntity)
+        public static int ScanEntity(string s, int pos, int length, out string namedEntity, out int numericEntity)
         {
             /*!re2c
                   [&] ([#] ([Xx][A-Fa-f0-9]{1,8}|[0-9]{1,8}) |[A-Za-z][A-Za-z0-9]{1,31} ) [;]
