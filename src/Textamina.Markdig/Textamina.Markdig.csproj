@@ -53,7 +53,7 @@
     <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
     <Compile Include="Syntax\Inlines\EscapeInline.cs" />
     <Compile Include="Syntax\Inlines\HardlineBreakInline.cs" />
-    <Compile Include="Syntax\Inlines\HtmlEscapeInline.cs" />
+    <Compile Include="Syntax\Inlines\HtmlInline.cs" />
     <Compile Include="Syntax\Inlines\InlineStack.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />

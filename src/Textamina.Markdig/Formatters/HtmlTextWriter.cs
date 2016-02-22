@@ -6,7 +6,7 @@ namespace Textamina.Markdig.Formatters
     /// <summary>
     /// A wrapper for <see cref="HtmlHelper"/> that keeps track if the last symbol has been a newline.
     /// </summary>
-    internal sealed class HtmlTextWriter
+    public sealed class HtmlTextWriter
     {
         private readonly TextWriter _inner;
         private char _last = '\n';

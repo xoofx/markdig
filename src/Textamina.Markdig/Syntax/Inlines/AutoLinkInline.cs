@@ -13,18 +13,34 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : InlineParser
         {
+            public ParserInternal()
+            {
+                FirstChars = new[] {'<'};
+            }
+
             public override bool Match(MatchInlineState state)
             {
                 var text = state.Lines;
 
                 string link;
                 bool isEmail;
-                if (!LinkHelper.TryParseAutolink(text, out link, out isEmail))
+                var saved = text.Save();
+                if (LinkHelper.TryParseAutolink(text, out link, out isEmail))
                 {
-                    return false;
+                    state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
+                }
+                else
+                {
+                    text.Restore(ref saved);
+                    string htmlTag;
+                    if (!HtmlHelper.TryParseHtmlTag(text, out htmlTag))
+                    {
+                        return false;
+                    }
+
+                    state.Inline = new HtmlInline() { Tag = htmlTag };
                 }
 
-                state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
                 return true;
             }
         }

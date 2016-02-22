@@ -33,6 +33,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
                 [typeof(AutolinkInline)] = o => Write((AutolinkInline)o),
+                [typeof(HtmlInline)] = o => Write((HtmlInline)o),
                 [typeof(EmphasisInline)] = o => Write((EmphasisInline)o),
                 [typeof(HardlineBreakInline)] = o => Write((HardlineBreakInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
@@ -93,6 +94,11 @@ namespace Textamina.Markdig.Formatters
         protected void Write(HtmlBlock codeBlock)
         {
             WriteLeaf(codeBlock, true, false);
+        }
+
+        protected void Write(HtmlInline htmlInline)
+        {
+            writer.WriteConstant(htmlInline.Tag);
         }
 
         protected void Write(HeadingBlock headingBlock)

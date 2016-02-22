@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Textamina.Markdig.Formatters;
+using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
 {
-    internal static class HtmlHelper
+    public static class HtmlHelper
     {
         private static readonly char[] EscapeHtmlCharacters = {'&', '<', '>', '"'};
         private const string HexCharacters = "0123456789ABCDEF";
@@ -53,6 +54,271 @@ namespace Textamina.Markdig.Helpers
             "VENTRILO", "VIEW-SOURCE", "WEBCAL", "WS", "WSS", "WTAI", "WYCIWYG", "XCON", "XCON-USERID", "XFIRE",
             "XMLRPC.BEEP", "XMLRPC.BEEPS", "XMPP", "XRI", "YMSGR", "Z39.50R", "Z39.50S"
         };
+
+        public static bool TryParseHtmlTag(StringLineGroup text, out string htmlTag)
+        {
+            var builder = StringBuilderCache.Local();
+            var result = TryParseHtmlTag(text, builder);
+            htmlTag = builder.ToString();
+            builder.Clear();
+            return result;
+        }
+
+        public static bool TryParseHtmlTag(StringLineGroup text, StringBuilder builder)
+        {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            var c = text.CurrentChar;
+            if (c != '<')
+            {
+                return false;
+            }
+            c = text.NextChar();
+
+            builder.Append('<');
+
+            switch (c)
+            {
+                case '/':
+                    return TryParseHtmlCloseTag(text, builder);
+                case '?':
+                    return TryParseHtmlTagProcessingInstruction(text, builder);
+                case '!':
+                    c = text.NextChar();
+                    if (c == '-')
+                    {
+                        return TryParseHtmlTagHtmlComment(text, builder);
+                    }
+
+                    if (c == '[')
+                    {
+                        return TryParseHtmlTagCData(text, builder);
+                    }
+
+                    return TryParseHtmlTagDeclaration(text, builder);
+            }
+
+            return TryParseHtmlTagOpenTag(text, builder);
+        }
+
+        private static bool TryParseHtmlTagOpenTag(StringLineGroup text, StringBuilder builder)
+        {
+            var c = text.CurrentChar;
+
+            // Parse the tagname
+            if (!c.IsAlpha())
+            {
+                return false;
+            }
+            builder.Append(c);
+
+            while (true)
+            {
+                c = text.NextChar();
+                if (c.IsAlphaNumeric() || c == '-')
+                {
+                    builder.Append(c);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            bool hasAttribute = false;
+            while (true)
+            {
+                var hasWhitespaces = false;
+                // Skip any whitespaces
+                while (c.IsWhitespace())
+                {
+                    builder.Append(c);
+                    c = text.NextChar();
+                    hasWhitespaces = true;
+                }
+
+                switch (c)
+                {
+                    case '\0':
+                        return false;
+                    case '>':
+                        text.NextChar();
+                        builder.Append(c);
+                        return true;
+                    case '/':
+                        builder.Append('/');
+                        c = text.NextChar();
+                        if (c != '>')
+                        {
+                            return false;
+                        }
+                        text.NextChar();
+                        builder.Append('>');
+                        return true;
+                    case '=':
+
+                        if (!hasAttribute)
+                        {
+                            return false;
+                        }
+
+                        builder.Append('=');
+
+                        // Skip any spaces after
+                        c = text.NextChar();
+                        while (c.IsWhitespace())
+                        {
+                            builder.Append(c);
+                            c = text.NextChar();
+                        }
+
+                        // Parse a quoted string
+                        if (c == '\'' || c == '\"')
+                        {
+                            builder.Append(c);
+                            char openingStringChar = c;
+                            while (true)
+                            {
+                                c = text.NextChar();
+                                if (c == '\0')
+                                {
+                                    return false;
+                                }
+                                if (c != openingStringChar)
+                                {
+                                    builder.Append(c);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            builder.Append(c);
+                            c = text.NextChar();
+                        }
+                        else
+                        {
+                            // Parse until we match a space or a special html character
+                            int matchCount = 0;
+                            while (true)
+                            {
+                                if (c == '\0')
+                                {
+                                    return false;
+                                }
+                                if (c == ' ' || c == '\n' || c == '"' || c == '\'' || c == '=' || c == '<' || c == '>' || c == '`')
+                                {
+                                    break;
+                                }
+                                matchCount++;
+                                builder.Append(c);
+                                c = text.NextChar();
+                            }
+
+                            // We need at least one char after '='
+                            if (matchCount == 0)
+                            {
+                                return false;
+                            }
+                        }
+
+                        hasAttribute = false;
+                        continue;
+                    default:
+                        if (!hasWhitespaces)
+                        {
+                            return false;
+                        }
+
+                        // Parse the attribute name
+                        if (!(c.IsAlpha() || c == '_' || c == ':'))
+                        {
+                            return false;
+                        }
+                        builder.Append(c);
+
+                        while (true)
+                        {
+                            c = text.NextChar();
+                            if (c.IsAlphaNumeric() || c == '_' || c == ':' || c == '.' || c == '-')
+                            {
+                                builder.Append(c);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        hasAttribute = true;
+                        break;
+                }
+            }
+        }
+
+        private static bool TryParseHtmlTagDeclaration(StringLineGroup text, StringBuilder builder)
+        {
+            return false;
+        }
+
+        private static bool TryParseHtmlTagCData(StringLineGroup text, StringBuilder builder)
+        {
+            return false;
+        }
+
+        private static bool TryParseHtmlCloseTag(StringLineGroup text, StringBuilder builder)
+        {
+            // </[A-Za-z][A-Za-z0-9]+\s*>
+            builder.Append('/');
+
+            var c = text.NextChar();
+            if (!c.IsAlpha())
+            {
+                return false;
+            }
+            builder.Append(c);
+
+            bool skipSpaces = false;
+            while (true)
+            {
+                c = text.NextChar();
+                if (c == '>')
+                {
+                    text.NextChar();
+                    builder.Append('>');
+                    return true;
+                }
+
+                if (skipSpaces)
+                {
+                    if (c != ' ')
+                    {
+                        break;
+                    }
+                }
+                else if (c == ' ')
+                {
+                    skipSpaces = true;
+                }
+                else if (!c.IsAlphaNumeric())
+                {
+                    break;
+                }
+
+                builder.Append(c);
+            }
+            return false;
+        }
+
+
+        private static bool TryParseHtmlTagHtmlComment(StringLineGroup text, StringBuilder builder)
+        {
+            return false;
+        }
+
+        private static bool TryParseHtmlTagProcessingInstruction(StringLineGroup text, StringBuilder builder)
+        {
+            return false;
+        }
 
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
