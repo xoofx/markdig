@@ -286,6 +286,11 @@ namespace Textamina.Markdig.Helpers
                 {
                     c = text.NextChar();
 
+                    if (text.Current != null && text.Current.IsBlankLine())
+                    {
+                        break;
+                    }
+
                     if (c == '\0')
                     {
                         break;
@@ -472,13 +477,21 @@ namespace Textamina.Markdig.Helpers
                 return false;
             }
 
+            var saved = text.Save();
             int newLineCount;
             var hasWhiteSpaces = text.SkipWhiteSpaces(out newLineCount);
-
-            if (TryParseTitle(text, out title))
+            var c = text.CurrentChar;
+            if (c == '\'' || c == '"' || c == '(')
             {
-                // If we have a title, it requires a whitespace after the url
-                if (!hasWhiteSpaces)
+                if (TryParseTitle(text, out title))
+                {
+                    // If we have a title, it requires a whitespace after the url
+                    if (!hasWhiteSpaces)
+                    {
+                        return false;
+                    }
+                }
+                else
                 {
                     return false;
                 }
@@ -492,7 +505,7 @@ namespace Textamina.Markdig.Helpers
             }
 
             // Check that the current line has only trailing spaces
-            var c = text.CurrentChar;
+            c = text.CurrentChar;
             while (c.IsSpaceOrTab())
             {
                 c = text.NextChar();
@@ -500,6 +513,15 @@ namespace Textamina.Markdig.Helpers
 
             if (c != '\0' && c != '\n')
             {
+                // If we were able to parse the url but the title doesn't end with space, 
+                // we are still returning a valid definition
+                if (newLineCount > 0 && title != null)
+                {
+                    text.Restore(ref saved);
+                    title = null;
+                    return true;
+                }
+
                 label = null;
                 url = null;
                 title = null;
