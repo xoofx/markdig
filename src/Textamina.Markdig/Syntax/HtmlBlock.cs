@@ -16,6 +16,9 @@ namespace Textamina.Markdig.Syntax
 
         public HtmlBlockType Type { get; set; }
 
+        [ThreadStatic]
+        private static readonly StringLineGroup HtmlLineGroup = new StringLineGroup();
+
 
         private class ParserInternal : BlockParser
         {
@@ -89,19 +92,19 @@ namespace Textamina.Markdig.Syntax
                 var htmlBlock = state.Block as HtmlBlock;
                 if (htmlBlock == null)
                 {
-                    var result = MatchStart(ref state);
+                    var result = MatchStart(state);
                     // An end-tag can occur on the same line
                     if (result == MatchLineResult.Continue)
                     {
-                        return MatchEnd(ref state, (HtmlBlock) state.Block);
+                        return MatchEnd(state, (HtmlBlock) state.Block);
                     }
                     return result;
                 }
 
-                return MatchEnd(ref state, htmlBlock);
+                return MatchEnd(state, htmlBlock);
             }
 
-            private MatchLineResult MatchStart(ref MatchLineState state)
+            private MatchLineResult MatchStart(MatchLineState state)
             {
                 var liner = state.Line;
                 int index = 0;
@@ -122,21 +125,73 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.None;
                 }
 
+                var result = TryParseTagType16(state, liner, index);
+
+                // HTML blocks of type 7 cannot interrupt a paragraph:
+                if (result == MatchLineResult.None && !(state.LastBlock is ParagraphBlock))
+                {
+                    result = TryParseTagType7(state, liner, index);
+                }
+
+                return result;
+            }
+
+            private MatchLineResult TryParseTagType7(MatchLineState state, StringLine liner, int index)
+            {
+                var builder = StringBuilderCache.Local();
+                var text = HtmlLineGroup;
+                text.Add(liner);
+                text.SetColumn(index);
+                var c = text.CurrentChar;
+                var result = MatchLineResult.None;
+                if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(text, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(text, builder))
+                {
+                    // Must be followed by whitespace only
+                    bool hasOnlySpaces = true;
+                    c = text.CurrentChar;
+                    while (true)
+                    {
+                        if (c == '\0')
+                        {
+                            break;
+                        }
+                        if (!c.IsWhitespace())
+                        {
+                            hasOnlySpaces = false;
+                            break;
+                        }
+                        c = text.NextChar();
+                    }
+
+                    if (hasOnlySpaces)
+                    {
+                        result = CreateHtmlBlock(state, HtmlBlockType.NonInterruptingBlock);
+                    }
+                }
+
+                text.Clear();
+                builder.Clear();
+                return result;
+            }
+
+            private MatchLineResult TryParseTagType16(MatchLineState state, StringLine liner, int index)
+            {
+                char c;
                 c = liner.PeekChar(index);
                 if (c == '!')
                 {
                     c = liner.PeekChar(index + 1);
                     if (c == '-' && liner.PeekChar(index + 2) == '-')
                     {
-                        return CreateHtmlBlock(ref state, HtmlBlockType.Comment); // group 2
+                        return CreateHtmlBlock(state, HtmlBlockType.Comment); // group 2
                     }
-                    if (CharHelper.IsAlphaUpper(c))
+                    if (c.IsAlphaUpper())
                     {
-                        return CreateHtmlBlock(ref state, HtmlBlockType.DocumentType); // group 4
+                        return CreateHtmlBlock(state, HtmlBlockType.DocumentType); // group 4
                     }
                     if (c == '[' && liner.Match("CDATA[", 3))
                     {
-                        return CreateHtmlBlock(ref state, HtmlBlockType.CData); // group 5
+                        return CreateHtmlBlock(state, HtmlBlockType.CData); // group 5
                     }
 
                     return MatchLineResult.None;
@@ -144,7 +199,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (c == '?')
                 {
-                    return CreateHtmlBlock(ref state, HtmlBlockType.ProcessingInstruction); // group 3
+                    return CreateHtmlBlock(state, HtmlBlockType.ProcessingInstruction); // group 3
                 }
 
                 var hasLeadingClose = c == '/';
@@ -158,14 +213,16 @@ namespace Textamina.Markdig.Syntax
                 for (; count < tag.Length; index++, count++)
                 {
                     c = liner.PeekChar(index);
-                    if (!CharHelper.IsAlphaNumeric(c))
+                    if (!c.IsAlphaNumeric())
                     {
                         break;
                     }
                     tag[count] = char.ToLowerInvariant(c);
                 }
 
-                if (!(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || CharHelper.IsWhitespace(c) || c == '\0'))
+                if (
+                    !(c == '>' || (!hasLeadingClose && c == '/' && liner.PeekChar(index + 1) == '>') || c.IsWhitespace() ||
+                      c == '\0'))
                 {
                     return MatchLineResult.None;
                 }
@@ -189,13 +246,13 @@ namespace Textamina.Markdig.Syntax
                     {
                         return MatchLineResult.None;
                     }
-                    return CreateHtmlBlock(ref state, HtmlBlockType.ScriptPreOrStyle);
+                    return CreateHtmlBlock(state, HtmlBlockType.ScriptPreOrStyle);
                 }
 
-                return CreateHtmlBlock(ref state, HtmlBlockType.InterruptingBlock);
+                return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock);
             }
 
-            private MatchLineResult MatchEnd(ref MatchLineState state, HtmlBlock htmlBlock)
+            private MatchLineResult MatchEnd(MatchLineState state, HtmlBlock htmlBlock)
             {
                 var liner = state.Line;
 
@@ -241,14 +298,17 @@ namespace Textamina.Markdig.Syntax
                         }
                         break;
                     case HtmlBlockType.NonInterruptingBlock:
-                        // TODO
+                        if (liner.IsBlankLine())
+                        {
+                            return MatchLineResult.LastDiscard;
+                        }
                         break;
                 }
 
                 return MatchLineResult.Continue;
             }
 
-            private MatchLineResult CreateHtmlBlock(ref MatchLineState state, HtmlBlockType type)
+            private MatchLineResult CreateHtmlBlock(MatchLineState state, HtmlBlockType type)
             {
                 state.Block = new HtmlBlock() {Type = type};
                 return MatchLineResult.Continue;

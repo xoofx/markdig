@@ -100,7 +100,7 @@ namespace Textamina.Markdig.Helpers
             return TryParseHtmlTagOpenTag(text, builder);
         }
 
-        private static bool TryParseHtmlTagOpenTag(StringLineGroup text, StringBuilder builder)
+        internal static bool TryParseHtmlTagOpenTag(StringLineGroup text, StringBuilder builder)
         {
             var c = text.CurrentChar;
 
@@ -265,7 +265,7 @@ namespace Textamina.Markdig.Helpers
             return false;
         }
 
-        private static bool TryParseHtmlCloseTag(StringLineGroup text, StringBuilder builder)
+        internal static bool TryParseHtmlCloseTag(StringLineGroup text, StringBuilder builder)
         {
             // </[A-Za-z][A-Za-z0-9]+\s*>
             builder.Append('/');
@@ -299,7 +299,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     skipSpaces = true;
                 }
-                else if (!c.IsAlphaNumeric())
+                else if (!(c.IsAlphaNumeric() || c == '-'))
                 {
                     break;
                 }

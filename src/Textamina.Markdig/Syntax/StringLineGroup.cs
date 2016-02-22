@@ -44,6 +44,18 @@ namespace Textamina.Markdig.Syntax
             NextChar();
         }
 
+        public void SetColumn(int index)
+        {
+            if (Current != null && index <= Current.End)
+            {
+                CurrentChar = Current[index];
+                ColumnPosition = index;
+                // Don't set previous char
+                PreviousChar1 = '\0';
+                PreviousChar2 = '\0';
+            }
+        }
+
         public char PeekCharOnSameLine()
         {
             if (Current != null && (ColumnPosition+1) <= Current.End)
