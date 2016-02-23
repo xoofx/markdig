@@ -293,7 +293,8 @@ namespace Textamina.Markdig.Parsing
 
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
-                var paragraph = LastBlock as ParagraphBlock;
+                var lastBlock = LastBlock;
+                var paragraph = lastBlock as ParagraphBlock;
                 if (paragraph != null && !blockParser.CanInterruptParagraph)
                 {
                     continue;
@@ -302,7 +303,7 @@ namespace Textamina.Markdig.Parsing
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
                 blockParserState.Pending = isParsingParagraph ? paragraph : null;
                 blockParserState.CurrentContainer = LastContainer;
-                blockParserState.LastBlock = LastBlock;
+                blockParserState.LastBlock = lastBlock;
 
                 var saveLiner = line.Save();
                 var result = blockParser.Match(blockParserState);
