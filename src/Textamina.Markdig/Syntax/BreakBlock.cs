@@ -66,7 +66,7 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.None;
                 }
 
-                state.Block = new BreakBlock();
+                state.NewBlocks.Push(new BreakBlock());
                 return MatchLineResult.Last;
             }
         }

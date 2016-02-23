@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Syntax
                 var c = liner.Current;
                 if (c != '>')
                 {
-                    if (state.Block != null && liner.IsBlankLine())
+                    if (state.Pending != null && liner.IsBlankLine())
                     {
                         return MatchLineResult.LastDiscard;
                     }
@@ -33,9 +33,9 @@ namespace Textamina.Markdig.Syntax
                     liner.NextChar();
                 }
 
-                if (state.Block == null)
+                if (state.Pending == null)
                 {
-                    state.Block = new QuoteBlock();
+                    state.NewBlocks.Push(new QuoteBlock());
                 }
 
                 return MatchLineResult.Continue;

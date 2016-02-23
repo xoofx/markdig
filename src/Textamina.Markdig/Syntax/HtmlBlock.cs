@@ -89,14 +89,14 @@ namespace Textamina.Markdig.Syntax
            
             public override MatchLineResult Match(MatchLineState state)
             {
-                var htmlBlock = state.Block as HtmlBlock;
+                var htmlBlock = state.Pending as HtmlBlock;
                 if (htmlBlock == null)
                 {
                     var result = MatchStart(state);
                     // An end-tag can occur on the same line
                     if (result == MatchLineResult.Continue)
                     {
-                        return MatchEnd(state, (HtmlBlock) state.Block);
+                        return MatchEnd(state, (HtmlBlock) state.NewBlocks.Peek());
                     }
                     return result;
                 }
@@ -310,7 +310,7 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult CreateHtmlBlock(MatchLineState state, HtmlBlockType type)
             {
-                state.Block = new HtmlBlock() {Type = type};
+                state.NewBlocks.Push(new HtmlBlock() {Type = type});
                 return MatchLineResult.Continue;
             }
         }

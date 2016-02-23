@@ -47,7 +47,7 @@ namespace Textamina.Markdig.Syntax
                 var saveLiner = liner.Save();
 
                 // If we have already a ListItemBlock, we are going to try to append to it
-                var listItem = state.Block as ListItemBlock;
+                var listItem = state.Pending as ListItemBlock;
                 if (listItem != null)
                 {
                     var list = (ListBlock) listItem.Parent;
@@ -236,8 +236,18 @@ namespace Textamina.Markdig.Syntax
                 {
                     NumberOfSpaces = numberOfSpaces
                 };
+                state.NewBlocks.Push(listItem);
 
-                var parentList = (state.Block as ListItemBlock)?.Parent as ListBlock;
+                var parentList = state.Pending as ListBlock ?? (ListBlock)(state.Pending?.Parent as ListItemBlock)?.Parent;
+
+                // A list is loose if any of its constituent list items are separated by blank lines, 
+                // or if any of its constituent list items directly contain two block-level elements with a blank line between them. 
+                // Otherwise a list is tight. (The difference in HTML output is that paragraphs in a loose list are wrapped in <p> tags, while paragraphs in a tight list are not.)
+                if (parentList != null && parentList.consecutiveBlankLines > 0 && parentList.Children.Count > 0 && ((ListItemBlock)parentList.Children[parentList.Children.Count - 1]).Children.Count > 0)
+                {
+                    parentList.IsLoose = true;
+                    parentList.consecutiveBlankLines = 0;
+                }
 
                 // Reset the list if it is a new list or a new type of bullet
                 if (parentList == null || (parentList.IsOrdered != isOrdered  ||
@@ -251,15 +261,7 @@ namespace Textamina.Markdig.Syntax
                         OrderedDelimiter = orderedDelimiter,
                         OrderedStart = orderedStart,
                     };
-                }
-
-                // A list is loose if any of its constituent list items are separated by blank lines, 
-                // or if any of its constituent list items directly contain two block-level elements with a blank line between them. 
-                // Otherwise a list is tight. (The difference in HTML output is that paragraphs in a loose list are wrapped in <p> tags, while paragraphs in a tight list are not.)
-                if (parentList.consecutiveBlankLines > 0)
-                {
-                    parentList.IsLoose = true;
-                    parentList.consecutiveBlankLines = 0;
+                    state.NewBlocks.Push(parentList);
                 }
 
                 // A list item can begin with at most one blank line
@@ -268,23 +270,23 @@ namespace Textamina.Markdig.Syntax
                     parentList.consecutiveBlankLines = 1;
                 }
 
-                parentList.Children.Add(listItem);
-                listItem.Parent = parentList;
-
-                state.Block = listItem;
-
                 return MatchLineResult.Continue;
             }
 
             public override void Close(MatchLineState state)
             {
-                var listItem = state.Block as ListItemBlock;
-                if (listItem != null)
+                var listBlock = state.Pending as ListBlock;
+                //var listItem = state.Pending as ListItemBlock;
+                if (listBlock != null)
                 {
-                    if (listItem.Children.Count > 1 && listItem.IsFollowedByBlankLine)
-                    {
-                        ((ListBlock)listItem.Parent).IsLoose = true;
-                    }
+                    //var list = (ListBlock)listItem.Parent;
+                    //// A list is loose:
+                    //// if any of its constituent list items directly contain two block-level elements with a blank line between them. 
+                    ////if (listItem.Children.Count > 1 && list.Children.IndexOf(listItem) < (list.Children.Count - 1) && listItem.IsFollowedByBlankLine)
+                    // if (listItem.IsFollowedByBlankLine)
+                    //{
+                    //    ((ListBlock)listItem.Parent).IsLoose = true;
+                    //}
                 }
             }
         }

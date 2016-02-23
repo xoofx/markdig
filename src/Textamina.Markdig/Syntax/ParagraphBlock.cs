@@ -30,7 +30,7 @@ namespace Textamina.Markdig.Syntax
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
-                var paragraph = state.Block as ParagraphBlock;
+                var paragraph = state.Pending as ParagraphBlock;
 
                 if (paragraph == null)
                 {
@@ -44,7 +44,7 @@ namespace Textamina.Markdig.Syntax
                 var result = MatchLineResult.Continue;
                 if (paragraph == null)
                 {
-                    state.Block =  new ParagraphBlock();
+                    state.NewBlocks.Push(new ParagraphBlock());
                 }
                 else
                 {
@@ -126,9 +126,11 @@ namespace Textamina.Markdig.Syntax
                                 line.Trim();
                             }
 
-                            state.Block = heading;
+                            // Remove the paragraph as a pending block
+                            state.NewBlocks.Push(heading);
+                            state.Pending = null;
 
-                            // Replace the children in the parent
+                            // Remove the children in the parent
                             var parent = (ContainerBlock) paragraph.Parent;
                             parent.Children.RemoveAt(parent.Children.Count - 1);
 
@@ -148,7 +150,7 @@ namespace Textamina.Markdig.Syntax
                     var parent = (ContainerBlock)paragraph.Parent;
                     parent.Children.RemoveAt(parent.Children.Count - 1);
                 }
-                state.Block = null;
+                state.Pending = null;
             }
 
             private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, MatchLineState state)
@@ -196,8 +198,8 @@ namespace Textamina.Markdig.Syntax
 
             public override void Close(MatchLineState state)
             {
-                var paragraph = state.Block as ParagraphBlock;
-                var heading = state.Block as HeadingBlock;
+                var paragraph = state.Pending as ParagraphBlock;
+                var heading = state.Pending as HeadingBlock;
                 if (paragraph != null)
                 {
                     var lines = paragraph.Lines;
@@ -207,7 +209,7 @@ namespace Textamina.Markdig.Syntax
                     // If Paragraph is empty, we can discard it
                     if (lines.Count == 0)
                     {
-                        state.Block = null;
+                        state.Pending = null;
                         return;
                     }
 

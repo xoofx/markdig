@@ -37,20 +37,20 @@ namespace Textamina.Markdig.Syntax
                 var isTab = c.IsTab();
                 var isSpace = c.IsSpace();
                 var isBlankLine = liner.IsBlankLine();
-                var codeBlock = state.Block as CodeBlock;
+                var codeBlock = state.Pending as CodeBlock;
                 // && !isBlankLine) || (isBlankLine && codeBlock != null && !codeBlock.Lines[codeBlock.Lines.Count - 1].IsBlankLine())
                 if ((codeBlock != null && isBlankLine) || (isTab || (isSpace && (liner.Start - position) == 3)))
                 //if (((isTab || (isSpace && (liner.Start - position) == 3)) && !isBlankLine))
                 {
                     liner.NextChar();
-                    if (state.Block == null)
+                    if (state.Pending == null)
                     {
                         if (isBlankLine)
                         {
                             return MatchLineResult.None;
                         }
 
-                        state.Block = new CodeBlock();
+                        state.NewBlocks.Push(new CodeBlock());
                     }
                     return MatchLineResult.Continue;
                 }
@@ -60,7 +60,7 @@ namespace Textamina.Markdig.Syntax
 
             public override void Close(MatchLineState state)
             {
-                var codeBlock = state.Block as CodeBlock;
+                var codeBlock = state.Pending as CodeBlock;
                 if (codeBlock != null)
                 {
                     var lines = codeBlock.Lines;

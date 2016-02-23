@@ -48,7 +48,7 @@ namespace Textamina.Markdig.Syntax
                 if (leadingCount > 0 && leadingCount <=6 && (CharHelper.IsSpace(c) || liner.IsEol))
                 {
                     liner.NextChar();
-                    state.Block = new HeadingBlock() {Level = leadingCount};
+                    state.NewBlocks.Push(new HeadingBlock() {Level = leadingCount});
 
 
                     // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
@@ -96,7 +96,7 @@ namespace Textamina.Markdig.Syntax
 
             public override void Close(MatchLineState state)
             {
-                var heading = (HeadingBlock) state.Block;
+                var heading = (HeadingBlock) state.Pending;
                 heading.Lines.Trim();
             }
         }

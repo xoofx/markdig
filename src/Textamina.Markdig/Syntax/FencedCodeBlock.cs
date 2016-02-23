@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Syntax
             {
                 var liner = state.Line;
 
-                var fenced = state.Block as FencedCodeBlock;
+                var fenced = state.Pending as FencedCodeBlock;
                 if (fenced != null)
                 {
                     var saveLiner = liner.Save();
@@ -145,14 +145,14 @@ namespace Textamina.Markdig.Syntax
                         }
 
                         // Store the number of matched string into the context
-                        state.Block = new FencedCodeBlock()
+                        state.NewBlocks.Push(new FencedCodeBlock()
                         {
                             fencedChar = matchChar,
                             fencedCharCount = count,
                             indentCount = indentCount,
                             Language = HtmlHelper.Unescape(infoString),
                             Arguments = HtmlHelper.Unescape(argString),
-                        };
+                        });
                         return MatchLineResult.Continue;
                     }
 
@@ -162,7 +162,7 @@ namespace Textamina.Markdig.Syntax
 
             public override void Close(MatchLineState state)
             {
-                var fenced = (FencedCodeBlock) state.Block;
+                var fenced = (FencedCodeBlock) state.Pending;
                 fenced.Lines.RemoveAt(0);
                 if (fenced.hasFencedEnd)
                 {

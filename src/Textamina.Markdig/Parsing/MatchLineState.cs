@@ -1,6 +1,7 @@
 
 
 
+using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -12,11 +13,14 @@ namespace Textamina.Markdig.Parsing
         {
             StringBuilders = stringBuilders;
             Root = root;
+            NewBlocks = new Stack<Block>();
         }
 
         public StringLine Line;
 
-        public Block Block;
+        public Block Pending { get; set; }
+
+        public readonly Stack<Block> NewBlocks;
 
         public ContainerBlock CurrentContainer;
 
@@ -29,7 +33,7 @@ namespace Textamina.Markdig.Parsing
         internal void Reset(StringLine line)
         {
             Line = line;
-            Block = null;
+            Pending = null;
         }
     }
 }
