@@ -14,8 +14,12 @@ namespace Textamina.Markdig.Helpers
 
         public static StringBuilder Local()
         {
-            local.Clear();
-            return local;
+            var sb = local;
+            if (sb.Length > 0)
+            {
+                sb.Clear();
+            }
+            return sb;
         }
 
         private readonly Stack<StringBuilder> builders;
@@ -38,7 +42,10 @@ namespace Textamina.Markdig.Helpers
         public void Release(StringBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
-            builder.Clear();
+            if (builder.Length > 0)
+            {
+                builder.Clear();
+            }
             builders.Push(builder);
         }
     }
