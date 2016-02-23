@@ -44,6 +44,7 @@ namespace Testamina.Markdig.Benchmarks
             for (int i = 0; i < 200; i++)
             {
                 program.TestMarkdig();
+                //program.TestCommonMark();
             }
             Console.WriteLine($"time: {clock.ElapsedMilliseconds}ms");
 

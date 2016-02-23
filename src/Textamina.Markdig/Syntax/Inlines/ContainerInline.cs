@@ -11,6 +11,18 @@ namespace Textamina.Markdig.Syntax
 
         public Inline LastChild { get; private set; }
 
+        public void Clear()
+        {
+            var child = LastChild;
+            while (child != null)
+            {
+                child.Parent = null;
+                child = child.PreviousSibling;
+            }
+            FirstChild = null;
+            LastChild = null;
+        }
+
         public virtual void AppendChild(Inline child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));

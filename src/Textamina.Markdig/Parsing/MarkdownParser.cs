@@ -12,17 +12,17 @@ namespace Textamina.Markdig.Parsing
     public class MarkdownParser
     {
         private StringLine line;
-        private bool isEof;
+        private LineReader lineReader;
 
         private readonly List<BlockParser> blockParsers;
         private readonly List<InlineParser> inlineParsers;
         private readonly List<InlineParser> regularInlineParsers;
         private readonly InlineParser[] inlineWithFirstCharParsers;
         private readonly Document document;
-        private readonly StringBuilder tempBuilder;
         private readonly BlockParserState blockParserState;
         private readonly InlineParserState inlineState;
         private readonly StringBuilderCache stringBuilderCache;
+
         private int lineIndex;
 
         public MarkdownParser(TextReader reader)
@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Parsing
             inlineParsers = new List<InlineParser>();
             inlineWithFirstCharParsers = new InlineParser[128];
             regularInlineParsers = new List<InlineParser>();
-            tempBuilder = new StringBuilder();
+            lineReader = new LineReader(Reader);
             stringBuilderCache  = new StringBuilderCache();
             inlineState = new InlineParserState(stringBuilderCache, document);
             blockParserState = new BlockParserState(stringBuilderCache, document);
@@ -121,12 +121,12 @@ namespace Textamina.Markdig.Parsing
 
         private void ParseLines()
         {
-            while (!isEof)
+            while (!lineReader.IsEof)
             {
-                ReadLine();
+                line = lineReader.ReadLine();
 
                 // If this is the end of file and the last line is empty
-                if (isEof && line.IsEol)
+                if (lineReader.IsEof && line.IsEol)
                 {
                     break;
                 }
@@ -428,39 +428,6 @@ namespace Textamina.Markdig.Parsing
             }
         }
 
-        private void ReadLine()
-        {
-            tempBuilder.Clear();
-            while (true)
-            {
-                var nextChar = Reader.Read();
-                if (nextChar < 0)
-                {
-                    isEof = true;
-                    break;
-                }
-                var c = (char) nextChar;
-
-                // 2.3 Insecure characters
-                c = c.EscapeInsecure();
-
-                // Go to next char, expecting most likely a \n, otherwise skip it
-                // TODO: Should we treat it as an error in no \n is following?
-                if (c == '\r')
-                {
-                    continue;
-                }
-
-                if (c == '\n')
-                {
-                    break;
-                }
-
-                tempBuilder.Append(c);
-            }
-            line = new StringLine(tempBuilder.ToString(), lineIndex++);
-        }
-
         private void ProcessInlines(LeafBlock leafBlock)
         {
             var lines = leafBlock.Lines;
@@ -476,11 +443,8 @@ namespace Textamina.Markdig.Parsing
             {
                 lines.Save(ref saveLines);
 
-                var currentChar = lines.CurrentChar;
-
-                InlineParser inlineParser = lines.CurrentChar < 128
-                    ? inlineWithFirstCharParsers[(int) lines.CurrentChar]
-                    : null;
+                var c = lines.CurrentChar;
+                var inlineParser = c < 128 ? inlineWithFirstCharParsers[c] : null;
                 if (inlineParser == null || !inlineParser.Match(inlineState))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
@@ -554,7 +518,7 @@ namespace Textamina.Markdig.Parsing
 
                 if (Log != null)
                 {
-                    Log.WriteLine($"** Dump: char '{currentChar}");
+                    Log.WriteLine($"** Dump: char '{c}");
                     leafBlock.Inline.DumpTo(Log);
                 }
             }
