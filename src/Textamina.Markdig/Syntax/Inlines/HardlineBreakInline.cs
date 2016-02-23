@@ -9,7 +9,7 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : InlineParser
         {
-            public override bool Match(MatchInlineState state)
+            public override bool Match(InlineParserState state)
             {
                 // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
                 if (!(state.Block is ParagraphBlock))

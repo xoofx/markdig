@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(MatchLineState state)
+            public override MatchLineResult Match(BlockParserState state)
             {
                 var liner = state.Line;
                 liner.SkipLeadingSpaces3();
@@ -142,7 +142,7 @@ namespace Textamina.Markdig.Syntax
                 return result;
             }
 
-            private void RemoveParagraph(ParagraphBlock paragraph, MatchLineState state)
+            private void RemoveParagraph(ParagraphBlock paragraph, BlockParserState state)
             {
                 // Remove the pending paragraph
                 if (paragraph != null)
@@ -153,7 +153,7 @@ namespace Textamina.Markdig.Syntax
                 state.Pending = null;
             }
 
-            private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, MatchLineState state)
+            private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, BlockParserState state)
             {
                 bool atLeastOneFound = false;
 
@@ -196,7 +196,7 @@ namespace Textamina.Markdig.Syntax
                 return atLeastOneFound;
             }
 
-            public override void Close(MatchLineState state)
+            public override void Close(BlockParserState state)
             {
                 var paragraph = state.Pending as ParagraphBlock;
                 var heading = state.Pending as HeadingBlock;

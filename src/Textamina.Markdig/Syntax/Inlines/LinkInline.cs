@@ -28,7 +28,7 @@ namespace Textamina.Markdig.Syntax
                 FirstChars = new[] {'[', ']', '!'};
             }
 
-            public override bool Match(MatchInlineState state)
+            public override bool Match(InlineParserState state)
             {
                 var text = state.Lines;
 
@@ -92,7 +92,7 @@ namespace Textamina.Markdig.Syntax
                 return false;
             }
 
-            private bool ProcessLinkReference(MatchInlineState state, string label, bool isImage, Inline child = null)
+            private bool ProcessLinkReference(InlineParserState state, string label, bool isImage, Inline child = null)
             {
                 bool isValidLink = false;
                 LinkReferenceDefinitionBlock linkRef;
@@ -146,7 +146,7 @@ namespace Textamina.Markdig.Syntax
                 return isValidLink;
             }
 
-            private bool TryProcessLinkOrImage(MatchInlineState inlineState, StringLineGroup text)
+            private bool TryProcessLinkOrImage(InlineParserState inlineState, StringLineGroup text)
             {
                 LinkDelimiterInline openParent = null;
                 foreach (var parent in inlineState.Inline.FindParentOfType<LinkDelimiterInline>())
@@ -265,7 +265,7 @@ namespace Textamina.Markdig.Syntax
                 }
             }
 
-            private bool TryParseLinkTitle(MatchInlineState state)
+            private bool TryParseLinkTitle(InlineParserState state)
             {
                 return false;
             }

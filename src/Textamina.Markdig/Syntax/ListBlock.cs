@@ -20,11 +20,11 @@ namespace Textamina.Markdig.Syntax
 
         public bool IsLoose { get; set; }
 
-        private int consecutiveBlankLines;
+        private bool HasBlankLines { get; set; }
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(MatchLineState state)
+            public override MatchLineResult Match(BlockParserState state)
             {
                 var liner = state.Line;
 
@@ -59,17 +59,14 @@ namespace Textamina.Markdig.Syntax
                     //if (isBlankLine && !(state.LastBlock is FencedCodeBlock)) // TODO: Handle this case
                     if (isBlankLine)
                     {
+                        // TODO: Check with a generic way (allow a block to have multiple empty lines)
                         if (!(state.LastBlock is FencedCodeBlock))
                         {
-                            list.consecutiveBlankLines++;
-
-                            if (list.consecutiveBlankLines == 1 && list.Children.Count == 1)
-                            {
-                                listItem.IsFollowedByBlankLine = true;
-                            }
+                            list.HasBlankLines = true;
+                            listItem.Children.Add(BlankLineBlock.Instance);
                         }
 
-                        if (list.consecutiveBlankLines > 1)
+                        if (listItem.Children.Count > 1)
                         {
                             // TODO: Close all lists and not only this one
                             return MatchLineResult.LastDiscard;
@@ -106,7 +103,6 @@ namespace Textamina.Markdig.Syntax
                         if (countSpaces == expectedCount)
                         {
                             listItem.NumberOfSpaces = countSpaces;
-                            list.consecutiveBlankLines = 0;
                             return MatchLineResult.Continue;
                         }
                     }
@@ -118,7 +114,6 @@ namespace Textamina.Markdig.Syntax
                             var countSpaces = preIndent + liner.Column - startPosition;
                             if (countSpaces >= listItem.NumberOfSpaces)
                             {
-                                list.consecutiveBlankLines = 0;
                                 return MatchLineResult.Continue;
                             }
                         }
@@ -129,14 +124,27 @@ namespace Textamina.Markdig.Syntax
                 return TryParseListItem(ref state, preIndent);
             }
 
-            private MatchLineResult TryParseListItem(ref MatchLineState state, int preIndent)
+            private MatchLineResult TryParseListItem(ref BlockParserState state, int preIndent)
             {
                 var liner = state.Line;
 
+                var isInList = state.Pending is ListItemBlock;
+
                 var preStartPosition = liner.Start;
-                liner.SkipLeadingSpaces3();
-                preIndent = preIndent + liner.Start - preStartPosition;
+
                 var c = liner.Current;
+                if (isInList)
+                {
+                    while (c.IsSpaceOrTab())
+                    {
+                        c = liner.NextChar();
+                    }
+                }
+                else
+                {
+                    liner.SkipLeadingSpaces3();
+                }
+                preIndent = preIndent + liner.Start - preStartPosition;
 
                 var isOrdered = false;
                 var bulletChar = (char) 0;
@@ -232,61 +240,104 @@ namespace Textamina.Markdig.Syntax
                     numberOfSpaces = preIndent + countSpaceAfterBullet + 1;
                 }
 
-                var listItem = new ListItemBlock()
+                var newListItem = new ListItemBlock()
                 {
                     NumberOfSpaces = numberOfSpaces
                 };
-                state.NewBlocks.Push(listItem);
+                state.NewBlocks.Push(newListItem);
 
-                var parentList = state.Pending as ListBlock ?? (ListBlock)(state.Pending?.Parent as ListItemBlock)?.Parent;
+                var currentListItem = state.Pending as ListItemBlock;
+                var currentParent = state.Pending as ListBlock ?? (ListBlock)currentListItem?.Parent;
 
-                // A list is loose if any of its constituent list items are separated by blank lines, 
-                // or if any of its constituent list items directly contain two block-level elements with a blank line between them. 
-                // Otherwise a list is tight. (The difference in HTML output is that paragraphs in a loose list are wrapped in <p> tags, while paragraphs in a tight list are not.)
-                if (parentList != null && parentList.consecutiveBlankLines > 0 && parentList.Children.Count > 0 && ((ListItemBlock)parentList.Children[parentList.Children.Count - 1]).Children.Count > 0)
+                while (currentParent != null)
                 {
-                    parentList.IsLoose = true;
-                    parentList.consecutiveBlankLines = 0;
+                    // If we have a new list item, close the previous one
+                    if (currentListItem != null)
+                    {
+                        state.Close(currentListItem);
+                        currentListItem = null;
+                    }
+
+                    // Reset the list if it is a new list or a new type of bullet
+                    if (currentParent.IsOrdered != isOrdered ||
+                        (isOrdered && currentParent.OrderedDelimiter != orderedDelimiter) ||
+                        (!isOrdered && currentParent.BulletChar != bulletChar)
+                        //(numberOfSpaces < ((ListItemBlock) currentParent.LastChild).NumberOfSpaces)
+                        )
+                    {
+                        state.Close(currentParent);
+                        currentParent = null;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    for (int i = state.Count - 1; i >= 1; i--)
+                    {
+                        var itemToClose = state[i].Block;
+                        currentListItem = itemToClose as ListItemBlock;
+                        if (currentListItem != null)
+                        {
+                            currentParent = (ListBlock) currentListItem.Parent;
+                            break;
+                        }
+                        else if (itemToClose is ListBlock)
+                        {
+                            currentParent = (ListBlock) itemToClose;
+                            break;
+                        }
+                    }
                 }
 
-                // Reset the list if it is a new list or a new type of bullet
-                if (parentList == null || (parentList.IsOrdered != isOrdered  ||
-                    ((isOrdered && parentList.OrderedDelimiter != orderedDelimiter) ||
-                    (!isOrdered && parentList.BulletChar != bulletChar))))
+                if (currentParent == null)
                 {
-                    parentList = new ListBlock()
+                    var newList = new ListBlock()
                     {
-                        IsOrdered =  isOrdered,
+                        IsOrdered = isOrdered,
                         BulletChar = bulletChar,
                         OrderedDelimiter = orderedDelimiter,
                         OrderedStart = orderedStart,
                     };
-                    state.NewBlocks.Push(parentList);
+                    state.NewBlocks.Push(newList);
                 }
 
-                // A list item can begin with at most one blank line
-                if (numberOfSpaces < 0)
-                {
-                    parentList.consecutiveBlankLines = 1;
-                }
+                // Make sure that we don't have any pending, as we are replacing the previous one
+                state.Pending = null;
+
+                //// A list item can begin with at most one blank line
+                //if (numberOfSpaces < 0)
+                //{
+                //    newListItem.Children.Add(BlankLineBlock.Instance);
+                //}
 
                 return MatchLineResult.Continue;
             }
 
-            public override void Close(MatchLineState state)
+            public override void Close(BlockParserState state)
             {
                 var listBlock = state.Pending as ListBlock;
-                //var listItem = state.Pending as ListItemBlock;
-                if (listBlock != null)
+                // Process only if we have blank lines
+                if (listBlock != null && listBlock.HasBlankLines)
                 {
-                    //var list = (ListBlock)listItem.Parent;
-                    //// A list is loose:
-                    //// if any of its constituent list items directly contain two block-level elements with a blank line between them. 
-                    ////if (listItem.Children.Count > 1 && list.Children.IndexOf(listItem) < (list.Children.Count - 1) && listItem.IsFollowedByBlankLine)
-                    // if (listItem.IsFollowedByBlankLine)
-                    //{
-                    //    ((ListBlock)listItem.Parent).IsLoose = true;
-                    //}
+                    for (int listIndex = listBlock.Children.Count - 1; listIndex >= 0; listIndex--)
+                    {
+                        var block = listBlock.Children[listIndex];
+                        var listItem = (ListItemBlock) block;
+                        var children = listItem.Children;
+                        for (int i = children.Count - 1; i >= 0; i--)
+                        {
+                            var item = children[i];
+                            if (item is BlankLineBlock)
+                            {
+                                if ((i == children.Count - 1 &&  listIndex < listBlock.Children.Count - 1) || (children.Count == 3 && i == 1))
+                                {
+                                    listBlock.IsLoose = true;
+                                }
+                                children.RemoveAt(i);
+                            }
+                        }
+                    }
                 }
             }
         }

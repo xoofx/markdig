@@ -190,7 +190,7 @@ namespace Textamina.Markdig.Syntax
         {
         }
 
-        internal void CloseInternal(MatchInlineState state)
+        internal void CloseInternal(InlineParserState state)
         {
             if (!IsClosed)
             {
@@ -199,7 +199,7 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        protected virtual void Close(MatchInlineState state)
+        protected virtual void Close(InlineParserState state)
         {
         }
 

@@ -5,9 +5,9 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
 {
-    public class MatchInlineState
+    public class InlineParserState
     {
-        public MatchInlineState(StringBuilderCache stringBuilders, Document document)
+        public InlineParserState(StringBuilderCache stringBuilders, Document document)
         {
             StringBuilders = stringBuilders;
             Document = document;

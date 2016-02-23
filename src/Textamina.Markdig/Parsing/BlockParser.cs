@@ -15,9 +15,9 @@ namespace Textamina.Markdig.Parsing
 
         public bool CanInterruptParagraph { get; protected set; }
 
-        public abstract MatchLineResult Match(MatchLineState state);
+        public abstract MatchLineResult Match(BlockParserState state);
 
-        public virtual void Close(MatchLineState state)
+        public virtual void Close(BlockParserState state)
         {
         }
     }

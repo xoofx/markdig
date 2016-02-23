@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Syntax
                 CanInterruptParagraph = false;
             }
 
-            public override MatchLineResult Match(MatchLineState state)
+            public override MatchLineResult Match(BlockParserState state)
             {
                 var liner = state.Line;
                 int position = liner.Start;
@@ -58,7 +58,7 @@ namespace Textamina.Markdig.Syntax
                 return MatchLineResult.None;
             }
 
-            public override void Close(MatchLineState state)
+            public override void Close(BlockParserState state)
             {
                 var codeBlock = state.Pending as CodeBlock;
                 if (codeBlock != null)

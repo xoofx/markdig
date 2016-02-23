@@ -43,7 +43,7 @@ namespace Textamina.Markdig.Syntax
         /// The position in the <see cref="Buffer"/> where this inline element was found.
         /// Used only if the specific parser requires this information.
         /// </summary>
-        public StringLineGroup.State StartPosition;
+        public StringLineGroup.BlockState StartPosition;
 
         /// <summary>
         /// The flags set for this stack entry.
@@ -96,7 +96,7 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
-        public void AppendStackEntry(MatchInlineState subj)
+        public void AppendStackEntry(InlineParserState subj)
         {
             if (subj.LastPendingInline != null)
             {
@@ -115,7 +115,7 @@ namespace Textamina.Markdig.Syntax
         /// </summary>
         /// <param name="subj">The subject associated with this stack. Can be <c>null</c> if the pointers in the subject should not be updated.</param>
         /// <param name="last">The last entry to be removed. Can be <c>null</c> if everything starting from <paramref name="first" /> has to be removed.</param>
-        public void RemoveStackEntry(MatchInlineState subj, InlineStack last)
+        public void RemoveStackEntry(InlineParserState subj, InlineStack last)
         {
             var first = this;
             var curPriority = first.Priority;
@@ -167,7 +167,7 @@ namespace Textamina.Markdig.Syntax
                 PostProcessInlineStack(null, first, last, curPriority);
         }
 
-        public static void PostProcessInlineStack(MatchInlineState subj, InlineStack first, InlineStack last,
+        public static void PostProcessInlineStack(InlineParserState subj, InlineStack first, InlineStack last,
             InlineStackPriority ignorePriority)
         {
             while (ignorePriority > 0)
@@ -233,7 +233,7 @@ namespace Textamina.Markdig.Syntax
         }
 
 
-        public int MatchInlineStack(MatchInlineState subj, int closingDelimiterCount, InlineStack closer, bool onlySingleCharTag)
+        public int MatchInlineStack(InlineParserState subj, int closingDelimiterCount, InlineStack closer, bool onlySingleCharTag)
         {
             // calculate the actual number of delimiters used from this closer
             int useDelims;

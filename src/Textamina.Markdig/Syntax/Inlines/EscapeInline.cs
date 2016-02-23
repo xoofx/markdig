@@ -18,7 +18,7 @@ namespace Textamina.Markdig.Syntax
                 FirstChars = new[] {'\\'};
             }
 
-            public override bool Match(MatchInlineState state)
+            public override bool Match(InlineParserState state)
             {
                 var lines = state.Lines;
 

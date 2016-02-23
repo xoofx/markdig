@@ -30,7 +30,7 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : BlockParser
         {
-            public override MatchLineResult Match(MatchLineState state)
+            public override MatchLineResult Match(BlockParserState state)
             {
                 var liner = state.Line;
 
@@ -160,7 +160,7 @@ namespace Textamina.Markdig.Syntax
                 }
             }
 
-            public override void Close(MatchLineState state)
+            public override void Close(BlockParserState state)
             {
                 var fenced = (FencedCodeBlock) state.Pending;
                 fenced.Lines.RemoveAt(0);

@@ -12,5 +12,7 @@ namespace Textamina.Markdig.Syntax
         }
 
         public List<Block> Children { get; }
+
+        public Block LastChild => Children.Count > 0 ? Children[Children.Count - 1] : null;
     }
 }

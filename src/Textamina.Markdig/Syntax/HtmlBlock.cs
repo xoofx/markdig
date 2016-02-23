@@ -87,7 +87,7 @@ namespace Textamina.Markdig.Syntax
                 "ul",          // 60
             };
            
-            public override MatchLineResult Match(MatchLineState state)
+            public override MatchLineResult Match(BlockParserState state)
             {
                 var htmlBlock = state.Pending as HtmlBlock;
                 if (htmlBlock == null)
@@ -104,7 +104,7 @@ namespace Textamina.Markdig.Syntax
                 return MatchEnd(state, htmlBlock);
             }
 
-            private MatchLineResult MatchStart(MatchLineState state)
+            private MatchLineResult MatchStart(BlockParserState state)
             {
                 var liner = state.Line;
                 int index = 0;
@@ -136,7 +136,7 @@ namespace Textamina.Markdig.Syntax
                 return result;
             }
 
-            private MatchLineResult TryParseTagType7(MatchLineState state, StringLine liner, int index)
+            private MatchLineResult TryParseTagType7(BlockParserState state, StringLine liner, int index)
             {
                 var builder = StringBuilderCache.Local();
                 var text = HtmlLineGroup;
@@ -174,7 +174,7 @@ namespace Textamina.Markdig.Syntax
                 return result;
             }
 
-            private MatchLineResult TryParseTagType16(MatchLineState state, StringLine liner, int index)
+            private MatchLineResult TryParseTagType16(BlockParserState state, StringLine liner, int index)
             {
                 char c;
                 c = liner.PeekChar(index);
@@ -252,7 +252,7 @@ namespace Textamina.Markdig.Syntax
                 return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock);
             }
 
-            private MatchLineResult MatchEnd(MatchLineState state, HtmlBlock htmlBlock)
+            private MatchLineResult MatchEnd(BlockParserState state, HtmlBlock htmlBlock)
             {
                 var liner = state.Line;
 
@@ -308,7 +308,7 @@ namespace Textamina.Markdig.Syntax
                 return MatchLineResult.Continue;
             }
 
-            private MatchLineResult CreateHtmlBlock(MatchLineState state, HtmlBlockType type)
+            private MatchLineResult CreateHtmlBlock(BlockParserState state, HtmlBlockType type)
             {
                 state.NewBlocks.Push(new HtmlBlock() {Type = type});
                 return MatchLineResult.Continue;

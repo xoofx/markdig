@@ -12,7 +12,7 @@ namespace Textamina.Markdig.Syntax
 
         public string Content { get; set; }
 
-        protected override void Close(MatchInlineState state)
+        protected override void Close(InlineParserState state)
         {
             Content = HtmlHelper.Unescape(ContentBuilder.ToString(), false);
             state.StringBuilders.Release(ContentBuilder);
@@ -21,7 +21,7 @@ namespace Textamina.Markdig.Syntax
 
         private class ParserInternal : InlineParser
         {
-            public override bool Match(MatchInlineState state)
+            public override bool Match(InlineParserState state)
             {
                 // A literal will always match
                 var literal = state.Inline as LiteralInline;
