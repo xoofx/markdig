@@ -39,17 +39,19 @@ namespace Textamina.Markdig.Syntax
 
         public char this[int index] => Text[index];
 
-
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public State Save()
         {
             return new State(Start, End, Column, SpaceHeaderCount, Current);
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void Restore(State state)
         {
             Restore(ref state);
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void Restore(ref State state)
         {
             Start = state.Start;
@@ -59,7 +61,6 @@ namespace Textamina.Markdig.Syntax
             Current = state.Current;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
         {
             Start++;
@@ -67,7 +68,7 @@ namespace Textamina.Markdig.Syntax
             {
                 // If previous character was a tab make the Column += 4
                 Column++;
-                if (CharHelper.IsTab(Current))
+                if (Current.IsTab())
                 {
                     // Align the tab on a column
                     Column = ((Column + 3) / 4) * 4;
@@ -171,13 +172,14 @@ namespace Textamina.Markdig.Syntax
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void SkipLeadingSpaces3()
         {
-            if (Current.IsSpace())
+            var c = Current;
+            if (c.IsSpace())
             {
-                NextChar();
-                if (Current.IsSpace())
+                c = NextChar();
+                if (c.IsSpace())
                 {
-                    NextChar();
-                    if (Current.IsSpace())
+                    c = NextChar();
+                    if (c.IsSpace())
                     {
                         NextChar();
                     }

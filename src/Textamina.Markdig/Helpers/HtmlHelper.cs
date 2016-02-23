@@ -440,6 +440,9 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
+        private static readonly char[] SearchBackAndAmp = new[] {'\\', '&'};
+        private static readonly char[] SearchAmp = new[] {'&'};
+
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
         /// </summary>
@@ -456,7 +459,7 @@ namespace Textamina.Markdig.Helpers
             int lastPos = 0;
             int match;
             char c;
-            char[] search = removeBackSlash ? new[] {'\\', '&'} : new[] {'&'};
+            char[] search = removeBackSlash ? SearchBackAndAmp : SearchAmp;
             var sb = StringBuilderCache.Local();
             sb.Clear();
 
