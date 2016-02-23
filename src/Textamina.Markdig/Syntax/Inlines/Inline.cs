@@ -15,6 +15,8 @@ namespace Textamina.Markdig.Syntax
 
         public bool IsClosed { get; set; }
 
+        public bool IsClosable { get; protected set; }
+
         public void InsertAfter(Inline next)
         {
             if (next == null) throw new ArgumentNullException(nameof(next));

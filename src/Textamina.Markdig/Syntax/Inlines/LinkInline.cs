@@ -174,7 +174,6 @@ namespace Textamina.Markdig.Syntax
                                     IsImage = openParent.IsImage,
                                 };
 
-                                inlineState.OpenedInlines.Remove(openParent);
                                 openParent.ReplaceBy(link);
                                 inlineState.Inline = link;
 
@@ -232,8 +231,7 @@ namespace Textamina.Markdig.Syntax
                         ContentBuilder = inlineState.StringBuilders.Get().Append(openParent.IsImage ? "![" : "[")
                     };
 
-                    inlineState.OpenedInlines.Remove(openParent);
-                    inlineState.OpenedInlines.Add(literal);
+                    inlineState.InlinesToClose.Add(literal);
                     inlineState.Inline = openParent.ReplaceBy(literal);
                     return false;
                 }

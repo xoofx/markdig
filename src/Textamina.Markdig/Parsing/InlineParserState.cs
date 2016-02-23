@@ -11,7 +11,7 @@ namespace Textamina.Markdig.Parsing
         {
             StringBuilders = stringBuilders;
             Document = document;
-            OpenedInlines = new HashSet<Inline>();
+            InlinesToClose = new List<Inline>();
         }
 
         public LeafBlock Block { get; internal set; }
@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Parsing
 
         public Inline Inline { get; set; }
 
-        public readonly HashSet<Inline> OpenedInlines;
+        public readonly List<Inline> InlinesToClose;
 
         public readonly Document Document;
 

@@ -7,6 +7,10 @@ namespace Textamina.Markdig.Syntax
     public class LiteralInline : LeafInline
     {
         public static readonly InlineParser Parser = new ParserInternal();
+        public LiteralInline()
+        {
+            IsClosable = true;
+        }
 
         public StringBuilder ContentBuilder { get; set; }
 
@@ -25,20 +29,21 @@ namespace Textamina.Markdig.Syntax
             {
                 // A literal will always match
                 var literal = state.Inline as LiteralInline;
-                var text = state.Lines;
+                StringBuilder builder;
                 if (literal == null)
                 {
-                    literal = new LiteralInline {ContentBuilder = state.StringBuilders.Get()};
+                    builder = state.StringBuilders.Get();
+                    literal = new LiteralInline {ContentBuilder = builder};
                     state.Inline = literal;
                 }
-
-                var builder = literal.ContentBuilder;
-                var c = text.CurrentChar;
-                if (c != '\0')
+                else
                 {
-                    builder.Append(c);
-                    text.NextChar();
+                    builder = literal.ContentBuilder;
                 }
+
+                var text = state.Lines;
+                builder.Append(text.CurrentChar);
+                text.NextChar();
                 return true;
             }
         }

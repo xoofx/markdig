@@ -11,8 +11,10 @@ namespace Textamina.Markdig.Parsing
 {
     public class MarkdownParser
     {
+        public static TextWriter Log;
+
         private StringLine line;
-        private LineReader lineReader;
+        private readonly LineReader lineReader;
 
         private readonly List<BlockParser> blockParsers;
         private readonly List<InlineParser> inlineParsers;
@@ -21,9 +23,6 @@ namespace Textamina.Markdig.Parsing
         private readonly Document document;
         private readonly BlockParserState blockParserState;
         private readonly InlineParserState inlineState;
-        private readonly StringBuilderCache stringBuilderCache;
-
-        private int lineIndex;
 
         public MarkdownParser(TextReader reader)
         {
@@ -34,7 +33,7 @@ namespace Textamina.Markdig.Parsing
             inlineWithFirstCharParsers = new InlineParser[128];
             regularInlineParsers = new List<InlineParser>();
             lineReader = new LineReader(Reader);
-            stringBuilderCache  = new StringBuilderCache();
+            var stringBuilderCache  = new StringBuilderCache();
             inlineState = new InlineParserState(stringBuilderCache, document);
             blockParserState = new BlockParserState(stringBuilderCache, document);
             blockParsers = new List<BlockParser>()
@@ -491,9 +490,16 @@ namespace Textamina.Markdig.Parsing
                         container.AppendChild(nextInline);
                     }
 
-                    if (!nextInline.IsClosed)
+                    if (nextInline.IsClosable && !nextInline.IsClosed)
                     {
-                        inlineState.OpenedInlines.Add(nextInline);
+                        var inlinesToClose = inlineState.InlinesToClose;
+                        var last = inlinesToClose.Count > 0
+                            ? inlineState.InlinesToClose[inlinesToClose.Count - 1]
+                            : null;
+                        if (last != nextInline)
+                        {
+                            inlineState.InlinesToClose.Add(nextInline);
+                        }
                     }
                 }
                 else
@@ -525,11 +531,11 @@ namespace Textamina.Markdig.Parsing
 
             // Close all inlines not closed
             inlineState.Inline = null;
-            foreach (var inline in inlineState.OpenedInlines)
+            foreach (var inline in inlineState.InlinesToClose)
             {
                 inline.CloseInternal(inlineState);
             }
-            inlineState.OpenedInlines.Clear();
+            inlineState.InlinesToClose.Clear();
 
             if (Log != null)
             {
@@ -549,27 +555,6 @@ namespace Textamina.Markdig.Parsing
             //    var inlineState = inlineStack.Pop();
             //    inlineState.Parser.Close(state, inlineState.Inline);
             //}
-        }
-
-        public static TextWriter Log;
-
-        private void CloseInline(InlineParserState state, Inline inline)
-        {
-            state.OpenedInlines.Remove(inline);
-            inline.CloseInternal(inlineState);
-        }
-
-        private class InlineState
-        {
-            public InlineState(InlineParser parser, Inline inline)
-            {
-                Parser = parser;
-                Inline = inline;
-            }
-
-            public InlineParser Parser;
-
-            public Inline Inline;
         }
     }
 }

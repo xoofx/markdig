@@ -24,7 +24,6 @@ namespace Textamina.Markdig.Parsing
 
         public StringLine ReadLine()
         {
-            tempBuilder.Clear();
             while (true)
             {
                 var nextChar = reader.Read();
@@ -49,7 +48,9 @@ namespace Textamina.Markdig.Parsing
                 // 2.3 Insecure characters '\0'
                 tempBuilder.Append(c.EscapeInsecure());
             }
-            return new StringLine(tempBuilder.ToString(), lineIndex++);
+            var line = new StringLine(tempBuilder.ToString(), lineIndex++);
+            tempBuilder.Clear();
+            return line;
         }
     }
 }

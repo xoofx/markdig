@@ -18,6 +18,7 @@ namespace Testamina.Markdig.Benchmarks
 
         public Program()
         {
+            //text = File.ReadAllText("progit.md");
             text = File.ReadAllText("spec.md");
         }
 
