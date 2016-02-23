@@ -12,9 +12,9 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class CodeBlock : LeafBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
 
-        public CodeBlock()
+        public CodeBlock(BlockParser parser) : base(parser)
         {
             NoInline = true;
         }
@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Syntax
                             return MatchLineResult.None;
                         }
 
-                        state.NewBlocks.Push(new CodeBlock());
+                        state.NewBlocks.Push(new CodeBlock(this));
                     }
                     return MatchLineResult.Continue;
                 }

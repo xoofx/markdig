@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Syntax
 {
     public abstract class LeafBlock : Block
     {
-        protected LeafBlock()
+        protected LeafBlock(BlockParser parser) : base(parser)
         {
             Lines = new StringLineGroup();
         }

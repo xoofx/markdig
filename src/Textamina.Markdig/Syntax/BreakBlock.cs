@@ -8,9 +8,9 @@ namespace Textamina.Markdig.Syntax
     /// </summary>
     public class BreakBlock : LeafBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
 
-        public BreakBlock()
+        public BreakBlock(BlockParser parser) : base(parser)
         {
             NoInline = true;
         }
@@ -66,7 +66,7 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.None;
                 }
 
-                state.NewBlocks.Push(new BreakBlock());
+                state.NewBlocks.Push(new BreakBlock(this));
                 return MatchLineResult.Last;
             }
         }

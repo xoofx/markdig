@@ -87,7 +87,7 @@ namespace Textamina.Markdig.Parsing
             get
             {
                 var count = blockParserState.Count;
-                return count > 0 ? blockParserState[count - 1].Block : null;
+                return count > 0 ? blockParserState[count - 1] : null;
             }
         }
 
@@ -97,7 +97,7 @@ namespace Textamina.Markdig.Parsing
             {
                 for (int i = blockParserState.Count - 1; i >= 0; i--)
                 {
-                    var container = blockParserState[i].Block as ContainerBlock;
+                    var container = blockParserState[i] as ContainerBlock;
                     if (container != null)
                     {
                         return container;
@@ -134,7 +134,7 @@ namespace Textamina.Markdig.Parsing
                 {
                     int index = blockParserState.Count - 1;
                     var lastBlock = blockParserState[index];
-                    if (lastBlock.Block is ParagraphBlock)
+                    if (lastBlock is ParagraphBlock)
                     {
                         blockParserState.Close(index);
                         continue;
@@ -194,11 +194,11 @@ namespace Textamina.Markdig.Parsing
             // Process any current block potentially opened
             for (int i = 1; i < blockParserState.Count; i++)
             {
-                var blockState = blockParserState[i];
+                var block = blockParserState[i];
 
                 // Else tries to match the Parser with the current line
-                var parser = blockState.Parser;
-                blockParserState.Pending = blockState.Block;
+                var parser = block.Parser;
+                blockParserState.Pending = block;
 
                 // If a parser is used by multiple pending object
                 // Only try to use it on the last pending block
@@ -240,7 +240,7 @@ namespace Textamina.Markdig.Parsing
 
                 // A block is open only if it has a Continue state.
                 // otherwise it is a Last state, and we don't keep it opened
-                blockState.IsOpen = result == MatchLineResult.Continue;
+                block.IsOpen = result == MatchLineResult.Continue;
 
                 // If it is a leaf content, we need to grab the content
                 var leaf = blockParserState.Pending as LeafBlock;
@@ -262,7 +262,7 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 bool isLast = i == blockParserState.Count - 1;
-                processLiner = ProcessNewBlocks(processLiner, parser, result, ref leaf, false);
+                ProcessNewBlocks(ref processLiner, result, ref leaf, false);
                 if (isLast || !processLiner)
                 {
                     break;
@@ -339,7 +339,7 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 LeafBlock leaf = null;
-                continueProcessLiner = ProcessNewBlocks(continueProcessLiner, blockParser, result, ref leaf, true);
+                ProcessNewBlocks(ref continueProcessLiner, result, ref leaf, true);
 
                 // If we have a container, we can retry to match against all types of block.
                 if (leaf == null)
@@ -357,7 +357,7 @@ namespace Textamina.Markdig.Parsing
             return continueProcessLiner;
         }
 
-        private bool ProcessNewBlocks(bool continueProcessLiner, BlockParser blockParser, MatchLineResult result, ref LeafBlock leaf, bool allowClosing)
+        private void ProcessNewBlocks(ref bool continueProcessLiner, MatchLineResult result, ref LeafBlock leaf, bool allowClosing)
         {
             while (continueProcessLiner && blockParserState.NewBlocks.Count > 0)
             {
@@ -390,10 +390,11 @@ namespace Textamina.Markdig.Parsing
                     AddToParent(block, container);
                 }
 
+                block.IsOpen = result == MatchLineResult.Continue;
+
                 // Add a block blockParserState to the stack (and leave it opened)
-                blockParserState.Open(blockParser, block, result == MatchLineResult.Continue);
+                blockParserState.Open(block);
             }
-            return continueProcessLiner;
         }
 
 

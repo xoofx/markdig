@@ -8,7 +8,11 @@ namespace Textamina.Markdig.Syntax
 {
     public class ListBlock : ContainerBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
+
+        public ListBlock(BlockParser parser) : base(parser)
+        {
+        }
 
         public bool IsOrdered { get; set; }
 
@@ -240,7 +244,7 @@ namespace Textamina.Markdig.Syntax
                     numberOfSpaces = preIndent + countSpaceAfterBullet + 1;
                 }
 
-                var newListItem = new ListItemBlock()
+                var newListItem = new ListItemBlock(this)
                 {
                     NumberOfSpaces = numberOfSpaces
                 };
@@ -275,16 +279,16 @@ namespace Textamina.Markdig.Syntax
 
                     for (int i = state.Count - 1; i >= 1; i--)
                     {
-                        var itemToClose = state[i].Block;
-                        currentListItem = itemToClose as ListItemBlock;
+                        var block = state[i];
+                        currentListItem = block as ListItemBlock;
                         if (currentListItem != null)
                         {
                             currentParent = (ListBlock) currentListItem.Parent;
                             break;
                         }
-                        else if (itemToClose is ListBlock)
+                        else if (block is ListBlock)
                         {
-                            currentParent = (ListBlock) itemToClose;
+                            currentParent = (ListBlock) block;
                             break;
                         }
                     }
@@ -292,7 +296,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (currentParent == null)
                 {
-                    var newList = new ListBlock()
+                    var newList = new ListBlock(this)
                     {
                         IsOrdered = isOrdered,
                         BulletChar = bulletChar,

@@ -1,14 +1,16 @@
 ﻿using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
     public class LinkReferenceDefinitionBlock : LeafBlock
     {
-        public LinkReferenceDefinitionBlock()
+        public LinkReferenceDefinitionBlock() : base(null)
         {
+            IsOpen = false;
         }
 
-        public LinkReferenceDefinitionBlock(string label, string url, string title)
+        public LinkReferenceDefinitionBlock(string label, string url, string title) : this()
         {
             Label = label;
             Url = url;

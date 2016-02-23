@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Syntax
     {
         public static readonly BlockParser Parser = new ParserInternal();
 
-        public HtmlBlock()
+        public HtmlBlock(BlockParser parser) : base(parser)
         {
             // We don't process inline of an html block, as we will copy the content as-is
             NoInline = true; 
@@ -310,7 +310,7 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult CreateHtmlBlock(BlockParserState state, HtmlBlockType type)
             {
-                state.NewBlocks.Push(new HtmlBlock() {Type = type});
+                state.NewBlocks.Push(new HtmlBlock(this) {Type = type});
                 return MatchLineResult.Continue;
             }
         }

@@ -8,19 +8,16 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsing
 {
-    public class BlockParserState : List<BlockState>
+    public class BlockParserState : List<Block>
     {
-        private readonly Stack<BlockState> cachedBlockStates;
-
         public BlockParserState(StringBuilderCache stringBuilders, Document root)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (root == null) throw new ArgumentNullException(nameof(root));
-            cachedBlockStates = new Stack<BlockState>();
             StringBuilders = stringBuilders;
             Root = root;
             NewBlocks = new Stack<Block>();
-            Add(new BlockState() {Block = root});
+            Add(root);
         }
 
         public StringLine Line;
@@ -37,15 +34,10 @@ namespace Textamina.Markdig.Parsing
 
         public StringBuilderCache StringBuilders { get; }
 
-        public BlockState Open(BlockParser parser, Block block, bool isOpen)
+        public Block Open(Block block)
         {
-            var blockState = cachedBlockStates.Count > 0 ? cachedBlockStates.Pop() : new BlockState();
-            blockState.Reset();
-            blockState.Parser = parser;
-            blockState.Block = block;
-            blockState.IsOpen = isOpen;
-            Add(blockState);
-            return blockState;
+            Add(block);
+            return block;
         }
 
         public void Close(Block block)
@@ -53,7 +45,7 @@ namespace Textamina.Markdig.Parsing
             // If we close a block, we close all blocks above
             for (int i = Count - 1; i >= 1; i--)
             {
-                if (this[i].Block == block)
+                if (this[i] == block)
                 {
                     for (int j = Count - 1; j >= i; j--)
                     {
@@ -66,26 +58,22 @@ namespace Textamina.Markdig.Parsing
 
         public void Close(int index)
         {
-            var blockState = this[index];
+            var block = this[index];
 
             var saveBlock = Pending;
 
-            var previousBlock = blockState.Block;
-            Pending = blockState.Block;
-            blockState.Parser.Close(this);
+            Pending = block;
+            block.Parser.Close(this);
 
             // If the pending object is removed, we need to remove it from the parent container
             if (Pending == null)
             {
-                var parent = blockState.Block.Parent as ContainerBlock;
+                var parent = block.Parent as ContainerBlock;
                 if (parent != null)
                 {
-                    parent.Children.Remove(previousBlock);
+                    parent.Children.Remove(block);
                 }
             }
-
-            blockState.Reset();
-            cachedBlockStates.Push(blockState);
             RemoveAt(index);
             Pending = saveBlock;
         }
@@ -95,10 +83,10 @@ namespace Textamina.Markdig.Parsing
             // Close any previous blocks not opened
             for (int i = Count - 1; i >= 1; i--)
             {
-                var blockState = this[i];
+                var block = this[i];
 
                 // Stop on the first open block
-                if (!force && blockState.IsOpen)
+                if (!force && block.IsOpen)
                 {
                     break;
                 }

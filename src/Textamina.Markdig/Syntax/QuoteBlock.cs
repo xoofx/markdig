@@ -5,7 +5,11 @@ namespace Textamina.Markdig.Syntax
 {
     public class QuoteBlock : ContainerBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
+
+        public QuoteBlock(BlockParser parser) : base(parser)
+        {
+        }
 
         private class ParserInternal : BlockParser
         {
@@ -35,7 +39,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (state.Pending == null)
                 {
-                    state.NewBlocks.Push(new QuoteBlock());
+                    state.NewBlocks.Push(new QuoteBlock(this));
                 }
 
                 return MatchLineResult.Continue;

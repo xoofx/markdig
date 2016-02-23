@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
     [DebuggerDisplay("Container: {GetType().Name} Count = {Children.Count}")]
     public abstract class ContainerBlock : Block
     {
-        protected ContainerBlock()
+        protected ContainerBlock(BlockParser parser) : base(parser)
         {
             Children = new List<Block>();
         }

@@ -16,6 +16,10 @@ namespace Textamina.Markdig.Syntax
     {
         public new static readonly BlockParser Parser = new ParserInternal();
 
+        public FencedCodeBlock(BlockParser parser) : base(parser)
+        {
+        }
+
         public string Language { get; set; }
 
         public string Arguments { get; set; }
@@ -145,7 +149,7 @@ namespace Textamina.Markdig.Syntax
                         }
 
                         // Store the number of matched string into the context
-                        state.NewBlocks.Push(new FencedCodeBlock()
+                        state.NewBlocks.Push(new FencedCodeBlock(this)
                         {
                             fencedChar = matchChar,
                             fencedCharCount = count,

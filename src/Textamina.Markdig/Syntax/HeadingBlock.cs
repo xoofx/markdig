@@ -8,7 +8,11 @@ namespace Textamina.Markdig.Syntax
     /// </summary>
     public class HeadingBlock : LeafBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
+        public new static readonly BlockParser Parser = new ParserInternal();
+
+        public HeadingBlock(BlockParser parser) : base(parser)
+        {
+        }
 
         public int Level { get; set; }
 
@@ -48,7 +52,7 @@ namespace Textamina.Markdig.Syntax
                 if (leadingCount > 0 && leadingCount <=6 && (CharHelper.IsSpace(c) || liner.IsEol))
                 {
                     liner.NextChar();
-                    state.NewBlocks.Push(new HeadingBlock() {Level = leadingCount});
+                    state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount});
 
 
                     // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.

@@ -15,10 +15,14 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class ParagraphBlock : LeafBlock
     {
-        public static readonly BlockParser Parser = new ParserInternal();
-
         [ThreadStatic]
-        private static StringLineGroup TempLineGroup = new StringLineGroup();
+        private static readonly StringLineGroup TempLineGroup = new StringLineGroup();
+
+        public new static readonly BlockParser Parser = new ParserInternal();
+
+        public ParagraphBlock(BlockParser parser) : base(parser)
+        {
+        }
 
         private class ParserInternal : BlockParser
         {
@@ -44,7 +48,7 @@ namespace Textamina.Markdig.Syntax
                 var result = MatchLineResult.Continue;
                 if (paragraph == null)
                 {
-                    state.NewBlocks.Push(new ParagraphBlock());
+                    state.NewBlocks.Push(new ParagraphBlock(this));
                 }
                 else
                 {
@@ -116,7 +120,7 @@ namespace Textamina.Markdig.Syntax
 
                             var level = headingChar == '=' ? 1 : 2;
 
-                            var heading = new HeadingBlock
+                            var heading = new HeadingBlock(this)
                             {
                                 Level = level,
                                 Lines = paragraph.Lines,
