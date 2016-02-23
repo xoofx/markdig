@@ -44,7 +44,6 @@
     <Compile Include="Parsing\InlineParser.cs" />
     <Compile Include="Parsing\InlineParserState.cs" />
     <Compile Include="Parsing\BlockParserState.cs" />
-    <Compile Include="Parsing\LineReader.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
     <Compile Include="Syntax\Inlines\AutolinkInline.cs" />
     <Compile Include="Syntax\Inlines\CodeInline.cs" />

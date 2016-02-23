@@ -134,7 +134,7 @@ namespace Textamina.Markdig.Syntax
                 ColumnPosition++;
                 if (ColumnPosition <= currentLine.End)
                 {
-                    CurrentChar = currentLine[ColumnPosition];
+                    CurrentChar = currentLine[ColumnPosition].EscapeInsecure();
                 }
                 else
                 {

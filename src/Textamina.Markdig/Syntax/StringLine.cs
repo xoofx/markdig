@@ -73,7 +73,7 @@ namespace Textamina.Markdig.Syntax
                     // Align the tab on a column
                     Column = ((Column + 3) / 4) * 4;
                 }
-                Current = Text[Start];
+                Current = Text[Start].EscapeInsecure();
             }
             else
             {
@@ -87,7 +87,7 @@ namespace Textamina.Markdig.Syntax
         public char PeekChar(int offset)
         {
             var index = Start + offset;
-            return index <= End ? Text[index] : (char) 0;
+            return index <= End ? Text[index].EscapeInsecure() : (char) 0;
         }
 
         public bool Match(string text, int offset = 0)

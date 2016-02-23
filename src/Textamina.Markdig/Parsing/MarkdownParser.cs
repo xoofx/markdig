@@ -14,7 +14,6 @@ namespace Textamina.Markdig.Parsing
         public static TextWriter Log;
 
         private StringLine line;
-        private readonly LineReader lineReader;
 
         private readonly List<BlockParser> blockParsers;
         private readonly List<InlineParser> inlineParsers;
@@ -32,7 +31,6 @@ namespace Textamina.Markdig.Parsing
             inlineParsers = new List<InlineParser>();
             inlineWithFirstCharParsers = new InlineParser[128];
             regularInlineParsers = new List<InlineParser>();
-            lineReader = new LineReader(Reader);
             var stringBuilderCache  = new StringBuilderCache();
             inlineState = new InlineParserState(stringBuilderCache, document);
             blockParserState = new BlockParserState(stringBuilderCache, document);
@@ -120,15 +118,17 @@ namespace Textamina.Markdig.Parsing
 
         private void ParseLines()
         {
-            while (!lineReader.IsEof)
+            int lineIndex = 0;
+            while (true)
             {
-                line = lineReader.ReadLine();
+                var lineText = Reader.ReadLine();
 
                 // If this is the end of file and the last line is empty
-                if (lineReader.IsEof && line.IsEol)
+                if (lineText == null)
                 {
                     break;
                 }
+                line = new StringLine(lineText, lineIndex++);
 
                 bool continueProcessLiner = ProcessPendingBlocks();
 

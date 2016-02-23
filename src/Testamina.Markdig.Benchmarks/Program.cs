@@ -25,8 +25,11 @@ namespace Testamina.Markdig.Benchmarks
         [Benchmark]
         public void TestMarkdig()
         {
-            var reader = new MarkdownParser(new StringReader(text));
-            var doc = reader.Parse();
+            //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+            var reader = new StringReader(text);
+            var parser = new MarkdownParser(reader);
+            var doc = parser.Parse();
+            reader.Dispose();
             //var formatter = new HtmlFormatter(new StringWriter());
             //formatter.Write(doc);
         }
@@ -35,7 +38,10 @@ namespace Testamina.Markdig.Benchmarks
         public void TestCommonMark()
         {
             //CommonMark.CommonMarkConverter.Convert(new StringReader(text), new StringWriter());
-            CommonMark.CommonMarkConverter.Parse(new StringReader(text));
+            //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+            var reader = new StringReader(text);
+            CommonMark.CommonMarkConverter.Parse(reader);
+            reader.Dispose();
         }
 
         static void Main(string[] args)
@@ -48,8 +54,16 @@ namespace Testamina.Markdig.Benchmarks
                 //program.TestCommonMark();
             }
             Console.WriteLine($"time: {clock.ElapsedMilliseconds}ms");
+            DumpGC();
 
             //BenchmarkRunner.Run<Program>();
+        }
+
+        static void DumpGC()
+        {
+            Console.WriteLine($"gc0: {GC.CollectionCount(0)}");
+            Console.WriteLine($"gc1: {GC.CollectionCount(1)}");
+            Console.WriteLine($"gc2: {GC.CollectionCount(2)}");
         }
     }
 }
