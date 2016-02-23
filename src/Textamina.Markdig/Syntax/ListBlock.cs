@@ -24,9 +24,9 @@ namespace Textamina.Markdig.Syntax
 
         public bool IsLoose { get; set; }
 
-        private bool HasBlankLines { get; set; }
+        private int CountAllBlankLines { get; set; }
 
-        private int CountBlankLines { get; set; }
+        private int CountBlankLinesReset { get; set; }
 
         private class ParserInternal : BlockParser
         {
@@ -39,6 +39,17 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 var liner = state.Line;
+
+                // When both a thematic break and a list item are possible
+                // interpretations of a line, the thematic break takes precedence
+                var save = liner.Save();
+                if (BreakBlock.Parser.Match(state) == MatchLineResult.Last)
+                {
+                    // Remove the BreakBlock as we will let the BreakBlock to catch it later
+                    state.NewBlocks.Pop();
+                    return MatchLineResult.None;
+                }
+                liner.Restore(ref save);
 
                 // 5.2 List items 
                 // TODO: Check with specs, it is not clear that list marker or bullet marker must be followed by at least 1 space
@@ -75,30 +86,33 @@ namespace Textamina.Markdig.Syntax
                         // TODO: Check with a generic way (allow a block to have multiple empty lines)
                         if (!isInFencedBlock)
                         {
-                            // If this is already a ListItem starting empty, we cannot have another empty line
-                            if (listItem.NumberOfSpaces < 0)
-                            {
-                                return MatchLineResult.LastDiscard;
-                            }
-
                             if (!(state.NextPending is ListBlock))
                             {
-                                list.HasBlankLines = true;
+                                list.CountAllBlankLines++;
                                 listItem.Children.Add(BlankLineBlock.Instance);
                             }
-                            list.CountBlankLines++;
+                            list.CountBlankLinesReset++;
                         }
 
-                        if (list.CountBlankLines > 1)
+                        if (list.CountBlankLinesReset > 1)
                         {
                             // TODO: Close all lists and not only this one
                             return MatchLineResult.LastDiscard;
                         }
 
+                        if (list.CountBlankLinesReset == 1 && listItem.NumberOfSpaces < 0)
+                        {
+                            state.Close(listItem);
+
+                            // Leave the list open
+                            list.IsOpen = true;
+                            return MatchLineResult.Continue;
+                        }
+
                         return MatchLineResult.Continue;
                     }
 
-                    list.CountBlankLines = 0;
+                    list.CountBlankLinesReset = 0;
 
                     var c = liner.Current;
                     var startPosition = liner.Column;
@@ -319,25 +333,50 @@ namespace Textamina.Markdig.Syntax
                 var listBlock = state.Pending as ListBlock;
 
                 // Process only if we have blank lines
-                if (listBlock != null && listBlock.HasBlankLines)
+                if (listBlock != null && listBlock.CountAllBlankLines > 0)
                 {
+                    bool isLastListItem = true;
                     for (int listIndex = listBlock.Children.Count - 1; listIndex >= 0; listIndex--)
                     {
                         var block = listBlock.Children[listIndex];
                         var listItem = (ListItemBlock) block;
                         var children = listItem.Children;
+                        bool isLastElement = true;
                         for (int i = children.Count - 1; i >= 0; i--)
                         {
                             var item = children[i];
                             if (item is BlankLineBlock)
                             {
-                                if ((i == children.Count - 1 &&  listIndex < listBlock.Children.Count - 1) || (children.Count > 2 && (i > 0 && i < (children.Count - 1))))
+                                if ((isLastElement &&  listIndex < listBlock.Children.Count - 1) || (children.Count > 2 && (i > 0 && i < (children.Count - 1))))
                                 {
                                     listBlock.IsLoose = true;
                                 }
+
+                                if (isLastElement && isLastListItem)
+                                {
+                                    // Inform the outer list that we have a blank line
+                                    var parentListItemBlock = listBlock.Parent as ListItemBlock;
+                                    if (parentListItemBlock != null)
+                                    {
+                                        var parentList = (ListBlock) parentListItemBlock.Parent;
+
+                                        parentList.CountAllBlankLines++;
+                                        parentListItemBlock.Children.Add(BlankLineBlock.Instance);
+                                    }
+                                }
+
                                 children.RemoveAt(i);
+
+                                // If we have remove all blank lines, we can exit
+                                listBlock.CountAllBlankLines--;
+                                if (listBlock.CountAllBlankLines == 0)
+                                {
+                                    return;
+                                }
                             }
+                            isLastElement = false;
                         }
+                        isLastListItem = false;
                     }
                 }
             }

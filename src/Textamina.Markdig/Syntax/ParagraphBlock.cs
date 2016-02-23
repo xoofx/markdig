@@ -15,9 +15,6 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class ParagraphBlock : LeafBlock
     {
-        [ThreadStatic]
-        private static readonly StringLineGroup TempLineGroup = new StringLineGroup();
-
         public new static readonly BlockParser Parser = new ParserInternal();
 
         public ParagraphBlock(BlockParser parser) : base(parser)
@@ -54,19 +51,6 @@ namespace Textamina.Markdig.Syntax
                 }
                 else
                 {
-                    var localLineGroup = TempLineGroup;
-                    localLineGroup.Clear();
-
-                    foreach (var line in paragraph.Lines)
-                    {
-                        localLineGroup.Add(line);
-                    }
-
-                    if (!isBlankLine)
-                    {
-                        localLineGroup.Add(liner);
-                    }
-
                     if (isBlankLine)
                     {
                         result = MatchLineResult.None;

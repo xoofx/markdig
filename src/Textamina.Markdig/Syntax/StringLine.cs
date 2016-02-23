@@ -150,7 +150,6 @@ namespace Textamina.Markdig.Syntax
             return false;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public bool IsBlankLine()
         {
             if (isBlankLine)
@@ -160,7 +159,7 @@ namespace Textamina.Markdig.Syntax
 
             for (int i = Start; i <= End; i++)
             {
-                if (!CharHelper.IsSpace(Text[i]))
+                if (!Text[i].IsSpace())
                 {
                     return false;
                 }
@@ -168,16 +167,21 @@ namespace Textamina.Markdig.Syntax
             isBlankLine = true;
             return true;
         }
-        
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void SkipLeadingSpaces3()
         {
-            for (int i = 0; i < 3; i++)
+            if (Current.IsSpace())
             {
-                if (!CharHelper.IsSpace(Current))
-                {
-                    break;
-                }
                 NextChar();
+                if (Current.IsSpace())
+                {
+                    NextChar();
+                    if (Current.IsSpace())
+                    {
+                        NextChar();
+                    }
+                }
             }
         }
 

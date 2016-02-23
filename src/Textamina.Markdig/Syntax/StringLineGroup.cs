@@ -105,6 +105,16 @@ namespace Textamina.Markdig.Syntax
             return new State(currentLine, LinePosition, ColumnPosition, CurrentChar, PreviousChar1, PreviousChar2);
         }
 
+        public void Save(ref State state)
+        {
+            state.CurrentLine = currentLine;
+            state.LinePosition = LinePosition;
+            state.ColumnPosition = ColumnPosition;
+            state.Current = CurrentChar;
+            state.PreviousChar1 = PreviousChar1;
+            state.PreviousChar2 = PreviousChar2;
+        }
+
         public void Restore(ref State state)
         {
             currentLine = state.CurrentLine;
@@ -227,7 +237,7 @@ namespace Textamina.Markdig.Syntax
             return stringBuilder.ToString();
         }
 
-        public class State
+        public struct State
         {
             public State(StringLine currentLine, int linePosition, int columnPosition, char current, char previousChar1, char previousChar2)
             {
@@ -239,17 +249,17 @@ namespace Textamina.Markdig.Syntax
                 PreviousChar2 = previousChar2;
             }
 
-            public readonly StringLine CurrentLine;
+            public StringLine CurrentLine;
 
-            public readonly int LinePosition;
+            public int LinePosition;
 
-            public readonly int ColumnPosition;
+            public int ColumnPosition;
 
-            public readonly char Current;
+            public char Current;
 
-            public readonly char PreviousChar1;
+            public char PreviousChar1;
 
-            public readonly char PreviousChar2;
+            public char PreviousChar2;
         }
     }
 }

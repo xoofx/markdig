@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Parsing
         private readonly List<BlockParser> blockParsers;
         private readonly List<InlineParser> inlineParsers;
         private readonly List<InlineParser> regularInlineParsers;
-        private readonly Dictionary<char, InlineParser> inlineWithFirstCharParsers;
+        private readonly InlineParser[] inlineWithFirstCharParsers;
         private readonly Document document;
         private readonly StringBuilder tempBuilder;
         private readonly BlockParserState blockParserState;
@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Parsing
             Reader = reader;
             blockParsers = new List<BlockParser>();
             inlineParsers = new List<InlineParser>();
-            inlineWithFirstCharParsers = new Dictionary<char, InlineParser>();
+            inlineWithFirstCharParsers = new InlineParser[128];
             regularInlineParsers = new List<InlineParser>();
             tempBuilder = new StringBuilder();
             stringBuilderCache  = new StringBuilderCache();
@@ -71,6 +71,10 @@ namespace Textamina.Markdig.Parsing
                 {
                     foreach (var firstChar in inlineParser.FirstChars)
                     {
+                        if (firstChar >= 128)
+                        {
+                            throw new InvalidOperationException($"Invalid character '{firstChar}'. Support only ASCII < 128 chars");
+                        }
                         inlineWithFirstCharParsers[firstChar] = inlineParser;
                     }
                 }
@@ -466,14 +470,18 @@ namespace Textamina.Markdig.Parsing
             inlineState.Inline = leafBlock.Inline;
             inlineState.Block = leafBlock;
 
+            var saveLines = new StringLineGroup.State();
+
             while (!lines.IsEndOfLines)
             {
-                var saveLines = lines.Save();
+                lines.Save(ref saveLines);
 
                 var currentChar = lines.CurrentChar;
 
-                InlineParser inlineParser = null;
-                if (!inlineWithFirstCharParsers.TryGetValue(lines.CurrentChar, out inlineParser) || !inlineParser.Match(inlineState))
+                InlineParser inlineParser = lines.CurrentChar < 128
+                    ? inlineWithFirstCharParsers[(int) lines.CurrentChar]
+                    : null;
+                if (inlineParser == null || !inlineParser.Match(inlineState))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
                     {
@@ -544,8 +552,11 @@ namespace Textamina.Markdig.Parsing
                     inlineState.Inline = container.LastChild is LeafInline ? container.LastChild : container;
                 }
 
-                Log.WriteLine($"** Dump: char '{currentChar}");
-                leafBlock.Inline.DumpTo(Log);
+                if (Log != null)
+                {
+                    Log.WriteLine($"** Dump: char '{currentChar}");
+                    leafBlock.Inline.DumpTo(Log);
+                }
             }
 
             // Close all inlines not closed
