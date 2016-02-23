@@ -23,6 +23,7 @@ namespace Textamina.Markdig.Parsing
         private readonly BlockParserState blockParserState;
         private readonly InlineParserState inlineState;
         private readonly StringBuilderCache stringBuilderCache;
+        private int lineIndex;
 
         public MarkdownParser(TextReader reader)
         {
@@ -130,22 +131,20 @@ namespace Textamina.Markdig.Parsing
 
                 // If we have already reached eol and the last block was a paragraph
                 // we close it
-                if (blockParserState.Count > 0 && line.IsEol)
+                if (line.IsEol)
                 {
                     int index = blockParserState.Count - 1;
-                    var lastBlock = blockParserState[index];
-                    if (lastBlock is ParagraphBlock)
+                    if (blockParserState[index] is ParagraphBlock)
                     {
                         blockParserState.Close(index);
                         continue;
                     }
                 }
 
-
                 // If the line was not entirely processed by pending blocks, try to process it with any new block
                 while (continueProcessLiner)
                 {
-                    continueProcessLiner = ParseNewBlocks(continueProcessLiner);
+                    ParseNewBlocks(ref continueProcessLiner);
                 }
 
                 // Close blocks that are no longer opened
@@ -200,13 +199,6 @@ namespace Textamina.Markdig.Parsing
                 var parser = block.Parser;
                 blockParserState.Pending = block;
 
-                // If a parser is used by multiple pending object
-                // Only try to use it on the last pending block
-                if ((i + 1) < blockParserState.Count && blockParserState[i+1].Parser == parser)
-                {
-                    continue;
-                }
-
                 // If we have a paragraph block, we want to try to match over blocks before trying the Paragraph
                 if (blockParserState.Pending is ParagraphBlock)
                 {
@@ -217,8 +209,14 @@ namespace Textamina.Markdig.Parsing
 
                 // If we have a discard, we can remove it from the current state
                 blockParserState.CurrentContainer = LastContainer;
+                blockParserState.PendingIndex = i;
                 blockParserState.LastBlock = LastBlock;
                 var result = parser.Match(blockParserState);
+                if (result == MatchLineResult.Skip)
+                {
+                    continue;
+                }
+
                 if (result == MatchLineResult.None)
                 {
                     // Restore the Line where it was
@@ -238,22 +236,26 @@ namespace Textamina.Markdig.Parsing
                     throw new InvalidOperationException("A pending parser cannot add a new block when it is not the last pending block");
                 }
 
-                // A block is open only if it has a Continue state.
-                // otherwise it is a Last state, and we don't keep it opened
-                block.IsOpen = result == MatchLineResult.Continue;
-
-                // If it is a leaf content, we need to grab the content
+                // If we have a leaf block
                 var leaf = blockParserState.Pending as LeafBlock;
-                if (leaf != null)
+                if (leaf != null && blockParserState.NewBlocks.Count == 0)
                 {
-                    // If the match doesn't require to add this line to the Inline content, we can discard it
-                    if (result != MatchLineResult.LastDiscard)
+                    processLiner = false;
+                    if (result != MatchLineResult.LastDiscard && result != MatchLineResult.ContinueDiscard)
                     {
                         leaf.Append(line);
                     }
-                    processLiner = false;
-                    break;
+
+                    if (blockParserState.NewBlocks.Count > 0)
+                    {
+                        throw new InvalidOperationException(
+                            "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
+                    }
                 }
+
+                // A block is open only if it has a Continue state.
+                // otherwise it is a Last state, and we don't keep it opened
+                block.IsOpen = result == MatchLineResult.Continue || result == MatchLineResult.ContinueDiscard;
 
                 if (result == MatchLineResult.LastDiscard)
                 {
@@ -261,6 +263,7 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
+                leaf = null;
                 bool isLast = i == blockParserState.Count - 1;
                 ProcessNewBlocks(ref processLiner, result, ref leaf, false);
                 if (isLast || !processLiner)
@@ -272,7 +275,7 @@ namespace Textamina.Markdig.Parsing
             return processLiner;
         }
 
-        private bool ParseNewBlocks(bool continueProcessLiner)
+        private void ParseNewBlocks(ref bool continueProcessLiner)
         {
             blockParserState.Reset(line);
 
@@ -287,14 +290,14 @@ namespace Textamina.Markdig.Parsing
 
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
-                var previousParagraph = LastBlock as ParagraphBlock;
-                if (previousParagraph != null && !blockParser.CanInterruptParagraph)
+                var paragraph = LastBlock as ParagraphBlock;
+                if (paragraph != null && !blockParser.CanInterruptParagraph)
                 {
                     continue;
                 }
 
                 bool isParsingParagraph = blockParser == ParagraphBlock.Parser;
-                blockParserState.Pending = isParsingParagraph ? previousParagraph : null;
+                blockParserState.Pending = isParsingParagraph ? paragraph : null;
                 blockParserState.CurrentContainer = LastContainer;
                 blockParserState.LastBlock = LastBlock;
 
@@ -315,12 +318,13 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 // Special case for paragraph
-                if (blockParserState.Pending == previousParagraph && previousParagraph != null)
+                paragraph = LastBlock as ParagraphBlock;
+                if (isParsingParagraph && paragraph != null)
                 {
                     Debug.Assert(blockParserState.NewBlocks.Count == 0);
 
                     continueProcessLiner = false;
-                    previousParagraph.Append(line);
+                    paragraph.Append(line);
 
                     // We have just found a lazy continuation for a paragraph, early exit
                     // Mark all block opened after a lazy continuation
@@ -353,8 +357,6 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
             }
-
-            return continueProcessLiner;
         }
 
         private void ProcessNewBlocks(ref bool continueProcessLiner, MatchLineResult result, ref LeafBlock leaf, bool allowClosing)
@@ -363,12 +365,17 @@ namespace Textamina.Markdig.Parsing
             {
                 var block = blockParserState.NewBlocks.Pop();
 
+                block.Line = line.LineIndex;
+
                 // If we have a leaf block
                 leaf = block as LeafBlock;
                 if (leaf != null)
                 {
                     continueProcessLiner = false;
-                    leaf.Append(line);
+                    if (result != MatchLineResult.LastDiscard && result != MatchLineResult.ContinueDiscard)
+                    {
+                        leaf.Append(line);
+                    }
 
                     if (blockParserState.NewBlocks.Count > 0)
                     {
@@ -390,7 +397,7 @@ namespace Textamina.Markdig.Parsing
                     AddToParent(block, container);
                 }
 
-                block.IsOpen = result == MatchLineResult.Continue;
+                block.IsOpen = result == MatchLineResult.Continue || result == MatchLineResult.ContinueDiscard;
 
                 // Add a block blockParserState to the stack (and leave it opened)
                 blockParserState.Open(block);
@@ -447,7 +454,7 @@ namespace Textamina.Markdig.Parsing
 
                 tempBuilder.Append(c);
             }
-            line = new StringLine(tempBuilder.ToString());
+            line = new StringLine(tempBuilder.ToString(), lineIndex++);
         }
 
         private void ProcessInlines(LeafBlock leafBlock)

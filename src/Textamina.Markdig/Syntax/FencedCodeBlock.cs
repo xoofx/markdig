@@ -28,8 +28,6 @@ namespace Textamina.Markdig.Syntax
 
         private char fencedChar;
 
-        private bool hasFencedEnd;
-
         private int indentCount;
 
         private class ParserInternal : BlockParser
@@ -63,8 +61,7 @@ namespace Textamina.Markdig.Syntax
                         liner.TrimEnd(true);
                         if (liner.IsEol || liner.End == endPosition)
                         {
-                            fenced.hasFencedEnd = true;
-                            return MatchLineResult.Last;
+                            return MatchLineResult.LastDiscard;
                         }
                     }
 
@@ -79,6 +76,7 @@ namespace Textamina.Markdig.Syntax
                     // TODO: We need to count the number of leading space to remove them on each line
                     var start = liner.Start;
                     liner.SkipLeadingSpaces3();
+                    var column = liner.Start;
                     var indentCount = liner.Start - start;
                     var c = liner.Current;
 
@@ -151,13 +149,14 @@ namespace Textamina.Markdig.Syntax
                         // Store the number of matched string into the context
                         state.NewBlocks.Push(new FencedCodeBlock(this)
                         {
+                            Column = column,
                             fencedChar = matchChar,
                             fencedCharCount = count,
                             indentCount = indentCount,
                             Language = HtmlHelper.Unescape(infoString),
                             Arguments = HtmlHelper.Unescape(argString),
                         });
-                        return MatchLineResult.Continue;
+                        return MatchLineResult.ContinueDiscard;
                     }
 
                     return MatchLineResult.None;
@@ -167,11 +166,6 @@ namespace Textamina.Markdig.Syntax
             public override void Close(BlockParserState state)
             {
                 var fenced = (FencedCodeBlock) state.Pending;
-                fenced.Lines.RemoveAt(0);
-                if (fenced.hasFencedEnd)
-                {
-                    fenced.Lines.RemoveAt(fenced.Lines.Count - 1);
-                }
                 for (int i = 0; i < fenced.Lines.Count; i++)
                 {
                     var line = fenced.Lines[i];
@@ -180,7 +174,7 @@ namespace Textamina.Markdig.Syntax
                     // content lines will have equivalent opening indentation removed, if present:
                     for (int j = 0; j < fenced.indentCount; j++)
                     {
-                        if (line[line.Start].IsSpace())
+                        if (line.Start < line.End && line[line.Start].IsSpace())
                         {
                             line.Start++;
                         }

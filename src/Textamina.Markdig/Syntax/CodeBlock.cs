@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Syntax
                             return MatchLineResult.None;
                         }
 
-                        state.NewBlocks.Push(new CodeBlock(this));
+                        state.NewBlocks.Push(new CodeBlock(this) { Column = position });
                     }
                     return MatchLineResult.Continue;
                 }

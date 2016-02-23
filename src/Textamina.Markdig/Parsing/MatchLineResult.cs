@@ -4,7 +4,11 @@
     {
         None,
 
+        Skip,
+
         Continue,
+
+        ContinueDiscard,
 
         Last,
 

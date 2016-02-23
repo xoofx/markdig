@@ -22,11 +22,13 @@ namespace Textamina.Markdig.Syntax
                 // 5.1 Block quotes 
                 // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
                 var c = liner.Current;
+                var column = liner.Start;
                 if (c != '>')
                 {
                     if (state.Pending != null && liner.IsBlankLine())
                     {
-                        return MatchLineResult.LastDiscard;
+                        state.Close(state.Pending);
+                        return MatchLineResult.None;
                     }
                     return MatchLineResult.None;
                 }
@@ -39,7 +41,7 @@ namespace Textamina.Markdig.Syntax
 
                 if (state.Pending == null)
                 {
-                    state.NewBlocks.Push(new QuoteBlock(this));
+                    state.NewBlocks.Push(new QuoteBlock(this) { Column = column });
                 }
 
                 return MatchLineResult.Continue;

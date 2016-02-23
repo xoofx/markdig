@@ -24,6 +24,8 @@ namespace Textamina.Markdig.Parsing
 
         public Block Pending { get; set; }
 
+        public int PendingIndex { get; internal set; }
+
         public readonly Stack<Block> NewBlocks;
 
         public ContainerBlock CurrentContainer;
@@ -33,6 +35,11 @@ namespace Textamina.Markdig.Parsing
         public readonly Document Root;
 
         public StringBuilderCache StringBuilders { get; }
+
+        public Block NextPending
+        {
+            get { return PendingIndex + 1 < Count ? this[PendingIndex + 1] : null; }
+        }
 
         public Block Open(Block block)
         {
@@ -56,6 +63,23 @@ namespace Textamina.Markdig.Parsing
             }
         }
 
+        public void Discard(Block block)
+        {
+            for (int i = Count - 1; i >= 1; i--)
+            {
+                if (this[i] == block)
+                {
+                    if (Pending == block)
+                    {
+                        Pending = null;
+                    }
+                    block.Parent.Children.Remove(block);
+                    RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         public void Close(int index)
         {
             var block = this[index];
@@ -74,6 +98,7 @@ namespace Textamina.Markdig.Parsing
                     parent.Children.Remove(block);
                 }
             }
+
             RemoveAt(index);
             Pending = saveBlock;
         }

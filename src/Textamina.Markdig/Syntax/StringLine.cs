@@ -7,9 +7,10 @@ namespace Textamina.Markdig.Syntax
 {
     public sealed class StringLine
     {
-        public StringLine(string text)
+        public StringLine(string text, int lineIndex = 0)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
+            LineIndex = lineIndex;
             Text = text;
             Start = 0;
             End = Text.Length - 1;
@@ -17,6 +18,8 @@ namespace Textamina.Markdig.Syntax
             SpaceHeaderCount = 0;
             Current = End >= 0 ? Text[0] : (char)0;
         }
+
+        public int LineIndex { get; }
         
         public string Text { get; private set; }
 

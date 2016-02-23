@@ -23,6 +23,8 @@ namespace Textamina.Markdig.Syntax
                 var liner = state.Line;
                 liner.SkipLeadingSpaces3();
 
+                var column = liner.Start;
+
                 // 4.2 ATX headings
                 // An ATX heading consists of a string of characters, parsed as inline content, 
                 // between an opening sequence of 1–6 unescaped # characters and an optional 
@@ -49,10 +51,10 @@ namespace Textamina.Markdig.Syntax
                 // closing # will be handled later, because anyway we have matched 
 
                 // A space is required after leading #
-                if (leadingCount > 0 && leadingCount <=6 && (CharHelper.IsSpace(c) || liner.IsEol))
+                if (leadingCount > 0 && leadingCount <=6 && (c.IsSpace() || liner.IsEol))
                 {
                     liner.NextChar();
-                    state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount});
+                    state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount, Column = column });
 
 
                     // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.

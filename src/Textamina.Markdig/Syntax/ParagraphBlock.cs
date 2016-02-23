@@ -31,6 +31,8 @@ namespace Textamina.Markdig.Syntax
                 var liner = state.Line;
                 liner.SkipLeadingSpaces3();
 
+                var column = liner.Start;
+
                 // Else it is a continue, we don't break on blank lines
                 var isBlankLine = liner.IsBlankLine();
 
@@ -48,7 +50,7 @@ namespace Textamina.Markdig.Syntax
                 var result = MatchLineResult.Continue;
                 if (paragraph == null)
                 {
-                    state.NewBlocks.Push(new ParagraphBlock(this));
+                    state.NewBlocks.Push(new ParagraphBlock(this) { Column = column });
                 }
                 else
                 {
@@ -114,7 +116,7 @@ namespace Textamina.Markdig.Syntax
                             // lines are empty, we can early exit and remove the paragraph
                             if (TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0)
                             {
-                                RemoveParagraph(paragraph, state);
+                                state.Discard(paragraph);
                                 return MatchLineResult.LastDiscard;
                             }
 
@@ -122,6 +124,7 @@ namespace Textamina.Markdig.Syntax
 
                             var heading = new HeadingBlock(this)
                             {
+                                Column = paragraph.Column,
                                 Level = level,
                                 Lines = paragraph.Lines,
                             };
@@ -132,11 +135,7 @@ namespace Textamina.Markdig.Syntax
 
                             // Remove the paragraph as a pending block
                             state.NewBlocks.Push(heading);
-                            state.Pending = null;
-
-                            // Remove the children in the parent
-                            var parent = (ContainerBlock) paragraph.Parent;
-                            parent.Children.RemoveAt(parent.Children.Count - 1);
+                            state.Discard(paragraph);
 
                             return MatchLineResult.LastDiscard;
                         }
@@ -144,17 +143,6 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 return result;
-            }
-
-            private void RemoveParagraph(ParagraphBlock paragraph, BlockParserState state)
-            {
-                // Remove the pending paragraph
-                if (paragraph != null)
-                {
-                    var parent = (ContainerBlock)paragraph.Parent;
-                    parent.Children.RemoveAt(parent.Children.Count - 1);
-                }
-                state.Pending = null;
             }
 
             private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, BlockParserState state)
@@ -246,7 +234,7 @@ namespace Textamina.Markdig.Syntax
                 }
                 else if (heading?.Lines.Count > 1)
                 {
-                    heading.Lines.RemoveAt(heading.Lines.Count - 1);
+                    //heading.Lines.RemoveAt(heading.Lines.Count - 1);
                 }
             }
         }

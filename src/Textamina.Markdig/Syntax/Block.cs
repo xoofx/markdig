@@ -12,7 +12,11 @@ namespace Textamina.Markdig.Syntax
             Parser = parser;
         }
 
-        public Block Parent { get; internal set;  }
+        public int Column { get; set; }
+
+        public int Line { get; set; }
+
+        public ContainerBlock Parent { get; internal set;  }
 
         public BlockParser Parser { get; }
 

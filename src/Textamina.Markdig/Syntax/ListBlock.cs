@@ -26,10 +26,18 @@ namespace Textamina.Markdig.Syntax
 
         private bool HasBlankLines { get; set; }
 
+        private int CountBlankLines { get; set; }
+
         private class ParserInternal : BlockParser
         {
             public override MatchLineResult Match(BlockParserState state)
             {
+                if (state.Pending is ListBlock && state.NextPending is ListItemBlock)
+                {
+                    // We try to match only on item block if the ListBlock
+                    return MatchLineResult.Skip;
+                }
+
                 var liner = state.Line;
 
                 // 5.2 List items 
@@ -61,16 +69,27 @@ namespace Textamina.Markdig.Syntax
                     // If > 1 blank line, terminate this list
                     var isBlankLine = liner.IsBlankLine();
                     //if (isBlankLine && !(state.LastBlock is FencedCodeBlock)) // TODO: Handle this case
+                    var isInFencedBlock = state.LastBlock is FencedCodeBlock;
                     if (isBlankLine)
                     {
                         // TODO: Check with a generic way (allow a block to have multiple empty lines)
-                        if (!(state.LastBlock is FencedCodeBlock))
+                        if (!isInFencedBlock)
                         {
-                            list.HasBlankLines = true;
-                            listItem.Children.Add(BlankLineBlock.Instance);
+                            // If this is already a ListItem starting empty, we cannot have another empty line
+                            if (listItem.NumberOfSpaces < 0)
+                            {
+                                return MatchLineResult.LastDiscard;
+                            }
+
+                            if (!(state.NextPending is ListBlock))
+                            {
+                                list.HasBlankLines = true;
+                                listItem.Children.Add(BlankLineBlock.Instance);
+                            }
+                            list.CountBlankLines++;
                         }
 
-                        if (listItem.Children.Count > 1)
+                        if (list.CountBlankLines > 1)
                         {
                             // TODO: Close all lists and not only this one
                             return MatchLineResult.LastDiscard;
@@ -78,6 +97,8 @@ namespace Textamina.Markdig.Syntax
 
                         return MatchLineResult.Continue;
                     }
+
+                    list.CountBlankLines = 0;
 
                     var c = liner.Current;
                     var startPosition = liner.Column;
@@ -147,6 +168,7 @@ namespace Textamina.Markdig.Syntax
                 else
                 {
                     liner.SkipLeadingSpaces3();
+                    c = liner.Current;
                 }
                 preIndent = preIndent + liner.Start - preStartPosition;
 
@@ -154,6 +176,8 @@ namespace Textamina.Markdig.Syntax
                 var bulletChar = (char) 0;
                 int orderedStart = 0;
                 var orderedDelimiter = (char) 0;
+
+                var column = liner.Start;
 
                 if (c.IsBulletListMarker())
                 {
@@ -246,6 +270,7 @@ namespace Textamina.Markdig.Syntax
 
                 var newListItem = new ListItemBlock(this)
                 {
+                    Column = column,
                     NumberOfSpaces = numberOfSpaces
                 };
                 state.NewBlocks.Push(newListItem);
@@ -253,13 +278,12 @@ namespace Textamina.Markdig.Syntax
                 var currentListItem = state.Pending as ListItemBlock;
                 var currentParent = state.Pending as ListBlock ?? (ListBlock)currentListItem?.Parent;
 
-                while (currentParent != null)
+                if (currentParent != null)
                 {
                     // If we have a new list item, close the previous one
                     if (currentListItem != null)
                     {
                         state.Close(currentListItem);
-                        currentListItem = null;
                     }
 
                     // Reset the list if it is a new list or a new type of bullet
@@ -272,32 +296,13 @@ namespace Textamina.Markdig.Syntax
                         state.Close(currentParent);
                         currentParent = null;
                     }
-                    else
-                    {
-                        break;
-                    }
-
-                    for (int i = state.Count - 1; i >= 1; i--)
-                    {
-                        var block = state[i];
-                        currentListItem = block as ListItemBlock;
-                        if (currentListItem != null)
-                        {
-                            currentParent = (ListBlock) currentListItem.Parent;
-                            break;
-                        }
-                        else if (block is ListBlock)
-                        {
-                            currentParent = (ListBlock) block;
-                            break;
-                        }
-                    }
                 }
 
                 if (currentParent == null)
                 {
                     var newList = new ListBlock(this)
                     {
+                        Column = column,
                         IsOrdered = isOrdered,
                         BulletChar = bulletChar,
                         OrderedDelimiter = orderedDelimiter,
@@ -306,21 +311,13 @@ namespace Textamina.Markdig.Syntax
                     state.NewBlocks.Push(newList);
                 }
 
-                // Make sure that we don't have any pending, as we are replacing the previous one
-                state.Pending = null;
-
-                //// A list item can begin with at most one blank line
-                //if (numberOfSpaces < 0)
-                //{
-                //    newListItem.Children.Add(BlankLineBlock.Instance);
-                //}
-
                 return MatchLineResult.Continue;
             }
 
             public override void Close(BlockParserState state)
             {
                 var listBlock = state.Pending as ListBlock;
+
                 // Process only if we have blank lines
                 if (listBlock != null && listBlock.HasBlankLines)
                 {
@@ -334,7 +331,7 @@ namespace Textamina.Markdig.Syntax
                             var item = children[i];
                             if (item is BlankLineBlock)
                             {
-                                if ((i == children.Count - 1 &&  listIndex < listBlock.Children.Count - 1) || (children.Count == 3 && i == 1))
+                                if ((i == children.Count - 1 &&  listIndex < listBlock.Children.Count - 1) || (children.Count > 2 && (i > 0 && i < (children.Count - 1))))
                                 {
                                     listBlock.IsLoose = true;
                                 }
