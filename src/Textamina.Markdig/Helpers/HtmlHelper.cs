@@ -440,8 +440,8 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static readonly char[] SearchBackAndAmp = new[] {'\\', '&'};
-        private static readonly char[] SearchAmp = new[] {'&'};
+        private static readonly char[] SearchBackAndAmp = {'\\', '&'};
+        private static readonly char[] SearchAmp = {'&'};
 
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
@@ -474,7 +474,7 @@ namespace Textamina.Markdig.Helpers
                         break;
 
                     c = text[searchPos];
-                    if (CharHelper.IsEscapableSymbol(c))
+                    if (c.IsEscapableSymbol())
                     {
                         sb.Append(text, lastPos, searchPos - lastPos - 1);
                         lastPos = searchPos;
