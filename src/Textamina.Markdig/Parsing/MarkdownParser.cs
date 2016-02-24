@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
@@ -21,7 +22,7 @@ namespace Textamina.Markdig.Parsing
         private readonly InlineParser[] inlineWithFirstCharParsers;
         private readonly Document document;
         private readonly BlockParserState blockParserState;
-        private readonly InlineParserState inlineState;
+        private readonly StringBuilderCache stringBuilderCache;
 
         public MarkdownParser(TextReader reader)
         {
@@ -31,8 +32,7 @@ namespace Textamina.Markdig.Parsing
             inlineParsers = new List<InlineParser>();
             inlineWithFirstCharParsers = new InlineParser[128];
             regularInlineParsers = new List<InlineParser>();
-            var stringBuilderCache  = new StringBuilderCache();
-            inlineState = new InlineParserState(stringBuilderCache, document);
+            stringBuilderCache = new StringBuilderCache();
             blockParserState = new BlockParserState(stringBuilderCache, document);
             blockParsers = new List<BlockParser>()
             {
@@ -159,24 +159,36 @@ namespace Textamina.Markdig.Parsing
             //ProcessPendingBlocks(true);
         }
 
-        private void ProcessInlines(Block block)
+        private void ProcessInlines(ContainerBlock container)
         {
-            // Avoid making a recursive call here
-            if (block is ContainerBlock)
+            var list = new Stack<ContainerBlock>();
+            list.Push(container);
+            var leafs = new List<Task>();
+
+            while (list.Count > 0)
             {
-                foreach (var child in ((ContainerBlock) block).Children)
+                container = list.Pop();
+                foreach (var block in container.Children)
                 {
-                    ProcessInlines(child);
+                    var leafBlock = block as LeafBlock;
+                    if (leafBlock != null)
+                    {
+                        if (!leafBlock.NoInline)
+                        {
+                            var task = new Task(() => ProcessInlineLeaf(leafBlock));
+                            task.Start();
+                            leafs.Add(task);
+                            //ProcessInlineLeaf(leafBlock);
+                        }
+                    }
+                    else 
+                    {
+                        list.Push((ContainerBlock)block);
+                    }
                 }
             }
-            else
-            {
-                var leafBlock = (LeafBlock)block;
-                if (!leafBlock.NoInline)
-                {
-                    ProcessInlines(leafBlock);
-                }
-            }
+
+            Task.WaitAll(leafs.ToArray());
         }
 
         private bool ProcessPendingBlocks()
@@ -266,9 +278,11 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                leaf = null;
                 bool isLast = i == blockParserState.Count - 1;
-                ProcessNewBlocks(ref processLiner, result, ref leaf, false);
+                if (processLiner)
+                {
+                    processLiner = ProcessNewBlocks(result, false);
+                }
                 if (isLast || !processLiner)
                 {
                     break;
@@ -346,11 +360,10 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                LeafBlock leaf = null;
-                ProcessNewBlocks(ref continueProcessLiner, result, ref leaf, true);
+                continueProcessLiner = ProcessNewBlocks(result, true);
 
                 // If we have a container, we can retry to match against all types of block.
-                if (leaf == null)
+                if (continueProcessLiner)
                 {
                     // rewind to the first parser
                     j = -1;
@@ -363,25 +376,25 @@ namespace Textamina.Markdig.Parsing
             }
         }
 
-        private void ProcessNewBlocks(ref bool continueProcessLiner, MatchLineResult result, ref LeafBlock leaf, bool allowClosing)
+        private bool ProcessNewBlocks(MatchLineResult result, bool allowClosing)
         {
-            while (continueProcessLiner && blockParserState.NewBlocks.Count > 0)
+            var newBlocks = blockParserState.NewBlocks;
+            while (newBlocks.Count > 0)
             {
-                var block = blockParserState.NewBlocks.Pop();
+                var block = newBlocks.Pop();
 
                 block.Line = line.LineIndex;
 
                 // If we have a leaf block
-                leaf = block as LeafBlock;
+                var leaf = block as LeafBlock;
                 if (leaf != null)
                 {
-                    continueProcessLiner = false;
                     if (result != MatchLineResult.LastDiscard && result != MatchLineResult.ContinueDiscard)
                     {
                         leaf.Append(line);
                     }
 
-                    if (blockParserState.NewBlocks.Count > 0)
+                    if (newBlocks.Count > 0)
                     {
                         throw new InvalidOperationException(
                             "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
@@ -395,44 +408,33 @@ namespace Textamina.Markdig.Parsing
                 }
 
                 // If previous block is a container, add the new block as a children of the previous block
-                var container = LastContainer;
-                if (container != null)
+                if (block.Parent == null)
                 {
-                    AddToParent(block, container);
+                    var container = LastContainer;
+                    LastContainer.Children.Add(block);
+                    block.Parent = container;
                 }
 
                 block.IsOpen = result == MatchLineResult.Continue || result == MatchLineResult.ContinueDiscard;
 
                 // Add a block blockParserState to the stack (and leave it opened)
-                blockParserState.Open(block);
+                blockParserState.Add(block);
+
+                if (leaf != null)
+                {
+                    return false;
+                }
             }
+            return true;
         }
 
-
-        private void AddToParent(Block block, ContainerBlock parent)
-        {
-            if (block == null)
-            {
-                return;
-            }
-
-            while (block.Parent != null)
-            {
-                block = block.Parent;
-            }
-
-            if (!(block is Document))
-            {
-                parent.Children.Add(block);
-                block.Parent = parent;
-            }
-        }
-
-        private void ProcessInlines(LeafBlock leafBlock)
+        private void ProcessInlineLeaf(LeafBlock leafBlock)
         {
             var lines = leafBlock.Lines;
 
             leafBlock.Inline = new ContainerInline() {IsClosed = false};
+            var inlineState = new InlineParserState(stringBuilderCache, document);
+
             inlineState.Lines = lines;
             inlineState.Inline = leafBlock.Inline;
             inlineState.Block = leafBlock;

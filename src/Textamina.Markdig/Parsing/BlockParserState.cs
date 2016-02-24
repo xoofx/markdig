@@ -41,12 +41,6 @@ namespace Textamina.Markdig.Parsing
             get { return PendingIndex + 1 < Count ? this[PendingIndex + 1] : null; }
         }
 
-        public Block Open(Block block)
-        {
-            Add(block);
-            return block;
-        }
-
         public void Close(Block block)
         {
             // If we close a block, we close all blocks above

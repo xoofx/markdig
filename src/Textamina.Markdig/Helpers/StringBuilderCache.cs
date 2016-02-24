@@ -10,11 +10,11 @@ namespace Textamina.Markdig.Helpers
         /// A StringBuilder that can be used locally in a method body only.
         /// </summary>
         [ThreadStatic]
-        private static readonly StringBuilder local = new StringBuilder();
+        private static StringBuilder local;
 
         public static StringBuilder Local()
         {
-            var sb = local;
+            var sb = local ?? (local = new StringBuilder());
             if (sb.Length > 0)
             {
                 sb.Clear();
@@ -31,9 +31,12 @@ namespace Textamina.Markdig.Helpers
 
         public StringBuilder Get()
         {
-            if (builders.Count > 0)
+            lock (builders)
             {
-                return builders.Pop();
+                if (builders.Count > 0)
+                {
+                    return builders.Pop();
+                }
             }
 
             return new StringBuilder();
@@ -46,7 +49,10 @@ namespace Textamina.Markdig.Helpers
             {
                 builder.Clear();
             }
-            builders.Push(builder);
+            lock (builders)
+            {
+                builders.Push(builder);
+            }
         }
     }
 }

@@ -133,10 +133,11 @@ namespace Textamina.Markdig.Syntax
             {
                 bool atLeastOneFound = false;
 
+                var saved = new StringLineGroup.State();
                 while (true)
                 {
                     // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
-                    var saved = localLineGroup.Save();
+                    localLineGroup.Save(ref saved);
                     LinkReferenceDefinitionBlock linkReferenceDefinition;
                     if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
                     {
@@ -193,28 +194,8 @@ namespace Textamina.Markdig.Syntax
                     for (int i = 0; i < lineCount; i++)
                     {
                         var line = lines[i];
-                        line.TrimStart();
-
-                        int endSpaces = 0;
-                        for (int j = line.End; j >= line.Start; j--)
-                        {
-                            if (line[j].IsSpace())
-                            {
-                                endSpaces++;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        // Remove single trailing space
-                        if (endSpaces == 1)
-                        {
-                            line.End = line.End - 1;
-                        }
+                        line.Trim();
                     }
-                    lines[lineCount - 1].TrimEnd();
                 }
                 else if (heading?.Lines.Count > 1)
                 {
