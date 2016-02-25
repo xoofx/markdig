@@ -11,8 +11,14 @@ namespace Textamina.Markdig.Syntax
     {
         public HeadingBlock(BlockParser parser) : base(parser)
         {
+            ProcessInlines = true;
         }
 
         public int Level { get; set; }
+
+        public override string ToInlineText()
+        {
+            return Lines.ToString(true);
+        }
     }
 }

@@ -240,7 +240,7 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(HardlineBreakInline hardlineBreak)
         {
-            writer.WriteConstant("<br />");
+            writer.WriteLineConstant("<br />");
         }
 
         protected void WriteChildren(ContainerInline containerInline)
@@ -274,7 +274,7 @@ namespace Textamina.Markdig.Formatters
                     inline = inline.NextSibling;
                 }
             }
-            else
+            else if (leafBlock.Lines != null)
             {
                 var lines = leafBlock.Lines;
                 for (int i = 0; i < lines.Count; i++)

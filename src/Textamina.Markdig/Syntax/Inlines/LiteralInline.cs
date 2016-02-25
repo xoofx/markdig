@@ -15,9 +15,16 @@ namespace Textamina.Markdig.Syntax.Inlines
 
         public string Content { get; set; }
 
+        public bool TrimEnd { get; set; }
+
         protected override void Close(InlineParserState state)
         {
-            Content = HtmlHelper.Unescape(ContentBuilder.ToString(), false);
+            var str = ContentBuilder.ToString();
+            if (TrimEnd)
+            {
+                str = str.TrimEnd();
+            }
+            Content = HtmlHelper.Unescape(str, false);
             state.StringBuilders.Release(ContentBuilder);
             ContentBuilder = null;
         }

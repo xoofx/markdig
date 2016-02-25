@@ -145,7 +145,8 @@ namespace Textamina.Markdig.Parsers
                 Block = leafBlock
             };
 
-            var text = new StringSlice(leafBlock.Lines.ToString());
+            var text = new StringSlice(leafBlock.ToInlineText());
+            leafBlock.Lines = null;
 
             while (!text.IsEndOfSlice)
             {
@@ -254,8 +255,11 @@ namespace Textamina.Markdig.Parsers
             {
                 Log.WriteLine("** Dump before Emphasis:");
                 leafBlock.Inline.DumpTo(Log);
-                EmphasisInline.ProcessEmphasis(leafBlock.Inline);
+            }
+            EmphasisInline.ProcessEmphasis(leafBlock.Inline);
 
+            if (Log != null)
+            { 
                 Log.WriteLine();
                 Log.WriteLine("** Dump after Emphasis:");
                 leafBlock.Inline.DumpTo(Log);

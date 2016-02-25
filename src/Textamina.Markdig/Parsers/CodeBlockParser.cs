@@ -29,6 +29,7 @@ namespace Textamina.Markdig.Parsers
             {
                 return state.IsBlankLine && block != null ? BlockState.BreakDiscard : BlockState.None;
             }
+            state.MoveTo(state.StartBeforeIndent + 4);
             return BlockState.Continue;
         }
     }

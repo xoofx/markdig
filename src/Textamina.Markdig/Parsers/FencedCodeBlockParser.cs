@@ -120,11 +120,13 @@ namespace Textamina.Markdig.Parsers
                 count--;
             }
 
-            if (count <=0 && line.TrimEnd())
+            if (count <=0 && !state.IsCodeIndent && line.TrimEnd())
             {
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
             }
+
+            state.MoveTo(state.StartBeforeIndent);
 
             // Remove any indent spaces
             c = state.CurrentChar;

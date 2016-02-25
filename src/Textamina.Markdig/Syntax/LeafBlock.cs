@@ -26,5 +26,10 @@ namespace Textamina.Markdig.Syntax
             }
             Lines.Append(ref line);
         }
+
+        public virtual string ToInlineText()
+        {
+            return Lines.ToString();
+        }
     }
 }

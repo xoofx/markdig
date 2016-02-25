@@ -1,5 +1,6 @@
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
+using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
@@ -19,6 +20,17 @@ namespace Textamina.Markdig.Parsers.Inlines
             {
                 return false;
             }
+
+            // A line break (not in a code span or HTML tag) that is preceded by two or more spaces 
+            // and does not occur at the end of a block is parsed as a hard line break (rendered in HTML as a <br /> tag)
+            var literal = state.Inline as LiteralInline;
+            if (literal != null)
+            {
+                literal.TrimEnd = true;
+            }
+
+            state.Inline = new HardlineBreakInline();
+            text.NextChar(); // Skip \n
 
             //// A line break (not in a code span or HTML tag) that is preceded by two or more spaces 
             //// and does not occur at the end of a block is parsed as a hard line break (rendered in HTML as a <br /> tag)
@@ -40,7 +52,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             //    return false;
             //}
 
-            return false;
+            return true;
         }
     }
 }

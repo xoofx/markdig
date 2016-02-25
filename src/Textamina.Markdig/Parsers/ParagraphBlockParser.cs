@@ -41,7 +41,11 @@ namespace Textamina.Markdig.Parsers
                 var lineCount = lines.Count;
                 for (int i = 0; i < lineCount; i++)
                 {
-                    lines.Slices[i].Trim();
+                    lines.Slices[i].TrimStart();
+                }
+                if (lineCount > 0)
+                {
+                    lines.Slices[lineCount - 1].TrimEnd();
                 }
             }
             else // if (heading?.Lines.Count > 1)

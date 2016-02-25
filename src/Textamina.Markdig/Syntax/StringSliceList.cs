@@ -48,12 +48,18 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool replaceEndOfLineBySpace)
+        {
+            var newLine = replaceEndOfLineBySpace ? ' ' : '\n';
             var builder = StringBuilderCache.Local();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
-                    builder.Append('\n');
+                    builder.Append(newLine);
                 }
                 builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
             }
