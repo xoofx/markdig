@@ -1,7 +1,4 @@
-
-
-
-using System;
+﻿using System;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
@@ -236,7 +233,9 @@ namespace Textamina.Markdig.Helpers
 
                 if (TryParseUrl(ref text, out link))
                 {
-                    var hasWhiteSpaces = text.TrimStart();
+                    int spaceCount;
+                    text.TrimStart(out spaceCount);
+                    var hasWhiteSpaces = spaceCount > 0;
 
                     c = text.CurrentChar;
                     if (c == ')')

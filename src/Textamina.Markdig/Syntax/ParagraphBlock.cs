@@ -12,6 +12,7 @@ namespace Textamina.Markdig.Syntax
     {
         public ParagraphBlock(BlockParser parser) : base(parser)
         {
+            ProcessInlines = true;
         }
     }
 }

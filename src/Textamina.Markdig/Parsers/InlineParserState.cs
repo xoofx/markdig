@@ -16,8 +16,6 @@ namespace Textamina.Markdig.Parsers
 
         public LeafBlock Block { get; internal set; }
 
-        public StringSlice Text;
-
         public Inline Inline { get; set; }
 
         public readonly List<Inline> InlinesToClose;

@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Syntax.Inlines
 {
     public class EmphasisInline : ContainerInline
     {
-        public static readonly InlineParser Parser = new EmphasisInlineParser();
-
         public char DelimiterChar { get; set; }
 
         public bool Strong { get; set; }

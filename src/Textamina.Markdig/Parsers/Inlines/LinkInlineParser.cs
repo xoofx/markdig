@@ -6,22 +6,22 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class LinkInlineParser : InlineParser
     {
-        public static readonly InlineParser Default = new LinkInlineParser();
+        public static readonly LinkInlineParser Default = new LinkInlineParser();
 
         public LinkInlineParser()
         {
             OpeningCharacters = new[] {'[', ']', '!'};
         }
 
-        public override bool Match(InlineParserState state)
+        public override bool Match(InlineParserState state, ref StringSlice text)
         {
-            var c = state.Text.CurrentChar;
+            var c = text.CurrentChar;
 
             bool isImage = false;
             if (c == '!')
             {
                 isImage = true;
-                c = state.Text.NextChar();
+                c = text.NextChar();
                 if (c != '[')
                 {
                     return false;
@@ -33,21 +33,21 @@ namespace Textamina.Markdig.Parsers.Inlines
                 case '[':
                     // If this is not an image, we may have a reference link shortcut
                     // so we try to resolve it here
-                    var saved = state.Text;
+                    var saved = text;
                     string label;
 
                     // If the label is followed by either a ( or a [, this is not a shortcut
-                    if (LinkHelper.TryParseLabel(ref state.Text, out label))
+                    if (LinkHelper.TryParseLabel(ref text, out label))
                     {
                         if (!state.Document.LinkReferenceDefinitions.ContainsKey(label))
                         {
                             label = null;
                         }
                     }
-                    state.Text = saved;
+                    text = saved;
 
                     // Else we insert a LinkDelimiter
-                    state.Text.NextChar();
+                    text.NextChar();
                     state.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
@@ -57,10 +57,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                     return true;
 
                 case ']':
-                    state.Text.NextChar();
+                    text.NextChar();
                     if (state.Inline != null)
                     {
-                        if (TryProcessLinkOrImage(state, ref state.Text))
+                        if (TryProcessLinkOrImage(state, ref text))
                         {
                             return true;
                         }

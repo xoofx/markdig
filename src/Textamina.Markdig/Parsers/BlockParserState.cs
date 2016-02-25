@@ -26,11 +26,11 @@ namespace Textamina.Markdig.Parsers
                 new ThematicBreakParser(),
                 new HeadingBlockParser(),
                 new QuoteBlockParser(),
-                //ListBlock.Parser,
+                //ListBlock.Default,
 
                 new HtmlBlockParser(),
-                new CodeBlockParser(),
                 new FencedCodeBlockParser(),
+                new CodeBlockParser(),
                 new ParagraphBlockParser(),
             };
             blockParsers.Initialize();
@@ -80,11 +80,13 @@ namespace Textamina.Markdig.Parsers
 
         public int EndOffset => Line.End;
 
-        public int Indent => Column - ColumnBegin;
+        public int Indent => Column - ColumnBeforeIndent;
 
         public bool IsCodeIndent => Indent >= 4;
 
-        public int ColumnBegin { get; private set; }
+        public int ColumnBeforeIndent { get; private set; }
+
+        public int StartBeforeIndent { get; private set; }
 
         public int Column { get; set; }
 
@@ -95,25 +97,72 @@ namespace Textamina.Markdig.Parsers
             return Line.PeekChar(offset);
         }
 
+        private void ResetLine(StringSlice newLine)
+        {
+            Line = newLine;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
+        }
+
+        public void ResetIndent()
+        {
+            StartBeforeIndent = Start;
+            ColumnBeforeIndent = Column;
+        }
+
         public void ParseIndent()
         {
             var c = CurrentChar;
-            ColumnBegin = Column;
+            var previousStartBeforeIndent = StartBeforeIndent;
+            var startBeforeIndent = Start;
+            var previousColumnBeforeIndent = ColumnBeforeIndent;
+            var columnBeforeIndent = Column;
             while (c !='\0')
             {
-                if (c == ' ')
+                if (c == '\t')
+                {
+                    Column = ((Column + 4) >> 2) << 2;
+                }
+                else if (c == ' ')
                 {
                     Column++;
-                }
-                else if (c == '\t')
-                {
-                    Column = ((Column + 3) >> 2) << 2;
                 }
                 else
                 {
                     break;
                 }
-                c = NextChar();
+                c = Line.NextChar();
+            }
+            if (columnBeforeIndent == Column)
+            {
+                StartBeforeIndent = previousStartBeforeIndent;
+                ColumnBeforeIndent = previousColumnBeforeIndent;
+            }
+            else
+            {
+                StartBeforeIndent = startBeforeIndent;
+                ColumnBeforeIndent = columnBeforeIndent;
+            }
+        }
+
+        public void MoveTo(int newStart)
+        {
+            Line.Start = 0;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
+            for (; Line.Start < newStart; Line.Start++)
+            {
+                var c = Line.Text[Line.Start];
+                if (c == '\t')
+                {
+                    Column = ((Column + 3) >> 2) << 2;
+                }
+                else
+                {
+                    Column++;
+                }
             }
         }
 
@@ -171,30 +220,29 @@ namespace Textamina.Markdig.Parsers
                 }
                 Close(i);
             }
+            UpdateLast(-1);
         }
 
         public void ProcessLine(string newLine)
         {
             ContinueProcessingLine = true;
 
-            Line = new StringSlice(newLine);
-            ParseIndent();
-
+            ResetLine(new StringSlice(newLine));
             LineIndex++;
 
             TryContinueBlocks();
 
-            // If we have already reached eol and the last block was a paragraph
-            // we close it
-            if (Line.IsEndOfSlice)
-            {
-                int index = Stack.Count - 1;
-                if (Stack[index] is ParagraphBlock)
-                {
-                    Close(index);
-                    return;
-                }
-            }
+            //// If we have already reached eol and the last block was a paragraph
+            //// we close it
+            //if (Line.IsEndOfSlice)
+            //{
+            //    int index = Stack.Count - 1;
+            //    if (Stack[index] is ParagraphBlock)
+            //    {
+            //        Close(index);
+            //        return;
+            //    }
+            //}
 
             // If the line was not entirely processed by pending blocks, try to process it with any new block
             TryOpenBlocks();
@@ -246,14 +294,17 @@ namespace Textamina.Markdig.Parsers
             {
                 var block = Stack[i];
 
+                ParseIndent();
+
                 // If we have a paragraph block, we want to try to match other blocks before trying the Paragraph
                 if (block is ParagraphBlock)
                 {
                     break;
                 }
 
-                // Else tries to match the Parser with the current line
+                // Else tries to match the Default with the current line
                 var parser = block.Parser;
+
 
                 // If we have a discard, we can remove it from the current state
                 UpdateLast(i);
@@ -267,6 +318,8 @@ namespace Textamina.Markdig.Parsers
                 {
                     break;
                 }
+
+                ResetIndent();
 
                 // In case the BlockParser has modified the blockParserState we are iterating on
                 if (i >= Stack.Count)
@@ -333,6 +386,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     if (TryOpenBlocks(parsers))
                     {
+                        ResetIndent();
                         continue;
                     }
                 }
@@ -341,6 +395,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     if (TryOpenBlocks(globalParsers))
                     {
+                        ResetIndent();
                         continue;
                     }
                 }

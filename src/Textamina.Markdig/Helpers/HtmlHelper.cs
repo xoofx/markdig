@@ -84,29 +84,29 @@ namespace Textamina.Markdig.Helpers
             switch (c)
             {
                 case '/':
-                    return TryParseHtmlCloseTag(text, builder);
+                    return TryParseHtmlCloseTag(ref text, builder);
                 case '?':
-                    return TryParseHtmlTagProcessingInstruction(text, builder);
+                    return TryParseHtmlTagProcessingInstruction(ref text, builder);
                 case '!':
                     builder.Append(c);
                     c = text.NextChar();
                     if (c == '-')
                     {
-                        return TryParseHtmlTagHtmlComment(text, builder);
+                        return TryParseHtmlTagHtmlComment(ref text, builder);
                     }
 
                     if (c == '[')
                     {
-                        return TryParseHtmlTagCData(text, builder);
+                        return TryParseHtmlTagCData(ref text, builder);
                     }
 
-                    return TryParseHtmlTagDeclaration(text, builder);
+                    return TryParseHtmlTagDeclaration(ref text, builder);
             }
 
-            return TryParseHtmlTagOpenTag(text, builder);
+            return TryParseHtmlTagOpenTag(ref text, builder);
         }
 
-        internal static bool TryParseHtmlTagOpenTag(StringSlice text, StringBuilder builder)
+        internal static bool TryParseHtmlTagOpenTag(ref StringSlice text, StringBuilder builder)
         {
             var c = text.CurrentChar;
 
@@ -261,7 +261,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagDeclaration(StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagDeclaration(ref StringSlice text, StringBuilder builder)
         {
             var c = text.CurrentChar;
             bool hasAlpha = false;
@@ -296,7 +296,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagCData(StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagCData(ref StringSlice text, StringBuilder builder)
         {
             builder.Append('[');
             var c = text.NextChar();
@@ -339,7 +339,7 @@ namespace Textamina.Markdig.Helpers
             return false;
         }
 
-        internal static bool TryParseHtmlCloseTag(StringSlice text, StringBuilder builder)
+        internal static bool TryParseHtmlCloseTag(ref StringSlice text, StringBuilder builder)
         {
             // </[A-Za-z][A-Za-z0-9]+\s*>
             builder.Append('/');
@@ -384,7 +384,7 @@ namespace Textamina.Markdig.Helpers
         }
 
 
-        private static bool TryParseHtmlTagHtmlComment(StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagHtmlComment(ref StringSlice text, StringBuilder builder)
         {
             var c = text.NextChar();
             if (c != '-')
@@ -422,7 +422,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagProcessingInstruction(StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagProcessingInstruction(ref StringSlice text, StringBuilder builder)
         {
             builder.Append('?');
             var prevChar = '\0';

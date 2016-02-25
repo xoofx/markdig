@@ -12,10 +12,10 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'\n'};
         }
 
-        public override bool Match(InlineParserState state)
+        public override bool Match(InlineParserState state, ref StringSlice text)
         {
             // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
-            if (!(state.Block is ParagraphBlock) || state.Text.Column == 0 || !state.Text.PeekChar(-1).IsSpace() || !state.Text.PeekChar(-2).IsSpace())
+            if (!(state.Block is ParagraphBlock) || text.Column == 0 || !text.PeekCharExtra(-1).IsSpace() || !text.PeekCharExtra(-2).IsSpace())
             {
                 return false;
             }

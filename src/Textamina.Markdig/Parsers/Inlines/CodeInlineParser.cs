@@ -1,36 +1,37 @@
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
     public class CodeInlineParser : InlineParser
     {
+        public static readonly CodeInlineParser Default = new CodeInlineParser();
+
         public CodeInlineParser()
         {
             OpeningCharacters = new[] { '`' };
         }
 
-        public override bool Match(InlineParserState state)
+        public override bool Match(InlineParserState state, ref StringSlice text)
         {
-            var text = state.Text;
-
             int openSticks = 0;
-            if (text.PeekChar(-1) == '`')
+            if (text.PeekCharExtra(-1) == '`')
             {
                 return false;
             }
 
-            while (text.CurrentChar == '`')
+            var c = text.CurrentChar;
+            while (c == '`')
             {
                 openSticks++;
-                text.NextChar();
+                c = text.NextChar();
             }
 
             bool isMatching = false;
 
             var builder = state.StringBuilders.Get();
             int closeSticks = 0;
-            var c = text.CurrentChar;
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
             // A code span begins with a backtick string and ends with a backtick string of equal length. 

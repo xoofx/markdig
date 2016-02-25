@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
@@ -24,13 +25,13 @@ namespace Textamina.Markdig.Parsers
 
             inlineParsers = new ParserList<InlineParser>()
             {
-                LinkInline.Parser,
-                EmphasisInline.Parser,
-                EscapeInline.Parser,
-                CodeInline.Parser,
-                AutolinkInline.Parser,
-                HardlineBreakInline.Parser,
-                LiteralInline.Parser,
+                LinkInlineParser.Default,
+                EmphasisInlineParser.Default,
+                EscapeInlineParser.Default,
+                CodeInlineParser.Default,
+                AutolineInlineParser.Default,
+                HardlineBreakInlineParser.Default,
+                LiteralInlineParser.Default,
             };
             inlineParsers.Initialize();
         }
@@ -40,7 +41,7 @@ namespace Textamina.Markdig.Parsers
         public Document Parse()
         {
             ParseLines();
-            //ProcessInlines(document);
+            ProcessInlines(document);
             return document;
         }
 
@@ -60,7 +61,7 @@ namespace Textamina.Markdig.Parsers
             blockParserState.CloseAll(true);
         }
 
-        private void ProcessInlines(ContainerBlock container)
+        private void ProcessInlinesTasks(ContainerBlock container)
         {
             var list = new Stack<ContainerBlock>();
             list.Push(container);
@@ -92,23 +93,47 @@ namespace Textamina.Markdig.Parsers
             Task.WaitAll(leafs.ToArray());
         }
 
+        private void ProcessInlines(ContainerBlock container)
+        {
+            var list = new Stack<ContainerBlock>();
+            list.Push(container);
+            while (list.Count > 0)
+            {
+                container = list.Pop();
+                foreach (var block in container.Children)
+                {
+                    var leafBlock = block as LeafBlock;
+                    if (leafBlock != null)
+                    {
+                        if (leafBlock.ProcessInlines)
+                        {
+                            ProcessInlineLeaf(leafBlock);
+                        }
+                    }
+                    else
+                    {
+                        list.Push((ContainerBlock)block);
+                    }
+                }
+            }
+        }
+
         private void ProcessInlineLeaf(LeafBlock leafBlock)
         {
-            var lines = leafBlock.Lines;
-
             leafBlock.Inline = new ContainerInline() {IsClosed = false};
             var inlineState = new InlineParserState(stringBuilderCache, document)
             {
-                Text = new StringSlice(leafBlock.Lines.ToString()),
                 Inline = leafBlock.Inline,
                 Block = leafBlock
             };
 
-            while (!inlineState.Text.IsEndOfSlice)
-            {
-                var saveLine = inlineState.Text;
+            var text = new StringSlice(leafBlock.Lines.ToString());
 
-                var c = saveLine.CurrentChar;
+            while (!text.IsEndOfSlice)
+            {
+                var textSaved = text;
+
+                var c = textSaved.CurrentChar;
 
                 var parsers = inlineParsers.GetParsersForOpeningCharacter(c);
                 bool match = false;
@@ -116,7 +141,8 @@ namespace Textamina.Markdig.Parsers
                 {
                     for (int i = 0; i < parsers.Length; i++)
                     {
-                        if (parsers[i].Match(inlineState))
+                        text = textSaved;
+                        if (parsers[i].Match(inlineState, ref text))
                         {
                             match = true;
                             break;
@@ -128,7 +154,8 @@ namespace Textamina.Markdig.Parsers
                 {
                     for (int i = 0; i < parsers.Length; i++)
                     {
-                        if (parsers[i].Match(inlineState))
+                        text = textSaved;
+                        if (parsers[i].Match(inlineState, ref text))
                         {
                             break;
                         }
@@ -136,7 +163,6 @@ namespace Textamina.Markdig.Parsers
                 }
 
                 var nextInline = inlineState.Inline;
-
                 if (nextInline != null)
                 {
                     if (nextInline.Parent == null)
@@ -222,7 +248,7 @@ namespace Textamina.Markdig.Parsers
             //while (inlineStack.Count > 0)
             //{
             //    var inlineState = inlineStack.Pop();
-            //    inlineState.Parser.Close(state, inlineState.Inline);
+            //    inlineState.Default.Close(state, inlineState.Inline);
             //}
         }
     }

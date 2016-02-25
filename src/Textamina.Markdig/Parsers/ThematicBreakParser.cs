@@ -19,14 +19,15 @@ namespace Textamina.Markdig.Parsers
                 return BlockState.None;
             }
 
+            var line = state.Line;
+
             // 4.1 Thematic breaks 
             // A line consisting of 0-3 spaces of indentation, followed by a sequence of three or more matching -, _, or * characters, each followed optionally by any number of spaces
-            int breakCharCount = 1;
-            var breakChar = state.CurrentChar;
+            int breakCharCount = 0;
+            var breakChar = line.CurrentChar;
             bool hasSpacesSinceLastMatch = false;
             bool hasInnerSpaces = false;
-            int offset = 0;
-            var c = state.PeekChar(offset++);
+            var c = breakChar;
             while (c != '\0')
             {
                 if (c == breakChar)
@@ -47,8 +48,7 @@ namespace Textamina.Markdig.Parsers
                     return BlockState.None;
                 }
 
-                c = state.PeekChar(offset);
-                offset++;
+                c = line.NextChar();
             }
 
             // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it

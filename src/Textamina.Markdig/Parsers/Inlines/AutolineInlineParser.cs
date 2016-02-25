@@ -1,29 +1,32 @@
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
     public class AutolineInlineParser : InlineParser
     {
+        public static readonly AutolineInlineParser Default = new AutolineInlineParser();
+
         public AutolineInlineParser()
         {
             OpeningCharacters = new[] {'<'};
         }
 
-        public override bool Match(InlineParserState state)
+        public override bool Match(InlineParserState state, ref StringSlice text)
         {
             string link;
             bool isEmail;
-            var saved = state.Text;
-            if (LinkHelper.TryParseAutolink(ref state.Text, out link, out isEmail))
+            var saved = text;
+            if (LinkHelper.TryParseAutolink(ref text, out link, out isEmail))
             {
                 state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
             }
             else
             {
-                state.Text = saved;
+                text = saved;
                 string htmlTag;
-                if (!HtmlHelper.TryParseHtmlTag(ref state.Text, out htmlTag))
+                if (!HtmlHelper.TryParseHtmlTag(ref text, out htmlTag))
                 {
                     return false;
                 }

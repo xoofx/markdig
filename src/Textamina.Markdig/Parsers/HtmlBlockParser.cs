@@ -87,7 +87,7 @@ namespace Textamina.Markdig.Parsers
             return result;
         }
 
-        public virtual BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockParserState state, Block block)
         {
             var htmlBlock = (HtmlBlock) block;
             return MatchEnd(state, htmlBlock);
@@ -100,12 +100,14 @@ namespace Textamina.Markdig.Parsers
                 return BlockState.None;
             }
 
-            var result = TryParseTagType16(state, state.Line, state.ColumnBegin);
+            var line = state.Line;
+            line.NextChar();
+            var result = TryParseTagType16(state, line, state.ColumnBeforeIndent);
 
             // HTML blocks of type 7 cannot interrupt a paragraph:
             if (result == BlockState.None && !(state.LastBlock is ParagraphBlock))
             {
-                result = TryParseTagType7(state, state.Line, state.ColumnBegin);
+                result = TryParseTagType7(state, line, state.ColumnBeforeIndent);
             }
             return result;
         }
@@ -115,7 +117,7 @@ namespace Textamina.Markdig.Parsers
             var builder = StringBuilderCache.Local();
             var c = line.CurrentChar;
             var result = BlockState.None;
-            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(line, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(line, builder))
+            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, builder))
             {
                 // Must be followed by whitespace only
                 bool hasOnlySpaces = true;
@@ -175,19 +177,19 @@ namespace Textamina.Markdig.Parsers
             var hasLeadingClose = c == '/';
             if (hasLeadingClose)
             {
-                line.NextChar();
+                c = line.NextChar();
             }
 
             var tag = new char[10];
             var count = 0;
             for (; count < tag.Length; count++)
             {
-                c = line.NextChar();
                 if (!c.IsAlphaNumeric())
                 {
                     break;
                 }
                 tag[count] = Char.ToLowerInvariant(c);
+                c = line.NextChar();
             }
 
             if (
@@ -273,6 +275,8 @@ namespace Textamina.Markdig.Parsers
                     }
                     break;
             }
+
+            state.MoveTo(state.StartBeforeIndent);
 
             return BlockState.Continue;
         }

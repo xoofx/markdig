@@ -1,4 +1,5 @@
 using System.Text;
+using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
@@ -7,7 +8,7 @@ namespace Textamina.Markdig.Parsers.Inlines
     {
         public static readonly LiteralInlineParser Default = new LiteralInlineParser();
 
-        public override bool Match(InlineParserState state)
+        public override bool Match(InlineParserState state, ref StringSlice text)
         {
             // A literal will always match
             var literal = state.Inline as LiteralInline;
@@ -23,7 +24,6 @@ namespace Textamina.Markdig.Parsers.Inlines
                 builder = literal.ContentBuilder;
             }
 
-            var text = state.Text;
             builder.Append(text.CurrentChar);
             text.NextChar();
             return true;

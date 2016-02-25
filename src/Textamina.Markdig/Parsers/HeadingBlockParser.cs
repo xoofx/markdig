@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Parsers
             if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
             {
                 // Move to the content
-                state.Line.Start = leadingCount + 1;
+                state.Line.Start = line.Start + 1;
                 state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount, Column = column });
 
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
