@@ -24,7 +24,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var reader = new StringReader(@"####### foo");
+            var reader = new StringReader(@"foo");
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");

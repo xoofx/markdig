@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Formatters
                 [typeof(FencedCodeBlock)] = o => Write((FencedCodeBlock)o),
                 [typeof(CodeBlock)] = o => Write((CodeBlock)o),
                 [typeof(HeadingBlock)] = o => Write((HeadingBlock)o),
-                [typeof(BreakBlock)] = o => Write((BreakBlock)o),
+                [typeof(ThematicBreakBlock)] = o => Write((ThematicBreakBlock)o),
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
                 [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
                 [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
@@ -135,7 +135,7 @@ namespace Textamina.Markdig.Formatters
             writer.WriteLineConstant(">");
         }
 
-        protected void Write(BreakBlock breakBlock)
+        protected void Write(ThematicBreakBlock breakBlock)
         {
             writer.WriteLineConstant("<hr />");
         }
@@ -282,7 +282,7 @@ namespace Textamina.Markdig.Formatters
                     {
                         writer.WriteLine();
                     }
-                    var line = lines[i];
+                    var line = lines.Slices[i];
                     if (escape)
                     {
                         HtmlHelper.EscapeHtml(line.ToString(), writer);

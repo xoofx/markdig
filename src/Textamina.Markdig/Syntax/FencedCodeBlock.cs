@@ -34,149 +34,148 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
+                int count;
+                char matchChar;
+                char c = state.CurrentChar;
+                int offset = 0;
 
-                var fenced = state.Pending as FencedCodeBlock;
-                if (fenced != null)
+                var currentFenced = state.Pending as FencedCodeBlock;
+                if (currentFenced != null)
                 {
-                    var saveLiner = liner.Save();
-                    liner.SkipLeadingSpaces3();
-
-                    var c = liner.Current;
-                    int count = fenced.fencedCharCount;
-                    var matchChar = fenced.fencedChar;
-                    while (!liner.IsEol)
+                    count = currentFenced.fencedCharCount;
+                    matchChar = currentFenced.fencedChar;
+                    while (c == matchChar)
                     {
-                        if (c != matchChar)
-                        {
-                            break;
-                        }
-                        c = liner.NextChar();
-                        count--;
+                        offset++;
+                        c = state.Line.PeekChar(offset);
                     }
 
-                    if (count <= 0)
+                    if (offset >= count)
                     {
-                        int endPosition = liner.Start;
-                        liner.TrimEnd(true);
-                        if (liner.IsEol || liner.End == endPosition)
+                        state.Line.TrimEnd(true);
+                        if (state.CurrentChar == matchChar)
                         {
                             return MatchLineResult.LastDiscard;
                         }
                     }
 
-                    liner.Restore(ref saveLiner);
-
                     // TODO: It is unclear how to handle this correctly
                     // Break only if Eof
                     return MatchLineResult.Continue;
                 }
-                else
-                {
-                    // TODO: We need to count the number of leading space to remove them on each line
-                    var start = liner.Start;
-                    liner.SkipLeadingSpaces3();
-                    var column = liner.Start;
-                    var indentCount = liner.Start - start;
-                    var c = liner.Current;
 
-                    int count = 0;
-                    var matchChar = (char)0;
-                    while (!liner.IsEol)
+                // Else if the we have an indent, it is not valid
+                if (state.IsCodeIndent)
+                {
+                    return MatchLineResult.None;
+                }
+
+                count = 0;
+                matchChar = (char) 0;
+                while (c != '\0')
+                {
+                    if (count == 0 && (c == '`' || c == '~'))
                     {
-                        if (count == 0 && (c == '`' || c == '~'))
-                        {
-                            matchChar = c;
-                        }
-                        else if (c != matchChar)
-                        {
-                            break;
-                        }
-                        c = liner.NextChar();
-                        count++;
+                        matchChar = c;
+                    }
+                    else if (c != matchChar)
+                    {
+                        break;
+                    }
+                    count++;
+                    c = state.PeekChar(count);
+                }
+
+                if (count >= 3)
+                {
+                    return MatchLineResult.None;
+                }
+
+                // TODO: We need to count the number of leading space to remove them on each line
+                var column = state.Column;
+
+                // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
+                while (c.IsSpaceOrTab())
+                {
+                    offset++;
+                    c = state.PeekChar(offset);
+                }
+                var start = state.Start + count + offset;
+
+                string infoString;
+                string argString = null;
+
+                // An info string cannot contain any backsticks
+                int firstSpace = -1;
+                for (int i = start; i <= state.EndOffset; i++)
+                {
+                    c = state.Line[i];
+                    if (c == '`')
+                    {
+                        return MatchLineResult.None;
                     }
 
-                    if (count >= 3)
+                    if (firstSpace < 0 && c.IsSpaceOrTab())
                     {
-                        // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
-                        liner.TrimStart(true);
-                        liner.TrimEnd(true);
+                        firstSpace = i;
+                    }
+                }
 
-                        string infoString = null;
-                        string argString = null;
+                if (firstSpace > 0)
+                {
+                    infoString = state.Line.Text.Substring(start, firstSpace - start);
 
-                        // An info string cannot contain any backsticks
-                        int firstSpace = -1;
-                        for (int i = liner.Start; i <= liner.End; i++)
+                    // Skip any spaces after info string
+                    firstSpace++;
+                    while (true)
+                    {
+                        c = state.Line[firstSpace];
+                        if (c.IsSpaceOrTab())
                         {
-                            c = liner[i];
-                            if (c == '`')
-                            {
-                                return MatchLineResult.None;
-                            }
-                            else if (firstSpace < 0 && c.IsSpaceOrTab())
-                            {
-                                firstSpace = i;
-                            }
-                        }
-
-                        if (firstSpace > 0)
-                        {
-                            infoString = liner.Text.Substring(liner.Start, firstSpace - liner.Start);
-
-                            // Skip any spaces after info string
                             firstSpace++;
-                            while (true)
-                            {
-                                c = liner[firstSpace];
-                                if (c.IsSpaceOrTab())
-                                {
-                                    firstSpace++;
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-
-                            argString = liner.Text.Substring(firstSpace, liner.End - firstSpace + 1);
                         }
                         else
                         {
-                            infoString = liner.ToString();
+                            break;
                         }
-
-                        // Store the number of matched string into the context
-                        state.NewBlocks.Push(new FencedCodeBlock(this)
-                        {
-                            Column = column,
-                            fencedChar = matchChar,
-                            fencedCharCount = count,
-                            indentCount = indentCount,
-                            Language = HtmlHelper.Unescape(infoString),
-                            Arguments = HtmlHelper.Unescape(argString),
-                        });
-                        return MatchLineResult.ContinueDiscard;
                     }
 
-                    return MatchLineResult.None;
+                    argString = state.Line.Text.Substring(firstSpace, state.Line.End - firstSpace + 1);
                 }
+                else
+                {
+                    infoString = state.Line.Text.Substring(start, state.EndOffset - start + 1);
+                }
+
+                // Store the number of matched string into the context
+                state.NewBlocks.Push(new FencedCodeBlock(this)
+                {
+                    Column = column,
+                    fencedChar = matchChar,
+                    fencedCharCount = count,
+                    indentCount = state.Indent,
+                    Language = HtmlHelper.Unescape(infoString),
+                    Arguments = HtmlHelper.Unescape(argString),
+                });
+
+                // Discard the current line
+                return MatchLineResult.ContinueDiscard;
             }
 
             public override void Close(BlockParserState state)
             {
-                var fenced = (FencedCodeBlock) state.Pending;
-                for (int i = 0; i < fenced.Lines.Count; i++)
+                var fenced = ((FencedCodeBlock) state.Pending);
+                var lines = fenced.Lines;
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    var line = fenced.Lines[i];
-
                     // Fences can be indented. If the opening fence is indented, 
                     // content lines will have equivalent opening indentation removed, if present:
                     for (int j = 0; j < fenced.indentCount; j++)
                     {
-                        if (line.Start < line.End && line[line.Start].IsSpace())
+                        var start = lines.Slices[i].Start;
+                        if (start < lines.Slices[i].End && lines.Slices[i][start].IsSpace())
                         {
-                            line.Start++;
+                            lines.Slices[i].Start++;
                         }
                         else
                         {

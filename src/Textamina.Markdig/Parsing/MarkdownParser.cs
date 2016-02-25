@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -13,9 +11,6 @@ namespace Textamina.Markdig.Parsing
     public class MarkdownParser
     {
         public static TextWriter Log;
-
-        private StringLine line;
-
         private readonly List<BlockParser> blockParsers;
         private readonly List<InlineParser> inlineParsers;
         private readonly List<InlineParser> regularInlineParsers;
@@ -36,7 +31,7 @@ namespace Textamina.Markdig.Parsing
             blockParserState = new BlockParserState(stringBuilderCache, document);
             blockParsers = new List<BlockParser>()
             {
-                BreakBlock.Parser,
+                ThematicBreakBlock.Parser,
                 HeadingBlock.Parser,
                 QuoteBlock.Parser,
                 ListBlock.Parser,
@@ -112,13 +107,12 @@ namespace Textamina.Markdig.Parsing
         public Document Parse()
         {
             ParseLines();
-            ProcessInlines(document);
+            //ProcessInlines(document);
             return document;
         }
 
         private void ParseLines()
         {
-            int lineIndex = 0;
             while (true)
             {
                 var lineText = Reader.ReadLine();
@@ -128,13 +122,15 @@ namespace Textamina.Markdig.Parsing
                 {
                     break;
                 }
-                line = new StringLine(lineText, lineIndex++);
+                var line = new StringSlice(lineText);
+                blockParserState.SetCurrentLine(ref line);
+                blockParserState.LineIndex++;
 
                 bool continueProcessLiner = ProcessPendingBlocks();
 
                 // If we have already reached eol and the last block was a paragraph
                 // we close it
-                if (line.IsEol)
+                if (blockParserState.Line.IsEndOfSlice)
                 {
                     int index = blockParserState.Count - 1;
                     if (blockParserState[index] is ParagraphBlock)
@@ -203,7 +199,7 @@ namespace Textamina.Markdig.Parsing
             }
 
             // Create the line state that will be used by all parser
-            blockParserState.Reset(line);
+            blockParserState.Pending = null;
 
             // Process any current block potentially opened
             for (int i = 1; i < blockParserState.Count; i++)
@@ -220,7 +216,7 @@ namespace Textamina.Markdig.Parsing
                     break;
                 }
 
-                var saveLiner = line.Save();
+                var saveLiner = blockParserState.Line;
 
                 // If we have a discard, we can remove it from the current state
                 blockParserState.CurrentContainer = LastContainer;
@@ -235,7 +231,7 @@ namespace Textamina.Markdig.Parsing
                 if (result == MatchLineResult.None)
                 {
                     // Restore the Line where it was
-                    line.Restore(ref saveLiner);
+                    blockParserState.SetCurrentLine(ref saveLiner);
                     break;
                 }
 
@@ -258,7 +254,7 @@ namespace Textamina.Markdig.Parsing
                     processLiner = false;
                     if (result != MatchLineResult.LastDiscard && result != MatchLineResult.ContinueDiscard)
                     {
-                        leaf.Append(line);
+                        leaf.Lines.Append(ref blockParserState.Line);
                     }
 
                     if (blockParserState.NewBlocks.Count > 0)
@@ -294,12 +290,12 @@ namespace Textamina.Markdig.Parsing
 
         private void ParseNewBlocks(ref bool continueProcessLiner)
         {
-            blockParserState.Reset(line);
+            blockParserState.Pending = null;
 
             for (int j = 0; j < blockParsers.Count; j++)
             {
                 var blockParser = blockParsers[j];
-                if (line.IsEol)
+                if (blockParserState.Line.IsEndOfSlice)
                 {
                     continueProcessLiner = false;
                     break;
@@ -319,19 +315,19 @@ namespace Textamina.Markdig.Parsing
                 blockParserState.CurrentContainer = LastContainer;
                 blockParserState.LastBlock = lastBlock;
 
-                var saveLiner = line.Save();
+                var saveLiner = blockParserState.Line;
                 var result = blockParser.Match(blockParserState);
                 if (result == MatchLineResult.None)
                 {
                     // If we have reached a blank line after trying to parse a paragraph
                     // we can ignore it
-                    if (isParsingParagraph && line.IsBlankLine())
+                    if (isParsingParagraph && blockParserState.IsBlankLine)
                     {
                         continueProcessLiner = false;
                         break;
                     }
 
-                    line.Restore(ref saveLiner);
+                    blockParserState.SetCurrentLine(ref saveLiner);
                     continue;
                 }
 
@@ -342,7 +338,7 @@ namespace Textamina.Markdig.Parsing
                     Debug.Assert(blockParserState.NewBlocks.Count == 0);
 
                     continueProcessLiner = false;
-                    paragraph.Append(line);
+                    paragraph.Lines.Append(ref blockParserState.Line);
 
                     // We have just found a lazy continuation for a paragraph, early exit
                     // Mark all block opened after a lazy continuation
@@ -383,7 +379,7 @@ namespace Textamina.Markdig.Parsing
             {
                 var block = newBlocks.Pop();
 
-                block.Line = line.LineIndex;
+                block.Line = blockParserState.LineIndex;
 
                 // If we have a leaf block
                 var leaf = block as LeafBlock;
@@ -391,7 +387,7 @@ namespace Textamina.Markdig.Parsing
                 {
                     if (result != MatchLineResult.LastDiscard && result != MatchLineResult.ContinueDiscard)
                     {
-                        leaf.Append(line);
+                        leaf.Lines.Append(ref blockParserState.Line);
                     }
 
                     if (newBlocks.Count > 0)
@@ -433,28 +429,25 @@ namespace Textamina.Markdig.Parsing
             var lines = leafBlock.Lines;
 
             leafBlock.Inline = new ContainerInline() {IsClosed = false};
-            var inlineState = new InlineParserState(stringBuilderCache, document);
-
-            inlineState.Lines = lines;
-            inlineState.Inline = leafBlock.Inline;
-            inlineState.Block = leafBlock;
-
-            var saveLines = new StringLineGroup.State();
-
-            while (!lines.IsEndOfLines)
+            var inlineState = new InlineParserState(stringBuilderCache, document)
             {
-                lines.Save(ref saveLines);
+                Text = new StringSlice(leafBlock.Lines.ToString()),
+                Inline = leafBlock.Inline,
+                Block = leafBlock
+            };
 
-                var c = lines.CurrentChar;
+            while (!inlineState.Text.IsEndOfSlice)
+            {
+                var saveLine = inlineState.Text;
+
+                var c = saveLine.CurrentChar;
                 var inlineParser = c < 128 ? inlineWithFirstCharParsers[c] : null;
                 if (inlineParser == null || !inlineParser.Match(inlineState))
                 {
                     for (int i = 0; i < regularInlineParsers.Count; i++)
                     {
-                        lines.Restore(ref saveLines);
-
+                        inlineState.Text = saveLine;
                         inlineParser = regularInlineParsers[i];
-
                         if (inlineParser.Match(inlineState))
                         {
                             break;
@@ -465,7 +458,7 @@ namespace Textamina.Markdig.Parsing
 
                     if (inlineParser == null)
                     {
-                        lines.Restore(ref saveLines);
+                        inlineState.Text = saveLine;
                     }
                 }
 

@@ -25,13 +25,15 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
-                liner.SkipLeadingSpaces3();
+                if (state.IsCodeIndent)
+                {
+                    return MatchLineResult.None;
+                }
 
-                var column = liner.Start;
+                var column = state.Column;
 
                 // Else it is a continue, we don't break on blank lines
-                var isBlankLine = liner.IsBlankLine();
+                var isBlankLine = state.IsBlankLine;
 
                 var paragraph = state.Pending as ParagraphBlock;
 
@@ -59,9 +61,9 @@ namespace Textamina.Markdig.Syntax
                     {
                         var headingChar = (char) 0;
                         bool checkForSpaces = false;
-                        for (int i = liner.Start; i <= liner.End; i++)
+                        for (int i = state.Start; i <= state.EndOffset; i++)
                         {
-                            var c = liner[i];
+                            var c = state.Line[i];
                             if (headingChar == 0)
                             {
                                 if (c == '=' || c == '-')
@@ -112,10 +114,7 @@ namespace Textamina.Markdig.Syntax
                                 Level = level,
                                 Lines = paragraph.Lines,
                             };
-                            foreach (var line in heading.Lines)
-                            {
-                                line.Trim();
-                            }
+                            heading.Lines.Trim();
 
                             // Remove the paragraph as a pending block
                             state.NewBlocks.Push(heading);
@@ -129,46 +128,46 @@ namespace Textamina.Markdig.Syntax
                 return result;
             }
 
-            private bool TryMatchLinkReferenceDefinition(StringLineGroup localLineGroup, BlockParserState state)
+            private bool TryMatchLinkReferenceDefinition(StringSliceList localLineGroup, BlockParserState state)
             {
                 bool atLeastOneFound = false;
 
-                var saved = new StringLineGroup.State();
-                while (true)
-                {
-                    // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
-                    localLineGroup.Save(ref saved);
-                    LinkReferenceDefinitionBlock linkReferenceDefinition;
-                    if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
-                    {
-                        if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
-                        {
-                            state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
-                        }
-                        atLeastOneFound = true;
+                //var saved = new StringSliceList.State();
+                //while (true)
+                //{
+                //    // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                //    localLineGroup.Save(ref saved);
+                //    LinkReferenceDefinitionBlock linkReferenceDefinition;
+                //    if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
+                //    {
+                //        if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
+                //        {
+                //            state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                //        }
+                //        atLeastOneFound = true;
 
-                        // Remove lines that have been matched
-                        if (localLineGroup.LinePosition == localLineGroup.Count)
-                        {
-                            localLineGroup.Clear();
-                        }
-                        else
-                        {
-                            for (int i = localLineGroup.LinePosition - 1; i >= 0; i--)
-                            {
-                                localLineGroup.RemoveAt(i);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!atLeastOneFound)
-                        {
-                            localLineGroup.Restore(ref saved);
-                        }
-                        break;
-                    }
-                }
+                //        // Remove lines that have been matched
+                //        if (localLineGroup.LinePosition == localLineGroup.Count)
+                //        {
+                //            localLineGroup.Clear();
+                //        }
+                //        else
+                //        {
+                //            for (int i = localLineGroup.LinePosition - 1; i >= 0; i--)
+                //            {
+                //                localLineGroup.RemoveAt(i);
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (!atLeastOneFound)
+                //        {
+                //            localLineGroup.Restore(ref saved);
+                //        }
+                //        break;
+                //    }
+                //}
 
                 return atLeastOneFound;
             }
@@ -193,7 +192,7 @@ namespace Textamina.Markdig.Syntax
                     var lineCount = lines.Count;
                     for (int i = 0; i < lineCount; i++)
                     {
-                        var line = lines[i];
+                        var line = lines.Slices[i];
                         line.Trim();
                     }
                 }

@@ -20,20 +20,18 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(InlineParserState state)
             {
-                var text = state.Lines;
-
                 string link;
                 bool isEmail;
-                var saved = text.Save();
-                if (LinkHelper.TryParseAutolink(text, out link, out isEmail))
+                var saved = state.Text;
+                if (LinkHelper.TryParseAutolink(ref state.Text, out link, out isEmail))
                 {
                     state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
                 }
                 else
                 {
-                    text.Restore(ref saved);
+                    state.Text = saved;
                     string htmlTag;
-                    if (!HtmlHelper.TryParseHtmlTag(text, out htmlTag))
+                    if (!HtmlHelper.TryParseHtmlTag(ref state.Text, out htmlTag))
                     {
                         return false;
                     }

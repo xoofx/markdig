@@ -41,7 +41,7 @@ namespace Textamina.Markdig.Syntax
                     builder = literal.ContentBuilder;
                 }
 
-                var text = state.Lines;
+                var text = state.Text;
                 builder.Append(text.CurrentChar);
                 text.NextChar();
                 return true;

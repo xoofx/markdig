@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(InlineParserState state)
             {
-                var lines = state.Lines;
+                var lines = state.Text;
 
                 // Go to escape character
                 lines.NextChar();

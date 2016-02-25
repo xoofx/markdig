@@ -8,7 +8,12 @@ namespace Textamina.Markdig.Helpers
 {
     public static class LinkHelper
     {
-        public static bool TryParseAutolink(StringLineGroup text, out string link, out bool isEmail)
+        public static bool TryParseAutolink(StringSlice text, out string link, out bool isEmail)
+        {
+            return TryParseAutolink(ref text, out link, out isEmail);
+        }
+
+        public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)
         {
             link = null;
             isEmail = false;
@@ -205,10 +210,13 @@ namespace Textamina.Markdig.Helpers
             return false;
         }
 
-        public static bool TryParseInlineLink(StringLineGroup text, out string link, out string title)
+        public static bool TryParseInlineLink(StringSlice text, out string link, out string title)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            return TryParseInlineLink(ref text, out link, out title);
+        }
 
+        public static bool TryParseInlineLink(ref StringSlice text, out string link, out string title)
+        {
             // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
             // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
             // 3. an optional link destination, 
@@ -224,11 +232,11 @@ namespace Textamina.Markdig.Helpers
             if (c == '(')
             {
                 text.NextChar();
-                text.SkipWhiteSpaces();
+                text.TrimStart();
 
-                if (TryParseUrl(text, out link))
+                if (TryParseUrl(ref text, out link))
                 {
-                    var hasWhiteSpaces = text.SkipWhiteSpaces();
+                    var hasWhiteSpaces = text.TrimStart();
 
                     c = text.CurrentChar;
                     if (c == ')')
@@ -242,9 +250,9 @@ namespace Textamina.Markdig.Helpers
                         {
                             isValid = true;
                         }
-                        else if (TryParseTitle(text, out title))
+                        else if (TryParseTitle(ref text, out title))
                         {
-                            text.SkipWhiteSpaces();
+                            text.TrimStart();
                             c = text.CurrentChar;
 
                             if (c == ')')
@@ -266,10 +274,13 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitle(StringLineGroup text, out string title)
+        public static bool TryParseTitle(StringSlice text, out string title)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            return TryParseTitle(ref text, out title);
+        }
 
+        public static bool TryParseTitle(ref StringSlice text, out string title)
+        {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
             buffer.Clear();
@@ -286,7 +297,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     c = text.NextChar();
 
-                    if (text.Current != null && text.Current.IsBlankLine())
+                    if (c == '\n') // TODO?
                     {
                         break;
                     }
@@ -333,10 +344,13 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseUrl(StringLineGroup text, out string link)
+        public static bool TryParseUrl(StringSlice text, out string link)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            return TryParseUrl(ref text, out link);
+        }
 
+        public static bool TryParseUrl(ref StringSlice text, out string link)
+        {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
             buffer.Clear();
@@ -453,12 +467,18 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseLinkReferenceDefinition(StringLineGroup text, out string label, out string url,
+        public static bool TryParseLinkReferenceDefinition(StringSlice text, out string label, out string url,
+            out string title)
+        {
+            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
+        }
+
+        public static bool TryParseLinkReferenceDefinition(ref StringSlice text, out string label, out string url,
             out string title)
         {
             url = null;
             title = null;
-            if (!TryParseLabel(text, out label))
+            if (!TryParseLabel(ref text, out label))
             {
                 return false;
             }
@@ -471,19 +491,19 @@ namespace Textamina.Markdig.Helpers
             text.NextChar(); // Skip ':'
 
             // Skip any whitespaces before the url
-            text.SkipWhiteSpaces();
-            if (!TryParseUrl(text, out url) || string.IsNullOrEmpty(url))
+            text.TrimStart();
+            if (!TryParseUrl(ref text, out url) || string.IsNullOrEmpty(url))
             {
                 return false;
             }
 
-            var saved = text.Save();
+            var saved = text;
             int newLineCount;
-            var hasWhiteSpaces = text.SkipWhiteSpaces(out newLineCount);
+            var hasWhiteSpaces = text.TrimStart(out newLineCount);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
-                if (TryParseTitle(text, out title))
+                if (TryParseTitle(ref text, out title))
                 {
                     // If we have a title, it requires a whitespace after the url
                     if (!hasWhiteSpaces)
@@ -517,7 +537,7 @@ namespace Textamina.Markdig.Helpers
                 // we are still returning a valid definition
                 if (newLineCount > 0 && title != null)
                 {
-                    text.Restore(ref saved);
+                    text = saved;
                     title = null;
                     return true;
                 }
@@ -531,13 +551,17 @@ namespace Textamina.Markdig.Helpers
             return true;
         }
 
-        public static bool TryParseLabel(StringLineGroup lines, out string label)
+        public static bool TryParseLabel(StringSlice lines, out string label)
         {
-            return TryParseLabel(lines, false, out label);
+            return TryParseLabel(ref lines, false, out label);
         }
 
+        public static bool TryParseLabel(ref StringSlice lines, out string label)
+        {
+            return TryParseLabel(ref lines, false, out label);
+        }
 
-        public static bool TryParseLabel(StringLineGroup lines, bool allowEmpty, out string label)
+        public static bool TryParseLabel(ref StringSlice lines, bool allowEmpty, out string label)
         {
             label = null;
             char c = lines.CurrentChar;

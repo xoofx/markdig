@@ -30,15 +30,13 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(InlineParserState state)
             {
-                var text = state.Lines;
-
-                var c = text.CurrentChar;
+                var c = state.Text.CurrentChar;
 
                 bool isImage = false;
                 if (c == '!')
                 {
                     isImage = true;
-                    c = text.NextChar();
+                    c = state.Text.NextChar();
                     if (c != '[')
                     {
                         return false;
@@ -50,21 +48,21 @@ namespace Textamina.Markdig.Syntax
                     case '[':
                         // If this is not an image, we may have a reference link shortcut
                         // so we try to resolve it here
-                        var saved = text.Save();
+                        var saved = state.Text;
                         string label;
 
                         // If the label is followed by either a ( or a [, this is not a shortcut
-                        if (LinkHelper.TryParseLabel(text, out label))
+                        if (LinkHelper.TryParseLabel(ref state.Text, out label))
                         {
                             if (!state.Document.LinkReferenceDefinitions.ContainsKey(label))
                             {
                                 label = null;
                             }
                         }
-                        text.Restore(ref saved);
+                        state.Text = saved;
 
                         // Else we insert a LinkDelimiter
-                        text.NextChar();
+                        state.Text.NextChar();
                         state.Inline = new LinkDelimiterInline(this)
                         {
                             Type = DelimiterType.Open,
@@ -74,10 +72,10 @@ namespace Textamina.Markdig.Syntax
                         return true;
 
                     case ']':
-                        text.NextChar();
+                        state.Text.NextChar();
                         if (state.Inline != null)
                         {
-                            if (TryProcessLinkOrImage(state, text))
+                            if (TryProcessLinkOrImage(state, ref state.Text))
                             {
                                 return true;
                             }
@@ -146,7 +144,7 @@ namespace Textamina.Markdig.Syntax
                 return isValidLink;
             }
 
-            private bool TryProcessLinkOrImage(InlineParserState inlineState, StringLineGroup text)
+            private bool TryProcessLinkOrImage(InlineParserState inlineState, ref StringSlice text)
             {
                 LinkDelimiterInline openParent = null;
                 foreach (var parent in inlineState.Inline.FindParentOfType<LinkDelimiterInline>())
@@ -164,7 +162,7 @@ namespace Textamina.Markdig.Syntax
                         case '(':
                             string url;
                             string title;
-                            if (LinkHelper.TryParseInlineLink(text, out url, out title))
+                            if (LinkHelper.TryParseInlineLink(ref text, out url, out title))
                             {
                                 // Inline Link
                                 var link = new LinkInline()
@@ -192,7 +190,7 @@ namespace Textamina.Markdig.Syntax
                             // Handle Collapsed links
                             if (text.CurrentChar == '[')
                             {
-                                if (text.PeekCharOnSameLine() == ']')
+                                if (text.PeekChar(1) == ']')
                                 {
                                     label = openParent.Label;
                                     text.NextChar(); // Skip [
@@ -204,7 +202,7 @@ namespace Textamina.Markdig.Syntax
                                 label = openParent.Label;
                             }
 
-                            if (label != null || LinkHelper.TryParseLabel(text, true, out label))
+                            if (label != null || LinkHelper.TryParseLabel(ref text, true, out label))
                             {
                                 if (ProcessLinkReference(inlineState, label, openParent.IsImage,
                                     openParent.FirstChild))

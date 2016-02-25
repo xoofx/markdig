@@ -18,10 +18,10 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(InlineParserState state)
             {
-                var text = state.Lines;
+                var text = state.Text;
 
                 int openSticks = 0;
-                if (text.PreviousChar1 == '`')
+                if (text.PeekChar(-1) == '`')
                 {
                     return false;
                 }

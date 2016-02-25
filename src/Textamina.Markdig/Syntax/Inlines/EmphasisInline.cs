@@ -215,15 +215,13 @@ namespace Textamina.Markdig.Syntax
 
             public override bool Match(InlineParserState state)
             {
-                var lines = state.Lines;
-
                 // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
                 // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
                 // is not preceded or followed by a _ character.
 
-                var delimiterChar = lines.CurrentChar;
-                var pc = lines.PreviousChar1;
-                if (delimiterChar == pc && lines.PreviousChar2 != '\\')
+                var delimiterChar = state.Text.CurrentChar;
+                var pc = state.Text.PeekChar(-1);
+                if (delimiterChar == pc && state.Text.PeekChar(-2) != '\\')
                 {
                     return false;
                 }
@@ -233,7 +231,7 @@ namespace Textamina.Markdig.Syntax
                 do
                 {
                     delimiterCount++;
-                    c = lines.NextChar();
+                    c = state.Text.NextChar();
                 } while (c == delimiterChar);
 
 

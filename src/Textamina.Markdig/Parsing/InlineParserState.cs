@@ -16,7 +16,7 @@ namespace Textamina.Markdig.Parsing
 
         public LeafBlock Block { get; internal set; }
 
-        public StringLineGroup Lines;
+        public StringSlice Text;
 
         public Inline Inline { get; set; }
 

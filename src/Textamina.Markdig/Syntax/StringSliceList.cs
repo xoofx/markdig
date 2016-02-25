@@ -1,0 +1,67 @@
+﻿using System;
+using System.Text;
+using Textamina.Markdig.Helpers;
+
+namespace Textamina.Markdig.Syntax
+{
+    public class StringSliceList
+    {
+        private static readonly StringSlice[] Empty = new StringSlice[0];
+
+        private StringSlice currentLine;
+
+        public StringSliceList()
+        {
+            Slices = Empty;
+        }
+
+        public StringSliceList(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            Append(new StringSlice(text));
+        }
+
+        public StringSlice[] Slices;
+
+        public int Count;
+
+        public void Append(ref StringSlice slice)
+        {
+            if (Count == Slices.Length) IncreaseCapacity();
+            Slices[Count++] = slice;
+        }
+
+        public void Append(StringSlice slice)
+        {
+            if (Count == Slices.Length) IncreaseCapacity();
+            Slices[Count++] = slice;
+        }
+
+        private void IncreaseCapacity()
+        {
+            int newCapacity = Slices.Length == 0 ? 4 : Slices.Length * 2;
+            var newItems = new StringSlice[newCapacity];
+            if (Count > 0)
+            {
+                Array.Copy(Slices, 0, newItems, 0, Count);
+            }
+            Slices = newItems;
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = StringBuilderCache.Local();
+            for(int i = 0; i < Count; i++)
+            {
+                if (i > 0)
+                {
+                    stringBuilder.Append('\n');
+                }
+                stringBuilder.Append(Slices[i]);
+            }
+            var str = stringBuilder.ToString();
+            stringBuilder.Clear();
+            return str;
+        }
+    }
+}

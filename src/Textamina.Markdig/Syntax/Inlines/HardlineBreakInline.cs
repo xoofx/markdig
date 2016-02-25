@@ -17,8 +17,7 @@ namespace Textamina.Markdig.Syntax
             public override bool Match(InlineParserState state)
             {
                 // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
-                var text = state.Lines;
-                if (!(state.Block is ParagraphBlock) || text.ColumnPosition == 0 || !text.PreviousChar1.IsSpace() || !text.PreviousChar2.IsSpace())
+                if (!(state.Block is ParagraphBlock) || state.Text.Column == 0 || !state.Text.PeekChar(-1).IsSpace() || !state.Text.PeekChar(-2).IsSpace())
                 {
                     return false;
                 }

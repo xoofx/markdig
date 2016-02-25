@@ -16,10 +16,6 @@ namespace Textamina.Markdig.Syntax
 
         public HtmlBlockType Type { get; set; }
 
-        [ThreadStatic]
-        private static readonly StringLineGroup HtmlLineGroup = new StringLineGroup();
-
-
         private class ParserInternal : BlockParser
         {
             private static readonly string[] HtmlTags =
@@ -106,12 +102,11 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult MatchStart(BlockParserState state)
             {
-                var liner = state.Line;
                 int index = 0;
 
                 for (int i = 0; i < 3; i++)
                 {
-                    if (!liner.PeekChar(index).IsSpace())
+                    if (!state.Line.PeekChar(index).IsSpace())
                     {
                         break;
                     }
@@ -120,36 +115,34 @@ namespace Textamina.Markdig.Syntax
 
                 // Early exit if it is not starting by an HTML tag
                 var column = index;
-                var c = liner.PeekChar(index++);
+                var c = state.Line.PeekChar(index++);
                 if (c != '<')
                 {
                     return MatchLineResult.None;
                 }
 
-                var result = TryParseTagType16(state, liner, index, column);
+                var result = TryParseTagType16(state, ref state.Line, index, column);
 
                 // HTML blocks of type 7 cannot interrupt a paragraph:
                 if (result == MatchLineResult.None && !(state.LastBlock is ParagraphBlock))
                 {
-                    result = TryParseTagType7(state, liner, index, column);
+                    result = TryParseTagType7(state, ref state.Line, index, column);
                 }
 
                 return result;
             }
 
-            private MatchLineResult TryParseTagType7(BlockParserState state, StringLine liner, int index, int startColumn)
+            private MatchLineResult TryParseTagType7(BlockParserState state, ref StringSlice liner, int index, int startColumn)
             {
                 var builder = StringBuilderCache.Local();
-                var text = HtmlLineGroup;
-                text.Add(liner);
-                text.SetColumn(index);
-                var c = text.CurrentChar;
+                liner.Start = index;
+                var c = liner.CurrentChar;
                 var result = MatchLineResult.None;
-                if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(text, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(text, builder))
+                if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(liner, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(liner, builder))
                 {
                     // Must be followed by whitespace only
                     bool hasOnlySpaces = true;
-                    c = text.CurrentChar;
+                    c = liner.CurrentChar;
                     while (true)
                     {
                         if (c == '\0')
@@ -161,7 +154,7 @@ namespace Textamina.Markdig.Syntax
                             hasOnlySpaces = false;
                             break;
                         }
-                        c = text.NextChar();
+                        c = liner.NextChar();
                     }
 
                     if (hasOnlySpaces)
@@ -170,12 +163,11 @@ namespace Textamina.Markdig.Syntax
                     }
                 }
 
-                text.Clear();
                 builder.Clear();
                 return result;
             }
 
-            private MatchLineResult TryParseTagType16(BlockParserState state, StringLine liner, int index, int startColumn)
+            private MatchLineResult TryParseTagType16(BlockParserState state, ref StringSlice liner, int index, int startColumn)
             {
                 char c;
                 c = liner.PeekChar(index);
@@ -255,51 +247,49 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult MatchEnd(BlockParserState state, HtmlBlock htmlBlock)
             {
-                var liner = state.Line;
-
                 // Early exit if it is not starting by an HTML tag
-                var c = liner.Current;
+                var c = state.Line.CurrentChar;
                 switch (htmlBlock.Type)
                 {
                     case HtmlBlockType.Comment:
-                        if (liner.Search("-->"))
+                        if (state.Line.Search("-->"))
                         {
                             return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.CData:
-                        if (liner.Search("]]>"))
+                        if (state.Line.Search("]]>"))
                         {
                             return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.ProcessingInstruction:
-                        if (liner.Search("?>"))
+                        if (state.Line.Search("?>"))
                         {
                             return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.DocumentType:
-                        if (liner.Search(">"))
+                        if (state.Line.Search(">"))
                         {
                             return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.ScriptPreOrStyle:
                         // TODO: could be optimized with a dedicated parser
-                        if (liner.SearchLowercase("</script>") || liner.SearchLowercase("</pre>") || liner.SearchLowercase("</style>"))
+                        if (state.Line.SearchLowercase("</script>") || state.Line.SearchLowercase("</pre>") || state.Line.SearchLowercase("</style>"))
                         {
                             return MatchLineResult.Last;
                         }
                         break;
                     case HtmlBlockType.InterruptingBlock:
-                        if (liner.IsBlankLine())
+                        if (state.IsBlankLine)
                         {
                             return MatchLineResult.LastDiscard;
                         }
                         break;
                     case HtmlBlockType.NonInterruptingBlock:
-                        if (liner.IsBlankLine())
+                        if (state.IsBlankLine)
                         {
                             return MatchLineResult.LastDiscard;
                         }

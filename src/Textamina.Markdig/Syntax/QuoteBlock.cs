@@ -15,17 +15,18 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
-
-                liner.SkipLeadingSpaces3();
+                if (state.IsCodeIndent)
+                {
+                    return MatchLineResult.None;
+                }
 
                 // 5.1 Block quotes 
                 // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
-                var c = liner.Current;
-                var column = liner.Start;
+                var c = state.CurrentChar;
+                var column = state.Column;
                 if (c != '>')
                 {
-                    if (state.Pending != null && liner.IsBlankLine())
+                    if (state.Pending != null && state.IsBlankLine)
                     {
                         state.Close(state.Pending);
                         return MatchLineResult.None;
@@ -33,10 +34,10 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.None;
                 }
 
-                c = liner.NextChar();
+                c = state.NextChar();
                 if (c.IsSpace())
                 {
-                    liner.NextChar();
+                    state.NextChar();
                 }
 
                 if (state.Pending == null)

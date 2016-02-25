@@ -55,16 +55,22 @@ namespace Textamina.Markdig.Helpers
             "XMLRPC.BEEP", "XMLRPC.BEEPS", "XMPP", "XRI", "YMSGR", "Z39.50R", "Z39.50S"
         };
 
-        public static bool TryParseHtmlTag(StringLineGroup text, out string htmlTag)
+
+        public static bool TryParseHtmlTag(StringSlice text, out string htmlTag)
+        {
+            return TryParseHtmlTag(ref text, out htmlTag);
+        }
+
+        public static bool TryParseHtmlTag(ref StringSlice text, out string htmlTag)
         {
             var builder = StringBuilderCache.Local();
-            var result = TryParseHtmlTag(text, builder);
+            var result = TryParseHtmlTag(ref text, builder);
             htmlTag = builder.ToString();
             builder.Clear();
             return result;
         }
 
-        public static bool TryParseHtmlTag(StringLineGroup text, StringBuilder builder)
+        public static bool TryParseHtmlTag(ref StringSlice text, StringBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             var c = text.CurrentChar;
@@ -101,7 +107,7 @@ namespace Textamina.Markdig.Helpers
             return TryParseHtmlTagOpenTag(text, builder);
         }
 
-        internal static bool TryParseHtmlTagOpenTag(StringLineGroup text, StringBuilder builder)
+        internal static bool TryParseHtmlTagOpenTag(StringSlice text, StringBuilder builder)
         {
             var c = text.CurrentChar;
 
@@ -256,7 +262,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagDeclaration(StringLineGroup text, StringBuilder builder)
+        private static bool TryParseHtmlTagDeclaration(StringSlice text, StringBuilder builder)
         {
             var c = text.CurrentChar;
             bool hasAlpha = false;
@@ -291,7 +297,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagCData(StringLineGroup text, StringBuilder builder)
+        private static bool TryParseHtmlTagCData(StringSlice text, StringBuilder builder)
         {
             builder.Append('[');
             var c = text.NextChar();
@@ -334,7 +340,7 @@ namespace Textamina.Markdig.Helpers
             return false;
         }
 
-        internal static bool TryParseHtmlCloseTag(StringLineGroup text, StringBuilder builder)
+        internal static bool TryParseHtmlCloseTag(StringSlice text, StringBuilder builder)
         {
             // </[A-Za-z][A-Za-z0-9]+\s*>
             builder.Append('/');
@@ -379,7 +385,7 @@ namespace Textamina.Markdig.Helpers
         }
 
 
-        private static bool TryParseHtmlTagHtmlComment(StringLineGroup text, StringBuilder builder)
+        private static bool TryParseHtmlTagHtmlComment(StringSlice text, StringBuilder builder)
         {
             var c = text.NextChar();
             if (c != '-')
@@ -388,7 +394,7 @@ namespace Textamina.Markdig.Helpers
             }
             builder.Append('-');
             builder.Append('-');
-            if (text.PeekCharOnSameLine() == '>')
+            if (text.PeekChar(1) == '>')
             {
                 return false;
             }
@@ -417,7 +423,7 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagProcessingInstruction(StringLineGroup text, StringBuilder builder)
+        private static bool TryParseHtmlTagProcessingInstruction(StringSlice text, StringBuilder builder)
         {
             builder.Append('?');
             var prevChar = '\0';

@@ -6,18 +6,13 @@ namespace Textamina.Markdig.Syntax
     {
         protected LeafBlock(BlockParser parser) : base(parser)
         {
-            Lines = new StringLineGroup();
+            Lines = new StringSliceList();
         }
 
-        public StringLineGroup Lines { get; set; }
+        public StringSliceList Lines { get; set; }
 
         public Inline Inline { get; set; }
 
         public bool NoInline { get; set; }
-
-        internal void Append(StringLine line)
-        {
-            Lines.Add(line);
-        }
     }
 }

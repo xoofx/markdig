@@ -20,10 +20,10 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
-                liner.SkipLeadingSpaces3();
-
-                var column = liner.Start;
+                if (state.IsCodeIndent)
+                {
+                    return MatchLineResult.None;
+                }
 
                 // 4.2 ATX headings
                 // An ATX heading consists of a string of characters, parsed as inline content, 
@@ -35,37 +35,37 @@ namespace Textamina.Markdig.Syntax
                 // the heading are stripped of leading and trailing spaces before being parsed as 
                 // inline content. The heading level is equal to the number of # characters in the 
                 // opening sequence.
-                var c = liner.Current;
+                var column = state.Column;
+                var c = state.CurrentChar;
 
                 int leadingCount = 0;
-                for (; !liner.IsEol && leadingCount <= 6; leadingCount++)
+                for (; !state.Line.IsEndOfSlice && leadingCount <= 6; leadingCount++)
                 {
                     if (c != '#')
                     {
                         break;
                     }
 
-                    c = liner.NextChar();
+                    c = state.PeekChar(leadingCount);
                 }
 
                 // closing # will be handled later, because anyway we have matched 
 
                 // A space is required after leading #
-                if (leadingCount > 0 && leadingCount <=6 && (c.IsSpace() || liner.IsEol))
+                if (leadingCount > 0 && leadingCount <=6 && (c.IsSpace() || state.Line.IsEndOfSlice))
                 {
-                    liner.NextChar();
+                    state.Line.Start = leadingCount + 1;
                     state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount, Column = column });
-
 
                     // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                     int endState = 0;
                     int countClosingTags = 0;
-                    for (int i = liner.End; i >= liner.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
+                    for (int i = state.Line.End; i >= state.Line.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
                     {
-                        c = liner[i];
+                        c = state.Line[i];
                         if (endState == 0)
                         {
-                            if (CharHelper.IsSpace(c)) // TODO: Not clear if it is a space or space+tab in the specs
+                            if (c.IsSpace()) // TODO: Not clear if it is a space or space+tab in the specs
                             {
                                 continue;
                             }
@@ -81,9 +81,9 @@ namespace Textamina.Markdig.Syntax
 
                             if (countClosingTags > 0)
                             {
-                                if (CharHelper.IsSpace(c))
+                                if (c.IsSpace())
                                 {
-                                    liner.End = i - 1;
+                                    state.Line.End = i - 1;
                                 }
                                 break;
                             }

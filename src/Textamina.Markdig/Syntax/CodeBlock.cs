@@ -1,5 +1,3 @@
-using System;
-using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
@@ -28,56 +26,15 @@ namespace Textamina.Markdig.Syntax
 
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
-                int position = liner.Start;
-                liner.SkipLeadingSpaces3();
-
-                // 4.4 Indented code blocks 
-                var c = liner.Current;
-                var isTab = c.IsTab();
-                var isSpace = c.IsSpace();
-                var isBlankLine = liner.IsBlankLine();
-                var codeBlock = state.Pending as CodeBlock;
-                // && !isBlankLine) || (isBlankLine && codeBlock != null && !codeBlock.Lines[codeBlock.Lines.Count - 1].IsBlankLine())
-                if ((codeBlock != null && isBlankLine) || (isTab || (isSpace && (liner.Start - position) == 3)))
-                //if (((isTab || (isSpace && (liner.Start - position) == 3)) && !isBlankLine))
+                if (!state.IsCodeIndent || state.IsBlankLine)
                 {
-                    liner.NextChar();
-                    if (state.Pending == null)
-                    {
-                        if (isBlankLine)
-                        {
-                            return MatchLineResult.None;
-                        }
-
-                        state.NewBlocks.Push(new CodeBlock(this) { Column = position });
-                    }
-                    return MatchLineResult.Continue;
+                    return state.IsBlankLine && state.Pending != null ? MatchLineResult.LastDiscard : MatchLineResult.None;
                 }
-
-                return MatchLineResult.None;
-            }
-
-            public override void Close(BlockParserState state)
-            {
-                var codeBlock = state.Pending as CodeBlock;
-                if (codeBlock != null)
+                if (state.Pending == null)
                 {
-                    var lines = codeBlock.Lines;
-                    // Remove trailing blankline
-                    for (int i = lines.Count - 1; i >= 0; i--)
-                    {
-                        if (lines[i].IsBlankLine())
-                        {
-                            lines.RemoveAt(i);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+                    state.NewBlocks.Push(new CodeBlock(this) { Column = state.Column });
                 }
-
+                return MatchLineResult.Continue;
             }
         }
     }

@@ -6,11 +6,11 @@ namespace Textamina.Markdig.Syntax
     /// <summary>
     /// Repressents a thematic break.
     /// </summary>
-    public class BreakBlock : LeafBlock
+    public class ThematicBreakBlock : LeafBlock
     {
         public new static readonly BlockParser Parser = new ParserInternal();
 
-        public BreakBlock(BlockParser parser) : base(parser)
+        public ThematicBreakBlock(BlockParser parser) : base(parser)
         {
             NoInline = true;
         }
@@ -19,20 +19,23 @@ namespace Textamina.Markdig.Syntax
         {
             public override MatchLineResult Match(BlockParserState state)
             {
-                var liner = state.Line;
-                liner.SkipLeadingSpaces3();
+                if (state.IsCodeIndent)
+                {
+                    return MatchLineResult.None;
+                }
 
-                var column = liner.Start;
+                var column = state.Column;
 
                 // 4.1 Thematic breaks 
                 // A line consisting of 0-3 spaces of indentation, followed by a sequence of three or more matching -, _, or * characters, each followed optionally by any number of spaces
-                var c = liner.Current;
+                var c = state.CurrentChar;
 
                 int count = 0;
                 var matchChar = (char)0;
                 bool hasSpacesSinceLastMatch = false;
                 bool hasInnerSpaces = false;
-                while (!liner.IsEol)
+                int offset = 0;
+                while (c != '\0')
                 {
                     if (count == 0 && (c == '-' || c == '_' || c == '*'))
                     {
@@ -56,7 +59,9 @@ namespace Textamina.Markdig.Syntax
                     {
                         hasSpacesSinceLastMatch = true;
                     }
-                    c = liner.NextChar();
+
+                    offset++;
+                    c = state.PeekChar(offset);
                 }
 
                 // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it
@@ -77,8 +82,8 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.None;
                 }
 
-                state.NewBlocks.Push(new BreakBlock(this) { Column = column });
-                return MatchLineResult.Last;
+                state.NewBlocks.Push(new ThematicBreakBlock(this) { Column = column });
+                return MatchLineResult.LastDiscard;
             }
         }
     }

@@ -38,26 +38,24 @@ namespace Textamina.Markdig.Syntax
                     return MatchLineResult.Skip;
                 }
 
-                var liner = state.Line;
-
                 // When both a thematic break and a list item are possible
                 // interpretations of a line, the thematic break takes precedence
-                var save = liner.Save();
-                if (BreakBlock.Parser.Match(state) == MatchLineResult.Last)
+                var save = state.Line;
+                if (ThematicBreakBlock.Parser.Match(state) == MatchLineResult.Last)
                 {
-                    // Remove the BreakBlock as we will let the BreakBlock to catch it later
+                    // Remove the ThematicBreakBlock as we will let the ThematicBreakBlock to catch it later
                     state.NewBlocks.Pop();
                     return MatchLineResult.None;
                 }
-                liner.Restore(ref save);
+                state.SetCurrentLine(ref save);
 
                 // 5.2 List items 
                 // TODO: Check with specs, it is not clear that list marker or bullet marker must be followed by at least 1 space
 
                 int preIndent = 0;
-                for (int i = liner.Start - 1; i >= 0; i--)
+                for (int i = state.Line.Start - 1; i >= 0; i--)
                 {
-                    if (liner[i].IsSpaceOrTab())
+                    if (state.Line[i].IsSpaceOrTab())
                     {
                         preIndent++;
                     }
@@ -67,7 +65,7 @@ namespace Textamina.Markdig.Syntax
                     }
                 }
 
-                var saveLiner = liner.Save();
+                var saveLiner = state.Line;
 
                 // If we have already a ListItemBlock, we are going to try to append to it
                 var listItem = state.Pending as ListItemBlock;
@@ -78,7 +76,7 @@ namespace Textamina.Markdig.Syntax
                     // Allow all blanks lines if the last block is a fenced code block
                     // Allow 1 blank line inside a list
                     // If > 1 blank line, terminate this list
-                    var isBlankLine = liner.IsBlankLine();
+                    var isBlankLine = state.IsBlankLine;
                     //if (isBlankLine && !(state.LastBlock is FencedCodeBlock)) // TODO: Handle this case
                     var isInFencedBlock = state.LastBlock is FencedCodeBlock;
                     if (isBlankLine)
@@ -114,26 +112,26 @@ namespace Textamina.Markdig.Syntax
 
                     list.CountBlankLinesReset = 0;
 
-                    var c = liner.Current;
-                    var startPosition = liner.Column;
+                    var c = state.Line.CurrentChar;
+                    var startPosition = state.Line.Start;
 
                     // List Item starting with a blank line (-1)
                     if (listItem.NumberOfSpaces < 0)
                     {
                         int expectedCount = -listItem.NumberOfSpaces;
                         int countSpaces = 0;
-                        var saved = new StringLine.State();
+                        var saved = new StringSlice();
                         while (c.IsSpaceOrTab())
                         {
-                            c = liner.NextChar();
-                            countSpaces = preIndent + liner.Column - startPosition;
+                            c = state.Line.NextChar();
+                            countSpaces = preIndent + state.Line.Column - startPosition;
                             if (countSpaces == expectedCount)
                             {
-                                saved = liner.Save();
+                                saved = state.Line;
                             }
                             else if (countSpaces >= 4)
                             {
-                                liner.Restore(ref saved);
+                                state.SetCurrentLine(ref saved);
                                 countSpaces = expectedCount;
                                 break;
                             }
@@ -149,15 +147,15 @@ namespace Textamina.Markdig.Syntax
                     {
                         while (c.IsSpaceOrTab())
                         {
-                            c = liner.NextChar();
-                            var countSpaces = preIndent + liner.Column - startPosition;
+                            c = state.Line.NextChar();
+                            var countSpaces = preIndent + state.Line.Column - startPosition;
                             if (countSpaces >= listItem.NumberOfSpaces)
                             {
                                 return MatchLineResult.Continue;
                             }
                         }
                     }
-                    liner.Restore(ref saveLiner);
+                    state.SetCurrentLine(ref saveLiner);
                 }
 
                 return TryParseListItem(ref state, preIndent);
@@ -165,33 +163,32 @@ namespace Textamina.Markdig.Syntax
 
             private MatchLineResult TryParseListItem(ref BlockParserState state, int preIndent)
             {
-                var liner = state.Line;
-
                 var isInList = state.Pending is ListItemBlock;
 
-                var preStartPosition = liner.Start;
+                var preStartPosition = state.Line.Start;
 
-                var c = liner.Current;
+                var c = state.Line.CurrentChar;
                 if (isInList)
                 {
                     while (c.IsSpaceOrTab())
                     {
-                        c = liner.NextChar();
+                        c = state.Line.NextChar();
                     }
                 }
                 else
                 {
-                    liner.SkipLeadingSpaces3();
-                    c = liner.Current;
+                    // TODO
+                    //state.Line.SkipLeadingSpaces3();
+                    c = state.Line.CurrentChar;
                 }
-                preIndent = preIndent + liner.Start - preStartPosition;
+                preIndent = preIndent + state.Line.Start - preStartPosition;
 
                 var isOrdered = false;
                 var bulletChar = (char) 0;
                 int orderedStart = 0;
                 var orderedDelimiter = (char) 0;
 
-                var column = liner.Start;
+                var column = state.Line.Start;
 
                 if (c.IsBulletListMarker())
                 {
@@ -204,7 +201,7 @@ namespace Textamina.Markdig.Syntax
                     while (c.IsDigit())
                     {
                         orderedStart = orderedStart*10 + c - '0';
-                        c = liner.NextChar();
+                        c = state.Line.NextChar();
                         preIndent++;
                         countDigit++;
                     }
@@ -230,11 +227,11 @@ namespace Textamina.Markdig.Syntax
                 }
 
                 // Skip Bullet or '.'
-                liner.NextChar();
+                state.Line.NextChar();
 
                 // Item starting with a blank line
                 int numberOfSpaces;
-                if (liner.IsBlankLine())
+                if (state.IsBlankLine)
                 {
                     // Use a negative number to store the number of expected chars
                     numberOfSpaces = -(preIndent + 1);
@@ -243,34 +240,34 @@ namespace Textamina.Markdig.Syntax
                 {
                     var startPosition = -1;
                     int countSpaceAfterBullet = 0;
-                    var saved = new StringLine.State();
+                    var saved = new StringSlice();
                     for (int i = 0; i <= 4; i++)
                     {
-                        c = liner.Current;
+                        c = state.Line.CurrentChar;
                         if (!c.IsSpaceOrTab())
                         {
                             break;
                         }
                         if (i == 0)
                         {
-                            startPosition = liner.Column;
+                            startPosition = state.Line.Column;
                         }
 
-                        var endPosition = liner.Column;
+                        var endPosition = state.Line.Column;
                         countSpaceAfterBullet = endPosition - startPosition;
 
                         if (countSpaceAfterBullet == 1)
                         {
-                            saved = liner.Save();
+                            saved = state.Line;
                         }
                         else if (countSpaceAfterBullet >= 4)
                         {
-                            liner.SpaceHeaderCount = countSpaceAfterBullet - 4;
+                            //state.Line.SpaceHeaderCount = countSpaceAfterBullet - 4;
                             countSpaceAfterBullet = 0;
-                            liner.Restore(ref saved);
+                            state.SetCurrentLine(ref saved);
                             break;
                         }
-                        liner.NextChar();
+                        state.Line.NextChar();
                     }
 
                     // If we haven't matched any spaces, early exit

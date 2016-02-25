@@ -23,14 +23,14 @@ namespace Textamina.Markdig.Syntax
 
         public string Title { get; set; }
 
-        public static bool TryParse(StringLineGroup lines, out LinkReferenceDefinitionBlock block)
+        public static bool TryParse(ref StringSlice text, out LinkReferenceDefinitionBlock block)
         {
             block = null;
             string label;
             string url;
             string title;
 
-            if (!LinkHelper.TryParseLinkReferenceDefinition(lines, out label, out url, out title))
+            if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out label, out url, out title))
             {
                 return false;
             }

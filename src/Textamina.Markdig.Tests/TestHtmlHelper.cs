@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Tests
         public void TestParseHtmlTagSimple()
         {
             var inputTag = "<a>";
-            var text = new StringLineGroup(inputTag);
+            var text = new StringSlice(inputTag);
             string outputTag;
             Assert.True(HtmlHelper.TryParseHtmlTag(text, out outputTag));
             Assert.AreEqual(inputTag, outputTag);
@@ -24,7 +24,7 @@ namespace Textamina.Markdig.Tests
         public void TestParseHtmlTagSimpleWithAttribute()
         {
             var inputTag = "<a href='http://google.com'>";
-            var text = new StringLineGroup(inputTag);
+            var text = new StringSlice(inputTag);
             string outputTag;
             Assert.True(HtmlHelper.TryParseHtmlTag(text, out outputTag));
             Assert.AreEqual(inputTag, outputTag);

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -20,7 +21,32 @@ namespace Textamina.Markdig.Parsing
             Add(root);
         }
 
-        public StringLine Line;
+
+        public StringSlice Line;
+
+        public int LineIndex;
+
+        public bool IsBlankLine => CurrentChar == '\0';
+
+        public bool IsEndOfLine => Line.IsEndOfSlice;
+
+        public char CurrentChar => Line.CurrentChar;
+
+        public char NextChar() => Line.NextChar();
+
+        public char CharAt(int index) => Line[index];
+
+        public int Start => Line.Start;
+
+        public int EndOffset => Line.End;
+
+        public int Indent => Column - ColumnBegin;
+
+        public bool IsCodeIndent => Indent >= 4;
+
+        public int ColumnBegin { get; private set; }
+
+        public int Column { get; set; }
 
         public Block Pending { get; set; }
 
@@ -35,6 +61,40 @@ namespace Textamina.Markdig.Parsing
         public readonly Document Root;
 
         public StringBuilderCache StringBuilders { get; }
+
+        public char PeekChar(int offset)
+        {
+            return Line.PeekChar(offset);
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public void SetCurrentLine(ref StringSlice line)
+        {
+            Line = line;
+            EatSpaces();
+        }
+
+        public void EatSpaces()
+        {
+            var c = CurrentChar;
+            ColumnBegin = Column;
+            while (c !='\0')
+            {
+                if (c == ' ')
+                {
+                    Column++;
+                }
+                else if (c == '\t')
+                {
+                    Column = ((Column + 3) >> 2) << 2;
+                }
+                else
+                {
+                    break;
+                }
+                c = NextChar();
+            }
+        }
 
         public Block NextPending
         {
@@ -111,12 +171,6 @@ namespace Textamina.Markdig.Parsing
                 }
                 Close(i);
             }
-        }
-
-        internal void Reset(StringLine line)
-        {
-            Line = line;
-            Pending = null;
         }
     }
 }
