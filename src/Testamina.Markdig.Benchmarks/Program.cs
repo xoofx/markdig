@@ -30,18 +30,18 @@ namespace Testamina.Markdig.Benchmarks
             var parser = new MarkdownParser(reader);
             var doc = parser.Parse();
             reader.Dispose();
-            var formatter = new HtmlFormatter(new StringWriter());
-            formatter.Write(doc);
+            //var formatter = new HtmlFormatter(new StringWriter());
+            //formatter.Write(doc);
         }
 
         [Benchmark]
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            //var reader = new StringReader(text);
-            //CommonMark.CommonMarkConverter.ProcessStage1(reader);
+            var reader = new StringReader(text);
+            CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
-            CommonMark.CommonMarkConverter.Convert(new StringReader(text), new StringWriter());
+            //CommonMark.CommonMarkConverter.Convert(new StringReader(text), new StringWriter());
         }
 
         static void Main(string[] args)
