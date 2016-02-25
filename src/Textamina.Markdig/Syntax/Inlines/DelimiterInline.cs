@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public abstract class DelimiterInline : ContainerInline
     {

@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public abstract class LeafInline : Inline
     {

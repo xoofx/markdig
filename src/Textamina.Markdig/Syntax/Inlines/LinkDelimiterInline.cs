@@ -1,6 +1,6 @@
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public class LinkDelimiterInline : DelimiterInline
     {

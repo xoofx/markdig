@@ -1,7 +1,6 @@
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public class RawHtmlInline : LeafInline
     {
-        
     }
 }

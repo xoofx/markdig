@@ -1,5 +1,4 @@
 ﻿using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Parsing;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -23,7 +22,7 @@ namespace Textamina.Markdig.Syntax
 
         public string Title { get; set; }
 
-        public static bool TryParse(ref StringSlice text, out LinkReferenceDefinitionBlock block)
+        public static bool TryParse<T>(ref ICharIterator text, out LinkReferenceDefinitionBlock block) where T : ICharIterator
         {
             block = null;
             string label;

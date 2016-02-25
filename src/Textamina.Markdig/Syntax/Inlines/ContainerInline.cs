@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Textamina.Markdig.Parsing;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public class ContainerInline : Inline
     {

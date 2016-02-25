@@ -4,7 +4,22 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Syntax
 {
-    public struct StringSlice
+    public interface ICharIterator
+    {
+        int Start { get; set; }
+
+        char CurrentChar { get; }
+
+        int End { get; set; }
+
+        char NextChar();
+
+        bool TrimStart();
+
+        bool TrimStart(out int spaceCount);
+    }
+
+    public struct StringSlice : ICharIterator
     {
         public StringSlice(string text)
         {
@@ -16,9 +31,11 @@ namespace Textamina.Markdig.Syntax
 
         public readonly string Text;
 
-        public int Start;
+        public int Start { get; set; }
 
-        public int End;
+        public int End { get; set; }
+
+        public int Length => End - Start + 1;
 
         public int Column => Start;
 
@@ -35,8 +52,9 @@ namespace Textamina.Markdig.Syntax
             if (Start > End)
             {
                 Start = End + 1;
+                return '\0';
             }
-            return CurrentChar;
+            return Text[Start];
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -117,44 +135,41 @@ namespace Textamina.Markdig.Syntax
         public bool TrimStart()
         {
             // Strip leading spaces
-            var c = CurrentChar;
-            var hasWhitespaces = false;
-            while (c.IsWhitespace())
+            for (; Start <= End; Start++)
             {
-                c = NextChar();
-                hasWhitespaces = true;
-            }
-            return hasWhitespaces;
-        }
-
-        public bool TrimStart(out int newLineCount)
-        {
-            bool hasWhitespaces = false;
-            newLineCount = 0;
-            var c = CurrentChar;
-            while (c.IsWhitespace())
-            {
-                if (c == '\n')
-                {
-                    newLineCount++;
-                }
-                c = NextChar();
-                hasWhitespaces = true;
-            }
-            return hasWhitespaces;
-        }
-
-        public void TrimEnd(bool includeTabs = false)
-        {
-            for (int i = End; i >= Start; i--)
-            {
-                End = i;
-                var c = this[i];
-                if (!(includeTabs ? c.IsSpaceOrTab() : c.IsSpace()))
+                if (!Text[Start].IsWhitespace())
                 {
                     break;
                 }
             }
+            return Start > End;
+        }
+
+        public bool TrimStart(out int spaceCount)
+        {
+            spaceCount = 0;
+            // Strip leading spaces
+            for (; Start <= End; Start++)
+            {
+                if (!Text[Start].IsWhitespace())
+                {
+                    break;
+                }
+                spaceCount++;
+            }
+            return IsEndOfSlice;
+        }
+
+        public bool TrimEnd()
+        {
+            for (; Start <= End; End--)
+            {
+                if (!Text[End].IsWhitespace())
+                {
+                    break;
+                }
+            }
+            return IsEndOfSlice;
         }
 
         public void Trim()
@@ -165,7 +180,7 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
-            return Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;
+            return Text != null && Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;
         }
     }
 }

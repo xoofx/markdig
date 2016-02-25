@@ -1,4 +1,4 @@
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -10,32 +10,9 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class CodeBlock : LeafBlock
     {
-        public new static readonly BlockParser Parser = new ParserInternal();
-
         public CodeBlock(BlockParser parser) : base(parser)
         {
-            NoInline = true;
-        }
-
-        private class ParserInternal : BlockParser
-        {
-            public ParserInternal()
-            {
-                CanInterruptParagraph = false;
-            }
-
-            public override MatchLineResult Match(BlockParserState state)
-            {
-                if (!state.IsCodeIndent || state.IsBlankLine)
-                {
-                    return state.IsBlankLine && state.Pending != null ? MatchLineResult.LastDiscard : MatchLineResult.None;
-                }
-                if (state.Pending == null)
-                {
-                    state.NewBlocks.Push(new CodeBlock(this) { Column = state.Column });
-                }
-                return MatchLineResult.Continue;
-            }
+            ProcessInlines = false;
         }
     }
 }

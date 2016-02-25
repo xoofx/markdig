@@ -274,12 +274,12 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitle(StringSlice text, out string title)
+        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
         {
             return TryParseTitle(ref text, out title);
         }
 
-        public static bool TryParseTitle(ref StringSlice text, out string title)
+        public static bool TryParseTitle<T>(ref T text, out string title) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -344,12 +344,12 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseUrl(StringSlice text, out string link)
+        public static bool TryParseUrl<T>(T text, out string link) where T : ICharIterator
         {
             return TryParseUrl(ref text, out link);
         }
 
-        public static bool TryParseUrl(ref StringSlice text, out string link)
+        public static bool TryParseUrl<T>(ref T text, out string link) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -467,14 +467,14 @@ namespace Textamina.Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseLinkReferenceDefinition(StringSlice text, out string label, out string url,
-            out string title)
+        public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
+            out string title) where T : ICharIterator
         {
             return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
         }
 
-        public static bool TryParseLinkReferenceDefinition(ref StringSlice text, out string label, out string url,
-            out string title)
+        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, 
+            out string title) where T : ICharIterator
         {
             url = null;
             title = null;
@@ -551,17 +551,17 @@ namespace Textamina.Markdig.Helpers
             return true;
         }
 
-        public static bool TryParseLabel(StringSlice lines, out string label)
+        public static bool TryParseLabel<T>(T lines, out string label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label);
         }
 
-        public static bool TryParseLabel(ref StringSlice lines, out string label)
+        public static bool TryParseLabel<T>(ref T lines, out string label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label);
         }
 
-        public static bool TryParseLabel(ref StringSlice lines, bool allowEmpty, out string label)
+        public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string label) where T : ICharIterator
         {
             label = null;
             char c = lines.CurrentChar;

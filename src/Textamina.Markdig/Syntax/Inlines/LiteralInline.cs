@@ -1,12 +1,11 @@
 using System.Text;
 using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public class LiteralInline : LeafInline
     {
-        public static readonly InlineParser Parser = new ParserInternal();
         public LiteralInline()
         {
             IsClosable = true;
@@ -21,31 +20,6 @@ namespace Textamina.Markdig.Syntax
             Content = HtmlHelper.Unescape(ContentBuilder.ToString(), false);
             state.StringBuilders.Release(ContentBuilder);
             ContentBuilder = null;
-        }
-
-        private class ParserInternal : InlineParser
-        {
-            public override bool Match(InlineParserState state)
-            {
-                // A literal will always match
-                var literal = state.Inline as LiteralInline;
-                StringBuilder builder;
-                if (literal == null)
-                {
-                    builder = state.StringBuilders.Get();
-                    literal = new LiteralInline {ContentBuilder = builder};
-                    state.Inline = literal;
-                }
-                else
-                {
-                    builder = literal.ContentBuilder;
-                }
-
-                var text = state.Text;
-                builder.Append(text.CurrentChar);
-                text.NextChar();
-                return true;
-            }
         }
 
         public override string ToString()

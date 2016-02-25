@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     public abstract class Inline
     {
@@ -111,7 +111,7 @@ namespace Textamina.Markdig.Syntax
             }
             else if (parent != null)
             {
-                ((ContainerInline) parent).AppendChild(inline);
+                parent.AppendChild(inline);
             }
 
             var container = this as ContainerInline;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Syntax.Inlines
 {
     [Flags]
     public enum DelimiterType

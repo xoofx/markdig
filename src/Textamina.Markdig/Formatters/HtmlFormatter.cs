@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
+using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Formatters
 {

@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Textamina.Markdig.Formatters;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Tests
 {
@@ -24,7 +24,9 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var reader = new StringReader(@"foo");
+            var reader = new StringReader(@">> foo
+test
+                                          ");
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");

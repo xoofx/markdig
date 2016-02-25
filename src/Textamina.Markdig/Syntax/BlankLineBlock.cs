@@ -1,6 +1,4 @@
-﻿using Textamina.Markdig.Parsing;
-
-namespace Textamina.Markdig.Syntax
+﻿namespace Textamina.Markdig.Syntax
 {
     public sealed class BlankLineBlock : Block
     {

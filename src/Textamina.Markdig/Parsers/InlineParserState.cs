@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Text;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
+using Textamina.Markdig.Syntax.Inlines;
 
-namespace Textamina.Markdig.Parsing
+namespace Textamina.Markdig.Parsers
 {
     public class InlineParserState
     {

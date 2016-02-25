@@ -1,7 +1,7 @@
 
 
 
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {

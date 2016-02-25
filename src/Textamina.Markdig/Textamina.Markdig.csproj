@@ -41,39 +41,52 @@
     <Compile Include="Formatters\HtmlTextWriter.cs" />
     <Compile Include="Helpers\LinkHelper.cs" />
     <Compile Include="Helpers\StringBuilderCache.cs" />
-    <Compile Include="Parsing\InlineParser.cs" />
-    <Compile Include="Parsing\InlineParserState.cs" />
-    <Compile Include="Parsing\BlockParserState.cs" />
-    <Compile Include="Parsing\NewBlockParserState.cs" />
+    <Compile Include="Parsers\IBlockParser.cs" />
+    <Compile Include="Parsers\InlineParser.cs" />
+    <Compile Include="Parsers\InlineParserState.cs" />
+    <Compile Include="Parsers\BlockParserState.cs" />
+    <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
+    <Compile Include="Parsers\CodeBlockParser.cs" />
+    <Compile Include="Parsers\FencedCodeBlockParser.cs" />
+    <Compile Include="Parsers\HeadingBlockParser.cs" />
+    <Compile Include="Parsers\HtmlBlockParser.cs" />
+    <Compile Include="Parsers\Inlines\AutolineInlineParser.cs" />
     <Compile Include="Syntax\Inlines\AutolinkInline.cs" />
     <Compile Include="Syntax\Inlines\CodeInline.cs" />
+    <Compile Include="Parsers\Inlines\CodeInlineParser.cs" />
     <Compile Include="Syntax\Inlines\ContainerInline.cs" />
     <Compile Include="Syntax\Inlines\DelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\DelimiterType.cs" />
     <Compile Include="Syntax\Inlines\EmphasisDelimiterInline.cs" />
     <Compile Include="Syntax\Inlines\EmphasisInline.cs" />
-    <Compile Include="Syntax\Inlines\EscapeInline.cs" />
+    <Compile Include="Parsers\Inlines\EmphasisInlineParser.cs" />
+    <Compile Include="Parsers\Inlines\EscapeInlineParser.cs" />
     <Compile Include="Syntax\Inlines\HardlineBreakInline.cs" />
+    <Compile Include="Parsers\Inlines\HardlineBreakInlineParser.cs" />
     <Compile Include="Syntax\Inlines\HtmlInline.cs" />
-    <Compile Include="Syntax\Inlines\InlineStack.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
     <Compile Include="Syntax\Inlines\LinkInline.cs" />
     <Compile Include="Syntax\Inlines\LinkDelimiterInline.cs" />
+    <Compile Include="Parsers\Inlines\LinkInlineParser.cs" />
     <Compile Include="Syntax\Inlines\LiteralInline.cs" />
+    <Compile Include="Parsers\Inlines\LiteralInlineParser.cs" />
     <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />
     <Compile Include="Syntax\HtmlBlock.cs" />
     <Compile Include="Syntax\HtmlBlockType.cs" />
     <Compile Include="Syntax\LeafBlock.cs" />
-    <Compile Include="Parsing\BlockParser.cs" />
-    <Compile Include="Parsing\MarkdownParser.cs" />
+    <Compile Include="Parsers\BlockParser.cs" />
+    <Compile Include="Parsers\MarkdownParser.cs" />
     <Compile Include="Syntax\LinkReferenceDefinitionBlock.cs" />
     <Compile Include="Syntax\ListBlock.cs" />
+    <Compile Include="Parsers\ListBlockParser.cs" />
     <Compile Include="Syntax\ListItemBlock.cs" />
+    <Compile Include="Parsers\ParagraphBlockParser.cs" />
     <Compile Include="Syntax\QuoteBlock.cs" />
+    <Compile Include="Parsers\QuoteBlockParser.cs" />
     <Compile Include="Syntax\StringSliceListExtensions.cs" />
     <Compile Include="Syntax\ThematicBreakBlock.cs" />
     <Compile Include="Helpers\CharHelper.cs" />
@@ -81,17 +94,19 @@
     <Compile Include="Syntax\Document.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />
     <Compile Include="Syntax\HeadingBlock.cs" />
-    <Compile Include="Parsing\MatchLineResult.cs" />
+    <Compile Include="Parsers\BlockState.cs" />
     <Compile Include="MethodImplOptionPortable.cs" />
     <Compile Include="Syntax\Inlines\Inline.cs" />
     <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\StringSlice.cs" />
     <Compile Include="Syntax\StringSliceList.cs" />
+    <Compile Include="Parsers\ThematicBreakParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

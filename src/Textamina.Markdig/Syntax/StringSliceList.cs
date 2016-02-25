@@ -8,8 +8,6 @@ namespace Textamina.Markdig.Syntax
     {
         private static readonly StringSlice[] Empty = new StringSlice[0];
 
-        private StringSlice currentLine;
-
         public StringSliceList()
         {
             Slices = Empty;
@@ -50,17 +48,17 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
-            var stringBuilder = StringBuilderCache.Local();
+            var builder = StringBuilderCache.Local();
             for(int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
-                    stringBuilder.Append('\n');
+                    builder.Append('\n');
                 }
-                stringBuilder.Append(Slices[i]);
+                builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
             }
-            var str = stringBuilder.ToString();
-            stringBuilder.Clear();
+            var str = builder.ToString();
+            builder.Clear();
             return str;
         }
     }

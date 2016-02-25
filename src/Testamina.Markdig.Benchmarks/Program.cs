@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Textamina.Markdig.Formatters;
-using Textamina.Markdig.Parsing;
+using Textamina.Markdig.Parsers;
 
 namespace Testamina.Markdig.Benchmarks
 {
@@ -46,15 +46,15 @@ namespace Testamina.Markdig.Benchmarks
 
         static void Main(string[] args)
         {
-            var clock = Stopwatch.StartNew();
+            //var clock = Stopwatch.StartNew();
             var program = new Program();
-            for (int i = 0; i < 200; i++)
-            {
-                //program.TestMarkdig();
-                program.TestCommonMark();
-            }
-            Console.WriteLine($"time: {clock.ElapsedMilliseconds}ms");
-            DumpGC();
+            //for (int i = 0; i < 200; i++)
+            //{
+            program.TestMarkdig();
+            //    //program.TestCommonMark();
+            //}
+            //Console.WriteLine($"time: {clock.ElapsedMilliseconds}ms");
+            //DumpGC();
 
             //BenchmarkRunner.Run<Program>();
         }
