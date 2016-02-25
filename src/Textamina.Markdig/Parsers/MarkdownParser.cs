@@ -56,9 +56,27 @@ namespace Textamina.Markdig.Parsers
                 {
                     break;
                 }
+                FixupZero(lineText);
+
                 blockParserState.ProcessLine(lineText);
             }
             blockParserState.CloseAll(true);
+        }
+       
+        private unsafe void FixupZero(string text)
+        {
+            fixed (char* pText = text)
+            {
+                int length = text.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    var c = pText[i];
+                    if (c == '\0')
+                    {
+                        pText[i] = '\ufffd';
+                    }
+                }
+            }
         }
 
         private void ProcessInlinesTasks(ContainerBlock container)

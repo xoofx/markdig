@@ -43,7 +43,7 @@ namespace Textamina.Markdig.Syntax
 
         public bool IsEndOfSlice => Start > End;
 
-        public char this[int index] => Text[index].EscapeInsecure();
+        public char this[int index] => Text[index];
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
@@ -61,14 +61,14 @@ namespace Textamina.Markdig.Syntax
         public char PeekChar(int offset)
         {
             var index = Start + offset;
-            return index >= Start && index <= End ? Text[index].EscapeInsecure() : (char) 0;
+            return index >= Start && index <= End ? Text[index] : (char) 0;
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char PeekCharExtra(int offset)
         {
             var index = Start + offset;
-            return index >= 0 && index < Text.Length ? Text[index].EscapeInsecure() : (char)0;
+            return index >= 0 && index < Text.Length ? Text[index] : (char)0;
         }
 
         public bool Match(string text, int offset = 0)
