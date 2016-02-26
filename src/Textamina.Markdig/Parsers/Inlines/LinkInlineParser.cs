@@ -13,15 +13,15 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'[', ']', '!'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
-            var c = text.CurrentChar;
+            var c = slice.CurrentChar;
 
             bool isImage = false;
             if (c == '!')
             {
                 isImage = true;
-                c = text.NextChar();
+                c = slice.NextChar();
                 if (c != '[')
                 {
                     return false;
@@ -33,21 +33,21 @@ namespace Textamina.Markdig.Parsers.Inlines
                 case '[':
                     // If this is not an image, we may have a reference link shortcut
                     // so we try to resolve it here
-                    var saved = text;
+                    var saved = slice;
                     string label;
 
                     // If the label is followed by either a ( or a [, this is not a shortcut
-                    if (LinkHelper.TryParseLabel(ref text, out label))
+                    if (LinkHelper.TryParseLabel(ref slice, out label))
                     {
                         if (!state.Document.LinkReferenceDefinitions.ContainsKey(label))
                         {
                             label = null;
                         }
                     }
-                    text = saved;
+                    slice = saved;
 
                     // Else we insert a LinkDelimiter
-                    text.NextChar();
+                    slice.NextChar();
                     state.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
@@ -57,16 +57,16 @@ namespace Textamina.Markdig.Parsers.Inlines
                     return true;
 
                 case ']':
-                    text.NextChar();
+                    slice.NextChar();
                     if (state.Inline != null)
                     {
-                        if (TryProcessLinkOrImage(state, ref text))
+                        if (TryProcessLinkOrImage(state, ref slice))
                         {
                             return true;
                         }
                     }
 
-                    // If we don’t find one, we return a literal text node ].
+                    // If we don’t find one, we return a literal slice node ].
                     // (Done after by the LiteralInline parser)
                     return false;
             }

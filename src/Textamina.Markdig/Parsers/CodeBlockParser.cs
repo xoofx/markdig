@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Parsers
                 // Remove trailing blankline
                 for (int i = lines.Count - 1; i >= 0; i--)
                 {
-                    if (lines.Slices[i].IsEndOfSlice)
+                    if (lines.Slices[i].IsEmpty)
                     {
                         lines.Count--;
                     }

@@ -70,9 +70,10 @@ namespace Textamina.Markdig.Parsers
             var paragraph = (ParagraphBlock) block;
             var headingChar = (char)0;
             bool checkForSpaces = false;
-            for (int i = state.Start; i <= state.EndOffset; i++)
+            var line = state.Line;
+            var c = line.CurrentChar;
+            while (c != '\0')
             {
-                var c = state.Line[i];
                 if (headingChar == 0)
                 {
                     if (c == '=' || c == '-')
@@ -103,15 +104,17 @@ namespace Textamina.Markdig.Parsers
                         break;
                     }
                 }
+                c = line.NextChar();
             }
 
             if (headingChar != 0)
             {
+                // We dicard the paragraph that will be transformed to a heading
                 state.Discard(paragraph);
 
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
                 // lines are empty, we can early exit and remove the paragraph
-                //if (!TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0)
+                if (!(TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0))
                 {
                     var level = headingChar == '=' ? 1 : 2;
 
@@ -132,46 +135,41 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private bool TryMatchLinkReferenceDefinition(StringSliceList localLineGroup, BlockParserState state)
+        private bool TryMatchLinkReferenceDefinition(StringSliceList lines, BlockParserState state)
         {
             bool atLeastOneFound = false;
 
-            //var saved = new StringSliceList.State();
-            //while (true)
-            //{
-            //    // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
-            //    localLineGroup.Save(ref saved);
-            //    LinkReferenceDefinitionBlock linkReferenceDefinition;
-            //    if (LinkReferenceDefinitionBlock.TryParse(localLineGroup, out linkReferenceDefinition))
-            //    {
-            //        if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
-            //        {
-            //            state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
-            //        }
-            //        atLeastOneFound = true;
+            while (true)
+            {
+                // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                var iterator = lines.ToCharIterator();
+                LinkReferenceDefinitionBlock linkReferenceDefinition;
+                if (LinkReferenceDefinitionBlock.TryParse(ref iterator, out linkReferenceDefinition))
+                {
+                    if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
+                    {
+                        state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                    }
+                    atLeastOneFound = true;
 
-            //        // Remove lines that have been matched
-            //        if (localLineGroup.LinePosition == localLineGroup.Count)
-            //        {
-            //            localLineGroup.Clear();
-            //        }
-            //        else
-            //        {
-            //            for (int i = localLineGroup.LinePosition - 1; i >= 0; i--)
-            //            {
-            //                localLineGroup.RemoveAt(i);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (!atLeastOneFound)
-            //        {
-            //            localLineGroup.Restore(ref saved);
-            //        }
-            //        break;
-            //    }
-            //}
+                    // Remove lines that have been matched
+                    if (iterator.Start > iterator.End)
+                    {
+                        lines.Clear();
+                    }
+                    else
+                    {
+                        for (int i = iterator.SliceIndex - 1; i >= 0; i--)
+                        {
+                            lines.RemoveAt(i);
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             return atLeastOneFound;
         }

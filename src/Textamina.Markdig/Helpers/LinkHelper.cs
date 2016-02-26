@@ -291,14 +291,24 @@ namespace Textamina.Markdig.Helpers
             {
                 var closingQuote = c == '(' ? ')' : c;
                 bool hasEscape = false;
-
+                // -1: undefined
+                //  0: has only spaces
+                //  1: has other characters
+                int hasOnlyWhiteSpacesSinceLastLine = -1;
                 while (true)
                 {
                     c = text.NextChar();
 
-                    if (c == '\n') // TODO?
+                    if (c == '\n')
                     {
-                        break;
+                        if (hasOnlyWhiteSpacesSinceLastLine >= 0)
+                        {
+                            if (hasOnlyWhiteSpacesSinceLastLine == 1)
+                            {
+                                break;
+                            }
+                            hasOnlyWhiteSpacesSinceLastLine = -1;
+                        }
                     }
 
                     if (c == '\0')
@@ -333,6 +343,18 @@ namespace Textamina.Markdig.Helpers
                     }
 
                     hasEscape = false;
+
+                    if (c.IsSpaceOrTab())
+                    {
+                        if (hasOnlyWhiteSpacesSinceLastLine < 0)
+                        {
+                            hasOnlyWhiteSpacesSinceLastLine = 1;
+                        }
+                    }
+                    else if (c != '\n')
+                    {
+                        hasOnlyWhiteSpacesSinceLastLine = 0;
+                    }
 
                     buffer.Append(c);
                 }
@@ -498,7 +520,7 @@ namespace Textamina.Markdig.Helpers
 
             var saved = text;
             int newLineCount;
-            var hasWhiteSpaces = text.TrimStart(out newLineCount);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out newLineCount);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {

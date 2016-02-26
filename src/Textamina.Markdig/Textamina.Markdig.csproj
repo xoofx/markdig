@@ -45,6 +45,7 @@
     <Compile Include="Parsers\InlineParser.cs" />
     <Compile Include="Parsers\InlineParserState.cs" />
     <Compile Include="Parsers\BlockParserState.cs" />
+    <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
     <Compile Include="Parsers\CodeBlockParser.cs" />

@@ -17,6 +17,7 @@ namespace Textamina.Markdig.Parsers
 
             Parsers = new ParserList<InlineParser>()
             {
+                HtmlEntityParser.Default,
                 LinkInlineParser.Default,
                 EmphasisInlineParser.Default,
                 EscapeInlineParser.Default,
@@ -54,7 +55,7 @@ namespace Textamina.Markdig.Parsers
             var text = new StringSlice(leafBlock.ToInlineText());
             leafBlock.Lines = null;
 
-            while (!text.IsEndOfSlice)
+            while (!text.IsEmpty)
             {
                 var c = text.CurrentChar;
                 var textSaved = text;

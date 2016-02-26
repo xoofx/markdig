@@ -13,20 +13,20 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'<'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             string link;
             bool isEmail;
-            var saved = text;
-            if (LinkHelper.TryParseAutolink(ref text, out link, out isEmail))
+            var saved = slice;
+            if (LinkHelper.TryParseAutolink(ref slice, out link, out isEmail))
             {
                 state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
             }
             else
             {
-                text = saved;
+                slice = saved;
                 string htmlTag;
-                if (!HtmlHelper.TryParseHtmlTag(ref text, out htmlTag))
+                if (!HtmlHelper.TryParseHtmlTag(ref slice, out htmlTag))
                 {
                     return false;
                 }

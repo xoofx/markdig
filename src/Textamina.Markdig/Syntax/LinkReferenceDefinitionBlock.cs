@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Syntax
 
         public string Title { get; set; }
 
-        public static bool TryParse<T>(ref ICharIterator text, out LinkReferenceDefinitionBlock block) where T : ICharIterator
+        public static bool TryParse<T>(ref T text, out LinkReferenceDefinitionBlock block) where T : ICharIterator
         {
             block = null;
             string label;

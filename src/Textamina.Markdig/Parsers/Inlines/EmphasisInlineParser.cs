@@ -13,15 +13,15 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '*', '_' };
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
             // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
             // is not preceded or followed by a _ character.
 
-            var delimiterChar = text.CurrentChar;
-            var pc = text.PeekCharExtra(-1);
-            if (delimiterChar == pc && text.PeekChar(-2) != '\\')
+            var delimiterChar = slice.CurrentChar;
+            var pc = slice.PeekCharExtra(-1);
+            if (delimiterChar == pc && slice.PeekChar(-2) != '\\')
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             do
             {
                 delimiterCount++;
-                c = text.NextChar();
+                c = slice.NextChar();
             } while (c == delimiterChar);
 
 

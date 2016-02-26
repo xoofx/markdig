@@ -57,7 +57,7 @@ namespace Textamina.Markdig.Parsers
 
         public bool IsBlankLine => CurrentChar == '\0';
 
-        public bool IsEndOfLine => Line.IsEndOfSlice;
+        public bool IsEndOfLine => Line.IsEmpty;
 
         public char CurrentChar => Line.CurrentChar;
 
@@ -235,7 +235,7 @@ namespace Textamina.Markdig.Parsers
 
             //// If we have already reached eol and the last block was a paragraph
             //// we close it
-            //if (Line.IsEndOfSlice)
+            //if (Line.IsEmpty)
             //{
             //    int index = Stack.Count - 1;
             //    if (Stack[index] is ParagraphBlock)
@@ -410,7 +410,7 @@ namespace Textamina.Markdig.Parsers
             for (int j = 0; j < parsers.Length; j++)
             {
                 var blockParser = parsers[j];
-                if (Line.IsEndOfSlice)
+                if (Line.IsEmpty)
                 {
                     ContinueProcessingLine = false;
                     break;

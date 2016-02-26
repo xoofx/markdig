@@ -13,10 +13,10 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'\n'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
-            if (!(state.Block is ParagraphBlock) || text.Column == 0 || !text.PeekCharExtra(-1).IsSpace() || !text.PeekCharExtra(-2).IsSpace())
+            if (!(state.Block is ParagraphBlock) || slice.Column == 0 || !slice.PeekCharExtra(-1).IsSpace() || !slice.PeekCharExtra(-2).IsSpace())
             {
                 return false;
             }
@@ -31,21 +31,21 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
 
             state.Inline = new HardlineBreakInline();
-            text.NextChar(); // Skip \n
+            slice.NextChar(); // Skip \n
 
             //// A line break (not in a code span or HTML tag) that is preceded by two or more spaces 
             //// and does not occur at the end of a block is parsed as a hard line break (rendered in HTML as a <br /> tag)
-            //var text = state.Lines;
+            //var slice = state.Lines;
             //int spaceCount = 0;
-            //var c = text.CurrentChar;
+            //var c = slice.CurrentChar;
             //while (c.IsSpaceOrTab())
             //{
-            //    c = text.NextChar();
+            //    c = slice.NextChar();
             //    spaceCount++;
             //}
             //if (c == '\\')
             //{
-            //    c = text.NextChar();
+            //    c = slice.NextChar();
             //    spaceCount = 2;
             //}
             //if (c != '\n' || spaceCount < 2)

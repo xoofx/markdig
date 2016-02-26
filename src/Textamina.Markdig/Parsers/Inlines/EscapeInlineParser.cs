@@ -13,15 +13,22 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'\\'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             // Go to escape character
-            var c = text.NextChar();
+            var c = slice.NextChar();
             if (c.IsAsciiPunctuation())
             {
-                var literal = new LiteralInline() {Content = new string(c, 1)};
-                state.Inline = literal;
-                text.NextChar();
+                state.Inline = new LiteralInline() {Content = new string(c, 1)};
+                slice.NextChar();
+                return true;
+            }
+
+            // A backslash at the end of the line is a [hard line break]:
+            if (c == '\n')
+            {
+                state.Inline = new HardlineBreakInline();
+                slice.NextChar();
                 return true;
             }
             return false;

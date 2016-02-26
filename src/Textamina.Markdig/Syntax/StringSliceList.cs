@@ -26,6 +26,26 @@ namespace Textamina.Markdig.Syntax
 
         public int Count;
 
+        public void Clear()
+        {
+            Array.Clear(Slices, 0, Slices.Length);
+            Count = 0;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (Count - 1 == index)
+            {
+                Count--;
+            }
+            else
+            {
+                Array.Copy(Slices, index + 1, Slices, index, Count - index - 1);
+                Slices[Count - 1] = new StringSlice();
+                Count--;
+            }
+        }
+
         public void Add(ref StringSlice slice)
         {
             if (Count == Slices.Length) IncreaseCapacity();
@@ -58,7 +78,7 @@ namespace Textamina.Markdig.Syntax
 
             if (Count == 1)
             {
-                return !Slices[0].IsEndOfSlice ? Slices[0].Text.Substring(Slices[0].Start, Slices[0].Length) : string.Empty;
+                return !Slices[0].IsEmpty ? Slices[0].Text.Substring(Slices[0].Start, Slices[0].Length) : string.Empty;
             }
 
             var builder = StringBuilderCache.Local();
@@ -68,7 +88,7 @@ namespace Textamina.Markdig.Syntax
                 {
                     builder.Append('\n');
                 }
-                if (!Slices[i].IsEndOfSlice)
+                if (!Slices[i].IsEmpty)
                 {
                     builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
                 }
@@ -114,6 +134,8 @@ namespace Textamina.Markdig.Syntax
 
             public int End { get; private set; }
 
+            public bool IsEmpty => Start > End;
+
             public int SliceIndex { get; private set; }
 
             public char NextChar()
@@ -147,23 +169,13 @@ namespace Textamina.Markdig.Syntax
             public bool TrimStart()
             {
                 var c = CurrentChar;
+                bool hasSpaces = false;
                 while (c.IsWhitespace())
                 {
+                    hasSpaces = true;
                     c = NextChar();
                 }
-                return c == '\0';
-            }
-
-            public bool TrimStart(out int spaceCount)
-            {
-                spaceCount = 0;
-                var c = CurrentChar;
-                while (c.IsWhitespace())
-                {
-                    c = NextChar();
-                    spaceCount++;
-                }
-                return c == '\0';
+                return hasSpaces;
             }
         }
     }

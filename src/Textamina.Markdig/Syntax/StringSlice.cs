@@ -14,18 +14,33 @@ namespace Textamina.Markdig.Syntax
 
         char NextChar();
 
+        bool IsEmpty { get; }
+
         /// <summary>
         /// Trims the start.
         /// </summary>
         /// <returns><c>true</c> if it has reaches the end of the iterator</returns>
         bool TrimStart();
+    }
 
-        /// <summary>
-        /// Trims the start.
-        /// </summary>
-        /// <param name="spaceCount">The space count.</param>
-        /// <returns><c>true</c> if it has reaches the end of the iterator</returns>
-        bool TrimStart(out int spaceCount);
+    public static class CharIteratorHelper
+    {
+        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
+        {
+            countNewLines = 0;
+            var c = iterator.CurrentChar;
+            bool hasWhitespaces = false;
+            while (c.IsWhitespace())
+            {
+                if (c == '\n')
+                {
+                    countNewLines++;
+                }
+                hasWhitespaces = true;
+                c = iterator.NextChar();
+            }
+            return hasWhitespaces;
+        }
     }
 
     public struct StringSlice : ICharIterator
@@ -50,7 +65,7 @@ namespace Textamina.Markdig.Syntax
 
         public char CurrentChar => Start <= End ? this[Start] : '\0';
 
-        public bool IsEndOfSlice => Start > End;
+        public bool IsEmpty => Start > End;
 
         public char this[int index] => Text[index];
 
@@ -144,6 +159,7 @@ namespace Textamina.Markdig.Syntax
         public bool TrimStart()
         {
             // Strip leading spaces
+            var start = Start;
             for (; Start <= End; Start++)
             {
                 if (!Text[Start].IsWhitespace())
@@ -151,10 +167,10 @@ namespace Textamina.Markdig.Syntax
                     break;
                 }
             }
-            return Start > End;
+            return start != Start;
         }
 
-        public bool TrimStart(out int spaceCount)
+        public void TrimStart(out int spaceCount)
         {
             spaceCount = 0;
             // Strip leading spaces
@@ -166,7 +182,6 @@ namespace Textamina.Markdig.Syntax
                 }
                 spaceCount++;
             }
-            return IsEndOfSlice;
         }
 
         public bool TrimEnd()
@@ -178,7 +193,7 @@ namespace Textamina.Markdig.Syntax
                     break;
                 }
             }
-            return IsEndOfSlice;
+            return IsEmpty;
         }
 
         public void Trim()

@@ -13,19 +13,19 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '`' };
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             int openSticks = 0;
-            if (text.PeekCharExtra(-1) == '`')
+            if (slice.PeekCharExtra(-1) == '`')
             {
                 return false;
             }
 
-            var c = text.CurrentChar;
+            var c = slice.CurrentChar;
             while (c == '`')
             {
                 openSticks++;
-                c = text.NextChar();
+                c = slice.NextChar();
             }
 
             bool isMatching = false;
@@ -56,7 +56,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     {
                         closeSticks++;
                         pc = c;
-                        c = text.NextChar();
+                        c = slice.NextChar();
                     }
 
                     if (openSticks == closeSticks)
@@ -73,7 +73,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 else
                 {
                     pc = c;
-                    c = text.NextChar();
+                    c = slice.NextChar();
                 }
             }
 

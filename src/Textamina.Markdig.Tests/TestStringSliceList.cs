@@ -80,7 +80,7 @@ namespace Textamina.Markdig.Tests
         public void TestSkipWhitespaces()
         {
             var text = new StringSliceList("             ABC").ToCharIterator();
-            Assert.False(text.TrimStart());
+            Assert.True(text.TrimStart());
             Assert.AreEqual('A', text.CurrentChar);
         }
 

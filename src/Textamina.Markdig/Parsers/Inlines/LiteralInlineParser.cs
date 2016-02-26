@@ -1,4 +1,5 @@
 using System.Text;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
@@ -17,20 +18,38 @@ namespace Textamina.Markdig.Parsers.Inlines
         {
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice text)
+        public override bool Match(InlineParserState state, ref StringSlice slice)
         {
+            var text = slice.Text;
+
             // Sligthly faster to perform our own search for opening characters
-            var nextStart = state.Parsers.IndexOfOpeningCharacter(text.Text, text.Start + 1, text.End);
-            //var nextStart = str.IndexOfAny(state.SpecialCharacters, text.Start + 1, text.Length - 1);
+            var nextStart = state.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
+            //var nextStart = str.IndexOfAny(state.SpecialCharacters, slice.Start + 1, slice.Length - 1);
+            int length;
+
             if (nextStart < 0)
             {
-                nextStart = text.End + 1;
+                nextStart = slice.End + 1;
+                length = nextStart - slice.Start;
+            }
+            else
+            {
+                // Remove line endings if the next char is a new line
+                length = nextStart - slice.Start;
+                if (text[nextStart] == '\n')
+                {
+                    int end = nextStart - 1;
+                    while (length > 0 && text[end].IsSpace())
+                    {
+                        length--;
+                        end--;
+                    }
+                }
             }
 
-            var length = nextStart - text.Start;
-            state.Inline = new LiteralInline { Content = text.Text.Substring(text.Start, length) };
-            text.Start = nextStart;
-            return true;
+            state.Inline = length > 0 ? new LiteralInline {Content = text.Substring(slice.Start, length)} : null;
+            slice.Start = nextStart;
+            return length > 0;
         }
     }
 }

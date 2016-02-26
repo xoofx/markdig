@@ -6,6 +6,6 @@ namespace Textamina.Markdig.Parsers
     {
         public char[] OpeningCharacters { get; protected set; }
 
-        public abstract bool Match(InlineParserState state, ref StringSlice text);
+        public abstract bool Match(InlineParserState state, ref StringSlice slice);
     }
 }

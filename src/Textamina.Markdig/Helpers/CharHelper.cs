@@ -6,6 +6,8 @@ namespace Textamina.Markdig.Helpers
 {
     public static class CharHelper
     {
+        public static readonly string ZeroSafeString = string.Empty + '\uFFFD';
+
         //[MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhitespace(this char c)
         {
