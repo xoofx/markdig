@@ -17,10 +17,14 @@ namespace Textamina.Markdig.Parsers
         {
             // When both a thematic break and a list item are possible
             // interpretations of a line, the thematic break takes precedence
-            var result = ThematicBreakParser.Default.TryOpen(state);
-            if (result.IsBreak())
+            var thematicParser = ThematicBreakParser.Default;
+            if (thematicParser.HasOpeningCharacter(state.CurrentChar))
             {
-                return result;
+                var result = thematicParser.TryOpen(state);
+                if (result.IsBreak())
+                {
+                    return result;
+                }
             }
 
             return TryParseListItem(state, null);
@@ -36,12 +40,17 @@ namespace Textamina.Markdig.Parsers
 
             // When both a thematic break and a list item are possible
             // interpretations of a line, the thematic break takes precedence
-            var result = ThematicBreakParser.Default.TryOpen(state);
-            if (result.IsBreak())
+            BlockState result;
+            var thematicParser = ThematicBreakParser.Default;
+            if (thematicParser.HasOpeningCharacter(state.CurrentChar))
             {
-                // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
-                state.NewBlocks.Pop();
-                return BlockState.None;
+                result = thematicParser.TryOpen(state);
+                if (result.IsBreak())
+                {
+                    // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
+                    state.NewBlocks.Pop();
+                    return BlockState.None;
+                }
             }
 
             // 5.2 List items 

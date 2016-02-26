@@ -10,6 +10,21 @@ namespace Textamina.Markdig.Parsers
 
         public char[] OpeningCharacters { get; protected set; }
 
+        public bool HasOpeningCharacter(char c)
+        {
+            if (OpeningCharacters != null)
+            {
+                for (int i = 0; i < OpeningCharacters.Length; i++)
+                {
+                    if (OpeningCharacters[i] == c)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public virtual bool CanInterrupt(BlockParserState state, Block block)
         {
             // By default, all blocks can interrupt a paragraph except:

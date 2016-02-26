@@ -6,9 +6,8 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Tests
 {
     [TestFixture]
-    public class TestStringLine
+    public class TestStringSliceList
     {
-        /*
         // TODO: Add tests for StringSlice
         // TODO: Add more tests for StringLineGroup
 
@@ -22,11 +21,29 @@ namespace Textamina.Markdig.Tests
                 new StringSlice("F")
             };
 
-            var chars = ToString(text);
+            var iterator = text.ToCharIterator();
+            Assert.AreEqual("ABC\nE\nF".Length, iterator.End - iterator.Start + 1);
+
+            var chars = ToString(text.ToCharIterator());
             TextAssert.AreEqual("ABC\nE\nF", chars.ToString());
         }
 
-        private static string ToString(StringSliceList text)
+        [Test]
+        public void TestStringLineGroupWithSlices()
+        {
+            var text = new StringSliceList()
+            {
+                new StringSlice("XABC") { Start = 1},
+                new StringSlice("YYE") { Start = 2},
+                new StringSlice("ZZZF") { Start = 3 }
+            };
+
+            var chars = ToString(text.ToCharIterator());
+            TextAssert.AreEqual("ABC\nE\nF", chars.ToString());
+        }
+
+
+        private static string ToString(StringSliceList.Iterator text)
         {
             var chars = new StringBuilder();
             while (text.CurrentChar != '\0')
@@ -44,32 +61,26 @@ namespace Textamina.Markdig.Tests
             {
                 new StringSlice("ABCD"),
                 new StringSlice("EF"),
-            };
+            }.ToCharIterator();
+
+            Assert.AreEqual('A', text.CurrentChar);
+            Assert.AreEqual(0, text.SliceIndex);
 
             text.NextChar(); // B
-
-            var save = text.Save();
 
             text.NextChar(); // C
             text.NextChar(); // D
             text.NextChar(); // \n
             text.NextChar();
             Assert.AreEqual('E', text.CurrentChar);
-            Assert.AreEqual(1, text.LinePosition);
-            Assert.AreEqual(0, text.ColumnPosition);
-
-            text.Restore(ref save);
-            Assert.AreEqual('B', text.CurrentChar);
-            Assert.AreEqual(0, text.LinePosition);
-            Assert.AreEqual(1, text.ColumnPosition);
+            Assert.AreEqual(1, text.SliceIndex);
         }
 
         [Test]
         public void TestSkipWhitespaces()
         {
-            var text = new StringSliceList("             ABC");
-            Assert.True(text.SkipWhiteSpaces());
-            Assert.False(text.SkipWhiteSpaces());
+            var text = new StringSliceList("             ABC").ToCharIterator();
+            Assert.False(text.TrimStart());
             Assert.AreEqual('A', text.CurrentChar);
         }
 
@@ -85,10 +96,9 @@ namespace Textamina.Markdig.Tests
 
             var text = new StringSliceList() {line1, line2};
 
-            var result = ToString(text);
+            var result = ToString(text.ToCharIterator());
             TextAssert.AreEqual("ABC\nDEF", result);
         }
-
 
         [Test]
         public void TestStringLineGroupWithTrim()
@@ -99,13 +109,11 @@ namespace Textamina.Markdig.Tests
 
             var line2 = new StringSlice("  DEF ");
 
-            var text = new StringSliceList() { line1, line2 };
-            text.Trim();
+            var text = new StringSliceList() { line1, line2}.ToCharIterator();
+            text.TrimStart();
 
             var result = ToString(text);
-            TextAssert.AreEqual("ABC  \n  DEF", result);
+            TextAssert.AreEqual("ABC  \n  DEF ", result);
         }
-        */
-
     }
 }

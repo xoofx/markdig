@@ -23,7 +23,7 @@ namespace Textamina.Markdig.Syntax
             {
                 Lines = new StringSliceList();
             }
-            Lines.Append(ref line);
+            Lines.Add(ref line);
         }
 
         public virtual string ToInlineText()

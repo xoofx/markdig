@@ -6,16 +6,25 @@ namespace Textamina.Markdig.Syntax
 {
     public interface ICharIterator
     {
-        int Start { get; set; }
+        int Start { get; }
 
         char CurrentChar { get; }
 
-        int End { get; set; }
+        int End { get; }
 
         char NextChar();
 
+        /// <summary>
+        /// Trims the start.
+        /// </summary>
+        /// <returns><c>true</c> if it has reaches the end of the iterator</returns>
         bool TrimStart();
 
+        /// <summary>
+        /// Trims the start.
+        /// </summary>
+        /// <param name="spaceCount">The space count.</param>
+        /// <returns><c>true</c> if it has reaches the end of the iterator</returns>
         bool TrimStart(out int spaceCount);
     }
 

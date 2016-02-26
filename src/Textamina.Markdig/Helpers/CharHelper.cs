@@ -111,12 +111,6 @@ namespace Textamina.Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public static bool IsBulletListMarker(this char c)
-        {
-            return c == '-' || c == '+' || c == '*';
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsAlphaUpper(this char c)
         {
             return c >= 'A' && c <= 'Z';
