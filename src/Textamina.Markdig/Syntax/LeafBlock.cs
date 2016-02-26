@@ -26,9 +26,9 @@ namespace Textamina.Markdig.Syntax
             Lines.Add(ref line);
         }
 
-        public virtual string ToInlineText()
+        public virtual StringSlice ToInlineSlice()
         {
-            return Lines.ToString();
+            return Lines.ToSlice();
         }
     }
 }

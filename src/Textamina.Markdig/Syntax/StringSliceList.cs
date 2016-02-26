@@ -71,14 +71,19 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
+            return ToSlice().ToString();
+        }
+
+        public StringSlice ToSlice()
+        {
             if (Count == 0)
             {
-                return string.Empty;
+                return new StringSlice(string.Empty);
             }
 
             if (Count == 1)
             {
-                return !Slices[0].IsEmpty ? Slices[0].Text.Substring(Slices[0].Start, Slices[0].Length) : string.Empty;
+                return Slices[0];
             }
 
             var builder = StringBuilderCache.Local();
@@ -95,7 +100,7 @@ namespace Textamina.Markdig.Syntax
             }
             var str = builder.ToString();
             builder.Clear();
-            return str;
+            return new StringSlice(str);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

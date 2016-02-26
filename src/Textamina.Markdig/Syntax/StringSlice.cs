@@ -53,6 +53,14 @@ namespace Textamina.Markdig.Syntax
             End = Text.Length - 1;
         }
 
+        public StringSlice(string text, int start, int end)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            Text = text;
+            Start = start;
+            End = end;
+        }
+
         public readonly string Text;
 
         public int Start { get; set; }
@@ -204,7 +212,17 @@ namespace Textamina.Markdig.Syntax
 
         public override string ToString()
         {
-            return Text != null && Start <= End ? Text.Substring(Start, End - Start + 1) : string.Empty;
+            if (Text != null && Start <= End)
+            {
+                var length = Length;
+                if (Start == 0 && Text.Length == length)
+                {
+                    return Text;
+                }
+
+                return Text.Substring(Start, length);
+            }
+            return string.Empty;
         }
     }
 }

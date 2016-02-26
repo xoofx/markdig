@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax.Inlines
         {
         }
 
-        public string Content { get; set; }
+        public StringSlice Content;
 
         protected override void Close(InlineParserState state)
         {
@@ -18,7 +18,7 @@ namespace Textamina.Markdig.Syntax.Inlines
 
         public override string ToString()
         {
-            return Content ?? string.Empty;
+            return Content.ToString();
         }
     }
 }

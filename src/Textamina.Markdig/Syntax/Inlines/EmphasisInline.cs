@@ -44,7 +44,7 @@ namespace Textamina.Markdig.Syntax.Inlines
                 child = subContainer?.LastChild;
                 if (delimiter == null && subContainer is DelimiterInline)
                 {
-                    subContainer.ReplaceBy(new LiteralInline() {Content = ((DelimiterInline)subContainer).ToLiteral(), IsClosed = true});
+                    subContainer.ReplaceBy(new LiteralInline() {Content = new StringSlice(((DelimiterInline)subContainer).ToLiteral()), IsClosed = true});
                 }
             }
 
@@ -121,7 +121,7 @@ namespace Textamina.Markdig.Syntax.Inlines
                                 var literalDelimiter = delimiters[k];
                                 var literal = new LiteralInline()
                                 {
-                                    Content = literalDelimiter.ToLiteral(),
+                                    Content = new StringSlice(literalDelimiter.ToLiteral()),
                                     IsClosed = true
                                 };
 
@@ -170,7 +170,7 @@ namespace Textamina.Markdig.Syntax.Inlines
                         {
                             var literal = new LiteralInline()
                             {
-                                Content = closeDelimiter.ToLiteral(),
+                                Content = new StringSlice(closeDelimiter.ToLiteral()),
                                 IsClosed = true
                             };
 
@@ -193,7 +193,7 @@ namespace Textamina.Markdig.Syntax.Inlines
                 var delimiter = delimiters[i];
                 var literal = new LiteralInline()
                 {
-                    Content = delimiter.ToLiteral(),
+                    Content = new StringSlice(delimiter.ToLiteral()),
                     IsClosed = true
                 };
 

@@ -47,9 +47,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                 }
             }
 
-            state.Inline = length > 0 ? new LiteralInline {Content = text.Substring(slice.Start, length)} : null;
+            // The LiteralInlineParser is always matching (at least an empty string)
+            state.Inline = length > 0 ? new LiteralInline {Content = new StringSlice(slice.Text, slice.Start, slice.Start + length - 1)} : new LiteralInline();
             slice.Start = nextStart;
-            return length > 0;
+            return true;
         }
     }
 }

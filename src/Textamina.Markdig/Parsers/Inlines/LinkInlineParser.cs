@@ -93,7 +93,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 {
                     child = new LiteralInline()
                     {
-                        Content = label,
+                        Content = new StringSlice(label),
                         IsClosed = true
                     };
                     link.AppendChild(child);
@@ -211,7 +211,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                 var literal = new LiteralInline()
                 {
-                    Content = openParent.IsImage ? "![" : "["
+                    Content = new StringSlice(openParent.IsImage ? "![" : "[")
                 };
 
                 inlineState.InlinesToClose.Add(literal);
@@ -238,7 +238,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                 var literal = new LiteralInline()
                 {
-                    Content = "[",
+                    Content = new StringSlice("["),
                     IsClosed = true
                 };
 

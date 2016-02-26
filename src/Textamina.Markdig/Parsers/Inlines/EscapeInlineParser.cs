@@ -19,7 +19,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             var c = slice.NextChar();
             if (c.IsAsciiPunctuation())
             {
-                state.Inline = new LiteralInline() {Content = new string(c, 1)};
+                state.Inline = new LiteralInline() {Content = new StringSlice(new string(c, 1))};
                 slice.NextChar();
                 return true;
             }

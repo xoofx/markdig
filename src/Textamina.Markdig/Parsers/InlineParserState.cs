@@ -52,7 +52,7 @@ namespace Textamina.Markdig.Parsers
             this.Inline = leafBlock.Inline;
             this.Block = leafBlock;
 
-            var text = new StringSlice(leafBlock.ToInlineText());
+            var text = leafBlock.ToInlineSlice();
             leafBlock.Lines = null;
 
             while (!text.IsEmpty)

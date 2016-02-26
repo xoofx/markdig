@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
             if (literal != null)
             {
-                state.Inline = new LiteralInline() {Content = literal};
+                state.Inline = new LiteralInline() {Content = new StringSlice(literal)};
                 slice.Start = slice.Start + match;
                 return true;
             }

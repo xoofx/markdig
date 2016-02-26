@@ -168,7 +168,8 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(LiteralInline literal)
         {
-            HtmlHelper.EscapeHtml(literal.Content, writer);
+            // TODO: Provide an optimized version
+            HtmlHelper.EscapeHtml(literal.Content.ToString(), writer);
         }
 
         protected void Write(AutolinkInline autolink)
