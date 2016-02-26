@@ -83,6 +83,7 @@ namespace Textamina.Markdig.Parsers
                     }
                 }
 
+                text = textSaved;
                 // Else match using the default literal inline parser
                 LiteralInlineParser.Default.Match(this, ref text);
 

@@ -26,8 +26,8 @@ namespace Textamina.Markdig.Parsers.Inlines
 
             var str = text.Text;
             // Sligthly faster to perform our
-            //var nextStart = state.Parsers.IndexOfOpeningCharacter(str, text.Start + 1, text.End);
-            var nextStart = str.IndexOfAny(state.SpecialCharacters, text.Start + 1, text.Length - 1);
+            var nextStart = state.Parsers.IndexOfOpeningCharacter(str, text.Start + 1, text.End);
+            //var nextStart = str.IndexOfAny(state.SpecialCharacters, text.Start + 1, text.Length - 1);
             if (nextStart < 0)
             {
                 nextStart = text.End + 1;
