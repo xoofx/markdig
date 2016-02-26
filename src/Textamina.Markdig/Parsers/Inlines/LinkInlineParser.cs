@@ -138,9 +138,26 @@ namespace Textamina.Markdig.Parsers.Inlines
                 break;
             }
 
-            // This will be matched as a literal
             if (openParent != null)
             {
+                // If we do find one, but it’s not active, 
+                // we remove the inactive delimiter from the stack, 
+                // and return a literal text node ].
+                if (!openParent.IsActive)
+                {
+                    inlineState.Inline = new LiteralInline()
+                    {
+                        Content = new StringSlice("[")
+                    };
+                    openParent.ReplaceBy(inlineState.Inline);
+                    return false;
+                }
+
+                // If we find one and it’s active, 
+                // then we parse ahead to see if we have 
+                // an inline link/image, reference link/image, 
+                // compact reference link/image, 
+                // or shortcut reference link/image
                 var parentDelimiter = openParent.Parent;
                 switch (text.CurrentChar)
                 {
@@ -162,7 +179,13 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                             EmphasisInline.ProcessEmphasis(link);
 
-                            ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+                            // If we have a link (and not an image), 
+                            // we also set all [ delimiters before the opening delimiter to inactive. 
+                            // (This will prevent us from getting links within links.)
+                            if (!openParent.IsImage)
+                            {
+                                MarkParentAsInactive(parentDelimiter);
+                            }
 
                             link.IsClosed = true;
 
@@ -194,7 +217,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                             {
                                 // Remove the open parent
                                 openParent.Remove();
-                                ReplaceParentIfNotImage(openParent.IsImage, parentDelimiter);
+                                if (!openParent.IsImage)
+                                {
+                                    MarkParentAsInactive(parentDelimiter);
+                                }
                             }
                             else
                             {
@@ -214,7 +240,6 @@ namespace Textamina.Markdig.Parsers.Inlines
                     Content = new StringSlice(openParent.IsImage ? "![" : "[")
                 };
 
-                inlineState.InlinesToClose.Add(literal);
                 inlineState.Inline = openParent.ReplaceBy(literal);
                 return false;
             }
@@ -222,9 +247,9 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-        private void ReplaceParentIfNotImage(bool isImage, Inline inline)
+        private void MarkParentAsInactive(Inline inline)
         {
-            if (isImage || inline == null)
+            if (inline == null)
             {
                 return;
             }
@@ -236,13 +261,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     break;
                 }
 
-                var literal = new LiteralInline()
-                {
-                    Content = new StringSlice("["),
-                    IsClosed = true
-                };
-
-                parent.ReplaceBy(literal);
+                parent.IsActive = false;
             }
         }
 

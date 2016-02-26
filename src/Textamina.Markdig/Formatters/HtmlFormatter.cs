@@ -214,19 +214,29 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(LinkInline link)
         {
-            writer.WriteConstant(link.IsImage ? "<img src=\"" : "<a href=\"");
-            HtmlHelper.EscapeUrl(link.Url, writer);
-            writer.WriteConstant("\"");
-            if (link.IsImage)
+            if (EnableHtmlForInline)
             {
-                writer.WriteConstant(" alt=\"");
-                EnableHtmlForInline = false;
-                WriteChildren(link);
-                EnableHtmlForInline = true;
+                writer.WriteConstant(link.IsImage ? "<img src=\"" : "<a href=\"");
+                HtmlHelper.EscapeUrl(link.Url, writer);
                 writer.WriteConstant("\"");
             }
+            if (link.IsImage)
+            {
+                if (EnableHtmlForInline)
+                {
+                    writer.WriteConstant(" alt=\"");
+                }
+                var wasEnableHtmlForInline = EnableHtmlForInline;
+                EnableHtmlForInline = false;
+                WriteChildren(link);
+                EnableHtmlForInline = wasEnableHtmlForInline;
+                if (EnableHtmlForInline)
+                {
+                    writer.WriteConstant("\"");
+                }
+            }
 
-            if (!string.IsNullOrEmpty(link.Title))
+            if (EnableHtmlForInline && !string.IsNullOrEmpty(link.Title))
             {
                 writer.WriteConstant(" title=\"");
                 HtmlHelper.EscapeHtml(link.Title, writer);
@@ -235,13 +245,22 @@ namespace Textamina.Markdig.Formatters
 
             if (link.IsImage)
             {
-                writer.WriteConstant(" />");
+                if (EnableHtmlForInline)
+                {
+                    writer.WriteConstant(" />");
+                }
             }
             else
             {
-                writer.WriteConstant(">");
+                if (EnableHtmlForInline)
+                {
+                    writer.WriteConstant(">");
+                }
                 WriteChildren(link);
-                writer.WriteConstant("</a>");
+                if (EnableHtmlForInline)
+                {
+                    writer.WriteConstant("</a>");
+                }
             }
         }
 

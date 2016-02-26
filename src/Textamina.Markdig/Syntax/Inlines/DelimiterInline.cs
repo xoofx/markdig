@@ -9,6 +9,7 @@ namespace Textamina.Markdig.Syntax.Inlines
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             Parser = parser;
+            IsActive = true;
         }
 
         public InlineParser Parser { get; }
@@ -19,6 +20,8 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// Gets or sets the priority of this delimiter.
         /// </summary>
         public int Priority { get; set; }
+
+        public bool IsActive { get; set; }
 
         public abstract string ToLiteral();
 
