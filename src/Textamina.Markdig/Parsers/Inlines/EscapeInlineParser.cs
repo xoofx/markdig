@@ -19,9 +19,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             var c = text.NextChar();
             if (c.IsAsciiPunctuation())
             {
-                var literal = state.Inline as LiteralInline ??
-                              new LiteralInline() {ContentBuilder = state.StringBuilders.Get()};
-                literal.ContentBuilder.Append(c);
+                var literal = new LiteralInline() {Content = new string(c, 1)};
                 state.Inline = literal;
                 text.NextChar();
                 return true;

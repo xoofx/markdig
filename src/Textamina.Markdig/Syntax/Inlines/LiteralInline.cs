@@ -8,30 +8,17 @@ namespace Textamina.Markdig.Syntax.Inlines
     {
         public LiteralInline()
         {
-            IsClosable = true;
         }
-
-        public StringBuilder ContentBuilder { get; set; }
 
         public string Content { get; set; }
 
-        public bool TrimEnd { get; set; }
-
         protected override void Close(InlineParserState state)
         {
-            var str = ContentBuilder.ToString();
-            if (TrimEnd)
-            {
-                str = str.TrimEnd();
-            }
-            Content = str;
-            state.StringBuilders.Release(ContentBuilder);
-            ContentBuilder = null;
         }
 
         public override string ToString()
         {
-            return Content ?? (ContentBuilder != null ? ContentBuilder.ToString() : string.Empty);
+            return Content ?? string.Empty;
         }
     }
 }

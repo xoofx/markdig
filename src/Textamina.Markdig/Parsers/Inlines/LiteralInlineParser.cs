@@ -11,18 +11,8 @@ namespace Textamina.Markdig.Parsers.Inlines
         public override bool Match(InlineParserState state, ref StringSlice text)
         {
             // A literal will always match
-            var literal = state.Inline as LiteralInline;
-            StringBuilder builder;
-            if (literal == null)
-            {
-                builder = state.StringBuilders.Get();
-                literal = new LiteralInline {ContentBuilder = builder};
-                state.Inline = literal;
-            }
-            else
-            {
-                builder = literal.ContentBuilder;
-            }
+            var literal = new LiteralInline();
+            state.Inline = literal;
 
             var str = text.Text;
             // Sligthly faster to perform our
@@ -34,14 +24,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
 
             var length = nextStart - text.Start;
-            if (length == 1)
-            {
-                builder.Append(text.CurrentChar);
-            }
-            else
-            {
-                builder.Append(str, text.Start, length);
-            }
+            literal.Content = str.Substring(text.Start, length);
             text.Start = nextStart;
             return true;
         }

@@ -26,7 +26,8 @@ namespace Textamina.Markdig.Parsers.Inlines
             var literal = state.Inline as LiteralInline;
             if (literal != null)
             {
-                literal.TrimEnd = true;
+                // TODO: TRIM END
+                // literal.TrimEnd = true;
             }
 
             state.Inline = new HardlineBreakInline();

@@ -211,7 +211,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                 var literal = new LiteralInline()
                 {
-                    ContentBuilder = inlineState.StringBuilders.Get().Append(openParent.IsImage ? "![" : "[")
+                    Content = openParent.IsImage ? "![" : "["
                 };
 
                 inlineState.InlinesToClose.Add(literal);
