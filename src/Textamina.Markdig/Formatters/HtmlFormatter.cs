@@ -16,6 +16,8 @@ namespace Textamina.Markdig.Formatters
 
         private bool implicitParagraph;
 
+        protected bool EnableHtmlForInline;
+
         public HtmlFormatter(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -31,6 +33,8 @@ namespace Textamina.Markdig.Formatters
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
                 [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
                 [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
+
+
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
                 [typeof(CodeInline)] = o => Write((CodeInline)o),
                 [typeof(LinkInline)] = o => Write((LinkInline)o),
@@ -40,6 +44,8 @@ namespace Textamina.Markdig.Formatters
                 [typeof(HardlineBreakInline)] = o => Write((HardlineBreakInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
             };
+
+            EnableHtmlForInline = true;
         }
 
         public void Write(Document document)
@@ -174,22 +180,36 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(AutolinkInline autolink)
         {
-            writer.WriteConstant("<a href=\"");
-            if (autolink.IsEmail)
+            if (EnableHtmlForInline)
             {
-                writer.WriteConstant("mailto:");
+                writer.WriteConstant("<a href=\"");
+                if (autolink.IsEmail)
+                {
+                    writer.WriteConstant("mailto:");
+                }
+                HtmlHelper.EscapeUrl(autolink.Url, writer);
+                writer.WriteConstant("\">");
             }
-            HtmlHelper.EscapeUrl(autolink.Url, writer);
-            writer.WriteConstant("\">");
+
             HtmlHelper.EscapeHtml(autolink.Url, writer);
-            writer.WriteConstant("</a>");
+
+            if (EnableHtmlForInline)
+            {
+                writer.WriteConstant("</a>");
+            }
         }
 
         protected void Write(CodeInline code)
         {
-            writer.WriteConstant("<code>");
+            if (EnableHtmlForInline)
+            {
+                writer.WriteConstant("<code>");
+            }
             HtmlHelper.EscapeHtml(code.Content, writer);
-            writer.WriteConstant("</code>");
+            if (EnableHtmlForInline)
+            {
+                writer.WriteConstant("</code>");
+            }
         }
 
         protected void Write(LinkInline link)
@@ -200,7 +220,9 @@ namespace Textamina.Markdig.Formatters
             if (link.IsImage)
             {
                 writer.WriteConstant(" alt=\"");
+                EnableHtmlForInline = false;
                 WriteChildren(link);
+                EnableHtmlForInline = true;
                 writer.WriteConstant("\"");
             }
 
@@ -225,23 +247,27 @@ namespace Textamina.Markdig.Formatters
 
         protected void Write(EmphasisInline emphasisInline)
         {
-            if (emphasisInline.Strong)
+            if (EnableHtmlForInline)
             {
-                writer.WriteConstant("<strong>");
-                WriteChildren(emphasisInline);
-                writer.WriteConstant("</strong>");
+                writer.WriteConstant(emphasisInline.Strong ? "<strong>" : "<em>");
             }
-            else
+            WriteChildren(emphasisInline);
+            if (EnableHtmlForInline)
             {
-                writer.WriteConstant("<em>");
-                WriteChildren(emphasisInline);
-                writer.WriteConstant("</em>");
+                writer.WriteConstant(emphasisInline.Strong ? "</strong>" : "</em>");
             }
         }
 
         protected void Write(HardlineBreakInline hardlineBreak)
         {
-            writer.WriteLineConstant("<br />");
+            if (EnableHtmlForInline)
+            {
+                writer.WriteLineConstant("<br />");
+            }
+            else
+            {
+                writer.WriteConstant(" ");
+            }
         }
 
         protected void WriteChildren(ContainerInline containerInline)
