@@ -120,7 +120,7 @@ namespace Textamina.Markdig.Parsers
                 count--;
             }
 
-            if (count <=0 && !state.IsCodeIndent && line.TrimEnd())
+            if (count <=0 && !state.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
