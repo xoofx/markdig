@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Textamina.Markdig.Parsers
 {
@@ -6,12 +9,30 @@ namespace Textamina.Markdig.Parsers
     {
         private T[][] parsersWithOpeningCharacters;
         private T[] globalParsers;
+        private bool[] isOpeningCharacter;
 
         public T[] GlobalParsers => globalParsers;
 
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
             return openingChar < parsersWithOpeningCharacters.Length ? parsersWithOpeningCharacters[openingChar] : null;
+        }
+
+        public char[] OpeningCharacters { get; private set; }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public int IndexOfOpeningCharacter(string text, int start, int end)
+        {
+            var maxChar = isOpeningCharacter.Length;
+            for (int i = start; i <= end; i++)
+            {
+                var c = text[i];
+                if (c < maxChar && isOpeningCharacter[c])
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public void Initialize()
@@ -41,9 +62,15 @@ namespace Textamina.Markdig.Parsers
                     globalCounter++;
                 }
             }
+            OpeningCharacters = charCounter.Keys.ToArray();
+            Array.Sort(OpeningCharacters);
 
-            globalParsers = new T[globalCounter];
+            if (globalCounter > 0)
+            {
+                globalParsers = new T[globalCounter];
+            }
             parsersWithOpeningCharacters = new T[maxChar+1][];
+            isOpeningCharacter = new bool[maxChar+1];
 
             foreach (var parser in this)
             {
@@ -59,6 +86,7 @@ namespace Textamina.Markdig.Parsers
                         var index = list.Length - charCounter[openingChar];
                         list[index] = parser;
                         charCounter[openingChar]--;
+                        isOpeningCharacter[openingChar] = true;
                     }
                 }
                 else

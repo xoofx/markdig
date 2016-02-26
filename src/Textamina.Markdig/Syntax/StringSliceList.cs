@@ -61,7 +61,10 @@ namespace Textamina.Markdig.Syntax
                 {
                     builder.Append(newLine);
                 }
-                builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
+                if (!Slices[i].IsEndOfSlice)
+                {
+                    builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
+                }
             }
             var str = builder.ToString();
             builder.Clear();

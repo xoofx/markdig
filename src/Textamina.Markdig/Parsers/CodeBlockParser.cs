@@ -27,10 +27,40 @@ namespace Textamina.Markdig.Parsers
         {
             if (!state.IsCodeIndent || state.IsBlankLine)
             {
-                return state.IsBlankLine && block != null ? BlockState.BreakDiscard : BlockState.None;
+                if (block == null || !state.IsBlankLine)
+                {
+                    return BlockState.None;
+                }
             }
-            state.MoveTo(state.StartBeforeIndent + 4);
+
+            // If we don't have a blank line, we reset to the indent
+            if (state.Indent >= 4)
+            {
+                state.ResetToPosition(state.StartBeforeIndent + 4);
+            }
             return BlockState.Continue;
+        }
+
+        public override bool Close(BlockParserState state, Block block)
+        {
+            var codeBlock = (CodeBlock)block;
+            if (codeBlock != null)
+            {
+                var lines = codeBlock.Lines;
+                // Remove trailing blankline
+                for (int i = lines.Count - 1; i >= 0; i--)
+                {
+                    if (lines.Slices[i].IsEndOfSlice)
+                    {
+                        lines.Count--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

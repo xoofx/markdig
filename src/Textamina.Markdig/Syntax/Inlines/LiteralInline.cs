@@ -24,7 +24,7 @@ namespace Textamina.Markdig.Syntax.Inlines
             {
                 str = str.TrimEnd();
             }
-            Content = HtmlHelper.Unescape(str, false);
+            Content = str;
             state.StringBuilders.Release(ContentBuilder);
             ContentBuilder = null;
         }

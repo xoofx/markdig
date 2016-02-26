@@ -12,7 +12,6 @@ namespace Textamina.Markdig.Syntax
     {
         public CodeBlock(BlockParser parser) : base(parser)
         {
-            ProcessInlines = false;
         }
     }
 }

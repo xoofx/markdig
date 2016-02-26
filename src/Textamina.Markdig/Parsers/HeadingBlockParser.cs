@@ -98,11 +98,11 @@ namespace Textamina.Markdig.Parsers
             return BlockState.None;
         }
 
-        //public override bool Close(BlockParserState state, Block block)
-        //{
-        //    var heading = (HeadingBlock) block;
-        //    heading.Lines.Trim();
-        //    return true;
-        //}
+        public override bool Close(BlockParserState state, Block block)
+        {
+            var heading = (HeadingBlock)block;
+            heading.Lines.Trim();
+            return true;
+        }
     }
 }

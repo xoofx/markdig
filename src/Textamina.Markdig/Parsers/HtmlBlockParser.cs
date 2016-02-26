@@ -152,8 +152,8 @@ namespace Textamina.Markdig.Parsers
             c = line.CurrentChar;
             if (c == '!')
             {
-                c = line.PeekChar(1);
-                if (c == '-' && line.PeekChar(2) == '-')
+                c = line.NextChar();
+                if (c == '-' && line.PeekChar(1) == '-')
                 {
                     return CreateHtmlBlock(state, HtmlBlockType.Comment, startColumn); // group 2
                 }
@@ -161,7 +161,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     return CreateHtmlBlock(state, HtmlBlockType.DocumentType, startColumn); // group 4
                 }
-                if (c == '[' && line.Match("CDATA[", 3))
+                if (c == '[' && line.Match("CDATA[", 1))
                 {
                     return CreateHtmlBlock(state, HtmlBlockType.CData, startColumn); // group 5
                 }
@@ -226,6 +226,8 @@ namespace Textamina.Markdig.Parsers
 
         private BlockState MatchEnd(BlockParserState state, HtmlBlock htmlBlock)
         {
+            state.ResetToPosition(state.StartBeforeIndent);
+
             // Early exit if it is not starting by an HTML tag
             var line = state.Line;
             var c = line.CurrentChar;
@@ -275,8 +277,6 @@ namespace Textamina.Markdig.Parsers
                     }
                     break;
             }
-
-            state.MoveTo(state.StartBeforeIndent);
 
             return BlockState.Continue;
         }

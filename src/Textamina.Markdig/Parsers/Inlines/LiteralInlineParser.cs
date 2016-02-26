@@ -24,8 +24,25 @@ namespace Textamina.Markdig.Parsers.Inlines
                 builder = literal.ContentBuilder;
             }
 
-            builder.Append(text.CurrentChar);
-            text.NextChar();
+            var str = text.Text;
+            // Sligthly faster to perform our
+            //var nextStart = state.Parsers.IndexOfOpeningCharacter(str, text.Start + 1, text.End);
+            var nextStart = str.IndexOfAny(state.SpecialCharacters, text.Start + 1, text.Length - 1);
+            if (nextStart < 0)
+            {
+                nextStart = text.End + 1;
+            }
+
+            var length = nextStart - text.Start;
+            if (length == 1)
+            {
+                builder.Append(text.CurrentChar);
+            }
+            else
+            {
+                builder.Append(str, text.Start, length);
+            }
+            text.Start = nextStart;
             return true;
         }
     }

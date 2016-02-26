@@ -19,7 +19,16 @@ namespace Textamina.Markdig.Parsers
 
         public override BlockState TryContinue(BlockParserState state, Block block)
         {
-            return state.IsBlankLine ? BlockState.BreakDiscard : BlockState.Continue;
+            if (state.IsBlankLine)
+            {
+                return BlockState.BreakDiscard;
+            }
+
+            if (!state.IsCodeIndent && !(block.Parent is QuoteBlock))
+            {
+                return TryParseSetexHeading(state, block);
+            }
+            return BlockState.Continue;
         }
 
         public override bool Close(BlockParserState state, Block block)
@@ -102,7 +111,7 @@ namespace Textamina.Markdig.Parsers
 
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
                 // lines are empty, we can early exit and remove the paragraph
-                if (!TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0)
+                //if (!TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0)
                 {
                     var level = headingChar == '=' ? 1 : 2;
 

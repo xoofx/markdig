@@ -11,6 +11,6 @@ namespace Textamina.Markdig.Syntax
         {
         }
 
-        internal int NumberOfSpaces { get; set; }
+        internal int ColumnWidth { get; set; }
     }
 }

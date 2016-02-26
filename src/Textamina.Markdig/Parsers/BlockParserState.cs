@@ -21,12 +21,13 @@ namespace Textamina.Markdig.Parsers
             root.IsOpen = true;
             Stack = new List<Block> {root};
 
+            // TODO: Make this configurable outside here
             blockParsers = new ParserList<BlockParser>()
             {
                 new ThematicBreakParser(),
                 new HeadingBlockParser(),
                 new QuoteBlockParser(),
-                //ListBlock.Default,
+                new ListBlockParser(),
 
                 new HtmlBlockParser(),
                 new FencedCodeBlockParser(),
@@ -146,13 +147,13 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void MoveTo(int newStart)
+        public void ResetToPosition(int newStart)
         {
             Line.Start = 0;
             Column = 0;
             ColumnBeforeIndent = 0;
             StartBeforeIndent = 0;
-            for (; Line.Start < newStart; Line.Start++)
+            for (; Line.Start <= Line.End && Line.Start < newStart; Line.Start++)
             {
                 var c = Line.Text[Line.Start];
                 if (c == '\t')
@@ -516,6 +517,7 @@ namespace Textamina.Markdig.Parsers
                 // If previous block is a container, add the new block as a children of the previous block
                 if (block.Parent == null)
                 {
+                    UpdateLast(-1);
                     CurrentContainer.Children.Add(block);
                     block.Parent = CurrentContainer;
                 }

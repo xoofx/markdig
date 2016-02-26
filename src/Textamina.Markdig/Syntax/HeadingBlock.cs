@@ -15,10 +15,5 @@ namespace Textamina.Markdig.Syntax
         }
 
         public int Level { get; set; }
-
-        public override string ToInlineText()
-        {
-            return Lines.ToString(true);
-        }
     }
 }

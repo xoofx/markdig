@@ -9,7 +9,6 @@ namespace Textamina.Markdig.Syntax
     {
         protected LeafBlock(BlockParser parser) : base(parser)
         {
-            ProcessInlines = false;
         }
 
         public StringSliceList Lines { get; set; }
