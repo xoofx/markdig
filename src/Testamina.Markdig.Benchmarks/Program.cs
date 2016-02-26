@@ -39,6 +39,7 @@ namespace Testamina.Markdig.Benchmarks
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
             var reader = new StringReader(text);
+            //CommonMark.CommonMarkConverter.Parse(reader);
             CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
             //CommonMark.CommonMarkConverter.Convert(new StringReader(text), new StringWriter());
@@ -46,17 +47,31 @@ namespace Testamina.Markdig.Benchmarks
 
         static void Main(string[] args)
         {
-            //var clock = Stopwatch.StartNew();
-            //var program = new Program();
-            //for (int i = 0; i < 200; i++)
-            //{
-            //    //program.TestMarkdig();
-            //    program.TestCommonMark();
-            //}
-            //Console.WriteLine($"time: {clock.ElapsedMilliseconds}ms");
-            //DumpGC();
+            bool markdig = args.Length == 0;
+            bool simpleBench = false;
 
-            BenchmarkRunner.Run<Program>();
+            if (simpleBench)
+            {
+                var clock = Stopwatch.StartNew();
+                var program = new Program();
+                for (int i = 0; i < 300; i++)
+                {
+                    if (markdig)
+                    {
+                        program.TestMarkdig();
+                    }
+                    else
+                    {
+                        program.TestCommonMark();
+                    }
+                }
+                Console.WriteLine((markdig ? "MarkDig" : "CommonMark") +  $" => time: {clock.ElapsedMilliseconds}ms");
+                DumpGC();
+            }
+            else
+            {
+                BenchmarkRunner.Run<Program>();
+            }
         }
 
         static void DumpGC()
