@@ -1,3 +1,4 @@
+using System;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -116,35 +117,25 @@ namespace Textamina.Markdig.Parsers
 
             list.CountBlankLinesReset = 0;
 
-            // List Item starting with a blank line (-1)
-            if (listItem.ColumnWidth < 0)
+            int columWidth = listItem.ColumnWidth;
+            if (columWidth < 0)
             {
-                int expectedColumn = -listItem.ColumnWidth;
-
-                // TODO: Handle case where state.Column >= expectedCount
-                if (state.Indent == expectedColumn)
-                {
-                    listItem.ColumnWidth = expectedColumn;
-                    return BlockState.Continue;
-                }
+                columWidth = -columWidth;
             }
-            else
-            {
-                // TODO: Handle code indent
-                if (state.Indent >= listItem.ColumnWidth)
-                {
-                    if (state.Indent > listItem.ColumnWidth && state.IsCodeIndent)
-                    {
-                        state.ResetToPosition(state.StartBeforeIndent + 4);
-                    }
 
-                    return BlockState.Continue;
+            // TODO: Handle code indent
+            if (state.Indent >= columWidth)
+            {
+                if (state.Indent > columWidth && state.IsCodeIndent)
+                {
+                    state.ResetToColumn(columWidth);
                 }
+
+                return BlockState.Continue;
             }
 
             return BlockState.None;
         }
-
 
         private BlockState TryParseListItem(BlockParserState state, Block block)
         {
@@ -202,12 +193,17 @@ namespace Textamina.Markdig.Parsers
                 isOrdered = true;
                 orderedDelimiter = c;
             }
-            else
+            else if (OpeningCharacters.Contains(c))
             {
                 // Else we have a bullet char
                 bulletChar = c;
             }
-
+            else
+            {
+                // Reset to an a start position
+                state.ResetToPosition(initStart);
+                return BlockState.None;
+            }
 
             // Skip Bullet or '.' or ')'
             c = state.NextChar();
@@ -233,12 +229,13 @@ namespace Textamina.Markdig.Parsers
                 state.NextChar();
 
                 // Parse the following indent
-                state.ResetIndent();
+                state.RestartIndent();
+                var positionBeforeIndent = state.Start;
                 state.ParseIndent();
 
                 if (state.IsCodeIndent)
                 {
-                    state.ResetIndent();
+                    state.ResetToPosition(positionBeforeIndent);
                 }
 
                 // Number of spaces required for the following content to be part of this list item

@@ -106,7 +106,7 @@ namespace Textamina.Markdig.Parsers
             StartBeforeIndent = 0;
         }
 
-        public void ResetIndent()
+        public void RestartIndent()
         {
             StartBeforeIndent = Start;
             ColumnBeforeIndent = Column;
@@ -162,10 +162,49 @@ namespace Textamina.Markdig.Parsers
                 }
                 else
                 {
+                    if (!c.IsSpaceOrTab())
+                    {
+                        ColumnBeforeIndent = Column;
+                        StartBeforeIndent = Line.Start;
+                    }
+
                     Column++;
                 }
             }
         }
+
+        public void ResetToColumn(int newColumn)
+        {
+            Line.Start = 0;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
+            for (; Line.Start <= Line.End && Column < newColumn; Line.Start++)
+            {
+                var c = Line.Text[Line.Start];
+                if (c == '\t')
+                {
+                    Column = ((Column + 3) >> 2) << 2;
+                }
+                else
+                {
+                    if (!c.IsSpaceOrTab())
+                    {
+                        ColumnBeforeIndent = Column;
+                        StartBeforeIndent = Line.Start;
+                    }
+
+                    Column++;
+                }
+            }
+        }
+
+
+        public void ResetToCodeIndent(int offset = 0)
+        {
+            ResetToPosition(ColumnBeforeIndent + 4 + offset);
+        }
+
 
         public void Close(Block block)
         {
@@ -320,7 +359,7 @@ namespace Textamina.Markdig.Parsers
                     break;
                 }
 
-                ResetIndent();
+                RestartIndent();
 
                 // In case the BlockParser has modified the blockParserState we are iterating on
                 if (i >= Stack.Count)
@@ -387,7 +426,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     if (TryOpenBlocks(parsers))
                     {
-                        ResetIndent();
+                        RestartIndent();
                         continue;
                     }
                 }
@@ -396,7 +435,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     if (TryOpenBlocks(globalParsers))
                     {
-                        ResetIndent();
+                        RestartIndent();
                         continue;
                     }
                 }

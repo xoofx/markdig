@@ -8,7 +8,20 @@ namespace Textamina.Markdig.Helpers
     {
         public static readonly string ZeroSafeString = string.Empty + '\uFFFD';
 
-        //[MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool Contains(this char[] charList, char c)
+        {
+            for (int i = 0; i < charList.Length; i++)
+            {
+                if (charList[i] == c)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsWhitespace(this char c)
         {
             // 2.1 Characters and lines 
