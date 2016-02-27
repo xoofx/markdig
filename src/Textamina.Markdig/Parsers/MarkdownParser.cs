@@ -21,9 +21,37 @@ namespace Textamina.Markdig.Parsers
             document = new Document();
             Reader = reader;
             stringBuilderCache = new StringBuilderCache();
-            blockParserState = new BlockParserState(stringBuilderCache, document);
-            inlineState = new InlineParserState(stringBuilderCache, document);
-            inlineState.Log = Log;
+
+            // TODO: Make this configurable outside here
+            var blockParsers = new ParserList<BlockParser>()
+            {
+                new ThematicBreakParser(),
+                new HeadingBlockParser(),
+                new QuoteBlockParser(),
+                new ListBlockParser(),
+
+                new HtmlBlockParser(),
+                new FencedCodeBlockParser(),
+                new IndentedCodeBlockParser(),
+                new ParagraphBlockParser(),
+            };
+            blockParsers.Initialize();
+
+            var inlineParsers = new ParserList<InlineParser>()
+            {
+                HtmlEntityParser.Default,
+                LinkInlineParser.Default,
+                EmphasisInlineParser.Default,
+                EscapeInlineParser.Default,
+                CodeInlineParser.Default,
+                AutolineInlineParser.Default,
+                HardlineBreakInlineParser.Default,
+            };
+            inlineParsers.Initialize();
+
+
+            blockParserState = new BlockParserState(stringBuilderCache, document, blockParsers);
+            inlineState = new InlineParserState(stringBuilderCache, document, inlineParsers) {Log = Log};
         }
 
         public TextReader Reader { get; }

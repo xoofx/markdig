@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Textamina.Markdig.Helpers;
@@ -9,24 +10,15 @@ namespace Textamina.Markdig.Parsers
 {
     public class InlineParserState
     {
-        public InlineParserState(StringBuilderCache stringBuilders, Document document)
+        public InlineParserState(StringBuilderCache stringBuilders, Document document, ParserList<InlineParser> parsers)
         {
+            if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
             StringBuilders = stringBuilders;
             Document = document;
             InlinesToClose = new List<Inline>();
-
-            Parsers = new ParserList<InlineParser>()
-            {
-                HtmlEntityParser.Default,
-                LinkInlineParser.Default,
-                EmphasisInlineParser.Default,
-                EscapeInlineParser.Default,
-                CodeInlineParser.Default,
-                AutolineInlineParser.Default,
-                HardlineBreakInlineParser.Default,
-            };
-            Parsers.Initialize();
-
+            Parsers = parsers;
             SpecialCharacters = Parsers.OpeningCharacters;
         }
 

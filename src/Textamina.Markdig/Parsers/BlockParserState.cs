@@ -11,30 +11,17 @@ namespace Textamina.Markdig.Parsers
         private readonly ParserList<BlockParser> blockParsers;
         private int currentStackIndex;
 
-        public BlockParserState(StringBuilderCache stringBuilders, Document root)
+        public BlockParserState(StringBuilderCache stringBuilders, Document root, ParserList<BlockParser> parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (root == null) throw new ArgumentNullException(nameof(root));
+            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
             StringBuilders = stringBuilders;
             Root = root;
             NewBlocks = new Stack<Block>();
             root.IsOpen = true;
             Stack = new List<Block> {root};
-
-            // TODO: Make this configurable outside here
-            blockParsers = new ParserList<BlockParser>()
-            {
-                new ThematicBreakParser(),
-                new HeadingBlockParser(),
-                new QuoteBlockParser(),
-                new ListBlockParser(),
-
-                new HtmlBlockParser(),
-                new FencedCodeBlockParser(),
-                new IndentedCodeBlockParser(),
-                new ParagraphBlockParser(),
-            };
-            blockParsers.Initialize();
+            blockParsers = parsers;
         }
 
         public List<Block> Stack { get; }
@@ -164,10 +151,21 @@ namespace Textamina.Markdig.Parsers
 
         public void ResetToColumn(int newColumn)
         {
-            Line.Start = 0;
-            Column = 0;
-            ColumnBeforeIndent = 0;
-            StartBeforeIndent = 0;
+            // Optimized path when we are moving above the previous start of indent
+            if (newColumn > ColumnBeforeIndent)
+            {
+                Line.Start = StartBeforeIndent;
+                Column = ColumnBeforeIndent;
+                ColumnBeforeIndent = 0;
+                StartBeforeIndent = 0;
+            }
+            else
+            {
+                Line.Start = 0;
+                Column = 0;
+                ColumnBeforeIndent = 0;
+                StartBeforeIndent = 0;
+            }
             for (; Line.Start <= Line.End && Column < newColumn; Line.Start++)
             {
                 var c = Line.Text[Line.Start];
