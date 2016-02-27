@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Formatters
             {
                 [typeof(ListBlock)] = o => Write((ListBlock)o),
                 [typeof(FencedCodeBlock)] = o => Write((FencedCodeBlock)o),
-                [typeof(CodeBlock)] = o => Write((CodeBlock)o),
+                [typeof(IndentedCodeBlock)] = o => Write((IndentedCodeBlock)o),
                 [typeof(HeadingBlock)] = o => Write((HeadingBlock)o),
                 [typeof(ThematicBreakBlock)] = o => Write((ThematicBreakBlock)o),
                 [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
@@ -95,12 +95,12 @@ namespace Textamina.Markdig.Formatters
             Write(fencedCodeBlock, fencedCodeBlock.Language, fencedCodeBlock.Arguments);
         }
 
-        protected void Write(CodeBlock codeBlock)
+        protected void Write(IndentedCodeBlock indentedCodeBlock)
         {
-            Write(codeBlock, null, null);
+            Write(indentedCodeBlock, null, null);
         }
 
-        protected void Write(CodeBlock codeBlock, string language, string arguments)
+        protected void Write(IndentedCodeBlock indentedCodeBlock, string language, string arguments)
         {
             writer.EnsureLine();
             // class="language-ruby
@@ -115,7 +115,7 @@ namespace Textamina.Markdig.Formatters
                 HtmlHelper.EscapeHtml(language, writer);
                 writer.WriteConstant("\">");
             }
-            WriteLeaf(codeBlock, true, true);
+            WriteLeaf(indentedCodeBlock, true, true);
             writer.WriteLineConstant("</code></pre>");
         }
 

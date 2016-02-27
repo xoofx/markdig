@@ -21,7 +21,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
             var delimiterChar = slice.CurrentChar;
             var pc = slice.PeekCharExtra(-1);
-            if (delimiterChar == pc && slice.PeekChar(-2) != '\\')
+            if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
             {
                 return false;
             }

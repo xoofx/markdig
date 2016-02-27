@@ -8,9 +8,9 @@ namespace Textamina.Markdig.Syntax
     /// <remarks>
     /// Related to CommonMark spec: 4.4 Indented code blocks 
     /// </remarks>
-    public class CodeBlock : LeafBlock
+    public class IndentedCodeBlock : LeafBlock
     {
-        public CodeBlock(BlockParser parser) : base(parser)
+        public IndentedCodeBlock(BlockParser parser) : base(parser)
         {
         }
     }

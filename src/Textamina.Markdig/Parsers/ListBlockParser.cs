@@ -226,16 +226,16 @@ namespace Textamina.Markdig.Parsers
                 }
 
                 // We require at least one char
-                state.NextChar();
+                state.NextColumn();
 
                 // Parse the following indent
                 state.RestartIndent();
-                var positionBeforeIndent = state.Start;
+                var columnBeforeIndent = state.Column;
                 state.ParseIndent();
 
                 if (state.IsCodeIndent)
                 {
-                    state.ResetToPosition(positionBeforeIndent);
+                    state.ResetToColumn(columnBeforeIndent);
                 }
 
                 // Number of spaces required for the following content to be part of this list item

@@ -48,7 +48,7 @@
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
-    <Compile Include="Parsers\CodeBlockParser.cs" />
+    <Compile Include="Parsers\IndentedCodeBlockParser.cs" />
     <Compile Include="Parsers\FencedCodeBlockParser.cs" />
     <Compile Include="Parsers\HeadingBlockParser.cs" />
     <Compile Include="Parsers\HtmlBlockParser.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="Syntax\StringSliceListExtensions.cs" />
     <Compile Include="Syntax\ThematicBreakBlock.cs" />
     <Compile Include="Helpers\CharHelper.cs" />
-    <Compile Include="Syntax\CodeBlock.cs" />
+    <Compile Include="Syntax\IndentedCodeBlock.cs" />
     <Compile Include="Syntax\Document.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />
     <Compile Include="Syntax\HeadingBlock.cs" />

@@ -23,9 +23,9 @@ namespace Textamina.Markdig.Parsers
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var quoteChar = state.CurrentChar;
             var c = state.NextChar();
-            if (c.IsSpace())
+            if (c.IsSpaceOrTab())
             {
-                state.NextChar();
+                state.NextColumn();
             }
             state.NewBlocks.Push(new QuoteBlock(this) {QuoteChar = quoteChar, Column = column});
             return BlockState.Continue;

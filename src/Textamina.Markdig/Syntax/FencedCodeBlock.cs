@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Syntax
     /// <remarks>
     /// Related to CommonMark spec: 4.5 Fenced code blocks
     /// </remarks>
-    public class FencedCodeBlock : CodeBlock
+    public class FencedCodeBlock : IndentedCodeBlock
     {
         public FencedCodeBlock(BlockParser parser) : base(parser)
         {

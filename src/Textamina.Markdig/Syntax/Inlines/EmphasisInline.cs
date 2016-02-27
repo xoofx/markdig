@@ -99,7 +99,7 @@ namespace Textamina.Markdig.Syntax.Inlines
                             while (true)
                             {
                                 var previousEmphasis = embracer.FirstChild as EmphasisInline;
-                                if (previousEmphasis != null && previousEmphasis.Strong && !isStrong)
+                                if (previousEmphasis != null && previousEmphasis.Strong && !isStrong && embracer.FirstChild == embracer.LastChild)
                                 {
                                     embracer = previousEmphasis;
                                 }

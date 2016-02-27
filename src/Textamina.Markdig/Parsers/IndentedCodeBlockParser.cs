@@ -2,9 +2,9 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
-    public class CodeBlockParser : BlockParser
+    public class IndentedCodeBlockParser : BlockParser
     {
-        public CodeBlockParser()
+        public IndentedCodeBlockParser()
         {
         }
 
@@ -18,7 +18,7 @@ namespace Textamina.Markdig.Parsers
             var result = TryContinue(state, null);
             if (result == BlockState.Continue)
             {
-                state.NewBlocks.Push(new CodeBlock(this) { Column = state.Column });
+                state.NewBlocks.Push(new IndentedCodeBlock(this) { Column = state.Column });
             }
             return result;
         }
@@ -36,14 +36,14 @@ namespace Textamina.Markdig.Parsers
             // If we don't have a blank line, we reset to the indent
             if (state.Indent >= 4)
             {
-                state.ResetToPosition(state.StartBeforeIndent + 4);
+                state.ResetToCodeIndent();
             }
             return BlockState.Continue;
         }
 
         public override bool Close(BlockParserState state, Block block)
         {
-            var codeBlock = (CodeBlock)block;
+            var codeBlock = (IndentedCodeBlock)block;
             if (codeBlock != null)
             {
                 var lines = codeBlock.Lines;

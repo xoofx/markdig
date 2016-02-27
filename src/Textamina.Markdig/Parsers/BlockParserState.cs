@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Parsers
 
                 new HtmlBlockParser(),
                 new FencedCodeBlockParser(),
-                new CodeBlockParser(),
+                new IndentedCodeBlockParser(),
                 new ParagraphBlockParser(),
             };
             blockParsers.Initialize();
@@ -73,6 +73,20 @@ namespace Textamina.Markdig.Parsers
                 Column++;
             }
             return Line.NextChar();
+        }
+
+        public void NextColumn()
+        {
+            var c = Line.CurrentChar;
+            if (c == '\t' && (Column & 3) != 0)
+            {
+                Column++;
+            }
+            else
+            {
+                Line.NextChar();
+                Column++;
+            }
         }
 
         public char CharAt(int index) => Line[index];
@@ -158,7 +172,7 @@ namespace Textamina.Markdig.Parsers
                 var c = Line.Text[Line.Start];
                 if (c == '\t')
                 {
-                    Column = ((Column + 3) >> 2) << 2;
+                    Column = ((Column + 4) >> 2) << 2;
                 }
                 else
                 {
@@ -184,27 +198,34 @@ namespace Textamina.Markdig.Parsers
                 var c = Line.Text[Line.Start];
                 if (c == '\t')
                 {
-                    Column = ((Column + 3) >> 2) << 2;
+                    Column = ((Column + 4) >> 2) << 2;
                 }
                 else
                 {
                     if (!c.IsSpaceOrTab())
                     {
-                        ColumnBeforeIndent = Column;
-                        StartBeforeIndent = Line.Start;
+                        ColumnBeforeIndent = Column + 1;
+                        StartBeforeIndent = Line.Start + 1;
                     }
 
                     Column++;
                 }
             }
+            if (Column > newColumn)
+            {
+                Column = newColumn;
+                if (Line.Start > 0)
+                {
+                    Line.Start--;
+                }
+            }
         }
 
 
-        public void ResetToCodeIndent(int offset = 0)
+        public void ResetToCodeIndent(int columnOffset = 0)
         {
-            ResetToPosition(ColumnBeforeIndent + 4 + offset);
+            ResetToColumn(ColumnBeforeIndent + 4 + columnOffset);
         }
-
 
         public void Close(Block block)
         {
@@ -380,7 +401,7 @@ namespace Textamina.Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line);
+                        leaf.AppendLine(ref Line, Column, LineIndex);
                     }
 
                     if (NewBlocks.Count > 0)
@@ -495,7 +516,7 @@ namespace Textamina.Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
-                        paragraph.AppendLine(ref Line);
+                        paragraph.AppendLine(ref Line, Column, LineIndex);
                     }
 
                     // We have just found a lazy continuation for a paragraph, early exit
@@ -537,7 +558,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line);
+                        leaf.AppendLine(ref Line, Column, LineIndex);
                     }
 
                     if (newBlocks.Count > 0)
