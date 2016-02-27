@@ -66,7 +66,7 @@ namespace Textamina.Markdig.Parsers
             var c = Line.CurrentChar;
             if (c == '\t')
             {
-                Column = ((Column + 3) >> 2) << 2;
+                Column = CharHelper.AddTab(Column);
             }
             else
             {
@@ -78,7 +78,8 @@ namespace Textamina.Markdig.Parsers
         public void NextColumn()
         {
             var c = Line.CurrentChar;
-            if (c == '\t' && (Column & 3) != 0)
+            // If we are accross a tab, we should just add 1 column
+            if (c == '\t' && CharHelper.IsAcrossTab(Column))
             {
                 Column++;
             }
@@ -137,7 +138,7 @@ namespace Textamina.Markdig.Parsers
             {
                 if (c == '\t')
                 {
-                    Column = ((Column + 4) >> 2) << 2;
+                    Column = CharHelper.AddTab(Column);
                 }
                 else if (c == ' ')
                 {
@@ -161,32 +162,6 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void ResetToPosition(int newStart)
-        {
-            Line.Start = 0;
-            Column = 0;
-            ColumnBeforeIndent = 0;
-            StartBeforeIndent = 0;
-            for (; Line.Start <= Line.End && Line.Start < newStart; Line.Start++)
-            {
-                var c = Line.Text[Line.Start];
-                if (c == '\t')
-                {
-                    Column = ((Column + 4) >> 2) << 2;
-                }
-                else
-                {
-                    if (!c.IsSpaceOrTab())
-                    {
-                        ColumnBeforeIndent = Column;
-                        StartBeforeIndent = Line.Start;
-                    }
-
-                    Column++;
-                }
-            }
-        }
-
         public void ResetToColumn(int newColumn)
         {
             Line.Start = 0;
@@ -198,7 +173,7 @@ namespace Textamina.Markdig.Parsers
                 var c = Line.Text[Line.Start];
                 if (c == '\t')
                 {
-                    Column = ((Column + 4) >> 2) << 2;
+                    Column = CharHelper.AddTab(Column);
                 }
                 else
                 {
@@ -220,7 +195,6 @@ namespace Textamina.Markdig.Parsers
                 }
             }
         }
-
 
         public void ResetToCodeIndent(int columnOffset = 0)
         {

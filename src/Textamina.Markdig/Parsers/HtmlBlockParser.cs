@@ -226,7 +226,7 @@ namespace Textamina.Markdig.Parsers
 
         private BlockState MatchEnd(BlockParserState state, HtmlBlock htmlBlock)
         {
-            state.ResetToPosition(state.StartBeforeIndent);
+            state.ResetToColumn(state.ColumnBeforeIndent);
 
             // Early exit if it is not starting by an HTML tag
             var line = state.Line;

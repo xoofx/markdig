@@ -126,7 +126,7 @@ namespace Textamina.Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            state.ResetToPosition(state.StartBeforeIndent);
+            state.ResetToColumn(state.ColumnBeforeIndent);
 
             // Remove any indent spaces
             c = state.CurrentChar;

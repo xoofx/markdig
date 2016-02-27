@@ -169,7 +169,7 @@ namespace Textamina.Markdig.Parsers
                 if (countDigit > 9)
                 {
                     // Reset to an a start position
-                    state.ResetToPosition(initStart);
+                    state.ResetToColumn(initColumn);
                     return BlockState.None;
                 }
 
@@ -186,7 +186,7 @@ namespace Textamina.Markdig.Parsers
                 if (!isOrderedDelimiter)
                 {
                     // Reset to an a start position
-                    state.ResetToPosition(initStart);
+                    state.ResetToColumn(initColumn);
                     return BlockState.None;
                 }
 
@@ -201,7 +201,7 @@ namespace Textamina.Markdig.Parsers
             else
             {
                 // Reset to an a start position
-                state.ResetToPosition(initStart);
+                state.ResetToColumn(initColumn);
                 return BlockState.None;
             }
 
@@ -221,7 +221,7 @@ namespace Textamina.Markdig.Parsers
             {
                 if (!c.IsSpaceOrTab())
                 {
-                    state.ResetToPosition(initStart);
+                    state.ResetToColumn(initColumn);
                     return BlockState.None;
                 }
 

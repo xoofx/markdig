@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Syntax
             }
 
             // Regular case, we are not in the middle of a tab
-            if (slice.CurrentChar != '\t' || (column & 3) == 0)
+            if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {
                 Lines.Add(ref slice);
             }
@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Syntax
             {
                 // We need to expand tabs to spaces
                 var builder = StringBuilderCache.Local();
-                for (int i = column; i < (((column + 4) >> 2) << 2); i++)
+                for (int i = column; i < CharHelper.AddTab(column); i++)
                 {
                     builder.Append(' ');
                 }

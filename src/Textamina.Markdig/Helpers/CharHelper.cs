@@ -6,7 +6,21 @@ namespace Textamina.Markdig.Helpers
 {
     public static class CharHelper
     {
+        public const int TabSize = 4;
+
         public static readonly string ZeroSafeString = string.Empty + '\uFFFD';
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static int AddTab(int column)
+        {
+            return ((column + TabSize) / TabSize) * TabSize;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsAcrossTab(int column)
+        {
+            return (column & (TabSize - 1)) != 0;
+        }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool Contains(this char[] charList, char c)
