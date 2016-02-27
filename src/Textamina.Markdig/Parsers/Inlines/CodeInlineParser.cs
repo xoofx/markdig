@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class CodeInlineParser : InlineParser
     {
-        public static readonly CodeInlineParser Default = new CodeInlineParser();
-
         public CodeInlineParser()
         {
             OpeningCharacters = new[] { '`' };

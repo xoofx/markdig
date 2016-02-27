@@ -40,13 +40,13 @@ namespace Textamina.Markdig.Parsers
 
             inlineParsers = new ParserList<InlineParser>()
             {
-                HtmlEntityParser.Default,
-                LinkInlineParser.Default,
-                EmphasisInlineParser.Default,
-                EscapeInlineParser.Default,
-                CodeInlineParser.Default,
-                AutolineInlineParser.Default,
-                HardlineBreakInlineParser.Default,
+                new HtmlEntityParser(),
+                new LinkInlineParser(),
+                new EmphasisInlineParser(),
+                new EscapeInlineParser(),
+                new CodeInlineParser(),
+                new AutolineInlineParser(),
+                new HardlineBreakInlineParser(),
             };
             inlineParsers.Initialize();
 

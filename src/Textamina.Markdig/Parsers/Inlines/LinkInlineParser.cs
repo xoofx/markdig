@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class LinkInlineParser : InlineParser
     {
-        public static readonly LinkInlineParser Default = new LinkInlineParser();
-
         public LinkInlineParser()
         {
             OpeningCharacters = new[] {'[', ']', '!'};

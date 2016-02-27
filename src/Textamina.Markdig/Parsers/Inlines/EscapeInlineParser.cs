@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class EscapeInlineParser : InlineParser
     {
-        public static readonly EscapeInlineParser Default = new EscapeInlineParser();
-
         public EscapeInlineParser()
         {
             OpeningCharacters = new[] {'\\'};

@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class HardlineBreakInlineParser : InlineParser
     {
-        public static readonly HardlineBreakInlineParser Default = new HardlineBreakInlineParser();
-
         public HardlineBreakInlineParser()
         {
             OpeningCharacters = new[] {'\n'};

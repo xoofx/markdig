@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class AutolineInlineParser : InlineParser
     {
-        public static readonly AutolineInlineParser Default = new AutolineInlineParser();
-
         public AutolineInlineParser()
         {
             OpeningCharacters = new[] {'<'};

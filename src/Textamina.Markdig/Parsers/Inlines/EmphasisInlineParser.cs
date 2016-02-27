@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class EmphasisInlineParser : InlineParser
     {
-        public static readonly EmphasisInlineParser Default = new EmphasisInlineParser();
-
         public EmphasisInlineParser()
         {
             OpeningCharacters = new[] { '*', '_' };

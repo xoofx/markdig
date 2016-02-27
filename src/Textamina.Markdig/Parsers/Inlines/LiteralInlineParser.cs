@@ -7,8 +7,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public sealed class LiteralInlineParser : InlineParser
     {
-        public static readonly LiteralInlineParser Default = new LiteralInlineParser();
-
         /// <summary>
         /// We don't expect the LiteralInlineParser to be instantiated a end-user, as it is part
         /// of the default parser pipeline (and should always be the last), working as a literal character

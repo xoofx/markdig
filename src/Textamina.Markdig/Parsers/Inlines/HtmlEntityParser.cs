@@ -6,8 +6,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class HtmlEntityParser : InlineParser
     {
-        public static readonly HtmlEntityParser Default = new HtmlEntityParser();
-
         public HtmlEntityParser()
         {
             OpeningCharacters = new[] {'&'};
