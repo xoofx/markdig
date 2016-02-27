@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using Sundown;
 using Textamina.Markdig.Formatters;
 using Textamina.Markdig.Parsers;
 
 namespace Testamina.Markdig.Benchmarks
 {
+    //[BenchmarkTask(platform: BenchmarkPlatform.X64, jitVersion: BenchmarkJitVersion.RyuJit, processCount: 1, warmupIterationCount: 2)]
     public class Program
     {
         private string text;
@@ -30,19 +32,41 @@ namespace Testamina.Markdig.Benchmarks
             var parser = new MarkdownParser(reader);
             var doc = parser.Parse();
             reader.Dispose();
-            //var formatter = new HtmlFormatter(new StringWriter());
-            //formatter.Write(doc);
+            var writer = new StringWriter();
+            var formatter = new HtmlFormatter(writer);
+            formatter.Write(doc);
+            writer.Flush();
+            writer.ToString();
+            //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
             var reader = new StringReader(text);
             //CommonMark.CommonMarkConverter.Parse(reader);
-            CommonMark.CommonMarkConverter.Parse(reader);
+            //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
-            //CommonMark.CommonMarkConverter.Convert(new StringReader(text), new StringWriter());
+            CommonMark.CommonMarkConverter.Convert(reader, new StringWriter());
+        }
+
+        //[Benchmark]
+        public void TestMarkdownDeep()
+        {
+            new MarkdownDeep.Markdown().Transform(text);
+        }
+
+        //[Benchmark]
+        public void TestMarkdownSharp()
+        {
+            new MarkdownSharp.Markdown().Transform(text);
+        }
+
+        //[Benchmark]
+        public void TestMoonshine()
+        {
+            MoonShine.Markdownify(text);
         }
 
         static void Main(string[] args)
@@ -54,7 +78,7 @@ namespace Testamina.Markdig.Benchmarks
             {
                 var clock = Stopwatch.StartNew();
                 var program = new Program();
-                for (int i = 0; i < 300; i++)
+                for (int i = 0; i < 500; i++)
                 {
                     if (markdig)
                     {
