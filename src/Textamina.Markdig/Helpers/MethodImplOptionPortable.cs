@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Textamina.Markdig
+namespace Textamina.Markdig.Helpers
 {
     internal static class MethodImplOptionPortable
     {

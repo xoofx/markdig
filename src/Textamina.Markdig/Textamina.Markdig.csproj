@@ -96,7 +96,7 @@
     <Compile Include="Syntax\FencedCodeBlock.cs" />
     <Compile Include="Syntax\HeadingBlock.cs" />
     <Compile Include="Parsers\BlockState.cs" />
-    <Compile Include="MethodImplOptionPortable.cs" />
+    <Compile Include="Helpers\MethodImplOptionPortable.cs" />
     <Compile Include="Syntax\Inlines\Inline.cs" />
     <Compile Include="Syntax\ParagraphBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

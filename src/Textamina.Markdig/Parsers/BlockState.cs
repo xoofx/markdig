@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Parsers
 {

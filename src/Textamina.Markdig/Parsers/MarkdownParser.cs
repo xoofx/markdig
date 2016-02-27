@@ -15,6 +15,7 @@ namespace Textamina.Markdig.Parsers
         private readonly BlockParserState blockParserState;
         private readonly StringBuilderCache stringBuilderCache;
         private readonly InlineParserState inlineState;
+        private readonly ParserList<InlineParser> inlineParsers;
 
         public MarkdownParser(TextReader reader)
         {
@@ -37,7 +38,7 @@ namespace Textamina.Markdig.Parsers
             };
             blockParsers.Initialize();
 
-            var inlineParsers = new ParserList<InlineParser>()
+            inlineParsers = new ParserList<InlineParser>()
             {
                 HtmlEntityParser.Default,
                 LinkInlineParser.Default,
@@ -59,6 +60,7 @@ namespace Textamina.Markdig.Parsers
         public Document Parse()
         {
             ParseLines();
+            //ProcessInlinesTasks(document);
             ProcessInlines(document);
             return document;
         }
@@ -97,37 +99,40 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        //private void ProcessInlinesTasks(ContainerBlock container)
-        //{
-        //    var list = new Stack<ContainerBlock>();
-        //    list.Push(container);
-        //    var leafs = new List<Task>();
+        private void ProcessInlinesTasks(ContainerBlock container)
+        {
+            var list = new Stack<ContainerBlock>();
+            list.Push(container);
+            var leafs = new List<Task>();
 
-        //    while (list.Count > 0)
-        //    {
-        //        container = list.Pop();
-        //        foreach (var block in container.Children)
-        //        {
-        //            var leafBlock = block as LeafBlock;
-        //            if (leafBlock != null)
-        //            {
-        //                if (leafBlock.ProcessInlines)
-        //                {
-        //                    var task = new Task(() => ProcessInlineLeaf(leafBlock));
-        //                    task.Start();
-        //                    leafs.Add(task);
-        //                    //ProcessInlineLeaf(leafBlock);
-        //                }
-        //            }
-        //            else 
-        //            {
-        //                list.Push((ContainerBlock)block);
-        //            }
-        //        }
-        //    }
+            while (list.Count > 0)
+            {
+                container = list.Pop();
+                foreach (var block in container.Children)
+                {
+                    var leafBlock = block as LeafBlock;
+                    if (leafBlock != null)
+                    {
+                        if (leafBlock.ProcessInlines)
+                        {
+                            var task = new Task(() =>
+                            {
+                                var threadInlineState = new InlineParserState(stringBuilderCache, document, inlineParsers) { Log = Log };
+                                threadInlineState.ProcessInlineLeaf(leafBlock);
+                            });
+                            task.Start();
+                            leafs.Add(task);
+                        }
+                    }
+                    else
+                    {
+                        list.Push((ContainerBlock)block);
+                    }
+                }
+            }
 
-        //    Task.WaitAll(leafs.ToArray());
-        //}
+            Task.WaitAll(leafs.ToArray());
+        }
 
         private void ProcessInlines(ContainerBlock container)
         {
