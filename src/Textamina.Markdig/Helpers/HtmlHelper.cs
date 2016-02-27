@@ -462,14 +462,17 @@ namespace Textamina.Markdig.Helpers
             // remove backslashes before punctuation chars:
             int searchPos = 0;
             int lastPos = 0;
-            int match;
             char c;
             char[] search = removeBackSlash ? SearchBackAndAmp : SearchAmp;
-            var sb = StringBuilderCache.Local();
-            sb.Clear();
+            StringBuilder sb = null;
 
             while ((searchPos = text.IndexOfAny(search, searchPos)) != -1)
             {
+                if (sb == null)
+                {
+                    sb = StringBuilderCache.Local();
+                    sb.Clear();
+                }
                 c = text[searchPos];
                 if (removeBackSlash && c == '\\')
                 {
@@ -489,7 +492,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     string namedEntity;
                     int numericEntity;
-                    match = ScanEntity(text, searchPos, text.Length - searchPos, out namedEntity,
+                    var match = ScanEntity(text, searchPos, text.Length - searchPos, out namedEntity,
                         out numericEntity);
                     if (match == 0)
                     {
@@ -535,7 +538,7 @@ namespace Textamina.Markdig.Helpers
                 }
             }
 
-            if (sb.Length == 0)
+            if (sb == null)
                 return text;
 
             sb.Append(text, lastPos, text.Length - lastPos);
