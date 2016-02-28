@@ -6,7 +6,7 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class ParserList<T> : List<T> where T : ParserBase
+    public abstract class ParserList<T, TState> : List<T> where T : ParserBase<TState>
     {
         private T[][] parsersWithOpeningCharacters;
         private T[] globalParsers;
@@ -36,7 +36,16 @@ namespace Textamina.Markdig.Parsers
             return -1;
         }
 
-        public virtual void Initialize()
+        public void Initialize(TState initState)
+        {
+            InitializeCore();
+            foreach (var parser in this)
+            {
+                parser.Initialize(initState);
+            }
+        }
+
+        protected virtual void InitializeCore()
         {
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
@@ -51,7 +60,8 @@ namespace Textamina.Markdig.Parsers
                     {
                         if (openingChar >= 127)
                         {
-                            throw new InvalidOperationException($"Invalid non-ascii character `{openingChar}` used by the parser [{parser.GetType().Name}]. Only ASCII < 127 are allowed");
+                            throw new InvalidOperationException(
+                                $"Invalid non-ascii character `{openingChar}` used by the parser [{parser.GetType().Name}]. Only ASCII < 127 are allowed");
                         }
 
                         if (!charCounter.ContainsKey(openingChar))
@@ -77,8 +87,8 @@ namespace Textamina.Markdig.Parsers
             {
                 globalParsers = new T[globalCounter];
             }
-            parsersWithOpeningCharacters = new T[maxChar+1][];
-            isOpeningCharacter = new bool[maxChar+1];
+            parsersWithOpeningCharacters = new T[maxChar + 1][];
+            isOpeningCharacter = new bool[maxChar + 1];
 
             foreach (var parser in this)
             {

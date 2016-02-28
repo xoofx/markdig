@@ -2,28 +2,27 @@
 
 namespace Textamina.Markdig.Parsers
 {
-    public class InlineParserList : ParserList<InlineParser>
+    public class InlineParserList : ParserList<InlineParser, InlineParserState>
     {
         public InlineParserList()
         {
         }
 
-        public InlineParser[] ClosingParsers { get; private set; }
+        public IDelimiterProcessor[] DelimiterProcessors { get; private set; }
 
-        public override void Initialize()
+        protected override void InitializeCore()
         {
-            base.Initialize();
-
-            var closingParsers = new InlineParserList();
+            base.InitializeCore();
+            var delimiterProcessors = new List<IDelimiterProcessor>();
             foreach (var parser in this)
             {
-                if (parser.OnCloseBlock != null)
+                var delimProcessor = parser as IDelimiterProcessor;
+                if (delimProcessor != null)
                 {
-                    closingParsers.Add(parser);
+                    delimiterProcessors.Add(delimProcessor);
                 }
             }
-
-            ClosingParsers = closingParsers.ToArray();
+            DelimiterProcessors = delimiterProcessors.ToArray();
         }
     }
 }

@@ -43,12 +43,14 @@
     <Compile Include="Helpers\StringBuilderCache.cs" />
     <Compile Include="Parsers\BlockParserList.cs" />
     <Compile Include="Parsers\IBlockParser.cs" />
+    <Compile Include="Parsers\IDelimiterProcessor.cs" />
     <Compile Include="Parsers\InlineParser.cs" />
     <Compile Include="Parsers\InlineParserList.cs" />
     <Compile Include="Parsers\InlineParserState.cs" />
     <Compile Include="Parsers\BlockParserState.cs" />
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
     <Compile Include="Parsers\Inlines\TableInlineParser.cs" />
+    <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
     <Compile Include="Parsers\IndentedCodeBlockParser.cs" />

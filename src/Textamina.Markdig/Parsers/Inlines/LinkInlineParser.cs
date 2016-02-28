@@ -6,9 +6,23 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class LinkInlineParser : InlineParser
     {
+        private EmphasisInlineParser emphasisInlineParser;
+
         public LinkInlineParser()
         {
             OpeningCharacters = new[] {'[', ']', '!'};
+        }
+
+        public override void Initialize(InlineParserState state)
+        {
+            foreach (var parser in state.Parsers)
+            {
+                emphasisInlineParser = parser as EmphasisInlineParser;
+                if (emphasisInlineParser != null)
+                {
+                    break;
+                }
+            }
         }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
@@ -109,7 +123,11 @@ namespace Textamina.Markdig.Parsers.Inlines
                 }
                 link.IsClosed = true;
 
-                EmphasisInlineParser.ProcessEmphasis(link);
+                // Process emphasis delimiters
+                if (emphasisInlineParser != null)
+                {
+                    emphasisInlineParser.ProcessDelimiters(link, null);
+                }
 
                 state.Inline = link;
                 isValidLink = true;
@@ -175,7 +193,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                             openParent.ReplaceBy(link);
                             inlineState.Inline = link;
 
-                            EmphasisInlineParser.ProcessEmphasis(link);
+                            if (emphasisInlineParser != null)
+                            {
+                                emphasisInlineParser.ProcessDelimiters(link, null);
+                            }
 
                             // If we have a link (and not an image), 
                             // we also set all [ delimiters before the opening delimiter to inactive. 

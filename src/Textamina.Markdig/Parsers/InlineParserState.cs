@@ -20,6 +20,7 @@ namespace Textamina.Markdig.Parsers
             InlinesToClose = new List<Inline>();
             Parsers = parsers;
             SpecialCharacters = Parsers.OpeningCharacters;
+            Parsers.Initialize(this);
         }
 
         public LeafBlock Block { get; internal set; }
@@ -136,19 +137,33 @@ namespace Textamina.Markdig.Parsers
                 leafBlock.Inline.DumpTo(Log);
             }
 
-            foreach (var parser in Parsers)
+            // Process delimiters
+            foreach (var delimiterProcessor in Parsers.DelimiterProcessors)
             {
-                if (parser.OnCloseBlock != null)
-                {
-                    parser.OnCloseBlock(this);
-                }
+                delimiterProcessor.ProcessDelimiters(Root, null);
             }
+            TransformDelimitersToLiterals();
 
             if (Log != null)
             {
                 Log.WriteLine();
                 Log.WriteLine("** Dump after Emphasis:");
                 leafBlock.Inline.DumpTo(Log);
+            }
+        }
+
+        private void TransformDelimitersToLiterals()
+        {
+            var child = Root.LastChild;
+            while (child != null)
+            {
+                var subContainer = child as ContainerInline;
+                child = subContainer?.LastChild;
+                var delimiterInline = subContainer as DelimiterInline;
+                if (delimiterInline != null)
+                {
+                    delimiterInline.ReplaceBy(new LiteralInline() { Content = new StringSlice(delimiterInline.ToLiteral()), IsClosed = true });
+                }
             }
         }
 

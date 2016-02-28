@@ -5,12 +5,51 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
-    public class EmphasisInlineParser : InlineParser
+    public class EmphasisInlineParser : InlineParser, IDelimiterProcessor
     {
         public EmphasisInlineParser()
         {
             OpeningCharacters = new[] { '*', '_' };
-            OnCloseBlock = ProcessEmphasis;
+        }
+
+        public void ProcessDelimiters(Inline root, Inline lastChild)
+        {
+            var container = root as ContainerInline;
+            if (container == null)
+            {
+                return;
+            }
+
+            var delimiters = new List<EmphasisDelimiterInline>();
+
+            if (container is EmphasisDelimiterInline)
+            {
+                delimiters.Add((EmphasisDelimiterInline)container);
+            }
+
+            // Move current_position forward in the delimiter stack (if needed) until 
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            var child = container.LastChild;
+            while (child != null)
+            {
+                if (child == lastChild)
+                {
+                    break;
+                }
+                var delimiter = child as EmphasisDelimiterInline;
+                if (delimiter != null)
+                {
+                    delimiters.Add(delimiter);
+                }
+                var subContainer = child as ContainerInline;
+                child = subContainer?.LastChild;
+                //if (delimiter == null && subContainer is DelimiterInline)
+                //{
+                //    subContainer.ReplaceBy(new LiteralInline() { Content = new StringSlice(((DelimiterInline)subContainer).ToLiteral()), IsClosed = true });
+                //}
+            }
+
+            ProcessEmphasis(delimiters);
         }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
@@ -111,46 +150,6 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-        public static void ProcessEmphasis(InlineParserState state)
-        {
-            ProcessEmphasis(state.Root);
-        }
-
-        public static void ProcessEmphasis(Inline root)
-        {
-            var container = root as ContainerInline;
-            if (container == null)
-            {
-                return;
-            }
-
-            var delimiters = new List<EmphasisDelimiterInline>();
-
-            if (container is EmphasisDelimiterInline)
-            {
-                delimiters.Add((EmphasisDelimiterInline)container);
-            }
-
-            // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
-            var child = container.LastChild;
-            while (child != null)
-            {
-                var delimiter = child as EmphasisDelimiterInline;
-                if (delimiter != null)
-                {
-                    delimiters.Add(delimiter);
-                }
-                var subContainer = child as ContainerInline;
-                child = subContainer?.LastChild;
-                if (delimiter == null && subContainer is DelimiterInline)
-                {
-                    subContainer.ReplaceBy(new LiteralInline() { Content = new StringSlice(((DelimiterInline)subContainer).ToLiteral()), IsClosed = true });
-                }
-            }
-
-            ProcessEmphasis(delimiters);
-        }
 
         private static void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
         {
@@ -302,5 +301,5 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
             delimiters.Clear();
         }
-    }
+   }
 }

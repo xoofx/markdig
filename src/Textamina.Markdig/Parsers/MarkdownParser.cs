@@ -36,7 +36,6 @@ namespace Textamina.Markdig.Parsers
                 new IndentedCodeBlockParser(),
                 new ParagraphBlockParser(),
             };
-            blockParsers.Initialize();
 
             inlineParsers = new InlineParserList()
             {
@@ -48,7 +47,6 @@ namespace Textamina.Markdig.Parsers
                 new AutolineInlineParser(),
                 new HardlineBreakInlineParser(),
             };
-            inlineParsers.Initialize();
 
 
             blockParserState = new BlockParserState(stringBuilderCache, document, blockParsers);

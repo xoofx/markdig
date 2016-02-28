@@ -2,7 +2,7 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class BlockParser : ParserBase, IBlockParser
+    public abstract class BlockParser : ParserBase<BlockParserState>
     {
         protected BlockParser()
         {

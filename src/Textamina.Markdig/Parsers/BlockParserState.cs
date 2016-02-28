@@ -21,6 +21,7 @@ namespace Textamina.Markdig.Parsers
             root.IsOpen = true;
             Stack = new List<Block> {root};
             Parsers = parsers;
+            parsers.Initialize(this);
         }
 
         public List<Block> Stack { get; }
