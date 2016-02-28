@@ -15,7 +15,7 @@ namespace Textamina.Markdig.Parsers
         private readonly BlockParserState blockParserState;
         private readonly StringBuilderCache stringBuilderCache;
         private readonly InlineParserState inlineState;
-        private readonly ParserList<InlineParser> inlineParsers;
+        private readonly InlineParserList inlineParsers;
 
         public MarkdownParser(TextReader reader)
         {
@@ -24,7 +24,7 @@ namespace Textamina.Markdig.Parsers
             stringBuilderCache = new StringBuilderCache();
 
             // TODO: Make this configurable outside here
-            var blockParsers = new ParserList<BlockParser>()
+            var blockParsers = new BlockParserList()
             {
                 new ThematicBreakParser(),
                 new HeadingBlockParser(),
@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Parsers
             };
             blockParsers.Initialize();
 
-            inlineParsers = new ParserList<InlineParser>()
+            inlineParsers = new InlineParserList()
             {
                 new HtmlEntityParser(),
                 new LinkInlineParser(),

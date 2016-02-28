@@ -5,6 +5,8 @@ namespace Textamina.Markdig.Parsers
     public interface ICharacterParser
     {
         char[] OpeningCharacters { get; }
+
+        int Index { get; }
     }
 
     public interface IBlockParser : ICharacterParser

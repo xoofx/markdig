@@ -2,13 +2,11 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class BlockParser : IBlockParser
+    public abstract class BlockParser : ParserBase, IBlockParser
     {
         protected BlockParser()
         {
         }
-
-        public char[] OpeningCharacters { get; protected set; }
 
         public bool HasOpeningCharacter(char c)
         {

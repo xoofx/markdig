@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Parsers
 {
     public class InlineParserState
     {
-        public InlineParserState(StringBuilderCache stringBuilders, Document document, ParserList<InlineParser> parsers)
+        public InlineParserState(StringBuilderCache stringBuilders, Document document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -30,7 +30,7 @@ namespace Textamina.Markdig.Parsers
 
         public readonly List<Inline> InlinesToClose;
 
-        public readonly ParserList<InlineParser> Parsers;
+        public readonly InlineParserList Parsers;
 
         public readonly Document Document;
 

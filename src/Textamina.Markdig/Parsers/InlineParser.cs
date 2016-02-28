@@ -2,11 +2,17 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class InlineParser : ICharacterParser
+    public class ParserBase : ICharacterParser
+    {
+        public char[] OpeningCharacters { get; protected set; }
+
+        public int Index { get; internal set; }
+    }
+
+
+    public abstract class InlineParser : ParserBase
     {
         public delegate void CloseBlockDelegate(InlineParserState state);
-
-        public char[] OpeningCharacters { get; protected set; }
 
         public abstract bool Match(InlineParserState state, ref StringSlice slice);
 

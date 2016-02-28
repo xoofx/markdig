@@ -8,10 +8,9 @@ namespace Textamina.Markdig.Parsers
 {
     public class BlockParserState
     {
-        private readonly ParserList<BlockParser> blockParsers;
         private int currentStackIndex;
 
-        public BlockParserState(StringBuilderCache stringBuilders, Document root, ParserList<BlockParser> parsers)
+        public BlockParserState(StringBuilderCache stringBuilders, Document root, BlockParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (root == null) throw new ArgumentNullException(nameof(root));
@@ -21,12 +20,14 @@ namespace Textamina.Markdig.Parsers
             NewBlocks = new Stack<Block>();
             root.IsOpen = true;
             Stack = new List<Block> {root};
-            blockParsers = parsers;
+            Parsers = parsers;
         }
 
         public List<Block> Stack { get; }
 
         public Stack<Block> NewBlocks { get; }
+
+        public BlockParserList Parsers { get; }
 
         public ContainerBlock CurrentContainer { get; private set; }
 
@@ -412,8 +413,8 @@ namespace Textamina.Markdig.Parsers
                 // Eat indent spaces before checking the character
                 ParseIndent();
 
-                var parsers = blockParsers.GetParsersForOpeningCharacter(CurrentChar);
-                var globalParsers = blockParsers.GlobalParsers;
+                var parsers = Parsers.GetParsersForOpeningCharacter(CurrentChar);
+                var globalParsers = Parsers.GlobalParsers;
 
                 if (parsers != null)
                 {
