@@ -50,11 +50,11 @@ namespace Textamina.Markdig.Parsers
                 var lineCount = lines.Count;
                 for (int i = 0; i < lineCount; i++)
                 {
-                    lines.Slices[i].TrimStart();
+                    lines.Lines[i].Slice.TrimStart();
                 }
                 if (lineCount > 0)
                 {
-                    lines.Slices[lineCount - 1].TrimEnd();
+                    lines.Lines[lineCount - 1].Slice.TrimEnd();
                 }
             }
             else // if (heading?.Lines.Count > 1)
@@ -135,7 +135,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private bool TryMatchLinkReferenceDefinition(StringSliceList lines, BlockParserState state)
+        private bool TryMatchLinkReferenceDefinition(StringLineGroup lines, BlockParserState state)
         {
             bool atLeastOneFound = false;
 

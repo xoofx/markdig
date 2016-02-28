@@ -26,6 +26,8 @@ namespace Textamina.Markdig.Parsers
 
         public Inline Inline { get; set; }
 
+        public ContainerInline Root { get; internal set; }
+
         public readonly List<Inline> InlinesToClose;
 
         public readonly ParserList<InlineParser> Parsers;
@@ -36,11 +38,14 @@ namespace Textamina.Markdig.Parsers
 
         public TextWriter Log;
 
+        public int LineIndex { get; private set; }
+
         public char[] SpecialCharacters { get; set; }
 
         public void ProcessInlineLeaf(LeafBlock leafBlock)
         {
-            leafBlock.Inline = new ContainerInline() { IsClosed = false };
+            this.Root = new ContainerInline() { IsClosed = false };
+            leafBlock.Inline = Root;
             this.Inline = leafBlock.Inline;
             this.Block = leafBlock;
 
@@ -130,7 +135,14 @@ namespace Textamina.Markdig.Parsers
                 Log.WriteLine("** Dump before Emphasis:");
                 leafBlock.Inline.DumpTo(Log);
             }
-            EmphasisInline.ProcessEmphasis(leafBlock.Inline);
+
+            foreach (var parser in Parsers)
+            {
+                if (parser.OnCloseBlock != null)
+                {
+                    parser.OnCloseBlock(this);
+                }
+            }
 
             if (Log != null)
             {

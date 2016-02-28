@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupSimple()
         {
-            var text = new StringSliceList()
+            var text = new StringLineGroup()
             {
                 new StringSlice("ABC"),
                 new StringSlice("E"),
@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupWithSlices()
         {
-            var text = new StringSliceList()
+            var text = new StringLineGroup()
             {
                 new StringSlice("XABC") { Start = 1},
                 new StringSlice("YYE") { Start = 2},
@@ -43,7 +43,7 @@ namespace Textamina.Markdig.Tests
         }
 
 
-        private static string ToString(StringSliceList.Iterator text)
+        private static string ToString(StringLineGroup.Iterator text)
         {
             var chars = new StringBuilder();
             while (text.CurrentChar != '\0')
@@ -57,7 +57,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupSaveAndRestore()
         {
-            var text = new StringSliceList()
+            var text = new StringLineGroup()
             {
                 new StringSlice("ABCD"),
                 new StringSlice("EF"),
@@ -79,7 +79,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSkipWhitespaces()
         {
-            var text = new StringSliceList("             ABC").ToCharIterator();
+            var text = new StringLineGroup("             ABC").ToCharIterator();
             Assert.True(text.TrimStart());
             Assert.AreEqual('A', text.CurrentChar);
         }
@@ -94,7 +94,7 @@ namespace Textamina.Markdig.Tests
             var line2 = new StringSlice("  DEF ");
             line2.Trim();
 
-            var text = new StringSliceList() {line1, line2};
+            var text = new StringLineGroup() {line1, line2};
 
             var result = ToString(text.ToCharIterator());
             TextAssert.AreEqual("ABC\nDEF", result);
@@ -109,7 +109,7 @@ namespace Textamina.Markdig.Tests
 
             var line2 = new StringSlice("  DEF ");
 
-            var text = new StringSliceList() { line1, line2}.ToCharIterator();
+            var text = new StringLineGroup() { line1, line2}.ToCharIterator();
             text.TrimStart();
 
             var result = ToString(text);

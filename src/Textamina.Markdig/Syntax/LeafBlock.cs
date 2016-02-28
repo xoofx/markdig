@@ -12,23 +12,26 @@ namespace Textamina.Markdig.Syntax
         {
         }
 
-        public StringSliceList Lines { get; set; }
+        public StringLineGroup Lines { get; set; }
 
         public Inline Inline { get; set; }
 
         public bool ProcessInlines { get; set; }
 
-        public void AppendLine(ref StringSlice slice, int column, int line1)
+        public void AppendLine(ref StringSlice slice, int column, int line)
         {
             if (Lines == null)
             {
-                Lines = new StringSliceList();
+                Lines = new StringLineGroup();
             }
+
+            var stringLine = new StringLine(ref slice, line, column, 0); // TODO: POSITION
+
 
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {
-                Lines.Add(ref slice);
+                Lines.Add(ref stringLine);
             }
             else
             {
@@ -39,8 +42,8 @@ namespace Textamina.Markdig.Syntax
                     builder.Append(' ');
                 }
                 builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
-                var newSlice = new StringSlice(builder.ToString());
-                Lines.Add(ref newSlice);
+                stringLine.Slice = new StringSlice(builder.ToString());
+                Lines.Add(ref stringLine);
             }
         }
 

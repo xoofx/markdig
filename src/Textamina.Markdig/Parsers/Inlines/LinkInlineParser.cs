@@ -109,7 +109,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 }
                 link.IsClosed = true;
 
-                EmphasisInline.ProcessEmphasis(link);
+                EmphasisInlineParser.ProcessEmphasis(link);
 
                 state.Inline = link;
                 isValidLink = true;
@@ -175,7 +175,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                             openParent.ReplaceBy(link);
                             inlineState.Inline = link;
 
-                            EmphasisInline.ProcessEmphasis(link);
+                            EmphasisInlineParser.ProcessEmphasis(link);
 
                             // If we have a link (and not an image), 
                             // we also set all [ delimiters before the opening delimiter to inactive. 

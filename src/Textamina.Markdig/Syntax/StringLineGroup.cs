@@ -6,29 +6,29 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Syntax
 {
-    public class StringSliceList : IEnumerable
+    public class StringLineGroup : IEnumerable
     {
-        private static readonly StringSlice[] Empty = new StringSlice[0];
+        private static readonly StringLine[] Empty = new StringLine[0];
 
-        public StringSliceList()
+        public StringLineGroup()
         {
-            Slices = Empty;
+            Lines = Empty;
         }
 
-        public StringSliceList(string text)
+        public StringLineGroup(string text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
-            Slices = Empty;
+            Lines = Empty;
             Add(new StringSlice(text));
         }
 
-        public StringSlice[] Slices;
+        public StringLine[] Lines { get; private set; }
 
-        public int Count;
+        public int Count { get; private set; }
 
         public void Clear()
         {
-            Array.Clear(Slices, 0, Slices.Length);
+            Array.Clear(Lines, 0, Lines.Length);
             Count = 0;
         }
 
@@ -40,33 +40,33 @@ namespace Textamina.Markdig.Syntax
             }
             else
             {
-                Array.Copy(Slices, index + 1, Slices, index, Count - index - 1);
-                Slices[Count - 1] = new StringSlice();
+                Array.Copy(Lines, index + 1, Lines, index, Count - index - 1);
+                Lines[Count - 1] = new StringLine();
                 Count--;
             }
         }
 
-        public void Add(ref StringSlice slice)
+        public void Add(ref StringLine line)
         {
-            if (Count == Slices.Length) IncreaseCapacity();
-            Slices[Count++] = slice;
+            if (Count == Lines.Length) IncreaseCapacity();
+            Lines[Count++] = line;
         }
 
         public void Add(StringSlice slice)
         {
-            if (Count == Slices.Length) IncreaseCapacity();
-            Slices[Count++] = slice;
+            if (Count == Lines.Length) IncreaseCapacity();
+            Lines[Count++] = new StringLine(ref slice);
         }
 
         private void IncreaseCapacity()
         {
-            int newCapacity = Slices.Length == 0 ? 4 : Slices.Length * 2;
-            var newItems = new StringSlice[newCapacity];
+            int newCapacity = Lines.Length == 0 ? 4 : Lines.Length * 2;
+            var newItems = new StringLine[newCapacity];
             if (Count > 0)
             {
-                Array.Copy(Slices, 0, newItems, 0, Count);
+                Array.Copy(Lines, 0, newItems, 0, Count);
             }
-            Slices = newItems;
+            Lines = newItems;
         }
 
         public override string ToString()
@@ -83,7 +83,7 @@ namespace Textamina.Markdig.Syntax
 
             if (Count == 1)
             {
-                return Slices[0];
+                return Lines[0];
             }
 
             var builder = StringBuilderCache.Local();
@@ -93,9 +93,9 @@ namespace Textamina.Markdig.Syntax
                 {
                     builder.Append('\n');
                 }
-                if (!Slices[i].IsEmpty)
+                if (!Lines[i].Slice.IsEmpty)
                 {
-                    builder.Append(Slices[i].Text, Slices[i].Start, Slices[i].Length);
+                    builder.Append(Lines[i].Slice.Text, Lines[i].Slice.Start, Lines[i].Slice.Length);
                 }
             }
             var str = builder.ToString();
@@ -105,7 +105,7 @@ namespace Textamina.Markdig.Syntax
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Slices.GetEnumerator();
+            return Lines.GetEnumerator();
         }
 
         public Iterator ToCharIterator()
@@ -115,10 +115,10 @@ namespace Textamina.Markdig.Syntax
 
         public struct Iterator : ICharIterator
         {
-            private readonly StringSliceList lines;
+            private readonly StringLineGroup lines;
             private int offset;
 
-            public Iterator(StringSliceList lines)
+            public Iterator(StringLineGroup lines)
             {
                 this.lines = lines;
                 Start = -1;
@@ -128,7 +128,7 @@ namespace Textamina.Markdig.Syntax
                 End = -2; 
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    End += lines.Slices[i].Length + 1; // Add chars
+                    End += lines.Lines[i].Slice.Length + 1; // Add chars
                 }
                 NextChar();
             }
@@ -149,7 +149,7 @@ namespace Textamina.Markdig.Syntax
                 offset++;
                 if (Start <= End)
                 {
-                    var slice = lines.Slices[SliceIndex];
+                    var slice = (StringSlice)lines.Lines[SliceIndex];
                     if (offset < slice.Length)
                     {
                         CurrentChar = slice[slice.Start + offset];

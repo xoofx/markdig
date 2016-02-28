@@ -329,7 +329,7 @@ namespace Textamina.Markdig.Formatters
                     {
                         writer.WriteLine();
                     }
-                    var line = lines.Slices[i];
+                    var line = lines.Lines[i];
                     if (escape)
                     {
                         HtmlHelper.EscapeHtml(line.ToString(), writer);

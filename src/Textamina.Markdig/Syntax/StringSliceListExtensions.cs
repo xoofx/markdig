@@ -2,11 +2,11 @@
 {
     public static class StringSliceListExtensions
     {
-        public static void Trim(this StringSliceList slices)
+        public static void Trim(this StringLineGroup slices)
         {
             for (int i = 0; i < slices.Count; i++)
             {
-                slices.Slices[i].Trim();
+                slices.Lines[i].Slice.Trim();
             }
         }
          
