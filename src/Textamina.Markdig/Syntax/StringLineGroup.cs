@@ -100,10 +100,9 @@ namespace Textamina.Markdig.Syntax
             {
                 if (i > 0)
                 {
-                    lineOffset++;
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(lineOffset);
+                        lineOffsets.Add(builder.Length + 2); // Add 1 for \n and 1 for next line
                     }
                     builder.Append('\n');
                 }
@@ -111,11 +110,10 @@ namespace Textamina.Markdig.Syntax
                 {
                     builder.Append(Lines[i].Slice.Text, Lines[i].Slice.Start, Lines[i].Slice.Length);
                 }
-                lineOffset += Lines[i].Slice.End + 1;
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(lineOffset);
+                lineOffsets.Add(builder.Length + 1); // Add 1 for \0
             }
             var str = builder.ToString();
             builder.Clear();

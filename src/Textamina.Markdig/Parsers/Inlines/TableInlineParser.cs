@@ -37,12 +37,10 @@ namespace Textamina.Markdig.Parsers.Inlines
 
         public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild)
         {
-
-
-
-
-
-
+            if (state.ParserStates[Index] == null)
+            {
+                return true;
+            }
 
 
 

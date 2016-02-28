@@ -161,7 +161,10 @@ namespace Textamina.Markdig.Parsers
             // Process delimiters
             foreach (var delimiterProcessor in Parsers.DelimiterProcessors)
             {
-                delimiterProcessor.ProcessDelimiters(this, Root, null);
+                if (!delimiterProcessor.ProcessDelimiters(this, Root, null))
+                {
+                    break;
+                }
             }
             TransformDelimitersToLiterals();
 
