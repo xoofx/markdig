@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Syntax;
@@ -48,7 +49,7 @@ namespace Textamina.Markdig.Parsers
                 new EmphasisInlineParser(),
                 new CodeInlineParser(),
                 new AutolineInlineParser(),
-                new HardlineBreakInlineParser(),
+                new LineBreakInlineParser(),
             };
 
 
@@ -142,19 +143,24 @@ namespace Textamina.Markdig.Parsers
             while (list.Count > 0)
             {
                 container = list.Pop();
-                foreach (var block in container.Children)
+                for (int i = 0; i < container.Children.Count; i++)
                 {
+                    var block = container.Children[i];
                     var leafBlock = block as LeafBlock;
                     if (leafBlock != null)
                     {
                         if (leafBlock.ProcessInlines)
                         {
                             inlineState.ProcessInlineLeaf(leafBlock);
+                            if (inlineState.BlockNew != null)
+                            {
+                                container.Children[i] = inlineState.BlockNew;
+                            }
                         }
                     }
                     else
                     {
-                        list.Push((ContainerBlock)block);
+                        list.Push((ContainerBlock) block);
                     }
                 }
             }

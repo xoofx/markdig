@@ -102,7 +102,7 @@ namespace Textamina.Markdig.Syntax
                 {
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(builder.Length + 2); // Add 1 for \n and 1 for next line
+                        lineOffsets.Add(builder.Length + 1); // Add 1 for \n and 1 for next line
                     }
                     builder.Append('\n');
                 }
@@ -113,7 +113,7 @@ namespace Textamina.Markdig.Syntax
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(builder.Length + 1); // Add 1 for \0
+                lineOffsets.Add(builder.Length); // Add 1 for \0
             }
             var str = builder.ToString();
             builder.Clear();

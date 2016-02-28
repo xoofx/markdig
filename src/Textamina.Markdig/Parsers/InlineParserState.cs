@@ -10,7 +10,6 @@ namespace Textamina.Markdig.Parsers
 {
     public class InlineParserState
     {
-        private int lineOffsetIndex;
         private readonly List<int> lineOffsets;
 
         public InlineParserState(StringBuilderCache stringBuilders, Document document, InlineParserList parsers)
@@ -28,7 +27,9 @@ namespace Textamina.Markdig.Parsers
             Parsers.Initialize(this);
         }
 
-        public LeafBlock Block { get; internal set; }
+        public LeafBlock Block { get; private set; }
+
+        public Block BlockNew { get; set; }
 
         public Inline Inline { get; set; }
 
@@ -46,6 +47,8 @@ namespace Textamina.Markdig.Parsers
 
         public int LineIndex { get; private set; }
 
+        public int LocalLineIndex { get; private set; }
+
         public char[] SpecialCharacters { get; set; }
 
         public object[] ParserStates { get; private set; }
@@ -62,7 +65,7 @@ namespace Textamina.Markdig.Parsers
             LineIndex = leafBlock.Line;
 
             lineOffsets.Clear();
-            lineOffsetIndex = 0;
+            LocalLineIndex = 0;
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines = null;
 
@@ -71,10 +74,10 @@ namespace Textamina.Markdig.Parsers
                 var c = text.CurrentChar;
 
                 // Update line index
-                if (text.Start >= lineOffsets[lineOffsetIndex])
+                if (text.Start >= lineOffsets[LocalLineIndex])
                 {
                     LineIndex++;
-                    lineOffsetIndex++;
+                    LocalLineIndex++;
                 }
 
                 var textSaved = text;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
@@ -41,8 +42,13 @@ namespace Textamina.Markdig.Formatters
                 [typeof(AutolinkInline)] = o => Write((AutolinkInline)o),
                 [typeof(HtmlInline)] = o => Write((HtmlInline)o),
                 [typeof(EmphasisInline)] = o => Write((EmphasisInline)o),
+                [typeof(SoftlineBreakInline)] = o => Write((SoftlineBreakInline)o),
                 [typeof(HardlineBreakInline)] = o => Write((HardlineBreakInline)o),
                 [typeof(ContainerInline)] = o => WriteChildren((ContainerInline)o),
+
+                // TODO: TEMP Extensions for tables
+
+                [typeof(TableBlock)] = o => Write((TableBlock)o),
             };
 
             EnableHtmlForInline = true;
@@ -287,6 +293,57 @@ namespace Textamina.Markdig.Formatters
             {
                 writer.WriteConstant(" ");
             }
+        }
+
+        private void Write(SoftlineBreakInline softLineBreak)
+        {
+            writer.WriteLine();
+        }
+
+        protected void Write(TableBlock tableBlock)
+        {
+            writer.EnsureLine();
+            writer.WriteLineConstant("<table>");
+
+            bool hasBody = false;
+            foreach (var rowObj in tableBlock.Children)
+            {
+                var row = (TableRow)rowObj;
+                if (row.IsHeader)
+                {
+                    writer.WriteLineConstant("<thead>");
+                }
+                else if (!hasBody)
+                {
+                    writer.WriteLineConstant("<tbody>");
+                    hasBody = true;
+                }
+                writer.WriteLineConstant("<tr>");
+                foreach (var cellObj in row.Children)
+                {
+                    var cell = (TableCell) cellObj;
+                    Write(cell);
+                }
+                writer.WriteLineConstant("</tr>");
+                if (row.IsHeader)
+                {
+                    writer.WriteLineConstant("</thead>");
+                }
+            }
+
+            if (hasBody)
+            {
+                writer.WriteLineConstant("</tbody>");
+            }
+        }
+
+        protected void Write(TableCell tableCell)
+        {
+            var row = (TableRow)tableCell.Parent;
+            writer.EnsureLine();
+            writer.WriteConstant(row.IsHeader ? "<th>" : "<td>");
+            WriteLeaf(tableCell, false, false);
+            writer.WriteLineConstant(row.IsHeader ? "</th>" : "</td>");
         }
 
         protected void WriteChildren(ContainerInline containerInline)

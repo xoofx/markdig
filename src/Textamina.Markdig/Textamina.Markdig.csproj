@@ -50,7 +50,7 @@
     <Compile Include="Parsers\InlineParserState.cs" />
     <Compile Include="Parsers\BlockParserState.cs" />
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
-    <Compile Include="Parsers\Inlines\TableInlineParser.cs" />
+    <Compile Include="Extensions\TableInlineParser.cs" />
     <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="Parsers\Inlines\EmphasisInlineParser.cs" />
     <Compile Include="Parsers\Inlines\EscapeInlineParser.cs" />
     <Compile Include="Syntax\Inlines\HardlineBreakInline.cs" />
-    <Compile Include="Parsers\Inlines\HardlineBreakInlineParser.cs" />
+    <Compile Include="Parsers\Inlines\LineBreakInlineParser.cs" />
     <Compile Include="Syntax\Inlines\HtmlInline.cs" />
     <Compile Include="Syntax\Inlines\LeafInline.cs" />
     <Compile Include="Syntax\Inlines\LineBreakInline.cs" />
