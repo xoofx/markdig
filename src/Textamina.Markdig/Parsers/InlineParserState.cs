@@ -10,6 +10,9 @@ namespace Textamina.Markdig.Parsers
 {
     public class InlineParserState
     {
+        private int lineOffsetIndex;
+        private readonly List<int> lineOffsets;
+
         public InlineParserState(StringBuilderCache stringBuilders, Document document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
@@ -20,6 +23,8 @@ namespace Textamina.Markdig.Parsers
             InlinesToClose = new List<Inline>();
             Parsers = parsers;
             SpecialCharacters = Parsers.OpeningCharacters;
+            ParserStates = new object[Parsers.Count];
+            lineOffsets = new List<int>();
             Parsers.Initialize(this);
         }
 
@@ -43,19 +48,35 @@ namespace Textamina.Markdig.Parsers
 
         public char[] SpecialCharacters { get; set; }
 
+        public object[] ParserStates { get; private set; }
+
         public void ProcessInlineLeaf(LeafBlock leafBlock)
         {
+            // clear parser states
+            Array.Clear(ParserStates, 0, ParserStates.Length);
+
             this.Root = new ContainerInline() { IsClosed = false };
             leafBlock.Inline = Root;
             this.Inline = leafBlock.Inline;
             this.Block = leafBlock;
+            LineIndex = leafBlock.Line;
 
-            var text = leafBlock.ToInlineSlice();
+            lineOffsets.Clear();
+            lineOffsetIndex = 0;
+            var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines = null;
 
             while (!text.IsEmpty)
             {
                 var c = text.CurrentChar;
+
+                // Update line index
+                if (text.Start >= lineOffsets[lineOffsetIndex])
+                {
+                    LineIndex++;
+                    lineOffsetIndex++;
+                }
+
                 var textSaved = text;
                 var parsers = Parsers.GetParsersForOpeningCharacter(c);
                 if (parsers != null)
@@ -140,7 +161,7 @@ namespace Textamina.Markdig.Parsers
             // Process delimiters
             foreach (var delimiterProcessor in Parsers.DelimiterProcessors)
             {
-                delimiterProcessor.ProcessDelimiters(Root, null);
+                delimiterProcessor.ProcessDelimiters(this, Root, null);
             }
             TransformDelimitersToLiterals();
 

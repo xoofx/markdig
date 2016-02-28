@@ -43,6 +43,7 @@
     <Compile Include="Helpers\StringBuilderCache.cs" />
     <Compile Include="Parsers\BlockParserList.cs" />
     <Compile Include="Parsers\IBlockParser.cs" />
+    <Compile Include="Parsers\ICharacterParser.cs" />
     <Compile Include="Parsers\IDelimiterProcessor.cs" />
     <Compile Include="Parsers\InlineParser.cs" />
     <Compile Include="Parsers\InlineParserList.cs" />

@@ -4,6 +4,6 @@ namespace Textamina.Markdig.Parsers
 {
     public interface IDelimiterProcessor
     {
-        void ProcessDelimiters(Inline root, Inline lastChild);
+        bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild);
     }
 }

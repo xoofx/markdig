@@ -2,16 +2,7 @@
 
 namespace Textamina.Markdig.Parsers
 {
-    public interface ICharacterParser<TState>
-    {
-        char[] OpeningCharacters { get; }
-
-        void Initialize(TState state);
-
-        int Index { get; }
-    }
-
-    public interface IBlockParser<T> : ICharacterParser<T>
+    public interface IBlockParser<in T> : ICharacterParser<T>
     {
         bool CanInterrupt(BlockParserState state, Block block);
 

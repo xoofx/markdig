@@ -9,10 +9,10 @@ namespace Textamina.Markdig.Parsers
         public ListBlockParser()
         {
             OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            OrderedDelimiter = new[] {'.', ')'};
+            OrderedDelimiters = new[] {'.', ')'};
         }
 
-        public char[] OrderedDelimiter { get; set; }
+        public char[] OrderedDelimiters { get; set; }
 
         public override BlockState TryOpen(BlockParserState state)
         {
@@ -175,9 +175,9 @@ namespace Textamina.Markdig.Parsers
 
                 // Check if we have an ordered delimiter
                 bool isOrderedDelimiter = false;
-                for (int i = 0; i < OrderedDelimiter.Length; i++)
+                for (int i = 0; i < OrderedDelimiters.Length; i++)
                 {
-                    if (OrderedDelimiter[i] == c)
+                    if (OrderedDelimiters[i] == c)
                     {
                         isOrderedDelimiter = true;
                         break;
@@ -264,7 +264,6 @@ namespace Textamina.Markdig.Parsers
                 if (currentParent.IsOrdered != isOrdered ||
                     (isOrdered && currentParent.OrderedDelimiter != orderedDelimiter) ||
                     (!isOrdered && currentParent.BulletChar != bulletChar)
-                    //(numberOfSpaces < ((ListItemBlock) currentParent.LastChild).ColumnWidth)
                     )
                 {
                     state.Close(currentParent);

@@ -126,7 +126,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 // Process emphasis delimiters
                 if (emphasisInlineParser != null)
                 {
-                    emphasisInlineParser.ProcessDelimiters(link, null);
+                    emphasisInlineParser.ProcessDelimiters(state, link, null);
                 }
 
                 state.Inline = link;
@@ -195,7 +195,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                             if (emphasisInlineParser != null)
                             {
-                                emphasisInlineParser.ProcessDelimiters(link, null);
+                                emphasisInlineParser.ProcessDelimiters(inlineState, link, null);
                             }
 
                             // If we have a link (and not an image), 

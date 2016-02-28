@@ -74,29 +74,48 @@ namespace Textamina.Markdig.Syntax
             return ToSlice().ToString();
         }
 
-        public StringSlice ToSlice()
+        public StringSlice ToSlice(List<int> lineOffsets = null)
         {
             if (Count == 0)
             {
+                if (lineOffsets != null)
+                {
+                    lineOffsets.Add(1);
+                }
                 return new StringSlice(string.Empty);
             }
 
             if (Count == 1)
             {
+                if (lineOffsets != null)
+                {
+                    lineOffsets.Add(Lines[0].Slice.End + 1);
+                }
                 return Lines[0];
             }
 
             var builder = StringBuilderCache.Local();
+            int lineOffset = 0;
             for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
+                    lineOffset++;
+                    if (lineOffsets != null)
+                    {
+                        lineOffsets.Add(lineOffset);
+                    }
                     builder.Append('\n');
                 }
                 if (!Lines[i].Slice.IsEmpty)
                 {
                     builder.Append(Lines[i].Slice.Text, Lines[i].Slice.Start, Lines[i].Slice.Length);
                 }
+                lineOffset += Lines[i].Slice.End + 1;
+            }
+            if (lineOffsets != null)
+            {
+                lineOffsets.Add(lineOffset);
             }
             var str = builder.ToString();
             builder.Clear();

@@ -12,12 +12,12 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '*', '_' };
         }
 
-        public void ProcessDelimiters(Inline root, Inline lastChild)
+        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild)
         {
             var container = root as ContainerInline;
             if (container == null)
             {
-                return;
+                return true;
             }
 
             var delimiters = new List<EmphasisDelimiterInline>();
@@ -50,6 +50,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
 
             ProcessEmphasis(delimiters);
+            return true;
         }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)

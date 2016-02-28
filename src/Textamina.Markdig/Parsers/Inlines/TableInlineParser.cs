@@ -10,13 +10,15 @@ namespace Textamina.Markdig.Parsers.Inlines
         {
         }
 
+        public int LineIndex { get; set; }
+
         public override string ToLiteral()
         {
             return "|";
         }
     }
 
-    public class TableInlineParser : InlineParser
+    public class TableInlineParser : InlineParser, IDelimiterProcessor
     {
         public TableInlineParser()
         {
@@ -25,9 +27,25 @@ namespace Textamina.Markdig.Parsers.Inlines
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
-            state.Inline = new TableDelimiterInline(this);
+            state.Inline = new TableDelimiterInline(this) {LineIndex = state.LineIndex};
 
-            // We don't have an emphasis
+            // Store that we have at least one delimiter
+            state.ParserStates[Index] = state.Inline;
+
+            return true;
+        }
+
+        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild)
+        {
+
+
+
+
+
+
+
+
+
             return false;
         }
     }
