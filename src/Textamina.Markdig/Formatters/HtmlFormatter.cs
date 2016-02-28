@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
@@ -14,6 +15,7 @@ namespace Textamina.Markdig.Formatters
         private readonly HtmlTextWriter writer;
 
         private readonly Dictionary<Type, Action<object>> registeredWriters;
+        private readonly Dictionary<Type, Action<object>> inheritedWriters;
 
         private bool implicitParagraph;
 
@@ -49,6 +51,11 @@ namespace Textamina.Markdig.Formatters
                 // TODO: TEMP Extensions for tables
 
                 [typeof(TableBlock)] = o => Write((TableBlock)o),
+            };
+
+            inheritedWriters = new Dictionary<Type, Action<object>>()
+            {
+                [typeof (DelimiterInline)] = o => Write((DelimiterInline) o),
             };
 
             EnableHtmlForInline = true;
@@ -346,18 +353,41 @@ namespace Textamina.Markdig.Formatters
             writer.WriteLineConstant(row.IsHeader ? "</th>" : "</td>");
         }
 
+        protected void Write(DelimiterInline delimiterInline)
+        {
+            writer.WriteConstant(delimiterInline.ToLiteral());
+            WriteChildren(delimiterInline);
+        }
+
         protected void WriteChildren(ContainerInline containerInline)
         {
             var inline = containerInline.FirstChild;
             while (inline != null)
             {
-                Action<object> writerAction;
-                if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
+                WriteDispatch(inline);
+                inline = inline.NextSibling;
+            }
+        }
+
+        protected void WriteDispatch(Inline inline)
+        {
+            Action<object> writerAction;
+            if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
+            {
+                writerAction(inline);
+            }
+            else
+            {
+                foreach (var inheritedWriter in inheritedWriters)
                 {
-                    writerAction(inline);
+                    if (inheritedWriter.Key.GetTypeInfo().IsAssignableFrom(inline.GetType().GetTypeInfo()))
+                    {
+                        registeredWriters[inline.GetType()] = inheritedWriter.Value;
+                        inheritedWriter.Value(inline);
+                        break;
+                    }
                 }
 
-                inline = inline.NextSibling;
             }
         }
 
@@ -368,12 +398,7 @@ namespace Textamina.Markdig.Formatters
             {
                 while (inline != null)
                 {
-                    Action<object> writerAction;
-                    if (registeredWriters.TryGetValue(inline.GetType(), out writerAction))
-                    {
-                        writerAction(inline);
-                    }
-
+                    WriteDispatch(inline);
                     inline = inline.NextSibling;
                 }
             }

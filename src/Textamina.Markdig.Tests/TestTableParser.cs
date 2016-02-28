@@ -18,9 +18,10 @@ namespace Textamina.Markdig.Tests
         public void TestSimple()
         {
             var reader = new StringReader(@"
-| This is a test | With a column
--------------  | -------------
-| 0              | 1
+|a|b
+|-|-|-
+|0|1|2|3
+|A|B
 
 ");
 //            var reader = new StringReader(@"> > toto tata

@@ -44,7 +44,7 @@ namespace Textamina.Markdig.Parsers
                 new LinkInlineParser(),
                 new EscapeInlineParser(),
 
-                new TableInlineParser(), // Extension
+                new PipeTableInlineParser(), // Extension
 
                 new EmphasisInlineParser(),
                 new CodeInlineParser(),

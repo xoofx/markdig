@@ -169,7 +169,7 @@ namespace Textamina.Markdig.Parsers
                     break;
                 }
             }
-            TransformDelimitersToLiterals();
+            //TransformDelimitersToLiterals();
 
             if (Log != null)
             {
@@ -179,20 +179,20 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        private void TransformDelimitersToLiterals()
-        {
-            var child = Root.LastChild;
-            while (child != null)
-            {
-                var subContainer = child as ContainerInline;
-                child = subContainer?.LastChild;
-                var delimiterInline = subContainer as DelimiterInline;
-                if (delimiterInline != null)
-                {
-                    delimiterInline.ReplaceBy(new LiteralInline() { Content = new StringSlice(delimiterInline.ToLiteral()), IsClosed = true });
-                }
-            }
-        }
+        //private void TransformDelimitersToLiterals()
+        //{
+        //    var child = Root.LastChild;
+        //    while (child != null)
+        //    {
+        //        var subContainer = child as ContainerInline;
+        //        child = subContainer?.LastChild;
+        //        var delimiterInline = subContainer as DelimiterInline;
+        //        if (delimiterInline != null)
+        //        {
+        //            delimiterInline.ReplaceBy(new LiteralInline() { Content = new StringSlice(delimiterInline.ToLiteral()), IsClosed = true });
+        //        }
+        //    }
+        //}
 
         private ContainerInline FindLastContainer()
         {

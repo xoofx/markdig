@@ -6,9 +6,9 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions
 {
-    public class TableDelimiterInline : DelimiterInline
+    public class PiprTableDelimiterInline : DelimiterInline
     {
-        public TableDelimiterInline(InlineParser parser) : base(parser)
+        public PiprTableDelimiterInline(InlineParser parser) : base(parser)
         {
         }
 
@@ -44,16 +44,16 @@ namespace Textamina.Markdig.Extensions
     }
 
 
-    public class TableInlineParser : InlineParser, IDelimiterProcessor
+    public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
     {
-        public TableInlineParser()
+        public PipeTableInlineParser()
         {
             OpeningCharacters = new[] { '|' };
         }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
-            state.Inline = new TableDelimiterInline(this) {LineIndex = state.LocalLineIndex};
+            state.Inline = new PiprTableDelimiterInline(this) {LineIndex = state.LocalLineIndex};
 
             // Store that we have at least one delimiter
             // TODO: Use cache for this kind of obejcts
@@ -82,7 +82,7 @@ namespace Textamina.Markdig.Extensions
             var previousLine = -1;
             while (child != null)
             {
-                var tableDelimiter = child as TableDelimiterInline;
+                var tableDelimiter = child as PiprTableDelimiterInline;
                 if (tableDelimiter != null)
                 {
                     if (lineIndex < 0)
@@ -132,25 +132,42 @@ namespace Textamina.Markdig.Extensions
             var table = new TableBlock();
             TableRow currentRow = null;
             state.BlockNew = table;
+            TableRow firstRow = null;
+            int columnCount = 0;
+            int maxColumn = 0;
+            TableRow previousRow = null;
 
             for (int i = 0; i < delimiters.Count; i++)
             {
-                var delimiter = delimiters[i] as TableDelimiterInline;
+                var delimiter = delimiters[i] as PiprTableDelimiterInline;
                 if (delimiter == null)
                 {
                     continue;
                 }
 
-                var nextDelimiter = (i + 1) < delimiters.Count ? delimiters[i + 1] : null;
-
                 bool startNewRow = false;
                 if (delimiter.LineIndex != lineIndex)
                 {
+                    if (firstRow == null)
+                    {
+                        firstRow = currentRow;
+                        maxColumn = columnCount;
+                    }
                     currentRow = new TableRow {Parent = table};
                     table.Children.Add(currentRow);
+                    columnCount = 0;
                     //startNewRow = true;
                 }
 
+                if (maxColumn > 0 && columnCount == maxColumn)
+                {
+                    delimiter.Remove();
+                    ((ContainerInline)((TableCell)currentRow.LastChild).Inline).AppendChild(delimiter);
+                    continue;
+                }
+
+                // If a '|' is the first in a line not starting at the begining of a line, we need
+                // to add the previous content as an implicit column
                 if (HasPreviousColumn(delimiter))
                 {
                     var cellContainer = new ContainerInline();
@@ -158,8 +175,10 @@ namespace Textamina.Markdig.Extensions
                     currentRow.Children.Add(tableCell);
                     var previousInline = delimiters[i - 1];
                     CopyCellDown(previousInline, cellContainer);
+                    columnCount++;
                 }
 
+                // otherwise we have a regular cell
                 {
                     var cellContainer = new ContainerInline();
                     var tableCell = new TableCell { Inline = cellContainer, Parent = currentRow };
@@ -172,6 +191,7 @@ namespace Textamina.Markdig.Extensions
                     }
 
                     CopyCellDown(delimiter, cellContainer);
+                    columnCount++;
                 }
 
                 lineIndex = delimiter.LineIndex;
@@ -207,7 +227,7 @@ namespace Textamina.Markdig.Extensions
             while (child != null)
             {
                 var nextSibling = child.NextSibling;
-                if (child is SoftlineBreakInline || child is HardlineBreakInline || child is TableDelimiterInline)
+                if (child is SoftlineBreakInline || child is HardlineBreakInline || child is PiprTableDelimiterInline)
                 {
                     var literal = previousSibling as LiteralInline;
                     if (literal != null)
