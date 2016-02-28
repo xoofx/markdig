@@ -6,44 +6,6 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions
 {
-    public class PiprTableDelimiterInline : DelimiterInline
-    {
-        public PiprTableDelimiterInline(InlineParser parser) : base(parser)
-        {
-        }
-
-        public int LineIndex { get; set; }
-
-        public override string ToLiteral()
-        {
-            return "|";
-        }
-    }
-
-    public class TableBlock : ContainerBlock
-    {
-        public TableBlock() : base(null)
-        {
-        }
-    }
-
-    public class TableRow : ContainerBlock
-    {
-        public TableRow() : base(null)
-        {
-        }
-
-        public bool IsHeader { get; set; }
-    }
-
-    public class TableCell : LeafBlock
-    {
-        public TableCell() : base(null)
-        {
-        }
-    }
-
-
     public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
     {
         public PipeTableInlineParser()
@@ -130,13 +92,11 @@ namespace Textamina.Markdig.Extensions
 
             lineIndex = -1;
             var table = new TableBlock();
-            TableRow currentRow = null;
+            TableRowBlock currentRow = null;
             state.BlockNew = table;
-            TableRow firstRow = null;
+            TableRowBlock firstRow = null;
             int columnCount = 0;
             int maxColumn = 0;
-            TableRow previousRow = null;
-
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var delimiter = delimiters[i] as PiprTableDelimiterInline;
@@ -153,7 +113,7 @@ namespace Textamina.Markdig.Extensions
                         firstRow = currentRow;
                         maxColumn = columnCount;
                     }
-                    currentRow = new TableRow {Parent = table};
+                    currentRow = new TableRowBlock {Parent = table};
                     table.Children.Add(currentRow);
                     columnCount = 0;
                     //startNewRow = true;
@@ -162,7 +122,7 @@ namespace Textamina.Markdig.Extensions
                 if (maxColumn > 0 && columnCount == maxColumn)
                 {
                     delimiter.Remove();
-                    ((ContainerInline)((TableCell)currentRow.LastChild).Inline).AppendChild(delimiter);
+                    ((ContainerInline)((TableCellBlock)currentRow.LastChild).Inline).AppendChild(delimiter);
                     continue;
                 }
 
@@ -171,7 +131,7 @@ namespace Textamina.Markdig.Extensions
                 if (HasPreviousColumn(delimiter))
                 {
                     var cellContainer = new ContainerInline();
-                    var tableCell = new TableCell { Inline = cellContainer, Parent = currentRow };
+                    var tableCell = new TableCellBlock { Inline = cellContainer, Parent = currentRow };
                     currentRow.Children.Add(tableCell);
                     var previousInline = delimiters[i - 1];
                     CopyCellDown(previousInline, cellContainer);
@@ -181,7 +141,7 @@ namespace Textamina.Markdig.Extensions
                 // otherwise we have a regular cell
                 {
                     var cellContainer = new ContainerInline();
-                    var tableCell = new TableCell { Inline = cellContainer, Parent = currentRow };
+                    var tableCell = new TableCellBlock { Inline = cellContainer, Parent = currentRow };
                     currentRow.Children.Add(tableCell);
 
                     var literal = delimiter.FirstChild as LiteralInline;
@@ -197,8 +157,95 @@ namespace Textamina.Markdig.Extensions
                 lineIndex = delimiter.LineIndex;
             }
 
+
+            TableRowBlock previousRow = null;
+            for (int rowIndex = 0; rowIndex < table.Children.Count; rowIndex++)
+            {
+                var rowObj = table.Children[rowIndex];
+                var row = (TableRowBlock) rowObj;
+
+                List<TableColumnAlignType> aligns;
+                if (rowIndex == 1 && TryParseRowHeaderSeparator(row, out aligns))
+                {
+                    previousRow.IsHeader = true;
+                    previousRow.ColumnAlignments = aligns;
+                    table.Children.RemoveAt(rowIndex);
+                    rowIndex--;
+                    continue;
+                }
+
+                var tableCell = (TableCellBlock) row.LastChild;
+                TrimLiteral(tableCell.Inline.LastChild);
+                previousRow = row;
+            }
+
             return false;
         }
+
+        private bool TryParseRowHeaderSeparator(TableRowBlock row, out List<TableColumnAlignType> aligns)
+        {
+            aligns = null;
+            foreach (var cellObj in row.Children)
+            {
+                var cell = (TableCellBlock) cellObj;
+                var literal = cell.Inline.FirstChild as LiteralInline;
+                if (literal == null)
+                {
+                    return false;
+                }
+
+                if (literal.NextSibling != null && !(literal.NextSibling is PiprTableDelimiterInline))
+                {
+                    return false;
+                }
+
+                // Work on a copy of the slice
+                var line = literal.Content;
+                line.Trim();
+                var c = line.CurrentChar;
+                bool hasLeft = false;
+                bool hasRight = false;
+                if (c == ':')
+                {
+                    hasLeft = true;
+                    c = line.NextChar();
+                }
+
+                int count = 0;
+                while (c == '-')
+                {
+                    c = line.NextChar();
+                    count++;
+                }
+
+                if (count == 0)
+                {
+                    return false;
+                }
+
+                if (c == ':')
+                {
+                    hasRight = true;
+                    c = line.NextChar();
+                }
+
+                if (c != '\0')
+                {
+                    return false;
+                }
+
+                if (aligns == null)
+                {
+                    aligns = new List<TableColumnAlignType>();
+                }
+
+                aligns.Add(hasLeft && hasRight ? TableColumnAlignType.Center :  hasRight ? TableColumnAlignType.Right : TableColumnAlignType.Left);
+            }
+
+            return true;
+        }
+
+
 
         private static bool HasPreviousColumn(Inline delimiter)
         {
@@ -229,12 +276,7 @@ namespace Textamina.Markdig.Extensions
                 var nextSibling = child.NextSibling;
                 if (child is SoftlineBreakInline || child is HardlineBreakInline || child is PiprTableDelimiterInline)
                 {
-                    var literal = previousSibling as LiteralInline;
-                    if (literal != null)
-                    {
-                        literal.Content.TrimEnd();
-                    }
-
+                    TrimLiteral(previousSibling);
                     found = true;
                     break;
                 }
@@ -271,6 +313,26 @@ namespace Textamina.Markdig.Extensions
             return found;
         }
 
+        private static void TrimLiteral(Inline inline)
+        {
+            while (inline is ContainerInline)
+            {
+                inline = ((ContainerInline) inline).LastChild;
+            }
+
+            var previousInline = inline.PreviousSibling;
+            while (inline is HardlineBreakInline || inline is SoftlineBreakInline)
+            {
+                inline.Remove();
+                inline = previousInline;
+            }
+
+            var literal = inline as LiteralInline;
+            if (literal != null)
+            {
+                literal.Content.TrimEnd();
+            }
+        }
 
         private static Inline FindBeginOfPreviousLine(ContainerInline container)
         {

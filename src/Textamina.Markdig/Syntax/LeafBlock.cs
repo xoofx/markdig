@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Syntax
 
         public StringLineGroup Lines { get; set; }
 
-        public Inline Inline { get; set; }
+        public ContainerInline Inline { get; set; }
 
         public bool ProcessInlines { get; set; }
 

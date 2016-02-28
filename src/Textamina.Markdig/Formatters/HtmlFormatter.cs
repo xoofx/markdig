@@ -313,9 +313,14 @@ namespace Textamina.Markdig.Formatters
             writer.WriteLineConstant("<table>");
 
             bool hasBody = false;
+            var header = (TableRowBlock)tableBlock.Children[0];
+            if (!header.IsHeader)
+            {
+                header = null;
+            }
             foreach (var rowObj in tableBlock.Children)
             {
-                var row = (TableRow)rowObj;
+                var row = (TableRowBlock)rowObj;
                 if (row.IsHeader)
                 {
                     writer.WriteLineConstant("<thead>");
@@ -326,10 +331,36 @@ namespace Textamina.Markdig.Formatters
                     hasBody = true;
                 }
                 writer.WriteLineConstant("<tr>");
-                foreach (var cellObj in row.Children)
+                for (int i = 0; i < row.Children.Count; i++)
                 {
-                    var cell = (TableCell) cellObj;
-                    Write(cell);
+                    var cellObj = row.Children[i];
+                    var cell = (TableCellBlock) cellObj;
+
+                    writer.EnsureLine();
+                    if (row.IsHeader)
+                    {
+                        writer.WriteConstant("<th>");
+                    }
+                    else
+                    {
+                        writer.WriteConstant("<td");
+                        if (header != null && i < header.ColumnAlignments.Count)
+                        {
+                            switch (header.ColumnAlignments[i])
+                            {
+                                case TableColumnAlignType.Center:
+                                    writer.WriteConstant(" style=\"text-align: center;\"");
+                                    break;
+                                case TableColumnAlignType.Right:
+                                    writer.WriteConstant(" style=\"text-align: right;\"");
+                                    break;
+                            }
+                        }
+                        writer.WriteConstant(">");
+                    }
+
+                    WriteLeaf(cell, false, false);
+                    writer.WriteLineConstant(row.IsHeader ? "</th>" : "</td>");
                 }
                 writer.WriteLineConstant("</tr>");
                 if (row.IsHeader)
@@ -342,15 +373,6 @@ namespace Textamina.Markdig.Formatters
             {
                 writer.WriteLineConstant("</tbody>");
             }
-        }
-
-        protected void Write(TableCell tableCell)
-        {
-            var row = (TableRow)tableCell.Parent;
-            writer.EnsureLine();
-            writer.WriteConstant(row.IsHeader ? "<th>" : "<td>");
-            WriteLeaf(tableCell, false, false);
-            writer.WriteLineConstant(row.IsHeader ? "</th>" : "</td>");
         }
 
         protected void Write(DelimiterInline delimiterInline)
@@ -393,7 +415,7 @@ namespace Textamina.Markdig.Formatters
 
         protected void WriteLeaf(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
-            var inline = leafBlock.Inline;
+            var inline = (Inline)leafBlock.Inline;
             if (inline != null)
             {
                 while (inline != null)

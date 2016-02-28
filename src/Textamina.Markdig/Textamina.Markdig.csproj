@@ -35,6 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\PiprTableDelimiterInline.cs" />
+    <Compile Include="Extensions\TableBlock.cs" />
+    <Compile Include="Extensions\TableCellBlock.cs" />
+    <Compile Include="Extensions\TableColumnAlignType.cs" />
+    <Compile Include="Extensions\TableRowBlock.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Formatters\HtmlFormatter.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="Syntax\ContainerBlock.cs" />
     <Compile Include="Syntax\HtmlBlock.cs" />
     <Compile Include="Syntax\HtmlBlockType.cs" />
+    <Compile Include="Syntax\Inlines\SoftlineBreakInline.cs" />
     <Compile Include="Syntax\LeafBlock.cs" />
     <Compile Include="Parsers\BlockParser.cs" />
     <Compile Include="Parsers\MarkdownParser.cs" />

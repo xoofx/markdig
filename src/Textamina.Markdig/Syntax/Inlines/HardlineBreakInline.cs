@@ -7,13 +7,4 @@ namespace Textamina.Markdig.Syntax.Inlines
             return "<br />";
         }
     }
-
-    public class SoftlineBreakInline : LeafInline
-    {
-        public override string ToString()
-        {
-            return "\\n";
-        }
-    }
-
 }
