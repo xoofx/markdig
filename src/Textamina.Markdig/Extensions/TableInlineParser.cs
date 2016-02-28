@@ -79,6 +79,7 @@ namespace Textamina.Markdig.Extensions
             var child = container;
             var delimiters = tableState.Delimiters;
             int lineIndex = -1;
+            var previousLine = -1;
             while (child != null)
             {
                 var tableDelimiter = child as TableDelimiterInline;
@@ -105,9 +106,20 @@ namespace Textamina.Markdig.Extensions
                         lineIndex = tableDelimiter.LineIndex;
                     }
 
+                    // We have a new row starting with a |, so we are going to track back the 
+                    if (previousLine != lineIndex)
+                    {
+                        if (HasPreviousColumn(tableDelimiter))
+                        {
+                            var beginOfLine = FindBeginOfPreviousLine(tableDelimiter);
+                            delimiters.Add(beginOfLine);
+                        }
+                    }
+
                     delimiters.Add(tableDelimiter);
                 }
                 child = child.LastChild as ContainerInline;
+                previousLine = lineIndex;
             }
 
             // The last line index must be equal to the last line of the leaf block
@@ -123,7 +135,14 @@ namespace Textamina.Markdig.Extensions
 
             for (int i = 0; i < delimiters.Count; i++)
             {
-                var delimiter = delimiters[i];
+                var delimiter = delimiters[i] as TableDelimiterInline;
+                if (delimiter == null)
+                {
+                    continue;
+                }
+
+                var nextDelimiter = (i + 1) < delimiters.Count ? delimiters[i + 1] : null;
+
                 bool startNewRow = false;
                 if (delimiter.LineIndex != lineIndex)
                 {
@@ -132,12 +151,28 @@ namespace Textamina.Markdig.Extensions
                     //startNewRow = true;
                 }
 
-                var cellContainer = new ContainerInline();
-                var tableCell = new TableCell {Inline = cellContainer, Parent = currentRow};
-                currentRow.Children.Add(tableCell);
+                if (HasPreviousColumn(delimiter))
+                {
+                    var cellContainer = new ContainerInline();
+                    var tableCell = new TableCell { Inline = cellContainer, Parent = currentRow };
+                    currentRow.Children.Add(tableCell);
+                    var previousInline = delimiters[i - 1];
+                    CopyCellDown(previousInline, cellContainer);
+                }
 
-                delimiter.Remove();
-                delimiter.ReplaceBy(cellContainer);
+                {
+                    var cellContainer = new ContainerInline();
+                    var tableCell = new TableCell { Inline = cellContainer, Parent = currentRow };
+                    currentRow.Children.Add(tableCell);
+
+                    var literal = delimiter.FirstChild as LiteralInline;
+                    if (literal != null)
+                    {
+                        literal.Content.TrimStart();
+                    }
+
+                    CopyCellDown(delimiter, cellContainer);
+                }
 
                 lineIndex = delimiter.LineIndex;
             }
@@ -145,14 +180,107 @@ namespace Textamina.Markdig.Extensions
             return false;
         }
 
+        private static bool HasPreviousColumn(Inline delimiter)
+        {
+            return delimiter.PreviousSibling != null &&
+                   (!(delimiter.PreviousSibling is SoftlineBreakInline) &&
+                    !(delimiter.PreviousSibling is HardlineBreakInline));
+        }
+
+        private static bool CopyCellDown(Inline fromElement, ContainerInline dest)
+        {
+            var container = fromElement as ContainerInline;
+            Inline lastChild = null;
+            Inline child;
+            if (container != null)
+            {
+                lastChild = container.LastChild;
+                child = container.FirstChild;
+            }
+            else
+            {
+                child = fromElement;
+            }
+
+            bool found = false;
+            Inline previousSibling = null;
+            while (child != null)
+            {
+                var nextSibling = child.NextSibling;
+                if (child is SoftlineBreakInline || child is HardlineBreakInline || child is TableDelimiterInline)
+                {
+                    var literal = previousSibling as LiteralInline;
+                    if (literal != null)
+                    {
+                        literal.Content.TrimEnd();
+                    }
+
+                    found = true;
+                    break;
+                }
+
+                var childContainer = child as ContainerInline;
+                if (childContainer != null)
+                {
+                    var newParent = new ContainerInline();
+                    dest.AppendChild(newParent);
+                    if (CopyCellDown(childContainer, newParent))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    child.Remove();
+                    dest.AppendChild(child);
+                }
+
+                previousSibling = child;
+                child = nextSibling;
+            }
+
+            // If we have removed all children, the container can be removed
+            if (container != null)
+            {
+                if (child == lastChild || child == null)
+                {
+                    fromElement.Remove();
+                }
+            }
+            return found;
+        }
+
+
+        private static Inline FindBeginOfPreviousLine(ContainerInline container)
+        {
+            var previousSibling = (Inline)container.PreviousSibling;
+            while (previousSibling != null)
+            {
+                if (previousSibling is SoftlineBreakInline || previousSibling is HardlineBreakInline)
+                {
+                    return previousSibling.NextSibling;
+                }
+
+                previousSibling = previousSibling.PreviousSibling;
+            }
+
+            if (container.Parent == null)
+            {
+                return container.FirstChild;
+            }
+
+            return FindBeginOfPreviousLine(container.Parent);
+        }
+
         private class TableState
         {
             public TableState()
             {
-                Delimiters = new List<TableDelimiterInline>();
+                Delimiters = new List<Inline>();
             }
 
-            public List<TableDelimiterInline> Delimiters { get; }
+            public List<Inline> Delimiters { get; }
         }
     }
 }

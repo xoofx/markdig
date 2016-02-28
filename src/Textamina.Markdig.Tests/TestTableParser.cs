@@ -19,7 +19,7 @@ namespace Textamina.Markdig.Tests
         {
             var reader = new StringReader(@"
 | This is a test | With a column
-| -------------  | -------------
+-------------  | -------------
 | 0              | 1
 
 ");
@@ -27,8 +27,6 @@ namespace Textamina.Markdig.Tests
 //> titi toto
 //");
             var parser = new MarkdownParser(reader);
-
-
             var document = parser.Parse();
 
             var output = new StringWriter();
