@@ -5,7 +5,7 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
-    public abstract class Inline
+    public abstract class Inline : MarkdownObject
     {
         public ContainerInline Parent { get; internal set; }
 

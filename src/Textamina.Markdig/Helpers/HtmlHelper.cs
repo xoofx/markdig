@@ -1,35 +1,13 @@
 ﻿using System;
 using System.Text;
-using Textamina.Markdig.Formatters;
-using Textamina.Markdig.Formatters.Html;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
 {
     public static class HtmlHelper
     {
-        /// <summary>
-        /// List of valid schemes of an URL. The array must be sorted.
-        /// </summary>
-        private static readonly string[] SchemeArray = new[]
-        {
-            "AAA", "AAAS", "ABOUT", "ACAP", "ADIUMXTRA", "AFP", "AFS", "AIM", "APT", "ATTACHMENT", "AW", "BESHARE",
-            "BITCOIN", "BOLO", "CALLTO", "CAP", "CHROME", "CHROME-EXTENSION", "CID", "COAP", "COM-EVENTBRITE-ATTENDEE",
-            "CONTENT", "CRID", "CVS", "DATA", "DAV", "DICT", "DLNA-PLAYCONTAINER", "DLNA-PLAYSINGLE", "DNS", "DOI",
-            "DTN", "DVB", "ED2K", "FACETIME", "FEED", "FILE", "FINGER", "FISH", "FTP", "GEO", "GG", "GIT",
-            "GIZMOPROJECT", "GO", "GOPHER", "GTALK", "H323", "HCP", "HTTP", "HTTPS", "IAX", "ICAP", "ICON", "IM", "IMAP",
-            "INFO", "IPN", "IPP", "IRC", "IRC6", "IRCS", "IRIS", "IRIS.BEEP", "IRIS.LWZ", "IRIS.XPC", "IRIS.XPCS",
-            "ITMS", "JAR", "JAVASCRIPT", "JMS", "KEYPARC", "LASTFM", "LDAP", "LDAPS", "MAGNET", "MAILTO", "MAPS",
-            "MARKET", "MESSAGE", "MID", "MMS", "MS-HELP", "MSNIM", "MSRP", "MSRPS", "MTQP", "MUMBLE", "MUPDATE", "MVN",
-            "NEWS", "NFS", "NI", "NIH", "NNTP", "NOTES", "OID", "OPAQUELOCKTOKEN", "PALM", "PAPARAZZI", "PLATFORM",
-            "POP", "PRES", "PROXY", "PSYC", "QUERY", "RES", "RESOURCE", "RMI", "RSYNC", "RTMP", "RTSP", "SECONDLIFE",
-            "SERVICE", "SESSION", "SFTP", "SGN", "SHTTP", "SIEVE", "SIP", "SIPS", "SKYPE", "SMB", "SMS", "SNMP",
-            "SOAP.BEEP", "SOAP.BEEPS", "SOLDAT", "SPOTIFY", "SSH", "STEAM", "SVN", "TAG", "TEAMSPEAK", "TEL", "TELNET",
-            "TFTP", "THINGS", "THISMESSAGE", "TIP", "TN3270", "TV", "UDP", "UNREAL", "URN", "UT2004", "VEMMI",
-            "VENTRILO", "VIEW-SOURCE", "WEBCAL", "WS", "WSS", "WTAI", "WYCIWYG", "XCON", "XCON-USERID", "XFIRE",
-            "XMLRPC.BEEP", "XMLRPC.BEEPS", "XMPP", "XRI", "YMSGR", "Z39.50R", "Z39.50S"
-        };
-
+        private static readonly char[] SearchBackAndAmp = { '\\', '&' };
+        private static readonly char[] SearchAmp = { '&' };
 
         public static bool TryParseHtmlTag(StringSlice text, out string htmlTag)
         {
@@ -421,13 +399,12 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private static readonly char[] SearchBackAndAmp = {'\\', '&'};
-        private static readonly char[] SearchAmp = {'&'};
-
         /// <summary>
         /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
         /// </summary>
         /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
+        /// <param name="removeBackSlash">if set to <c>true</c> [remove back slash].</param>
+        /// <returns></returns>
         public static string Unescape(string text, bool removeBackSlash = true)
         {
             if (string.IsNullOrEmpty(text))
@@ -522,59 +499,6 @@ namespace Textamina.Markdig.Helpers
             sb.Clear();
             return result;
         }
-
-        /*
-
-        /// <summary>
-        /// Escapes special HTML characters.
-        /// </summary>
-        /// <remarks>Orig: escape_html(inp, preserve_entities)</remarks>
-        internal static void EscapeHtml(StringContent inp, HtmlTextWriter target)
-        {
-            int pos;
-            int lastPos;
-            char[] buffer = target.Buffer;
-
-            var parts = inp.RetrieveParts();
-            for (var i = parts.Offset; i < parts.Offset + parts.Count; i++)
-            {
-                var part = parts.Array[i];
-
-                if (buffer.Length < part.Length)
-                    buffer = target.Buffer = new char[part.Length];
-
-                part.Source.CopyTo(part.StartIndex, buffer, 0, part.Length);
-
-                lastPos = part.StartIndex;
-                while (
-                    (pos =
-                        part.Source.IndexOfAny(EscapeHtmlCharacters, lastPos, part.Length - lastPos + part.StartIndex)) !=
-                    -1)
-                {
-                    target.Write(buffer, lastPos - part.StartIndex, pos - lastPos);
-                    lastPos = pos + 1;
-
-                    switch (part.Source[pos])
-                    {
-                        case '<':
-                            target.WriteConstant(EscapeHtmlLessThan);
-                            break;
-                        case '>':
-                            target.WriteConstant(EscapeHtmlGreaterThan);
-                            break;
-                        case '&':
-                            target.WriteConstant(EscapeHtmlAmpersand);
-                            break;
-                        case '"':
-                            target.WriteConstant(EscapeHtmlQuote);
-                            break;
-                    }
-                }
-
-                target.Write(buffer, lastPos - part.StartIndex, part.Length - lastPos + part.StartIndex);
-            }
-        }
-        */
 
         /// <summary>
         /// Scans an entity.
@@ -685,11 +609,6 @@ namespace Textamina.Markdig.Helpers
             }
 
             return 0;
-        }
-
-        public static bool IsUrlScheme(string scheme)
-        {
-            return Array.BinarySearch(SchemeArray, scheme, StringComparer.Ordinal) >= 0;
         }
     }
 }

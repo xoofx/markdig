@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Sundown;
-using Textamina.Markdig.Formatters;
-using Textamina.Markdig.Formatters.Html;
+using Textamina.Markdig;
 using Textamina.Markdig.Parsers;
 
 namespace Testamina.Markdig.Benchmarks
@@ -29,15 +28,7 @@ namespace Testamina.Markdig.Benchmarks
         public void TestMarkdig()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            var reader = new StringReader(text);
-            var parser = new MarkdownParser(reader);
-            var doc = parser.Parse();
-            reader.Dispose();
-            var writer = new StringWriter();
-            var formatter = new HtmlFormatterOld(writer);
-            formatter.Write(doc);
-            writer.Flush();
-            writer.ToString();
+            Markdown.ConvertToHtml(text);
             //File.WriteAllText("spec.html", writer.ToString());
         }
 

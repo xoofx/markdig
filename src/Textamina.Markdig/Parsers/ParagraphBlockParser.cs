@@ -146,9 +146,9 @@ namespace Textamina.Markdig.Parsers
                 LinkReferenceDefinitionBlock linkReferenceDefinition;
                 if (LinkReferenceDefinitionBlock.TryParse(ref iterator, out linkReferenceDefinition))
                 {
-                    if (!state.Root.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
+                    if (!state.Document.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
                     {
-                        state.Root.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                        state.Document.LinkReferenceDefinitions[linkReferenceDefinition.Label] = linkReferenceDefinition;
                     }
                     atLeastOneFound = true;
 

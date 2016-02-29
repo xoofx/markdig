@@ -10,16 +10,16 @@ namespace Textamina.Markdig.Parsers
     {
         private int currentStackIndex;
 
-        public BlockParserState(StringBuilderCache stringBuilders, Document root, BlockParserList parsers)
+        public BlockParserState(StringBuilderCache stringBuilders, Document document, BlockParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
-            if (root == null) throw new ArgumentNullException(nameof(root));
+            if (document == null) throw new ArgumentNullException(nameof(document));
             if (parsers == null) throw new ArgumentNullException(nameof(parsers));
             StringBuilders = stringBuilders;
-            Root = root;
+            Document = document;
             NewBlocks = new Stack<Block>();
-            root.IsOpen = true;
-            Stack = new List<Block> {root};
+            document.IsOpen = true;
+            Stack = new List<Block> {document};
             Parsers = parsers;
             parsers.Initialize(this);
         }
@@ -36,7 +36,7 @@ namespace Textamina.Markdig.Parsers
 
         public Block NextContinue => currentStackIndex + 1 < Stack.Count ? Stack[currentStackIndex + 1] : null;
 
-        public Document Root { get; }
+        public Document Document { get; }
 
         public bool ContinueProcessingLine { get; set; }
 

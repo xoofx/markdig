@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using NUnit.Framework;
-using Textamina.Markdig.Formatters;
-using Textamina.Markdig.Formatters.Html;
 using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Tests
@@ -28,15 +21,8 @@ namespace Textamina.Markdig.Tests
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");
-            var parser = new MarkdownParser(reader);
-            var document = parser.Parse();
 
-            var output = new StringWriter();
-            var formatter = new HtmlFormatterOld(output);
-            formatter.Write(document);
-            output.Flush();
-
-            var result = output.ToString();
+            var result = Markdown.ConvertToHtml(reader);
             Console.WriteLine(result);
         }
    }

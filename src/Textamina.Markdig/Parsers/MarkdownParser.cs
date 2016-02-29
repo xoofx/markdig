@@ -1,60 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using Textamina.Markdig.Extensions;
-using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Syntax;
-using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers
 {
     public class MarkdownParser
     {
         public static TextWriter Log;
-        private readonly Document document;
         private readonly BlockParserState blockParserState;
-        private readonly StringBuilderCache stringBuilderCache;
         private readonly InlineParserState inlineState;
-        private readonly InlineParserList inlineParsers;
 
-        public MarkdownParser(TextReader reader)
+        public MarkdownParser(TextReader reader, BlockParserState blockParserState, InlineParserState inlineParserState)
         {
-            document = new Document();
             Reader = reader;
-            stringBuilderCache = new StringBuilderCache();
-
-            // TODO: Make this configurable outside here
-            var blockParsers = new BlockParserList()
-            {
-                new ThematicBreakParser(),
-                new HeadingBlockParser(),
-                new QuoteBlockParser(),
-                new ListBlockParser(),
-
-                new HtmlBlockParser(),
-                new FencedCodeBlockParser(),
-                new IndentedCodeBlockParser(),
-                new ParagraphBlockParser(),
-            };
-
-            inlineParsers = new InlineParserList()
-            {
-                new HtmlEntityParser(),
-                new LinkInlineParser(),
-                new EscapeInlineParser(),
-
-                new PipeTableInlineParser(), // Extension
-
-                new EmphasisInlineParser(),
-                new CodeInlineParser(),
-                new AutolineInlineParser(),
-                new LineBreakInlineParser(),
-            };
-
-
-            blockParserState = new BlockParserState(stringBuilderCache, document, blockParsers);
-            inlineState = new InlineParserState(stringBuilderCache, document, inlineParsers) {Log = Log};
+            this.blockParserState = blockParserState;
+            this.inlineState = inlineParserState;
         }
 
         public TextReader Reader { get; }
@@ -62,9 +22,8 @@ namespace Textamina.Markdig.Parsers
         public Document Parse()
         {
             ParseLines();
-            //ProcessInlinesTasks(document);
-            ProcessInlines(document);
-            return document;
+            ProcessInlines(blockParserState.Document);
+            return inlineState.Document;
         }
 
         private void ParseLines()
@@ -99,41 +58,6 @@ namespace Textamina.Markdig.Parsers
                     }
                 }
             }
-        }
-
-        private void ProcessInlinesTasks(ContainerBlock container)
-        {
-            var list = new Stack<ContainerBlock>();
-            list.Push(container);
-            var leafs = new List<Task>();
-
-            while (list.Count > 0)
-            {
-                container = list.Pop();
-                foreach (var block in container.Children)
-                {
-                    var leafBlock = block as LeafBlock;
-                    if (leafBlock != null)
-                    {
-                        if (leafBlock.ProcessInlines)
-                        {
-                            var task = new Task(() =>
-                            {
-                                var threadInlineState = new InlineParserState(stringBuilderCache, document, inlineParsers) { Log = Log };
-                                threadInlineState.ProcessInlineLeaf(leafBlock);
-                            });
-                            task.Start();
-                            leafs.Add(task);
-                        }
-                    }
-                    else
-                    {
-                        list.Push((ContainerBlock)block);
-                    }
-                }
-            }
-
-            Task.WaitAll(leafs.ToArray());
         }
 
         private void ProcessInlines(ContainerBlock container)

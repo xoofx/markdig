@@ -2,7 +2,7 @@
 
 namespace Textamina.Markdig.Syntax
 {
-    public abstract class Block
+    public abstract class Block : MarkdownObject
     {
         protected Block(BlockParser parser)
         {

@@ -181,7 +181,7 @@ namespace Textamina.Markdig.Parsers
 
         //private void TransformDelimitersToLiterals()
         //{
-        //    var child = Root.LastChild;
+        //    var child = Document.LastChild;
         //    while (child != null)
         //    {
         //        var subContainer = child as ContainerInline;
