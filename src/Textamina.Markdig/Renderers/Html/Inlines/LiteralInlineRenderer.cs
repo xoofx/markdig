@@ -6,7 +6,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
     {
         protected override void Write(HtmlMarkdownRenderer renderer, LiteralInline obj)
         {
-            renderer.WriteEscape(obj.Content.ToString());
+            renderer.WriteEscape(ref obj.Content);
         }
     }
 }

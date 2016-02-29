@@ -120,18 +120,36 @@ namespace Textamina.Markdig.Renderers
 
         public HtmlMarkdownRenderer WriteEscape(string content)
         {
-            previousWasLine = false;
             if (string.IsNullOrEmpty(content))
                 return this;
 
-            int pos;
-            int lastPos = 0;
-            while ((pos = content.IndexOfAny(EscapeHtmlCharacters, lastPos, content.Length - lastPos)) != -1)
-            {
-                Write(content, lastPos, pos - lastPos);
-                lastPos = pos + 1;
+            WriteEscape(content, 0, content.Length);
+            return this;
+        }
 
-                switch (content[pos])
+        public HtmlMarkdownRenderer WriteEscape(ref StringSlice slice)
+        {
+            if (slice.Start > slice.End)
+            {
+                return this;
+            }
+            return WriteEscape(slice.Text, slice.Start, slice.Length);
+        }
+
+        public HtmlMarkdownRenderer WriteEscape(string content, int offset, int length)
+        {
+            previousWasLine = false;
+            if (string.IsNullOrEmpty(content) || length == 0)
+                return this;
+
+            int currentPosition;
+            var baseOffset = offset;
+            while ((currentPosition = content.IndexOfAny(EscapeHtmlCharacters, offset, length - (offset - baseOffset))) >= 0)
+            {
+                Write(content, offset, currentPosition - offset);
+                offset = currentPosition + 1;
+
+                switch (content[currentPosition])
                 {
                     case '<':
                         Write("&lt;");
@@ -148,7 +166,7 @@ namespace Textamina.Markdig.Renderers
                 }
             }
 
-            Write(content, lastPos, content.Length - lastPos);
+            Write(content, offset, length - (offset - baseOffset));
             return this;
         }
 
