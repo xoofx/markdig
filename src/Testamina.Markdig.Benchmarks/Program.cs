@@ -32,7 +32,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -90,6 +90,7 @@ namespace Testamina.Markdig.Benchmarks
             else
             {
                 BenchmarkRunner.Run<Program>();
+                //BenchmarkRunner.Run<TestStringPerf>();
             }
         }
 

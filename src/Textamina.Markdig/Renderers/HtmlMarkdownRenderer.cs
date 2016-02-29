@@ -105,16 +105,23 @@ namespace Textamina.Markdig.Renderers
         public HtmlMarkdownRenderer Write(string content, int offset, int length)
         {
             previousWasLine = false;
-            if (length > buffer.Length)
+            if (offset == 0 && content.Length == length)
             {
-                buffer = content.ToCharArray(offset, length);
+                textWriter.Write(content);
             }
             else
             {
-                content.CopyTo(offset, buffer, 0, length);
-            }
+                if (length > buffer.Length)
+                {
+                    buffer = content.ToCharArray(offset, length);
+                }
+                else
+                {
+                    content.CopyTo(offset, buffer, 0, length);
+                }
 
-            textWriter.Write(buffer, 0, length);
+                textWriter.Write(buffer, 0, length);
+            }
             return this;
         }
 
@@ -160,31 +167,36 @@ namespace Textamina.Markdig.Renderers
             if (string.IsNullOrEmpty(content) || length == 0)
                 return this;
 
-            int currentPosition;
-            var baseOffset = offset;
-            while ((currentPosition = content.IndexOfAny(EscapeHtmlCharacters, offset, length - (offset - baseOffset))) >= 0)
+            var end = offset + length;
+            int previousOffset = offset;
+            for (;offset < end;  offset++)
             {
-                Write(content, offset, currentPosition - offset);
-                offset = currentPosition + 1;
-
-                switch (content[currentPosition])
+                switch (content[offset])
                 {
                     case '<':
+                        Write(content, previousOffset, offset - previousOffset);
                         Write("&lt;");
+                        previousOffset = offset + 1;
                         break;
                     case '>':
+                        Write(content, previousOffset, offset - previousOffset);
                         Write("&gt;");
+                        previousOffset = offset + 1;
                         break;
                     case '&':
+                        Write(content, previousOffset, offset - previousOffset);
                         Write("&amp;");
+                        previousOffset = offset + 1;
                         break;
                     case '"':
+                        Write(content, previousOffset, offset - previousOffset);
                         Write("&quot;");
+                        previousOffset = offset + 1;
                         break;
                 }
             }
 
-            Write(content, offset, length - (offset - baseOffset));
+            Write(content, previousOffset, end - previousOffset);
             return this;
         }
 
