@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Renderers.Html.Inlines;
 using Textamina.Markdig.Syntax;
@@ -36,7 +38,7 @@ namespace Textamina.Markdig.Renderers
             if (textWriter == null) throw new ArgumentNullException(nameof(textWriter));
             this.textWriter = textWriter;
 
-            buffer = new char[4096];
+            buffer = new char[1024];
 
             // Default block renderers
             Renderers.Add(new CodeBlockRenderer());
@@ -74,6 +76,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer Write(string content)
         {
             previousWasLine = false;
@@ -81,6 +84,17 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public HtmlMarkdownRenderer Write(ref StringSlice slice)
+        {
+            if (slice.Start > slice.End)
+            {
+                return this;
+            }
+            return Write(slice.Text, slice.Start, slice.Length);
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer Write(char content)
         {
             previousWasLine = content == '\n';
@@ -104,6 +118,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer WriteLine()
         {
             textWriter.WriteLine();
@@ -111,6 +126,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer WriteLine(string content)
         {
             previousWasLine = true;
@@ -118,6 +134,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer WriteEscape(string content)
         {
             if (string.IsNullOrEmpty(content))
@@ -127,6 +144,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer WriteEscape(ref StringSlice slice)
         {
             if (slice.Start > slice.End)
@@ -222,6 +240,7 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlMarkdownRenderer WriteLeafInline(LeafBlock leafBlock)
         {
             var inline = (Inline)leafBlock.Inline;
@@ -241,20 +260,20 @@ namespace Textamina.Markdig.Renderers
             if (leafBlock.Lines != null)
             {
                 var lines = leafBlock.Lines;
+                var slices = lines.Lines;
                 for (int i = 0; i < lines.Count; i++)
                 {
                     if (!writeEndOfLines && i > 0)
                     {
                         WriteLine();
                     }
-                    var line = lines.Lines[i];
                     if (escape)
                     {
-                        WriteEscape(line.ToString());
+                        WriteEscape(ref slices[i].Slice);
                     }
                     else
                     {
-                        Write(line.ToString());
+                        Write(ref slices[i].Slice);
                     }
                     if (writeEndOfLines)
                     {

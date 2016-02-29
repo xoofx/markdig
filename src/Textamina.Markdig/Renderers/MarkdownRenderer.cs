@@ -8,6 +8,8 @@ namespace Textamina.Markdig.Renderers
     public abstract class MarkdownRenderer
     {
         private readonly Dictionary<Type, MarkdownObjectRenderer> renderersPerType;
+        private MarkdownObjectRenderer previousRenderer;
+        private Type previousObjectType;
 
         protected MarkdownRenderer()
         {
@@ -52,14 +54,15 @@ namespace Textamina.Markdig.Renderers
                 return;
             }
 
-            MarkdownObjectRenderer renderer;
-            if (!renderersPerType.TryGetValue(obj.GetType(), out renderer))
+            var objectType = obj.GetType();
+            MarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
+            if (renderer == null && !renderersPerType.TryGetValue(objectType, out renderer))
             {
                 foreach (var testRenderer in Renderers)
                 {
-                    if (testRenderer.Accept(this, obj.GetType()))
+                    if (testRenderer.Accept(this, objectType))
                     {
-                        renderersPerType[obj.GetType()] = renderer = testRenderer;
+                        renderersPerType[objectType] = renderer = testRenderer;
                         break;
                     }
                 }
@@ -84,6 +87,8 @@ namespace Textamina.Markdig.Renderers
                     }
                 }
             }
+            previousObjectType = objectType;
+            previousRenderer = renderer;
         }
     }
 }
