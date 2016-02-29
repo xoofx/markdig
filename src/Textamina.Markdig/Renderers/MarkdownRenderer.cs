@@ -19,6 +19,8 @@ namespace Textamina.Markdig.Renderers
 
         public List<MarkdownObjectRenderer> Renderers { get; }
 
+        public abstract object WriteDocument(Document document);
+
         public void WriteChildren(ContainerBlock containerBlock)
         {
             if (containerBlock == null)

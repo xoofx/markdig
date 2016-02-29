@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Tests
 //> titi toto
 //");
 
-            var result = Markdown.ConvertToHtml(reader);
+            var result = Markdown.Convert(reader);
             Console.WriteLine(result);
         }
    }

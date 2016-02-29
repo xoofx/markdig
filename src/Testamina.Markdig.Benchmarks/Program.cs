@@ -28,11 +28,11 @@ namespace Testamina.Markdig.Benchmarks
         public void TestMarkdig()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            Markdown.ConvertToHtml(text);
+            Markdown.Convert(text);
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -73,7 +73,7 @@ namespace Testamina.Markdig.Benchmarks
             {
                 var clock = Stopwatch.StartNew();
                 var program = new Program();
-                for (int i = 0; i < 500; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     if (markdig)
                     {

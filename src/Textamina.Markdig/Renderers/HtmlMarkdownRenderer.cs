@@ -283,5 +283,11 @@ namespace Textamina.Markdig.Renderers
             }
             return this;
         }
+
+        public override object WriteDocument(Document document)
+        {
+            WriteChildren(document);
+            return textWriter;
+        }
     }
 }
