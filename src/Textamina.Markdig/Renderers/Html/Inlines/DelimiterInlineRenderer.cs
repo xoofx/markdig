@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, DelimiterInline obj)
+        protected override void Write(HtmlRenderer renderer, DelimiterInline obj)
         {
             renderer.WriteEscape(obj.ToLiteral());
             renderer.WriteChildren(obj);

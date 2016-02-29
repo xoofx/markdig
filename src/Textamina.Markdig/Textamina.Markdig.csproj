@@ -57,13 +57,14 @@
     <Compile Include="Renderers\Html\Inlines\SoftlineBreakInlineRenderer.cs" />
     <Compile Include="Renderers\Html\ListRenderer.cs" />
     <Compile Include="Renderers\Html\ParagraphRenderer.cs" />
-    <Compile Include="Renderers\HtmlMarkdownRenderer.cs" />
+    <Compile Include="Renderers\HtmlRenderer.cs" />
     <Compile Include="Renderers\Html\QuoteBlockRenderer.cs" />
     <Compile Include="Renderers\Html\HtmlObjectRenderer.cs" />
     <Compile Include="Renderers\Html\HeadingRenderer.cs" />
     <Compile Include="Renderers\Html\ThematicBreakRenderer.cs" />
-    <Compile Include="Renderers\MarkdownObjectRenderer.cs" />
-    <Compile Include="Renderers\MarkdownRenderer.cs" />
+    <Compile Include="Renderers\IMarkdownObjectRenderer.cs" />
+    <Compile Include="Renderers\IMarkdownRenderer.cs" />
+    <Compile Include="Renderers\RendererBase.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\LinkHelper.cs" />

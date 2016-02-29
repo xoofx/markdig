@@ -6,7 +6,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
     {
         public bool RenderAsHardlineBreak { get; set; }
 
-        protected override void Write(HtmlMarkdownRenderer renderer, SoftlineBreakInline obj)
+        protected override void Write(HtmlRenderer renderer, SoftlineBreakInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {

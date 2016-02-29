@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Renderers.Html
 {
     public class ListRenderer : HtmlObjectRenderer<ListBlock>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, ListBlock listBlock)
+        protected override void Write(HtmlRenderer renderer, ListBlock listBlock)
         {
             renderer.EnsureLine();
             if (listBlock.IsOrdered)

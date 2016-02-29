@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class CodeInlineRenderer : HtmlObjectRenderer<CodeInline>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, CodeInline obj)
+        protected override void Write(HtmlRenderer renderer, CodeInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {

@@ -5,21 +5,21 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers
 {
-    public abstract class MarkdownRenderer
+    public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<Type, MarkdownObjectRenderer> renderersPerType;
-        private MarkdownObjectRenderer previousRenderer;
+        private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
+        private IMarkdownObjectRenderer previousRenderer;
         private Type previousObjectType;
 
-        protected MarkdownRenderer()
+        protected RendererBase()
         {
-            Renderers = new List<MarkdownObjectRenderer>();
-            renderersPerType = new Dictionary<Type, MarkdownObjectRenderer>();
+            ObjectRenderers = new List<IMarkdownObjectRenderer>();
+            renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
         }
 
-        public List<MarkdownObjectRenderer> Renderers { get; }
+        public List<IMarkdownObjectRenderer> ObjectRenderers { get; }
 
-        public abstract object WriteDocument(Document document);
+        public abstract object Render(MarkdownObject markdownObject);
 
         public void WriteChildren(ContainerBlock containerBlock)
         {
@@ -57,10 +57,10 @@ namespace Textamina.Markdig.Renderers
             }
 
             var objectType = obj.GetType();
-            MarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
+            IMarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
             if (renderer == null && !renderersPerType.TryGetValue(objectType, out renderer))
             {
-                foreach (var testRenderer in Renderers)
+                foreach (var testRenderer in ObjectRenderers)
                 {
                     if (testRenderer.Accept(this, objectType))
                     {

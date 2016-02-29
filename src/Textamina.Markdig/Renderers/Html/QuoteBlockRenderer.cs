@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html
 {
     public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, QuoteBlock obj)
+        protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
         {
             renderer.EnsureLine();
             renderer.WriteLine("<blockquote>");

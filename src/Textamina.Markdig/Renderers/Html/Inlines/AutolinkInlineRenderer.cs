@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, AutolinkInline obj)
+        protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {

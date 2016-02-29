@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html
 {
     public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, CodeBlock obj)
+        protected override void Write(HtmlRenderer renderer, CodeBlock obj)
         {
             renderer.EnsureLine();
             renderer.Write("<pre><code");

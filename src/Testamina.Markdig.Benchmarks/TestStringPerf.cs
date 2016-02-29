@@ -6,7 +6,7 @@ namespace Testamina.Markdig.Benchmarks
 {
     public class TestStringPerf
     {
-        private HtmlMarkdownRenderer htmlMarkdownRenderer;
+        private HtmlRenderer htmlRenderer;
         private StringWriter writer;
         private string text;
 
@@ -18,7 +18,7 @@ namespace Testamina.Markdig.Benchmarks
         [Benchmark]
         public void TestIndexOfAny()
         {
-            var writer = new HtmlMarkdownRenderer(new StringWriter());
+            var writer = new HtmlRenderer(new StringWriter());
             for (int i = 0; i < 100; i++)
             {
                 writer.WriteEscape(text, 0, text.Length);
@@ -39,7 +39,7 @@ namespace Testamina.Markdig.Benchmarks
         //[Benchmark]
         //public void TestCustomIndexOfAny()
         //{
-        //    var writer = new HtmlMarkdownRenderer(new StringWriter());
+        //    var writer = new HtmlRenderer(new StringWriter());
         //    for (int i = 0; i < 100; i++)
         //    {
         //        writer.WriteEscapeOptimized(text, 0, text.Length);

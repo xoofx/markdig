@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html
 {
     public class ParagraphRenderer : HtmlObjectRenderer<ParagraphBlock>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, ParagraphBlock obj)
+        protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)
         {
             renderer.EnsureLine();
             if (!renderer.ImplicitParagraph)

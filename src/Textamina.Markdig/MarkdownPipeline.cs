@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Parsers.Inlines;
@@ -43,6 +44,8 @@ namespace Textamina.Markdig
 
             Extensions = new List<IMarkdownExtension>();
 
+            Renderer = new HtmlRenderer(new StringWriter());
+
             StringBuilderCache = new StringBuilderCache();
         }
 
@@ -50,7 +53,7 @@ namespace Textamina.Markdig
 
         public InlineParserList InlineParsers { get; private set; }
 
-        public MarkdownRenderer Renderer { get; set; }
+        public RendererBase Renderer { get; set; }
 
         public List<IMarkdownExtension> Extensions { get; }
 

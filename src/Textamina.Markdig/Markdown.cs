@@ -22,11 +22,11 @@ namespace Textamina.Markdig
 
             if (pipeline.Renderer == null)
             {
-                pipeline.Renderer = new HtmlMarkdownRenderer(new StringWriter());
+                pipeline.Renderer = new HtmlRenderer(new StringWriter());
             }
 
             var document = Parse(reader, pipeline);
-            return pipeline.Renderer.WriteDocument(document);
+            return pipeline.Renderer.Render(document);
         }
 
         public static void Convert(TextReader reader, TextWriter writer, MarkdownPipeline pipeline = null)
@@ -35,9 +35,9 @@ namespace Textamina.Markdig
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             pipeline = pipeline ?? new MarkdownPipeline();
 
-            if (!(pipeline.Renderer is HtmlMarkdownRenderer))
+            if (!(pipeline.Renderer is HtmlRenderer))
             {
-                pipeline.Renderer = new HtmlMarkdownRenderer(writer);
+                pipeline.Renderer = new HtmlRenderer(writer);
             }
 
             var document = Parse(reader, pipeline);

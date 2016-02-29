@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Extensions
 {
     public class HtmlTableRenderer : HtmlObjectRenderer<TableBlock>
     {
-        protected override void Write(HtmlMarkdownRenderer writer, TableBlock tableBlock)
+        protected override void Write(HtmlRenderer writer, TableBlock tableBlock)
         {
             writer.EnsureLine();
             writer.WriteLine("<table>");

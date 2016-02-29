@@ -12546,7 +12546,7 @@ namespace Textamina.Markdig.Tests
         // into the corresponding Unicode code points, as usual.  These may
         // be optionally URL-escaped when written as HTML, but this spec
         // does not enforce any particular policy for rendering URLs in
-        // HTML or other formats.  Renderers may make different decisions
+        // HTML or other formats.  ObjectRenderers may make different decisions
         // about how to escape or normalize URLs in the output.
     [TestFixture]
     public partial class TestInlinesLinks

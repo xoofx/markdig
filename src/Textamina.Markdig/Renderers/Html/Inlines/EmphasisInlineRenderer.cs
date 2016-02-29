@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, EmphasisInline obj)
+        protected override void Write(HtmlRenderer renderer, EmphasisInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {

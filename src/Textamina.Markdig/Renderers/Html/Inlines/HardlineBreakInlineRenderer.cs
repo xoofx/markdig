@@ -4,7 +4,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class HardlineBreakInlineRenderer : HtmlObjectRenderer<HardlineBreakInline>
     {
-        protected override void Write(HtmlMarkdownRenderer renderer, HardlineBreakInline obj)
+        protected override void Write(HtmlRenderer renderer, HardlineBreakInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {
