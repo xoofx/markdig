@@ -18,7 +18,7 @@ namespace Textamina.Markdig.Parsers
             var result = TryContinue(state, null);
             if (result == BlockState.Continue)
             {
-                state.NewBlocks.Push(new IndentedCodeBlock(this) { Column = state.Column });
+                state.NewBlocks.Push(new CodeBlock(this) { Column = state.Column });
             }
             return result;
         }
@@ -43,7 +43,7 @@ namespace Textamina.Markdig.Parsers
 
         public override bool Close(BlockParserState state, Block block)
         {
-            var codeBlock = (IndentedCodeBlock)block;
+            var codeBlock = (CodeBlock)block;
             if (codeBlock != null)
             {
                 var lines = codeBlock.Lines;

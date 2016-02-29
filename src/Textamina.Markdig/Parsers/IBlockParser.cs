@@ -2,7 +2,7 @@
 
 namespace Textamina.Markdig.Parsers
 {
-    public interface IBlockParser<in T> : ICharacterParser<T>
+    public interface IBlockParser<in T> : IMarkdownParser<T>
     {
         bool CanInterrupt(BlockParserState state, Block block);
 

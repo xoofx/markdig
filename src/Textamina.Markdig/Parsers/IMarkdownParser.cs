@@ -1,6 +1,6 @@
 ﻿namespace Textamina.Markdig.Parsers
 {
-    public interface ICharacterParser<in TState>
+    public interface IMarkdownParser<in TState>
     {
         char[] OpeningCharacters { get; }
 

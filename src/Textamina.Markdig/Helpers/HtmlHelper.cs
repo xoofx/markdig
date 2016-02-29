@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Textamina.Markdig.Formatters;
+using Textamina.Markdig.Formatters.Html;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
@@ -10,10 +11,10 @@ namespace Textamina.Markdig.Helpers
         private static readonly char[] EscapeHtmlCharacters = {'&', '<', '>', '"'};
         private const string HexCharacters = "0123456789ABCDEF";
 
-        private static readonly char[] EscapeHtmlLessThan = "&lt;".ToCharArray();
-        private static readonly char[] EscapeHtmlGreaterThan = "&gt;".ToCharArray();
-        private static readonly char[] EscapeHtmlAmpersand = "&amp;".ToCharArray();
-        private static readonly char[] EscapeHtmlQuote = "&quot;".ToCharArray();
+        private static readonly string EscapeHtmlLessThan = "&lt;";
+        private static readonly string EscapeHtmlGreaterThan = "&gt;";
+        private static readonly string EscapeHtmlAmpersand = "&amp;";
+        private static readonly string EscapeHtmlQuote = "&quot;";
 
         private static readonly string[] HeadingOpenerTags = {"<h1>", "<h2>", "<h3>", "<h4>", "<h5>", "<h6>"};
         private static readonly string[] HeadingCloserTags = {"</h1>", "</h2>", "</h3>", "</h4>", "</h5>", "</h6>"};
@@ -617,7 +618,7 @@ namespace Textamina.Markdig.Helpers
         /// Escapes special HTML characters.
         /// </summary>
         /// <remarks>Orig: escape_html(inp, preserve_entities)</remarks>
-        public static void EscapeHtml(string input, HtmlTextWriter target)
+        public static void EscapeHtml(string input, HtmlWriter target)
         {
             if (input.Length == 0)
                 return;
@@ -626,38 +627,31 @@ namespace Textamina.Markdig.Helpers
             int lastPos = 0;
             char[] buffer;
 
-            if (target.Buffer.Length < input.Length)
-                buffer = target.Buffer = new char[input.Length];
-            else
-                buffer = target.Buffer;
-
-            input.CopyTo(0, buffer, 0, input.Length);
-
             while (
                 (pos = input.IndexOfAny(EscapeHtmlCharacters, lastPos, input.Length - lastPos)) !=
                 -1)
             {
-                target.Write(buffer, lastPos, pos - lastPos);
+                target.Write(input, lastPos, pos - lastPos);
                 lastPos = pos + 1;
 
                 switch (input[pos])
                 {
                     case '<':
-                        target.WriteConstant(EscapeHtmlLessThan);
+                        target.Write(EscapeHtmlLessThan);
                         break;
                     case '>':
-                        target.WriteConstant(EscapeHtmlGreaterThan);
+                        target.Write(EscapeHtmlGreaterThan);
                         break;
                     case '&':
-                        target.WriteConstant(EscapeHtmlAmpersand);
+                        target.Write(EscapeHtmlAmpersand);
                         break;
                     case '"':
-                        target.WriteConstant(EscapeHtmlQuote);
+                        target.Write(EscapeHtmlQuote);
                         break;
                 }
             }
 
-            target.Write(buffer, lastPos, input.Length - lastPos);
+            target.Write(input, lastPos, input.Length - lastPos);
         }
 
         /*

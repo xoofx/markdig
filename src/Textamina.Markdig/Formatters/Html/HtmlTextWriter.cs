@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Textamina.Markdig.Helpers;
 
-namespace Textamina.Markdig.Formatters
+namespace Textamina.Markdig.Formatters.Html
 {
     /// <summary>
     /// A wrapper for <see cref="HtmlHelper"/> that keeps track if the last symbol has been a newline.

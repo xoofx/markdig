@@ -9,6 +9,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Sundown;
 using Textamina.Markdig.Formatters;
+using Textamina.Markdig.Formatters.Html;
 using Textamina.Markdig.Parsers;
 
 namespace Testamina.Markdig.Benchmarks
@@ -33,14 +34,14 @@ namespace Testamina.Markdig.Benchmarks
             var doc = parser.Parse();
             reader.Dispose();
             var writer = new StringWriter();
-            var formatter = new HtmlFormatter(writer);
+            var formatter = new HtmlFormatterOld(writer);
             formatter.Write(doc);
             writer.Flush();
             writer.ToString();
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -51,19 +52,19 @@ namespace Testamina.Markdig.Benchmarks
             CommonMark.CommonMarkConverter.Convert(reader, new StringWriter());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMarkdownDeep()
         {
             new MarkdownDeep.Markdown().Transform(text);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMarkdownSharp()
         {
             new MarkdownSharp.Markdown().Transform(text);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMoonshine()
         {
             MoonShine.Markdownify(text);

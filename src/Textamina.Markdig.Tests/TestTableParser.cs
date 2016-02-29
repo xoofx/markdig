@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Textamina.Markdig.Formatters;
+using Textamina.Markdig.Formatters.Html;
 using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Tests
@@ -31,7 +32,7 @@ namespace Textamina.Markdig.Tests
             var document = parser.Parse();
 
             var output = new StringWriter();
-            var formatter = new HtmlFormatter(output);
+            var formatter = new HtmlFormatterOld(output);
             formatter.Write(document);
             output.Flush();
 

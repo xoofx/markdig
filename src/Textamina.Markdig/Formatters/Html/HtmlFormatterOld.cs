@@ -8,9 +8,9 @@ using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
-namespace Textamina.Markdig.Formatters
+namespace Textamina.Markdig.Formatters.Html
 {
-    public class HtmlFormatter
+    public class HtmlFormatterOld
     {
         private readonly HtmlTextWriter writer;
 
@@ -21,21 +21,21 @@ namespace Textamina.Markdig.Formatters
 
         protected bool EnableHtmlForInline;
 
-        public HtmlFormatter(TextWriter writer)
+        public HtmlFormatterOld(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             writer.NewLine = "\n";
             this.writer = new HtmlTextWriter(writer);
             registeredWriters = new Dictionary<Type, Action<object>>
             {
-                [typeof(ListBlock)] = o => Write((ListBlock)o),
-                [typeof(FencedCodeBlock)] = o => Write((FencedCodeBlock)o),
-                [typeof(IndentedCodeBlock)] = o => Write((IndentedCodeBlock)o),
-                [typeof(HeadingBlock)] = o => Write((HeadingBlock)o),
-                [typeof(ThematicBreakBlock)] = o => Write((ThematicBreakBlock)o),
-                [typeof(QuoteBlock)] = o => Write((QuoteBlock)o),
-                [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o),
-                [typeof(HtmlBlock)] = o => Write((HtmlBlock)o),
+                [typeof(ListBlock)] = o => Write((ListBlock)o), // DONE
+                [typeof(FencedCodeBlock)] = o => Write((FencedCodeBlock)o), // DONE
+                [typeof(CodeBlock)] = o => Write((CodeBlock)o), // DONE
+                [typeof(HeadingBlock)] = o => Write((HeadingBlock)o), // DONE
+                [typeof(ThematicBreakBlock)] = o => Write((ThematicBreakBlock)o), // DONE
+                [typeof(QuoteBlock)] = o => Write((QuoteBlock)o), // DONE
+                [typeof(ParagraphBlock)] = o => Write((ParagraphBlock)o), // DONE
+                [typeof(HtmlBlock)] = o => Write((HtmlBlock)o), // DONE
 
 
                 [typeof(LiteralInline)] = o => Write((LiteralInline)o),
@@ -108,12 +108,12 @@ namespace Textamina.Markdig.Formatters
             Write(fencedCodeBlock, fencedCodeBlock.Language, fencedCodeBlock.Arguments);
         }
 
-        protected void Write(IndentedCodeBlock indentedCodeBlock)
+        protected void Write(CodeBlock codeBlock)
         {
-            Write(indentedCodeBlock, null, null);
+            Write(codeBlock, null, null);
         }
 
-        protected void Write(IndentedCodeBlock indentedCodeBlock, string language, string arguments)
+        protected void Write(CodeBlock codeBlock, string language, string arguments)
         {
             writer.EnsureLine();
             // class="language-ruby
@@ -128,7 +128,7 @@ namespace Textamina.Markdig.Formatters
                 HtmlHelper.EscapeHtml(language, writer);
                 writer.WriteConstant("\">");
             }
-            WriteLeaf(indentedCodeBlock, true, true);
+            WriteLeaf(codeBlock, true, true);
             writer.WriteLineConstant("</code></pre>");
         }
 
@@ -159,6 +159,7 @@ namespace Textamina.Markdig.Formatters
         {
             writer.WriteLineConstant("<hr />");
         }
+
 
         protected void Write(QuoteBlock quoteBlock)
         {
