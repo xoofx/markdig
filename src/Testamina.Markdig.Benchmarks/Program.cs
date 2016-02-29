@@ -36,26 +36,29 @@ namespace Testamina.Markdig.Benchmarks
         public void TestCommonMark()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            var reader = new StringReader(text);
+            // var reader = new StringReader(text);
             //CommonMark.CommonMarkConverter.Parse(reader);
             //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
-            CommonMark.CommonMarkConverter.Convert(reader, new StringWriter());
+            //var writer = new StringWriter();
+            CommonMark.CommonMarkConverter.Convert(text);
+            //writer.Flush();
+            //writer.ToString();
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestMarkdownDeep()
         {
             new MarkdownDeep.Markdown().Transform(text);
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestMarkdownSharp()
         {
             new MarkdownSharp.Markdown().Transform(text);
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestMoonshine()
         {
             MoonShine.Markdownify(text);
