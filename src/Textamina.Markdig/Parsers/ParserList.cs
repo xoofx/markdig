@@ -6,7 +6,7 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class ParserList<T, TState> : List<T> where T : ParserBase<TState>
+    public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
         private T[][] parsersWithOpeningCharacters;
         private T[] globalParsers;

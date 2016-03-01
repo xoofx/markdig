@@ -11,6 +11,8 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'\n'};
         }
 
+        public bool EnableSoftAsHard { get; set; }
+
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
@@ -22,7 +24,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
-            state.Inline = slice.Column == 0 || !hasDoubleSpacesBefore ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
+            state.Inline = !EnableSoftAsHard && (slice.Column == 0 || !hasDoubleSpacesBefore) ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
             return true;
         }
     }

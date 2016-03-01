@@ -61,6 +61,8 @@ namespace Textamina.Markdig.Renderers
             ObjectRenderers.Add(new LiteralInlineRenderer());
 
             EnableHtmlForInline = true;
+            // We assume that we are starting as if we had previously a newline
+            previousWasLine = true;
         }
 
         public bool EnableHtmlForInline { get; set; }
@@ -298,7 +300,7 @@ namespace Textamina.Markdig.Renderers
 
         public override object Render(MarkdownObject markdownObject)
         {
-            WriteChildren(markdownObject);
+            Write(markdownObject);
             return textWriter;
         }
     }

@@ -13,11 +13,11 @@ namespace Textamina.Markdig.Renderers
 
         protected RendererBase()
         {
-            ObjectRenderers = new List<IMarkdownObjectRenderer>();
+            ObjectRenderers = new ObjectRendererCollection();
             renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
         }
 
-        public List<IMarkdownObjectRenderer> ObjectRenderers { get; }
+        public ObjectRendererCollection ObjectRenderers { get; }
 
         public abstract object Render(MarkdownObject markdownObject);
 

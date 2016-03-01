@@ -5,7 +5,7 @@ namespace Textamina.Markdig.Renderers
 {
     public interface IMarkdownRenderer
     {
-        List<IMarkdownObjectRenderer> ObjectRenderers { get; }
+        ObjectRendererCollection ObjectRenderers { get; }
 
         object Render(MarkdownObject markdownObject);
     }

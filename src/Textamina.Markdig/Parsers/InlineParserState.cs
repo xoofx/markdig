@@ -161,14 +161,9 @@ namespace Textamina.Markdig.Parsers
                 leafBlock.Inline.DumpTo(Log);
             }
 
-            // Process delimiters
-            foreach (var delimiterProcessor in Parsers.DelimiterProcessors)
-            {
-                if (!delimiterProcessor.ProcessDelimiters(this, Root, null))
-                {
-                    break;
-                }
-            }
+            // Process all delimiters
+            ProcessDelimiters(0, Root);
+
             //TransformDelimitersToLiterals();
 
             if (Log != null)
@@ -176,6 +171,18 @@ namespace Textamina.Markdig.Parsers
                 Log.WriteLine();
                 Log.WriteLine("** Dump after Emphasis:");
                 leafBlock.Inline.DumpTo(Log);
+            }
+        }
+
+        public void ProcessDelimiters(int startingIndex, Inline root, Inline lastChild = null)
+        {
+            for (int i = startingIndex; i < Parsers.DelimiterProcessors.Length; i++)
+            {
+                var delimiterProcessor = Parsers.DelimiterProcessors[i];
+                if (!delimiterProcessor.ProcessDelimiters(this, root, lastChild, i))
+                {
+                    break;
+                }
             }
         }
 

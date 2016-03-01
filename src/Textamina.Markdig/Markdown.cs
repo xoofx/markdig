@@ -8,37 +8,26 @@ namespace Textamina.Markdig
 {
     public class Markdown
     {
-        public static string Convert(string markdown)
+        public static string ConvertToHtml(string markdown, MarkdownPipeline pipeline = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             var reader = new StringReader(markdown);
-            return Convert(reader)?.ToString() ?? string.Empty;
+            return ConvertToHtml(reader, pipeline) ?? string.Empty;
         }
 
-        public static object Convert(TextReader reader, MarkdownPipeline pipeline = null)
+        public static string ConvertToHtml(TextReader reader, MarkdownPipeline pipeline = null)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
-            pipeline = pipeline ?? new MarkdownPipeline();
-
-            if (pipeline.Renderer == null)
-            {
-                pipeline.Renderer = new HtmlRenderer(new StringWriter());
-            }
-
-            var document = Parse(reader, pipeline);
-            return pipeline.Renderer.Render(document);
+            var writer = new StringWriter();
+            ConvertToHtml(reader, writer, pipeline);
+            return writer.ToString();
         }
 
-        public static void Convert(TextReader reader, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static void ConvertToHtml(TextReader reader, TextWriter writer, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             pipeline = pipeline ?? new MarkdownPipeline();
-
-            if (!(pipeline.Renderer is HtmlRenderer))
-            {
-                pipeline.Renderer = new HtmlRenderer(writer);
-            }
+            pipeline.Renderer = new HtmlRenderer(writer);
 
             var document = Parse(reader, pipeline);
             pipeline.Renderer.WriteChildren(document);

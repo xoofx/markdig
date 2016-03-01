@@ -11,18 +11,18 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var reader = new StringReader(@"
+            var text = @"
 |a|b
 |-|-|-
 |0|1|2|3
 |A|B
 
-");
+";
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");
 
-            var result = Markdown.Convert(reader);
+            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().EnablePipeTable());
             Console.WriteLine(result);
         }
    }

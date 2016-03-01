@@ -6,7 +6,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 {
     public class LinkInlineParser : InlineParser
     {
-        private EmphasisInlineParser emphasisInlineParser;
+        private int emphasisInlineDelimiterProcessorIndex;
 
         public LinkInlineParser()
         {
@@ -15,11 +15,13 @@ namespace Textamina.Markdig.Parsers.Inlines
 
         public override void Initialize(InlineParserState state)
         {
-            foreach (var parser in state.Parsers)
+            emphasisInlineDelimiterProcessorIndex = -1;
+            for (int i = 0; i < state.Parsers.DelimiterProcessors.Length; i++)
             {
-                emphasisInlineParser = parser as EmphasisInlineParser;
-                if (emphasisInlineParser != null)
+                var delimiters = state.Parsers.DelimiterProcessors[i];
+                if (delimiters is EmphasisInlineParser)
                 {
+                    emphasisInlineDelimiterProcessorIndex = i;
                     break;
                 }
             }
@@ -124,9 +126,9 @@ namespace Textamina.Markdig.Parsers.Inlines
                 link.IsClosed = true;
 
                 // Process emphasis delimiters
-                if (emphasisInlineParser != null)
+                if (emphasisInlineDelimiterProcessorIndex >= 0)
                 {
-                    emphasisInlineParser.ProcessDelimiters(state, link, null);
+                    state.ProcessDelimiters(emphasisInlineDelimiterProcessorIndex, link);
                 }
 
                 state.Inline = link;
@@ -193,9 +195,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                             openParent.ReplaceBy(link);
                             inlineState.Inline = link;
 
-                            if (emphasisInlineParser != null)
+                            // Process emphasis delimiters
+                            if (emphasisInlineDelimiterProcessorIndex >= 0)
                             {
-                                emphasisInlineParser.ProcessDelimiters(inlineState, link, null);
+                                inlineState.ProcessDelimiters(emphasisInlineDelimiterProcessorIndex, link);
                             }
 
                             // If we have a link (and not an image), 

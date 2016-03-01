@@ -28,7 +28,7 @@ namespace Textamina.Markdig.Tests
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto
 //");
-            var result = Markdown.Convert(reader);
+            var result = Markdown.ConvertToHtml(reader);
             Console.WriteLine(result);
         }
 
@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Tests
             MarkdownParser.Log = Console.Out;
             var reader = new StringReader(inputText);
             var output = new StringWriter();
-            Markdown.Convert(reader, output);
+            Markdown.ConvertToHtml(reader, output);
 
             var result = Compact(output.ToString());
             expectedOutputText = Compact(expectedOutputText);

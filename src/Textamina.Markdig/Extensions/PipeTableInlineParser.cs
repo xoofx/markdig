@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Extensions
             return true;
         }
 
-        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild)
+        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex)
         {
             // Continue
             var container = root as ContainerInline;
@@ -97,6 +97,7 @@ namespace Textamina.Markdig.Extensions
             TableRowBlock firstRow = null;
             int columnCount = 0;
             int maxColumn = 0;
+            var cells = new List<TableCellBlock>();
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var delimiter = delimiters[i] as PiprTableDelimiterInline;
@@ -132,6 +133,7 @@ namespace Textamina.Markdig.Extensions
                 {
                     var cellContainer = new ContainerInline();
                     var tableCell = new TableCellBlock { Inline = cellContainer, Parent = currentRow };
+                    cells.Add(tableCell);
                     currentRow.Children.Add(tableCell);
                     var previousInline = delimiters[i - 1];
                     CopyCellDown(previousInline, cellContainer);
@@ -142,6 +144,7 @@ namespace Textamina.Markdig.Extensions
                 {
                     var cellContainer = new ContainerInline();
                     var tableCell = new TableCellBlock { Inline = cellContainer, Parent = currentRow };
+                    cells.Add(tableCell);
                     currentRow.Children.Add(tableCell);
 
                     var literal = delimiter.FirstChild as LiteralInline;
@@ -179,6 +182,21 @@ namespace Textamina.Markdig.Extensions
                 previousRow = row;
             }
 
+            // Perform delimiter processor that are coming after this processor
+            var delimiterProcessors = state.Parsers.DelimiterProcessors;
+            for (int i = 0; i < delimiterProcessors.Length; i++)
+            {
+                if (delimiterProcessors[i] == this)
+                {
+                    foreach (var cell in cells)
+                    {
+                        state.ProcessDelimiters(i + 1, cell.Inline);
+                    }
+                    break;
+                }
+            }
+
+            // We don't want to continue procesing delimiters, as we are already processing them here
             return false;
         }
 

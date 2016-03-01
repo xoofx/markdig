@@ -42,7 +42,7 @@ namespace Textamina.Markdig
                 new LineBreakInlineParser(),
             };
 
-            Extensions = new List<IMarkdownExtension>();
+            Extensions = new OrderedList<IMarkdownExtension>();
 
             Renderer = new HtmlRenderer(new StringWriter());
 
@@ -55,7 +55,7 @@ namespace Textamina.Markdig
 
         public RendererBase Renderer { get; set; }
 
-        public List<IMarkdownExtension> Extensions { get; }
+        public OrderedList<IMarkdownExtension> Extensions { get; }
 
         public StringBuilderCache StringBuilderCache { get; set; }
 

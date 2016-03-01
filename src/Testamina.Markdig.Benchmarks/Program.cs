@@ -28,7 +28,7 @@ namespace Testamina.Markdig.Benchmarks
         public void TestMarkdig()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            Markdown.Convert(text);
+            Markdown.ConvertToHtml(text);
             //File.WriteAllText("spec.html", writer.ToString());
         }
 

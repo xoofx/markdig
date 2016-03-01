@@ -36,13 +36,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions\HtmlTableRenderer.cs" />
+    <Compile Include="Extensions\PipeTableExtension.cs" />
     <Compile Include="Extensions\PiprTableDelimiterInline.cs" />
+    <Compile Include="Extensions\SoftlineBreakAsHardlineExtension.cs" />
     <Compile Include="Extensions\TableBlock.cs" />
     <Compile Include="Extensions\TableCellBlock.cs" />
     <Compile Include="Extensions\TableColumnAlignType.cs" />
     <Compile Include="Extensions\TableRowBlock.cs" />
+    <Compile Include="Helpers\OrderedList.cs" />
     <Compile Include="IMarkdownExtension.cs" />
     <Compile Include="Markdown.cs" />
+    <Compile Include="MarkdownExtensions.cs" />
     <Compile Include="MarkdownPipeline.cs" />
     <Compile Include="Renderers\Html\HtmlBlockRenderer.cs" />
     <Compile Include="Renderers\Html\CodeBlockRenderer.cs" />
@@ -64,6 +68,7 @@
     <Compile Include="Renderers\Html\ThematicBreakRenderer.cs" />
     <Compile Include="Renderers\IMarkdownObjectRenderer.cs" />
     <Compile Include="Renderers\IMarkdownRenderer.cs" />
+    <Compile Include="Renderers\ObjectRendererCollection.cs" />
     <Compile Include="Renderers\RendererBase.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
