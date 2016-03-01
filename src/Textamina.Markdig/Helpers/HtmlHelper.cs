@@ -8,6 +8,30 @@ namespace Textamina.Markdig.Helpers
     {
         private static readonly char[] SearchBackAndAmp = { '\\', '&' };
         private static readonly char[] SearchAmp = { '&' };
+        private static readonly string[] EscapeUrlsForAscii = new string[128];
+
+        static HtmlHelper()
+        {
+            for (int i = 0; i < EscapeUrlsForAscii.Length; i++)
+            {
+                if (i <= 32 || @"""'<>[\]^`{|}~".IndexOf((char)i) >= 0 || i == 127)
+                {
+                    EscapeUrlsForAscii[i] = $"%{i:X2}";
+                }
+                else if ((char) i == '&')
+                {
+                    EscapeUrlsForAscii[i] = "&amp;";
+                }
+            }
+        }
+        public static string EscapeUrlCharacter(char c)
+        {
+            if (c < 128)
+            {
+                return EscapeUrlsForAscii[c];
+            }
+            return null;
+        }
 
         public static bool TryParseHtmlTag(StringSlice text, out string htmlTag)
         {

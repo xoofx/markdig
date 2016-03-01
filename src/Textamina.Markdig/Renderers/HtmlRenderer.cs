@@ -10,23 +10,6 @@ namespace Textamina.Markdig.Renderers
 {
     public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
-        // TODO: Move this code to HTMLHelper
-        private const string HexCharacters = "0123456789ABCDEF";
-        private static readonly char[] EscapeHtmlCharacters = { '&', '<', '>', '"' };
-        private static readonly bool[] UrlSafeCharacters =
-        {
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false,
-            false, true, false, true, true, true, false, false, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true, true, true, false, true, false, true,
-            true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, true,
-            false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-            true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
-        };
-
         public HtmlRenderer(TextWriter writer) : base(writer)
         {
             // Default block renderers
@@ -120,35 +103,34 @@ namespace Textamina.Markdig.Renderers
                 return this;
 
             int previousPosition = 0;
-            int len = content.Length;
+            int length = content.Length;
 
-            for (var i = 0; i < len; i++)
+            for (var i = 0; i < length; i++)
             {
                 var c = content[i];
 
-                if (c == '&')
+                if (c < 128)
                 {
-                    Write(content, previousPosition, i - previousPosition);
-                    previousPosition = i + 1;
-                    Write("&amp;");
+                    var escape = HtmlHelper.EscapeUrlCharacter(c);
+                    if (escape != null)
+                    {
+                        Write(content, previousPosition, i - previousPosition);
+                        previousPosition = i + 1;
+                        Write(escape);
+                    }
                 }
-                else if (c < 128 && !UrlSafeCharacters[c])
-                {
-                    Write(content, previousPosition, i - previousPosition);
-                    previousPosition = i + 1;
-
-                    Write("%").Write(HexCharacters[c / 16]).Write(HexCharacters[c % 16]);
-                }
-                else if (c > 127)
+                else
                 {
                     Write(content, previousPosition, i - previousPosition);
                     previousPosition = i + 1;
 
                     byte[] bytes;
-                    if (c >= '\ud800' && c <= '\udfff' && len != previousPosition)
+                    if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
                     {
                         bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
-                        previousPosition = ++i + 1;
+                        // Skip next char as it is decoded above
+                        i++;
+                        previousPosition = i + 1;
                     }
                     else
                     {
@@ -157,12 +139,12 @@ namespace Textamina.Markdig.Renderers
 
                     for (var j = 0; j < bytes.Length; j++)
                     {
-                        Write('%').Write(HexCharacters[bytes[j] / 16]).Write(HexCharacters[bytes[j] % 16]);
+                        Write($"%{bytes[j]:X2}");
                     }
                 }
             }
 
-            Write(content, previousPosition, len - previousPosition);
+            Write(content, previousPosition, length - previousPosition);
             return this;
         }
 
