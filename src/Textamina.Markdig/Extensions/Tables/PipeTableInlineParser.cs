@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Tables
 {
     public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
     {
@@ -15,13 +14,20 @@ namespace Textamina.Markdig.Extensions
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
-            state.Inline = new PiprTableDelimiterInline(this) {LineIndex = state.LocalLineIndex};
+            // If we have not a delimiter on the first line of a paragraph, don't bother to continue 
+            // tracking other delimiters on following lines
+            if (state.ParserStates[Index] == null)
+            {
+                if (state.LocalLineIndex > 0)
+                {
+                    return false;
+                }
+                // Else setup a table state
+                state.ParserStates[Index] = new TableState();
+            }
 
-            // Store that we have at least one delimiter
-            // TODO: Use cache for this kind of obejcts
-            state.ParserStates[Index] = new TableState();
-
-            slice.NextChar();
+            state.Inline = new PiprTableDelimiterInline(this) { LineIndex = state.LocalLineIndex };
+            slice.NextChar(); // Skip the `|` character
 
             return true;
         }
@@ -97,7 +103,8 @@ namespace Textamina.Markdig.Extensions
             TableRowBlock firstRow = null;
             int columnCount = 0;
             int maxColumn = 0;
-            var cells = new List<TableCellBlock>();
+            var cells = tableState.Cells;
+            cells.Clear();
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var delimiter = delimiters[i] as PiprTableDelimiterInline;
@@ -167,7 +174,7 @@ namespace Textamina.Markdig.Extensions
                 var rowObj = table.Children[rowIndex];
                 var row = (TableRowBlock) rowObj;
 
-                List<TableColumnAlignType> aligns;
+                List<TableColumnAlign> aligns;
                 if (rowIndex == 1 && TryParseRowHeaderSeparator(row, out aligns))
                 {
                     previousRow.IsHeader = true;
@@ -195,12 +202,14 @@ namespace Textamina.Markdig.Extensions
                     break;
                 }
             }
+            // Clear cells when we are done
+            cells.Clear();
 
             // We don't want to continue procesing delimiters, as we are already processing them here
             return false;
         }
 
-        private bool TryParseRowHeaderSeparator(TableRowBlock row, out List<TableColumnAlignType> aligns)
+        private bool TryParseRowHeaderSeparator(TableRowBlock row, out List<TableColumnAlign> aligns)
         {
             aligns = null;
             foreach (var cellObj in row.Children)
@@ -254,10 +263,10 @@ namespace Textamina.Markdig.Extensions
 
                 if (aligns == null)
                 {
-                    aligns = new List<TableColumnAlignType>();
+                    aligns = new List<TableColumnAlign>();
                 }
 
-                aligns.Add(hasLeft && hasRight ? TableColumnAlignType.Center :  hasRight ? TableColumnAlignType.Right : TableColumnAlignType.Left);
+                aligns.Add(hasLeft && hasRight ? TableColumnAlign.Center :  hasRight ? TableColumnAlign.Right : TableColumnAlign.Left);
             }
 
             return true;
@@ -378,9 +387,12 @@ namespace Textamina.Markdig.Extensions
             public TableState()
             {
                 Delimiters = new List<Inline>();
+                Cells = new List<TableCellBlock>();
             }
 
             public List<Inline> Delimiters { get; }
+
+            public List<TableCellBlock> Cells { get; }
         }
     }
 }

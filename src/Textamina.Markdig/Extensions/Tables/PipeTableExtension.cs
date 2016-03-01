@@ -1,7 +1,7 @@
 ﻿using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Renderers;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Tables
 {
     public class PipeTableExtension : IMarkdownExtension
     {

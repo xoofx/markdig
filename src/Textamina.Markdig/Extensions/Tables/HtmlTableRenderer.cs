@@ -1,7 +1,7 @@
 using Textamina.Markdig.Renderers;
 using Textamina.Markdig.Renderers.Html;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Tables
 {
     public class HtmlTableRenderer : HtmlObjectRenderer<TableBlock>
     {
@@ -46,10 +46,10 @@ namespace Textamina.Markdig.Extensions
                         {
                             switch (header.ColumnAlignments[i])
                             {
-                                case TableColumnAlignType.Center:
+                                case TableColumnAlign.Center:
                                     writer.Write(" style=\"text-align: center;\"");
                                     break;
-                                case TableColumnAlignType.Right:
+                                case TableColumnAlign.Right:
                                     writer.Write(" style=\"text-align: right;\"");
                                     break;
                             }

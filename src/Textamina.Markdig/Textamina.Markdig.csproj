@@ -35,14 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\HtmlTableRenderer.cs" />
-    <Compile Include="Extensions\PipeTableExtension.cs" />
-    <Compile Include="Extensions\PiprTableDelimiterInline.cs" />
+    <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
+    <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
+    <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />
     <Compile Include="Extensions\SoftlineBreakAsHardlineExtension.cs" />
-    <Compile Include="Extensions\TableBlock.cs" />
-    <Compile Include="Extensions\TableCellBlock.cs" />
-    <Compile Include="Extensions\TableColumnAlignType.cs" />
-    <Compile Include="Extensions\TableRowBlock.cs" />
+    <Compile Include="Extensions\Tables\TableBlock.cs" />
+    <Compile Include="Extensions\Tables\TableCellBlock.cs" />
+    <Compile Include="Extensions\Tables\TableColumnAlign.cs" />
+    <Compile Include="Extensions\Tables\TableRowBlock.cs" />
     <Compile Include="Helpers\OrderedList.cs" />
     <Compile Include="IMarkdownExtension.cs" />
     <Compile Include="Markdown.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="Parsers\InlineParserState.cs" />
     <Compile Include="Parsers\BlockParserState.cs" />
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
-    <Compile Include="Extensions\PipeTableInlineParser.cs" />
+    <Compile Include="Extensions\Tables\PipeTableInlineParser.cs" />
     <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />

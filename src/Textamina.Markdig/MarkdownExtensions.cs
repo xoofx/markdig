@@ -2,6 +2,7 @@
 
 
 using Textamina.Markdig.Extensions;
+using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
 {

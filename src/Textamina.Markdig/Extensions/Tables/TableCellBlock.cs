@@ -1,6 +1,6 @@
 using Textamina.Markdig.Syntax;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Tables
 {
     public class TableCellBlock : LeafBlock
     {

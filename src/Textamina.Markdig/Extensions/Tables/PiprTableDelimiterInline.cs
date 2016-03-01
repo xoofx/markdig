@@ -1,7 +1,7 @@
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Syntax.Inlines;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Tables
 {
     public class PiprTableDelimiterInline : DelimiterInline
     {
