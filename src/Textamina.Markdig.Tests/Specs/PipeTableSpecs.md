@@ -6,8 +6,8 @@ This section describes the different extensions supported:
 
 A pipe table is detected when:
 
-- The first line of a paragraph block contains at least a **column delimiter** `|`
-- All sub-sequent lines must contain at a column delimiter `|`
+**Rule #1**
+Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
 
 ```````````````````````````````` example
 a | b
@@ -26,7 +26,33 @@ c | d
 </tbody>
 ````````````````````````````````
 
-The following example shows that the second line doesn't have a column delimiter `|` so the table is not detected:
+A pipe table with one row is also possible:
+
+```````````````````````````````` example
+a | b
+.
+<table>
+<tbody>
+<tr>
+<td>a</td>
+<td>b</td>
+</tr>
+</tbody>
+````````````````````````````````
+
+But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
+
+```````````````````````````````` example
+a b
+c | d
+e | f
+.
+<p>a b
+c | d
+e | f</p>
+````````````````````````````````
+
+If a line doesn't have a column delimiter `|` the table is not detected
 
 ```````````````````````````````` example
 a | b
@@ -36,7 +62,7 @@ c no d
 c no d</p>
 ````````````````````````````````
 
-The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` are converted to literal strings instead
+The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
 
 ```````````````````````````````` example
 a | b 
@@ -60,29 +86,97 @@ a | b
 </tr>
 <tr>
 <td>5</td>
-<td></td>
 </tr>
 </tbody>
 ````````````````````````````````
 
- 
+**Rule #2**
 A pipe table ends after a blank line or the end of the file.
+
+**Rule #3**
 A cell content is trimmed (start and end) from white-spaces.
 
-The **header row** is separated from the regular rows by a row containing a **header column separator** for each column. A header column separator is:
+```````````````````````````````` example
+a          | b              | 
+0      | 1       |
+.
+<table>
+<tbody>
+<tr>
+<td>a</td>
+<td>b</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+````````````````````````````````
+
+**Rule #4**
+Column delimiters `|` at the very beginning of a line or just before a line ending with only spaces and/or terminated by a newline can be omitted
+
+```````````````````````````````` example
+  a     | b     |
+| 0     | 1
+| 2     | 3     |
+  4     | 5 
+.
+<table>
+<tbody>
+<tr>
+<td>a</td>
+<td>b</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody>
+````````````````````````````````
+Single column table can be declared with lines starting only by a column delimiter: 
+
+```````````````````````````````` example
+| a
+| b
+| c 
+.
+<table>
+<tbody>
+<tr>
+<td>a</td>
+</tr>
+<tr>
+<td>b</td>
+</tr>
+<tr>
+<td>c</td>
+</tr>
+</tbody>
+````````````````````````````````
+
+**Rule #5**
+
+The first row is considered as a **header row** if it is separated from the regular rows by a row containing a **header column separator** for each column. A header column separator is:
 
 - starting by optional spaces
 - followed by an optional `:` to specify left align
 - followed by a sequence of at least one `-` character
-- followed by an optional `:` to specify right align
+- followed by an optional `:` to specify right align (or center align if left align is also defined)
 - ending by optional spaces
-
-The text alignment is defined by default to be left.
-
+ 
 ```````````````````````````````` example
- a     | b
+ a     | b 
 -------|-------
- 0     | 1
+ 0     | 1 
  2     | 3 
 .
 <table>
@@ -104,76 +198,55 @@ The text alignment is defined by default to be left.
 </tbody>
 ````````````````````````````````
 
-The pipe `|` may be present at the beginning or at the end of a line:  
-
-```````````````````````````````` example
-  a     | b     |
-|-------|-------
-| 0     | 1     |
-  2     | 3 
-.
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>3</td>
-</tr>
-</tbody>
-````````````````````````````````
-
-The pipe `|` may be present at the beginning or at the end of a line:  
-
-```````````````````````````````` example
-  a     | b     |
-|-------|-------
-| 0     | 1     |
-  2     | 3 
-.
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>3</td>
-</tr>
-</tbody>
-````````````````````````````````
-
+The text alignment is defined by default to be left.
 The text alignment can be changed by using the character `:` with the header column separator:
  
 ```````````````````````````````` example
- a     | b
--------|-------:
- 0     | 1
- 2     | 3 
+ a     | b       | c 
+:------|:-------:| ----:
+ 0     | 1       | 2 
+ 3     | 4       | 5 
 .
 <table>
 <thead>
 <tr>
 <th>a</th>
-<th>b</th>
+<th style="text-align: center;">b</th>
+<th style="text-align: right;">c</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+````````````````````````````````
+
+The following example shows a non matching header column separator:
+ 
+```````````````````````````````` example
+ a     | b
+-------|---x---
+ 0     | 1
+ 2     | 3 
+.
+<table>
+<tbody>
+<tr>
+<td>a</td>
+<td>b</td>
+</tr>
+<tr>
+<td>-------</td>
+<td>---x---</td>
+</tr>
 <tr>
 <td>0</td>
 <td>1</td>

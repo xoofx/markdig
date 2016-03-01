@@ -47,10 +47,9 @@ namespace Textamina.Markdig.Syntax
     {
         public StringSlice(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
             Text = text;
             Start = 0;
-            End = Text.Length - 1;
+            End = (Text?.Length ?? 0) - 1;
         }
 
         public StringSlice(string text, int start, int end)

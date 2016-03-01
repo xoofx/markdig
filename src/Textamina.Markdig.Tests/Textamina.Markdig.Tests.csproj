@@ -67,6 +67,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Specs\PipeTableSpecs.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Textamina.Markdig\Textamina.Markdig.csproj">

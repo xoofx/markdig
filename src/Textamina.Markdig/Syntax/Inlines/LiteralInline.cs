@@ -8,6 +8,7 @@ namespace Textamina.Markdig.Syntax.Inlines
     {
         public LiteralInline()
         {
+            Content = new StringSlice(null);
         }
 
         public StringSlice Content;

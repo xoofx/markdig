@@ -97,14 +97,14 @@ namespace Textamina.Markdig.Extensions.Tables
             cells.Clear();
             for (int i = 0; i < lines.Count; i++)
             {
-                var nextColumn = lines[i];
+                var column = lines[i];
 
                 var row = new TableRowBlock {Parent = table};
                 table.Children.Add(row);
 
-                if (nextColumn is PiprTableDelimiterInline)
+                if (column is PiprTableDelimiterInline)
                 {
-                    nextColumn = ((PiprTableDelimiterInline)nextColumn).FirstChild;
+                    column = ((PiprTableDelimiterInline)column).FirstChild;
                 }
 
                 ContainerInline previousColumn = null;
@@ -114,9 +114,9 @@ namespace Textamina.Markdig.Extensions.Tables
                     if (maxColumn > 0 && row.Children.Count >= maxColumn)
                     {
                         lastColumn = null;
-                        nextColumn.Remove();
-                        TrimEnd(nextColumn);
-                        previousColumn.AppendChild(nextColumn);
+                        column.Remove();
+                        TrimEnd(column);
+                        previousColumn.AppendChild(column);
                         break;
                     }
                     else
@@ -126,16 +126,30 @@ namespace Textamina.Markdig.Extensions.Tables
                             TrimEnd(lastColumn);
                         }
                         var cellContainer = new ContainerInline();
-                        TrimStart(nextColumn);
-                        CopyCellDown(nextColumn, cellContainer, out lastColumn, out nextColumn);
+                        TrimStart(column);
+                        Inline nextColumn;
+                        CopyCellDown(column, cellContainer, out lastColumn, out nextColumn);
 
                         var tableCell = new TableCellBlock { Inline = cellContainer, Parent = row };
                         cells.Add(tableCell);
                         row.Children.Add(tableCell);
-                        previousColumn = cellContainer;
+
+                        if (nextColumn is PiprTableDelimiterInline &&
+                            IsTrailingColumnDelimiter((PiprTableDelimiterInline) nextColumn))
+                        {
+                            TrimEnd(column);
+                            nextColumn.Remove();
+                            column = null;
+                        }
+                        else
+                        {
+                            column = nextColumn;
+                            previousColumn = cellContainer;
+
+                        }
                     }
 
-                    if (nextColumn == null || IsLine(nextColumn))
+                    if (column == null || IsLine(column))
                     {
                         break;
                     }
@@ -259,6 +273,21 @@ namespace Textamina.Markdig.Extensions.Tables
         private static bool IsLine(Inline inline)
         {
             return inline is SoftlineBreakInline || inline is HardlineBreakInline;
+        }
+
+        private static bool IsTrailingColumnDelimiter(PiprTableDelimiterInline inline)
+        {
+            var child = inline.FirstChild;
+            var literal = child as LiteralInline;
+            if (literal != null)
+            {
+                if (!literal.Content.IsEmptyOrWhitespace())
+                {
+                    return false;
+                }
+                child = child.NextSibling;
+            }
+            return child == null || IsLine(child);
         }
 
         private static bool CopyCellDown(Inline fromElement, ContainerInline dest, out Inline last, out Inline next)

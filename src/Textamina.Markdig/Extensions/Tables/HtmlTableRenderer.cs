@@ -37,26 +37,26 @@ namespace Textamina.Markdig.Extensions.Tables
                     writer.EnsureLine();
                     if (row.IsHeader)
                     {
-                        writer.Write("<th>");
+                        writer.Write("<th");
                     }
                     else
                     {
                         writer.Write("<td");
-                        if (header != null && i < header.ColumnAlignments.Count)
-                        {
-                            switch (header.ColumnAlignments[i])
-                            {
-                                case TableColumnAlign.Center:
-                                    writer.Write(" style=\"text-align: center;\"");
-                                    break;
-                                case TableColumnAlign.Right:
-                                    writer.Write(" style=\"text-align: right;\"");
-                                    break;
-                            }
-                        }
-                        writer.Write(">");
                     }
-
+                    if (header != null && i < header.ColumnAlignments.Count)
+                    {
+                        switch (header.ColumnAlignments[i])
+                        {
+                            case TableColumnAlign.Center:
+                                writer.Write(" style=\"text-align: center;\"");
+                                break;
+                            case TableColumnAlign.Right:
+                                writer.Write(" style=\"text-align: right;\"");
+                                break;
+                        }
+                    }
+                    writer.Write(">");
+                    
                     writer.WriteLeafInline(cell);
                     writer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
