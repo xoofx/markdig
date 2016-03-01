@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -6,11 +5,10 @@ using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Renderers.Html.Inlines;
 using Textamina.Markdig.Syntax;
-using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers
 {
-    public class HtmlRenderer : RendererBase
+    public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
         // TODO: Move this code to HTMLHelper
         private const string HexCharacters = "0123456789ABCDEF";
@@ -29,17 +27,8 @@ namespace Textamina.Markdig.Renderers
             true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
         };
 
-        private readonly TextWriter textWriter;
-        private bool previousWasLine;
-        private char[] buffer;
-
-        public HtmlRenderer(TextWriter textWriter)
+        public HtmlRenderer(TextWriter writer = null) : base(writer)
         {
-            if (textWriter == null) throw new ArgumentNullException(nameof(textWriter));
-            this.textWriter = textWriter;
-
-            buffer = new char[1024];
-
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());
             ObjectRenderers.Add(new ListRenderer());
@@ -61,87 +50,11 @@ namespace Textamina.Markdig.Renderers
             ObjectRenderers.Add(new LiteralInlineRenderer());
 
             EnableHtmlForInline = true;
-            // We assume that we are starting as if we had previously a newline
-            previousWasLine = true;
         }
 
         public bool EnableHtmlForInline { get; set; }
 
         public bool ImplicitParagraph { get; set; }
-
-        public HtmlRenderer EnsureLine()
-        {
-            if (!previousWasLine)
-            {
-                WriteLine();
-            }
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer Write(string content)
-        {
-            previousWasLine = false;
-            textWriter.Write(content);
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer Write(ref StringSlice slice)
-        {
-            if (slice.Start > slice.End)
-            {
-                return this;
-            }
-            return Write(slice.Text, slice.Start, slice.Length);
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer Write(char content)
-        {
-            previousWasLine = content == '\n';
-            textWriter.Write(content);
-            return this;
-        }
-
-        public HtmlRenderer Write(string content, int offset, int length)
-        {
-            previousWasLine = false;
-            if (offset == 0 && content.Length == length)
-            {
-                textWriter.Write(content);
-            }
-            else
-            {
-                if (length > buffer.Length)
-                {
-                    buffer = content.ToCharArray(offset, length);
-                }
-                else
-                {
-                    content.CopyTo(offset, buffer, 0, length);
-                }
-
-                textWriter.Write(buffer, 0, length);
-            }
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer WriteLine()
-        {
-            textWriter.WriteLine();
-            previousWasLine = true;
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer WriteLine(string content)
-        {
-            previousWasLine = true;
-            textWriter.WriteLine(content);
-            return this;
-        }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlRenderer WriteEscape(string content)
@@ -165,7 +78,6 @@ namespace Textamina.Markdig.Renderers
 
         public HtmlRenderer WriteEscape(string content, int offset, int length)
         {
-            previousWasLine = false;
             if (string.IsNullOrEmpty(content) || length == 0)
                 return this;
 
@@ -254,21 +166,6 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer WriteLeafInline(LeafBlock leafBlock)
-        {
-            var inline = (Inline)leafBlock.Inline;
-            if (inline != null)
-            {
-                while (inline != null)
-                {
-                    Write(inline);
-                    inline = inline.NextSibling;
-                }
-            }
-            return this;
-        }
-
         public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
             if (leafBlock.Lines != null)
@@ -297,11 +194,5 @@ namespace Textamina.Markdig.Renderers
             }
             return this;
         }
-
-        public override object Render(MarkdownObject markdownObject)
-        {
-            Write(markdownObject);
-            return textWriter;
-        }
-    }
+   }
 }
