@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Renderers
             true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
         };
 
-        public HtmlRenderer(TextWriter writer = null) : base(writer)
+        public HtmlRenderer(TextWriter writer) : base(writer)
         {
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());

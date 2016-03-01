@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Textamina.Markdig.Helpers;
@@ -8,12 +9,27 @@ namespace Textamina.Markdig.Renderers
 {
     public abstract class TextRendererBase : RendererBase
     {
-        protected TextRendererBase(TextWriter writer = null)
+        private TextWriter writer;
+
+        protected TextRendererBase(TextWriter writer)
         {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
             this.Writer = writer;
         }
 
-        public TextWriter Writer { get; set; }
+        public TextWriter Writer
+        {
+            get { return writer; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                writer = value;
+            }
+        }
 
         public override object Render(MarkdownObject markdownObject)
         {
@@ -27,7 +43,7 @@ namespace Textamina.Markdig.Renderers
         private bool previousWasLine;
         private char[] buffer;
 
-        protected TextRendererBase(TextWriter writer = null) : base(writer)
+        protected TextRendererBase(TextWriter writer) : base(writer)
         {
             buffer = new char[1024];
             // We assume that we are starting as if we had previously a newline
