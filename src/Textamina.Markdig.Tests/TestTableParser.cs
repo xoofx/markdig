@@ -12,11 +12,10 @@ namespace Textamina.Markdig.Tests
         public void TestSimple()
         {
             var text = @"
-|a|b
-|-|-|-
-|0|1|2|3
-|A|B
-
+a | b 
+0 | 1 | 2
+3 | 4
+5 |
 ";
 //            var reader = new StringReader(@"> > toto tata
 //> titi toto

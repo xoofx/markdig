@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Textamina.Markdig.Tests
@@ -12546,7 +12541,7 @@ namespace Textamina.Markdig.Tests
         // into the corresponding Unicode code points, as usual.  These may
         // be optionally URL-escaped when written as HTML, but this spec
         // does not enforce any particular policy for rendering URLs in
-        // HTML or other formats.  ObjectRenderers may make different decisions
+        // HTML or other formats.  Renderers may make different decisions
         // about how to escape or normalize URLs in the output.
     [TestFixture]
     public partial class TestInlinesLinks
@@ -16208,4 +16203,275 @@ namespace Textamina.Markdig.Tests
         //
         // After we're done, we remove all delimiters above `stack_bottom` from the
         // delimiter stack.
+        //
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Pipe Table
+        //
+        // A pipe table is detected when:
+        //
+        // - The first line of a paragraph block contains at least a **column delimiter** `|`
+        // - All sub-sequent lines must contain at a column delimiter `|`
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b
+            //     c | d
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <tbody>
+            //     <tr>
+            //     <td>a</td>
+            //     <td>b</td>
+            //     </tr>
+            //     <tr>
+            //     <td>c</td>
+            //     <td>d</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b\nc | d", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n<td>d</td>\n</tr>\n</tbody>");
+        }
+    }
+        // The following example shows that the second line doesn't have a column delimiter `|` so the table is not detected:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b
+            //     c no d
+            //
+            // Should be rendered as:
+            //     a | b
+            //     c no d
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b\nc no d", "a | b\nc no d");
+        }
+    }
+        // The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` are converted to literal strings instead
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b 
+            //     0 | 1 | 2
+            //     3 | 4
+            //     5 |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <tbody>
+            //     <tr>
+            //     <td>a</td>
+            //     <td>b</td>
+            //     </tr>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1 | 2</td>
+            //     </tr>
+            //     <tr>
+            //     <td>3</td>
+            //     <td>4</td>
+            //     </tr>
+            //     <tr>
+            //     <td>5</td>
+            //     <td></td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b \n0 | 1 | 2\n3 | 4\n5 |", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n</tr>\n</tbody>");
+        }
+    }
+        // A pipe table ends after a blank line or the end of the file.
+        // A cell content is trimmed (start and end) from white-spaces.
+        //
+        // The **header row** is separated from the regular rows by a row containing a **header column separator** for each column. A header column separator is:
+        //
+        // - starting by optional spaces
+        // - followed by an optional `:` to specify left align
+        // - followed by a sequence of at least one `-` character
+        // - followed by an optional `:` to specify right align
+        // - ending by optional spaces
+        //
+        // The text alignment is defined by default to be left.
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //      a     | b
+            //     -------|-------
+            //      0     | 1
+            //      2     | 3 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     <tr>
+            //     <td>2</td>
+            //     <td>3</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Pipe Table");
+			TestParser.TestSpec(" a     | b\n-------|-------\n 0     | 1\n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+        }
+    }
+        // The pipe `|` may be present at the beginning or at the end of a line:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //       a     | b     |
+            //     |-------|-------
+            //     | 0     | 1     |
+            //       2     | 3 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     <tr>
+            //     <td>2</td>
+            //     <td>3</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Pipe Table");
+			TestParser.TestSpec("  a     | b     |\n|-------|-------\n| 0     | 1     |\n  2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+        }
+    }
+        // The pipe `|` may be present at the beginning or at the end of a line:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //       a     | b     |
+            //     |-------|-------
+            //     | 0     | 1     |
+            //       2     | 3 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     <tr>
+            //     <td>2</td>
+            //     <td>3</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Pipe Table");
+			TestParser.TestSpec("  a     | b     |\n|-------|-------\n| 0     | 1     |\n  2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+        }
+    }
+        // The text alignment can be changed by using the character `:` with the header column separator:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //      a     | b
+            //     -------|-------:
+            //      0     | 1
+            //      2     | 3 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     <tr>
+            //     <td>2</td>
+            //     <td>3</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
+			TestParser.TestSpec(" a     | b\n-------|-------:\n 0     | 1\n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+        }
+    }
 }

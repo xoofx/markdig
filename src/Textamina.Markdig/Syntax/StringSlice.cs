@@ -224,5 +224,17 @@ namespace Textamina.Markdig.Syntax
             }
             return string.Empty;
         }
+
+        public bool IsEmptyOrWhitespace()
+        {
+            for (int i = Start; i <= End; i++)
+            {
+                if (!Text[i].IsWhitespace())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
