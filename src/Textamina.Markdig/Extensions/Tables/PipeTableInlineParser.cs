@@ -292,6 +292,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
         private static bool CopyCellDown(Inline fromElement, ContainerInline dest, out Inline last, out Inline next)
         {
+            // TODO: Handle more correctly CopyCellDown
             next = null;
             var container = fromElement as ContainerInline;
             Inline lastChild = null;

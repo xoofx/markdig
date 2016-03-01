@@ -16597,4 +16597,42 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>-------</td>\n<td>---x---</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
         }
     }
+        // **Rule #6**
+        //
+        // A column delimiter has a higher priority than emphasis delimiter
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //      *a*   | b
+            //      0     | _1_
+            //      _2     | 3* 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <tbody>
+            //     <tr>
+            //     <td><em>a</em></td>
+            //     <td>b</td>
+            //     </tr>
+            //     <tr>
+            //     <td>0</td>
+            //     <td><em>1</em></td>
+            //     </tr>
+            //     <tr>
+            //     <td>*2</td>
+            //     <td>3*</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
+			TestParser.TestSpec(" *a*   | b\n 0     | _1_\n _2     | 3* ", "<table>\n<tbody>\n<tr>\n<td><em>a</em></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>*2</td>\n<td>3*</td>\n</tr>\n</tbody>");
+        }
+    }
 }

@@ -257,3 +257,29 @@ The following example shows a non matching header column separator:
 </tr>
 </tbody>
 ````````````````````````````````
+
+**Rule #6**
+
+A column delimiter has a higher priority than emphasis delimiter
+ 
+```````````````````````````````` example
+ *a*   | b
+ 0     | _1_
+ _2     | 3* 
+.
+<table>
+<tbody>
+<tr>
+<td><em>a</em></td>
+<td>b</td>
+</tr>
+<tr>
+<td>0</td>
+<td><em>1</em></td>
+</tr>
+<tr>
+<td>*2</td>
+<td>3*</td>
+</tr>
+</tbody>
+````````````````````````````````
