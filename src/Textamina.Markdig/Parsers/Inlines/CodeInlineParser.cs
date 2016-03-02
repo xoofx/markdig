@@ -41,6 +41,8 @@ namespace Textamina.Markdig.Parsers.Inlines
                 // Transform '\n' into a single space
                 if (c == '\n')
                 {
+                    state.LocalLineIndex++;
+                    state.LineIndex++;
                     c = ' ';
                 }
 

@@ -16626,13 +16626,69 @@ namespace Textamina.Markdig.Tests
             //     <td><em>1</em></td>
             //     </tr>
             //     <tr>
-            //     <td>*2</td>
+            //     <td>_2</td>
             //     <td>3*</td>
             //     </tr>
             //     </tbody>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
-			TestParser.TestSpec(" *a*   | b\n 0     | _1_\n _2     | 3* ", "<table>\n<tbody>\n<tr>\n<td><em>a</em></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>*2</td>\n<td>3*</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec(" *a*   | b\n 0     | _1_\n _2     | 3* ", "<table>\n<tbody>\n<tr>\n<td><em>a</em></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>");
+        }
+    }
+        // **Rule #7**
+        //
+        // A backstick/code delimiter has a higher priority than a table column delimiter
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b `
+            //     0 | ` 
+            //
+            // Should be rendered as:
+            //     <p>a | b <code>0 |</code></p> 
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ");
+        }
+    }
+        // **Rule #7**
+        //
+        // HTML inline can use `|`
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example014()
+        {
+            // Example 14
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a <a href="" title="|"></a> | b
+            //     0 | 1
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <tbody>
+            //     <tr>
+            //     <td>a <a href="" title="|"></a></td>
+            //     <td>b</td>
+            //     </tr>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
+			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n0 | 1", "<table>\n<tbody>\n<tr>\n<td>a <a href=\"\" title=\"|\"></a></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>");
         }
     }
 }

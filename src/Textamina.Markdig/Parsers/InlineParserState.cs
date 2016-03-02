@@ -45,9 +45,9 @@ namespace Textamina.Markdig.Parsers
 
         public TextWriter Log;
 
-        public int LineIndex { get; private set; }
+        public int LineIndex { get; set; }
 
-        public int LocalLineIndex { get; private set; }
+        public int LocalLineIndex { get; set; }
 
         public char[] SpecialCharacters { get; set; }
 

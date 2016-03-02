@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Textamina.Markdig.Parsers;
+using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
@@ -7,27 +9,66 @@ namespace Textamina.Markdig.Extensions.Tables
 {
     public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
     {
+        private LineBreakInlineParser lineBreakParser;
         public PipeTableInlineParser()
         {
-            OpeningCharacters = new[] { '|' };
+            OpeningCharacters = new[] { '|', '\n' };
+        }
+
+
+        public override void Initialize(InlineParserState state)
+        {
+            lineBreakParser = state.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
         }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
+            // Only working on Paragraph block
+            if (!(state.Block is ParagraphBlock))
+            {
+                return false;
+            }
+
+            var c = slice.CurrentChar;
+
             // If we have not a delimiter on the first line of a paragraph, don't bother to continue 
             // tracking other delimiters on following lines
-            if (state.ParserStates[Index] == null)
+            var tableState = state.ParserStates[Index] as TableState;
+            if (tableState == null)
             {
-                if (state.LocalLineIndex > 0)
+                if (state.LocalLineIndex > 0 || c == '\n')
                 {
                     return false;
                 }
                 // Else setup a table state
-                state.ParserStates[Index] = new TableState();
+                tableState = new TableState();
+                state.ParserStates[Index] = tableState;
             }
 
-            state.Inline = new PiprTableDelimiterInline(this) { LineIndex = state.LocalLineIndex };
-            slice.NextChar(); // Skip the `|` character
+            if (c == '\n')
+            {
+                if (!tableState.LineHasPipe)
+                {
+                    tableState.IsInvalidTable = true;
+                }
+                tableState.LineHasPipe = false;
+                lineBreakParser.Match(state, ref slice);
+                tableState.LineIndex++;
+            }
+            else
+            {
+                state.Inline = new PiprTableDelimiterInline(this) { LineIndex = state.LocalLineIndex };
+                var deltaLine = state.LocalLineIndex - tableState.LineIndex;
+                if (deltaLine > 0)
+                {
+                    tableState.IsInvalidTable = true;
+                }
+                tableState.LineHasPipe = true;
+                tableState.LineIndex = state.LocalLineIndex;
+                slice.NextChar(); // Skip the `|` character
+            }
+
+            tableState.ColumnAndLineDelimiters.Add(state.Inline);
 
             return true;
         }
@@ -37,53 +78,7 @@ namespace Textamina.Markdig.Extensions.Tables
             // Continue
             var container = root as ContainerInline;
             var tableState = state.ParserStates[Index] as TableState;
-            if (tableState == null || container == null)
-            {
-                return true;
-            }
-
-            var lastLineIndex = state.LocalLineIndex;
-
-            var child = container.FirstChild;
-            var lines = tableState.Lines;
-            int lineIndex = 0;
-            var previousLine = -1;
-            bool lineHasAPipe = false;
-            while (child != null)
-            {
-                if (lineIndex != previousLine)
-                {
-                    if (previousLine >= 0 && !lineHasAPipe)
-                    {
-                        return true;
-                    }
-                    previousLine = lineIndex;
-                    lines.Add(child);
-                    lineHasAPipe = false;
-                }
-
-                if (IsLine(child))
-                {
-                    previousLine = lineIndex;
-                    lineIndex++;
-                }
-                else if (child is PiprTableDelimiterInline && !lineHasAPipe)
-                {
-                    lineHasAPipe = true;
-                }
-
-                if (child is ContainerInline)
-                {
-                    child = ((ContainerInline) child).FirstChild;
-                }
-                else
-                {
-                    child = child.NextSibling;
-                }
-            }
-
-            // The last line index must be equal to the last line of the leaf block
-            if (!lineHasAPipe || lineIndex != lastLineIndex)
+            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe || tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
             }
@@ -91,78 +86,107 @@ namespace Textamina.Markdig.Extensions.Tables
             var table = new TableBlock();
             state.BlockNew = table;
             TableRowBlock firstRow = null;
-            int columnCount = 0;
             int maxColumn = 0;
             var cells = tableState.Cells;
             cells.Clear();
-            for (int i = 0; i < lines.Count; i++)
+            TableRowBlock currentRow = null;
+
+            Inline column = container.FirstChild;
+            if (column is PiprTableDelimiterInline)
             {
-                var column = lines[i];
+                column = ((PiprTableDelimiterInline) column).FirstChild;
+            }
 
-                var row = new TableRowBlock {Parent = table};
-                table.Children.Add(row);
-
-                if (column is PiprTableDelimiterInline)
+            var delimiters = tableState.ColumnAndLineDelimiters;
+            delimiters.Add(null);
+            int lastIndex = 0;
+            for (int i = 0; i < delimiters.Count; i++)
+            {
+                var delimiter = delimiters[i];
+                if (delimiter == null || IsLine(delimiter))
                 {
-                    column = ((PiprTableDelimiterInline)column).FirstChild;
-                }
+                    var beforeEndOfLine = delimiter?.PreviousSibling;
+                    var nextColumn = delimiter?.NextSibling;
 
-                ContainerInline previousColumn = null;
-                Inline lastColumn = null;
-                while (true)
-                {
-                    if (maxColumn > 0 && row.Children.Count >= maxColumn)
+                    var row = new TableRowBlock { Parent = table };
+                    table.Children.Add(row);
+
+                    for (int j = lastIndex; j <= i; j++)
                     {
-                        lastColumn = null;
-                        column.Remove();
-                        TrimEnd(column);
-                        previousColumn.AppendChild(column);
-                        break;
-                    }
-                    else
-                    {
-                        if (lastColumn != null)
+                        var columnSeparator = delimiters[j];
+                        var pipeSeparator = columnSeparator as PiprTableDelimiterInline;
+
+                        var endOfColumn = columnSeparator?.PreviousSibling;
+
+                        // This is the first column empty
+                        if (j == lastIndex && pipeSeparator != null && endOfColumn == null)
                         {
-                            TrimEnd(lastColumn);
+                            columnSeparator.Remove();
+                            column = pipeSeparator.FirstChild;
+                            continue;
                         }
-                        var cellContainer = new ContainerInline();
-                        TrimStart(column);
-                        Inline nextColumn;
-                        CopyCellDown(column, cellContainer, out lastColumn, out nextColumn);
 
-                        var tableCell = new TableCellBlock { Inline = cellContainer, Parent = row };
-                        cells.Add(tableCell);
+                        if (pipeSeparator != null && IsTrailingColumnDelimiter(pipeSeparator))
+                        {
+                            TrimEnd(endOfColumn);
+                            columnSeparator.Remove();
+                            continue;
+                        }
+
+                        var columnContainer = new ContainerInline();
+                        var item = column;
+                        TrimStart(item);
+                        while (item != null && !IsLine(item) && !(item is PiprTableDelimiterInline))
+                        {
+                            var nextSibling = item.NextSibling;
+                            item.Remove();
+                            columnContainer.AppendChild(item);
+                            item = nextSibling;
+                        }
+
+                        var tableCell = new TableCellBlock { Inline = columnContainer, Parent = row };
                         row.Children.Add(tableCell);
+                        cells.Add(tableCell);
 
-                        if (nextColumn is PiprTableDelimiterInline &&
-                            IsTrailingColumnDelimiter((PiprTableDelimiterInline) nextColumn))
+                        // If we have reached the end, we can add remaining delimiters as pure child of the current cell
+                        if (row.Children.Count == maxColumn && columnSeparator is PiprTableDelimiterInline)
                         {
-                            TrimEnd(column);
-                            nextColumn.Remove();
-                            column = null;
+                            columnSeparator.Remove();
+                            tableCell.Inline.AppendChild(columnSeparator);
+                            break;
                         }
-                        else
-                        {
-                            column = nextColumn;
-                            previousColumn = cellContainer;
+                        TrimEnd(endOfColumn);
 
+                        //TrimEnd(previousSibling);
+                        if (columnSeparator != null)
+                        {
+                            if (pipeSeparator != null)
+                            {
+                                column = pipeSeparator.FirstChild;
+                            }
+                            columnSeparator.Remove();
                         }
                     }
 
-                    if (column == null || IsLine(column))
+                    TrimEnd(beforeEndOfLine);
+
+                    if (delimiter != null)
                     {
-                        break;
+                        delimiter.Remove();
                     }
-                }
 
-                if (lastColumn != null)
-                {
-                    TrimEnd(lastColumn);
-                }
+                    if (nextColumn != null)
+                    {
+                        column = nextColumn;
+                    }
 
-                if (i == 0)
-                {
-                    maxColumn = cells.Count;
+                    if (firstRow == null)
+                    {
+                        firstRow = row;
+                        maxColumn = firstRow.Children.Count;
+                    }
+
+                    lastIndex = i + 1;
                 }
             }
 
@@ -179,11 +203,8 @@ namespace Textamina.Markdig.Extensions.Tables
                     previousRow.ColumnAlignments = aligns;
                     table.Children.RemoveAt(rowIndex);
                     rowIndex--;
-                    continue;
+                    break;
                 }
-
-                var tableCell = (TableCellBlock) row.LastChild;
-                TrimEnd(tableCell.Inline.LastChild);
                 previousRow = row;
             }
 
@@ -290,72 +311,9 @@ namespace Textamina.Markdig.Extensions.Tables
             return child == null || IsLine(child);
         }
 
-        private static bool CopyCellDown(Inline fromElement, ContainerInline dest, out Inline last, out Inline next)
-        {
-            // TODO: Handle more correctly CopyCellDown
-            next = null;
-            var container = fromElement as ContainerInline;
-            Inline lastChild = null;
-            Inline child;
-            if (container != null)
-            {
-                lastChild = container.LastChild;
-                child = container.FirstChild;
-            }
-            else
-            {
-                child = fromElement;
-            }
-
-            bool found = false;
-            last = null;
-            while (child != null)
-            {
-                var nextSibling = child.NextSibling;
-                var isLine = IsLine(child);
-                if (isLine || child is PiprTableDelimiterInline)
-                {
-                    child.Remove();
-                    next = child;
-                    found = true;
-                    break;
-                }
-
-                var childContainer = child as ContainerInline;
-                if (childContainer != null)
-                {
-                    var newParent = new ContainerInline();
-                    dest.AppendChild(newParent);
-                    if (CopyCellDown(childContainer, newParent, out last, out next))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    child.Remove();
-                    dest.AppendChild(child);
-                }
-
-                last = child;
-                child = nextSibling;
-            }
-
-            // If we have removed all children, the container can be removed
-            if (container != null)
-            {
-                if (child == lastChild || child == null)
-                {
-                    fromElement.Remove();
-                }
-            }
-            return found;
-        }
-
         private static void TrimStart(Inline inline)
         {
-            while (inline is ContainerInline)
+            while (inline is ContainerInline && !(inline is DelimiterInline))
             {
                 inline = ((ContainerInline)inline).FirstChild;
             }
@@ -368,25 +326,10 @@ namespace Textamina.Markdig.Extensions.Tables
 
         private static void TrimEnd(Inline inline)
         {
-            while (inline is ContainerInline)
+            var literal = inline as LiteralInline;
+            if (literal != null)
             {
-                inline = ((ContainerInline)inline).LastChild;
-            }
-
-            if (inline != null)
-            {
-                var previous = inline.PreviousSibling;
-                if (IsLine(inline))
-                {
-                    inline.Remove();
-                    inline = previous;
-                }
-
-                var literal = inline as LiteralInline;
-                if (literal != null)
-                {
-                    literal.Content.TrimEnd();
-                }
+                literal.Content.TrimEnd();
             }
         }
 
@@ -394,10 +337,17 @@ namespace Textamina.Markdig.Extensions.Tables
         {
             public TableState()
             {
-                Lines = new List<Inline>();
+                ColumnAndLineDelimiters = new List<Inline>();
                 Cells = new List<TableCellBlock>();
             }
-            public List<Inline> Lines { get; }
+
+            public bool IsInvalidTable { get; set; }
+
+            public bool LineHasPipe { get; set; }
+
+            public int LineIndex { get; set; }
+
+            public List<Inline> ColumnAndLineDelimiters { get; }
 
             public List<TableCellBlock> Cells { get; }
         }

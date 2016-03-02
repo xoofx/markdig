@@ -278,8 +278,40 @@ A column delimiter has a higher priority than emphasis delimiter
 <td><em>1</em></td>
 </tr>
 <tr>
-<td>*2</td>
+<td>_2</td>
 <td>3*</td>
+</tr>
+</tbody>
+````````````````````````````````
+
+**Rule #7**
+
+A backstick/code delimiter has a higher priority than a table column delimiter
+ 
+```````````````````````````````` example
+a | b `
+0 | ` 
+.
+<p>a | b <code>0 |</code></p> 
+````````````````````````````````
+
+**Rule #7**
+
+A HTML inline inside a table can use `|` 
+ 
+```````````````````````````````` example
+a <a href="" title="|"></a> | b
+0 | 1
+.
+<table>
+<tbody>
+<tr>
+<td>a <a href="" title="|"></a></td>
+<td>b</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
 </tr>
 </tbody>
 ````````````````````````````````
