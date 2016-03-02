@@ -16213,7 +16213,15 @@ namespace Textamina.Markdig.Tests
         // A pipe table is detected when:
         //
         // **Rule #1**
-        // Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+        // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+        // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column. A header column separator is:
+        // - starting by optional spaces
+        // - followed by an optional `:` to specify left align
+        // - followed by a sequence of at least one `-` character
+        // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+        // - ending by optional spaces
+        //
+        // Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16224,9 +16232,9 @@ namespace Textamina.Markdig.Tests
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
-            //     a  | b
-            //     -- | --
-            //     c  | d
+            //     a | b
+            //     -- | -
+            //     0 | 1
             //
             // Should be rendered as:
             //     <table>
@@ -16238,17 +16246,17 @@ namespace Textamina.Markdig.Tests
             //     </thead>
             //     <tbody>
             //     <tr>
-            //     <td>c</td>
-            //     <td>d</td>
+            //     <td>0</td>
+            //     <td>1</td>
             //     </tr>
             //     </tbody>
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Pipe Table");
-			TestParser.TestSpec("a  | b\n-- | --\nc  | d", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>c</td>\n<td>d</td>\n</tr>\n</tbody>\n</table>");
+			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>");
         }
     }
-        // A pipe table with only one header row is allowed:
+        // While the following would be considered as a plain paragraph:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16256,6 +16264,32 @@ namespace Textamina.Markdig.Tests
         public void Example002()
         {
             // Example 2
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b
+            //     - | -
+            //     0 | 1
+            //
+            // Should be rendered as:
+            //     <p>a | b</p>
+            //     <ul>
+            //     <li>| -
+            //     0 | 1</li>
+            //     </ul>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<p>a | b</p>\n<ul>\n<li>| -\n0 | 1</li>\n</ul>");
+        }
+    }
+        // A pipe table with only one header row is allowed:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16272,8 +16306,43 @@ namespace Textamina.Markdig.Tests
             //     </thead>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Pipe Table");
 			TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>");
+        }
+    }
+        // After a row separator header, they will be interpreted as plain column:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b
+            //     -- | --
+            //     -- | --
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>--</td>
+            //     <td>--</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
@@ -16281,9 +16350,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example003()
+        public void Example005()
         {
-            // Example 3
+            // Example 5
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16296,7 +16365,7 @@ namespace Textamina.Markdig.Tests
             //     c | d
             //     e | f</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Pipe Table");
 			TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>");
         }
     }
@@ -16305,9 +16374,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example004()
+        public void Example006()
         {
-            // Example 4
+            // Example 6
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16318,7 +16387,7 @@ namespace Textamina.Markdig.Tests
             //     <p>a | b
             //     c no d</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Pipe Table");
 			TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>");
         }
     }
@@ -16327,9 +16396,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example005()
+        public void Example007()
         {
-            // Example 5
+            // Example 7
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16362,7 +16431,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
 			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16375,9 +16444,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example006()
+        public void Example008()
         {
-            // Example 6
+            // Example 8
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16401,7 +16470,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Pipe Table");
 			TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16411,9 +16480,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example007()
+        public void Example009()
         {
-            // Example 7
+            // Example 9
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16447,7 +16516,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Pipe Table");
 			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16456,9 +16525,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example008()
+        public void Example010()
         {
-            // Example 8
+            // Example 10
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16484,7 +16553,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
 			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16501,9 +16570,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example009()
+        public void Example011()
         {
-            // Example 9
+            // Example 11
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16532,7 +16601,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16542,9 +16611,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example010()
+        public void Example012()
         {
-            // Example 10
+            // Example 12
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16576,7 +16645,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16585,9 +16654,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example011()
+        public void Example013()
         {
-            // Example 11
+            // Example 13
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16602,7 +16671,7 @@ namespace Textamina.Markdig.Tests
             //     0     | 1
             //     2     | 3</p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ");
         }
     }
@@ -16613,9 +16682,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example012()
+        public void Example014()
         {
-            // Example 12
+            // Example 14
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16644,7 +16713,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
 			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>");
         }
     }
@@ -16655,9 +16724,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example013()
+        public void Example015()
         {
-            // Example 13
+            // Example 15
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16667,7 +16736,7 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>a | b <code>0 |</code></p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Pipe Table");
 			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ");
         }
     }
@@ -16678,9 +16747,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example014()
+        public void Example016()
         {
-            // Example 14
+            // Example 16
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16704,7 +16773,7 @@ namespace Textamina.Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
 			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>");
         }
     }

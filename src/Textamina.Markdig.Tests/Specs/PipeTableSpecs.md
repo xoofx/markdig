@@ -7,12 +7,20 @@ This section describes the different extensions supported:
 A pipe table is detected when:
 
 **Rule #1**
-Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+- Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+- The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column. A header column separator is:
+  - starting by optional spaces
+  - followed by an optional `:` to specify left align
+  - followed by a sequence of at least one `-` character
+  - followed by an optional `:` to specify right align (or center align if left align is also defined)
+  - ending by optional spaces
+ 
+Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
 
 ```````````````````````````````` example
-a  | b
--- | --
-c  | d
+a | b
+-- | -
+0 | 1
 .
 <table>
 <thead>
@@ -23,11 +31,25 @@ c  | d
 </thead>
 <tbody>
 <tr>
-<td>c</td>
-<td>d</td>
+<td>0</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
+````````````````````````````````
+
+While the following would be considered as a plain paragraph:
+
+```````````````````````````````` example
+a | b
+- | -
+0 | 1
+.
+<p>a | b</p>
+<ul>
+<li>| -
+0 | 1</li>
+</ul>
 ````````````````````````````````
 
 A pipe table with only one header row is allowed:
@@ -43,6 +65,29 @@ a | b
 <th>b</th>
 </tr>
 </thead>
+</table>
+````````````````````````````````
+
+After a row separator header, they will be interpreted as plain column:
+
+```````````````````````````````` example
+a | b
+-- | --
+-- | --
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
 </table>
 ````````````````````````````````
 
