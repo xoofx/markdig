@@ -16224,27 +16224,31 @@ namespace Textamina.Markdig.Tests
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
-            //     a | b
-            //     c | d
+            //     a  | b
+            //     -- | --
+            //     c  | d
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
+            //     <th>a</th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>c</td>
             //     <td>d</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\nc | d", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n<td>d</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("a  | b\n-- | --\nc  | d", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>c</td>\n<td>d</td>\n</tr>\n</tbody>\n</table>");
         }
     }
-        // A pipe table with one row is also possible:
+        // A pipe table with only one header row is allowed:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16256,18 +16260,20 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //     a | b
+            //     -- | --
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
+            //     <th>a</th>
+            //     <th>b</th>
             //     </tr>
-            //     </tbody>
+            //     </thead>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>");
         }
     }
         // But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
@@ -16327,18 +16333,21 @@ namespace Textamina.Markdig.Tests
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
-            //     a | b 
-            //     0 | 1 | 2
-            //     3 | 4
-            //     5 |
+            //     a  | b 
+            //     -- | --
+            //     0  | 1 | 2
+            //     3  | 4
+            //     5  |
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
+            //     <th>a</th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td>1 | 2</td>
@@ -16351,9 +16360,10 @@ namespace Textamina.Markdig.Tests
             //     <td>5</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b \n0 | 1 | 2\n3 | 4\n5 |", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // **Rule #2**
@@ -16371,24 +16381,28 @@ namespace Textamina.Markdig.Tests
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
-            //     a          | b              | 
+            //     a          | b              |
+            //     -- | --
             //     0      | 1       |
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
+            //     <th>a</th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td>1</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Pipe Table");
-			TestParser.TestSpec("a          | b              | \n0      | 1       |", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // **Rule #4**
@@ -16404,17 +16418,20 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //       a     | b     |
+            //     --      | --
             //     | 0     | 1
             //     | 2     | 3     |
             //       4     | 5 
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
+            //     <th>a</th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td>1</td>
@@ -16428,9 +16445,10 @@ namespace Textamina.Markdig.Tests
             //     <td>5</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
-			TestParser.TestSpec("  a     | b     |\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // Single column table can be declared with lines starting only by a column delimiter:
@@ -16445,15 +16463,18 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //     | a
+            //     | --
             //     | b
             //     | c 
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a</td>
+            //     <th>a</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>b</td>
             //     </tr>
@@ -16461,9 +16482,10 @@ namespace Textamina.Markdig.Tests
             //     <td>c</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Pipe Table");
-			TestParser.TestSpec("| a\n| b\n| c ", "<table>\n<tbody>\n<tr>\n<td>a</td>\n</tr>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // **Rule #5**
@@ -16508,9 +16530,10 @@ namespace Textamina.Markdig.Tests
             //     <td>3</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // The text alignment is defined by default to be left.
@@ -16551,9 +16574,10 @@ namespace Textamina.Markdig.Tests
             //     <td style="text-align: right;">5</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // The following example shows a non matching header column separator:
@@ -16573,28 +16597,13 @@ namespace Textamina.Markdig.Tests
             //      2     | 3 
             //
             // Should be rendered as:
-            //     <table>
-            //     <tbody>
-            //     <tr>
-            //     <td>a</td>
-            //     <td>b</td>
-            //     </tr>
-            //     <tr>
-            //     <td>-------</td>
-            //     <td>---x---</td>
-            //     </tr>
-            //     <tr>
-            //     <td>0</td>
-            //     <td>1</td>
-            //     </tr>
-            //     <tr>
-            //     <td>2</td>
-            //     <td>3</td>
-            //     </tr>
-            //     </tbody>
+            //     <p>a     | b
+            //     -------|---x---
+            //     0     | 1
+            //     2     | 3</p> 
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<table>\n<tbody>\n<tr>\n<td>a</td>\n<td>b</td>\n</tr>\n<tr>\n<td>-------</td>\n<td>---x---</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ");
         }
     }
         // **Rule #6**
@@ -16611,16 +16620,19 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //      *a*   | b
+            //     -----  |-----
             //      0     | _1_
-            //      _2     | 3* 
+            //      _2    | 3* 
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td><em>a</em></td>
-            //     <td>b</td>
+            //     <th><em>a</em></th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td><em>1</em></td>
@@ -16630,9 +16642,10 @@ namespace Textamina.Markdig.Tests
             //     <td>3*</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
-			TestParser.TestSpec(" *a*   | b\n 0     | _1_\n _2     | 3* ", "<table>\n<tbody>\n<tr>\n<td><em>a</em></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>");
         }
     }
         // **Rule #7**
@@ -16660,7 +16673,7 @@ namespace Textamina.Markdig.Tests
     }
         // **Rule #7**
         //
-        // HTML inline can use `|`
+        // A HTML inline inside a table can use `|`
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16672,23 +16685,27 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //     a <a href="" title="|"></a> | b
-            //     0 | 1
+            //     -- | --
+            //     0  | 1
             //
             // Should be rendered as:
             //     <table>
-            //     <tbody>
+            //     <thead>
             //     <tr>
-            //     <td>a <a href="" title="|"></a></td>
-            //     <td>b</td>
+            //     <th>a <a href="" title="|"></a></th>
+            //     <th>b</th>
             //     </tr>
+            //     </thead>
+            //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td>1</td>
             //     </tr>
             //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
-			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n0 | 1", "<table>\n<tbody>\n<tr>\n<td>a <a href=\"\" title=\"|\"></a></td>\n<td>b</td>\n</tr>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>");
+			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>");
         }
     }
 }

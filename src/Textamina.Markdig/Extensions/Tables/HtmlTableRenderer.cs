@@ -71,6 +71,7 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 writer.WriteLine("</tbody>");
             }
+            writer.WriteLine("</table>");
         }
     }
 }

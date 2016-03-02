@@ -10,34 +10,40 @@ A pipe table is detected when:
 Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
 
 ```````````````````````````````` example
-a | b
-c | d
+a  | b
+-- | --
+c  | d
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
-<td>b</td>
+<th>a</th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>c</td>
 <td>d</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
-A pipe table with one row is also possible:
+A pipe table with only one header row is allowed:
 
 ```````````````````````````````` example
 a | b
+-- | --
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
-<td>b</td>
+<th>a</th>
+<th>b</th>
 </tr>
-</tbody>
+</thead>
+</table>
 ````````````````````````````````
 
 But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
@@ -65,17 +71,20 @@ c no d</p>
 The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
 
 ```````````````````````````````` example
-a | b 
-0 | 1 | 2
-3 | 4
-5 |
+a  | b 
+-- | --
+0  | 1 | 2
+3  | 4
+5  |
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
-<td>b</td>
+<th>a</th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>0</td>
 <td>1 | 2</td>
@@ -88,6 +97,7 @@ a | b
 <td>5</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 **Rule #2**
@@ -97,20 +107,24 @@ A pipe table ends after a blank line or the end of the file.
 A cell content is trimmed (start and end) from white-spaces.
 
 ```````````````````````````````` example
-a          | b              | 
+a          | b              |
+-- | --
 0      | 1       |
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
-<td>b</td>
+<th>a</th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>0</td>
 <td>1</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 **Rule #4**
@@ -118,16 +132,19 @@ Column delimiters `|` at the very beginning of a line or just before a line endi
 
 ```````````````````````````````` example
   a     | b     |
+--      | --
 | 0     | 1
 | 2     | 3     |
   4     | 5 
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
-<td>b</td>
+<th>a</th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>0</td>
 <td>1</td>
@@ -141,19 +158,23 @@ Column delimiters `|` at the very beginning of a line or just before a line endi
 <td>5</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 Single column table can be declared with lines starting only by a column delimiter: 
 
 ```````````````````````````````` example
 | a
+| --
 | b
 | c 
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a</td>
+<th>a</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>b</td>
 </tr>
@@ -161,6 +182,7 @@ Single column table can be declared with lines starting only by a column delimit
 <td>c</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 **Rule #5**
@@ -196,6 +218,7 @@ The first row is considered as a **header row** if it is separated from the regu
 <td>3</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 The text alignment is defined by default to be left.
@@ -227,6 +250,7 @@ The text alignment can be changed by using the character `:` with the header col
 <td style="text-align: right;">5</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 The following example shows a non matching header column separator:
@@ -237,25 +261,10 @@ The following example shows a non matching header column separator:
  0     | 1
  2     | 3 
 .
-<table>
-<tbody>
-<tr>
-<td>a</td>
-<td>b</td>
-</tr>
-<tr>
-<td>-------</td>
-<td>---x---</td>
-</tr>
-<tr>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>3</td>
-</tr>
-</tbody>
+<p>a     | b
+-------|---x---
+0     | 1
+2     | 3</p> 
 ````````````````````````````````
 
 **Rule #6**
@@ -264,15 +273,18 @@ A column delimiter has a higher priority than emphasis delimiter
  
 ```````````````````````````````` example
  *a*   | b
+-----  |-----
  0     | _1_
- _2     | 3* 
+ _2    | 3* 
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td><em>a</em></td>
-<td>b</td>
+<th><em>a</em></th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>0</td>
 <td><em>1</em></td>
@@ -282,6 +294,7 @@ A column delimiter has a higher priority than emphasis delimiter
 <td>3*</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
 
 **Rule #7**
@@ -301,17 +314,21 @@ A HTML inline inside a table can use `|`
  
 ```````````````````````````````` example
 a <a href="" title="|"></a> | b
-0 | 1
+-- | --
+0  | 1
 .
 <table>
-<tbody>
+<thead>
 <tr>
-<td>a <a href="" title="|"></a></td>
-<td>b</td>
+<th>a <a href="" title="|"></a></th>
+<th>b</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>0</td>
 <td>1</td>
 </tr>
 </tbody>
+</table>
 ````````````````````````````````
