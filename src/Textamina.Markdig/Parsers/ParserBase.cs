@@ -2,7 +2,7 @@ namespace Textamina.Markdig.Parsers
 {
     public class ParserBase<T> : IMarkdownParser<T>
     {
-        public char[] OpeningCharacters { get; protected set; }
+        public char[] OpeningCharacters { get; set; }
 
         public virtual void Initialize(T state)
         {

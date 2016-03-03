@@ -4,17 +4,37 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
 {
     public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     {
+        public delegate string GetTagDelegate(EmphasisInline obj);
+
+        public EmphasisInlineRenderer()
+        {
+            GetTag = GetDefaultTag;
+        }
+
+        public GetTagDelegate GetTag { get; set; }
+
         protected override void Write(HtmlRenderer renderer, EmphasisInline obj)
         {
+            string tag = null;
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write(obj.Strong ? "<strong>" : "<em>");
+                tag = GetTag(obj);
+                renderer.Write("<").Write(tag).Write(">");
             }
             renderer.WriteChildren(obj);
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write(obj.Strong ? "</strong>" : "</em>");
+                renderer.Write("</").Write(tag).Write(">");
             }
+        }
+
+        public string GetDefaultTag(EmphasisInline obj)
+        {
+            if (obj.DelimiterChar == '*' || obj.DelimiterChar == '_')
+            {
+                return obj.Strong ? "strong" : "em";
+            }
+            return null;
         }
     }
 }

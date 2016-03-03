@@ -12,6 +12,11 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '*', '_' };
         }
 
+        public override void Initialize(InlineParserState state)
+        {
+            base.Initialize(state);
+        }
+
         public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex)
         {
             var container = root as ContainerInline;

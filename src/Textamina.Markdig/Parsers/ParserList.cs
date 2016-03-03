@@ -36,16 +36,7 @@ namespace Textamina.Markdig.Parsers
             return -1;
         }
 
-        public void Initialize(TState initState)
-        {
-            InitializeCore();
-            foreach (var parser in this)
-            {
-                parser.Initialize(initState);
-            }
-        }
-
-        protected virtual void InitializeCore()
+        public virtual void Initialize(TState initState)
         {
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
@@ -53,6 +44,7 @@ namespace Textamina.Markdig.Parsers
             for (int i = 0; i < this.Count; i++)
             {
                 var parser = this[i];
+                parser.Initialize(initState);
                 parser.Index = i;
                 if (parser.OpeningCharacters != null && parser.OpeningCharacters.Length != 0)
                 {

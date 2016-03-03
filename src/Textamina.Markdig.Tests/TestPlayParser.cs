@@ -12,79 +12,10 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @"This is a link to a footnote[^OhYeah] [^OhYeah]
+            var text = @"This *^yes^* ~~is~~ a link to a footnote[^OhYeah] [^OhYeah]
 
 [^OhYeah]: This is the footnote
     > Yes
-
-qqewtqet
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
-qqewtqet
-
-
 
 This is a text after the footnote not part of the foot note [^3]
 
@@ -97,8 +28,8 @@ This is a text after the footnote not part of the foot note [^3]
 //> titi toto
 //");
 
-            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().EnableFootnoteExtensions());
-            File.WriteAllText("test.html", result, Encoding.UTF8);
+            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().EnableFootnoteExtensions().EnableStrikethroughSuperAndSubScript());
+            //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
    }

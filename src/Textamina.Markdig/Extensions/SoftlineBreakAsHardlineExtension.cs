@@ -1,4 +1,6 @@
-﻿using Textamina.Markdig.Parsers.Inlines;
+﻿using System;
+using Textamina.Markdig.Extensions.Footnotes;
+using Textamina.Markdig.Parsers.Inlines;
 
 namespace Textamina.Markdig.Extensions
 {

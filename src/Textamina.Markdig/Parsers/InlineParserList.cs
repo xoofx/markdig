@@ -10,9 +10,9 @@ namespace Textamina.Markdig.Parsers
 
         public IDelimiterProcessor[] DelimiterProcessors { get; private set; }
 
-        protected override void InitializeCore()
+        public override void Initialize(InlineParserState initState)
         {
-            base.InitializeCore();
+            // Prepare the list of delimiter processors
             var delimiterProcessors = new List<IDelimiterProcessor>();
             foreach (var parser in this)
             {
@@ -23,6 +23,8 @@ namespace Textamina.Markdig.Parsers
                 }
             }
             DelimiterProcessors = delimiterProcessors.ToArray();
+
+            base.Initialize(initState);
         }
     }
 }
