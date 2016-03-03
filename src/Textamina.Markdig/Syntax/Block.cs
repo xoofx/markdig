@@ -1,4 +1,5 @@
-﻿using Textamina.Markdig.Parsers;
+﻿using System;
+using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -20,5 +21,18 @@ namespace Textamina.Markdig.Syntax
         public bool IsOpen { get; set; }
 
         public bool RemoveAfterProcessInlines { get; set; }
+
+        public event Action<InlineParserState> ProcessInlinesBegin;
+
+        public event Action<InlineParserState> ProcessInlinesEnd;
+
+        internal void OnProcessInlinesBegin(InlineParserState obj)
+        {
+            ProcessInlinesBegin?.Invoke(obj);
+        }
+        internal void OnProcessInlinesEnd(InlineParserState obj)
+        {
+            ProcessInlinesEnd?.Invoke(obj);
+        }
     }
 }

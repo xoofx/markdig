@@ -92,52 +92,46 @@ namespace Textamina.Markdig.Parsers.Inlines
         private bool ProcessLinkReference(InlineParserState state, string label, bool isImage, Inline child = null)
         {
             bool isValidLink = false;
-            LinkReferenceDefinitionBlock linkRef;
+            LinkReferenceDefinition linkRef;
             if (state.Document.LinkReferenceDefinitions.TryGetValue(label, out linkRef))
             {
-                LinkInline link = null;
-                bool appendChild = true;
+                Inline link = null;
+                // Try to use a callback directly defined on the LinkReferenceDefinition
                 if (linkRef.CreateLinkInline != null)
                 {
-                    link = linkRef.CreateLinkInline(state, linkRef, out appendChild);
+                    link = linkRef.CreateLinkInline(state, linkRef, child);
                 }
 
                 // Create a default link if the callback was not found
                 if (link == null)
                 {
                     // Inline Link
-                    link = new LinkInline()
+                    var containerLink = new LinkInline()
                     {
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         IsImage = isImage,
                     };
-                }
-
-                if (child == null)
-                {
-                    if (appendChild)
+                    link = containerLink;
+                    if (child == null)
                     {
                         child = new LiteralInline()
                         {
                             Content = new StringSlice(label),
                             IsClosed = true
                         };
-                        link.AppendChild(child);
+                        containerLink.AppendChild(child);
                     }
-                }
-                else
-                {
-                    // Insert all child into the link
-                    while (child != null)
+                    else
                     {
-                        var next = child.NextSibling;
-                        child.Remove();
-                        if (appendChild)
+                        // Insert all child into the link
+                        while (child != null)
                         {
-                            link.AppendChild(child);
+                            var next = child.NextSibling;
+                            child.Remove();
+                            containerLink.AppendChild(child);
+                            child = next;
                         }
-                        child = next;
                     }
                 }
                 link.IsClosed = true;

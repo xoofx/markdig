@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using Textamina.Markdig.Parsers;
 
@@ -11,11 +12,83 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @"[^1]: This is a footnote
+            var text = @"This is a link to a footnote[^OhYeah] [^OhYeah]
 
-This is a link to a footnote [^2] [^1]
+[^OhYeah]: This is the footnote
+    > Yes
 
-[^2]: This is second a footnote
+qqewtqet
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+qqewtqet
+
+
+
+This is a text after the footnote not part of the foot note [^3]
+
+[^3]: This is a 2nd footnote
 ";
 
 
@@ -25,6 +98,7 @@ This is a link to a footnote [^2] [^1]
 //");
 
             var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().EnableFootnoteExtensions());
+            File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
    }

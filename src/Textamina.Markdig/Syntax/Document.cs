@@ -7,9 +7,9 @@ namespace Textamina.Markdig.Syntax
     {
         public Document() : base(null)
         {
-            LinkReferenceDefinitions = new Dictionary<string, LinkReferenceDefinitionBlock>(StringComparer.OrdinalIgnoreCase);
+            LinkReferenceDefinitions = new Dictionary<string, LinkReferenceDefinition>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public Dictionary<string, LinkReferenceDefinitionBlock> LinkReferenceDefinitions { get; }
+        public Dictionary<string, LinkReferenceDefinition> LinkReferenceDefinitions { get; }
     }
 }

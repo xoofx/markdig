@@ -31,6 +31,14 @@ namespace Textamina.Markdig.Helpers
             return default(TElement);
         }
 
+        public void AddIfNotAlready<TElement>(TElement telement) where TElement : T
+        {
+            if (!Contains<TElement>())
+            {
+                Add(telement);
+            }
+        }
+
         public bool InsertAfter<TElement>(T element) where TElement : T
         {
             if (element == null) throw new ArgumentNullException(nameof(element));

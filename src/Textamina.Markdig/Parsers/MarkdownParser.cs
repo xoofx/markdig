@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
@@ -60,43 +62,84 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        private void ProcessInlines(ContainerBlock container)
+        private void ProcessInlines(ContainerBlock root)
         {
-            var list = new Stack<ContainerBlock>();
-            list.Push(container);
-            while (list.Count > 0)
+            var cache = new ObjectCache<ContainerItem>();
+            var blocks = new Stack<ContainerItem>();
+
+            blocks.Push(new ContainerItem(root));
+            root.OnProcessInlinesBegin(inlineState);
+            while (blocks.Count > 0)
             {
-                container = list.Pop();
-                for (int i = 0; i < container.Children.Count; i++)
+                process_new_block:
+                var item = blocks.Peek();
+                var container = item.Container;
+
+                for (; item.Index < container.Children.Count; item.Index++)
                 {
-                    var block = container.Children[i];
+                    var block = container.Children[item.Index];
                     var leafBlock = block as LeafBlock;
                     if (leafBlock != null)
                     {
+                        leafBlock.OnProcessInlinesBegin(inlineState);
                         if (leafBlock.ProcessInlines)
                         {
                             inlineState.ProcessInlineLeaf(leafBlock);
                             if (leafBlock.RemoveAfterProcessInlines)
                             {
-                                container.Children.RemoveAt(i);
-                                i--;
+                                container.Children.RemoveAt(item.Index);
+                                item.Index--;
                             }
                             else if (inlineState.BlockNew != null)
                             {
-                                container.Children[i] = inlineState.BlockNew;
+                                container.Children[item.Index] = inlineState.BlockNew;
                             }
                         }
+                        leafBlock.OnProcessInlinesEnd(inlineState);
                     }
                     else
                     {
-                        list.Push((ContainerBlock) block);
+                        var newContainer = (ContainerBlock) block;
+                        // If we need to remove it
+                        if (newContainer.RemoveAfterProcessInlines)
+                        {
+                            container.Children.RemoveAt(item.Index);
+                        }
+                        else
+                        {
+                            // Else we have processed it
+                            item.Index++;
+                        }
+                        var newItem = cache.Get();
+                        newItem.Container = (ContainerBlock)block;
+                        block.OnProcessInlinesBegin(inlineState);
+                        newItem.Index = 0;
+                        blocks.Push(newItem);
+                        goto process_new_block;
                     }
                 }
-                if (container.RemoveAfterProcessInlines)
-                {
-                    container.Parent.Children.Remove(container);
-                }
+                item = blocks.Pop();
+                container = item.Container;
+                container.OnProcessInlinesEnd(inlineState);
+
+                cache.Release(item);
             }
+        }
+
+        private class ContainerItem
+        {
+            public ContainerItem()
+            {
+            }
+
+            public ContainerItem(ContainerBlock container)
+            {
+                Container = container;
+            }
+
+            public ContainerBlock Container;
+
+            public int Index;
         }
     }
 }

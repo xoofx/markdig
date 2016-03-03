@@ -35,9 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Footnotes\FootnoteBlock.cs" />
+    <Compile Include="Extensions\Footnotes\Footnote.cs" />
+    <Compile Include="Extensions\Footnotes\FootnoteParser.cs" />
+    <Compile Include="Extensions\Footnotes\FootnoteGroup.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteExtension.cs" />
-    <Compile Include="Extensions\Footnotes\HtmlFootnoteRenderer.cs" />
+    <Compile Include="Extensions\Footnotes\FootnoteLink.cs" />
+    <Compile Include="Extensions\Footnotes\FootnoteLinkReferenceDefinition.cs" />
+    <Compile Include="Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs" />
+    <Compile Include="Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs" />
     <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
     <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
     <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />
@@ -46,6 +51,7 @@
     <Compile Include="Extensions\Tables\TableCellBlock.cs" />
     <Compile Include="Extensions\Tables\TableColumnAlign.cs" />
     <Compile Include="Extensions\Tables\TableRowBlock.cs" />
+    <Compile Include="Helpers\ObjectCache.cs" />
     <Compile Include="Helpers\OrderedList.cs" />
     <Compile Include="IMarkdownExtension.cs" />
     <Compile Include="Markdown.cs" />
@@ -126,7 +132,7 @@
     <Compile Include="Syntax\LeafBlock.cs" />
     <Compile Include="Parsers\BlockParser.cs" />
     <Compile Include="Parsers\MarkdownParser.cs" />
-    <Compile Include="Syntax\LinkReferenceDefinitionBlock.cs" />
+    <Compile Include="Syntax\LinkReferenceDefinition.cs" />
     <Compile Include="Syntax\ListBlock.cs" />
     <Compile Include="Parsers\ListBlockParser.cs" />
     <Compile Include="Syntax\ListItemBlock.cs" />

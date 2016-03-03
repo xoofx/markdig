@@ -143,8 +143,8 @@ namespace Textamina.Markdig.Parsers
             {
                 // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
                 var iterator = lines.ToCharIterator();
-                LinkReferenceDefinitionBlock linkReferenceDefinition;
-                if (LinkReferenceDefinitionBlock.TryParse(ref iterator, out linkReferenceDefinition))
+                LinkReferenceDefinition linkReferenceDefinition;
+                if (LinkReferenceDefinition.TryParse(ref iterator, out linkReferenceDefinition))
                 {
                     if (!state.Document.LinkReferenceDefinitions.ContainsKey(linkReferenceDefinition.Label))
                     {

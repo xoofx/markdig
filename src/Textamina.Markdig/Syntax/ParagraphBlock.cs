@@ -10,6 +10,10 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class ParagraphBlock : LeafBlock
     {
+        public ParagraphBlock() : this(null)
+        {
+        }
+
         public ParagraphBlock(BlockParser parser) : base(parser)
         {
             ProcessInlines = true;

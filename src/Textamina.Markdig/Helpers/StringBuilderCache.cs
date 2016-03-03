@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Textamina.Markdig.Helpers
 {
-    public class StringBuilderCache
+    public class StringBuilderCache : ObjectCache<StringBuilder>
     {
         /// <summary>
         /// A StringBuilder that can be used locally in a method body only.
@@ -22,36 +21,11 @@ namespace Textamina.Markdig.Helpers
             return sb;
         }
 
-        private readonly Stack<StringBuilder> builders;
-
-        public StringBuilderCache()
+        protected override void Reset(StringBuilder builder)
         {
-            builders = new Stack<StringBuilder>();
-        }
-
-        public StringBuilder Get()
-        {
-            lock (builders)
-            {
-                if (builders.Count > 0)
-                {
-                    return builders.Pop();
-                }
-            }
-
-            return new StringBuilder();
-        }
-
-        public void Release(StringBuilder builder)
-        {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
             if (builder.Length > 0)
             {
                 builder.Clear();
-            }
-            lock (builders)
-            {
-                builders.Push(builder);
             }
         }
     }

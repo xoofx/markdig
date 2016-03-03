@@ -1,6 +1,4 @@
-﻿using Textamina.Markdig.Extensions.Tables;
-using Textamina.Markdig.Parsers.Inlines;
-using Textamina.Markdig.Renderers;
+﻿using Textamina.Markdig.Renderers;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
@@ -8,16 +6,17 @@ namespace Textamina.Markdig.Extensions.Footnotes
     {
         public void Setup(MarkdownPipeline pipeline)
         {
-            if (!pipeline.BlockParsers.Contains<FootnoteBlockParser>())
+            if (!pipeline.BlockParsers.Contains<FootnoteParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.BlockParsers.Insert(0, new FootnoteBlockParser());
+                pipeline.BlockParsers.Insert(0, new FootnoteParser());
             }
 
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;
-            if (htmlRenderer != null && !htmlRenderer.ClosingObjectRenderers.Contains<HtmlFootnoteRenderer>())
+            if (htmlRenderer != null)
             {
-                htmlRenderer.ClosingObjectRenderers.Add(new HtmlFootnoteRenderer());
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer());
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteLinkRenderer());
             }
         }
     }
