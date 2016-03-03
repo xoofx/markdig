@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -145,6 +146,18 @@ namespace Textamina.Markdig.Renderers
             }
 
             Write(content, previousPosition, length - previousPosition);
+            return this;
+        }
+
+        public HtmlRenderer WriteAttributes(MarkdownObject obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
+            if (obj.Id != null)
+            {
+                Write(" Id=\"").WriteEscape(obj.Id).Write("\"");
+            }
+
             return this;
         }
 

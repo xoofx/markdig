@@ -1,9 +1,14 @@
-﻿using Textamina.Markdig.Helpers;
+﻿using System;
+using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Parsers;
+using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Syntax
 {
     public class LinkReferenceDefinitionBlock : LeafBlock
     {
+        public delegate LinkInline CreateLinkInlineDelegate(InlineParserState inlineState, LinkReferenceDefinitionBlock linkRef, out bool acceptChild);
+
         public LinkReferenceDefinitionBlock() : base(null)
         {
             IsOpen = false;
@@ -21,6 +26,8 @@ namespace Textamina.Markdig.Syntax
         public string Url { get; set; }
 
         public string Title { get; set; }
+
+        public CreateLinkInlineDelegate CreateLinkInline;
 
         public static bool TryParse<T>(ref T text, out LinkReferenceDefinitionBlock block) where T : ICharIterator
         {

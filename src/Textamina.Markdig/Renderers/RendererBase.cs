@@ -7,17 +7,27 @@ namespace Textamina.Markdig.Renderers
 {
     public abstract class RendererBase : IMarkdownRenderer
     {
+        private readonly Dictionary<Type, List<IMarkdownObjectRenderer>> openObjectRenderersPerType;
+        private readonly Dictionary<Type, List<IMarkdownObjectRenderer>> closeObjectRenderersPerType;
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
         private IMarkdownObjectRenderer previousRenderer;
         private Type previousObjectType;
 
         protected RendererBase()
         {
+            OpeningObjectRenderers = new ObjectRendererCollection();
             ObjectRenderers = new ObjectRendererCollection();
+            ClosingObjectRenderers = new ObjectRendererCollection();
+            openObjectRenderersPerType = new Dictionary<Type, List<IMarkdownObjectRenderer>>();
+            closeObjectRenderersPerType = new Dictionary<Type, List<IMarkdownObjectRenderer>>();
             renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
         }
 
+        public ObjectRendererCollection OpeningObjectRenderers { get; }
+
         public ObjectRendererCollection ObjectRenderers { get; }
+
+        public ObjectRendererCollection ClosingObjectRenderers { get; }
 
         public abstract object Render(MarkdownObject markdownObject);
 
@@ -57,6 +67,11 @@ namespace Textamina.Markdig.Renderers
             }
 
             var objectType = obj.GetType();
+
+            // Handle opening renderers
+            HandleOpenCloseRenderers(objectType, obj, true);
+
+            // Handle regular renderers
             IMarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
             if (renderer == null && !renderersPerType.TryGetValue(objectType, out renderer))
             {
@@ -89,8 +104,44 @@ namespace Textamina.Markdig.Renderers
                     }
                 }
             }
+            
+            // Handle closing renderers
+            HandleOpenCloseRenderers(objectType, obj, false);
+
             previousObjectType = objectType;
             previousRenderer = renderer;
+        }
+
+        private void HandleOpenCloseRenderers(Type objectType, MarkdownObject markdownObject, bool open)
+        {
+            var map = open ? openObjectRenderersPerType : closeObjectRenderersPerType;
+            var list = open ? OpeningObjectRenderers : ClosingObjectRenderers;
+
+            List<IMarkdownObjectRenderer> renderers;
+
+            if (!map.TryGetValue(objectType, out renderers))
+            {
+                foreach (var renderer in list)
+                {
+                    if (renderer.Accept(this, objectType))
+                    {
+                        if (renderers == null)
+                        {
+                            renderers = new List<IMarkdownObjectRenderer>();
+                        }
+                        renderers.Add(renderer);
+                    }
+                }
+                map[objectType] = renderers;
+            }
+
+            if (renderers != null)
+            {
+                foreach (var renderer in renderers)
+                {
+                    renderer.Write(this, markdownObject);
+                }
+            }
         }
     }
 }

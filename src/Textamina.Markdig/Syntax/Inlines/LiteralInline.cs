@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
@@ -9,6 +10,12 @@ namespace Textamina.Markdig.Syntax.Inlines
         public LiteralInline()
         {
             Content = new StringSlice(null);
+        }
+
+        public LiteralInline(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            Content = new StringSlice(text);
         }
 
         public StringSlice Content;

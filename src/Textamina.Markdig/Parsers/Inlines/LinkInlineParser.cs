@@ -95,22 +95,36 @@ namespace Textamina.Markdig.Parsers.Inlines
             LinkReferenceDefinitionBlock linkRef;
             if (state.Document.LinkReferenceDefinitions.TryGetValue(label, out linkRef))
             {
-                // Inline Link
-                var link = new LinkInline()
+                LinkInline link = null;
+                bool appendChild = true;
+                if (linkRef.CreateLinkInline != null)
                 {
-                    Url = HtmlHelper.Unescape(linkRef.Url),
-                    Title = HtmlHelper.Unescape(linkRef.Title),
-                    IsImage = isImage,
-                };
+                    link = linkRef.CreateLinkInline(state, linkRef, out appendChild);
+                }
+
+                // Create a default link if the callback was not found
+                if (link == null)
+                {
+                    // Inline Link
+                    link = new LinkInline()
+                    {
+                        Url = HtmlHelper.Unescape(linkRef.Url),
+                        Title = HtmlHelper.Unescape(linkRef.Title),
+                        IsImage = isImage,
+                    };
+                }
 
                 if (child == null)
                 {
-                    child = new LiteralInline()
+                    if (appendChild)
                     {
-                        Content = new StringSlice(label),
-                        IsClosed = true
-                    };
-                    link.AppendChild(child);
+                        child = new LiteralInline()
+                        {
+                            Content = new StringSlice(label),
+                            IsClosed = true
+                        };
+                        link.AppendChild(child);
+                    }
                 }
                 else
                 {
@@ -119,7 +133,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                     {
                         var next = child.NextSibling;
                         child.Remove();
-                        link.AppendChild(child);
+                        if (appendChild)
+                        {
+                            link.AppendChild(child);
+                        }
                         child = next;
                     }
                 }

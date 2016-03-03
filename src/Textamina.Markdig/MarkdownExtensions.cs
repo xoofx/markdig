@@ -2,6 +2,7 @@
 
 
 using Textamina.Markdig.Extensions;
+using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -22,6 +23,18 @@ namespace Textamina.Markdig
             {
                 // We don't care about order, so we can add it directly
                 var extension = new PipeTableExtension();
+                pipeline.Extensions.Add(extension);
+            }
+            return pipeline;
+        }
+
+        public static MarkdownPipeline EnableFootnoteExtensions(this MarkdownPipeline pipeline)
+        {
+            // If the pipeline doesn't this extension, we can add it
+            if (!pipeline.Extensions.Contains<FootnoteExtension>())
+            {
+                // We don't care about order, so we can add it directly
+                var extension = new FootnoteExtension();
                 pipeline.Extensions.Add(extension);
             }
             return pipeline;

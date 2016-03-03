@@ -53,7 +53,7 @@ namespace Textamina.Markdig
 
         public InlineParserList InlineParsers { get; private set; }
 
-        public RendererBase Renderer { get; set; }
+        public IMarkdownRenderer Renderer { get; set; }
 
         public OrderedList<IMarkdownExtension> Extensions { get; }
 

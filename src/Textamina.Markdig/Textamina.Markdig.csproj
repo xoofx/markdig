@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Footnotes\FootnoteBlock.cs" />
+    <Compile Include="Extensions\Footnotes\FootnoteExtension.cs" />
+    <Compile Include="Extensions\Footnotes\HtmlFootnoteRenderer.cs" />
     <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
     <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
     <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />

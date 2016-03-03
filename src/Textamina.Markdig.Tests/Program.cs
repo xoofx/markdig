@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Tests
 
         public static void Main()
         {
-            new TestParser().TestSimple();
+            new TestPlayParser().TestSimple();
         }
     }
 }

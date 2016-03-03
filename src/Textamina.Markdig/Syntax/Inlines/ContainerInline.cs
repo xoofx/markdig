@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Syntax.Inlines
             LastChild = null;
         }
 
-        public virtual void AppendChild(Inline child)
+        public virtual ContainerInline AppendChild(Inline child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
             if (child.Parent != null)
@@ -40,6 +40,7 @@ namespace Textamina.Markdig.Syntax.Inlines
             {
                 LastChild.InsertAfter(child);
             }
+            return this;
         }
 
         public Inline FindChild(Inline childToFind)

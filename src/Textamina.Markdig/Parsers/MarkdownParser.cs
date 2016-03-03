@@ -76,7 +76,12 @@ namespace Textamina.Markdig.Parsers
                         if (leafBlock.ProcessInlines)
                         {
                             inlineState.ProcessInlineLeaf(leafBlock);
-                            if (inlineState.BlockNew != null)
+                            if (leafBlock.RemoveAfterProcessInlines)
+                            {
+                                container.Children.RemoveAt(i);
+                                i--;
+                            }
+                            else if (inlineState.BlockNew != null)
                             {
                                 container.Children[i] = inlineState.BlockNew;
                             }
@@ -86,6 +91,10 @@ namespace Textamina.Markdig.Parsers
                     {
                         list.Push((ContainerBlock) block);
                     }
+                }
+                if (container.RemoveAfterProcessInlines)
+                {
+                    container.Parent.Children.Remove(container);
                 }
             }
         }

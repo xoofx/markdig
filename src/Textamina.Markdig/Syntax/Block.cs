@@ -18,5 +18,7 @@ namespace Textamina.Markdig.Syntax
         public BlockParser Parser { get; }
 
         public bool IsOpen { get; set; }
+
+        public bool RemoveAfterProcessInlines { get; set; }
     }
 }

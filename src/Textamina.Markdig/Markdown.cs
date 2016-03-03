@@ -30,7 +30,7 @@ namespace Textamina.Markdig
             pipeline.Renderer = new HtmlRenderer(writer);
 
             var document = Parse(reader, pipeline);
-            pipeline.Renderer.WriteChildren(document);
+            pipeline.Renderer.Render(document);
             writer.Flush();
         }
 

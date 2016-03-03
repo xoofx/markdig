@@ -60,7 +60,7 @@
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLinkHelper.cs" />
     <Compile Include="TestStringSliceList.cs" />
-    <Compile Include="TestTableParser.cs" />
+    <Compile Include="TestPlayParser.cs" />
     <Compile Include="TextAssert.cs" />
     <Compile Include="TestParser.cs" />
   </ItemGroup>
