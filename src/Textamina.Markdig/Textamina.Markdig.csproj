@@ -86,6 +86,7 @@
     <Compile Include="Parsers\BlockParserList.cs" />
     <Compile Include="Parsers\IBlockParser.cs" />
     <Compile Include="Renderers\TextRendererBase.cs" />
+    <Compile Include="Syntax\LinkReferenceDefinitionExtensions.cs" />
     <Compile Include="Syntax\MarkdownObject.cs" />
     <Compile Include="Parsers\IMarkdownParser.cs" />
     <Compile Include="Parsers\IDelimiterProcessor.cs" />

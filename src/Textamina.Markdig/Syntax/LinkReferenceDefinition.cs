@@ -6,6 +6,8 @@ namespace Textamina.Markdig.Syntax
 {
     public class LinkReferenceDefinition : LeafBlock
     {
+        public static readonly object DocumentKey = typeof (LinkReferenceDefinition);
+
         public delegate Inline CreateLinkInlineDelegate(InlineParserState inlineState, LinkReferenceDefinition linkRef, Inline child = null);
 
         public LinkReferenceDefinition() : base(null)
