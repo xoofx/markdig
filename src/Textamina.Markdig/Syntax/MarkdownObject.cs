@@ -7,8 +7,6 @@ namespace Textamina.Markdig.Syntax
     {
         private Dictionary<object, object> attachedDatas;
 
-        public string Id { get; set; }
-
         public void SetData(object key, object value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));

@@ -151,12 +151,12 @@ namespace Textamina.Markdig.Renderers
 
         public HtmlRenderer WriteAttributes(MarkdownObject obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            //if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            if (obj.Id != null)
-            {
-                Write(" Id=\"").WriteEscape(obj.Id).Write("\"");
-            }
+            //if (obj.Id != null)
+            //{
+            //    Write(" Id=\"").WriteEscape(obj.Id).Write("\"");
+            //}
 
             return this;
         }
