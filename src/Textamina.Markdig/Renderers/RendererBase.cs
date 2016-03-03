@@ -28,9 +28,10 @@ namespace Textamina.Markdig.Renderers
                 return;
             }
 
-            foreach (var block in containerBlock.Children)
+            var children = containerBlock.Children;
+            for (int i = 0; i < children.Count; i++)
             {
-                Write(block);
+                Write(children[i]);
             }
         }
 
@@ -62,9 +63,10 @@ namespace Textamina.Markdig.Renderers
             IMarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
             if (renderer == null && !renderersPerType.TryGetValue(objectType, out renderer))
             {
-                foreach (var testRenderer in ObjectRenderers)
+                for (int i = 0; i < ObjectRenderers.Count; i++)
                 {
-                    if (testRenderer.Accept(this, objectType))
+                    var testRenderer = ObjectRenderers[i];
+                    if (testRenderer.Accept(this, obj))
                     {
                         renderersPerType[objectType] = renderer = testRenderer;
                         break;
