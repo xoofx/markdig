@@ -14,6 +14,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
                     renderer.Write("mailto:");
                 }
                 renderer.WriteEscapeUrl(obj.Url);
+                renderer.WriteAttributes(obj);
                 renderer.Write("\">");
             }
 

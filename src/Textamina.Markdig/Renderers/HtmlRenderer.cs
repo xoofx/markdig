@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -151,12 +152,40 @@ namespace Textamina.Markdig.Renderers
 
         public HtmlRenderer WriteAttributes(MarkdownObject obj)
         {
-            //if (obj == null) throw new ArgumentNullException(nameof(obj));
+            var attributes = obj.TryGetAttributes();
+            if (attributes != null)
+            {
+                if (attributes.Id != null)
+                {
+                    Write($" Id=\"{attributes.Id}\"");
+                }
 
-            //if (obj.Id != null)
-            //{
-            //    Write(" Id=\"").WriteEscape(obj.Id).Write("\"");
-            //}
+                if (attributes.Classes != null && attributes.Classes.Count > 0)
+                {
+                    Write($" class=\"");
+                    for (int i = 0; i < attributes.Classes.Count; i++)
+                    {
+                        var cssClass = attributes.Classes[i];
+                        if (i > 0)
+                        {
+                            Write(" ");
+                        }
+                        Write(cssClass);
+                    }
+                    Write("\"");
+                }
+
+                if (attributes.Properties != null && attributes.Properties.Count > 0)
+                {
+                    foreach (var property in attributes.Properties)
+                    {
+                        Write(" ");
+                        Write(property.Key).Write("=").Write("\"");
+                        WriteEscape(property.Value);
+                        Write("\"");
+                    }
+                }
+            }
 
             return this;
         }

@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Renderers.Html
         protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
         {
             renderer.EnsureLine();
-            renderer.WriteLine("<blockquote>");
+            renderer.Write("<blockquote").WriteAttributes(obj).WriteLine(">");
             var savedImplicitParagraph = renderer.ImplicitParagraph;
             renderer.ImplicitParagraph = false;
             renderer.WriteChildren(obj);

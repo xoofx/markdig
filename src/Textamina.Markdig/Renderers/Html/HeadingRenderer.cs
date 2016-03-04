@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Renderers.Html
         protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
         {
             var heading = obj.Level.ToString(CultureInfo.InvariantCulture);
-            renderer.Write("<h").Write(heading).Write(">");
+            renderer.Write("<h").Write(heading).WriteAttributes(obj).Write(">");
             renderer.WriteLeafInline(obj);
             renderer.Write("</h").Write(heading).WriteLine(">");
         }

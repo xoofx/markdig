@@ -17,6 +17,7 @@ namespace Textamina.Markdig.Renderers.Html
                     renderer.Write(listBlock.OrderedStart.ToString(CultureInfo.InvariantCulture));
                     renderer.Write("\"");
                 }
+                renderer.WriteAttributes(listBlock);
                 renderer.WriteLine(">");
             }
             else
@@ -30,7 +31,7 @@ namespace Textamina.Markdig.Renderers.Html
                 renderer.ImplicitParagraph = !listBlock.IsLoose;
 
                 renderer.EnsureLine();
-                renderer.Write("<li>");
+                renderer.Write("<li").WriteAttributes(listItem).Write(">");
                 renderer.WriteChildren(listItem);
                 renderer.WriteLine("</li>");
 

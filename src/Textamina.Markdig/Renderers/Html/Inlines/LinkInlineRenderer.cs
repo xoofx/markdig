@@ -11,6 +11,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
                 renderer.Write(link.IsImage ? "<img src=\"" : "<a href=\"");
                 renderer.WriteEscapeUrl(link.Url);
                 renderer.Write("\"");
+                renderer.WriteAttributes(link);
             }
             if (link.IsImage)
             {

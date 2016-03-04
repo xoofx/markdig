@@ -6,7 +6,7 @@ namespace Textamina.Markdig.Renderers.Html
     {
         protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)
         {
-            renderer.WriteLine("<hr />");
+            renderer.Write("<hr").WriteAttributes(obj).WriteLine(" />");
         }
     }
 }

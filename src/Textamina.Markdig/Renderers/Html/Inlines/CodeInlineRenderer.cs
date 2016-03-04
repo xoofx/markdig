@@ -9,7 +9,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
         {
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("<code>");
+                renderer.Write("<code").WriteAttributes(obj).Write(">");
             }
             renderer.WriteEscape(obj.Content);
             if (renderer.EnableHtmlForInline)

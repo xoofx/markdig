@@ -9,7 +9,7 @@ namespace Textamina.Markdig.Renderers.Html
             renderer.EnsureLine();
             if (!renderer.ImplicitParagraph)
             {
-                renderer.Write("<p>");
+                renderer.Write("<p").WriteAttributes(obj).Write(">");
             }
             renderer.WriteLeafInline(obj);
             if (!renderer.ImplicitParagraph)
