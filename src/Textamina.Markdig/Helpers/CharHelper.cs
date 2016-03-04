@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 
 namespace Textamina.Markdig.Helpers
 {
+    /// <summary>
+    /// Helper class for handling characters.
+    /// </summary>
     public static class CharHelper
     {
         public const int TabSize = 4;

@@ -10,7 +10,7 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig
 {
     /// <summary>
-    /// Provides methods for parsing to a syntax tree and converting Markdown to other formats.
+    /// Provides methods for parsing a Markdown string to a syntax tree and converting it to other formats.
     /// </summary>
     public class Markdown
     {
@@ -55,11 +55,32 @@ namespace Textamina.Markdig
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             pipeline = pipeline ?? new MarkdownPipeline();
+
+            // We override the renderer with our own writer
             pipeline.Renderer = new HtmlRenderer(writer);
 
             var document = Parse(reader, pipeline);
             pipeline.Renderer.Render(document);
             writer.Flush();
+        }
+
+        /// <summary>
+        /// Converts a Markdown string using a custom <see cref="IMarkdownRenderer"/> specified in the <see cref="MarkdownPipeline.Renderer"/>.
+        /// </summary>
+        /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
+        /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
+        public static object Convert(TextReader reader, MarkdownPipeline pipeline = null)
+        {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            pipeline = pipeline ?? new MarkdownPipeline();
+            if (pipeline.Renderer == null)
+            {
+                throw new InvalidOperationException("The property MarkdownPipeline.Renderer cannot be null");
+            }
+
+            var document = Parse(reader, pipeline);
+            return pipeline.Renderer.Render(document);
         }
 
         /// <summary>

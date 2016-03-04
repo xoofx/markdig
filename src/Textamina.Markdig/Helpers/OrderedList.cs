@@ -6,6 +6,12 @@ using System.Collections.Generic;
 
 namespace Textamina.Markdig.Helpers
 {
+    /// <summary>
+    /// A List that provides methods for inserting/finding before/after. See remarks.
+    /// </summary>
+    /// <typeparam name="T">Type of the list item</typeparam>
+    /// <seealso cref="System.Collections.Generic.List{T}" />
+    /// <remarks>We use a typed list and don't use extension methods because it would pollute all list implemts and the top level namespace.</remarks>
     public class OrderedList<T> : List<T>
     {
         public bool InsertBefore<TElement>(T element) where TElement : T

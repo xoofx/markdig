@@ -9,7 +9,7 @@ using Textamina.Markdig.Extensions.Tables;
 namespace Textamina.Markdig
 {
     /// <summary>
-    /// Provides extension methods for <see cref="MarkdownPipeline"/> to enable extensions.
+    /// Provides extension methods for <see cref="MarkdownPipeline"/> to enable several Markdown extensions.
     /// </summary>
     public static class MarkdownExtensions
     {

@@ -6,6 +6,9 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
 {
+    /// <summary>
+    /// Helpers to parse Markdown links.
+    /// </summary>
     public static class LinkHelper
     {
         public static bool TryParseAutolink(StringSlice text, out string link, out bool isEmail)

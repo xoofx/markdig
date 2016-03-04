@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Textamina.Markdig.Helpers
 {
+    /// <summary>
+    /// An implementation of <see cref="ObjectCache{T}"/> for <see cref="StringBuilder"/>
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Helpers.ObjectCache{System.Text.StringBuilder}" />
     public class StringBuilderCache : ObjectCache<StringBuilder>
     {
         /// <summary>
@@ -14,6 +18,10 @@ namespace Textamina.Markdig.Helpers
         [ThreadStatic]
         private static StringBuilder local;
 
+        /// <summary>
+        /// Provides a string builder that can only be used locally in a method. This StringBuilder MUST not be stored.
+        /// </summary>
+        /// <returns></returns>
         public static StringBuilder Local()
         {
             var sb = local ?? (local = new StringBuilder());
@@ -24,11 +32,11 @@ namespace Textamina.Markdig.Helpers
             return sb;
         }
 
-        protected override void Reset(StringBuilder builder)
+        protected override void Reset(StringBuilder instance)
         {
-            if (builder.Length > 0)
+            if (instance.Length > 0)
             {
-                builder.Clear();
+                instance.Clear();
             }
         }
     }
