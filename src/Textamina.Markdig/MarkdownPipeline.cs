@@ -7,16 +7,17 @@ using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Renderers;
-using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig
 {
+    /// <summary>
+    /// This class allows to modify the pipeline to parse and render a Markdown document.
+    /// </summary>
     public class MarkdownPipeline
     {
-        private BlockParserState blockParserState;
-        private InlineParserState inlineParserState;
-        private bool isInitialized;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
+        /// </summary>
         public MarkdownPipeline()
         {
             // Add all default parsers
@@ -51,28 +52,37 @@ namespace Textamina.Markdig
             StringBuilderCache = new StringBuilderCache();
         }
 
+        /// <summary>
+        /// Gets the block parsers.
+        /// </summary>
         public BlockParserList BlockParsers { get; private set; }
 
+        /// <summary>
+        /// Gets the inline parsers.
+        /// </summary>
         public InlineParserList InlineParsers { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the renderer.
+        /// </summary>
         public IMarkdownRenderer Renderer { get; set; }
 
+        /// <summary>
+        /// Gets the register extensions.
+        /// </summary>
         public OrderedList<IMarkdownExtension> Extensions { get; }
 
+        /// <summary>
+        /// Gets or sets the string builder cache used by the parsers.
+        /// </summary>
         public StringBuilderCache StringBuilderCache { get; set; }
 
-        public void Initialize(out BlockParserState blockParserState, out InlineParserState inlineParserState)
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
+        public void Initialize()
         {
-            blockParserState = this.blockParserState;
-            inlineParserState = this.inlineParserState;
-            if (isInitialized)
-            {
-                return;
-            }
-
-            // Make sure we have a StringBuilderCache by default
-            StringBuilderCache = StringBuilderCache ?? new StringBuilderCache();
-
             // Allow extensions to modify existing BlockParsers, InlineParsers and Renderer
             foreach (var extension in Extensions)
             {
@@ -82,22 +92,6 @@ namespace Textamina.Markdig
                 }
                 extension.Setup(this);
             }
-
-            var document = new Document();
-
-            // Make a copy of parsers
-            var blockParserList = new BlockParserList();
-            blockParserList.AddRange(BlockParsers);
-            blockParserState =
-                this.blockParserState = new BlockParserState(StringBuilderCache, document, blockParserList);
-
-            var inlineParserList = new InlineParserList();
-            inlineParserList.AddRange(InlineParsers);
-
-            inlineParserState =
-                this.inlineParserState = new InlineParserState(StringBuilderCache, document, InlineParsers);
-
-            isInitialized = true;
         }
     }
 }
