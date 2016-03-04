@@ -13,6 +13,11 @@ namespace Textamina.Markdig.Tests
         public void TestSimple()
         {
             var text = @"
+{#heading}
+|a  | b
+|---|---
+| 0 | 1
+
 # Heading {#heading}
 
 ```info {#test .class src=tata src2='toto'}
@@ -25,7 +30,7 @@ This is a test
             //");
 
             //var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseFootnoteExtensions().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseAttributes());
+            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseAttributes().UsePipeTable());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Parsers.Inlines;
+using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
@@ -36,11 +37,22 @@ namespace Textamina.Markdig.Extensions.Tables
             // If we have not a delimiter on the first line of a paragraph, don't bother to continue 
             // tracking other delimiters on following lines
             var tableState = state.ParserStates[Index] as TableState;
+            bool isFirstLineEmpty = false;
             if (tableState == null)
             {
-                if (state.LocalLineIndex > 0 || c == '\n')
+                // A table could be preceded by an empty line or a line containing an inline
+                // that has not been added to the stack, so we consider this as a valid 
+                // start for a table. Typically, with this, we can have an attributes {...}
+                // starting on the first line of a pipe table, even if the first line
+                // doesn't have a pipe
+                if (state.Inline != null &&(state.LocalLineIndex > 0 || c == '\n'))
                 {
                     return false;
+                }
+
+                if (state.Inline == null)
+                {
+                    isFirstLineEmpty = true;
                 }
                 // Else setup a table state
                 tableState = new TableState();
@@ -49,13 +61,17 @@ namespace Textamina.Markdig.Extensions.Tables
 
             if (c == '\n')
             {
-                if (!tableState.LineHasPipe)
+                if (!isFirstLineEmpty && !tableState.LineHasPipe)
                 {
                     tableState.IsInvalidTable = true;
                 }
                 tableState.LineHasPipe = false;
                 lineBreakParser.Match(state, ref slice);
                 tableState.LineIndex++;
+                if (!isFirstLineEmpty)
+                {
+                    tableState.ColumnAndLineDelimiters.Add(state.Inline);
+                }
             }
             else
             {
@@ -68,9 +84,10 @@ namespace Textamina.Markdig.Extensions.Tables
                 tableState.LineHasPipe = true;
                 tableState.LineIndex = state.LocalLineIndex;
                 slice.NextChar(); // Skip the `|` character
+
+                tableState.ColumnAndLineDelimiters.Add(state.Inline);
             }
 
-            tableState.ColumnAndLineDelimiters.Add(state.Inline);
 
             return true;
         }
@@ -95,6 +112,14 @@ namespace Textamina.Markdig.Extensions.Tables
             }
 
             var table = new TableBlock();
+
+            // If the current paragraph block has any attributes attached, we can copy them
+            var attributes = state.Block.TryGetAttributes();
+            if (attributes != null)
+            {
+                attributes.CopyTo(table.GetAttributes());
+            }
+
             state.BlockNew = table;
             TableRowBlock firstRow = null;
             int maxColumn = 0;

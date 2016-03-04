@@ -189,7 +189,6 @@ namespace Textamina.Markdig.Extensions.Attributes
             if (TryParse(ref slice, out attributes))
             {
                 var inline = state.Inline;
-                var objectToAttach = (MarkdownObject) inline;
 
                 // If the curent object to attach is either a literal or delimiter
                 // try to find a suitable parent, otherwise attach the html attributes to the block
@@ -203,16 +202,8 @@ namespace Textamina.Markdig.Extensions.Attributes
                             break;
                         }
                     }
-
-                    if (inline == state.Root)
-                    {
-                        objectToAttach = state.Block;
-                    }
-                    else
-                    {
-                        objectToAttach = inline;
-                    }
                 }
+                var objectToAttach = inline == null || inline == state.Root ? (MarkdownObject) state.Block : inline;
 
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
                 attributes.CopyTo(currentHtmlAttributes);

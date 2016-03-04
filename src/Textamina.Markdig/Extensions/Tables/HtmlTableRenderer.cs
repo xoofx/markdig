@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Extensions.Tables
         protected override void Write(HtmlRenderer writer, TableBlock tableBlock)
         {
             writer.EnsureLine();
-            writer.WriteLine("<table>");
+            writer.Write("<table").WriteAttributes(tableBlock).WriteLine(">");
 
             bool hasBody = false;
             var header = (TableRowBlock)tableBlock.Children[0];

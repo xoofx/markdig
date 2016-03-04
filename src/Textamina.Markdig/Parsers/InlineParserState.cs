@@ -60,8 +60,9 @@ namespace Textamina.Markdig.Parsers
 
             this.Root = new ContainerInline() { IsClosed = false };
             leafBlock.Inline = Root;
-            this.Inline = leafBlock.Inline;
+            this.Inline = null;
             this.Block = leafBlock;
+            this.BlockNew = null;
             LineIndex = leafBlock.Line;
 
             lineOffsets.Clear();
@@ -138,6 +139,10 @@ namespace Textamina.Markdig.Parsers
                     var container = FindLastContainer();
 
                     Inline = container.LastChild is LeafInline ? container.LastChild : container;
+                    if (Inline == Root)
+                    {
+                        Inline = null;
+                    }
                 }
 
                 if (Log != null)
