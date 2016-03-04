@@ -11,10 +11,23 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// The inline parser state used by all <see cref="InlineParser"/>.
+    /// </summary>
     public class InlineParserState
     {
+        internal static TextWriter Log;
+
         private readonly List<int> lineOffsets;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InlineParserState"/> class.
+        /// </summary>
+        /// <param name="stringBuilders">The string builders.</param>
+        /// <param name="document">The document.</param>
+        /// <param name="parsers">The parsers.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public InlineParserState(StringBuilderCache stringBuilders, Document document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
@@ -25,9 +38,9 @@ namespace Textamina.Markdig.Parsers
             InlinesToClose = new List<Inline>();
             Parsers = parsers;
             SpecialCharacters = Parsers.OpeningCharacters;
-            ParserStates = new object[Parsers.Count];
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
+            ParserStates = new object[Parsers.Count];
         }
 
         public LeafBlock Block { get; private set; }
@@ -38,15 +51,13 @@ namespace Textamina.Markdig.Parsers
 
         public ContainerInline Root { get; internal set; }
 
-        public readonly List<Inline> InlinesToClose;
+        public List<Inline> InlinesToClose { get; }
 
-        public readonly InlineParserList Parsers;
+        public InlineParserList Parsers { get; }
 
-        public readonly Document Document;
+        public Document Document { get; }
 
         public StringBuilderCache StringBuilders { get;  }
-
-        public TextWriter Log;
 
         public int LineIndex { get; set; }
 
@@ -54,18 +65,22 @@ namespace Textamina.Markdig.Parsers
 
         public char[] SpecialCharacters { get; set; }
 
-        public object[] ParserStates { get; private set; }
+        public object[] ParserStates { get; }
 
+        /// <summary>
+        /// Processes the inline of the specified <see cref="LeafBlock"/>.
+        /// </summary>
+        /// <param name="leafBlock">The leaf block.</param>
         public void ProcessInlineLeaf(LeafBlock leafBlock)
         {
             // clear parser states
             Array.Clear(ParserStates, 0, ParserStates.Length);
 
-            this.Root = new ContainerInline() { IsClosed = false };
+            Root = new ContainerInline() { IsClosed = false };
             leafBlock.Inline = Root;
-            this.Inline = null;
-            this.Block = leafBlock;
-            this.BlockNew = null;
+            Inline = null;
+            Block = leafBlock;
+            BlockNew = null;
             LineIndex = leafBlock.Line;
 
             lineOffsets.Clear();
@@ -193,21 +208,6 @@ namespace Textamina.Markdig.Parsers
                 }
             }
         }
-
-        //private void TransformDelimitersToLiterals()
-        //{
-        //    var child = Document.LastChild;
-        //    while (child != null)
-        //    {
-        //        var subContainer = child as ContainerInline;
-        //        child = subContainer?.LastChild;
-        //        var delimiterInline = subContainer as DelimiterInline;
-        //        if (delimiterInline != null)
-        //        {
-        //            delimiterInline.ReplaceBy(new LiteralInline() { Content = new StringSlice(delimiterInline.ToLiteral()), IsClosed = true });
-        //        }
-        //    }
-        //}
 
         private ContainerInline FindLastContainer()
         {

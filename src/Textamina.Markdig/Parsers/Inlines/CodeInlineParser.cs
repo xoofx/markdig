@@ -2,13 +2,19 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
+    /// <summary>
+    /// An inline parser for a <see cref="CodeInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public class CodeInlineParser : InlineParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CodeInlineParser"/> class.
+        /// </summary>
         public CodeInlineParser()
         {
             OpeningCharacters = new[] { '`' };
@@ -17,13 +23,15 @@ namespace Textamina.Markdig.Parsers.Inlines
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
             int openSticks = 0;
-            if (slice.PeekCharExtra(-1) == '`')
+            var match = slice.CurrentChar;
+            if (slice.PeekCharExtra(-1) == match)
             {
                 return false;
             }
 
+            // Match the opened sticks
             var c = slice.CurrentChar;
-            while (c == '`')
+            while (c == match)
             {
                 openSticks++;
                 c = slice.NextChar();
@@ -49,13 +57,13 @@ namespace Textamina.Markdig.Parsers.Inlines
                     c = ' ';
                 }
 
-                if (c != '`' && (c != ' ' || pc != ' '))
+                if (c != match && (c != ' ' || pc != ' '))
                 {
                     builder.Append(c);
                 }
                 else
                 {
-                    while (c == '`')
+                    while (c == match)
                     {
                         closeSticks++;
                         pc = c;
@@ -70,7 +78,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                 if (closeSticks > 0)
                 {
-                    builder.Append('`', closeSticks);
+                    builder.Append(match, closeSticks);
                     closeSticks = 0;
                 }
                 else
@@ -90,7 +98,11 @@ namespace Textamina.Markdig.Parsers.Inlines
                         builder.Length--;
                     }
                 }
-                state.Inline = new CodeInline() { Content = builder.ToString() };
+                state.Inline = new CodeInline()
+                {
+                    Delimiter = match,
+                    Content = builder.ToString()
+                };
                 isMatching = true;
             }
 

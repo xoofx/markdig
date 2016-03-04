@@ -9,10 +9,21 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// The <see cref="BlockParser"/> state used by all <see cref="BlockParser"/>.
+    /// </summary>
     public class BlockParserState
     {
         private int currentStackIndex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlockParserState"/> class.
+        /// </summary>
+        /// <param name="stringBuilders">The string builders cache.</param>
+        /// <param name="document">The document to build blocks into.</param>
+        /// <param name="parsers">The list of parsers.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public BlockParserState(StringBuilderCache stringBuilders, Document document, BlockParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
@@ -269,18 +280,6 @@ namespace Textamina.Markdig.Parsers
             LineIndex++;
 
             TryContinueBlocks();
-
-            //// If we have already reached eol and the last block was a paragraph
-            //// we close it
-            //if (Line.IsEmpty)
-            //{
-            //    int index = Stack.Count - 1;
-            //    if (Stack[index] is ParagraphBlock)
-            //    {
-            //        Close(index);
-            //        return;
-            //    }
-            //}
 
             // If the line was not entirely processed by pending blocks, try to process it with any new block
             TryOpenBlocks();
@@ -572,6 +571,5 @@ namespace Textamina.Markdig.Parsers
             }
             ContinueProcessingLine = true;
         }
-
     }
 }

@@ -7,10 +7,17 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
+    /// <summary>
+    /// An inline parser for <see cref="LinkInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public class LinkInlineParser : InlineParser
     {
         private int emphasisInlineDelimiterProcessorIndex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinkInlineParser"/> class.
+        /// </summary>
         public LinkInlineParser()
         {
             OpeningCharacters = new[] {'[', ']', '!'};
@@ -18,6 +25,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
         public override void Initialize(InlineParserState state)
         {
+            // Look for emphasis delimiter processor
             emphasisInlineDelimiterProcessorIndex = -1;
             for (int i = 0; i < state.Parsers.DelimiterProcessors.Length; i++)
             {
@@ -32,6 +40,9 @@ namespace Textamina.Markdig.Parsers.Inlines
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
+            // The following methods are inspired by the "An algorithm for parsing nested emphasis and links"
+            // at the end of the CommonMark specs.
+
             var c = slice.CurrentChar;
 
             bool isImage = false;

@@ -7,13 +7,23 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
+    /// <summary>
+    /// An inline parser for <see cref="SoftlineBreakInline"/> and <see cref="HardlineBreakInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public class LineBreakInlineParser : InlineParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LineBreakInlineParser"/> class.
+        /// </summary>
         public LineBreakInlineParser()
         {
             OpeningCharacters = new[] {'\n'};
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to interpret softline breaks as hardline breaks. Default is false
+        /// </summary>
         public bool EnableSoftAsHard { get; set; }
 
         public override bool Match(InlineParserState state, ref StringSlice slice)

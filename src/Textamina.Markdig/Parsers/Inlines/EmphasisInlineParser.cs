@@ -3,21 +3,23 @@
 // See the license.txt file in the project root for more information.
 using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
+    /// <summary>
+    /// An inline parser for <see cref="EmphasisInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
+    /// <seealso cref="Textamina.Markdig.Parsers.IDelimiterProcessor" />
     public class EmphasisInlineParser : InlineParser, IDelimiterProcessor
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmphasisInlineParser"/> class.
+        /// </summary>
         public EmphasisInlineParser()
         {
             OpeningCharacters = new[] { '*', '_' };
-        }
-
-        public override void Initialize(InlineParserState state)
-        {
-            base.Initialize(state);
         }
 
         public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex)
@@ -121,16 +123,6 @@ namespace Textamina.Markdig.Parsers.Inlines
                 canClose = canClose && (!temp || nextIsPunctuation);
             }
 
-            //// If we can close, try to find a matching open
-            //if (canClose && state.Inline != null)
-            //{
-            //    var matching = DelimiterInline.FindMatchingOpen(state.Inline, 0, delimiterRun, delimiterCount);
-
-            //    // transform matching into
-
-            //    return true;
-            //}
-
             // We have potentially an open or close emphasis
             if (canOpen || canClose)
             {
@@ -159,9 +151,11 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-
         private static void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
         {
+            // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
+            // at the end of the CommonMark specs.
+
             // Move current_position forward in the delimiter stack (if needed) until 
             // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
             for (int i = 0; i < delimiters.Count; i++)

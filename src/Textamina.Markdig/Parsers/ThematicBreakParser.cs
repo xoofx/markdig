@@ -6,10 +6,20 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// A block parser for a <see cref="ThematicBreakBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class ThematicBreakParser : BlockParser
     {
+        /// <summary>
+        /// A singleton instance used by other parsers.
+        /// </summary>
         public static readonly ThematicBreakParser Default = new ThematicBreakParser();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThematicBreakParser"/> class.
+        /// </summary>
         public ThematicBreakParser()
         {
             OpeningCharacters = new[] {'-', '_', '*'};

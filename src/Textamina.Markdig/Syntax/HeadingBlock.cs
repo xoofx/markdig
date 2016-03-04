@@ -22,6 +22,11 @@ namespace Textamina.Markdig.Syntax
         }
 
         /// <summary>
+        /// Gets or sets the header character used to defines this heading (usually #)
+        /// </summary>
+        public char HeaderChar { get; set; }
+
+        /// <summary>
         /// Gets or sets the level of heading (starting at 1 for the lowest level).
         /// </summary>
         public int Level { get; set; }

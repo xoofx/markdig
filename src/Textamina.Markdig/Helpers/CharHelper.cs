@@ -67,15 +67,9 @@ namespace Textamina.Markdig.Helpers
 
         public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
         {
-            // CODE from CommonMark.NET
-
-            // This method does the same as would calling the two built-in methods:
-            // // space = char.IsWhiteSpace(c);
-            // // punctuation = char.IsPunctuation(c);
-            //
-            // The performance benefit for using this method is ~50% when calling only on ASCII characters
-            // and ~12% when calling only on Unicode characters.
-
+            // Credits: code from CommonMark.NET
+            // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
+            // See license for details:  https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md
             if (c <= 'ÿ')
             {
                 space = c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085';
@@ -97,8 +91,6 @@ namespace Textamina.Markdig.Helpers
                     || category == UnicodeCategory.OtherPunctuation);
             }
         }
-
-
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsNewLine(this char c)

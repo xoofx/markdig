@@ -9,21 +9,45 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Base class for a list of parsers.
+    /// </summary>
+    /// <typeparam name="T">Type of the parser</typeparam>
+    /// <typeparam name="TState">The type of the parser state.</typeparam>
+    /// <seealso cref="Textamina.Markdig.Helpers.OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
         private T[][] parsersWithOpeningCharacters;
         private T[] globalParsers;
         private bool[] isOpeningCharacter;
 
+        /// <summary>
+        /// Gets the list of global parsers (that don't have any opening characters defined)
+        /// </summary>
         public T[] GlobalParsers => globalParsers;
 
+        /// <summary>
+        /// Gets all the opening characters defined.
+        /// </summary>
+        public char[] OpeningCharacters { get; private set; }
+
+        /// <summary>
+        /// Gets the list of parsers valid for the specified opening character.
+        /// </summary>
+        /// <param name="openingChar">The opening character.</param>
+        /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
             return openingChar < parsersWithOpeningCharacters.Length ? parsersWithOpeningCharacters[openingChar] : null;
         }
 
-        public char[] OpeningCharacters { get; private set; }
-
+        /// <summary>
+        /// Searches for an opening character from a registered parser in the specified string.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
@@ -39,14 +63,27 @@ namespace Textamina.Markdig.Parsers
             return -1;
         }
 
+        /// <summary>
+        /// Initializes this instance with specified parser state.
+        /// </summary>
+        /// <param name="initState">State of the initialize.</param>
+        /// <exception cref="System.InvalidOperationException">
+        /// Unexpected null parser found
+        /// or
+        /// </exception>
         public virtual void Initialize(TState initState)
         {
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
             int maxChar = 0;
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 var parser = this[i];
+                if (parser == null)
+                {
+                    throw new InvalidOperationException("Unexpected null parser found");
+                }
+
                 parser.Initialize(initState);
                 parser.Index = i;
                 if (parser.OpeningCharacters != null && parser.OpeningCharacters.Length != 0)

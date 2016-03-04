@@ -6,18 +6,42 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Parser for a <see cref="FencedCodeBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class FencedCodeBlockParser : BlockParser
     {
+        /// <summary>
+        /// Delegate used to parse the string on the first line after the fenced code block special characters (usually ` or ~)
+        /// </summary>
+        /// <param name="state">The parser state.</param>
+        /// <param name="line">The being processed line.</param>
+        /// <param name="fenced">The fenced code block.</param>
+        /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
         public delegate bool InfoParserDelegate(BlockParserState state, ref StringSlice line, FencedCodeBlock fenced);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
+        /// </summary>
         public FencedCodeBlockParser()
         {
             OpeningCharacters = new[] {'`', '~'};
             InfoParser = DefaultInfoParser;
         }
 
+        /// <summary>
+        /// Gets or sets the information parser.
+        /// </summary>
         public InfoParserDelegate InfoParser { get; set; }
 
+        /// <summary>
+        /// The default parser for the information after the fenced code block special characters (usually ` or ~)
+        /// </summary>
+        /// <param name="state">The parser state.</param>
+        /// <param name="line">The line.</param>
+        /// <param name="fenced">The fenced code block.</param>
+        /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
         public static bool DefaultInfoParser(BlockParserState state, ref StringSlice line,
             FencedCodeBlock fenced)
         {
@@ -75,12 +99,13 @@ namespace Textamina.Markdig.Parsers
 
         public override BlockState TryOpen(BlockParserState state)
         {
-            // Else if the we have an indent, it is not valid
+            // We expect no indentation for a fenced code block.
             if (state.IsCodeIndent)
             {
                 return BlockState.None;
             }
 
+            // Match fenced char
             int count = 0;
             var line = state.Line;
             char c = line.CurrentChar;
@@ -95,6 +120,7 @@ namespace Textamina.Markdig.Parsers
                 c = line.NextChar();
             }
 
+            // A fenced codeblock requires at least 3 opening chars
             if (count < 3)
             {
                 return BlockState.None;
@@ -131,7 +157,7 @@ namespace Textamina.Markdig.Parsers
             var matchChar = fence.FencedChar;
             var c = state.CurrentChar;
 
-            // Work on a copy of StringSlice
+            // Match if we have a closing fence
             var line = state.Line;
             while (c == matchChar)
             {
@@ -139,12 +165,15 @@ namespace Textamina.Markdig.Parsers
                 count--;
             }
 
+            // If we have a closing fence, close it and discard the current line
+            // The line must contain only fence opening character followed only by whitespaces.
             if (count <=0 && !state.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
             }
 
+            // Reset the indentation to the column before the indent
             state.ResetToColumn(state.ColumnBeforeIndent);
 
             // Remove any indent spaces
@@ -156,8 +185,6 @@ namespace Textamina.Markdig.Parsers
                 c = state.NextChar();
             }
 
-            // TODO: It is unclear how to handle this correctly
-            // Break only if Eof
             return BlockState.Continue;
         }
     }

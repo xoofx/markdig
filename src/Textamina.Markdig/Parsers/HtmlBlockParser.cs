@@ -7,82 +7,25 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Block parser for a <see cref="HtmlBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class HtmlBlockParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlBlockParser"/> class.
+        /// </summary>
         public HtmlBlockParser()
         {
-            OpeningCharacters = new[] {'<'};
+            OpeningCharacters = new[] { '<' };
         }
-
-        private static readonly string[] HtmlTags =
-        {
-            "address",     // 0
-            "article",     // 1
-            "aside",       // 2
-            "base",        // 3
-            "basefont",    // 4
-            "blockquote",  // 5
-            "body",        // 6
-            "caption",     // 7
-            "center",      // 8
-            "col",         // 9
-            "colgroup",    // 10
-            "dd",          // 11
-            "details",     // 12
-            "dialog",      // 13
-            "dir",         // 14
-            "div",         // 15
-            "dl",          // 16
-            "dt",          // 17
-            "fieldset",    // 18
-            "figcaption",  // 19
-            "figure",      // 20
-            "footer",      // 21
-            "form",        // 22
-            "frame",       // 23
-            "frameset",    // 24
-            "h1",          // 25
-            "head",        // 26
-            "header",      // 27
-            "hr",          // 28
-            "html",        // 29
-            "iframe",      // 30
-            "legend",      // 31
-            "li",          // 32
-            "link",        // 33
-            "main",        // 34
-            "menu",        // 35
-            "menuitem",    // 36
-            "meta",        // 37
-            "nav",         // 38
-            "noframes",    // 39
-            "ol",          // 40
-            "optgroup",    // 41
-            "option",      // 42
-            "p",           // 43
-            "param",       // 44
-            "pre",         // 45   <- special group 1
-            "script",      // 46   <- special group 1
-            "section",     // 47
-            "source",      // 48
-            "style",       // 49   <- special group 1
-            "summary",     // 50
-            "table",       // 51
-            "tbody",       // 52
-            "td",          // 53
-            "tfoot",       // 54
-            "th",          // 55
-            "thead",       // 56
-            "title",       // 57
-            "tr",          // 58
-            "track",       // 59
-            "ul",          // 60
-        };
            
         public override BlockState TryOpen(BlockParserState state)
         {
             var result = MatchStart(state);
-            // An end-tag can occur on the same line
+
+            // An end-tag can occur on the same line, so we try to parse it here
             if (result == BlockState.Continue)
             {
                 result = MatchEnd(state, (HtmlBlock) state.NewBlocks.Peek());
@@ -261,7 +204,6 @@ namespace Textamina.Markdig.Parsers
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
-                    // TODO: could be optimized with a dedicated parser
                     if (line.SearchLowercase("</script>") || line.SearchLowercase("</pre>") || line.SearchLowercase("</style>"))
                     {
                         return BlockState.Break;
@@ -289,5 +231,70 @@ namespace Textamina.Markdig.Parsers
             state.NewBlocks.Push(new HtmlBlock(this) {Column = startColumn, Type = type});
             return BlockState.Continue;
         }
+
+        private static readonly string[] HtmlTags =
+        {
+            "address",     // 0
+            "article",     // 1
+            "aside",       // 2
+            "base",        // 3
+            "basefont",    // 4
+            "blockquote",  // 5
+            "body",        // 6
+            "caption",     // 7
+            "center",      // 8
+            "col",         // 9
+            "colgroup",    // 10
+            "dd",          // 11
+            "details",     // 12
+            "dialog",      // 13
+            "dir",         // 14
+            "div",         // 15
+            "dl",          // 16
+            "dt",          // 17
+            "fieldset",    // 18
+            "figcaption",  // 19
+            "figure",      // 20
+            "footer",      // 21
+            "form",        // 22
+            "frame",       // 23
+            "frameset",    // 24
+            "h1",          // 25
+            "head",        // 26
+            "header",      // 27
+            "hr",          // 28
+            "html",        // 29
+            "iframe",      // 30
+            "legend",      // 31
+            "li",          // 32
+            "link",        // 33
+            "main",        // 34
+            "menu",        // 35
+            "menuitem",    // 36
+            "meta",        // 37
+            "nav",         // 38
+            "noframes",    // 39
+            "ol",          // 40
+            "optgroup",    // 41
+            "option",      // 42
+            "p",           // 43
+            "param",       // 44
+            "pre",         // 45   <- special group 1
+            "script",      // 46   <- special group 1
+            "section",     // 47
+            "source",      // 48
+            "style",       // 49   <- special group 1
+            "summary",     // 50
+            "table",       // 51
+            "tbody",       // 52
+            "td",          // 53
+            "tfoot",       // 54
+            "th",          // 55
+            "thead",       // 56
+            "title",       // 57
+            "tr",          // 58
+            "track",       // 59
+            "ul",          // 60
+        };
     }
 }

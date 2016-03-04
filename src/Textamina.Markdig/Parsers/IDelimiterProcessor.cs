@@ -5,8 +5,20 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// A procesor used for <see cref="DelimiterInline"/>.
+    /// </summary>
     public interface IDelimiterProcessor
     {
+        /// <summary>
+        /// Processes the delimiters.
+        /// </summary>
+        /// <param name="state">The parser state.</param>
+        /// <param name="root">The root inline.</param>
+        /// <param name="lastChild">The last child.</param>
+        /// <param name="delimiterProcessorIndex">Index of this delimiter processor.</param>
+        /// <returns><c>true</c> to continue to the next delimiter processor; 
+        /// <c>false</c> to stop the process (in case a processor is perfoming sub-sequent processor itself)</returns>
         bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex);
     }
 }

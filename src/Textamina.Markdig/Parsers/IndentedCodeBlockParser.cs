@@ -5,12 +5,12 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Block parser for an indented <see cref="CodeBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class IndentedCodeBlockParser : BlockParser
     {
-        public IndentedCodeBlockParser()
-        {
-        }
-
         public override bool CanInterrupt(BlockParserState state, Block block)
         {
             return !(block is ParagraphBlock);
@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Parsers
             if (codeBlock != null)
             {
                 var lines = codeBlock.Lines;
-                // Remove trailing blankline
+                // Remove any trailing blankline
                 for (int i = lines.Count - 1; i >= 0; i--)
                 {
                     if (lines.Lines[i].Slice.IsEmpty)

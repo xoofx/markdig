@@ -60,6 +60,7 @@
     <Compile Include="MarkdownExtensions.cs" />
     <Compile Include="MarkdownPipeline.cs" />
     <Compile Include="Extensions\Attributes\AttributesParser.cs" />
+    <Compile Include="Parsers\BlockStateExtensions.cs" />
     <Compile Include="Renderers\Html\HtmlAttributes.cs" />
     <Compile Include="Renderers\Html\HtmlBlockRenderer.cs" />
     <Compile Include="Renderers\Html\CodeBlockRenderer.cs" />

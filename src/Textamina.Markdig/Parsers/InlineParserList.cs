@@ -5,12 +5,15 @@ using System.Collections.Generic;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// A list of <see cref="InlineParser"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.ParserList{Textamina.Markdig.Parsers.InlineParser, Textamina.Markdig.Parsers.InlineParserState}" />
     public class InlineParserList : ParserList<InlineParser, InlineParserState>
     {
-        public InlineParserList()
-        {
-        }
-
+        /// <summary>
+        /// Gets the registered delimiter processors.
+        /// </summary>
         public IDelimiterProcessor[] DelimiterProcessors { get; private set; }
 
         public override void Initialize(InlineParserState initState)

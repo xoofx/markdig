@@ -6,8 +6,15 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Block parser for a <see cref="HeadingBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class HeadingBlockParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeadingBlockParser"/> class.
+        /// </summary>
         public HeadingBlockParser()
         {
             OpeningCharacters = new[] {'#'};
@@ -47,14 +54,17 @@ namespace Textamina.Markdig.Parsers
                 leadingCount++;
             }
 
-            // closing # will be handled later, because anyway we have matched 
-
             // A space is required after leading #
             if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
             {
                 // Move to the content
                 state.Line.Start = line.Start + 1;
-                state.NewBlocks.Push(new HeadingBlock(this) {Level = leadingCount, Column = column });
+                state.NewBlocks.Push(new HeadingBlock(this)
+                {
+                    HeaderChar = matchingChar,
+                    Level = leadingCount,
+                    Column = column
+                });
 
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;
@@ -72,7 +82,7 @@ namespace Textamina.Markdig.Parsers
                     }
                     if (endState == 1)
                     {
-                        if (c == '#')
+                        if (c == matchingChar)
                         {
                             countClosingTags++;
                             continue;

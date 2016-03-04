@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.IO;
-using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers;
 using Textamina.Markdig.Syntax;
@@ -87,25 +86,7 @@ namespace Textamina.Markdig
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             pipeline = pipeline ?? new MarkdownPipeline();
 
-            // Initialize the pipeline
-            pipeline.Initialize();
-            var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
-
-            var document = new Document();
-
-            // Initialize the block parsers
-            var blockParserList = new BlockParserList();
-            blockParserList.AddRange(pipeline.BlockParsers);
-            var blockParserState = new BlockParserState(stringBuilderCache, document, blockParserList);
-
-            // Initialize the inline parsers
-            var inlineParserList = new InlineParserList();
-            inlineParserList.AddRange(pipeline.InlineParsers);
-            var inlineParserState = new InlineParserState(stringBuilderCache, document, inlineParserList);
-
-            // Perform the parsing
-            var markdownParser = new MarkdownParser(reader, blockParserState, inlineParserState);
-            return markdownParser.Parse();
+            return MarkdownParser.Parse(reader, pipeline);
         }
     }
 }

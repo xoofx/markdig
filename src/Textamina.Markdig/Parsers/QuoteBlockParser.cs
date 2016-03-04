@@ -6,8 +6,15 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// A block parser for a <see cref="QuoteBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class QuoteBlockParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuoteBlockParser"/> class.
+        /// </summary>
         public QuoteBlockParser()
         {
             OpeningCharacters = new[] {'>'};

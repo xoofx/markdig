@@ -3,14 +3,29 @@
 // See the license.txt file in the project root for more information.
 namespace Textamina.Markdig.Parsers
 {
-    public class ParserBase<T> : IMarkdownParser<T>
+    /// <summary>
+    /// Base class for a <see cref="BlockParser"/> or <see cref="InlineParser"/>.
+    /// </summary>
+    /// <typeparam name="TParserState">Type of the parser state</typeparam>
+    /// <seealso cref="Textamina.Markdig.Parsers.IMarkdownParser{TParserState}" />
+    public class ParserBase<TParserState> : IMarkdownParser<TParserState>
     {
+        /// <summary>
+        /// Gets the opening characters this parser will be triggered if the character is found.
+        /// </summary>
         public char[] OpeningCharacters { get; set; }
 
-        public virtual void Initialize(T state)
+        /// <summary>
+        /// Initializes this parser with the specified parser state.
+        /// </summary>
+        /// <param name="state">The parser state.</param>
+        public virtual void Initialize(TParserState state)
         {
         }
 
+        /// <summary>
+        /// Gets the index of this parser in <see cref="T:Textamina.Markdig.Parsers.BlockParserList" /> or <see cref="T:Textamina.Markdig.Parsers.InlineParserList" />.
+        /// </summary>
         public int Index { get; internal set; }
     }
 }

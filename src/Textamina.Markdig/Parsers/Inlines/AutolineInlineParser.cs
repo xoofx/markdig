@@ -2,13 +2,19 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Helpers;
-using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
 {
+    /// <summary>
+    /// An inline parser for parsing <see cref="AutolinkInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public class AutolineInlineParser : InlineParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutolineInlineParser"/> class.
+        /// </summary>
         public AutolineInlineParser()
         {
             OpeningCharacters = new[] {'<'};

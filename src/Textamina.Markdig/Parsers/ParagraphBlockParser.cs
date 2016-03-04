@@ -6,6 +6,10 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// Block parser for a <see cref="ParagraphBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class ParagraphBlockParser : BlockParser
     {
         public override BlockState TryOpen(BlockParserState state)
@@ -37,7 +41,6 @@ namespace Textamina.Markdig.Parsers
         public override bool Close(BlockParserState state, Block block)
         {
             var paragraph = block as ParagraphBlock;
-            var heading = block as HeadingBlock;
             if (paragraph != null)
             {
                 var lines = paragraph.Lines;
@@ -59,10 +62,6 @@ namespace Textamina.Markdig.Parsers
                 {
                     lines.Lines[lineCount - 1].Slice.TrimEnd();
                 }
-            }
-            else // if (heading?.Lines.Count > 1)
-            {
-                //heading.Lines.RemoveAt(heading.Lines.Count - 1);
             }
 
             return true;

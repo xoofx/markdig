@@ -1,20 +1,30 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System;
+
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+    /// <summary>
+    /// A parser for a list block and list item block.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class ListBlockParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListBlockParser"/> class.
+        /// </summary>
         public ListBlockParser()
         {
             OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             OrderedDelimiters = new[] {'.', ')'};
         }
 
+        /// <summary>
+        /// Gets or sets the ordered delimiters used after a digit/number (by default `.` and `)`)
+        /// </summary>
         public char[] OrderedDelimiters { get; set; }
 
         public override BlockState TryOpen(BlockParserState state)
@@ -85,7 +95,6 @@ namespace Textamina.Markdig.Parsers
             // If > 1 blank line, terminate this list
             var isBlankLine = state.IsBlankLine;
 
-            //if (isBlankLine && !(state.LastBlock is FencedCodeBlock)) // TODO: Handle this case
             var isInFencedBlock = state.LastBlock is FencedCodeBlock;
             if (isBlankLine)
             {
@@ -102,7 +111,6 @@ namespace Textamina.Markdig.Parsers
 
                 if (list.CountBlankLinesReset > 1)
                 {
-                    // TODO: Close all lists and not only this one
                     return BlockState.BreakDiscard;
                 }
 
