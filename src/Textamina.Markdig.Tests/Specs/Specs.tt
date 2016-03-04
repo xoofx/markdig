@@ -32,9 +32,9 @@ SOFTWARE.
 <#@ import namespace="System.CodeDom" #>
 <#@ import namespace="System.CodeDom.Compiler" #>
 <#@ output extension=".cs" #><#
-    var specFiles = new string[] {
-		"https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt",
-		Host.ResolvePath("PipeTableSpecs.md")
+    var specFiles = new KeyValuePair<string, string>[] {
+		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
+		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables")
 	};
     var emptyLines = false;
     var displayEmptyLines = false;
@@ -45,7 +45,9 @@ using NUnit.Framework;
 namespace Textamina.Markdig.Tests
 {
 <#
-foreach (var specFile in specFiles)
+foreach (var specFileItem in specFiles)
+{
+	var specFile = specFileItem.Key;
 foreach (var item in ReadSpecs(specFile))
 {
     if (item is string)
@@ -92,11 +94,12 @@ foreach (var item in ReadSpecs(specFile))
 <#= string.Join(Environment.NewLine, spec.Html.Split('\n').Select(s => string.Format("            //     {0}", s))) #>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, <#= spec.Example #>, "<#= Escape(spec.SecHeading) #>");
-			TestParser.TestSpec("<#= Escape(spec.CommonMark) #>", "<#= Escape(spec.Html) #>");
+			TestParser.TestSpec("<#= Escape(spec.CommonMark) #>", "<#= Escape(spec.Html) #>", "<#= Escape(specFileItem.Value) #>");
         }
     }
 <#
     }
+}
 }
 #>
 }

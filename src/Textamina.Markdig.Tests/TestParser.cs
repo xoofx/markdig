@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Tests
 
         private static MarkdownPipeline GetPipeline(string extensionsStr)
         {
-            if (extensionsStr == null)
+            if (string.IsNullOrEmpty(extensionsStr))
             {
                 return new MarkdownPipeline();
             }
