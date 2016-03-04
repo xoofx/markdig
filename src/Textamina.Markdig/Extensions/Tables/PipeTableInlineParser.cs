@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using System.Collections.Generic;
 using System.Reflection;
+using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Parsers.Inlines;
 using Textamina.Markdig.Renderers.Html;
