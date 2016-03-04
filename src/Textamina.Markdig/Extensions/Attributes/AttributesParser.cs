@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Extensions.Attributes
             OpeningCharacters = new[] { '{' };
         }
 
-        public static bool TryParse(ref StringSlice slice, out AttributesInline attributes)
+        public static bool TryParse(ref StringSlice slice, out HtmlAttributes attributes)
         {
             attributes = null;
             if (slice.PeekCharExtra(-1) == '{')
@@ -169,7 +169,7 @@ namespace Textamina.Markdig.Extensions.Attributes
 
             if (isValid)
             {
-                attributes = new AttributesInline
+                attributes = new HtmlAttributes()
                 {
                     Id = id,
                     Classes = classes,
@@ -185,57 +185,43 @@ namespace Textamina.Markdig.Extensions.Attributes
 
         public override bool Match(InlineParserState state, ref StringSlice slice)
         {
-            AttributesInline attributes;
+            HtmlAttributes attributes;
             if (TryParse(ref slice, out attributes))
             {
-                state.Inline = attributes;
+                var inline = state.Inline;
+                var objectToAttach = (MarkdownObject) inline;
 
-                var attributesCollection = state.Block.GetData(typeof (AttributesInline)) as List<AttributesInline>;
-                if (attributesCollection == null)
+                // If the curent object to attach is either a literal or delimiter
+                // try to find a suitable parent, otherwise attach the html attributes to the block
+                if (inline is LiteralInline || inline is DelimiterInline)
                 {
-                    // Add a callback
-                    state.Block.ProcessInlinesEnd += BlockOnProcessInlinesEnd;
-                    attributesCollection = new List<AttributesInline>(); // TODO: use caching
-                    state.Block.SetData(typeof(AttributesInline), attributesCollection);
+                    while (true)
+                    {
+                        inline = inline.Parent;
+                        if (!(inline is DelimiterInline))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (inline == state.Root)
+                    {
+                        objectToAttach = state.Block;
+                    }
+                    else
+                    {
+                        objectToAttach = inline;
+                    }
                 }
-                attributesCollection.Add(attributes);
+
+                var currentHtmlAttributes = objectToAttach.GetAttributes();
+                attributes.CopyTo(currentHtmlAttributes);
+
+                // We don't set the state.Inline as we don't want to add attach attributes to a particular entity
                 return true;
             }
 
             return false;
-        }
-
-        private static void BlockOnProcessInlinesEnd(InlineParserState state)
-        {
-            // Remove the callback
-            state.Block.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
-            
-            // Gets the attributes that we have scanned in the whole block
-            var attributesCollection = (List<AttributesInline>)state.Block.GetData(typeof(AttributesInline));
-
-            // Remove the list
-            state.Block.RemoveData(typeof (AttributesInline));
-
-            foreach (var attributesInline in attributesCollection)
-            {
-                var objectToAttach = (MarkdownObject)(attributesInline.PreviousSibling ?? attributesInline.Parent);
-
-                // If the previous sibling object is null or the object is a literal
-                // we will attach the attributes to the block instead
-                if (objectToAttach == state.Block.Inline || objectToAttach is LiteralInline)
-                {
-                    objectToAttach = state.Block;
-                }
-
-                // Add html attributes to the object
-                var htmlAttributes = objectToAttach.GetAttributes();
-                attributesInline.CopyTo(htmlAttributes);
-                htmlAttributes.Id = attributesInline.Id;
-
-                // Remove the inline as we don't want to keep it in the code
-                attributesInline.Remove();
-            }
-            // TODO: release list to a cache
         }
     }
 }

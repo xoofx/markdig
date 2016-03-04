@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers.Html
@@ -31,6 +32,30 @@ namespace Textamina.Markdig.Renderers.Html
                 Properties = new List<KeyValuePair<string, string>>();
             }
             Properties.Add(new KeyValuePair<string, string>(name, value));
+        }
+
+        public void CopyTo(HtmlAttributes htmlAttributes)
+        {
+            if (htmlAttributes == null) throw new ArgumentNullException(nameof(htmlAttributes));
+            // Add html htmlAttributes to the object
+            htmlAttributes.Id = Id;
+            if (htmlAttributes.Classes == null)
+            {
+                htmlAttributes.Classes = Classes;
+            }
+            else if (Classes != null)
+            {
+                htmlAttributes.Classes.AddRange(Classes);
+            }
+
+            if (htmlAttributes.Properties == null)
+            {
+                htmlAttributes.Properties = Properties;
+            }
+            else if (Properties != null)
+            {
+                htmlAttributes.Properties.AddRange(Properties);
+            }
         }
     }
 

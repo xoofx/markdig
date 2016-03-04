@@ -12,7 +12,10 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @"```info {#test .class src=tata src2='toto'}
+            var text = @"
+# Heading {#heading}
+
+```info {#test .class src=tata src2='toto'}
 This is a test
 ```
 ";

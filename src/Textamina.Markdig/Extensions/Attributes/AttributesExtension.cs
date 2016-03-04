@@ -1,5 +1,4 @@
-﻿using System;
-using Textamina.Markdig.Parsers;
+﻿using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 
@@ -33,7 +32,7 @@ namespace Textamina.Markdig.Extensions.Attributes
                     // Work on a copy
                     var copy = line;
                     copy.Start = indexOfAttributes;
-                    AttributesInline attributes;
+                    HtmlAttributes attributes;
                     if (AttributesParser.TryParse(ref copy, out attributes))
                     {
                         var htmlAttributes = fenced.GetAttributes();

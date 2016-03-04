@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Attributes\AttributesInline.cs" />
     <Compile Include="Extensions\Attributes\AttributesExtension.cs" />
     <Compile Include="Extensions\Footnotes\Footnote.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteParser.cs" />
