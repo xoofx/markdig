@@ -12,23 +12,17 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @"This *^yes^* ~~is~~ a link to a footnote[^OhYeah] [^OhYeah]
-
-[^OhYeah]: This is the footnote
-    > Yes
-
-This is a text after the footnote not part of the foot note [^3]
-
-[^3]: This is a 2nd footnote
+            var text = @"```info {#test .class src=tata src2='toto'}
+This is a test
+```
 ";
 
+            //            var reader = new StringReader(@"> > toto tata
+            //> titi toto
+            //");
 
-
-//            var reader = new StringReader(@"> > toto tata
-//> titi toto
-//");
-
-            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().EnableFootnoteExtensions().EnableStrikethroughSuperAndSubScript());
+            //var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseFootnoteExtensions().UseStrikethroughSuperAndSubScript());
+            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseAttributes());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }

@@ -38,5 +38,15 @@ namespace Textamina.Markdig.Syntax
             attachedDatas.TryGetValue(key, out value);
             return value;
         }
+
+        public bool RemoveData(object key)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (attachedDatas == null)
+            {
+                return true;
+            }
+            return attachedDatas.Remove(key);
+        }
     }
 }

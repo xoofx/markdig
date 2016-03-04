@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Tests
             MarkdownParser.Log = Console.Out;
             var reader = new StringReader(inputText);
             var output = new StringWriter();
-            Markdown.ConvertToHtml(reader, output, new MarkdownPipeline().EnablePipeTable());
+            Markdown.ConvertToHtml(reader, output, new MarkdownPipeline().UsePipeTable());
 
             var result = Compact(output.ToString());
             expectedOutputText = Compact(expectedOutputText);

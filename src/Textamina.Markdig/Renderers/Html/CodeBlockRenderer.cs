@@ -25,18 +25,15 @@ namespace Textamina.Markdig.Renderers.Html
                 {
                     renderer.Write(" class=\"language-");
                     renderer.WriteEscape(fencedCode.Language);
+                    renderer.Write("\"");
                 }
                 else
                 {
                     attributes.AddClass("language-" + fencedCode.Language);
                     renderer.WriteAttributes(obj);
                 }
-                renderer.Write("\">");
             }
-            else
-            {
-                renderer.Write(">");
-            }
+            renderer.Write(">");
             renderer.WriteLeafRawLines(obj, true, true);
             renderer.WriteLine("</code></pre>");
         }

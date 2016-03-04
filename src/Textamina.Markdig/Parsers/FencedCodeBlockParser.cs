@@ -5,49 +5,23 @@ namespace Textamina.Markdig.Parsers
 {
     public class FencedCodeBlockParser : BlockParser
     {
+        public delegate bool InfoParserDelegate(BlockParserState state, ref StringSlice line, FencedCodeBlock fenced);
+
         public FencedCodeBlockParser()
         {
             OpeningCharacters = new[] {'`', '~'};
+            InfoParser = DefaultInfoParser;
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public InfoParserDelegate InfoParser { get; set; }
+
+        public static bool DefaultInfoParser(BlockParserState state, ref StringSlice line,
+            FencedCodeBlock fenced)
         {
-            // Else if the we have an indent, it is not valid
-            if (state.IsCodeIndent)
-            {
-                return BlockState.None;
-            }
-
-            int count = 0;
-            var line = state.Line;
-            char c = line.CurrentChar;
-            var matchChar = c;
-            while (c != '\0')
-            {
-                if (c != matchChar)
-                {
-                    break;
-                }
-                count++;
-                c = line.NextChar();
-            }
-
-            if (count < 3)
-            {
-                return BlockState.None;
-            }
-
-            // TODO: We need to count the number of leading space to remove them on each line
-            var column = state.Column;
-
-            // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
-            while (c.IsSpaceOrTab())
-            {
-                c = line.NextChar();
-            }
             string infoString;
             string argString = null;
 
+            var c = line.CurrentChar;
             // An info string cannot contain any backsticks
             int firstSpace = -1;
             for (int i = line.Start; i <= line.End; i++)
@@ -55,7 +29,7 @@ namespace Textamina.Markdig.Parsers
                 c = line.Text[i];
                 if (c == '`')
                 {
-                    return BlockState.None;
+                    return false;
                 }
 
                 if (firstSpace < 0 && c.IsSpaceOrTab())
@@ -90,16 +64,58 @@ namespace Textamina.Markdig.Parsers
                 infoString = line.ToString();
             }
 
-            // Store the number of matched string into the context
-            state.NewBlocks.Push(new FencedCodeBlock(this)
+            fenced.Language = HtmlHelper.Unescape(infoString);
+            fenced.Arguments = HtmlHelper.Unescape(argString);
+
+            return true;
+        }
+
+        public override BlockState TryOpen(BlockParserState state)
+        {
+            // Else if the we have an indent, it is not valid
+            if (state.IsCodeIndent)
             {
-                Column = column,
+                return BlockState.None;
+            }
+
+            int count = 0;
+            var line = state.Line;
+            char c = line.CurrentChar;
+            var matchChar = c;
+            while (c != '\0')
+            {
+                if (c != matchChar)
+                {
+                    break;
+                }
+                count++;
+                c = line.NextChar();
+            }
+
+            if (count < 3)
+            {
+                return BlockState.None;
+            }
+
+            // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
+            line.TrimStart();
+
+            var fenced = new FencedCodeBlock(this)
+            {
+                Column = state.Column,
                 FencedChar = matchChar,
                 FencedCharCount = count,
                 IndentCount = state.Indent,
-                Language = HtmlHelper.Unescape(infoString),
-                Arguments = HtmlHelper.Unescape(argString),
-            });
+            };
+
+            // If the info parser was not successfull, early exit
+            if (InfoParser != null && !InfoParser(state, ref line, fenced))
+            {
+                return BlockState.None;
+            }
+
+            // Store the number of matched string into the context
+            state.NewBlocks.Push(fenced);
 
             // Discard the current line as it is already parsed
             return BlockState.ContinueDiscard;

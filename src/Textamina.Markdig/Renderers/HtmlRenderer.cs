@@ -157,12 +157,12 @@ namespace Textamina.Markdig.Renderers
             {
                 if (attributes.Id != null)
                 {
-                    Write($" Id=\"{attributes.Id}\"");
+                    Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
                 }
 
                 if (attributes.Classes != null && attributes.Classes.Count > 0)
                 {
-                    Write($" class=\"");
+                    Write(" class=\"");
                     for (int i = 0; i < attributes.Classes.Count; i++)
                     {
                         var cssClass = attributes.Classes[i];
@@ -170,7 +170,7 @@ namespace Textamina.Markdig.Renderers
                         {
                             Write(" ");
                         }
-                        Write(cssClass);
+                        WriteEscape(cssClass);
                     }
                     Write("\"");
                 }
