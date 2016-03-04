@@ -7,47 +7,16 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Syntax
 {
-    public interface ICharIterator
-    {
-        int Start { get; }
-
-        char CurrentChar { get; }
-
-        int End { get; }
-
-        char NextChar();
-
-        bool IsEmpty { get; }
-
-        /// <summary>
-        /// Trims the start.
-        /// </summary>
-        /// <returns><c>true</c> if it has reaches the end of the iterator</returns>
-        bool TrimStart();
-    }
-
-    public static class CharIteratorHelper
-    {
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
-        {
-            countNewLines = 0;
-            var c = iterator.CurrentChar;
-            bool hasWhitespaces = false;
-            while (c.IsWhitespace())
-            {
-                if (c == '\n')
-                {
-                    countNewLines++;
-                }
-                hasWhitespaces = true;
-                c = iterator.NextChar();
-            }
-            return hasWhitespaces;
-        }
-    }
-
+    /// <summary>
+    /// A lightweight struct that represents a slice of a string.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.ICharIterator" />
     public struct StringSlice : ICharIterator
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
         public StringSlice(string text)
         {
             Text = text;
@@ -55,6 +24,13 @@ namespace Textamina.Markdig.Syntax
             End = (Text?.Length ?? 0) - 1;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
@@ -63,22 +39,49 @@ namespace Textamina.Markdig.Syntax
             End = end;
         }
 
+        /// <summary>
+        /// The text of this slice.
+        /// </summary>
         public readonly string Text;
 
+        /// <summary>
+        /// Gets or sets the start position within <see cref="Text"/>.
+        /// </summary>
         public int Start { get; set; }
 
+        /// <summary>
+        /// Gets or sets the end position (inclusive) within <see cref="Text"/>.
+        /// </summary>
         public int End { get; set; }
 
+        /// <summary>
+        /// Gets the length.
+        /// </summary>
         public int Length => End - Start + 1;
 
-        public int Column => Start;
-
+        /// <summary>
+        /// Gets the current character.
+        /// </summary>
         public char CurrentChar => Start <= End ? this[Start] : '\0';
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
         public bool IsEmpty => Start > End;
 
+        /// <summary>
+        /// Gets the <see cref="System.Char"/> at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>A character in the slice at the specified index (not from <see cref="Start"/> but from the begining of the slice)</returns>
         public char this[int index] => Text[index];
 
+        /// <summary>
+        /// Goes to the next character, incrementing the <see cref="Start" /> position.
+        /// </summary>
+        /// <returns>
+        /// The next character. `\0` is end of the iteration.
+        /// </returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
         {
@@ -91,6 +94,12 @@ namespace Textamina.Markdig.Syntax
             return Text[Start];
         }
 
+        /// <summary>
+        /// Peeks a character at the specified offset from the current <see cref="Start"/> position
+        /// inside the range <see cref="Start"/> and <see cref="End"/>, returns `\0` if outside this range.
+        /// </summary>
+        /// <param name="offset">The offset.</param>
+        /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char PeekChar(int offset)
         {
@@ -98,6 +107,12 @@ namespace Textamina.Markdig.Syntax
             return index >= Start && index <= End ? Text[index] : (char) 0;
         }
 
+        /// <summary>
+        /// Peeks a character at the specified offset from the current begining of the slice
+        /// without using the range <see cref="Start"/> or <see cref="End"/>, returns `\0` if outside the <see cref="Text"/>.
+        /// </summary>
+        /// <param name="offset">The offset.</param>
+        /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char PeekCharExtra(int offset)
         {
@@ -105,11 +120,24 @@ namespace Textamina.Markdig.Syntax
             return index >= 0 && index < Text.Length ? Text[index] : (char)0;
         }
 
+        /// <summary>
+        /// Matches the specified text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
         public bool Match(string text, int offset = 0)
         {
             return Match(text, End, offset);
         }
 
+        /// <summary>
+        /// Matches the specified text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
         public bool Match(string text, int end, int offset)
         {
             var index = Start + offset;
@@ -125,6 +153,13 @@ namespace Textamina.Markdig.Syntax
             return i == text.Length;
         }
 
+        /// <summary>
+        /// Matches the specified text using lowercase comparison.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
         public bool MatchLowercase(string text, int end, int offset)
         {
             var index = Start + offset;
@@ -140,6 +175,12 @@ namespace Textamina.Markdig.Syntax
             return i == text.Length;
         }
 
+        /// <summary>
+        /// Searches the specified text within this slice.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
         public bool Search(string text, int offset = 0)
         {
             var end = End - text.Length + 1;
@@ -153,6 +194,12 @@ namespace Textamina.Markdig.Syntax
             return false;
         }
 
+        /// <summary>
+        /// Searches the specified text within this slice (matching lowercase).
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
         public bool SearchLowercase(string text, int offset = 0)
         {
             var end = End - text.Length + 1;
@@ -166,6 +213,12 @@ namespace Textamina.Markdig.Syntax
             return false;
         }
 
+        /// <summary>
+        /// Trims whitespaces at the beginning of this slice starting from <see cref="Start"/> position.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if it has reaches the end of the iterator
+        /// </returns>
         public bool TrimStart()
         {
             // Strip leading spaces
@@ -180,6 +233,10 @@ namespace Textamina.Markdig.Syntax
             return start != Start;
         }
 
+        /// <summary>
+        /// Trims whitespaces at the beginning of this slice starting from <see cref="Start"/> position.
+        /// </summary>
+        /// <param name="spaceCount">The number of spaces trimmed.</param>
         public void TrimStart(out int spaceCount)
         {
             spaceCount = 0;
@@ -194,6 +251,10 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
+        /// <summary>
+        /// Trims whitespaces at the end of this slice, starting from <see cref="End"/> position.
+        /// </summary>
+        /// <returns></returns>
         public bool TrimEnd()
         {
             for (; Start <= End; End--)
@@ -206,12 +267,21 @@ namespace Textamina.Markdig.Syntax
             return IsEmpty;
         }
 
+        /// <summary>
+        /// Trims whitespaces from both the start and end of this slice.
+        /// </summary>
         public void Trim()
         {
             TrimStart();
             TrimEnd();
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             if (Text != null && Start <= End)
@@ -227,6 +297,10 @@ namespace Textamina.Markdig.Syntax
             return string.Empty;
         }
 
+        /// <summary>
+        /// Determines whether this slice is empty or made only of whitespaces.
+        /// </summary>
+        /// <returns><c>true</c> if this slice is empty or made only of whitespaces; <c>false</c> otherwise</returns>
         public bool IsEmptyOrWhitespace()
         {
             for (int i = Start; i <= End; i++)

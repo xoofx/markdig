@@ -4,20 +4,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Syntax
 {
+    /// <summary>
+    /// A group of <see cref="StringLine"/>.
+    /// </summary>
+    /// <seealso cref="System.Collections.IEnumerable" />
     public class StringLineGroup : IEnumerable
     {
         private static readonly StringLine[] Empty = new StringLine[0];
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
+        /// </summary>
         public StringLineGroup()
         {
             Lines = Empty;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public StringLineGroup(string text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
@@ -25,16 +36,29 @@ namespace Textamina.Markdig.Syntax
             Add(new StringSlice(text));
         }
 
+        /// <summary>
+        /// Gets the lines.
+        /// </summary>
         public StringLine[] Lines { get; private set; }
 
+        /// <summary>
+        /// Gets the number of lines.
+        /// </summary>
         public int Count { get; private set; }
 
+        /// <summary>
+        /// Clears this instance.
+        /// </summary>
         public void Clear()
         {
             Array.Clear(Lines, 0, Lines.Length);
             Count = 0;
         }
 
+        /// <summary>
+        /// Removes the line at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
         public void RemoveAt(int index)
         {
             if (Count - 1 == index)
@@ -49,27 +73,24 @@ namespace Textamina.Markdig.Syntax
             }
         }
 
+        /// <summary>
+        /// Adds the specified line to this instance.
+        /// </summary>
+        /// <param name="line">The line.</param>
         public void Add(ref StringLine line)
         {
             if (Count == Lines.Length) IncreaseCapacity();
             Lines[Count++] = line;
         }
 
+        /// <summary>
+        /// Adds the specified slice to this instance.
+        /// </summary>
+        /// <param name="slice">The slice.</param>
         public void Add(StringSlice slice)
         {
             if (Count == Lines.Length) IncreaseCapacity();
             Lines[Count++] = new StringLine(ref slice);
-        }
-
-        private void IncreaseCapacity()
-        {
-            int newCapacity = Lines.Length == 0 ? 4 : Lines.Length * 2;
-            var newItems = new StringLine[newCapacity];
-            if (Count > 0)
-            {
-                Array.Copy(Lines, 0, newItems, 0, Count);
-            }
-            Lines = newItems;
         }
 
         public override string ToString()
@@ -77,8 +98,14 @@ namespace Textamina.Markdig.Syntax
             return ToSlice().ToString();
         }
 
+        /// <summary>
+        /// Converts the lines to a single <see cref="StringSlice"/> by concatenating the lines.
+        /// </summary>
+        /// <param name="lineOffsets">The position of the `\n` line offsets from the beginning of the returned slice.</param>
+        /// <returns>A single slice concatenating the lines of this instance</returns>
         public StringSlice ToSlice(List<int> lineOffsets = null)
         {
+            // Optimization case when no lines
             if (Count == 0)
             {
                 if (lineOffsets != null)
@@ -88,6 +115,7 @@ namespace Textamina.Markdig.Syntax
                 return new StringSlice(string.Empty);
             }
 
+            // Optimization case for a single line.
             if (Count == 1)
             {
                 if (lineOffsets != null)
@@ -97,8 +125,8 @@ namespace Textamina.Markdig.Syntax
                 return Lines[0];
             }
 
+            // Else use a builder
             var builder = StringBuilderCache.Local();
-            int lineOffset = 0;
             for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
@@ -123,16 +151,35 @@ namespace Textamina.Markdig.Syntax
             return new StringSlice(str);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Lines.GetEnumerator();
-        }
-
+        /// <summary>
+        /// Converts this instance into a <see cref="ICharIterator"/>.
+        /// </summary>
+        /// <returns></returns>
         public Iterator ToCharIterator()
         {
             return new Iterator(this);
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Lines.GetEnumerator();
+        }
+
+        private void IncreaseCapacity()
+        {
+            int newCapacity = Lines.Length == 0 ? 4 : Lines.Length * 2;
+            var newItems = new StringLine[newCapacity];
+            if (Count > 0)
+            {
+                Array.Copy(Lines, 0, newItems, 0, Count);
+            }
+            Lines = newItems;
+        }
+
+        /// <summary>
+        /// The iterator used to iterate other the lines.
+        /// </summary>
+        /// <seealso cref="Textamina.Markdig.Syntax.ICharIterator" />
         public struct Iterator : ICharIterator
         {
             private readonly StringLineGroup lines;

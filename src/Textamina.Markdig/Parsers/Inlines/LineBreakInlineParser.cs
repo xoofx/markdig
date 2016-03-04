@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
-            state.Inline = !EnableSoftAsHard && (slice.Column == 0 || !hasDoubleSpacesBefore) ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
+            state.Inline = !EnableSoftAsHard && (slice.Start == 0 || !hasDoubleSpacesBefore) ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
             return true;
         }
     }

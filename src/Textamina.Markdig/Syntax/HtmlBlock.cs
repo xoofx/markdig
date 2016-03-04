@@ -5,12 +5,23 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {
+    /// <summary>
+    /// Represents a group of lines that is treated as raw HTML (and will not be escaped in HTML output).
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.LeafBlock" />
     public class HtmlBlock : LeafBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlBlock"/> class.
+        /// </summary>
+        /// <param name="parser">The parser.</param>
         public HtmlBlock(BlockParser parser) : base(parser)
         {
         }
 
+        /// <summary>
+        /// Gets or sets the type of block.
+        /// </summary>
         public HtmlBlockType Type { get; set; }
     }
 }

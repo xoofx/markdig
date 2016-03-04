@@ -9,16 +9,24 @@ namespace Textamina.Markdig.Syntax
     /// Repressents a paragraph.
     /// </summary>
     /// <remarks>
-    /// Related to CommonMark spec: 4.5 Fenced code blocks
+    /// Related to CommonMark spec: 4.8 Paragraphs
     /// </remarks>
     public class ParagraphBlock : LeafBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
+        /// </summary>
         public ParagraphBlock() : this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public ParagraphBlock(BlockParser parser) : base(parser)
         {
+            // Inlines are processed for a paragraph
             ProcessInlines = true;
         }
     }

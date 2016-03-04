@@ -6,36 +6,77 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {
+    /// <summary>
+    /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.MarkdownObject" />
     public abstract class Block : MarkdownObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Block"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         protected Block(BlockParser parser)
         {
             Parser = parser;
         }
 
+        /// <summary>
+        /// Gets or sets the text column this instance was declared (zero-based).
+        /// </summary>
         public int Column { get; set; }
 
+        /// <summary>
+        /// Gets or sets the text line this instance was declared (zero-based).
+        /// </summary>
         public int Line { get; set; }
 
+        /// <summary>
+        /// Gets the parent of this container. May be null.
+        /// </summary>
         public ContainerBlock Parent { get; internal set;  }
 
+        /// <summary>
+        /// Gets the parser associated to this instance.
+        /// </summary>
         public BlockParser Parser { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is still open.
+        /// </summary>
         public bool IsOpen { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this block must be removed from its container after inlines have been processed.
+        /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
 
+        /// <summary>
+        /// Occurs when the process of inlines begin.
+        /// </summary>
         public event Action<InlineParserState> ProcessInlinesBegin;
 
+        /// <summary>
+        /// Occurs when the process of inlines ends for this instance.
+        /// </summary>
         public event Action<InlineParserState> ProcessInlinesEnd;
 
-        internal void OnProcessInlinesBegin(InlineParserState obj)
+        /// <summary>
+        /// Called when the process of inlines begin.
+        /// </summary>
+        /// <param name="state">The inline parser state.</param>
+        internal void OnProcessInlinesBegin(InlineParserState state)
         {
-            ProcessInlinesBegin?.Invoke(obj);
+            ProcessInlinesBegin?.Invoke(state);
         }
-        internal void OnProcessInlinesEnd(InlineParserState obj)
+
+        /// <summary>
+        /// Called when the process of inlines ends.
+        /// </summary>
+        /// <param name="state">The inline parser state.</param>
+        internal void OnProcessInlinesEnd(InlineParserState state)
         {
-            ProcessInlinesEnd?.Invoke(obj);
+            ProcessInlinesEnd?.Invoke(state);
         }
     }
 }

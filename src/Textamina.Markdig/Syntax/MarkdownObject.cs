@@ -6,10 +6,22 @@ using System.Collections.Generic;
 
 namespace Textamina.Markdig.Syntax
 {
+    /// <summary>
+    /// Base class for a the Markdown syntax tree.
+    /// </summary>
     public class MarkdownObject
     {
+        /// <summary>
+        /// The attached datas.
+        /// </summary>
         private Dictionary<object, object> attachedDatas;
 
+        /// <summary>
+        /// Stores a key/value pair for this instance.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public void SetData(object key, object value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -20,6 +32,12 @@ namespace Textamina.Markdig.Syntax
             attachedDatas[key] = value;
         }
 
+        /// <summary>
+        /// Determines whether this instance contains the specified key data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns><c>true</c> if a data with the key is stored</returns>
+        /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public bool ContainsData(object key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -30,6 +48,12 @@ namespace Textamina.Markdig.Syntax
             return attachedDatas.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Gets the associated data for the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The associated data or null if none</returns>
+        /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public object GetData(object key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -42,6 +66,12 @@ namespace Textamina.Markdig.Syntax
             return value;
         }
 
+        /// <summary>
+        /// Removes the associated data for the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns><c>true</c> if the data was removed; <c>false</c> otherwise</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool RemoveData(object key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));

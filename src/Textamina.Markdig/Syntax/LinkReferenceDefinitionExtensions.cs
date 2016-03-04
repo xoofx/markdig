@@ -8,6 +8,8 @@ namespace Textamina.Markdig.Syntax
 {
     public static class LinkReferenceDefinitionExtensions
     {
+        // TODO: Add extension methods for the document instead of showing the internal of the Dictioanry
+
         public static Dictionary<string, LinkReferenceDefinition> GetLinkReferenceDefinitions(this Document document)
         {
             var references = document.GetData(LinkReferenceDefinition.DocumentKey) as Dictionary<string, LinkReferenceDefinition>;

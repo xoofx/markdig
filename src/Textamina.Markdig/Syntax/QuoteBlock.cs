@@ -5,12 +5,23 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax
 {
+    /// <summary>
+    /// A block quote (Section 5.1 CommonMark specs)
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public QuoteBlock(BlockParser parser) : base(parser)
         {
         }
 
+        /// <summary>
+        /// Gets or sets the quote character (usually `&gt;`)
+        /// </summary>
         public char QuoteChar { get; set; }
     }
 }

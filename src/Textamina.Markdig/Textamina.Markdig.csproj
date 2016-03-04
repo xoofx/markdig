@@ -90,6 +90,8 @@
     <Compile Include="Parsers\BlockParserList.cs" />
     <Compile Include="Parsers\IBlockParser.cs" />
     <Compile Include="Renderers\TextRendererBase.cs" />
+    <Compile Include="Syntax\CharIteratorHelper.cs" />
+    <Compile Include="Syntax\ICharIterator.cs" />
     <Compile Include="Syntax\LinkReferenceDefinitionExtensions.cs" />
     <Compile Include="Syntax\MarkdownObject.cs" />
     <Compile Include="Parsers\IMarkdownParser.cs" />
@@ -145,7 +147,7 @@
     <Compile Include="Syntax\QuoteBlock.cs" />
     <Compile Include="Parsers\QuoteBlockParser.cs" />
     <Compile Include="Syntax\StringLine.cs" />
-    <Compile Include="Syntax\StringSliceListExtensions.cs" />
+    <Compile Include="Syntax\StringLineGroupExtensions.cs" />
     <Compile Include="Syntax\ThematicBreakBlock.cs" />
     <Compile Include="Helpers\CharHelper.cs" />
     <Compile Include="Syntax\CodeBlock.cs" />

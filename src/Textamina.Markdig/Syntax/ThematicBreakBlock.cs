@@ -6,10 +6,14 @@ using Textamina.Markdig.Parsers;
 namespace Textamina.Markdig.Syntax
 {
     /// <summary>
-    /// Repressents a thematic break.
+    /// Repressents a thematic break (Section 4.1 CommonMark specs).
     /// </summary>
     public class ThematicBreakBlock : LeafBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThematicBreakBlock"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public ThematicBreakBlock(BlockParser parser) : base(parser)
         {
         }

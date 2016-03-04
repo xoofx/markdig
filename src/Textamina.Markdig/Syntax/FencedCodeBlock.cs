@@ -13,18 +13,40 @@ namespace Textamina.Markdig.Syntax
     /// </remarks>
     public class FencedCodeBlock : CodeBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FencedCodeBlock"/> class.
+        /// </summary>
+        /// <param name="parser">The parser.</param>
         public FencedCodeBlock(BlockParser parser) : base(parser)
         {
         }
 
+        /// <summary>
+        /// Gets or sets the language parsed after the first line of 
+        /// the fenced code block. May be null.
+        /// </summary>
         public string Language { get; set; }
 
+        /// <summary>
+        /// Gets or sets the arguments after the <see cref="Language"/>.
+        /// May be null.
+        /// </summary>
         public string Arguments { get; set; }
 
+        /// <summary>
+        /// Gets or sets the fenced character count used to open this fenced code block.
+        /// </summary>
         public int FencedCharCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the fenced character used to open and close this fenced code block.
+        /// </summary>
         public char FencedChar { get; set; }
 
-        public int IndentCount { get; set; }
+        /// <summary>
+        /// Gets or sets the indent count when the fenced code block was indented 
+        /// and we need to remove up to indent count chars spaces from the begining of a line.
+        /// </summary>
+        internal int IndentCount { get; set; }
     }
 }
