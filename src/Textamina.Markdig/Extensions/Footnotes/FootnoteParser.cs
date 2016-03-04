@@ -29,7 +29,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
             int start = state.Start;
             if (!LinkHelper.TryParseLabel(ref state.Line, false, out label) || !label.StartsWith("^") || state.CurrentChar != ':')
             {
-                state.ResetToColumn(saved);
+                state.GoToColumn(saved);
                 return BlockState.None;
             }
            
@@ -148,7 +148,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
 
             if (state.IsCodeIndent)
             {
-                state.ResetToCodeIndent();
+                state.GoToCodeIndent();
             }
 
             return BlockState.Continue;

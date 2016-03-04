@@ -174,7 +174,7 @@ namespace Textamina.Markdig.Parsers
             }
 
             // Reset the indentation to the column before the indent
-            state.ResetToColumn(state.ColumnBeforeIndent);
+            state.GoToColumn(state.ColumnBeforeIndent);
 
             // Remove any indent spaces
             c = state.CurrentChar;

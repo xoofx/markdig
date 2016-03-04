@@ -311,10 +311,5 @@ namespace Textamina.Markdig.Parsers.Inlines
                 parent.IsActive = false;
             }
         }
-
-        private bool TryParseLinkTitle(InlineParserState state)
-        {
-            return false;
-        }
     }
 }

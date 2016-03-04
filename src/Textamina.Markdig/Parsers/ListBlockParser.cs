@@ -139,7 +139,7 @@ namespace Textamina.Markdig.Parsers
             {
                 if (state.Indent > columWidth && state.IsCodeIndent)
                 {
-                    state.ResetToColumn(columWidth);
+                    state.GoToColumn(columWidth);
                 }
 
                 return BlockState.Continue;
@@ -180,7 +180,7 @@ namespace Textamina.Markdig.Parsers
                 if (countDigit > 9)
                 {
                     // Reset to an a start position
-                    state.ResetToColumn(initColumn);
+                    state.GoToColumn(initColumn);
                     return BlockState.None;
                 }
 
@@ -197,7 +197,7 @@ namespace Textamina.Markdig.Parsers
                 if (!isOrderedDelimiter)
                 {
                     // Reset to an a start position
-                    state.ResetToColumn(initColumn);
+                    state.GoToColumn(initColumn);
                     return BlockState.None;
                 }
 
@@ -212,7 +212,7 @@ namespace Textamina.Markdig.Parsers
             else
             {
                 // Reset to an a start position
-                state.ResetToColumn(initColumn);
+                state.GoToColumn(initColumn);
                 return BlockState.None;
             }
 
@@ -232,7 +232,7 @@ namespace Textamina.Markdig.Parsers
             {
                 if (!c.IsSpaceOrTab())
                 {
-                    state.ResetToColumn(initColumn);
+                    state.GoToColumn(initColumn);
                     return BlockState.None;
                 }
 
@@ -246,7 +246,7 @@ namespace Textamina.Markdig.Parsers
 
                 if (state.IsCodeIndent)
                 {
-                    state.ResetToColumn(columnBeforeIndent);
+                    state.GoToColumn(columnBeforeIndent);
                 }
 
                 // Number of spaces required for the following content to be part of this list item

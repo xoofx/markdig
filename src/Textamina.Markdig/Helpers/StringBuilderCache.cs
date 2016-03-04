@@ -9,7 +9,7 @@ namespace Textamina.Markdig.Helpers
     /// <summary>
     /// An implementation of <see cref="ObjectCache{T}"/> for <see cref="StringBuilder"/>
     /// </summary>
-    /// <seealso cref="Textamina.Markdig.Helpers.ObjectCache{System.Text.StringBuilder}" />
+    /// <seealso cref="Textamina.Markdig.Helpers.ObjectCache{StringBuilder}" />
     public class StringBuilderCache : ObjectCache<StringBuilder>
     {
         /// <summary>

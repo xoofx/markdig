@@ -16,8 +16,6 @@ namespace Textamina.Markdig.Parsers
     /// </summary>
     public class InlineParserState
     {
-        internal static TextWriter Log;
-
         private readonly List<int> lineOffsets;
 
         /// <summary>
@@ -37,35 +35,70 @@ namespace Textamina.Markdig.Parsers
             Document = document;
             InlinesToClose = new List<Inline>();
             Parsers = parsers;
-            SpecialCharacters = Parsers.OpeningCharacters;
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
         }
 
+        /// <summary>
+        /// Gets the current block being proessed.
+        /// </summary>
         public LeafBlock Block { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the new block to replace the block being processed.
+        /// </summary>
         public Block BlockNew { get; set; }
 
+        /// <summary>
+        /// Gets or sets the current inline. Used by <see cref="InlineParser"/> to return a new inline if match was successfull
+        /// </summary>
         public Inline Inline { get; set; }
 
+        /// <summary>
+        /// Gets the root container of the current <see cref="Block"/>.
+        /// </summary>
         public ContainerInline Root { get; internal set; }
 
-        public List<Inline> InlinesToClose { get; }
-
+        /// <summary>
+        /// Gets the list of inline parsers.
+        /// </summary>
         public InlineParserList Parsers { get; }
 
+        /// <summary>
+        /// Gets the root document.
+        /// </summary>
         public Document Document { get; }
 
+        /// <summary>
+        /// Gets the cache string builders.
+        /// </summary>
         public StringBuilderCache StringBuilders { get;  }
 
+        /// <summary>
+        /// Gets or sets the index of the line from the begining of the document being processed.
+        /// </summary>
         public int LineIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of the local line from the beginning of the block being processed.
+        /// </summary>
         public int LocalLineIndex { get; set; }
 
-        public char[] SpecialCharacters { get; set; }
-
+        /// <summary>
+        /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="InlineParser.Index"/> property.
+        /// </summary>
         public object[] ParserStates { get; }
+
+        /// <summary>
+        /// Gets or sets the debug log writer. No log if null.
+        /// </summary>
+        public TextWriter DebugLog { get; set; }
+
+        /// <summary>
+        /// Gets the list of inlines to close.
+        /// </summary>
+        private List<Inline> InlinesToClose { get; }
 
         /// <summary>
         /// Processes the inline of the specified <see cref="LeafBlock"/>.
@@ -163,10 +196,10 @@ namespace Textamina.Markdig.Parsers
                     }
                 }
 
-                if (Log != null)
+                if (DebugLog != null)
                 {
-                    Log.WriteLine($"** Dump: char '{c}");
-                    leafBlock.Inline.DumpTo(Log);
+                    DebugLog.WriteLine($"** Dump: char '{c}");
+                    leafBlock.Inline.DumpTo(DebugLog);
                 }
             }
 
@@ -178,10 +211,10 @@ namespace Textamina.Markdig.Parsers
             }
             InlinesToClose.Clear();
 
-            if (Log != null)
+            if (DebugLog != null)
             {
-                Log.WriteLine("** Dump before Emphasis:");
-                leafBlock.Inline.DumpTo(Log);
+                DebugLog.WriteLine("** Dump before Emphasis:");
+                leafBlock.Inline.DumpTo(DebugLog);
             }
 
             // Process all delimiters
@@ -189,11 +222,11 @@ namespace Textamina.Markdig.Parsers
 
             //TransformDelimitersToLiterals();
 
-            if (Log != null)
+            if (DebugLog != null)
             {
-                Log.WriteLine();
-                Log.WriteLine("** Dump after Emphasis:");
-                leafBlock.Inline.DumpTo(Log);
+                DebugLog.WriteLine();
+                DebugLog.WriteLine("** Dump after Emphasis:");
+                leafBlock.Inline.DumpTo(DebugLog);
             }
         }
 
@@ -211,7 +244,7 @@ namespace Textamina.Markdig.Parsers
 
         private ContainerInline FindLastContainer()
         {
-            var container = (ContainerInline)Block.Inline;
+            var container = Block.Inline;
             while (true)
             {
                 var nextContainer = container.LastChild as ContainerInline;

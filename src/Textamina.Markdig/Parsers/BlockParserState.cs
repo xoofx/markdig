@@ -38,32 +38,105 @@ namespace Textamina.Markdig.Parsers
             parsers.Initialize(this);
         }
 
-        public List<Block> Stack { get; }
-
+        /// <summary>
+        /// Gets the new blocks to push. A <see cref="BlockParser"/> is required to push new blocks that it creates to this property.
+        /// </summary>
         public Stack<Block> NewBlocks { get; }
 
+        /// <summary>
+        /// Gets the list of <see cref="BlockParser"/> configured with this parser state.
+        /// </summary>
         public BlockParserList Parsers { get; }
 
+        /// <summary>
+        /// Gets the current active container.
+        /// </summary>
         public ContainerBlock CurrentContainer { get; private set; }
 
+        /// <summary>
+        /// Gets the last block that was created.
+        /// </summary>
         public Block LastBlock { get; private set; }
 
+        /// <summary>
+        /// Gets the next block in a <see cref="BlockParser.TryContinue"/>.
+        /// </summary>
         public Block NextContinue => currentStackIndex + 1 < Stack.Count ? Stack[currentStackIndex + 1] : null;
 
+        /// <summary>
+        /// Gets the root document.
+        /// </summary>
         public Document Document { get; }
 
-        public bool ContinueProcessingLine { get; set; }
-
+        /// <summary>
+        /// The current line being processed.
+        /// </summary>
         public StringSlice Line;
 
+        /// <summary>
+        /// Gets the index of the line in the source text.
+        /// </summary>
         public int LineIndex { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the line is blank (valid only after <see cref="ParseIndent"/> has been called).
+        /// </summary>
         public bool IsBlankLine => CurrentChar == '\0';
 
-        public bool IsEndOfLine => Line.IsEmpty;
-
+        /// <summary>
+        /// Gets the current character being processed.
+        /// </summary>
         public char CurrentChar => Line.CurrentChar;
 
+        /// <summary>
+        /// Gets or sets the column.
+        /// </summary>
+        public int Column { get; set; }
+
+        /// <summary>
+        /// Gets the position of the current character in the line being processed. 
+        /// </summary>
+        public int Start => Line.Start;
+
+        /// <summary>
+        /// Gets the current indent position (number of columns between the previous indent and the current position).
+        /// </summary>
+        public int Indent => Column - ColumnBeforeIndent;
+
+        /// <summary>
+        /// Gets a value indicating whether a code indentation is at the beginning of the line being processed.
+        /// </summary>
+        public bool IsCodeIndent => Indent >= 4;
+
+        /// <summary>
+        /// Gets the column position before the indent occured.
+        /// </summary>
+        public int ColumnBeforeIndent { get; private set; }
+
+        /// <summary>
+        /// Gets the character position before the indent occured.
+        /// </summary>
+        public int StartBeforeIndent { get; private set; }
+
+        /// <summary>
+        /// Gets the cache of string builders.
+        /// </summary>
+        public StringBuilderCache StringBuilders { get; }
+
+        /// <summary>
+        /// Gets the current stack of <see cref="Block"/> being processed.
+        /// </summary>
+        private List<Block> Stack { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to continue processing the current line.
+        /// </summary>
+        private bool ContinueProcessingLine { get; set; }
+
+        /// <summary>
+        /// Returns the next character in the line being processed. Update <see cref="Start"/> and <see cref="Column"/>.
+        /// </summary>
+        /// <returns>The next character or `\0` if end of line is reached</returns>
         public char NextChar()
         {
             var c = Line.CurrentChar;
@@ -78,6 +151,9 @@ namespace Textamina.Markdig.Parsers
             return Line.NextChar();
         }
 
+        /// <summary>
+        /// Returns the next character in the line taking into space taken by tabs. Update <see cref="Start"/> and <see cref="Column"/>.
+        /// </summary>
         public void NextColumn()
         {
             var c = Line.CurrentChar;
@@ -93,43 +169,30 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public char CharAt(int index) => Line[index];
-
-        public int Start => Line.Start;
-
-        public int EndOffset => Line.End;
-
-        public int Indent => Column - ColumnBeforeIndent;
-
-        public bool IsCodeIndent => Indent >= 4;
-
-        public int ColumnBeforeIndent { get; private set; }
-
-        public int StartBeforeIndent { get; private set; }
-
-        public int Column { get; set; }
-
-        public StringBuilderCache StringBuilders { get; }
-
+        /// <summary>
+        /// Peeks a character at the specified offset from the current position in the line.
+        /// </summary>
+        /// <param name="offset">The offset.</param>
+        /// <returns>A character peeked at the specified offset</returns>
         public char PeekChar(int offset)
         {
             return Line.PeekChar(offset);
         }
 
-        private void ResetLine(StringSlice newLine)
-        {
-            Line = newLine;
-            Column = 0;
-            ColumnBeforeIndent = 0;
-            StartBeforeIndent = 0;
-        }
-
+        /// <summary>
+        /// Restarts the indent from the current position.
+        /// </summary>
         public void RestartIndent()
         {
             StartBeforeIndent = Start;
             ColumnBeforeIndent = Column;
         }
 
+        /// <summary>
+        /// Parses the indentation from the current position in the line, updating <see cref="StartBeforeIndent"/>, 
+        /// <see cref="ColumnBeforeIndent"/>, <see cref="Start"/> and <see cref="Column"/> accordingly
+        /// taking into account space taken by tabs.
+        /// </summary>
         public void ParseIndent()
         {
             var c = CurrentChar;
@@ -165,7 +228,11 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void ResetToColumn(int newColumn)
+        /// <summary>
+        /// Moves to the position to the specified column position, taking into account spaces in tabs.
+        /// </summary>
+        /// <param name="newColumn">The new column position to move the cursor to.</param>
+        public void GoToColumn(int newColumn)
         {
             // Optimized path when we are moving above the previous start of indent
             if (newColumn > ColumnBeforeIndent)
@@ -210,11 +277,19 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void ResetToCodeIndent(int columnOffset = 0)
+        /// <summary>
+        /// Moves to the position to the code indent (<see cref="ColumnBeforeIndent"/> + 4 spaces).
+        /// </summary>
+        /// <param name="columnOffset">The column offset to apply to this indent.</param>
+        public void GoToCodeIndent(int columnOffset = 0)
         {
-            ResetToColumn(ColumnBeforeIndent + 4 + columnOffset);
+            GoToColumn(ColumnBeforeIndent + 4 + columnOffset);
         }
 
+        /// <summary>
+        /// Force closing the specified block.
+        /// </summary>
+        /// <param name="block">The block.</param>
         public void Close(Block block)
         {
             // If we close a block, we close all blocks above
@@ -231,6 +306,10 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
+        /// <summary>
+        /// Discards the specified block from the stack, remove from its parent.
+        /// </summary>
+        /// <param name="block">The block.</param>
         public void Discard(Block block)
         {
             for (int i = Stack.Count - 1; i >= 1; i--)
@@ -244,34 +323,10 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void Close(int index)
-        {
-            var block = Stack[index];
-            // If the pending object is removed, we need to remove it from the parent container
-            if (!block.Parser.Close(this, block))
-            {
-                block.Parent?.Children.Remove(block);
-            }
-            Stack.RemoveAt(index);
-        }
-
-        public void CloseAll(bool force)
-        {
-            // Close any previous blocks not opened
-            for (int i = Stack.Count - 1; i >= 1; i--)
-            {
-                var block = Stack[i];
-
-                // Stop on the first open block
-                if (!force && block.IsOpen)
-                {
-                    break;
-                }
-                Close(i);
-            }
-            UpdateLast(-1);
-        }
-
+        /// <summary>
+        /// Processes a new line.
+        /// </summary>
+        /// <param name="newLine">The new line.</param>
         public void ProcessLine(string newLine)
         {
             ContinueProcessingLine = true;
@@ -288,6 +343,45 @@ namespace Textamina.Markdig.Parsers
             CloseAll(false);
         }
 
+        /// <summary>
+        /// Closes a block at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        private void Close(int index)
+        {
+            var block = Stack[index];
+            // If the pending object is removed, we need to remove it from the parent container
+            if (!block.Parser.Close(this, block))
+            {
+                block.Parent?.Children.Remove(block);
+            }
+            Stack.RemoveAt(index);
+        }
+
+        /// <summary>
+        /// Closes all the blocks opened.
+        /// </summary>
+        /// <param name="force">if set to <c>true</c> [force].</param>
+        internal void CloseAll(bool force)
+        {
+            // Close any previous blocks not opened
+            for (int i = Stack.Count - 1; i >= 1; i--)
+            {
+                var block = Stack[i];
+
+                // Stop on the first open block
+                if (!force && block.IsOpen)
+                {
+                    break;
+                }
+                Close(i);
+            }
+            UpdateLastBlockAndContainer();
+        }
+
+        /// <summary>
+        /// Mark all blocks in the stack as opened.
+        /// </summary>
         private void OpenAll()
         {
             for (int i = 1; i < Stack.Count; i++)
@@ -296,7 +390,11 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        internal void UpdateLast(int stackIndex)
+        /// <summary>
+        /// Updates the <see cref="LastBlock"/> and <see cref="CurrentContainer"/>.
+        /// </summary>
+        /// <param name="stackIndex">Index of a block in a stack considered as the last block to update from.</param>
+        private void UpdateLastBlockAndContainer(int stackIndex = -1)
         {
             currentStackIndex = stackIndex < 0 ? Stack.Count - 1 : stackIndex;
             LastBlock = null;
@@ -317,6 +415,14 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
+        /// <summary>
+        /// Tries to continue matching existing opened <see cref="Block"/>.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// A pending parser cannot add a new block when it is not the last pending block
+        /// or
+        /// The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed
+        /// </exception>
         private void TryContinueBlocks()
         {
             // Set all blocks non opened. 
@@ -344,7 +450,7 @@ namespace Textamina.Markdig.Parsers
 
 
                 // If we have a discard, we can remove it from the current state
-                UpdateLast(i);
+                UpdateLastBlockAndContainer(i);
                 var result = parser.TryContinue(this, block);
                 if (result == BlockState.Skip)
                 {
@@ -409,6 +515,9 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
+        /// <summary>
+        /// First phase of the process, try to open new blocks.
+        /// </summary>
         private void TryOpenBlocks()
         {
             while (ContinueProcessingLine)
@@ -441,6 +550,11 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
+        /// <summary>
+        /// Tries to open new blocks using the specified list of <see cref="BlockParser"/>
+        /// </summary>
+        /// <param name="parsers">The parsers.</param>
+        /// <returns><c>true</c> to continue processing the current line</returns>
         private bool TryOpenBlocks(BlockParser[] parsers)
         {
             for (int j = 0; j < parsers.Length; j++)
@@ -452,8 +566,8 @@ namespace Textamina.Markdig.Parsers
                     break;
                 }
 
-                // UpdateLast the state of LastBlock and LastContainer
-                UpdateLast(-1);
+                // UpdateLastBlockAndContainer the state of LastBlock and LastContainer
+                UpdateLastBlockAndContainer();
 
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
@@ -483,7 +597,7 @@ namespace Textamina.Markdig.Parsers
                 }
 
                 // Special case for paragraph
-                UpdateLast(-1);
+                UpdateLastBlockAndContainer();
 
                 var paragraph = LastBlock as ParagraphBlock;
                 if (isLazyParagraph && paragraph != null)
@@ -519,6 +633,12 @@ namespace Textamina.Markdig.Parsers
             return false;
         }
 
+        /// <summary>
+        /// Processes any new blocks that have been pushed to <see cref="NewBlocks"/>.
+        /// </summary>
+        /// <param name="result">The last result of matching.</param>
+        /// <param name="allowClosing">if set to <c>true</c> the processing of a new block will close existing opened blocks].</param>
+        /// <exception cref="System.InvalidOperationException">The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed</exception>
         private void ProcessNewBlocks(BlockState result, bool allowClosing)
         {
             var newBlocks = NewBlocks;
@@ -553,7 +673,7 @@ namespace Textamina.Markdig.Parsers
                 // If previous block is a container, add the new block as a children of the previous block
                 if (block.Parent == null)
                 {
-                    UpdateLast(-1);
+                    UpdateLastBlockAndContainer();
                     CurrentContainer.Children.Add(block);
                     block.Parent = CurrentContainer;
                 }
@@ -570,6 +690,14 @@ namespace Textamina.Markdig.Parsers
                 }
             }
             ContinueProcessingLine = true;
+        }
+
+        private void ResetLine(StringSlice newLine)
+        {
+            Line = newLine;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Textamina.Markdig.Parsers
             // If we don't have a blank line, we reset to the indent
             if (state.Indent >= 4)
             {
-                state.ResetToCodeIndent();
+                state.GoToCodeIndent();
             }
             return BlockState.Continue;
         }
