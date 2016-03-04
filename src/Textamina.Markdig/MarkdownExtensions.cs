@@ -23,7 +23,7 @@ namespace Textamina.Markdig
             return pipeline
                 .UsePipeTable()
                 .UseSoftlineBreakAsHardlineBreak()
-                .UseFootnoteExtensions()
+                .UseFootnotes()
                 .UseStrikethroughSuperAndSubScript()
                 .UseAttributes();
         }
@@ -44,7 +44,7 @@ namespace Textamina.Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseFootnoteExtensions(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseFootnotes(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FootnoteExtension>();
             return pipeline;

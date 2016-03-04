@@ -16214,7 +16214,7 @@ namespace Textamina.Markdig.Tests
         //
         // **Rule #1**
         // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
-        // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column. A header column separator is:
+        // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
         // - starting by optional spaces
         // - followed by an optional `:` to specify left align
         // - followed by a sequence of at least one `-` character
@@ -16256,7 +16256,7 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
-        // While the following would be considered as a plain paragraph:
+        // While the following would be considered as a plain paragraph with a list item:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16775,6 +16775,118 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
 			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Footontes
+        //
+        // Allows footnotes using the following syntax (taken from pandoc example):
+    [TestFixture]
+    public partial class TestExtensionsFootontes
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Footontes
+            //
+            // The following CommonMark:
+            //     Here is a footnote reference,[^1] and another.[^longnote]
+            //     
+            //     This is another reference to [^1]
+            //     
+            //     [^1]: Here is the footnote.
+            //     
+            //     And another reference to [^longnote]
+            //     
+            //     [^longnote]: Here's one with multiple blocks.
+            //     
+            //         Subsequent paragraphs are indented to show that they
+            //     belong to the previous footnote.
+            //     
+            //         > This is a block quote
+            //         > Inside a footnote
+            //     
+            //             { some.code }
+            //     
+            //         The whole paragraph can be indented, or just the first
+            //         line.  In this way, multi-paragraph footnotes work like
+            //         multi-paragraph list items.
+            //     
+            //     This paragraph won't be part of the note, because it
+            //     isn't indented.
+            //
+            // Should be rendered as:
+            //     <p>Here is a footnote reference,<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a> and another.<a id="fnref:3" href="#fn:2" class="footnote-ref"><sup>2</sup></a></p>
+            //     <p>This is another reference to <a id="fnref:2" href="#fn:1" class="footnote-ref"><sup>1</sup></a></p>
+            //     <p>And another reference to <a id="fnref:4" href="#fn:2" class="footnote-ref"><sup>2</sup></a></p>
+            //     <p>This paragraph won't be part of the note, because it
+            //     isn't indented.</p>
+            //     <div class="footnotes">
+            //     <hr />
+            //     <ol>
+            //     <li id="fn:1">
+            //     <p>Here is the footnote.<a href="#fnref:1" class="footnote-back-ref">&#8617;</a><a href="#fnref:2" class="footnote-back-ref">&#8617;</a></p>
+            //     </li>
+            //     <li id="fn:2">
+            //     <p>Here's one with multiple blocks.</p>
+            //     <p>Subsequent paragraphs are indented to show that they
+            //     belong to the previous footnote.</p>
+            //     <blockquote>
+            //     <p>This is a block quote
+            //     Inside a footnote</p>
+            //     </blockquote>
+            //     <pre><code>{ some.code }
+            //     </code></pre>
+            //     <p>The whole paragraph can be indented, or just the first
+            //     line.  In this way, multi-paragraph footnotes work like
+            //     multi-paragraph list items.<a href="#fnref:3" class="footnote-back-ref">&#8617;</a><a href="#fnref:4" class="footnote-back-ref">&#8617;</a></p>
+            //     </li>
+            //     </ol>
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Footontes");
+			TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Attributes
+        //
+        // Attributes can be attached to a previous inline element or the current block if the previous inline element is a literal. Attributes can be:
+        //
+        // - An id element, starting by `#` that will be used to set the `id` property of the HTML element
+        // - A class element, starting by `.` that will be appended to the CSS class property of the HTML element
+        // - a `name=value` or `name="value"` that will be appended as an attribute of the HTML element
+    [TestFixture]
+    public partial class TestExtensionsAttributes
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Attributes
+            //
+            // The following CommonMark:
+            //     # This is a heading with an an attribute{#heading-link}
+            //     
+            //     [This is a link](http://google.com){#a-link .myclass data-lang=fr data-value="This is a value"}
+            //     
+            //     This is a heading{#heading-link2}
+            //     -----------------
+            //
+            // Should be rendered as:
+            //     <h1 id="heading-link">This is a heading with an an attribute</h1>
+            //     <p><a href="http://google.com" id="a-link" class="myclass" data-lang="fr" data-value="This is a value">This is a link</a></p>
+            //     <h2 id="heading-link2">This is a heading</h2>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Attributes");
+			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>", "attributes");
         }
     }
 }

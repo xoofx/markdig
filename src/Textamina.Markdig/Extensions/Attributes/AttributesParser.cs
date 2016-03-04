@@ -159,7 +159,7 @@ namespace Textamina.Markdig.Extensions.Attributes
 
                     c = line.CurrentChar;
                     // Parse a quoted string
-                    if (c == '\'' || c == '\"')
+                    if (c == '\'' || c == '"')
                     {
                         char openingStringChar = c;
                         startValue = line.Start + 1;

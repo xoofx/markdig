@@ -8,7 +8,7 @@ A pipe table is detected when:
 
 **Rule #1**
 - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
-- The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column. A header column separator is:
+- The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
   - starting by optional spaces
   - followed by an optional `:` to specify left align
   - followed by a sequence of at least one `-` character
@@ -38,7 +38,7 @@ a | b
 </table>
 ````````````````````````````````
 
-While the following would be considered as a plain paragraph:
+While the following would be considered as a plain paragraph with a list item:
 
 ```````````````````````````````` example
 a | b

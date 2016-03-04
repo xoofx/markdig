@@ -60,10 +60,10 @@ namespace Textamina.Markdig.Tests
                             pipeline.UseSoftlineBreakAsHardlineBreak();
                             break;
                         case "footnotes":
-                            pipeline.UseFootnoteExtensions();
+                            pipeline.UseFootnotes();
                             break;
                         case "attributes":
-                            pipeline.UseFootnoteExtensions();
+                            pipeline.UseAttributes();
                             break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");

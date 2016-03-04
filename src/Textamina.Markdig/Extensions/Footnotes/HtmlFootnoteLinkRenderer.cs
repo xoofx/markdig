@@ -29,7 +29,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
         {
             var order = link.Footnote.Order;
             renderer.Write(link.IsBackLink
-                ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\">{HtmlHelper.Unescape(BackLinkString)}</a>"
+                ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\">{BackLinkString}</a>"
                 : $"<a id=\"fnref:{link.Index}\" href=\"#fn:{order}\" class=\"{FootnoteLinkClass}\"><sup>{order}</sup></a>");
         }
     }

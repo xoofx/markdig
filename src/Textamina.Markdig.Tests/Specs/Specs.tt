@@ -34,7 +34,9 @@ SOFTWARE.
 <#@ output extension=".cs" #><#
     var specFiles = new KeyValuePair<string, string>[] {
 		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
-		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables")
+		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables"),
+		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes"),
+		new KeyValuePair<string, string>(Host.ResolvePath("AttributesSpecs.md"), "attributes"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;
