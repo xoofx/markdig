@@ -6,7 +6,7 @@ using System;
 namespace Textamina.Markdig.Syntax.Inlines
 {
     /// <summary>
-    /// Gets the type of delimiter.
+    /// Gets the type of a <see cref="DelimiterInline"/>.
     /// </summary>
     [Flags]
     public enum DelimiterType
