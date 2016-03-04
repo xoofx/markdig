@@ -56,7 +56,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
                 Footnote = footnote,
                 CreateLinkInline = CreateLinkToFootnote
             };
-            state.Document.GetLinkReferenceDefinitions()[footnote.Label] = linkRef;
+            state.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
 
             state.NewBlocks.Push(footnote);
             return BlockState.Continue;

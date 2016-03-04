@@ -141,7 +141,6 @@ namespace Textamina.Markdig.Parsers
         {
             bool atLeastOneFound = false;
 
-            var references = state.Document.GetLinkReferenceDefinitions();
             while (true)
             {
                 // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
@@ -149,9 +148,9 @@ namespace Textamina.Markdig.Parsers
                 LinkReferenceDefinition linkReferenceDefinition;
                 if (LinkReferenceDefinition.TryParse(ref iterator, out linkReferenceDefinition))
                 {
-                    if (!references.ContainsKey(linkReferenceDefinition.Label))
+                    if (!state.Document.ContainsLinkReferenceDefinition(linkReferenceDefinition.Label))
                     {
-                        references[linkReferenceDefinition.Label] = linkReferenceDefinition;
+                        state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition);
                     }
                     atLeastOneFound = true;
 

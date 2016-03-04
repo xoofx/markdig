@@ -15,7 +15,6 @@ namespace Textamina.Markdig.Parsers
     /// </summary>
     public sealed class MarkdownParser
     {
-        public static TextWriter Log;
         private readonly BlockParserState blockParserState;
         private readonly InlineParserState inlineParserState;
         private readonly Document document;
@@ -47,7 +46,10 @@ namespace Textamina.Markdig.Parsers
             // Initialize the inline parsers
             var inlineParserList = new InlineParserList();
             inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineParserState = new InlineParserState(stringBuilderCache, document, inlineParserList);
+            inlineParserState = new InlineParserState(stringBuilderCache, document, inlineParserList)
+            {
+                DebugLog = pipeline.DebugLog
+            };
         }
 
         /// <summary>

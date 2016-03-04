@@ -2,10 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Tests
 {
@@ -13,62 +12,72 @@ namespace Textamina.Markdig.Tests
     {
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
         {
-            MarkdownParser.Log = Console.Out;
-            var reader = new StringReader(inputText);
-            var output = new StringWriter();
-            Markdown.ConvertToHtml(reader, output, GetPipeline(extensions));
+            foreach (var pipeline in GetPipeline(extensions))
+            {
+                Console.WriteLine($"Pipeline configured with extensions: {extensions}");
+                // Uncomment this line to get more debug information for process inlines.
+                //pipeline.DebugLog = Console.Out;
+                var result = Markdown.ConvertToHtml(inputText, pipeline);
 
-            var result = Compact(output.ToString());
-            expectedOutputText = Compact(expectedOutputText);
+                result = Compact(result);
+                expectedOutputText = Compact(expectedOutputText);
 
-            Console.WriteLine("```````````````````Source");
-            Console.WriteLine(DisplaySpaceAndTabs(inputText));
-            Console.WriteLine("```````````````````Result");
-            Console.WriteLine(DisplaySpaceAndTabs(result));
-            Console.WriteLine("```````````````````Expected");
-            Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
-            Console.WriteLine("```````````````````");
-            Console.WriteLine();
-            TextAssert.AreEqual(expectedOutputText, result);
+                Console.WriteLine("```````````````````Source");
+                Console.WriteLine(DisplaySpaceAndTabs(inputText));
+                Console.WriteLine("```````````````````Result");
+                Console.WriteLine(DisplaySpaceAndTabs(result));
+                Console.WriteLine("```````````````````Expected");
+                Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
+                Console.WriteLine("```````````````````");
+                Console.WriteLine();
+                TextAssert.AreEqual(expectedOutputText, result);
+            }
         }
 
-        private static MarkdownPipeline GetPipeline(string extensionsStr)
+        private static IEnumerable<MarkdownPipeline> GetPipeline(string extensionsGroupText)
         {
-            if (string.IsNullOrEmpty(extensionsStr))
+            if (string.IsNullOrEmpty(extensionsGroupText))
             {
-                return new MarkdownPipeline();
+                yield return new MarkdownPipeline();
+                yield break;
             }
 
-            var pipeline = new MarkdownPipeline();
-            foreach (var extension in extensionsStr.Split(new[] {'+'}, StringSplitOptions.RemoveEmptyEntries))
+            var extensionGroups = extensionsGroupText.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var extensionsText in extensionGroups)
             {
-                switch (extension.ToLowerInvariant())
+                var pipeline = new MarkdownPipeline();
+                foreach (var extension in extensionsText.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    case "pipetables":
-                        pipeline.UsePipeTable();
-                        break;
-                    case "strike":
-                        pipeline.UseStrikethroughSuperAndSubScript();
-                        break;
-                    case "hardlinebreak":
-                        pipeline.UseSoftlineBreakAsHardlineBreak();
-                        break;
-                    case "footnotes":
-                        pipeline.UseFootnoteExtensions();
-                        break;
-                    case "attributes":
-                        pipeline.UseFootnoteExtensions();
-                        break;
-                    default:
-                        Console.WriteLine($"Unsupported extension: {extension}");
-                        break;
+                    switch (extension.ToLowerInvariant())
+                    {
+                        case "pipetables":
+                            pipeline.UsePipeTable();
+                            break;
+                        case "extra_emphasis":
+                            pipeline.UseStrikethroughSuperAndSubScript();
+                            break;
+                        case "hardlinebreak":
+                            pipeline.UseSoftlineBreakAsHardlineBreak();
+                            break;
+                        case "footnotes":
+                            pipeline.UseFootnoteExtensions();
+                            break;
+                        case "attributes":
+                            pipeline.UseFootnoteExtensions();
+                            break;
+                        default:
+                            Console.WriteLine($"Unsupported extension: {extension}");
+                            break;
+                    }
                 }
+
+                yield return pipeline;
             }
-            return pipeline;
         }
 
         private static string DisplaySpaceAndTabs(string text)
         {
+            // Output special characters to check correctly the results
             return text.Replace('\t', '→').Replace(' ', '·');
         }
 

@@ -67,7 +67,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     // If the label is followed by either a ( or a [, this is not a shortcut
                     if (LinkHelper.TryParseLabel(ref slice, out label))
                     {
-                        if (!state.Document.GetLinkReferenceDefinitions().ContainsKey(label))
+                        if (!state.Document.ContainsLinkReferenceDefinition(label))
                         {
                             label = null;
                         }
@@ -107,7 +107,7 @@ namespace Textamina.Markdig.Parsers.Inlines
         {
             bool isValidLink = false;
             LinkReferenceDefinition linkRef;
-            if (state.Document.GetLinkReferenceDefinitions().TryGetValue(label, out linkRef))
+            if (state.Document.TryGetLinkReferenceDefinition(label, out linkRef))
             {
                 Inline link = null;
                 // Try to use a callback directly defined on the LinkReferenceDefinition

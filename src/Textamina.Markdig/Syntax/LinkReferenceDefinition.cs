@@ -14,11 +14,6 @@ namespace Textamina.Markdig.Syntax
     public class LinkReferenceDefinition : LeafBlock
     {
         /// <summary>
-        /// TODO: document this.
-        /// </summary>
-        public static readonly object DocumentKey = typeof (LinkReferenceDefinition);
-
-        /// <summary>
         /// Creates an inline link for the specified <see cref="LinkReferenceDefinition"/>.
         /// </summary>
         /// <param name="inlineState">State of the inline.</param>

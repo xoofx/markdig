@@ -78,6 +78,11 @@ namespace Textamina.Markdig
         public StringBuilderCache StringBuilderCache { get; set; }
 
         /// <summary>
+        /// Gets or sets the debug log.
+        /// </summary>
+        public TextWriter DebugLog { get; set; }
+
+        /// <summary>
         /// Initializes this instance.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
