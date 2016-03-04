@@ -7,6 +7,10 @@ using Textamina.Markdig.Renderers.Html;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="FootnoteLink"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Extensions.Footnotes.FootnoteLink}" />
     public class HtmlFootnoteLinkRenderer : HtmlObjectRenderer<FootnoteLink>
     {
         public HtmlFootnoteLinkRenderer()
@@ -23,7 +27,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
 
         protected override void Write(HtmlRenderer renderer, FootnoteLink link)
         {
-            var order = link.Footnote.Order ?? 0;
+            var order = link.Footnote.Order;
             renderer.Write(link.IsBackLink
                 ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\">{HtmlHelper.Unescape(BackLinkString)}</a>"
                 : $"<a id=\"fnref:{link.Index}\" href=\"#fn:{order}\" class=\"{FootnoteLinkClass}\"><sup>{order}</sup></a>");

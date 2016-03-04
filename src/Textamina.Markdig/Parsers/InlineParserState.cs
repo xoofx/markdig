@@ -26,7 +26,7 @@ namespace Textamina.Markdig.Parsers
         /// <param name="parsers">The parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineParserState(StringBuilderCache stringBuilders, Document document, InlineParserList parsers)
+        public InlineParserState(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -68,7 +68,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets the root document.
         /// </summary>
-        public Document Document { get; }
+        public MarkdownDocument Document { get; }
 
         /// <summary>
         /// Gets the cache string builders.

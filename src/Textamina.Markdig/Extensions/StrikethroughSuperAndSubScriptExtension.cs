@@ -9,6 +9,10 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions
 {
+    /// <summary>
+    /// Extension for strikethrough, subscript and superscript.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class StrikethroughSuperAndSubScriptExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipeline pipeline)
@@ -31,6 +35,7 @@ namespace Textamina.Markdig.Extensions
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
+                // Extend the rendering here.
                 var emphasisRenderer = htmlRenderer.ObjectRenderers.Find<EmphasisInlineRenderer>();
                 if (emphasisRenderer != null)
                 {

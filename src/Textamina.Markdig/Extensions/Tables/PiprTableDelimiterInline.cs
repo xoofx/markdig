@@ -6,13 +6,20 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
+    /// <summary>
+    /// The delimiter used to separate the columns of a pipe table.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.DelimiterInline" />
     public class PiprTableDelimiterInline : DelimiterInline
     {
         public PiprTableDelimiterInline(InlineParser parser) : base(parser)
         {
         }
 
-        public int LineIndex { get; set; }
+        /// <summary>
+        /// Gets or sets the index of line where this delimiter was found relative to the current block.
+        /// </summary>
+        public int LocalLineIndex { get; set; }
 
         public override string ToLiteral()
         {

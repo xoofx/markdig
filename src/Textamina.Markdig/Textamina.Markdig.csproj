@@ -151,7 +151,7 @@
     <Compile Include="Syntax\ThematicBreakBlock.cs" />
     <Compile Include="Helpers\CharHelper.cs" />
     <Compile Include="Syntax\CodeBlock.cs" />
-    <Compile Include="Syntax\Document.cs" />
+    <Compile Include="Syntax\MarkdownDocument.cs" />
     <Compile Include="Syntax\FencedCodeBlock.cs" />
     <Compile Include="Syntax\HeadingBlock.cs" />
     <Compile Include="Parsers\BlockState.cs" />

@@ -5,6 +5,10 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
+    /// <summary>
+    /// Defines a table that contains <see cref="TableRowBlock"/>
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     public class TableBlock : ContainerBlock
     {
         public TableBlock() : base(null)

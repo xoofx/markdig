@@ -6,13 +6,30 @@ using Textamina.Markdig.Renderers.Html;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="FootnoteGroup"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Extensions.Footnotes.FootnoteGroup}" />
     public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlFootnoteGroupRenderer"/> class.
+        /// </summary>
+        public HtmlFootnoteGroupRenderer()
+        {
+            GroupClass = "footnotes";
+        }
+
+        /// <summary>
+        /// Gets or sets the CSS group class used when rendering the &lt;div&gt; of this instance.
+        /// </summary>
+        public string GroupClass { get; set; }
+
         protected override void Write(HtmlRenderer renderer, FootnoteGroup footnoteGroup)
         {
             var footnotes = footnoteGroup.Children;
             renderer.EnsureLine();
-            renderer.WriteLine("<div class=\"footnotes\">");
+            renderer.WriteLine($"<div class=\"{GroupClass}\">");
             renderer.WriteLine("<hr />");
             renderer.WriteLine("<ol>");
 

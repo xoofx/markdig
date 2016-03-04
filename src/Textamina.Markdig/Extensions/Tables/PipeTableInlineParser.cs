@@ -12,19 +12,32 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
+    /// <summary>
+    /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="TableBlock"/> at inline parsing time.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
+    /// <seealso cref="Textamina.Markdig.Parsers.IDelimiterProcessor" />
     public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
     {
         private LineBreakInlineParser lineBreakParser;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PipeTableInlineParser"/> class.
+        /// </summary>
         public PipeTableInlineParser()
         {
             OpeningCharacters = new[] { '|', '\n' };
             RequireHeaderSeparator = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to require header separator. True by default (false to have Kramdown behaviour)
+        /// </summary>
         public bool RequireHeaderSeparator { get; set; }
 
         public override void Initialize(InlineParserState state)
         {
+            // We are using the linebreak parser
             lineBreakParser = state.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
         }
 
@@ -79,7 +92,7 @@ namespace Textamina.Markdig.Extensions.Tables
             }
             else
             {
-                state.Inline = new PiprTableDelimiterInline(this) { LineIndex = state.LocalLineIndex };
+                state.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = state.LocalLineIndex };
                 var deltaLine = state.LocalLineIndex - tableState.LineIndex;
                 if (deltaLine > 0)
                 {
@@ -375,7 +388,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
         private static bool IsLine(Inline inline)
         {
-            return inline is SoftlineBreakInline || inline is HardlineBreakInline;
+            return inline is LineBreakInline;
         }
 
         private static bool IsStartOfLineColumnDelimiter(Inline inline)

@@ -13,7 +13,7 @@ namespace Textamina.Markdig.Syntax
     {
         private static readonly object DocumentKey = typeof(LinkReferenceDefinition);
 
-        public static bool ContainsLinkReferenceDefinition(this Document document, string label)
+        public static bool ContainsLinkReferenceDefinition(this MarkdownDocument document, string label)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
@@ -24,14 +24,14 @@ namespace Textamina.Markdig.Syntax
             return references.ContainsKey(label);
         }
 
-        public static void SetLinkReferenceDefinition(this Document document, string label, LinkReferenceDefinition linkReferenceDefinition)
+        public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             var references = document.GetLinkReferenceDefinitions();
             references[label] = linkReferenceDefinition;
         }
 
-        public static bool RemoveLinkReferenceDefinition(this Document document, string label)
+        public static bool RemoveLinkReferenceDefinition(this MarkdownDocument document, string label)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
@@ -42,7 +42,7 @@ namespace Textamina.Markdig.Syntax
             return references.Remove(label);
         }
 
-        public static bool TryGetLinkReferenceDefinition(this Document document, string label, out LinkReferenceDefinition linkReferenceDefinition)
+        public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, out LinkReferenceDefinition linkReferenceDefinition)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             linkReferenceDefinition = null;
@@ -54,7 +54,7 @@ namespace Textamina.Markdig.Syntax
             return references.TryGetValue(label, out linkReferenceDefinition);
         }
 
-        public static Dictionary<string, LinkReferenceDefinition> GetLinkReferenceDefinitions(this Document document)
+        public static Dictionary<string, LinkReferenceDefinition> GetLinkReferenceDefinitions(this MarkdownDocument document)
         {
             var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
             if (references == null)

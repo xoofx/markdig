@@ -5,6 +5,10 @@ using Textamina.Markdig.Renderers;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// Extension to allow footnotes.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class FootnoteExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipeline pipeline)

@@ -7,12 +7,12 @@ namespace Textamina.Markdig.Syntax
     /// The root Markdown document.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
-    public class Document : ContainerBlock
+    public class MarkdownDocument : ContainerBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Document"/> class.
+        /// Initializes a new instance of the <see cref="MarkdownDocument"/> class.
         /// </summary>
-        public Document() : base(null)
+        public MarkdownDocument() : base(null)
         {
         }
     }

@@ -7,7 +7,7 @@ using Textamina.Markdig.Syntax.Inlines;
 namespace Textamina.Markdig.Renderers
 {
     /// <summary>
-    /// Base interface for a renderer for a Markdown <see cref="Document"/>.
+    /// Base interface for a renderer for a Markdown <see cref="MarkdownDocument"/>.
     /// </summary>
     public interface IMarkdownRenderer
     {

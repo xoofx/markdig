@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System.Collections.Generic;
+
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Syntax;
@@ -9,8 +9,17 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// The block parser for a <see cref="Footnote"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class FootnoteParser : BlockParser
     {
+        /// <summary>
+        /// The key used to store at the document level the pending <see cref="FootnoteGroup"/>
+        /// </summary>
+        private static readonly object DocumentKey = typeof(Footnote);
+
         public FootnoteParser()
         {
             OpeningCharacters = new [] {'['};
@@ -19,7 +28,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
         public override BlockState TryOpen(BlockParserState state)
         {
             // We expect footnote to appear only at document level and not indented more than a code indent block
-            if (state.IsCodeIndent || state.CurrentContainer.GetType() != typeof(Document) )
+            if (state.IsCodeIndent || state.CurrentContainer.GetType() != typeof(MarkdownDocument) )
             {
                 return BlockState.None;
             }
@@ -42,11 +51,11 @@ namespace Textamina.Markdig.Extensions.Footnotes
             var footnote = new Footnote(this) {Label = label};
 
             // Maintain a list of all footnotes at document level
-            var footnotes = state.Document.GetData(Footnote.DocumentKey) as FootnoteGroup;
+            var footnotes = state.Document.GetData(DocumentKey) as FootnoteGroup;
             if (footnotes == null)
             {
                 footnotes = new FootnoteGroup(this);
-                state.Document.SetData(Footnote.DocumentKey, footnotes);
+                state.Document.SetData(DocumentKey, footnotes);
                 state.Document.ProcessInlinesEnd += Document_ProcessInlinesEnd;
             }
             footnotes.Children.Add(footnote);
@@ -71,9 +80,10 @@ namespace Textamina.Markdig.Extensions.Footnotes
             // Unregister
             state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
 
-            var footnoteGroup = ((FootnoteGroup)state.Document.GetData(Footnote.DocumentKey));
+            var footnoteGroup = ((FootnoteGroup)state.Document.GetData(DocumentKey));
             var footnotes = footnoteGroup.Children;
             state.Document.Children.Add(footnoteGroup);
+            state.Document.RemoveData(DocumentKey);
 
             footnotes.Sort(
                 (leftObj, rightObj) =>
@@ -81,8 +91,8 @@ namespace Textamina.Markdig.Extensions.Footnotes
                     var left = (Footnote) leftObj;
                     var right = (Footnote) rightObj;
 
-                    return left.Order.HasValue && right.Order.HasValue
-                        ? left.Order.Value.CompareTo(right.Order.Value)
+                    return left.Order >= 0  && right.Order >= 0
+                        ? left.Order.CompareTo(right.Order)
                         : 0;
                 });
 
@@ -90,7 +100,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
             for (int i = 0; i < footnotes.Count; i++)
             {
                 var footnote = (Footnote)footnotes[i];
-                if (!footnote.Order.HasValue)
+                if (footnote.Order < 0)
                 {
                     // Remove this footnote if it doesn't have any links
                     footnotes.RemoveAt(i);
@@ -157,9 +167,9 @@ namespace Textamina.Markdig.Extensions.Footnotes
         private static Inline CreateLinkToFootnote(InlineParserState state, LinkReferenceDefinition linkRef, Inline child)
         {
             var footnote = ((FootnoteLinkReferenceDefinition)linkRef).Footnote;
-            if (footnote.Order == null)
+            if (footnote.Order < 0)
             {
-                var footnotes = (FootnoteGroup)state.Document.GetData(Footnote.DocumentKey);
+                var footnotes = (FootnoteGroup)state.Document.GetData(DocumentKey);
                 footnotes.CurrentOrder++;
                 footnote.Order = footnotes.CurrentOrder;
             }

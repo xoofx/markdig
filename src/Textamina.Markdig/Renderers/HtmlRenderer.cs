@@ -14,7 +14,7 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Renderers
 {
     /// <summary>
-    /// Default HTML renderer for a Markdown <see cref="Document"/> object.
+    /// Default HTML renderer for a Markdown <see cref="MarkdownDocument"/> object.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Renderers.TextRendererBase{Textamina.Markdig.Renderers.HtmlRenderer}" />
     public class HtmlRenderer : TextRendererBase<HtmlRenderer>

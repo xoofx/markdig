@@ -6,6 +6,10 @@ using Textamina.Markdig.Renderers.Html;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="TableBlock"/>
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Extensions.Tables.TableBlock}" />
     public class HtmlTableRenderer : HtmlObjectRenderer<TableBlock>
     {
         protected override void Write(HtmlRenderer renderer, TableBlock tableBlock)

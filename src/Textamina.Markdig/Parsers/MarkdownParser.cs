@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Parsers
     {
         private readonly BlockParserState blockParserState;
         private readonly InlineParserState inlineParserState;
-        private readonly Document document;
+        private readonly MarkdownDocument document;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownParser" /> class.
@@ -36,7 +36,7 @@ namespace Textamina.Markdig.Parsers
             pipeline.Initialize();
             var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
 
-            document = new Document();
+            document = new MarkdownDocument();
 
             // Initialize the block parsers
             var blockParserList = new BlockParserList();
@@ -53,13 +53,13 @@ namespace Textamina.Markdig.Parsers
         }
 
         /// <summary>
-        /// Parses the specified markdown into an AST <see cref="Document"/>
+        /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
         /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
-        public static Document Parse(TextReader reader, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument Parse(TextReader reader, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             pipeline = pipeline ?? new MarkdownPipeline();
@@ -75,10 +75,10 @@ namespace Textamina.Markdig.Parsers
         private TextReader Reader { get; }
 
         /// <summary>
-        /// Parses the current <see cref="Reader"/> into a Markdown <see cref="Document"/>.
+        /// Parses the current <see cref="Reader"/> into a Markdown <see cref="MarkdownDocument"/>.
         /// </summary>
         /// <returns>A document instance</returns>
-        private Document Parse()
+        private MarkdownDocument Parse()
         {
             ProcessBlocks();
             ProcessInlines();

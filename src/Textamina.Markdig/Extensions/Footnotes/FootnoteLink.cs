@@ -5,12 +5,25 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// A inline link to a <see cref="Footnote"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.Inline" />
     public class FootnoteLink : Inline
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is back link (from a footnote to the link)
+        /// </summary>
         public bool IsBackLink { get; set; }
 
+        /// <summary>
+        /// Gets or sets the global index number of this link.
+        /// </summary>
         public int Index { get; set; }
 
+        /// <summary>
+        /// Gets or sets the footnote this link refers to.
+        /// </summary>
         public Footnote Footnote { get; set; }
     }
 }

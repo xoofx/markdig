@@ -10,13 +10,58 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Attributes
 {
+    /// <summary>
+    /// An inline parser used to parse a HTML attributes that can be attached to the previous <see cref="Inline"/> or current <see cref="Block"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public class AttributesParser : InlineParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributesParser"/> class.
+        /// </summary>
         public AttributesParser()
         {
             OpeningCharacters = new[] { '{' };
         }
 
+        public override bool Match(InlineParserState state, ref StringSlice slice)
+        {
+            HtmlAttributes attributes;
+            if (TryParse(ref slice, out attributes))
+            {
+                var inline = state.Inline;
+
+                // If the curent object to attach is either a literal or delimiter
+                // try to find a suitable parent, otherwise attach the html attributes to the block
+                if (inline is LiteralInline || inline is DelimiterInline)
+                {
+                    while (true)
+                    {
+                        inline = inline.Parent;
+                        if (!(inline is DelimiterInline))
+                        {
+                            break;
+                        }
+                    }
+                }
+                var objectToAttach = inline == null || inline == state.Root ? (MarkdownObject) state.Block : inline;
+
+                var currentHtmlAttributes = objectToAttach.GetAttributes();
+                attributes.CopyTo(currentHtmlAttributes);
+
+                // We don't set the state.Inline as we don't want to add attach attributes to a particular entity
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to extra from the current position of a slice an HTML attributes {...}
+        /// </summary>
+        /// <param name="slice">The slice to parse.</param>
+        /// <param name="attributes">The output attributes or null if not found or invalid</param>
+        /// <returns><c>true</c> if parsing the HTML attributes was succsesfull</returns>
         public static bool TryParse(ref StringSlice slice, out HtmlAttributes attributes)
         {
             attributes = null;
@@ -186,36 +231,5 @@ namespace Textamina.Markdig.Extensions.Attributes
         }
 
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
-        {
-            HtmlAttributes attributes;
-            if (TryParse(ref slice, out attributes))
-            {
-                var inline = state.Inline;
-
-                // If the curent object to attach is either a literal or delimiter
-                // try to find a suitable parent, otherwise attach the html attributes to the block
-                if (inline is LiteralInline || inline is DelimiterInline)
-                {
-                    while (true)
-                    {
-                        inline = inline.Parent;
-                        if (!(inline is DelimiterInline))
-                        {
-                            break;
-                        }
-                    }
-                }
-                var objectToAttach = inline == null || inline == state.Root ? (MarkdownObject) state.Block : inline;
-
-                var currentHtmlAttributes = objectToAttach.GetAttributes();
-                attributes.CopyTo(currentHtmlAttributes);
-
-                // We don't set the state.Inline as we don't want to add attach attributes to a particular entity
-                return true;
-            }
-
-            return false;
-        }
     }
 }

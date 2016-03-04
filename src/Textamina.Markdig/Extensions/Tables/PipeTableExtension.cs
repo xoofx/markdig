@@ -6,6 +6,10 @@ using Textamina.Markdig.Renderers;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
+    /// <summary>
+    /// Extension that allows to use pipe tables.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class PipeTableExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipeline pipeline)

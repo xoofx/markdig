@@ -84,25 +84,25 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
-        /// Parses the specified markdown into an AST <see cref="Document"/>
+        /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
         /// <param name="markdown">The markdown text.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static Document Parse(string markdown)
+        public static MarkdownDocument Parse(string markdown)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             return Parse(new StringReader(markdown), new MarkdownPipeline());
         }
 
         /// <summary>
-        /// Parses the specified markdown into an AST <see cref="Document"/>
+        /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
         /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
-        public static Document Parse(TextReader reader, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument Parse(TextReader reader, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             pipeline = pipeline ?? new MarkdownPipeline();

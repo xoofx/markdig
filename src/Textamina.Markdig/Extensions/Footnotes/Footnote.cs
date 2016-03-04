@@ -7,20 +7,32 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.Footnotes
 {
+    /// <summary>
+    /// A block for a footnote.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     public class Footnote : ContainerBlock
     {
-        public static readonly object DocumentKey = typeof (Footnote);
-
         public Footnote(BlockParser parser) : base(parser)
         {
             RemoveAfterProcessInlines = true;
             Links = new List<FootnoteLink>();
+            Order = -1;
         }
 
+        /// <summary>
+        /// Gets or sets the label used by this footnote.
+        /// </summary>
         public string Label { get; set; }
 
-        public int? Order { get; set; }
+        /// <summary>
+        /// Gets or sets the order of this footnote (determined by the order of the <see cref="FootnoteLink"/> in the document)
+        /// </summary>
+        public int Order { get; set; }
 
+        /// <summary>
+        /// Gets the links referencing this footnote.
+        /// </summary>
         public List<FootnoteLink> Links { get; private set; }
 
         internal bool IsLastLineEmpty { get; set; }
