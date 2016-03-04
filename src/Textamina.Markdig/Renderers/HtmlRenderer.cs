@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -197,6 +199,7 @@ namespace Textamina.Markdig.Renderers
         /// <returns></returns>
         public HtmlRenderer WriteAttributes(MarkdownObject obj)
         {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             var attributes = obj.TryGetAttributes();
             if (attributes != null)
             {
@@ -244,6 +247,7 @@ namespace Textamina.Markdig.Renderers
         /// <returns>This instance</returns>
         public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
+            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
             if (leafBlock.Lines != null)
             {
                 var lines = leafBlock.Lines;

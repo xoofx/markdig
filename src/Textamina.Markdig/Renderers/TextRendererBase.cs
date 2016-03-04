@@ -143,6 +143,11 @@ namespace Textamina.Markdig.Renderers
         /// <returns>This instance</returns>
         public T Write(string content, int offset, int length)
         {
+            if (content == null)
+            {
+                return (T) this;
+            }
+
             previousWasLine = false;
             if (offset == 0 && content.Length == length)
             {
@@ -197,6 +202,7 @@ namespace Textamina.Markdig.Renderers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLeafInline(LeafBlock leafBlock)
         {
+            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
             var inline = (Inline) leafBlock.Inline;
             if (inline != null)
             {
