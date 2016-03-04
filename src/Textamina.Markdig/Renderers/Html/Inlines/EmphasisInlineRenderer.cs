@@ -5,15 +5,30 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers.Html.Inlines
 {
+    /// <summary>
+    /// A HTML renderer for an <see cref="EmphasisInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.Inlines.EmphasisInline}" />
     public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     {
+        /// <summary>
+        /// Delegates to get the tag associated to an <see cref="EmphasisInline"/> object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The HTML tag associated to this <see cref="EmphasisInline"/> object</returns>
         public delegate string GetTagDelegate(EmphasisInline obj);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmphasisInlineRenderer"/> class.
+        /// </summary>
         public EmphasisInlineRenderer()
         {
             GetTag = GetDefaultTag;
         }
 
+        /// <summary>
+        /// Gets or sets the GetTag delegate.
+        /// </summary>
         public GetTagDelegate GetTag { get; set; }
 
         protected override void Write(HtmlRenderer renderer, EmphasisInline obj)
@@ -31,6 +46,11 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
             }
         }
 
+        /// <summary>
+        /// Gets the default HTML tag for ** and __ emphasis.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns></returns>
         public string GetDefaultTag(EmphasisInline obj)
         {
             if (obj.DelimiterChar == '*' || obj.DelimiterChar == '_')

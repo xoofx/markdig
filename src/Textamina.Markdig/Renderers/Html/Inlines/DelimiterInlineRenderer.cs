@@ -5,6 +5,10 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers.Html.Inlines
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="DelimiterInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.Inlines.DelimiterInline}" />
     public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
     {
         protected override void Write(HtmlRenderer renderer, DelimiterInline obj)

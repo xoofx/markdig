@@ -5,6 +5,10 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers.Html.Inlines
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="LiteralInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.Inlines.LiteralInline}" />
     public class LiteralInlineRenderer : HtmlObjectRenderer<LiteralInline>
     {
         protected override void Write(HtmlRenderer renderer, LiteralInline obj)

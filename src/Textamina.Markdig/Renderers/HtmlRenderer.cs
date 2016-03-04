@@ -11,8 +11,16 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers
 {
+    /// <summary>
+    /// Default HTML renderer for a Markdown <see cref="Document"/> object.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.TextRendererBase{Textamina.Markdig.Renderers.HtmlRenderer}" />
     public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlRenderer"/> class.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
         public HtmlRenderer(TextWriter writer) : base(writer)
         {
             // Default block renderers
@@ -38,10 +46,24 @@ namespace Textamina.Markdig.Renderers
             EnableHtmlForInline = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to ouput HTML tags when rendering. See remarks.
+        /// </summary>
+        /// <remarks>
+        /// This is used by some renderers to disable HTML tags when rendering some inlines (for image links).
+        /// </remarks>
         public bool EnableHtmlForInline { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to use implicit paragraph (optional &lt;p&gt;)
+        /// </summary>
         public bool ImplicitParagraph { get; set; }
 
+        /// <summary>
+        /// Writes the content escaped for HTML.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlRenderer WriteEscape(string content)
         {
@@ -52,6 +74,11 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        /// <summary>
+        /// Writes the content escaped for HTML.
+        /// </summary>
+        /// <param name="slice">The slice.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public HtmlRenderer WriteEscape(ref StringSlice slice)
         {
@@ -62,6 +89,13 @@ namespace Textamina.Markdig.Renderers
             return WriteEscape(slice.Text, slice.Start, slice.Length);
         }
 
+        /// <summary>
+        /// Writes the content escaped for HTML.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>This instance</returns>
         public HtmlRenderer WriteEscape(string content, int offset, int length)
         {
             if (string.IsNullOrEmpty(content) || length == 0)
@@ -100,6 +134,11 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        /// <summary>
+        /// Writes the URL escaped for HTML.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
         public HtmlRenderer WriteEscapeUrl(string content)
         {
             if (content == null)
@@ -151,6 +190,11 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        /// <summary>
+        /// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns></returns>
         public HtmlRenderer WriteAttributes(MarkdownObject obj)
         {
             var attributes = obj.TryGetAttributes();
@@ -191,6 +235,13 @@ namespace Textamina.Markdig.Renderers
             return this;
         }
 
+        /// <summary>
+        /// Writes the lines of a <see cref="LeafBlock"/>
+        /// </summary>
+        /// <param name="leafBlock">The leaf block.</param>
+        /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
+        /// <param name="escape">if set to <c>true</c> escape the content for HTML</param>
+        /// <returns>This instance</returns>
         public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
             if (leafBlock.Lines != null)

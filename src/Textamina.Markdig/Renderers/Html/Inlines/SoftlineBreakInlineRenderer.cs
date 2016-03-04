@@ -5,8 +5,15 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers.Html.Inlines
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="SoftlineBreakInline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.Inlines.SoftlineBreakInline}" />
     public class SoftlineBreakInlineRenderer : HtmlObjectRenderer<SoftlineBreakInline>
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether to render this softline break as a HTML hardline break tag (&lt;br /&gt;)
+        /// </summary>
         public bool RenderAsHardlineBreak { get; set; }
 
         protected override void Write(HtmlRenderer renderer, SoftlineBreakInline obj)

@@ -1,15 +1,19 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System;
-using System.Reflection;
 using Textamina.Markdig.Syntax;
+using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers.Html
 {
+    /// <summary>
+    /// A base class for HTML rendering <see cref="Block"/> and <see cref="Inline"/> Markdown objects.
+    /// </summary>
+    /// <typeparam name="TObject">The type of the object.</typeparam>
+    /// <seealso cref="Textamina.Markdig.Renderers.IMarkdownObjectRenderer" />
     public abstract class HtmlObjectRenderer<TObject> : IMarkdownObjectRenderer where TObject : MarkdownObject
     {
-        public virtual bool Accept(RendererBase renderer, object obj)
+        public virtual bool Accept(RendererBase renderer, MarkdownObject obj)
         {
             return obj is TObject;
         }
@@ -19,6 +23,11 @@ namespace Textamina.Markdig.Renderers.Html
             Write((HtmlRenderer)renderer, (TObject)obj);
         }
 
-        protected abstract void Write(HtmlRenderer visitor, TObject obj);
+        /// <summary>
+        /// Writes the specified Markdown object to the renderer.
+        /// </summary>
+        /// <param name="renderer">The renderer.</param>
+        /// <param name="obj">The markdown object.</param>
+        protected abstract void Write(HtmlRenderer renderer, TObject obj);
     }
 }

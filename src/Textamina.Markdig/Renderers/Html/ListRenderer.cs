@@ -6,6 +6,10 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers.Html
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="ListBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.ListBlock}" />
     public class ListRenderer : HtmlObjectRenderer<ListBlock>
     {
         protected override void Write(HtmlRenderer renderer, ListBlock listBlock)

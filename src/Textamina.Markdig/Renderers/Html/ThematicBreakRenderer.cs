@@ -5,6 +5,10 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers.Html
 {
+    /// <summary>
+    /// A HTML renderer for a <see cref="ThematicBreakBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.ThematicBreakBlock}" />
     public class ThematicBreakRenderer : HtmlObjectRenderer<ThematicBreakBlock>
     {
         protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)

@@ -21,10 +21,10 @@ namespace Textamina.Markdig.Extensions.Footnotes
 
         public string FootnoteBackLinkClass { get; set; }
 
-        protected override void Write(HtmlRenderer writer, FootnoteLink link)
+        protected override void Write(HtmlRenderer renderer, FootnoteLink link)
         {
             var order = link.Footnote.Order ?? 0;
-            writer.Write(link.IsBackLink
+            renderer.Write(link.IsBackLink
                 ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\">{HtmlHelper.Unescape(BackLinkString)}</a>"
                 : $"<a id=\"fnref:{link.Index}\" href=\"#fn:{order}\" class=\"{FootnoteLinkClass}\"><sup>{order}</sup></a>");
         }

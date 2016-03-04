@@ -5,6 +5,10 @@ using Textamina.Markdig.Helpers;
 
 namespace Textamina.Markdig.Renderers
 {
+    /// <summary>
+    /// A collection of <see cref="IMarkdownObjectRenderer"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Helpers.OrderedList{Textamina.Markdig.Renderers.IMarkdownObjectRenderer}" />
     public class ObjectRendererCollection : OrderedList<IMarkdownObjectRenderer>
     {
     }

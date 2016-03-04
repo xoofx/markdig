@@ -8,12 +8,19 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers
 {
+    /// <summary>
+    /// Base class for a <see cref="IMarkdownRenderer"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
         private IMarkdownObjectRenderer previousRenderer;
         private Type previousObjectType;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RendererBase"/> class.
+        /// </summary>
         protected RendererBase()
         {
             ObjectRenderers = new ObjectRendererCollection();
@@ -24,6 +31,10 @@ namespace Textamina.Markdig.Renderers
 
         public abstract object Render(MarkdownObject markdownObject);
 
+        /// <summary>
+        /// Writes the children of the specified <see cref="ContainerBlock"/>.
+        /// </summary>
+        /// <param name="containerBlock">The container block.</param>
         public void WriteChildren(ContainerBlock containerBlock)
         {
             if (containerBlock == null)
@@ -38,6 +49,10 @@ namespace Textamina.Markdig.Renderers
             }
         }
 
+        /// <summary>
+        /// Writes the children of the specified <see cref="ContainerInline"/>.
+        /// </summary>
+        /// <param name="containerInline">The container inline.</param>
         public void WriteChildren(ContainerInline containerInline)
         {
             if (containerInline == null)
@@ -53,6 +68,11 @@ namespace Textamina.Markdig.Renderers
             }
         }
 
+        /// <summary>
+        /// Writes the specified Markdown object.
+        /// </summary>
+        /// <typeparam name="T">A MarkdownObject type</typeparam>
+        /// <param name="obj">The Markdown object to write to this renderer.</param>
         public void Write<T>(T obj) where T : MarkdownObject
         {
             if (obj == null)

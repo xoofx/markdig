@@ -6,6 +6,10 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers.Html
 {
+    /// <summary>
+    /// An HTML renderer for a <see cref="HeadingBlock"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Syntax.HeadingBlock}" />
     public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
     {
         protected override void Write(HtmlRenderer renderer, HeadingBlock obj)

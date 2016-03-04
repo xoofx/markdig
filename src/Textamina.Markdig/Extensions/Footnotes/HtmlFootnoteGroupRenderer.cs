@@ -8,23 +8,23 @@ namespace Textamina.Markdig.Extensions.Footnotes
 {
     public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     {
-        protected override void Write(HtmlRenderer writer, FootnoteGroup footnoteGroup)
+        protected override void Write(HtmlRenderer renderer, FootnoteGroup footnoteGroup)
         {
             var footnotes = footnoteGroup.Children;
-            writer.EnsureLine();
-            writer.WriteLine("<div class=\"footnotes\">");
-            writer.WriteLine("<hr />");
-            writer.WriteLine("<ol>");
+            renderer.EnsureLine();
+            renderer.WriteLine("<div class=\"footnotes\">");
+            renderer.WriteLine("<hr />");
+            renderer.WriteLine("<ol>");
 
             for (int i = 0; i < footnotes.Count; i++)
             {
                 var footnote = (Footnote)footnotes[i];
-                writer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
-                writer.WriteChildren(footnote);
-                writer.WriteLine("</li>");
+                renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
+                renderer.WriteChildren(footnote);
+                renderer.WriteLine("</li>");
             }
-            writer.WriteLine("</ol>");
-            writer.WriteLine("</div>");
+            renderer.WriteLine("</ol>");
+            renderer.WriteLine("</div>");
         }
     }
 }

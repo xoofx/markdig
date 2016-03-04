@@ -10,16 +10,29 @@ using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Renderers
 {
+    /// <summary>
+    /// A text based <see cref="IMarkdownRenderer"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Renderers.RendererBase" />
     public abstract class TextRendererBase : RendererBase
     {
         private TextWriter writer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextRendererBase"/> class.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             this.Writer = writer;
         }
 
+        /// <summary>
+        /// Gets or sets the writer.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">if the value is null</exception>
         public TextWriter Writer
         {
             get { return writer; }
@@ -34,6 +47,11 @@ namespace Textamina.Markdig.Renderers
             }
         }
 
+        /// <summary>
+        /// Renders the specified markdown object (returns the <see cref="Writer"/> as a render object).
+        /// </summary>
+        /// <param name="markdownObject">The markdown object.</param>
+        /// <returns></returns>
         public override object Render(MarkdownObject markdownObject)
         {
             Write(markdownObject);
@@ -41,11 +59,20 @@ namespace Textamina.Markdig.Renderers
         }
     }
 
+    /// <summary>
+    /// Typed <see cref="TextRendererBase"/>.
+    /// </summary>
+    /// <typeparam name="T">Type of the renderer</typeparam>
+    /// <seealso cref="Textamina.Markdig.Renderers.RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
         private bool previousWasLine;
         private char[] buffer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextRendererBase{T}"/> class.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
         protected TextRendererBase(TextWriter writer) : base(writer)
         {
             buffer = new char[1024];
@@ -53,6 +80,10 @@ namespace Textamina.Markdig.Renderers
             previousWasLine = true;
         }
 
+        /// <summary>
+        /// Ensures a newline.
+        /// </summary>
+        /// <returns>This instance</returns>
         public T EnsureLine()
         {
             if (!previousWasLine)
@@ -62,6 +93,11 @@ namespace Textamina.Markdig.Renderers
             return (T)this;
         }
 
+        /// <summary>
+        /// Writes the specified content.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T Write(string content)
         {
@@ -70,6 +106,11 @@ namespace Textamina.Markdig.Renderers
             return (T) this;
         }
 
+        /// <summary>
+        /// Writes the specified slice.
+        /// </summary>
+        /// <param name="slice">The slice.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T Write(ref StringSlice slice)
         {
@@ -80,6 +121,11 @@ namespace Textamina.Markdig.Renderers
             return Write(slice.Text, slice.Start, slice.Length);
         }
 
+        /// <summary>
+        /// Writes the specified character.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T Write(char content)
         {
@@ -88,6 +134,13 @@ namespace Textamina.Markdig.Renderers
             return (T) this;
         }
 
+        /// <summary>
+        /// Writes the specified content.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>This instance</returns>
         public T Write(string content, int offset, int length)
         {
             previousWasLine = false;
@@ -111,6 +164,10 @@ namespace Textamina.Markdig.Renderers
             return (T) this;
         }
 
+        /// <summary>
+        /// Writes a newline.
+        /// </summary>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLine()
         {
@@ -119,6 +176,11 @@ namespace Textamina.Markdig.Renderers
             return (T) this;
         }
 
+        /// <summary>
+        /// Writes a content followed by a newline.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLine(string content)
         {
@@ -127,6 +189,11 @@ namespace Textamina.Markdig.Renderers
             return (T) this;
         }
 
+        /// <summary>
+        /// Writes the inlines of a leaf inline.
+        /// </summary>
+        /// <param name="leafBlock">The leaf block.</param>
+        /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLeafInline(LeafBlock leafBlock)
         {

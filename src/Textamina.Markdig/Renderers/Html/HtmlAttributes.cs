@@ -7,18 +7,37 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Renderers.Html
 {
+    /// <summary>
+    /// Attached HTML attributes to a <see cref="MarkdownObject"/>.
+    /// </summary>
     public class HtmlAttributes
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlAttributes"/> class.
+        /// </summary>
         public HtmlAttributes()
         {
         }
 
+        /// <summary>
+        /// Gets or sets the HTML id/identifier. May be null.
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the CSS classes attached. May be null.
+        /// </summary>
         public List<string> Classes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the additional properties. May be null.
+        /// </summary>
         public List<KeyValuePair<string, string>> Properties { get; set; }
 
+        /// <summary>
+        /// Adds a CSS class.
+        /// </summary>
+        /// <param name="name">The css class name.</param>
         public void AddClass(string name)
         {
             if (Classes == null)
@@ -28,6 +47,11 @@ namespace Textamina.Markdig.Renderers.Html
             Classes.Add(name);
         }
 
+        /// <summary>
+        /// Adds a property.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
         public void AddProperty(string name, string value)
         {
             if (Properties == null)
@@ -37,6 +61,11 @@ namespace Textamina.Markdig.Renderers.Html
             Properties.Add(new KeyValuePair<string, string>(name, value));
         }
 
+        /// <summary>
+        /// Copies the values from this instance to the specified <see cref="HtmlAttributes"/> instance.
+        /// </summary>
+        /// <param name="htmlAttributes">The HTML attributes.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public void CopyTo(HtmlAttributes htmlAttributes)
         {
             if (htmlAttributes == null) throw new ArgumentNullException(nameof(htmlAttributes));
@@ -62,15 +91,28 @@ namespace Textamina.Markdig.Renderers.Html
         }
     }
 
+    /// <summary>
+    /// Extensions for a <see cref="MarkdownObject"/> to allow accessing <see cref="HtmlAttributes"/>
+    /// </summary>
     public static class HtmlAttributesExtensions
     {
         private static readonly object Key = typeof (HtmlAttributes);
 
+        /// <summary>
+        /// Tries the get <see cref="HtmlAttributes"/> stored on a <see cref="MarkdownObject"/>.
+        /// </summary>
+        /// <param name="obj">The markdown object.</param>
+        /// <returns>The attached html attributes or null if not found</returns>
         public static HtmlAttributes TryGetAttributes(this MarkdownObject obj)
         {
             return obj.GetData(Key) as HtmlAttributes;
         }
 
+        /// <summary>
+        /// Gets or creates the <see cref="HtmlAttributes"/> stored on a <see cref="MarkdownObject"/>
+        /// </summary>
+        /// <param name="obj">The markdown object.</param>
+        /// <returns>The attached html attributes</returns>
         public static HtmlAttributes GetAttributes(this MarkdownObject obj)
         {
             var attributes = obj.GetData(Key) as HtmlAttributes;

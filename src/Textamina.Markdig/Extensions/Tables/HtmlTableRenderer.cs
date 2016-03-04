@@ -8,10 +8,10 @@ namespace Textamina.Markdig.Extensions.Tables
 {
     public class HtmlTableRenderer : HtmlObjectRenderer<TableBlock>
     {
-        protected override void Write(HtmlRenderer writer, TableBlock tableBlock)
+        protected override void Write(HtmlRenderer renderer, TableBlock tableBlock)
         {
-            writer.EnsureLine();
-            writer.Write("<table").WriteAttributes(tableBlock).WriteLine(">");
+            renderer.EnsureLine();
+            renderer.Write("<table").WriteAttributes(tableBlock).WriteLine(">");
 
             bool hasBody = false;
             var header = (TableRowBlock)tableBlock.Children[0];
@@ -24,57 +24,57 @@ namespace Textamina.Markdig.Extensions.Tables
                 var row = (TableRowBlock)rowObj;
                 if (row.IsHeader)
                 {
-                    writer.WriteLine("<thead>");
+                    renderer.WriteLine("<thead>");
                 }
                 else if (!hasBody)
                 {
-                    writer.WriteLine("<tbody>");
+                    renderer.WriteLine("<tbody>");
                     hasBody = true;
                 }
-                writer.WriteLine("<tr>");
+                renderer.WriteLine("<tr>");
                 for (int i = 0; i < row.Children.Count; i++)
                 {
                     var cellObj = row.Children[i];
                     var cell = (TableCellBlock)cellObj;
 
-                    writer.EnsureLine();
+                    renderer.EnsureLine();
                     if (row.IsHeader)
                     {
-                        writer.Write("<th");
+                        renderer.Write("<th");
                     }
                     else
                     {
-                        writer.Write("<td");
+                        renderer.Write("<td");
                     }
                     if (header != null && i < header.ColumnAlignments.Count)
                     {
                         switch (header.ColumnAlignments[i])
                         {
                             case TableColumnAlign.Center:
-                                writer.Write(" style=\"text-align: center;\"");
+                                renderer.Write(" style=\"text-align: center;\"");
                                 break;
                             case TableColumnAlign.Right:
-                                writer.Write(" style=\"text-align: right;\"");
+                                renderer.Write(" style=\"text-align: right;\"");
                                 break;
                         }
                     }
-                    writer.Write(">");
+                    renderer.Write(">");
                     
-                    writer.WriteLeafInline(cell);
-                    writer.WriteLine(row.IsHeader ? "</th>" : "</td>");
+                    renderer.WriteLeafInline(cell);
+                    renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
-                writer.WriteLine("</tr>");
+                renderer.WriteLine("</tr>");
                 if (row.IsHeader)
                 {
-                    writer.WriteLine("</thead>");
+                    renderer.WriteLine("</thead>");
                 }
             }
 
             if (hasBody)
             {
-                writer.WriteLine("</tbody>");
+                renderer.WriteLine("</tbody>");
             }
-            writer.WriteLine("</table>");
+            renderer.WriteLine("</table>");
         }
     }
 }
