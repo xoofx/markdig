@@ -91,7 +91,7 @@
     <Compile Include="Parsers\IBlockParser.cs" />
     <Compile Include="Renderers\TextRendererBase.cs" />
     <Compile Include="Syntax\CharIteratorHelper.cs" />
-    <Compile Include="Syntax\ICharIterator.cs" />
+    <Compile Include="Helpers\ICharIterator.cs" />
     <Compile Include="Syntax\LinkReferenceDefinitionExtensions.cs" />
     <Compile Include="Syntax\MarkdownObject.cs" />
     <Compile Include="Parsers\IMarkdownParser.cs" />

@@ -4,14 +4,13 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
 {
     /// <summary>
     /// A lightweight struct that represents a slice of a string.
     /// </summary>
-    /// <seealso cref="Textamina.Markdig.Syntax.ICharIterator" />
+    /// <seealso cref="ICharIterator" />
     public struct StringSlice : ICharIterator
     {
         /// <summary>

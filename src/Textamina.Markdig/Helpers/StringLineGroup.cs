@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Helpers
 {
@@ -180,7 +179,7 @@ namespace Textamina.Markdig.Helpers
         /// <summary>
         /// The iterator used to iterate other the lines.
         /// </summary>
-        /// <seealso cref="Textamina.Markdig.Syntax.ICharIterator" />
+        /// <seealso cref="ICharIterator" />
         public struct Iterator : ICharIterator
         {
             private readonly StringLineGroup lines;

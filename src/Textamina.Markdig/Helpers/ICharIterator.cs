@@ -2,9 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using Textamina.Markdig.Helpers;
-
-namespace Textamina.Markdig.Syntax
+namespace Textamina.Markdig.Helpers
 {
     /// <summary>
     /// Provides a common interface for iterating characters 
