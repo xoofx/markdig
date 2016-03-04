@@ -1,57 +1,70 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
-// Licensed under the BSD-Clause 2 license. See license.txt file in the project root for full license information.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
 using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Tests
 {
-
-    [TestFixture]
     public class TestParser
     {
-        private const string RelativeBasePath = @"..\..\TestFiles";
-        private const string InputFilePattern = "*.txt";
-        private const string OutputEndFileExtension = ".out.txt";
-
-        [Test]
-        public void TestSimple()
-        {
-            var reader = new StringReader(@"- toto
-- tata");
-//            var reader = new StringReader(@"> > toto tata
-//> titi toto
-//");
-            var result = Markdown.ConvertToHtml(reader);
-            Console.WriteLine(result);
-        }
-
-        //[TestCaseSource("TestFiles")]
-        public static void TestSpec(string inputText, string expectedOutputText)
+        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
         {
             MarkdownParser.Log = Console.Out;
             var reader = new StringReader(inputText);
             var output = new StringWriter();
-            Markdown.ConvertToHtml(reader, output, new MarkdownPipeline().UsePipeTable());
+            Markdown.ConvertToHtml(reader, output, GetPipeline(extensions));
 
             var result = Compact(output.ToString());
             expectedOutputText = Compact(expectedOutputText);
 
-            Console.WriteLine("``````````````````` Source");
+            Console.WriteLine("```````````````````Source");
             Console.WriteLine(DisplaySpaceAndTabs(inputText));
-            Console.WriteLine("``````````````````` Result");
+            Console.WriteLine("```````````````````Result");
             Console.WriteLine(DisplaySpaceAndTabs(result));
-            Console.WriteLine("``````````````````` Expected");
+            Console.WriteLine("```````````````````Expected");
             Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
             Console.WriteLine("```````````````````");
             Console.WriteLine();
             TextAssert.AreEqual(expectedOutputText, result);
+        }
+
+        private static MarkdownPipeline GetPipeline(string extensionsStr)
+        {
+            if (extensionsStr == null)
+            {
+                return new MarkdownPipeline();
+            }
+
+            var pipeline = new MarkdownPipeline();
+            foreach (var extension in extensionsStr.Split(new[] {'+'}, StringSplitOptions.RemoveEmptyEntries))
+            {
+                switch (extension.ToLowerInvariant())
+                {
+                    case "pipetables":
+                        pipeline.UsePipeTable();
+                        break;
+                    case "strike":
+                        pipeline.UseStrikethroughSuperAndSubScript();
+                        break;
+                    case "hardlinebreak":
+                        pipeline.UseSoftlineBreakAsHardlineBreak();
+                        break;
+                    case "footnotes":
+                        pipeline.UseFootnoteExtensions();
+                        break;
+                    case "attributes":
+                        pipeline.UseFootnoteExtensions();
+                        break;
+                    default:
+                        Console.WriteLine($"Unsupported extension: {extension}");
+                        break;
+                }
+            }
+            return pipeline;
         }
 
         private static string DisplaySpaceAndTabs(string text)
@@ -61,65 +74,12 @@ namespace Textamina.Markdig.Tests
 
         private static string Compact(string html)
         {
+            // Normalize the output to make it compatible with CommonMark specs
             html = html.Replace("\r", "").Trim();
-
-            // collapse spaces and newlines before </li> and after <li>
             html = Regex.Replace(html, @"\s+</li>", "</li>");
             html = Regex.Replace(html, @"<li>\s+", "<li>");
-
-            // needed to compare UTF-32 characters
             html = html.Normalize(NormalizationForm.FormKD);
             return html;
-        }
-
-
-
-
-
-        public static IEnumerable<object[]> TestFiles
-        {
-            get
-            {
-                var baseDir = Path.GetFullPath(Path.Combine(BaseDirectory, RelativeBasePath));
-                return
-                    Directory.EnumerateFiles(baseDir, InputFilePattern, SearchOption.AllDirectories)
-                        .Where(f => !f.EndsWith(OutputEndFileExtension))
-                        .Select(f => f.StartsWith(baseDir) ? f.Substring(baseDir.Length + 1) : f)
-                        .OrderBy(f => f)
-                        .Select(x => new object[]
-                        {
-                            new TestFilePath(x)
-                        });
-            }
-        }
-
-        /// <summary>
-        /// Use an internal class to have a better display of the filename in Resharper Unit Tests runner.
-        /// </summary>
-        public struct TestFilePath
-        {
-            public TestFilePath(string filePath)
-            {
-                FilePath = filePath;
-            }
-
-            public string FilePath { get; }
-
-            public override string ToString()
-            {
-                return FilePath;
-            }
-        }
-
-        private static string BaseDirectory
-        {
-            get
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var codebase = new Uri(assembly.CodeBase);
-                var path = codebase.LocalPath;
-                return Path.GetDirectoryName(path);
-            }
         }
     }
 }
