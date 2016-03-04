@@ -134,7 +134,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             // We have potentially an open or close emphasis
             if (canOpen || canClose)
             {
-                var delimiterType = DelimiterType.None;
+                var delimiterType = DelimiterType.Undefined;
                 if (canOpen)
                 {
                     delimiterType |= DelimiterType.Open;

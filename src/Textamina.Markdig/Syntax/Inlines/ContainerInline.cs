@@ -7,12 +7,25 @@ using System.IO;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// A base class for container for <see cref="Inline"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.Inline" />
     public class ContainerInline : Inline
     {
+        /// <summary>
+        /// Gets the first child.
+        /// </summary>
         public Inline FirstChild { get; private set; }
 
+        /// <summary>
+        /// Gets the last child.
+        /// </summary>
         public Inline LastChild { get; private set; }
 
+        /// <summary>
+        /// Clears this instance by removing all its children.
+        /// </summary>
         public void Clear()
         {
             var child = LastChild;
@@ -25,6 +38,13 @@ namespace Textamina.Markdig.Syntax.Inlines
             LastChild = null;
         }
 
+        /// <summary>
+        /// Appends a child to this container.
+        /// </summary>
+        /// <param name="child">The child to append to this container..</param>
+        /// <returns>This instance</returns>
+        /// <exception cref="System.ArgumentNullException">If child is null</exception>
+        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public virtual ContainerInline AppendChild(Inline child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
@@ -46,7 +66,12 @@ namespace Textamina.Markdig.Syntax.Inlines
             return this;
         }
 
-        public Inline FindChild(Inline childToFind)
+        /// <summary>
+        /// Checks if this instance contains the specified child.
+        /// </summary>
+        /// <param name="childToFind">The child to find.</param>
+        /// <returns><c>true</c> if this instance contains the specified child; <c>false</c> otherwise</returns>
+        public bool ContainsChild(Inline childToFind)
         {
             var child = FirstChild;
             while (child != null)
@@ -54,13 +79,18 @@ namespace Textamina.Markdig.Syntax.Inlines
                 var next = child.NextSibling;
                 if (child == childToFind)
                 {
-                    return child;
+                    return true;
                 }
                 child = next;
             }
-            return null;
+            return false;
         }
 
+        /// <summary>
+        /// Finds all the descendants.
+        /// </summary>
+        /// <typeparam name="T">Type of the descendants to find</typeparam>
+        /// <returns>An enumeration of T</returns>
         public IEnumerable<T> FindDescendants<T>() where T : Inline
         {
             var child = FirstChild;
@@ -85,8 +115,13 @@ namespace Textamina.Markdig.Syntax.Inlines
             }
         }
 
+        /// <summary>
+        /// Moves all the children of this container after the specified inline.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public void MoveChildrenAfter(Inline parent)
         {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
             var child = FirstChild;
             var nextSibliing = parent;
             while (child != null)
@@ -100,8 +135,14 @@ namespace Textamina.Markdig.Syntax.Inlines
             }
         }
 
+        /// <summary>
+        /// Embraces this instance by the specified container.
+        /// </summary>
+        /// <param name="container">The container to use to embrace this instance.</param>
+        /// <exception cref="System.ArgumentNullException">If the container is null</exception>
         public void EmbraceChildrenBy(ContainerInline container)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
             var child = FirstChild;
             while (child != null)
             {

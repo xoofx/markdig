@@ -5,8 +5,16 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// A delimiter used for parsing emphasis.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.DelimiterInline" />
     public class EmphasisDelimiterInline : DelimiterInline
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmphasisDelimiterInline"/> class.
+        /// </summary>
+        /// <param name="parser">The parser.</param>
         public EmphasisDelimiterInline(InlineParser parser) : base(parser)
         {
         }

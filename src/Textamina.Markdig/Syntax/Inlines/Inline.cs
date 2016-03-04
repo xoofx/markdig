@@ -8,18 +8,43 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// Base class for all syntax tree inlines.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.MarkdownObject" />
     public abstract class Inline : MarkdownObject
     {
+        /// <summary>
+        /// Gets the parent container of this inline.
+        /// </summary>
         public ContainerInline Parent { get; internal set; }
 
+        /// <summary>
+        /// Gets the previous inline.
+        /// </summary>
         public Inline PreviousSibling { get; private set; }
 
+        /// <summary>
+        /// Gets the next sibling inline.
+        /// </summary>
         public Inline NextSibling { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is closed.
+        /// </summary>
         public bool IsClosed { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is closable.
+        /// </summary>
         public bool IsClosable { get; protected set; }
 
+        /// <summary>
+        /// Inserts the specified inline after this instance.
+        /// </summary>
+        /// <param name="next">The inline to insert after this instance.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public void InsertAfter(Inline next)
         {
             if (next == null) throw new ArgumentNullException(nameof(next));
@@ -45,6 +70,12 @@ namespace Textamina.Markdig.Syntax.Inlines
             }
         }
 
+        /// <summary>
+        /// Inserts the specified inline before this instance.
+        /// </summary>
+        /// <param name="previous">The inlnie previous to insert before this instance.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public void InsertBefore(Inline previous)
         {
             if (previous == null) throw new ArgumentNullException(nameof(previous));
@@ -94,6 +125,13 @@ namespace Textamina.Markdig.Syntax.Inlines
             }
         }
 
+        /// <summary>
+        /// Replaces this inline by the specified inline.
+        /// </summary>
+        /// <param name="inline">The inline.</param>
+        /// <param name="copyChildren">if set to <c>true</c> the children of this instance are copied to the specified inline.</param>
+        /// <returns>The last children</returns>
+        /// <exception cref="System.ArgumentNullException">If inlnie is null</exception>
         public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
             if (inline == null) throw new ArgumentNullException(nameof(inline));
@@ -152,6 +190,11 @@ namespace Textamina.Markdig.Syntax.Inlines
             return inline;
         }
 
+        /// <summary>
+        /// Determines whether this instance contains a parent of the specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of the parent to check</typeparam>
+        /// <returns><c>true</c> if this instance contains a parent of the specified type; <c>false</c> otherwise</returns>
         public bool ContainsParentOfType<T>() where T : Inline
         {
             var delimiter = this as T;
@@ -168,6 +211,11 @@ namespace Textamina.Markdig.Syntax.Inlines
             return false;
         }
 
+        /// <summary>
+        /// Iterates on parents of the specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of the parent to iterate over</typeparam>
+        /// <returns>An enumeration on the parents of the specified type</returns>
         public IEnumerable<T> FindParentOfType<T>() where T : Inline
         {
             var parent = Parent;
@@ -208,14 +256,26 @@ namespace Textamina.Markdig.Syntax.Inlines
         {
         }
 
+        /// <summary>
+        /// Dumps this instance to <see cref="TextWriter"/>.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public void DumpTo(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             DumpTo(writer, 0);
         }
 
+        /// <summary>
+        /// Dumps this instance to <see cref="TextWriter"/>.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="level">The level of indent.</param>
+        /// <exception cref="System.ArgumentNullException">if writer is null</exception>
         public void DumpTo(TextWriter writer, int level)
         {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
             for (int i = 0; i < level; i++)
             {
                 writer.Write(' ');

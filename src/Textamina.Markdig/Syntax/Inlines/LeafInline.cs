@@ -3,6 +3,10 @@
 // See the license.txt file in the project root for more information.
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// A base class for a leaf inline.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.Inline" />
     public abstract class LeafInline : Inline
     {
     }

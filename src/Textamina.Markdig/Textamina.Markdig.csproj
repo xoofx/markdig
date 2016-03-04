@@ -130,7 +130,6 @@
     <Compile Include="Parsers\Inlines\LinkInlineParser.cs" />
     <Compile Include="Syntax\Inlines\LiteralInline.cs" />
     <Compile Include="Parsers\Inlines\LiteralInlineParser.cs" />
-    <Compile Include="Syntax\Inlines\RawHtmlInline.cs" />
     <Compile Include="Syntax\Block.cs" />
     <Compile Include="Syntax\ContainerBlock.cs" />
     <Compile Include="Syntax\HtmlBlock.cs" />

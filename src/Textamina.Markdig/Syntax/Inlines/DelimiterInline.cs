@@ -6,6 +6,10 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// Internal delimiter used by some parsers (e.g emphasis, tables).
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.ContainerInline" />
     public abstract class DelimiterInline : ContainerInline
     {
         protected DelimiterInline(InlineParser parser)
@@ -15,17 +19,25 @@ namespace Textamina.Markdig.Syntax.Inlines
             IsActive = true;
         }
 
+        /// <summary>
+        /// Gets the parser.
+        /// </summary>
         public InlineParser Parser { get; }
 
+        /// <summary>
+        /// Gets or sets the type of this delimiter.
+        /// </summary>
         public DelimiterType Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the priority of this delimiter.
+        /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
-        public int Priority { get; set; }
-
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// Converts this delimiter to a literal.
+        /// </summary>
+        /// <returns>The string representation of this delimiter</returns>
         public abstract string ToLiteral();
 
         public override string ToString()

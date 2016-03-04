@@ -4,10 +4,20 @@
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// An autolink (Section 6.7 CommonMark specs)
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.LeafInline" />
     public class AutolinkInline : LeafInline
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is an email link.
+        /// </summary>
         public bool IsEmail { get; set; }
 
+        /// <summary>
+        /// Gets or sets the URL of this link.
+        /// </summary>
         public string Url { get; set; }
 
         public override string ToString()

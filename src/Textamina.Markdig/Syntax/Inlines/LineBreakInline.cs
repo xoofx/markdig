@@ -3,7 +3,11 @@
 // See the license.txt file in the project root for more information.
 namespace Textamina.Markdig.Syntax.Inlines
 {
-    public class LineBreakInline : LeafInline
+    /// <summary>
+    /// A base class for a line break.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.LeafInline" />
+    public abstract class LineBreakInline : LeafInline
     {
     }
 }

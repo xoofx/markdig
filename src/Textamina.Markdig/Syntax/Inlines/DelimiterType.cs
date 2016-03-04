@@ -5,13 +5,25 @@ using System;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
+    /// <summary>
+    /// Gets the type of delimiter.
+    /// </summary>
     [Flags]
     public enum DelimiterType
     {
-        None,
+        /// <summary>
+        /// An undefined open or close delimiter.
+        /// </summary>
+        Undefined,
 
+        /// <summary>
+        /// An open delimiter.
+        /// </summary>
         Open,
 
+        /// <summary>
+        /// A close delimiter.
+        /// </summary>
         Close,
     }
 }

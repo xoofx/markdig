@@ -3,7 +3,11 @@
 // See the license.txt file in the project root for more information.
 namespace Textamina.Markdig.Syntax.Inlines
 {
-    public class HardlineBreakInline : LeafInline
+    /// <summary>
+    /// A hard line break (Section 6.9 CommonMark specs).
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.Inlines.LeafInline" />
+    public class HardlineBreakInline : LineBreakInline
     {
         public override string ToString()
         {
