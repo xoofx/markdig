@@ -16779,7 +16779,7 @@ namespace Textamina.Markdig.Tests
     }
         // **Rule #8**
         //
-        // Links labels are escaping `|`
+        // The character `|` inside a link label is not recognize as a column delimiter
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16924,6 +16924,82 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Attributes");
 			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>", "attributes");
+        }
+    }
+        // # Extensions
+        //
+        // The following additional emphasis are supported:
+        //
+        // ## Strikeout
+        //
+        // Allows to strikeout a span of text by surrounding it by `~~`
+    [TestFixture]
+    public partial class TestExtensionsStrikeout
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Strikeout
+            //
+            // The following CommonMark:
+            //     The following text ~~is deleted~~
+            //
+            // Should be rendered as:
+            //     <p>The following text <del>is deleted</del></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikeout");
+			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "extra_emphasis");
+        }
+    }
+        // ## Superscript and Subscript
+        //
+        // Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters:
+    [TestFixture]
+    public partial class TestExtensionsSuperscriptandSubscript
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Superscript and Subscript
+            //
+            // The following CommonMark:
+            //     H~2~O is a liquid. 2^10^ is 1024
+            //
+            // Should be rendered as:
+            //     <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Superscript and Subscript");
+			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "extra_emphasis");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Hardline break
+        //
+        // When this extension is used, a new line in a paragraph block will result in a hardline break `<br>`:
+    [TestFixture]
+    public partial class TestExtensionsHardlinebreak
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Hardline break
+            //
+            // The following CommonMark:
+            //     This is a paragraph
+            //     with a break inside
+            //
+            // Should be rendered as:
+            //     <p>This is a paragraph<br />
+            //     with a break inside</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Hardline break");
+			TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak");
         }
     }
 }

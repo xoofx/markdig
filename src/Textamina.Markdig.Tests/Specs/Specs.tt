@@ -37,6 +37,8 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AttributesSpecs.md"), "attributes"),
+		new KeyValuePair<string, string>(Host.ResolvePath("StrikeSubAndSuperscriptSpecs.md"), "extra_emphasis"),
+		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "hardlinebreak"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

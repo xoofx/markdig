@@ -70,6 +70,7 @@
     <None Include="Specs\AttributesSpecs.md" />
     <None Include="Specs\FootnotesSpecs.md" />
     <None Include="Specs\PipeTableSpecs.md" />
+    <None Include="Specs\StrikeSubAndSuperscriptSpecs.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Textamina.Markdig\Textamina.Markdig.csproj">
