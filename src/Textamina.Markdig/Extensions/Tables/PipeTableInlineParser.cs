@@ -109,11 +109,81 @@ namespace Textamina.Markdig.Extensions.Tables
             return true;
         }
 
-        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex)
+        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
         {
-            // Continue
             var container = root as ContainerInline;
             var tableState = state.ParserStates[Index] as TableState;
+
+            // If the delimiters are being processed by an image link, we need to transform them back to literals
+            if (!isFinalProcessing)
+            {
+                if (container == null || tableState == null)
+                {
+                    return true;
+                }
+
+                var child = container.LastChild;
+                List<PiprTableDelimiterInline> delimitersToRemove = null;
+
+                while (child != null)
+                {
+                    var pipeDelimiter = child as PiprTableDelimiterInline;
+                    if (pipeDelimiter != null)
+                    {
+                        if (delimitersToRemove == null)
+                        {
+                            delimitersToRemove = new List<PiprTableDelimiterInline>();
+                        }
+                        delimitersToRemove.Add(pipeDelimiter);
+                    }
+
+                    if (child == lastChild)
+                    {
+                        break;
+                    }
+
+                    var subContainer = child as ContainerInline;
+                    child = subContainer?.LastChild;
+                }
+
+                // If we have found any delimiters, transform them to literals
+                if (delimitersToRemove != null)
+                {
+                    bool leftIsDelimiter = false;
+                    bool rightIsDelimiter = false;
+                    for (int i = 0; i < delimitersToRemove.Count; i++)
+                    {
+                        var pipeDelimiter = delimitersToRemove[i];
+                        pipeDelimiter.ReplaceBy(new LiteralInline() {Content = new StringSlice("|"), IsClosed = true});
+
+                        // Check that the pipe that is being removed is not going to make a line without pipe delimiters
+                        var tableDelimiters = tableState.ColumnAndLineDelimiters;
+                        var delimiterIndex = tableDelimiters.IndexOf(pipeDelimiter);
+
+                        if (i == 0)
+                        {
+                            leftIsDelimiter = delimiterIndex > 0 && tableDelimiters[delimiterIndex - 1] is PiprTableDelimiterInline;
+                        }
+                        else if (i + 1 == delimitersToRemove.Count)
+                        {
+                            rightIsDelimiter = delimiterIndex + 1 < tableDelimiters.Count &&
+                                               tableDelimiters[delimiterIndex + 1] is PiprTableDelimiterInline;
+                        }
+                        // Remove this delimiter from the table state
+                        tableState.ColumnAndLineDelimiters.Remove(pipeDelimiter);
+                    }
+
+                    // If we didn't have any delimiter before and after the delimiters we jsut removed, we mark the state of the current line as no pipe
+                    if (!leftIsDelimiter && !rightIsDelimiter)
+                    {
+                        tableState.LineHasPipe = false;
+                    }
+                }
+
+                return true;
+            }
+
+            // Continue
             if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe || tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
@@ -258,7 +328,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 {
                     foreach (var cell in cells)
                     {
-                        state.ProcessDelimiters(i + 1, cell.Inline);
+                        state.ProcessDelimiters(i + 1, cell.Inline, null, true);
                     }
                     break;
                 }

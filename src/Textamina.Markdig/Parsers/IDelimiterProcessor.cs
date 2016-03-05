@@ -17,8 +17,9 @@ namespace Textamina.Markdig.Parsers
         /// <param name="root">The root inline.</param>
         /// <param name="lastChild">The last child.</param>
         /// <param name="delimiterProcessorIndex">Index of this delimiter processor.</param>
+        /// <param name="isFinalProcessing"></param>
         /// <returns><c>true</c> to continue to the next delimiter processor; 
         /// <c>false</c> to stop the process (in case a processor is perfoming sub-sequent processor itself)</returns>
-        bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex);
+        bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing);
     }
 }

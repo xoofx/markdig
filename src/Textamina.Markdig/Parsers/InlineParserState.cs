@@ -218,7 +218,7 @@ namespace Textamina.Markdig.Parsers
             }
 
             // Process all delimiters
-            ProcessDelimiters(0, Root);
+            ProcessDelimiters(0, Root, null, true);
 
             //TransformDelimitersToLiterals();
 
@@ -230,12 +230,12 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
-        public void ProcessDelimiters(int startingIndex, Inline root, Inline lastChild = null)
+        public void ProcessDelimiters(int startingIndex, Inline root, Inline lastChild, bool isFinalProcessing)
         {
             for (int i = startingIndex; i < Parsers.DelimiterProcessors.Length; i++)
             {
                 var delimiterProcessor = Parsers.DelimiterProcessors[i];
-                if (!delimiterProcessor.ProcessDelimiters(this, root, lastChild, i))
+                if (!delimiterProcessor.ProcessDelimiters(this, root, lastChild, i, isFinalProcessing))
                 {
                     break;
                 }

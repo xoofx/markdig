@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '*', '_' };
         }
 
-        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex)
+        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             if (container == null)

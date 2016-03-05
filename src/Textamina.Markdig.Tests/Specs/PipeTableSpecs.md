@@ -377,3 +377,29 @@ a <a href="" title="|"></a> | b
 </tbody>
 </table>
 ````````````````````````````````
+
+**Rule #8**
+
+The character `|` inside a link label is not recognize as a column delimiter
+
+```````````````````````````````` example
+a  | b
+-- | --
+[This is a link with a | inside the label](http://google.com) | 1
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://google.com">This is a link with a | inside the label</a></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
