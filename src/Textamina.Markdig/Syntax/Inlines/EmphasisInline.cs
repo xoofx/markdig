@@ -2,12 +2,15 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 namespace Textamina.Markdig.Syntax.Inlines
 {
     /// <summary>
     /// An emphasis and strong emphasis (Section 6.4 CommonMark specs).
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.ContainerInline" />
+    [DebuggerDisplay("{DelimiterChar} Strong: {Strong}")]
     public class EmphasisInline : ContainerInline
     {
         /// <summary>
@@ -19,10 +22,5 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// Gets or sets a value indicating whether this <see cref="EmphasisInline"/> is strong.
         /// </summary>
         public bool Strong { get; set; }
-
-        public override string ToString()
-        {
-            return Strong ? $"{DelimiterChar}{DelimiterChar}" : $"{DelimiterChar}";
-        }
     }
 }

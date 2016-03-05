@@ -1,12 +1,16 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System.Diagnostics;
+
 namespace Textamina.Markdig.Syntax.Inlines
 {
     /// <summary>
     /// A Link inline (Section 6.5 CommonMark specs)
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.ContainerInline" />
+    [DebuggerDisplay("Url: {Url} Title: {Title} Image: {IsImage}")]
     public class LinkInline : ContainerInline
     {
         /// <summary>
@@ -41,10 +45,5 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// Gets or sets a value indicating whether this instance is an image link.
         /// </summary>
         public bool IsImage { get; set; }
-
-        public override string ToString()
-        {
-            return (IsImage ? "<img src=\"" : "<a href=\"") + Url + "\" title=\"" + Title + "\">";
-        }
     }
 }

@@ -35,11 +35,6 @@ namespace Textamina.Markdig.Syntax.Inlines
         public bool IsClosed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is closable.
-        /// </summary>
-        public bool IsClosable { get; protected set; }
-
-        /// <summary>
         /// Inserts the specified inline after this instance.
         /// </summary>
         /// <param name="next">The inline to insert after this instance.</param>
@@ -240,19 +235,6 @@ namespace Textamina.Markdig.Syntax.Inlines
         }
 
         protected virtual void OnChildInsert(Inline child)
-        {
-        }
-
-        internal void CloseInternal(InlineParserState state)
-        {
-            if (!IsClosed)
-            {
-                Close(state);
-                IsClosed = true;
-            }
-        }
-
-        protected virtual void Close(InlineParserState state)
         {
         }
 

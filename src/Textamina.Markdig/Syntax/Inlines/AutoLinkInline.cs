@@ -2,12 +2,15 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 namespace Textamina.Markdig.Syntax.Inlines
 {
     /// <summary>
     /// An autolink (Section 6.7 CommonMark specs)
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.LeafInline" />
+    [DebuggerDisplay("<{Url}>")]
     public class AutolinkInline : LeafInline
     {
         /// <summary>

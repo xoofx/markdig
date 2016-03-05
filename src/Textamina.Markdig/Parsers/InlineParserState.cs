@@ -33,7 +33,6 @@ namespace Textamina.Markdig.Parsers
             if (parsers == null) throw new ArgumentNullException(nameof(parsers));
             StringBuilders = stringBuilders;
             Document = document;
-            InlinesToClose = new List<Inline>();
             Parsers = parsers;
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
@@ -94,11 +93,6 @@ namespace Textamina.Markdig.Parsers
         /// Gets or sets the debug log writer. No log if null.
         /// </summary>
         public TextWriter DebugLog { get; set; }
-
-        /// <summary>
-        /// Gets the list of inlines to close.
-        /// </summary>
-        private List<Inline> InlinesToClose { get; }
 
         /// <summary>
         /// Processes the inline of the specified <see cref="LeafBlock"/>.
@@ -171,18 +165,6 @@ namespace Textamina.Markdig.Parsers
                         // Get deepest container
                         FindLastContainer().AppendChild(nextInline);
                     }
-
-                    if (nextInline.IsClosable && !nextInline.IsClosed)
-                    {
-                        var inlinesToClose = InlinesToClose;
-                        var last = inlinesToClose.Count > 0
-                            ? InlinesToClose[inlinesToClose.Count - 1]
-                            : null;
-                        if (last != nextInline)
-                        {
-                            InlinesToClose.Add(nextInline);
-                        }
-                    }
                 }
                 else
                 {
@@ -203,14 +185,7 @@ namespace Textamina.Markdig.Parsers
                 }
             }
 
-            // Close all inlines not closed
             Inline = null;
-            foreach (var inline in InlinesToClose)
-            {
-                inline.CloseInternal(this);
-            }
-            InlinesToClose.Clear();
-
             if (DebugLog != null)
             {
                 DebugLog.WriteLine("** Dump before Emphasis:");
