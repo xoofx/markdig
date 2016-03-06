@@ -45,7 +45,6 @@
     <Compile Include="Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs" />
     <Compile Include="Extensions\StrikethroughSuperAndSubScriptExtension.cs" />
-    <Compile Include="Extensions\Tables\GridTableBlock.cs" />
     <Compile Include="Extensions\Tables\GridTableBlockParser.cs" />
     <Compile Include="Extensions\Tables\GridTableExtension.cs" />
     <Compile Include="Extensions\Tables\GridTableBlockState.cs" />
