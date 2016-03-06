@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
+using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.Tables
@@ -14,6 +15,10 @@ namespace Textamina.Markdig.Extensions.Tables
     public class TableBlock : ContainerBlock
     {
         public TableBlock() : base(null)
+        {
+        }
+
+        public TableBlock(BlockParser parser) : base(parser)
         {
         }
 

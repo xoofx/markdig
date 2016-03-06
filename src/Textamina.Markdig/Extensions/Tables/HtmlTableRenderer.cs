@@ -18,20 +18,30 @@ namespace Textamina.Markdig.Extensions.Tables
             renderer.Write("<table").WriteAttributes(tableBlock).WriteLine(">");
 
             bool hasBody = false;
-            var header = (TableRowBlock)tableBlock.Children[0];
-            if (!header.IsHeader)
-            {
-                header = null;
-            }
+            bool hasAlreadyHeader = false;
+            bool isHeaderOpen = false;
+
             foreach (var rowObj in tableBlock.Children)
             {
                 var row = (TableRowBlock)rowObj;
                 if (row.IsHeader)
                 {
-                    renderer.WriteLine("<thead>");
+                    // Allow a single thead
+                    if (!hasAlreadyHeader)
+                    {
+                        renderer.WriteLine("<thead>");
+                        isHeaderOpen = true;
+                    }
+                    hasAlreadyHeader = true;
                 }
                 else if (!hasBody)
                 {
+                    if (isHeaderOpen)
+                    {
+                        renderer.WriteLine("</thead>");
+                        isHeaderOpen = false;
+                    }
+
                     renderer.WriteLine("<tbody>");
                     hasBody = true;
                 }
@@ -42,15 +52,13 @@ namespace Textamina.Markdig.Extensions.Tables
                     var cell = (TableCellBlock)cellObj;
 
                     renderer.EnsureLine();
-                    if (row.IsHeader)
+                    renderer.Write(row.IsHeader ? "<th" : "<td");
+                    if (cell.ColumnSpan != 1)
                     {
-                        renderer.Write("<th");
+                        renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
-                    else
-                    {
-                        renderer.Write("<td");
-                    }
-                    if (header != null && i < tableBlock.ColumnAlignments.Count)
+
+                    if (tableBlock.ColumnAlignments != null && i < tableBlock.ColumnAlignments.Count)
                     {
                         switch (tableBlock.ColumnAlignments[i])
                         {
@@ -62,6 +70,7 @@ namespace Textamina.Markdig.Extensions.Tables
                                 break;
                         }
                     }
+                    renderer.WriteAttributes(cell);
                     renderer.Write(">");
 
                     var previousImplicitParagraph = renderer.ImplicitParagraph;
@@ -75,15 +84,15 @@ namespace Textamina.Markdig.Extensions.Tables
                     renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
                 renderer.WriteLine("</tr>");
-                if (row.IsHeader)
-                {
-                    renderer.WriteLine("</thead>");
-                }
             }
 
             if (hasBody)
             {
                 renderer.WriteLine("</tbody>");
+            }
+            else if (isHeaderOpen)
+            {
+                renderer.WriteLine("</thead>");
             }
             renderer.WriteLine("</table>");
         }

@@ -40,6 +40,17 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
+        /// Uses the grid table extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseGridTable(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<GridTableExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
         /// Uses the footnotes extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>

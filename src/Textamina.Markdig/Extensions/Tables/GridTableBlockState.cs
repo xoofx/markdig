@@ -4,15 +4,17 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
-    internal class GridTableParserState
+    internal class GridTableBlockState
     {
-        public int StartColumn { get; set; }
+        public int Start { get; set; }
 
         public StringLineGroup Lines { get; private set; }
 
         public List<ColumnSlice> ColumnSlices { get; private set; }
 
         public bool ExpectRow { get; set; }
+
+        public int StartRowGroup { get; set; }
 
         public void AddLine(ref StringSlice line)
         {
@@ -32,8 +34,8 @@ namespace Textamina.Markdig.Extensions.Tables
 
             ColumnSlices.Add(new ColumnSlice()
             {
-                ColumnStart = start,
-                ColumnEnd = end,
+                Start = start,
+                End = end,
                 Align = align,
             });
         }
@@ -45,9 +47,9 @@ namespace Textamina.Markdig.Extensions.Tables
                 CurrentColumnSpan = -1;
             }
 
-            public int ColumnStart { get; set; }
+            public int Start { get; set; }
 
-            public int ColumnEnd { get; set; }
+            public int End { get; set; }
 
             public TableColumnAlign Align { get; set; }
 

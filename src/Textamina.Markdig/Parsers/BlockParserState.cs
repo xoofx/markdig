@@ -17,6 +17,7 @@ namespace Textamina.Markdig.Parsers
         private BlockParserState root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
+        private int originalLineStart = 0;
 
         private BlockParserState(BlockParserState root)
         {
@@ -263,10 +264,10 @@ namespace Textamina.Markdig.Parsers
             }
             else
             {
-                Line.Start = 0;
+                Line.Start = originalLineStart;
                 Column = 0;
                 ColumnBeforeIndent = 0;
-                StartBeforeIndent = 0;
+                StartBeforeIndent = originalLineStart;
             }
             for (; Line.Start <= Line.End && Column < newColumn; Line.Start++)
             {
@@ -398,7 +399,7 @@ namespace Textamina.Markdig.Parsers
         {
             var block = OpenedBlocks[index];
             // If the pending object is removed, we need to remove it from the parent container
-            if (!block.Parser.Close(this, block))
+            if (block.Parser != null && !block.Parser.Close(this, block))
             {
                 block.Parent?.Children.Remove(block);
             }
@@ -693,6 +694,11 @@ namespace Textamina.Markdig.Parsers
             {
                 var block = newBlocks.Pop();
 
+                if (block.Parser == null)
+                {
+                    throw new InvalidOperationException($"The new block [{block.GetType()}] must have a valid Parser property");
+                }
+
                 block.Line = LineIndex;
 
                 // If we have a leaf block
@@ -745,7 +751,8 @@ namespace Textamina.Markdig.Parsers
             Line = newLine;
             Column = 0;
             ColumnBeforeIndent = 0;
-            StartBeforeIndent = 0;
+            StartBeforeIndent = Start;
+            originalLineStart = newLine.Start;
         }
 
         private void Reset()

@@ -22,6 +22,35 @@ namespace Textamina.Markdig.Extensions.Tables
         /// </returns>
         public static bool ParseColumnHeader(ref StringSlice slice, char delimiterChar, out TableColumnAlign align)
         {
+            return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
+        }
+
+        /// <summary>
+        /// Parses a column header equivalent to the regexp: <code>\s*:\s*[delimiterChar]+\s*:\s*</code>
+        /// </summary>
+        /// <param name="slice">The text slice.</param>
+        /// <param name="delimiterChar">The delimiter character (either `-` or `=`).</param>
+        /// <param name="align">The alignment of the column.</param>
+        /// <returns>
+        ///   <c>true</c> if parsing was successfull
+        /// </returns>
+        public static bool ParseColumnHeaderAuto(ref StringSlice slice, out char delimiterChar, out TableColumnAlign align)
+        {
+            delimiterChar = '\0';
+            return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
+        }
+
+        /// <summary>
+        /// Parses a column header equivalent to the regexp: <code>\s*:\s*[delimiterChar]+\s*:\s*</code>
+        /// </summary>
+        /// <param name="slice">The text slice.</param>
+        /// <param name="delimiterChar">The delimiter character (either `-` or `=`). If `\0`, it will detect the character (either `-` or `=`)</param>
+        /// <param name="align">The alignment of the column.</param>
+        /// <returns>
+        ///   <c>true</c> if parsing was successfull
+        /// </returns>
+        public static bool ParseColumnHeaderDetect(ref StringSlice slice, ref char delimiterChar, out TableColumnAlign align)
+        {
             align = TableColumnAlign.Left;
 
             // Work on a copy of the slice
@@ -32,7 +61,23 @@ namespace Textamina.Markdig.Extensions.Tables
             if (c == ':')
             {
                 hasLeft = true;
-                c = slice.NextChar();
+                slice.NextChar();
+            }
+
+            slice.TrimStart();
+            c = slice.CurrentChar;
+
+            // if we want to automatically detect
+            if (delimiterChar == '\0')
+            {
+                if (c == '=' || c == '-')
+                {
+                    delimiterChar = c;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             int count = 0;
@@ -46,6 +91,9 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 return false;
             }
+
+            slice.TrimStart();
+            c = slice.CurrentChar;
 
             if (c == ':')
             {

@@ -16,16 +16,20 @@ namespace Textamina.Markdig.Tests
         public void TestSimple()
         {
             var text = @"
-{#heading}
-|a  | b
-|---|---
-| 0 | 1
++-----------------------------------+--------------------------------------+
+| - this is a list                  | > We have a blockquote
+| - this is a second item           |
+|                                   |
+| ```                               |
+| Yes                               |
+| ```                               |
++===================================+======================================+
+| This is a second line             | 
++-----------------------------------+--------------------------------------+
 
-# Heading {#heading}
-
-```info {#test .class src=tata src2='toto'}
-This is a test
-```
+/| we have mult | paragraph    |
+/| we have a new colspan with a long line
+/| and lots of text
 ";
 
             //            var reader = new StringReader(@"> > toto tata
@@ -33,7 +37,7 @@ This is a test
             //");
 
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAttributes().UsePipeTable());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAttributes().UseGridTable());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }

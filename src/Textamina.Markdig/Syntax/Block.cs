@@ -19,6 +19,7 @@ namespace Textamina.Markdig.Syntax
         protected Block(BlockParser parser)
         {
             Parser = parser;
+            IsOpen = true;
         }
 
         /// <summary>

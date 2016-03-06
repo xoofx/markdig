@@ -47,7 +47,8 @@
     <Compile Include="Extensions\StrikethroughSuperAndSubScriptExtension.cs" />
     <Compile Include="Extensions\Tables\GridTableBlock.cs" />
     <Compile Include="Extensions\Tables\GridTableBlockParser.cs" />
-    <Compile Include="Extensions\Tables\GridTableParserState.cs" />
+    <Compile Include="Extensions\Tables\GridTableExtension.cs" />
+    <Compile Include="Extensions\Tables\GridTableBlockState.cs" />
     <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
     <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
     <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />
