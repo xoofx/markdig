@@ -9,10 +9,16 @@ namespace Textamina.Markdig.Extensions.Tables
     /// Defines a cell in a <see cref="TableRowBlock"/>
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.LeafBlock" />
-    public class TableCellBlock : LeafBlock
+    public class TableCellBlock : ContainerBlock
     {
         public TableCellBlock() : base(null)
         {
+            ColumnSpan = 1;
         }
+
+        /// <summary>
+        /// Gets or sets the column span this cell is covering. Default is 1.
+        /// </summary>
+        public int ColumnSpan { get; set; }
     }
 }

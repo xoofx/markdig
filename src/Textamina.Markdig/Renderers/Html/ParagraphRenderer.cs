@@ -13,9 +13,9 @@ namespace Textamina.Markdig.Renderers.Html
     {
         protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)
         {
-            renderer.EnsureLine();
             if (!renderer.ImplicitParagraph)
             {
+                renderer.EnsureLine();
                 renderer.Write("<p").WriteAttributes(obj).Write(">");
             }
             renderer.WriteLeafInline(obj);

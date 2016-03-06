@@ -14,7 +14,23 @@ namespace Textamina.Markdig.Parsers
     /// </summary>
     public class BlockParserState
     {
+        private BlockParserState root;
         private int currentStackIndex;
+        private readonly BlockParserStateCache parserStateCache;
+
+        private BlockParserState(BlockParserState root)
+        {
+            // These properties are not changing between a parent and a children BlockParserState
+            this.root = root;
+            this.parserStateCache = root.parserStateCache;
+            StringBuilders = root.StringBuilders;
+            Document = root.Document;
+            Parsers = root.Parsers;
+
+            // These properties are local to a state
+            OpenedBlocks = new List<Block>();
+            NewBlocks = new Stack<Block>();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockParserState"/> class.
@@ -29,13 +45,16 @@ namespace Textamina.Markdig.Parsers
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (parsers == null) throw new ArgumentNullException(nameof(parsers));
+            parserStateCache = new BlockParserStateCache(this);
             StringBuilders = stringBuilders;
             Document = document;
-            NewBlocks = new Stack<Block>();
             document.IsOpen = true;
-            Stack = new List<Block> {document};
             Parsers = parsers;
             parsers.Initialize(this);
+            OpenedBlocks = new List<Block>();
+            NewBlocks = new Stack<Block>();
+            root = this;
+            Open(document);
         }
 
         /// <summary>
@@ -61,7 +80,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets the next block in a <see cref="BlockParser.TryContinue"/>.
         /// </summary>
-        public Block NextContinue => currentStackIndex + 1 < Stack.Count ? Stack[currentStackIndex + 1] : null;
+        public Block NextContinue => currentStackIndex + 1 < OpenedBlocks.Count ? OpenedBlocks[currentStackIndex + 1] : null;
 
         /// <summary>
         /// Gets the root document.
@@ -126,7 +145,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.
         /// </summary>
-        private List<Block> Stack { get; }
+        private List<Block> OpenedBlocks { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to continue processing the current line.
@@ -287,17 +306,30 @@ namespace Textamina.Markdig.Parsers
         }
 
         /// <summary>
+        /// Opens the specified block.
+        /// </summary>
+        /// <param name="block">The block.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentException">The block must be opened</exception>
+        public void Open(Block block)
+        {
+            if (block == null) throw new ArgumentNullException(nameof(block));
+            if (!block.IsOpen) throw new ArgumentException("The block must be opened", nameof(block));
+            OpenedBlocks.Add(block);
+        }
+
+        /// <summary>
         /// Force closing the specified block.
         /// </summary>
         /// <param name="block">The block.</param>
         public void Close(Block block)
         {
             // If we close a block, we close all blocks above
-            for (int i = Stack.Count - 1; i >= 1; i--)
+            for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
             {
-                if (Stack[i] == block)
+                if (OpenedBlocks[i] == block)
                 {
-                    for (int j = Stack.Count - 1; j >= i; j--)
+                    for (int j = OpenedBlocks.Count - 1; j >= i; j--)
                     {
                         Close(j);
                     }
@@ -312,12 +344,12 @@ namespace Textamina.Markdig.Parsers
         /// <param name="block">The block.</param>
         public void Discard(Block block)
         {
-            for (int i = Stack.Count - 1; i >= 1; i--)
+            for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
             {
-                if (Stack[i] == block)
+                if (OpenedBlocks[i] == block)
                 {
                     block.Parent.Children.Remove(block);
-                    Stack.RemoveAt(i);
+                    OpenedBlocks.RemoveAt(i);
                     break;
                 }
             }
@@ -327,11 +359,11 @@ namespace Textamina.Markdig.Parsers
         /// Processes a new line.
         /// </summary>
         /// <param name="newLine">The new line.</param>
-        public void ProcessLine(string newLine)
+        public void ProcessLine(StringSlice newLine)
         {
             ContinueProcessingLine = true;
 
-            ResetLine(new StringSlice(newLine));
+            ResetLine(newLine);
             LineIndex++;
 
             TryContinueBlocks();
@@ -343,19 +375,34 @@ namespace Textamina.Markdig.Parsers
             CloseAll(false);
         }
 
+        public BlockParserState CreateChild()
+        {
+            var newState = parserStateCache.Get();
+            return newState;
+        }
+
+        public void ReleaseChild()
+        {
+            if (this == root)
+            {
+                throw new InvalidOperationException("Cannot release the root parser state");
+            }
+            parserStateCache.Release(this);
+        }
+
         /// <summary>
         /// Closes a block at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
         private void Close(int index)
         {
-            var block = Stack[index];
+            var block = OpenedBlocks[index];
             // If the pending object is removed, we need to remove it from the parent container
             if (!block.Parser.Close(this, block))
             {
                 block.Parent?.Children.Remove(block);
             }
-            Stack.RemoveAt(index);
+            OpenedBlocks.RemoveAt(index);
         }
 
         /// <summary>
@@ -365,9 +412,9 @@ namespace Textamina.Markdig.Parsers
         internal void CloseAll(bool force)
         {
             // Close any previous blocks not opened
-            for (int i = Stack.Count - 1; i >= 1; i--)
+            for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
             {
-                var block = Stack[i];
+                var block = OpenedBlocks[i];
 
                 // Stop on the first open block
                 if (!force && block.IsOpen)
@@ -384,23 +431,23 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         private void OpenAll()
         {
-            for (int i = 1; i < Stack.Count; i++)
+            for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                Stack[i].IsOpen = true;
+                OpenedBlocks[i].IsOpen = true;
             }
         }
-
+        
         /// <summary>
         /// Updates the <see cref="LastBlock"/> and <see cref="CurrentContainer"/>.
         /// </summary>
         /// <param name="stackIndex">Index of a block in a stack considered as the last block to update from.</param>
         private void UpdateLastBlockAndContainer(int stackIndex = -1)
         {
-            currentStackIndex = stackIndex < 0 ? Stack.Count - 1 : stackIndex;
+            currentStackIndex = stackIndex < 0 ? OpenedBlocks.Count - 1 : stackIndex;
             LastBlock = null;
-            for (int i = Stack.Count - 1; i >= 0; i--)
+            for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
             {
-                var block = Stack[i];
+                var block = OpenedBlocks[i];
                 if (LastBlock == null)
                 {
                     LastBlock = block;
@@ -427,15 +474,15 @@ namespace Textamina.Markdig.Parsers
         {
             // Set all blocks non opened. 
             // They will be marked as open in the following loop
-            for (int i = 1; i < Stack.Count; i++)
+            for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                Stack[i].IsOpen = false;
+                OpenedBlocks[i].IsOpen = false;
             }
 
             // Process any current block potentially opened
-            for (int i = 1; i < Stack.Count; i++)
+            for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                var block = Stack[i];
+                var block = OpenedBlocks[i];
 
                 ParseIndent();
 
@@ -465,13 +512,13 @@ namespace Textamina.Markdig.Parsers
                 RestartIndent();
 
                 // In case the BlockParser has modified the blockParserState we are iterating on
-                if (i >= Stack.Count)
+                if (i >= OpenedBlocks.Count)
                 {
-                    i = Stack.Count - 1;
+                    i = OpenedBlocks.Count - 1;
                 }
 
                 // If a parser is adding a block, it must be the last of the list
-                if ((i + 1) < Stack.Count && NewBlocks.Count > 0)
+                if ((i + 1) < OpenedBlocks.Count && NewBlocks.Count > 0)
                 {
                     throw new InvalidOperationException("A pending parser cannot add a new block when it is not the last pending block");
                 }
@@ -503,7 +550,7 @@ namespace Textamina.Markdig.Parsers
                     break;
                 }
 
-                bool isLast = i == Stack.Count - 1;
+                bool isLast = i == OpenedBlocks.Count - 1;
                 if (ContinueProcessingLine)
                 {
                     ProcessNewBlocks(result, false);
@@ -681,7 +728,7 @@ namespace Textamina.Markdig.Parsers
                 block.IsOpen = result.IsContinue();
 
                 // Add a block blockParserState to the stack (and leave it opened)
-                Stack.Add(block);
+                OpenedBlocks.Add(block);
 
                 if (leaf != null)
                 {
@@ -689,7 +736,8 @@ namespace Textamina.Markdig.Parsers
                     return;
                 }
             }
-            ContinueProcessingLine = true;
+
+            ContinueProcessingLine = !result.IsDiscard();
         }
 
         private void ResetLine(StringSlice newLine)
@@ -698,6 +746,36 @@ namespace Textamina.Markdig.Parsers
             Column = 0;
             ColumnBeforeIndent = 0;
             StartBeforeIndent = 0;
+        }
+
+        private void Reset()
+        {
+            Line = StringSlice.Empty;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
+            OpenedBlocks.Clear();
+            NewBlocks.Clear();
+        }
+
+        private class BlockParserStateCache : ObjectCache<BlockParserState>
+        {
+            private readonly BlockParserState root;
+
+            public BlockParserStateCache(BlockParserState root)
+            {
+                this.root = root;
+            }
+
+            protected override BlockParserState NewInstance()
+            {
+                return new BlockParserState(root);
+            }
+
+            protected override void Reset(BlockParserState instance)
+            {
+                instance.Reset();
+            }
         }
     }
 }

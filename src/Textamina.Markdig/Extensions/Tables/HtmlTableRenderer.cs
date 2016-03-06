@@ -50,9 +50,9 @@ namespace Textamina.Markdig.Extensions.Tables
                     {
                         renderer.Write("<td");
                     }
-                    if (header != null && i < header.ColumnAlignments.Count)
+                    if (header != null && i < tableBlock.ColumnAlignments.Count)
                     {
-                        switch (header.ColumnAlignments[i])
+                        switch (tableBlock.ColumnAlignments[i])
                         {
                             case TableColumnAlign.Center:
                                 renderer.Write(" style=\"text-align: center;\"");
@@ -63,8 +63,15 @@ namespace Textamina.Markdig.Extensions.Tables
                         }
                     }
                     renderer.Write(">");
+
+                    var previousImplicitParagraph = renderer.ImplicitParagraph;
+                    if (cell.Children.Count == 1)
+                    {
+                        renderer.ImplicitParagraph = true;
+                    }
+                    renderer.Write(cell);
+                    renderer.ImplicitParagraph = previousImplicitParagraph;
                     
-                    renderer.WriteLeafInline(cell);
                     renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
                 renderer.WriteLine("</tr>");

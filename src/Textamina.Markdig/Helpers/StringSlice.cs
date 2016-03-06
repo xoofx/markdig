@@ -14,6 +14,11 @@ namespace Textamina.Markdig.Helpers
     public struct StringSlice : ICharIterator
     {
         /// <summary>
+        /// An empty string slice.
+        /// </summary>
+        public static readonly StringSlice Empty = new StringSlice(string.Empty);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="StringSlice"/> struct.
         /// </summary>
         /// <param name="text">The text.</param>

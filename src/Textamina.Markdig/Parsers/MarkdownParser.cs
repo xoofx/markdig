@@ -99,7 +99,7 @@ namespace Textamina.Markdig.Parsers
                 }
                 FixupZero(lineText);
 
-                blockParserState.ProcessLine(lineText);
+                blockParserState.ProcessLine(new StringSlice(lineText));
             }
             blockParserState.CloseAll(true);
         }
@@ -127,7 +127,7 @@ namespace Textamina.Markdig.Parsers
 
         private void ProcessInlines()
         {
-            var cache = new ObjectCache<ContainerItem>();
+            var cache = new DefaultObjectCache<ContainerItem>();
             var blocks = new Stack<ContainerItem>();
 
             // TODO: Use an ObjectCache for ContainerItem

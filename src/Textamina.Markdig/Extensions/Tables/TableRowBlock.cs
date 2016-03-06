@@ -23,10 +23,5 @@ namespace Textamina.Markdig.Extensions.Tables
         /// Gets or sets a value indicating whether this instance is header row.
         /// </summary>
         public bool IsHeader { get; set; }
-
-        /// <summary>
-        /// Gets or sets the column alignments. May be null.
-        /// </summary>
-        public List<TableColumnAlign> ColumnAlignments { get; set; }
     }
 }

@@ -265,7 +265,9 @@ namespace Textamina.Markdig.Extensions.Tables
                             item = nextSibling;
                         }
 
-                        var tableCell = new TableCellBlock { Inline = columnContainer, Parent = row };
+                        var tableCell = new TableCellBlock { Parent = row };
+                        var tableParagraph = new ParagraphBlock() {Inline = columnContainer, Parent = tableCell };
+                        tableCell.Children.Add(tableParagraph);
                         row.Children.Add(tableCell);
                         cells.Add(tableCell);
 
@@ -273,7 +275,7 @@ namespace Textamina.Markdig.Extensions.Tables
                         if (row.Children.Count == maxColumn && columnSeparator is PiprTableDelimiterInline)
                         {
                             columnSeparator.Remove();
-                            tableCell.Inline.AppendChild(columnSeparator);
+                            tableParagraph.Inline.AppendChild(columnSeparator);
                             break;
                         }
                         TrimEnd(endOfColumn);
@@ -316,7 +318,7 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 table.Children.RemoveAt(1);
                 var tableRow = (TableRowBlock) table.Children[0];
-                tableRow.ColumnAlignments = aligns;
+                table.ColumnAlignments = aligns;
                 tableRow.IsHeader = true;
             }
 
@@ -328,7 +330,9 @@ namespace Textamina.Markdig.Extensions.Tables
                 {
                     foreach (var cell in cells)
                     {
-                        state.ProcessDelimiters(i + 1, cell.Inline, null, true);
+                        var paragraph = (ParagraphBlock) cell.Children[0];
+
+                        state.ProcessDelimiters(i + 1, paragraph.Inline, null, true);
                     }
                     break;
                 }
@@ -351,44 +355,16 @@ namespace Textamina.Markdig.Extensions.Tables
 
             // Work on a copy of the slice
             var line = literal.Content;
-            line.Trim();
-            var c = line.CurrentChar;
-            bool hasLeft = false;
-            bool hasRight = false;
-            if (c == ':')
+            if (TableHelper.ParseColumnHeader(ref line, '-', out align))
             {
-                hasLeft = true;
-                c = line.NextChar();
+                if (line.CurrentChar != '\0')
+                {
+                    return false;
+                }
+                return true;
             }
 
-            int count = 0;
-            while (c == '-')
-            {
-                c = line.NextChar();
-                count++;
-            }
-
-            if (count == 0)
-            {
-                return false;
-            }
-
-            if (c == ':')
-            {
-                hasRight = true;
-                c = line.NextChar();
-            }
-
-            if (c != '\0')
-            {
-                return false;
-            }
-
-            align = hasLeft && hasRight
-                ? TableColumnAlign.Center
-                : hasRight ? TableColumnAlign.Right : TableColumnAlign.Left;
-
-            return true;
+            return false;
         }
 
         private List<TableColumnAlign> FindHeaderRow(List<Inline> delimiters) 

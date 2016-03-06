@@ -10,14 +10,14 @@ namespace Textamina.Markdig.Helpers
     /// A simple object recycling system.
     /// </summary>
     /// <typeparam name="T">Type of the object to cache</typeparam>
-    public class ObjectCache<T> where T : class, new()
+    public abstract class ObjectCache<T> where T : class
     {
         private readonly Stack<T> builders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectCache{T}"/> class.
         /// </summary>
-        public ObjectCache()
+        protected ObjectCache()
         {
             builders = new Stack<T>();
         }
@@ -36,7 +36,7 @@ namespace Textamina.Markdig.Helpers
                 }
             }
 
-            return new T();
+            return NewInstance();
         }
 
         /// <summary>
@@ -53,6 +53,12 @@ namespace Textamina.Markdig.Helpers
                 builders.Push(instance);
             }
         }
+
+        /// <summary>
+        /// Creates a new instance of {T}
+        /// </summary>
+        /// <returns>A new instance of {T}</returns>
+        protected abstract T NewInstance();
 
         /// <summary>
         /// Resets the specified instance when <see cref="Release"/> is called before storing back to this cache.

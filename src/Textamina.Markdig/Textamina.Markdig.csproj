@@ -45,6 +45,9 @@
     <Compile Include="Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs" />
     <Compile Include="Extensions\StrikethroughSuperAndSubScriptExtension.cs" />
+    <Compile Include="Extensions\Tables\GridTableBlock.cs" />
+    <Compile Include="Extensions\Tables\GridTableBlockParser.cs" />
+    <Compile Include="Extensions\Tables\GridTableParserState.cs" />
     <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
     <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
     <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />
@@ -52,7 +55,9 @@
     <Compile Include="Extensions\Tables\TableBlock.cs" />
     <Compile Include="Extensions\Tables\TableCellBlock.cs" />
     <Compile Include="Extensions\Tables\TableColumnAlign.cs" />
+    <Compile Include="Extensions\Tables\TableHelper.cs" />
     <Compile Include="Extensions\Tables\TableRowBlock.cs" />
+    <Compile Include="Helpers\DefaultObjectCache.cs" />
     <Compile Include="Helpers\ObjectCache.cs" />
     <Compile Include="Helpers\OrderedList.cs" />
     <Compile Include="IMarkdownExtension.cs" />

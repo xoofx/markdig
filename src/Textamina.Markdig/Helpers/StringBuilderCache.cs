@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Helpers
     /// An implementation of <see cref="ObjectCache{T}"/> for <see cref="StringBuilder"/>
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Helpers.ObjectCache{StringBuilder}" />
-    public class StringBuilderCache : ObjectCache<StringBuilder>
+    public class StringBuilderCache : DefaultObjectCache<StringBuilder>
     {
         /// <summary>
         /// A StringBuilder that can be used locally in a method body only.
