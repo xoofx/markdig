@@ -72,18 +72,28 @@ namespace Textamina.Markdig.Extensions.Tables
             tableBlockState.AddLine(ref state.Line);
 
             // Create the grid table
-            var table = new TableBlock(this)
-            {
-                ColumnAlignments = new List<TableColumnAlign>()
-            };
+            var table = new TableBlock(this);
 
             table.SetData(typeof(GridTableBlockState), tableBlockState);
 
 
-            // Store the column alignments
+            // Calculate the total width of all columns
+            int totalWidth = 0;
             foreach (var columnSlice in tableBlockState.ColumnSlices)
             {
-                table.ColumnAlignments.Add(columnSlice.Align);
+                totalWidth += columnSlice.End - columnSlice.Start + 1;
+            }
+
+            // Store the column width and alignment
+            foreach (var columnSlice in tableBlockState.ColumnSlices)
+            {
+                var columnDefinition = new TableColumnDefinition
+                {
+                    // Column width proportional to the total width
+                    Width = (float)(columnSlice.End - columnSlice.Start + 1) * 100.0f / totalWidth,
+                    Alignment = columnSlice.Align,
+                };
+                table.ColumnDefinitions.Add(columnDefinition);
             }
 
             state.NewBlocks.Push(table);
@@ -93,7 +103,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
         public override BlockState TryContinue(BlockParserState state, Block block)
         {
-            var gridTable = (TableBlock) block.GetData(typeof(GridTableBlockState));
+            var gridTable = (TableBlock) block;
             var tableState = (GridTableBlockState)block.GetData(typeof(GridTableBlockState));
 
             // We expect to start at the same 

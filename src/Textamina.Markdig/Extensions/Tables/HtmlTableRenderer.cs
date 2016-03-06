@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using Textamina.Markdig.Renderers;
 using Textamina.Markdig.Renderers.Html;
 
@@ -20,6 +22,25 @@ namespace Textamina.Markdig.Extensions.Tables
             bool hasBody = false;
             bool hasAlreadyHeader = false;
             bool isHeaderOpen = false;
+
+
+            bool hasColumnWidth = false;
+            foreach (var tableColumnDefinition in tableBlock.ColumnDefinitions)
+            {
+                if (tableColumnDefinition.Width != 0.0f && tableColumnDefinition.Width != 1.0f)
+                {
+                    hasColumnWidth = true;
+                    break;
+                }
+            }
+
+            if (hasColumnWidth)
+            {
+                foreach (var tableColumnDefinition in tableBlock.ColumnDefinitions)
+                {
+                    renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width)}%\">");
+                }
+            }
 
             foreach (var rowObj in tableBlock.Children)
             {
@@ -58,9 +79,9 @@ namespace Textamina.Markdig.Extensions.Tables
                         renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
 
-                    if (tableBlock.ColumnAlignments != null && i < tableBlock.ColumnAlignments.Count)
+                    if (tableBlock.ColumnDefinitions != null && i < tableBlock.ColumnDefinitions.Count)
                     {
-                        switch (tableBlock.ColumnAlignments[i])
+                        switch (tableBlock.ColumnDefinitions[i].Alignment)
                         {
                             case TableColumnAlign.Center:
                                 renderer.Write(" style=\"text-align: center;\"");

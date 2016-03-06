@@ -55,6 +55,7 @@
     <Compile Include="Extensions\Tables\TableBlock.cs" />
     <Compile Include="Extensions\Tables\TableCellBlock.cs" />
     <Compile Include="Extensions\Tables\TableColumnAlign.cs" />
+    <Compile Include="Extensions\Tables\TableColumnDefinition.cs" />
     <Compile Include="Extensions\Tables\TableHelper.cs" />
     <Compile Include="Extensions\Tables\TableRowBlock.cs" />
     <Compile Include="Helpers\DefaultObjectCache.cs" />

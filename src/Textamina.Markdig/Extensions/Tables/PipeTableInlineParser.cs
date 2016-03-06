@@ -318,7 +318,7 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 table.Children.RemoveAt(1);
                 var tableRow = (TableRowBlock) table.Children[0];
-                table.ColumnAlignments = aligns;
+                table.ColumnDefinitions.AddRange(aligns);
                 tableRow.IsHeader = true;
             }
 
@@ -367,10 +367,10 @@ namespace Textamina.Markdig.Extensions.Tables
             return false;
         }
 
-        private List<TableColumnAlign> FindHeaderRow(List<Inline> delimiters) 
+        private List<TableColumnDefinition> FindHeaderRow(List<Inline> delimiters) 
         {
             bool isValidRow = false;
-            List<TableColumnAlign> aligns = null;
+            List<TableColumnDefinition> aligns = null;
             for (int i = 0; i < delimiters.Count; i++)
             {
                 if (delimiters[i] != null && IsLine(delimiters[i]))
@@ -397,9 +397,9 @@ namespace Textamina.Markdig.Extensions.Tables
                         // Create aligns until we may have a header row
                         if (aligns == null)
                         {
-                            aligns = new List<TableColumnAlign>();
+                            aligns = new List<TableColumnDefinition>();
                         }
-                        aligns.Add(align);
+                        aligns.Add(new TableColumnDefinition() { Alignment =  align });
 
                         // If this is the last delimiter, we need to check the right side of the `|` delimiter
                         if (nextDelimiter == null)
@@ -414,7 +414,7 @@ namespace Textamina.Markdig.Extensions.Tables
                             }
 
                             isValidRow = true;
-                            aligns.Add(align);
+                            aligns.Add(new TableColumnDefinition() { Alignment = align });
                             break;
                         }
 

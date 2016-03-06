@@ -9,22 +9,23 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// Defines a table that contains an optional <see cref="TableHeadBlock"/> and <see cref="TableBodyBlock"/>
+    /// Defines a table that contains an optional <see cref="TableRowBlock"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     public class TableBlock : ContainerBlock
     {
-        public TableBlock() : base(null)
+        public TableBlock() : this(null)
         {
         }
 
         public TableBlock(BlockParser parser) : base(parser)
         {
+            ColumnDefinitions = new List<TableColumnDefinition>();
         }
 
         /// <summary>
         /// Gets or sets the column alignments. May be null.
         /// </summary>
-        public List<TableColumnAlign> ColumnAlignments { get; set; }
+        public List<TableColumnDefinition> ColumnDefinitions { get; private set; }
     }
 }
