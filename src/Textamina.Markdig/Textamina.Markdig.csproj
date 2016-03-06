@@ -36,28 +36,32 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions\Attributes\AttributesExtension.cs" />
+    <Compile Include="Extensions\CustomContainers\CustomContainer.cs" />
+    <Compile Include="Extensions\CustomContainers\CustomContainerParser.cs" />
+    <Compile Include="Extensions\CustomContainers\CustomContainerExtension.cs" />
     <Compile Include="Extensions\Footnotes\Footnote.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteParser.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteGroup.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteExtension.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteLink.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteLinkReferenceDefinition.cs" />
+    <Compile Include="Extensions\CustomContainers\HtmlCustomContainerRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs" />
     <Compile Include="Extensions\StrikethroughSuperAndSubScriptExtension.cs" />
-    <Compile Include="Extensions\Tables\GridTableBlockParser.cs" />
+    <Compile Include="Extensions\Tables\GridTableParser.cs" />
     <Compile Include="Extensions\Tables\GridTableExtension.cs" />
-    <Compile Include="Extensions\Tables\GridTableBlockState.cs" />
+    <Compile Include="Extensions\Tables\GridTableState.cs" />
     <Compile Include="Extensions\Tables\HtmlTableRenderer.cs" />
     <Compile Include="Extensions\Tables\PipeTableExtension.cs" />
     <Compile Include="Extensions\Tables\PiprTableDelimiterInline.cs" />
     <Compile Include="Extensions\SoftlineBreakAsHardlineExtension.cs" />
-    <Compile Include="Extensions\Tables\TableBlock.cs" />
-    <Compile Include="Extensions\Tables\TableCellBlock.cs" />
+    <Compile Include="Extensions\Tables\Table.cs" />
+    <Compile Include="Extensions\Tables\TableCell.cs" />
     <Compile Include="Extensions\Tables\TableColumnAlign.cs" />
     <Compile Include="Extensions\Tables\TableColumnDefinition.cs" />
     <Compile Include="Extensions\Tables\TableHelper.cs" />
-    <Compile Include="Extensions\Tables\TableRowBlock.cs" />
+    <Compile Include="Extensions\Tables\TableRow.cs" />
     <Compile Include="Helpers\DefaultObjectCache.cs" />
     <Compile Include="Helpers\ObjectCache.cs" />
     <Compile Include="Helpers\OrderedList.cs" />
@@ -108,7 +112,7 @@
     <Compile Include="Parsers\InlineParserState.cs" />
     <Compile Include="Parsers\BlockParserState.cs" />
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
-    <Compile Include="Extensions\Tables\PipeTableInlineParser.cs" />
+    <Compile Include="Extensions\Tables\PipeTableParser.cs" />
     <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Parsers\ParserList.cs" />
     <Compile Include="Syntax\BlankLineBlock.cs" />

@@ -1,21 +1,20 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System.Collections.Generic;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// Defines a row in a <see cref="TableBlock"/>, contains <see cref="TableCellBlock"/>, parent is <see cref="TableBlock"/>.
+    /// Defines a row in a <see cref="Table"/>, contains <see cref="TableCell"/>, parent is <see cref="Table"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
-    public class TableRowBlock : ContainerBlock
+    public class TableRow : ContainerBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableRowBlock"/> class.
+        /// Initializes a new instance of the <see cref="TableRow"/> class.
         /// </summary>
-        public TableRowBlock() : base(null)
+        public TableRow() : base(null)
         {
         }
 

@@ -6,12 +6,13 @@ using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
-using Textamina.Markdig.Syntax.Inlines;
+
 
 namespace Textamina.Markdig.Extensions.Attributes
 {
     /// <summary>
     /// Extension that allows to attach HTML attributes to the previous <see cref="Inline"/> or current <see cref="Block"/>.
+    /// This extension should be enabled last after enabling other extensions.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class AttributesExtension : IMarkdownExtension
@@ -22,10 +23,15 @@ namespace Textamina.Markdig.Extensions.Attributes
             {
                 pipeline.InlineParsers.Insert(0, new AttributesParser());
             }
-            var fencedParser = pipeline.BlockParsers.Find<FencedCodeBlockParser>();
-            if (fencedParser != null)
+
+            // Modify all existing FencedBlockParser
+            foreach (var parser in pipeline.BlockParsers)
             {
-                InstallInfoParserForFenced(fencedParser);
+                var fencedParser = parser as FencedCodeBlockParser;
+                if (fencedParser != null)
+                {
+                    InstallInfoParserForFenced(fencedParser);
+                }
             }
         }
 

@@ -129,12 +129,12 @@ namespace Textamina.Markdig.Parsers
             // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
             line.TrimStart();
 
-            var fenced = new FencedCodeBlock(this)
+            var fenced = CreateFencedCodeBlock();
             {
-                Column = state.Column,
-                FencedChar = matchChar,
-                FencedCharCount = count,
-                IndentCount = state.Indent,
+                fenced.Column = state.Column;
+                fenced.FencedChar = matchChar;
+                fenced.FencedCharCount = count;
+                fenced.IndentCount = state.Indent;
             };
 
             // If the info parser was not successfull, early exit
@@ -148,6 +148,11 @@ namespace Textamina.Markdig.Parsers
 
             // Discard the current line as it is already parsed
             return BlockState.ContinueDiscard;
+        }
+
+        protected virtual FencedCodeBlock CreateFencedCodeBlock()
+        {
+            return new FencedCodeBlock(this);
         }
 
         public override BlockState TryContinue(BlockParserState state, Block block)

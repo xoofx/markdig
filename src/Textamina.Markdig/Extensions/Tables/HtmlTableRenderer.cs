@@ -9,15 +9,15 @@ using Textamina.Markdig.Renderers.Html;
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// A HTML renderer for a <see cref="TableBlock"/>
+    /// A HTML renderer for a <see cref="Table"/>
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Extensions.Tables.TableBlock}" />
-    public class HtmlTableRenderer : HtmlObjectRenderer<TableBlock>
+    public class HtmlTableRenderer : HtmlObjectRenderer<Table>
     {
-        protected override void Write(HtmlRenderer renderer, TableBlock tableBlock)
+        protected override void Write(HtmlRenderer renderer, Table table)
         {
             renderer.EnsureLine();
-            renderer.Write("<table").WriteAttributes(tableBlock).WriteLine(">");
+            renderer.Write("<table").WriteAttributes(table).WriteLine(">");
 
             bool hasBody = false;
             bool hasAlreadyHeader = false;
@@ -25,7 +25,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
 
             bool hasColumnWidth = false;
-            foreach (var tableColumnDefinition in tableBlock.ColumnDefinitions)
+            foreach (var tableColumnDefinition in table.ColumnDefinitions)
             {
                 if (tableColumnDefinition.Width != 0.0f && tableColumnDefinition.Width != 1.0f)
                 {
@@ -36,15 +36,15 @@ namespace Textamina.Markdig.Extensions.Tables
 
             if (hasColumnWidth)
             {
-                foreach (var tableColumnDefinition in tableBlock.ColumnDefinitions)
+                foreach (var tableColumnDefinition in table.ColumnDefinitions)
                 {
                     renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width)}%\">");
                 }
             }
 
-            foreach (var rowObj in tableBlock.Children)
+            foreach (var rowObj in table.Children)
             {
-                var row = (TableRowBlock)rowObj;
+                var row = (TableRow)rowObj;
                 if (row.IsHeader)
                 {
                     // Allow a single thead
@@ -70,7 +70,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 for (int i = 0; i < row.Children.Count; i++)
                 {
                     var cellObj = row.Children[i];
-                    var cell = (TableCellBlock)cellObj;
+                    var cell = (TableCell)cellObj;
 
                     renderer.EnsureLine();
                     renderer.Write(row.IsHeader ? "<th" : "<td");
@@ -79,9 +79,9 @@ namespace Textamina.Markdig.Extensions.Tables
                         renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
 
-                    if (tableBlock.ColumnDefinitions != null && i < tableBlock.ColumnDefinitions.Count)
+                    if (table.ColumnDefinitions != null && i < table.ColumnDefinitions.Count)
                     {
-                        switch (tableBlock.ColumnDefinitions[i].Alignment)
+                        switch (table.ColumnDefinitions[i].Alignment)
                         {
                             case TableColumnAlign.Center:
                                 renderer.Write(" style=\"text-align: center;\"");

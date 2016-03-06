@@ -9,16 +9,16 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// Defines a table that contains an optional <see cref="TableRowBlock"/>.
+    /// Defines a table that contains an optional <see cref="TableRow"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
-    public class TableBlock : ContainerBlock
+    public class Table : ContainerBlock
     {
-        public TableBlock() : this(null)
+        public Table() : this(null)
         {
         }
 
-        public TableBlock(BlockParser parser) : base(parser)
+        public Table(BlockParser parser) : base(parser)
         {
             ColumnDefinitions = new List<TableColumnDefinition>();
         }

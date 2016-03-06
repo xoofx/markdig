@@ -24,6 +24,10 @@ namespace Textamina.Markdig.Tests
 | This is a second line             | 
 +-----------------------------------+--------------------------------------+
 
+:::spoiler  {#yessss}
+This is a spoiler
+:::
+
 /| we have mult | paragraph    |
 /| we have a new colspan with a long line
 /| and lots of text
@@ -34,7 +38,7 @@ namespace Textamina.Markdig.Tests
             //");
 
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAttributes().UseGridTable());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseGridTable().UseCustomContainer().UseAttributes());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }

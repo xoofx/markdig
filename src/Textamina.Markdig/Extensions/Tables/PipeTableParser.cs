@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System.Collections.Generic;
-using System.Reflection;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Parsers.Inlines;
@@ -13,18 +12,18 @@ using Textamina.Markdig.Syntax.Inlines;
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="TableBlock"/> at inline parsing time.
+    /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="Table"/> at inline parsing time.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     /// <seealso cref="Textamina.Markdig.Parsers.IDelimiterProcessor" />
-    public class PipeTableInlineParser : InlineParser, IDelimiterProcessor
+    public class PipeTableParser : InlineParser, IDelimiterProcessor
     {
         private LineBreakInlineParser lineBreakParser;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PipeTableInlineParser"/> class.
+        /// Initializes a new instance of the <see cref="PipeTableParser"/> class.
         /// </summary>
-        public PipeTableInlineParser()
+        public PipeTableParser()
         {
             OpeningCharacters = new[] { '|', '\n' };
             RequireHeaderSeparator = true;
@@ -198,7 +197,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 return true;
             }
 
-            var table = new TableBlock();
+            var table = new Table();
 
             // If the current paragraph block has any attributes attached, we can copy them
             var attributes = state.Block.TryGetAttributes();
@@ -208,11 +207,11 @@ namespace Textamina.Markdig.Extensions.Tables
             }
 
             state.BlockNew = table;
-            TableRowBlock firstRow = null;
+            TableRow firstRow = null;
             int maxColumn = 0;
             var cells = tableState.Cells;
             cells.Clear();
-            TableRowBlock currentRow = null;
+            TableRow currentRow = null;
 
             Inline column = container.FirstChild;
             if (column is PiprTableDelimiterInline)
@@ -229,7 +228,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     var beforeDelimiter = delimiter?.PreviousSibling;
                     var nextLineColumn = delimiter?.NextSibling;
 
-                    var row = new TableRowBlock { Parent = table };
+                    var row = new TableRow { Parent = table };
                     table.Children.Add(row);
 
                     for (int j = lastIndex; j <= i; j++)
@@ -265,7 +264,7 @@ namespace Textamina.Markdig.Extensions.Tables
                             item = nextSibling;
                         }
 
-                        var tableCell = new TableCellBlock { Parent = row };
+                        var tableCell = new TableCell { Parent = row };
                         var tableParagraph = new ParagraphBlock() {Inline = columnContainer, Parent = tableCell };
                         tableCell.Children.Add(tableParagraph);
                         row.Children.Add(tableCell);
@@ -317,7 +316,7 @@ namespace Textamina.Markdig.Extensions.Tables
             if (aligns != null)
             {
                 table.Children.RemoveAt(1);
-                var tableRow = (TableRowBlock) table.Children[0];
+                var tableRow = (TableRow) table.Children[0];
                 table.ColumnDefinitions.AddRange(aligns);
                 tableRow.IsHeader = true;
             }
@@ -503,7 +502,7 @@ namespace Textamina.Markdig.Extensions.Tables
             public TableState()
             {
                 ColumnAndLineDelimiters = new List<Inline>();
-                Cells = new List<TableCellBlock>();
+                Cells = new List<TableCell>();
             }
 
             public bool IsInvalidTable { get; set; }
@@ -514,7 +513,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
             public List<Inline> ColumnAndLineDelimiters { get; }
 
-            public List<TableCellBlock> Cells { get; }
+            public List<TableCell> Cells { get; }
         }
     }
 }

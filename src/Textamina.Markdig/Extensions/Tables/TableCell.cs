@@ -8,16 +8,16 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Extensions.Tables
 {
     /// <summary>
-    /// Defines a cell in a <see cref="TableRowBlock"/>
+    /// Defines a cell in a <see cref="TableRow"/>
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.LeafBlock" />
-    public class TableCellBlock : ContainerBlock
+    public class TableCell : ContainerBlock
     {
-        public TableCellBlock() : this(null)
+        public TableCell() : this(null)
         {
         }
 
-        public TableCellBlock(BlockParser parser) : base(parser)
+        public TableCell(BlockParser parser) : base(parser)
         {
             ColumnSpan = 1;
         }

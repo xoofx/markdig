@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Extensions.Attributes;
+using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.Tables;
 
@@ -21,11 +22,24 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
         {
             return pipeline
+                .UseCustomContainer()
+                .UseGridTable()
                 .UsePipeTable()
                 .UseSoftlineBreakAsHardlineBreak()
                 .UseFootnotes()
                 .UseStrikethroughSuperAndSubScript()
                 .UseAttributes();
+        }
+
+        /// <summary>
+        /// Uses the custom container extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
         }
 
         /// <summary>

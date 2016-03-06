@@ -11,9 +11,9 @@ namespace Textamina.Markdig.Extensions.Tables
     {
         public void Setup(MarkdownPipeline pipeline)
         {
-            if (!pipeline.BlockParsers.Contains<GridTableBlockParser>())
+            if (!pipeline.BlockParsers.Contains<GridTableParser>())
             {
-                pipeline.BlockParsers.Insert(0, new GridTableBlockParser());
+                pipeline.BlockParsers.Insert(0, new GridTableParser());
             }
 
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;

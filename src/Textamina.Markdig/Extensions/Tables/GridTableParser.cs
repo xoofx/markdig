@@ -8,9 +8,9 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
-    public class GridTableBlockParser : BlockParser
+    public class GridTableParser : BlockParser
     {
-        public GridTableBlockParser()
+        public GridTableParser()
         {
             OpeningCharacters = new[] {'+'};
         }
@@ -29,7 +29,7 @@ namespace Textamina.Markdig.Extensions.Tables
             // + ------------- + ------------ + ---------------------------------------- +
             // Spaces are optional
 
-            GridTableBlockState tableBlockState = null;
+            GridTableState tableState = null;
             var c = line.CurrentChar;
             while (true)
             {
@@ -39,7 +39,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     line.NextChar();
                     if (line.IsEmptyOrWhitespace())
                     {
-                        if (tableBlockState == null)
+                        if (tableState == null)
                         {
                             return BlockState.None;
                         }
@@ -49,15 +49,15 @@ namespace Textamina.Markdig.Extensions.Tables
                     TableColumnAlign align;
                     if (TableHelper.ParseColumnHeader(ref line, '-', out align))
                     {
-                        if (tableBlockState == null)
+                        if (tableState == null)
                         {
-                            tableBlockState = new GridTableBlockState()
+                            tableState = new GridTableState()
                             {
                                 Start = state.Column,
                                 ExpectRow = true,
                             };
                         }
-                        tableBlockState.AddColumn(startCharacter, line.Start - 1, align);
+                        tableState.AddColumn(startCharacter, line.Start - 1, align);
 
                         c = line.CurrentChar;
                         continue;
@@ -69,23 +69,23 @@ namespace Textamina.Markdig.Extensions.Tables
             }
 
             // Store the line (if we need later to build a ParagraphBlock because the GridTable was in fact invalid)
-            tableBlockState.AddLine(ref state.Line);
+            tableState.AddLine(ref state.Line);
 
             // Create the grid table
-            var table = new TableBlock(this);
+            var table = new Table(this);
 
-            table.SetData(typeof(GridTableBlockState), tableBlockState);
+            table.SetData(typeof(GridTableState), tableState);
 
 
             // Calculate the total width of all columns
             int totalWidth = 0;
-            foreach (var columnSlice in tableBlockState.ColumnSlices)
+            foreach (var columnSlice in tableState.ColumnSlices)
             {
                 totalWidth += columnSlice.End - columnSlice.Start + 1;
             }
 
             // Store the column width and alignment
-            foreach (var columnSlice in tableBlockState.ColumnSlices)
+            foreach (var columnSlice in tableState.ColumnSlices)
             {
                 var columnDefinition = new TableColumnDefinition
                 {
@@ -103,8 +103,8 @@ namespace Textamina.Markdig.Extensions.Tables
 
         public override BlockState TryContinue(BlockParserState state, Block block)
         {
-            var gridTable = (TableBlock) block;
-            var tableState = (GridTableBlockState)block.GetData(typeof(GridTableBlockState));
+            var gridTable = (Table) block;
+            var tableState = (GridTableState)block.GetData(typeof(GridTableState));
 
             // We expect to start at the same 
             if (state.Start == tableState.Start)
@@ -226,7 +226,7 @@ namespace Textamina.Markdig.Extensions.Tables
         }
 
 
-        private BlockState ParseRowSeparator(BlockParserState state, GridTableBlockState tableState, TableBlock gridTable)
+        private BlockState ParseRowSeparator(BlockParserState state, GridTableState tableState, Table gridTable)
         {
             // A grid table must start with a line like this:
             // + ------------- + ------------ + ---------------------------------------- +
@@ -275,7 +275,7 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 for (int i = tableState.StartRowGroup; i < gridTable.Children.Count; i++)
                 {
-                    var row = (TableRowBlock) gridTable.Children[i];
+                    var row = (TableRow) gridTable.Children[i];
                     row.IsHeader = true;
                 }
             }
@@ -287,17 +287,17 @@ namespace Textamina.Markdig.Extensions.Tables
             return BlockState.ContinueDiscard;
         }
 
-        private void TerminateLastRow(BlockParserState state, GridTableBlockState tableState, TableBlock gridTable, bool isLastRow)
+        private void TerminateLastRow(BlockParserState state, GridTableState tableState, Table gridTable, bool isLastRow)
         {
             var columns = tableState.ColumnSlices;
-            TableRowBlock currentRow = null;
+            TableRow currentRow = null;
             foreach (var columnSlice in columns)
             {
                 if (columnSlice.CurrentCell != null)
                 {
                     if (currentRow == null)
                     {
-                        currentRow = new TableRowBlock();
+                        currentRow = new TableRow();
                     }
                     currentRow.Children.Add(columnSlice.CurrentCell);
                     columnSlice.BlockParserState.Close(columnSlice.CurrentCell);
@@ -320,7 +320,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 else
                 {
                     // Else we can create a new cell
-                    columnSlice.CurrentCell = new TableCellBlock(this)
+                    columnSlice.CurrentCell = new TableCell(this)
                     {
                         ColumnSpan = columnSlice.CurrentColumnSpan
                     };
@@ -330,7 +330,7 @@ namespace Textamina.Markdig.Extensions.Tables
                         columnSlice.BlockParserState = state.CreateChild();
                     }
 
-                    // Ensure that the BlockParser is aware that the TableCellBlock is the top-level container
+                    // Ensure that the BlockParser is aware that the TableCell is the top-level container
                     columnSlice.BlockParserState.Open(columnSlice.CurrentCell);
                 }
             }

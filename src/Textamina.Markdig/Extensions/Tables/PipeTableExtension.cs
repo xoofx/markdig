@@ -14,9 +14,9 @@ namespace Textamina.Markdig.Extensions.Tables
     {
         public void Setup(MarkdownPipeline pipeline)
         {
-            if (!pipeline.InlineParsers.Contains<PipeTableInlineParser>())
+            if (!pipeline.InlineParsers.Contains<PipeTableParser>())
             {
-                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableInlineParser());
+                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser());
             }
 
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;

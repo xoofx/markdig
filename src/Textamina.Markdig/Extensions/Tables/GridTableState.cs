@@ -4,7 +4,7 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Extensions.Tables
 {
-    internal class GridTableBlockState
+    internal class GridTableState
     {
         public int Start { get; set; }
 
@@ -59,7 +59,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
             public BlockParserState BlockParserState { get; set; }
 
-            public TableCellBlock CurrentCell { get; set; }
+            public TableCell CurrentCell { get; set; }
         }
     }
 }
