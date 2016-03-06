@@ -21,11 +21,11 @@ namespace Textamina.Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static string ConvertToHtml(string markdown, MarkdownPipeline pipeline = null)
+        public static string ToHtml(string markdown, MarkdownPipeline pipeline = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             var reader = new StringReader(markdown);
-            return ConvertToHtml(reader, pipeline) ?? string.Empty;
+            return ToHtml(reader, pipeline) ?? string.Empty;
         }
 
         /// <summary>
@@ -35,11 +35,11 @@ namespace Textamina.Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static string ConvertToHtml(TextReader reader, MarkdownPipeline pipeline = null)
+        public static string ToHtml(TextReader reader, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             var writer = new StringWriter();
-            ConvertToHtml(reader, writer, pipeline);
+            ToHtml(reader, writer, pipeline);
             return writer.ToString();
         }
 
@@ -50,7 +50,7 @@ namespace Textamina.Markdig
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
-        public static void ConvertToHtml(TextReader reader, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static void ToHtml(TextReader reader, TextWriter writer, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (writer == null) throw new ArgumentNullException(nameof(writer));

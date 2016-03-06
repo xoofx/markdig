@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Tests
                 Console.WriteLine($"Pipeline configured with extensions: {extensions}");
                 // Uncomment this line to get more debug information for process inlines.
                 //pipeline.DebugLog = Console.Out;
-                var result = Markdown.ConvertToHtml(inputText, pipeline);
+                var result = Markdown.ToHtml(inputText, pipeline);
 
                 result = Compact(result);
                 expectedOutputText = Compact(expectedOutputText);

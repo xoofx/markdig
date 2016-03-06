@@ -32,8 +32,8 @@ This is a test
             //> titi toto
             //");
 
-            //var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ConvertToHtml(text, new MarkdownPipeline().UseAttributes().UsePipeTable());
+            //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAttributes().UsePipeTable());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
