@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Textamina.Markdig.Renderers.RendererBase" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAgIIAAAAABAAAAEABAA=</HashCode>
+      <FileName>Renderers\RendererBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ObjectRenderers" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.TextRendererBase" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAEAAAA=</HashCode>
+      <FileName>Renderers\TextRendererBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.TextRendererBase&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAEAAIAAAAAAAAAAAAAAAAAABAAAEABAA=</HashCode>
+      <FileName>Renderers\TextRendererBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.HtmlRenderer" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAIAAAQABAEAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Renderers\HtmlRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer&lt;TObject&gt;" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\HtmlObjectRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.CustomContainers.HtmlCustomContainerRenderer" Collapsed="true">
+    <Position X="4.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Extensions\CustomContainers\HtmlCustomContainerRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Footnotes.HtmlFootnoteGroupRenderer" Collapsed="true">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Footnotes.HtmlFootnoteLinkRenderer" Collapsed="true">
+    <Position X="4.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAABAAEAAAAAAAAEAAAA=</HashCode>
+      <FileName>Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Tables.HtmlTableRenderer" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Extensions\Tables\HtmlTableRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.CodeBlockRenderer" Collapsed="true">
+    <Position X="8.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\CodeBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.HeadingRenderer" Collapsed="true">
+    <Position X="8.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\HeadingRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.HtmlBlockRenderer" Collapsed="true">
+    <Position X="4.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\HtmlBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.AutolinkInlineRenderer" Collapsed="true">
+    <Position X="8.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\AutolinkInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.CodeInlineRenderer" Collapsed="true">
+    <Position X="4.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\CodeInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.DelimiterInlineRenderer" Collapsed="true">
+    <Position X="8.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\DelimiterInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.EmphasisInlineRenderer" Collapsed="true">
+    <Position X="4.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\EmphasisInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.HardlineBreakInlineRenderer" Collapsed="true">
+    <Position X="8.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\HardlineBreakInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.HtmlInlineRenderer" Collapsed="true">
+    <Position X="4.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\HtmlInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.LinkInlineRenderer" Collapsed="true">
+    <Position X="8.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\LinkInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.LiteralInlineRenderer" Collapsed="true">
+    <Position X="4.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\LiteralInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.Inlines.SoftlineBreakInlineRenderer" Collapsed="true">
+    <Position X="8.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\Inlines\SoftlineBreakInlineRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.ListRenderer" Collapsed="true">
+    <Position X="4.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\ListRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.ParagraphRenderer" Collapsed="true">
+    <Position X="4.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\ParagraphRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.QuoteBlockRenderer" Collapsed="true">
+    <Position X="8.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\QuoteBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Renderers.Html.ThematicBreakRenderer" Collapsed="true">
+    <Position X="8.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\Html\ThematicBreakRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Textamina.Markdig.Renderers.IMarkdownRenderer" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Renderers\IMarkdownRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Textamina.Markdig.Renderers.IMarkdownObjectRenderer" Collapsed="true">
+    <Position X="3.75" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Renderers\IMarkdownObjectRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

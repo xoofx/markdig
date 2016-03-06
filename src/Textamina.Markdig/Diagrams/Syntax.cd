@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Textamina.Markdig.Syntax.MarkdownObject" Collapsed="true">
+    <Position X="2.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABEQAAAAAAAAAAAAAAAAAQAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Syntax\MarkdownObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.Block" Collapsed="true">
+    <Position X="1.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAgAAAAAAAAUAAAEABAQAAAAAgAAAAAAAAAAAAJAAg=</HashCode>
+      <FileName>Syntax\Block.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.Inlines.Inline" Collapsed="true">
+    <Position X="4" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAgAAIAAIEAAABATAAAAAgAQEAAAAAACAAAABA=</HashCode>
+      <FileName>Syntax\Inlines\Inline.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.BlankLineBlock" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\BlankLineBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.ContainerBlock" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\ContainerBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.LeafBlock" Collapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAQAAAAgAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\LeafBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Footnotes.Footnote" Collapsed="true">
+    <Position X="1.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAAAAAIAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\Footnotes\Footnote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Footnotes.FootnoteGroup" Collapsed="true">
+    <Position X="1.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Extensions\Footnotes\FootnoteGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Tables.Table" Collapsed="true">
+    <Position X="1.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\Tables\Table.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Tables.TableCell" Collapsed="true">
+    <Position X="1.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Extensions\Tables\TableCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.Tables.TableRow" Collapsed="true">
+    <Position X="1.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\Tables\TableRow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.ListBlock" Collapsed="true">
+    <Position X="4.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACIAQAAAAAAAAAAAAAAgCAAAAAAQAAAAIA=</HashCode>
+      <FileName>Syntax\ListBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.ListItemBlock" Collapsed="true">
+    <Position X="4.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\ListItemBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.MarkdownDocument" Collapsed="true">
+    <Position X="4.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\MarkdownDocument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.QuoteBlock" Collapsed="true">
+    <Position X="4.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Syntax\QuoteBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.CodeBlock" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\CodeBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.HeadingBlock" Collapsed="true">
+    <Position X="9.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\HeadingBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.HtmlBlock" Collapsed="true">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Syntax\HtmlBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.LinkReferenceDefinition" Collapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAAEAAAAEAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\LinkReferenceDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.ParagraphBlock" Collapsed="true">
+    <Position X="16.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\ParagraphBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Syntax.ThematicBreakBlock" Collapsed="true">
+    <Position X="18.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Syntax\ThematicBreakBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
