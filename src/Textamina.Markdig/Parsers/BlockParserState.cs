@@ -96,7 +96,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets the index of the line in the source text.
         /// </summary>
-        public int LineIndex { get; private set; }
+        public int LineIndex { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the line is blank (valid only after <see cref="ParseIndent"/> has been called).
@@ -365,7 +365,6 @@ namespace Textamina.Markdig.Parsers
             ContinueProcessingLine = true;
 
             ResetLine(newLine);
-            LineIndex++;
 
             TryContinueBlocks();
 
@@ -374,6 +373,8 @@ namespace Textamina.Markdig.Parsers
 
             // Close blocks that are no longer opened
             CloseAll(false);
+
+            LineIndex++;
         }
 
         public BlockParserState CreateChild()

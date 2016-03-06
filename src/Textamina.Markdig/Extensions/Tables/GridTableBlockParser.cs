@@ -179,6 +179,7 @@ namespace Textamina.Markdig.Extensions.Tables
                         }
 
                         // Process the content of the cell
+                        column.BlockParserState.LineIndex = state.LineIndex;
                         column.BlockParserState.ProcessLine(sliceForCell);
 
                         // Go to next column

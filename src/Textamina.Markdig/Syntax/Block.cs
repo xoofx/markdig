@@ -20,6 +20,7 @@ namespace Textamina.Markdig.Syntax
         {
             Parser = parser;
             IsOpen = true;
+            IsBreakable = true;
         }
 
         /// <summary>
@@ -46,6 +47,11 @@ namespace Textamina.Markdig.Syntax
         /// Gets or sets a value indicating whether this instance is still open.
         /// </summary>
         public bool IsOpen { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this block is breakable. Default is true.
+        /// </summary>
+        public bool IsBreakable { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this block must be removed from its container after inlines have been processed.

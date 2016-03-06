@@ -19,6 +19,9 @@ namespace Textamina.Markdig.Syntax
         /// <param name="parser">The parser.</param>
         public FencedCodeBlock(BlockParser parser) : base(parser)
         {
+            // Fenced code blocks are not breakable, unless
+            // we reach the end of the document (or the end of a table cell in a grid table)
+            IsBreakable = false;
         }
 
         /// <summary>
