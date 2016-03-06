@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Sundown;
@@ -26,12 +27,20 @@ namespace Testamina.Markdig.Benchmarks
         public void TestMarkdig()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            Markdown.ConvertToHtml(text);
+            Markdown.ToHtml(text);
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
         [Benchmark]
-        public void TestCommonMark()
+        public void TestCommonMarkCpp()
+        {
+            //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+            CommonMarkLib.ToHtml(text);
+            //File.WriteAllText("spec.html", writer.ToString());
+        }
+
+        //[Benchmark]
+        public void TestCommonMarkNet()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
             // var reader = new StringReader(text);
@@ -75,11 +84,11 @@ namespace Testamina.Markdig.Benchmarks
                 {
                     if (markdig)
                     {
-                        program.TestMarkdig();
+                        program.TestCommonMarkCpp();
                     }
                     else
                     {
-                        program.TestCommonMark();
+                        program.TestCommonMarkNet();
                     }
                 }
                 Console.WriteLine((markdig ? "MarkDig" : "CommonMark") +  $" => time: {clock.ElapsedMilliseconds}ms");
