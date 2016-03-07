@@ -4,6 +4,7 @@
 using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Extensions.Attributes;
 using Textamina.Markdig.Extensions.CustomContainers;
+using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.Tables;
 
@@ -22,6 +23,7 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
         {
             return pipeline
+                .UseDefinitionList()
                 .UseCustomContainer()
                 .UseGridTable()
                 .UsePipeTable()
@@ -39,6 +41,17 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the definition lists extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseDefinitionList(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<DefinitionListExtension>();
             return pipeline;
         }
 

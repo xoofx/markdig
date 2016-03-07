@@ -29,5 +29,7 @@ namespace Textamina.Markdig.Syntax
             // Inlines are processed for a paragraph
             ProcessInlines = true;
         }
+
+        public int LastLine => Line + Lines.Count - 1;
     }
 }

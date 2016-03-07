@@ -13,24 +13,26 @@ namespace Textamina.Markdig.Tests
         public void TestSimple()
         {
             var text = @"
-+-----------------------------------+--------------------------------------+
-| - this is a list                  | > We have a blockquote
-| - this is a second item           |
-|                                   |
-| ```                               |
-| Yes                               |
-| ```                               |
-+===================================+======================================+
-| This is a second line             | 
-+-----------------------------------+--------------------------------------+
+Term 1
+:   This is a definition item
+    With a paragraph
+    > This is a block quote
 
-:::spoiler  {#yessss}
-This is a spoiler
-:::
+    - This is a list
+    - item2
 
-/| we have mult | paragraph    |
-/| we have a new colspan with a long line
-/| and lots of text
+    ```java
+    Test
+
+
+    ```
+
+    And a lazy line
+:   This ia another definition item
+
+Term2
+Term3 *with some inline*
+:   This is another definition for term2
 ";
 
             //            var reader = new StringReader(@"> > toto tata
@@ -38,9 +40,33 @@ This is a spoiler
             //");
 
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseGridTable().UseCustomContainer().UseAttributes());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseDefinitionList());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
-   }
+
+
+//        var text = @"
+//+-----------------------------------+--------------------------------------+
+//| - this is a list                  | > We have a blockquote
+//| - this is a second item           |
+//|                                   |
+//| ```                               |
+//| Yes                               |
+//| ```                               |
+//+===================================+======================================+
+//| This is a second line             | 
+//+-----------------------------------+--------------------------------------+
+
+//:::spoiler  {#yessss}
+//This is a spoiler
+//:::
+
+///| we have mult | paragraph    |
+///| we have a new colspan with a long line
+///| and lots of text
+//";
+
+
+    }
 }

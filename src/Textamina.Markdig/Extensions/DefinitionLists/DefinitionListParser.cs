@@ -1,0 +1,161 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+
+using System;
+using Textamina.Markdig.Parsers;
+using Textamina.Markdig.Syntax;
+
+namespace Textamina.Markdig.Extensions.DefinitionLists
+{
+    /// <summary>
+    /// The block parser for a <see cref="DefinitionList"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
+    public class DefinitionListParser : BlockParser
+    {
+        public DefinitionListParser()
+        {
+            OpeningCharacters = new [] {':', '~'};
+        }
+
+        public override BlockState TryOpen(BlockParserState state)
+        {
+            var paragraphBlock = state.LastBlock as ParagraphBlock;
+            if (state.IsCodeIndent || paragraphBlock == null || paragraphBlock.LastLine - state.LineIndex > 1)
+            {
+                return BlockState.None;
+            }
+
+            var column = state.ColumnBeforeIndent;
+            state.NextChar();
+            state.ParseIndent();
+            var delta = state.Column - column;
+
+            // We expect to have a least
+            if (delta < 4)
+            {
+                return BlockState.None;
+            }
+
+            if (delta > 4)
+            {
+                state.GoToColumn(column + 4);
+            }
+
+            var previousParent = paragraphBlock.Parent;
+            var indexOfParagraph = previousParent.Children.IndexOf(paragraphBlock);
+            var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent.Children[indexOfParagraph - 1] as DefinitionList : null;
+
+            state.Discard(paragraphBlock);
+
+            if (currentDefinitionList == null)
+            {
+                currentDefinitionList = new DefinitionList(this)
+                {
+                    Parent = previousParent
+                };
+                previousParent.Children.Add(currentDefinitionList);
+            }
+
+            var definitionItem = new DefinitionItem(this)
+            {
+                Column =  state.Column,
+                OpeningCharacter = state.CurrentChar,
+                Parent = currentDefinitionList
+            };
+            currentDefinitionList.Children.Add(definitionItem);
+
+            for (int i = 0; i < paragraphBlock.Lines.Count; i++)
+            {
+                var line = paragraphBlock.Lines.Lines[i];
+                var term = new DefinitionTerm(this)
+                {
+                    Column =  paragraphBlock.Column,
+                    Line = line.Line,
+                    Parent = definitionItem,
+                    IsOpen = false
+                };
+                term.AppendLine(ref line.Slice, line.Column, line.Line);
+                definitionItem.Children.Add(term);
+            }
+
+            state.Open(definitionItem);
+            return BlockState.Continue;
+        }
+
+        public override BlockState TryContinue(BlockParserState state, Block block)
+        {
+            var definitionItem = (DefinitionItem)block;
+            if (state.IsCodeIndent)
+            {
+                state.GoToCodeIndent();
+                return BlockState.Continue;
+            }
+
+            var lastBlankLine = definitionItem.LastChild as BlankLineBlock;
+
+            // Check if we have another definition list
+            if (Array.IndexOf(OpeningCharacters, state.CurrentChar) >= 0)
+            {
+                var column = state.ColumnBeforeIndent;
+                state.NextChar();
+                state.ParseIndent();
+                var delta = state.Column - column;
+
+                // We expect to have a least
+                if (delta < 4)
+                {
+                    // Remove the blankline before breaking this definition item
+                    if (lastBlankLine != null)
+                    {
+                        definitionItem.Children.RemoveAt(definitionItem.Children.Count - 1);
+                    }
+                    return BlockState.None;
+                }
+
+                if (delta > 4)
+                {
+                    state.GoToColumn(column + 4);
+                }
+
+                var list = (DefinitionList) definitionItem.Parent;
+                state.Close(definitionItem);
+                var nextDefinitionItem = new DefinitionItem(this)
+                {
+                    Column = state.Column,
+                    OpeningCharacter = state.CurrentChar,
+                    Parent = list
+                };
+                list.Children.Add(nextDefinitionItem);
+                state.Open(nextDefinitionItem);
+
+                return BlockState.Continue;
+            }
+
+            var isBreakable = definitionItem.LastChild?.IsBreakable ?? true;
+            if (state.IsBlankLine)
+            {
+                if (lastBlankLine == null && isBreakable)
+                {
+                    definitionItem.Children.Add(new BlankLineBlock());
+                }
+                return isBreakable ? BlockState.ContinueDiscard : BlockState.Continue;
+            }
+
+            var paragraphBlock = definitionItem.LastChild as ParagraphBlock;
+            if (lastBlankLine == null && paragraphBlock != null)
+            {
+                return BlockState.Continue;
+            }
+
+            // Remove the blankline before breaking this definition item
+            if (lastBlankLine != null)
+            {
+                definitionItem.Children.RemoveAt(definitionItem.Children.Count - 1);
+            }
+
+            return BlockState.Break;
+        }
+    }
+}
