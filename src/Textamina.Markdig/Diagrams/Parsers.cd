@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Comment CommentText="Block Parsers Extensions">
-    <Position X="4.427" Y="3.917" Height="0.406" Width="1.7" />
+    <Position X="4.465" Y="5.947" Height="0.406" Width="1.7" />
   </Comment>
   <Comment CommentText="Inline Parsers Extensions">
     <Position X="10.448" Y="3.885" Height="0.406" Width="1.7" />
@@ -15,14 +15,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Textamina.Markdig.Extensions.Footnotes.FootnoteParser" Collapsed="true">
-    <Position X="4.5" Y="2" Width="1.5" />
+    <Position X="4.25" Y="2" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
       <FileName>Extensions\Footnotes\FootnoteParser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Textamina.Markdig.Extensions.Tables.GridTableParser" Collapsed="true">
-    <Position X="4.5" Y="3" Width="1.5" />
+    <Position X="4.25" Y="3" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAABAAAAAAAAAAAABAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Extensions\Tables\GridTableParser.cs</FileName>
@@ -170,6 +170,20 @@
       <FileName>Parsers\ParserBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.CustomContainers.CustomContainerParser" Collapsed="true">
+    <Position X="4.25" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\CustomContainers\CustomContainerParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textamina.Markdig.Extensions.DefinitionLists.DefinitionListParser" Collapsed="true">
+    <Position X="4.25" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Extensions\DefinitionLists\DefinitionListParser.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="Textamina.Markdig.Parsers.IMarkdownParser&lt;TParserState&gt;" Collapsed="true">
     <Position X="12.5" Y="0.5" Width="2.25" />
