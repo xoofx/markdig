@@ -22,18 +22,19 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Textamina.Markdig.Syntax.BlankLineBlock" Collapsed="true">
-    <Position X="13.75" Y="5" Width="1.5" />
+    <Position X="5.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Syntax\BlankLineBlock.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Textamina.Markdig.Syntax.ContainerBlock" Collapsed="true">
     <Position X="2.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAACAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEIAAEAgAAAACBQQCEAQBAQAAAAAAAAECAAAAABQIAA=</HashCode>
       <FileName>Syntax\ContainerBlock.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Textamina.Markdig.Syntax.LeafBlock" Collapsed="true">
     <Position X="8.25" Y="3.5" Width="1.5" />

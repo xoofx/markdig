@@ -96,11 +96,11 @@ namespace Testamina.Markdig.Benchmarks
             }
             else
             {
-                new TestMatchPerf().TestMatch();
+                //new TestMatchPerf().TestMatch();
                 
 
-                //BenchmarkRunner.Run<Program>();
-                BenchmarkRunner.Run<TestMatchPerf>();
+                BenchmarkRunner.Run<Program>();
+                //BenchmarkRunner.Run<TestMatchPerf>();
                 //BenchmarkRunner.Run<TestStringPerf>();
             }
         }

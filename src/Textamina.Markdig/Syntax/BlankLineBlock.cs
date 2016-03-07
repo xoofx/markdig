@@ -7,13 +7,15 @@ namespace Textamina.Markdig.Syntax
     /// A blank line, used internally by some parsers to store blank lines in a container. They are removed before the end of the document.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Block" />
-    public sealed class BlankLineBlock : LeafBlock
+    public sealed class BlankLineBlock : Block
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BlankLineBlock"/> class.
         /// </summary>
         public BlankLineBlock() : base(null)
         {
+            // A blankline is never opened
+            IsOpen = false;
         }
     }
 }

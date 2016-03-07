@@ -161,7 +161,7 @@ namespace Textamina.Markdig.Parsers
                         }
                         leafBlock.OnProcessInlinesEnd(inlineParserState);
                     }
-                    else
+                    else if (block is ContainerBlock)
                     {
                         var newContainer = (ContainerBlock) block;
                         // If we need to remove it
