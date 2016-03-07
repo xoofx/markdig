@@ -42,7 +42,7 @@ namespace Textamina.Markdig.Renderers
                 return;
             }
 
-            var children = containerBlock.Children;
+            var children = containerBlock;
             for (int i = 0; i < children.Count; i++)
             {
                 Write(children[i]);

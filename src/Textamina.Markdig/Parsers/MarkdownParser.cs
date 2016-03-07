@@ -139,9 +139,9 @@ namespace Textamina.Markdig.Parsers
                 var item = blocks.Peek();
                 var container = item.Container;
 
-                for (; item.Index < container.Children.Count; item.Index++)
+                for (; item.Index < container.Count; item.Index++)
                 {
-                    var block = container.Children[item.Index];
+                    var block = container[item.Index];
                     var leafBlock = block as LeafBlock;
                     if (leafBlock != null)
                     {
@@ -151,12 +151,12 @@ namespace Textamina.Markdig.Parsers
                             inlineParserState.ProcessInlineLeaf(leafBlock);
                             if (leafBlock.RemoveAfterProcessInlines)
                             {
-                                container.Children.RemoveAt(item.Index);
+                                container.RemoveAt(item.Index);
                                 item.Index--;
                             }
                             else if (inlineParserState.BlockNew != null)
                             {
-                                container.Children[item.Index] = inlineParserState.BlockNew;
+                                container[item.Index] = inlineParserState.BlockNew;
                             }
                         }
                         leafBlock.OnProcessInlinesEnd(inlineParserState);
@@ -167,7 +167,7 @@ namespace Textamina.Markdig.Parsers
                         // If we need to remove it
                         if (newContainer.RemoveAfterProcessInlines)
                         {
-                            container.Children.RemoveAt(item.Index);
+                            container.RemoveAt(item.Index);
                         }
                         else
                         {

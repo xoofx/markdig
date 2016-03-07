@@ -55,10 +55,11 @@ namespace Textamina.Markdig.Extensions.Footnotes
             if (footnotes == null)
             {
                 footnotes = new FootnoteGroup(this);
+                state.Document.Add(footnotes);
                 state.Document.SetData(DocumentKey, footnotes);
                 state.Document.ProcessInlinesEnd += Document_ProcessInlinesEnd;
             }
-            footnotes.Children.Add(footnote);
+            footnotes.Add(footnote);
 
             var linkRef = new FootnoteLinkReferenceDefinition()
             {
@@ -66,82 +67,15 @@ namespace Textamina.Markdig.Extensions.Footnotes
                 CreateLinkInline = CreateLinkToFootnote
             };
             state.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
-
             state.NewBlocks.Push(footnote);
             return BlockState.Continue;
-        }
-
-        /// <summary>
-        /// Add footnotes to the end of the document
-        /// </summary>
-        /// <param name="state">The state.</param>
-        private void Document_ProcessInlinesEnd(InlineParserState state)
-        {
-            // Unregister
-            state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
-
-            var footnoteGroup = ((FootnoteGroup)state.Document.GetData(DocumentKey));
-            var footnotes = footnoteGroup.Children;
-            state.Document.Children.Add(footnoteGroup);
-            state.Document.RemoveData(DocumentKey);
-
-            footnotes.Sort(
-                (leftObj, rightObj) =>
-                {
-                    var left = (Footnote) leftObj;
-                    var right = (Footnote) rightObj;
-
-                    return left.Order >= 0  && right.Order >= 0
-                        ? left.Order.CompareTo(right.Order)
-                        : 0;
-                });
-
-            int linkIndex = 0;
-            for (int i = 0; i < footnotes.Count; i++)
-            {
-                var footnote = (Footnote)footnotes[i];
-                if (footnote.Order < 0)
-                {
-                    // Remove this footnote if it doesn't have any links
-                    footnotes.RemoveAt(i);
-                    i--;
-                    continue;
-                }
-
-                // Insert all footnote backlinks
-                var paragraphBlock = footnote.Children.Count > 0
-                    ? footnote.Children[footnote.Children.Count - 1] as ParagraphBlock
-                    : null;
-                if (paragraphBlock == null)
-                {
-                    paragraphBlock = new ParagraphBlock();
-                    footnote.Children.Add(paragraphBlock);
-                }
-                if (paragraphBlock.Inline == null)
-                {
-                    paragraphBlock.Inline = new ContainerInline();
-                }
-
-                foreach (var link in footnote.Links)
-                {
-                    linkIndex++;
-                    link.Index = linkIndex;
-                    var backLink = new FootnoteLink()
-                    {
-                        Index = linkIndex,
-                        IsBackLink = true,
-                        Footnote = footnote
-                    };
-                    paragraphBlock.Inline.AppendChild(backLink);
-                }
-            }
         }
 
         public override BlockState TryContinue(BlockParserState state, Block block)
         {
             var footnote = (Footnote) block;
 
-            if (!(state.LastBlock is FencedCodeBlock))
+            if (state.LastBlock != null && state.LastBlock.IsBreakable)
             {
                 if (state.IsBlankLine)
                 {
@@ -162,6 +96,71 @@ namespace Textamina.Markdig.Extensions.Footnotes
             }
 
             return BlockState.Continue;
+        }
+
+        /// <summary>
+        /// Add footnotes to the end of the document
+        /// </summary>
+        /// <param name="state">The state.</param>
+        private void Document_ProcessInlinesEnd(InlineParserState state)
+        {
+            // Unregister
+            state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
+
+            var footnotes = ((FootnoteGroup)state.Document.GetData(DocumentKey));
+            // Remove the footnotes from the document and readd them at the end
+            state.Document.Remove(footnotes);
+            state.Document.Add(footnotes);
+            state.Document.RemoveData(DocumentKey);
+
+            footnotes.Sort(
+                (leftObj, rightObj) =>
+                {
+                    var left = (Footnote)leftObj;
+                    var right = (Footnote)rightObj;
+
+                    return left.Order >= 0 && right.Order >= 0
+                        ? left.Order.CompareTo(right.Order)
+                        : 0;
+                });
+
+            int linkIndex = 0;
+            for (int i = 0; i < footnotes.Count; i++)
+            {
+                var footnote = (Footnote)footnotes[i];
+                if (footnote.Order < 0)
+                {
+                    // Remove this footnote if it doesn't have any links
+                    footnotes.RemoveAt(i);
+                    i--;
+                    continue;
+                }
+
+                // Insert all footnote backlinks
+                var paragraphBlock = footnote.LastChild as ParagraphBlock;
+                if (paragraphBlock == null)
+                {
+                    paragraphBlock = new ParagraphBlock();
+                    footnote.Add(paragraphBlock);
+                }
+                if (paragraphBlock.Inline == null)
+                {
+                    paragraphBlock.Inline = new ContainerInline();
+                }
+
+                foreach (var link in footnote.Links)
+                {
+                    linkIndex++;
+                    link.Index = linkIndex;
+                    var backLink = new FootnoteLink()
+                    {
+                        Index = linkIndex,
+                        IsBackLink = true,
+                        Footnote = footnote
+                    };
+                    paragraphBlock.Inline.AppendChild(backLink);
+                }
+            }
         }
 
         private static Inline CreateLinkToFootnote(InlineParserState state, LinkReferenceDefinition linkRef, Inline child)

@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Renderers.Html
             {
                 renderer.WriteLine("<ul>");
             }
-            foreach (var item in listBlock.Children)
+            foreach (var item in listBlock)
             {
                 var listItem = (ListItemBlock)item;
                 var previousImplicit = renderer.ImplicitParagraph;

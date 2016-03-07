@@ -228,8 +228,8 @@ namespace Textamina.Markdig.Extensions.Tables
                     var beforeDelimiter = delimiter?.PreviousSibling;
                     var nextLineColumn = delimiter?.NextSibling;
 
-                    var row = new TableRow { Parent = table };
-                    table.Children.Add(row);
+                    var row = new TableRow();
+                    table.Add(row);
 
                     for (int j = lastIndex; j <= i; j++)
                     {
@@ -264,14 +264,14 @@ namespace Textamina.Markdig.Extensions.Tables
                             item = nextSibling;
                         }
 
-                        var tableCell = new TableCell { Parent = row };
-                        var tableParagraph = new ParagraphBlock() {Inline = columnContainer, Parent = tableCell };
-                        tableCell.Children.Add(tableParagraph);
-                        row.Children.Add(tableCell);
+                        var tableCell = new TableCell();
+                        var tableParagraph = new ParagraphBlock() {Inline = columnContainer};
+                        tableCell.Add(tableParagraph);
+                        row.Add(tableCell);
                         cells.Add(tableCell);
 
                         // If we have reached the end, we can add remaining delimiters as pure child of the current cell
-                        if (row.Children.Count == maxColumn && columnSeparator is PiprTableDelimiterInline)
+                        if (row.Count == maxColumn && columnSeparator is PiprTableDelimiterInline)
                         {
                             columnSeparator.Remove();
                             tableParagraph.Inline.AppendChild(columnSeparator);
@@ -305,7 +305,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     if (firstRow == null)
                     {
                         firstRow = row;
-                        maxColumn = firstRow.Children.Count;
+                        maxColumn = firstRow.Count;
                     }
 
                     lastIndex = i + 1;
@@ -315,8 +315,8 @@ namespace Textamina.Markdig.Extensions.Tables
             // If we have a header row, we can remove it
             if (aligns != null)
             {
-                table.Children.RemoveAt(1);
-                var tableRow = (TableRow) table.Children[0];
+                table.RemoveAt(1);
+                var tableRow = (TableRow) table[0];
                 table.ColumnDefinitions.AddRange(aligns);
                 tableRow.IsHeader = true;
             }
@@ -329,7 +329,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 {
                     foreach (var cell in cells)
                     {
-                        var paragraph = (ParagraphBlock) cell.Children[0];
+                        var paragraph = (ParagraphBlock) cell[0];
 
                         state.ProcessDelimiters(i + 1, paragraph.Inline, null, true);
                     }

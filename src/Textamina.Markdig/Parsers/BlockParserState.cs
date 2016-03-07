@@ -349,7 +349,7 @@ namespace Textamina.Markdig.Parsers
             {
                 if (OpenedBlocks[i] == block)
                 {
-                    block.Parent.Children.Remove(block);
+                    block.Parent.Remove(block);
                     OpenedBlocks.RemoveAt(i);
                     break;
                 }
@@ -402,7 +402,7 @@ namespace Textamina.Markdig.Parsers
             // If the pending object is removed, we need to remove it from the parent container
             if (block.Parser != null && !block.Parser.Close(this, block))
             {
-                block.Parent?.Children.Remove(block);
+                block.Parent?.Remove(block);
             }
             OpenedBlocks.RemoveAt(index);
         }
@@ -728,8 +728,7 @@ namespace Textamina.Markdig.Parsers
                 if (block.Parent == null)
                 {
                     UpdateLastBlockAndContainer();
-                    CurrentContainer.Children.Add(block);
-                    block.Parent = CurrentContainer;
+                    CurrentContainer.Add(block);
                 }
 
                 block.IsOpen = result.IsContinue();

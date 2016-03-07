@@ -207,7 +207,7 @@ namespace Textamina.Markdig.Extensions.Tables
             // If we don't have a row, it means that only the header was valid
             // So we need to remove the grid table, and create a ParagraphBlock
             // with the 2 slices 
-            if (gridTable.Children.Count == 0)
+            if (gridTable.Count == 0)
             {
                 var parser = state.Parsers.Find<ParagraphBlockParser>();
                 // Discard the grid table
@@ -216,9 +216,8 @@ namespace Textamina.Markdig.Extensions.Tables
                 var paragraphBlock = new ParagraphBlock(parser)
                 {
                     Lines = tableState.Lines,
-                    Parent = parent
                 };
-                parent.Children.Add(paragraphBlock);
+                parent.Add(paragraphBlock);
                 state.Open(paragraphBlock);
             }
 
@@ -273,15 +272,15 @@ namespace Textamina.Markdig.Extensions.Tables
             // to be header rows
             if (isHeader)
             {
-                for (int i = tableState.StartRowGroup; i < gridTable.Children.Count; i++)
+                for (int i = tableState.StartRowGroup; i < gridTable.Count; i++)
                 {
-                    var row = (TableRow) gridTable.Children[i];
+                    var row = (TableRow) gridTable[i];
                     row.IsHeader = true;
                 }
             }
 
             // Makr the next start row group continue on the next row
-            tableState.StartRowGroup = gridTable.Children.Count;
+            tableState.StartRowGroup = gridTable.Count;
 
             // We don't keep the line
             return BlockState.ContinueDiscard;
@@ -299,7 +298,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     {
                         currentRow = new TableRow();
                     }
-                    currentRow.Children.Add(columnSlice.CurrentCell);
+                    currentRow.Add(columnSlice.CurrentCell);
                     columnSlice.BlockParserState.Close(columnSlice.CurrentCell);
                 }
 
@@ -337,7 +336,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
             if (currentRow != null)
             {
-                gridTable.Children.Add(currentRow);
+                gridTable.Add(currentRow);
             }
         }
     }

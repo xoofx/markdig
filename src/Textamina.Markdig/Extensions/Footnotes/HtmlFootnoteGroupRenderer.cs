@@ -25,9 +25,8 @@ namespace Textamina.Markdig.Extensions.Footnotes
         /// </summary>
         public string GroupClass { get; set; }
 
-        protected override void Write(HtmlRenderer renderer, FootnoteGroup footnoteGroup)
+        protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
         {
-            var footnotes = footnoteGroup.Children;
             renderer.EnsureLine();
             renderer.WriteLine($"<div class=\"{GroupClass}\">");
             renderer.WriteLine("<hr />");

@@ -15,7 +15,6 @@ namespace Textamina.Markdig.Extensions.Footnotes
     {
         public Footnote(BlockParser parser) : base(parser)
         {
-            RemoveAfterProcessInlines = true;
             Links = new List<FootnoteLink>();
             Order = -1;
         }

@@ -103,7 +103,7 @@ namespace Textamina.Markdig.Parsers
                     if (!(state.NextContinue is ListBlock))
                     {
                         list.CountAllBlankLines++;
-                        listItem.Children.Add(BlankLineBlock.Instance);
+                        listItem.Add(new BlankLineBlock());
                     }
                     list.CountBlankLinesReset++;
                 }
@@ -309,18 +309,17 @@ namespace Textamina.Markdig.Parsers
 
             // TODO: This code is UGLY and WAY TOO LONG, simplify!
             bool isLastListItem = true;
-            for (int listIndex = listBlock.Children.Count - 1; listIndex >= 0; listIndex--)
+            for (int listIndex = listBlock.Count - 1; listIndex >= 0; listIndex--)
             {
-                var block = listBlock.Children[listIndex];
+                var block = listBlock[listIndex];
                 var listItem = (ListItemBlock) block;
-                var children = listItem.Children;
                 bool isLastElement = true;
-                for (int i = children.Count - 1; i >= 0; i--)
+                for (int i = listItem.Count - 1; i >= 0; i--)
                 {
-                    var item = children[i];
+                    var item = listItem[i];
                     if (item is BlankLineBlock)
                     {
-                        if ((isLastElement &&  listIndex < listBlock.Children.Count - 1) || (children.Count > 2 && (i > 0 && i < (children.Count - 1))))
+                        if ((isLastElement &&  listIndex < listBlock.Count - 1) || (listItem.Count > 2 && (i > 0 && i < (listItem.Count - 1))))
                         {
                             listBlock.IsLoose = true;
                         }
@@ -334,11 +333,11 @@ namespace Textamina.Markdig.Parsers
                                 var parentList = (ListBlock) parentListItemBlock.Parent;
 
                                 parentList.CountAllBlankLines++;
-                                parentListItemBlock.Children.Add(BlankLineBlock.Instance);
+                                parentListItemBlock.Add(new BlankLineBlock());
                             }
                         }
 
-                        children.RemoveAt(i);
+                        listItem.RemoveAt(i);
 
                         // If we have remove all blank lines, we can exit
                         listBlock.CountAllBlankLines--;

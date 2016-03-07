@@ -44,27 +44,23 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             }
 
             var previousParent = paragraphBlock.Parent;
-            var indexOfParagraph = previousParent.Children.IndexOf(paragraphBlock);
-            var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent.Children[indexOfParagraph - 1] as DefinitionList : null;
+            var indexOfParagraph = previousParent.IndexOf(paragraphBlock);
+            var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent[indexOfParagraph - 1] as DefinitionList : null;
 
             state.Discard(paragraphBlock);
 
             if (currentDefinitionList == null)
             {
-                currentDefinitionList = new DefinitionList(this)
-                {
-                    Parent = previousParent
-                };
-                previousParent.Children.Add(currentDefinitionList);
+                currentDefinitionList = new DefinitionList(this);
+                previousParent.Add(currentDefinitionList);
             }
 
             var definitionItem = new DefinitionItem(this)
             {
                 Column =  state.Column,
                 OpeningCharacter = state.CurrentChar,
-                Parent = currentDefinitionList
             };
-            currentDefinitionList.Children.Add(definitionItem);
+            currentDefinitionList.Add(definitionItem);
 
             for (int i = 0; i < paragraphBlock.Lines.Count; i++)
             {
@@ -73,11 +69,10 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                 {
                     Column =  paragraphBlock.Column,
                     Line = line.Line,
-                    Parent = definitionItem,
                     IsOpen = false
                 };
                 term.AppendLine(ref line.Slice, line.Column, line.Line);
-                definitionItem.Children.Add(term);
+                definitionItem.Add(term);
             }
 
             state.Open(definitionItem);
@@ -109,7 +104,7 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                     // Remove the blankline before breaking this definition item
                     if (lastBlankLine != null)
                     {
-                        definitionItem.Children.RemoveAt(definitionItem.Children.Count - 1);
+                        definitionItem.RemoveAt(definitionItem.Count - 1);
                     }
                     return BlockState.None;
                 }
@@ -125,9 +120,8 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                 {
                     Column = state.Column,
                     OpeningCharacter = state.CurrentChar,
-                    Parent = list
                 };
-                list.Children.Add(nextDefinitionItem);
+                list.Add(nextDefinitionItem);
                 state.Open(nextDefinitionItem);
 
                 return BlockState.Continue;
@@ -138,7 +132,7 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             {
                 if (lastBlankLine == null && isBreakable)
                 {
-                    definitionItem.Children.Add(new BlankLineBlock());
+                    definitionItem.Add(new BlankLineBlock());
                 }
                 return isBreakable ? BlockState.ContinueDiscard : BlockState.Continue;
             }
@@ -152,7 +146,7 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             // Remove the blankline before breaking this definition item
             if (lastBlankLine != null)
             {
-                definitionItem.Children.RemoveAt(definitionItem.Children.Count - 1);
+                definitionItem.RemoveAt(definitionItem.Count - 1);
             }
 
             return BlockState.Break;

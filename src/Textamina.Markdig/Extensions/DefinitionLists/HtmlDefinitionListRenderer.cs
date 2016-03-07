@@ -14,19 +14,19 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
     /// <seealso cref="Textamina.Markdig.Renderers.Html.HtmlObjectRenderer{Textamina.Markdig.Extensions.DefinitionLists.DefinitionList}" />
     public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
     {
-        protected override void Write(HtmlRenderer renderer, DefinitionList obj)
+        protected override void Write(HtmlRenderer renderer, DefinitionList list)
         {
             renderer.EnsureLine();
-            renderer.Write("<dl").WriteAttributes(obj).WriteLine(">");
-            foreach (var item in obj.Children)
+            renderer.Write("<dl").WriteAttributes(list).WriteLine(">");
+            foreach (var item in list)
             {
                 bool hasOpendd = false;
                 var definitionItem = (DefinitionItem) item;
                 int countdd = 0;
                 bool lastWasSimpleParagraph = false;
-                for (int i = 0; i < definitionItem.Children.Count; i++)
+                for (int i = 0; i < definitionItem.Count; i++)
                 {
-                    var definitionTermOrContent = definitionItem.Children[i];
+                    var definitionTermOrContent = definitionItem[i];
                     var definitionTerm = definitionTermOrContent as DefinitionTerm;
                     if (definitionTerm != null)
                     {
@@ -54,7 +54,7 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                             hasOpendd = true;
                         }
 
-                        var nextTerm = i + 1 < definitionItem.Children.Count ? definitionItem.Children[i + 1] : null;
+                        var nextTerm = i + 1 < definitionItem.Count ? definitionItem[i + 1] : null;
                         bool isSimpleParagraph = (nextTerm == null || nextTerm is DefinitionItem) && countdd == 0 &&
                                                  definitionTermOrContent is ParagraphBlock;
 

@@ -68,6 +68,7 @@
     <Compile Include="Extensions\Tables\TableColumnDefinition.cs" />
     <Compile Include="Extensions\Tables\TableHelper.cs" />
     <Compile Include="Extensions\Tables\TableRow.cs" />
+    <Compile Include="Helpers\ArrayHelper.cs" />
     <Compile Include="Helpers\DefaultObjectCache.cs" />
     <Compile Include="Helpers\ObjectCache.cs" />
     <Compile Include="Helpers\OrderedList.cs" />

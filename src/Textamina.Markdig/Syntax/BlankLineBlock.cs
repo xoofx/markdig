@@ -10,11 +10,6 @@ namespace Textamina.Markdig.Syntax
     public sealed class BlankLineBlock : LeafBlock
     {
         /// <summary>
-        /// The singleton instance.
-        /// </summary>
-        public static readonly BlankLineBlock Instance = new BlankLineBlock();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BlankLineBlock"/> class.
         /// </summary>
         public BlankLineBlock() : base(null)

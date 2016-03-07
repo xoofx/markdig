@@ -42,7 +42,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 }
             }
 
-            foreach (var rowObj in table.Children)
+            foreach (var rowObj in table)
             {
                 var row = (TableRow)rowObj;
                 if (row.IsHeader)
@@ -67,9 +67,9 @@ namespace Textamina.Markdig.Extensions.Tables
                     hasBody = true;
                 }
                 renderer.WriteLine("<tr>");
-                for (int i = 0; i < row.Children.Count; i++)
+                for (int i = 0; i < row.Count; i++)
                 {
-                    var cellObj = row.Children[i];
+                    var cellObj = row[i];
                     var cell = (TableCell)cellObj;
 
                     renderer.EnsureLine();
@@ -95,7 +95,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     renderer.Write(">");
 
                     var previousImplicitParagraph = renderer.ImplicitParagraph;
-                    if (cell.Children.Count == 1)
+                    if (cell.Count == 1)
                     {
                         renderer.ImplicitParagraph = true;
                     }
