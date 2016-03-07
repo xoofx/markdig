@@ -39,7 +39,7 @@
     <Compile Include="Extensions\CustomContainers\CustomContainer.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainerParser.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainerExtension.cs" />
-    <Compile Include="Extensions\DefinitionLists\CustomContainerExtension.cs" />
+    <Compile Include="Extensions\DefinitionLists\DefinitionListExtension.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionItem.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionList.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionListParser.cs" />
