@@ -67,6 +67,7 @@
     <Compile Include="CommonMarkLib.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMatchPerf.cs" />
     <Compile Include="TestStringPerf.cs" />
   </ItemGroup>
   <ItemGroup>
