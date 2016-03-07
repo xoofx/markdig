@@ -20,7 +20,9 @@ namespace Textamina.Markdig.Syntax
         public FencedCodeBlock(BlockParser parser) : base(parser)
         {
             // Fenced code blocks are not breakable, unless
-            // we reach the end of the document (or the end of a table cell in a grid table)
+            // we reach:
+            // - a fenced line terminator
+            // - the closing of the container that is holding this fenced block
             IsBreakable = false;
         }
 
