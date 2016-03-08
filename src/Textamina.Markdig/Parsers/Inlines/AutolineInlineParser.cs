@@ -20,14 +20,14 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'<'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             string link;
             bool isEmail;
             var saved = slice;
             if (LinkHelper.TryParseAutolink(ref slice, out link, out isEmail))
             {
-                state.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
+                processor.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
             }
             else
             {
@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     return false;
                 }
 
-                state.Inline = new HtmlInline() { Tag = htmlTag };
+                processor.Inline = new HtmlInline() { Tag = htmlTag };
             }
 
             return true;

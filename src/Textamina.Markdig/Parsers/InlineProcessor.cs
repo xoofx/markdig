@@ -14,19 +14,19 @@ namespace Textamina.Markdig.Parsers
     /// <summary>
     /// The inline parser state used by all <see cref="InlineParser"/>.
     /// </summary>
-    public class InlineParserState
+    public class InlineProcessor
     {
         private readonly List<int> lineOffsets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InlineParserState"/> class.
+        /// Initializes a new instance of the <see cref="InlineProcessor"/> class.
         /// </summary>
         /// <param name="stringBuilders">The string builders.</param>
         /// <param name="document">The document.</param>
         /// <param name="parsers">The parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineParserState(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
+        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));

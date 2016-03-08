@@ -15,15 +15,15 @@ namespace Textamina.Markdig.Extensions.Tables
             OpeningCharacters = new[] {'+'};
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
             // A grid table cannot start more than an indent
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
                 return BlockState.None;
             }
 
-            var line = state.Line;
+            var line = processor.Line;
 
             // A grid table must start with a line like this:
             // + ------------- + ------------ + ---------------------------------------- +
@@ -53,7 +53,7 @@ namespace Textamina.Markdig.Extensions.Tables
                         {
                             tableState = new GridTableState()
                             {
-                                Start = state.Column,
+                                Start = processor.Column,
                                 ExpectRow = true,
                             };
                         }
@@ -69,7 +69,7 @@ namespace Textamina.Markdig.Extensions.Tables
             }
 
             // Store the line (if we need later to build a ParagraphBlock because the GridTable was in fact invalid)
-            tableState.AddLine(ref state.Line);
+            tableState.AddLine(ref processor.Line);
 
             // Create the grid table
             var table = new Table(this);
@@ -96,18 +96,18 @@ namespace Textamina.Markdig.Extensions.Tables
                 table.ColumnDefinitions.Add(columnDefinition);
             }
 
-            state.NewBlocks.Push(table);
+            processor.NewBlocks.Push(table);
 
             return BlockState.ContinueDiscard;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var gridTable = (Table) block;
             var tableState = (GridTableState)block.GetData(typeof(GridTableState));
 
             // We expect to start at the same 
-            if (state.Start == tableState.Start)
+            if (processor.Start == tableState.Start)
             {
                 var columns = tableState.ColumnSlices;
 
@@ -117,17 +117,17 @@ namespace Textamina.Markdig.Extensions.Tables
                     columnSlice.CurrentColumnSpan = 0;
                 }
 
-                if (state.CurrentChar == '+')
+                if (processor.CurrentChar == '+')
                 {
-                    var result = ParseRowSeparator(state, tableState, gridTable);
+                    var result = ParseRowSeparator(processor, tableState, gridTable);
                     if (result != BlockState.None)
                     {
                         return result;
                     }
                 }
-                else if (state.CurrentChar == '|')
+                else if (processor.CurrentChar == '|')
                 {
-                    var line = state.Line;
+                    var line = processor.Line;
 
                     // | ------------- | ------------ | ---------------------------------------- |
                     // Calculate the colspan for the new row
@@ -159,7 +159,7 @@ namespace Textamina.Markdig.Extensions.Tables
                     // Close the previous row
                     if (!continueRow)
                     {
-                        TerminateLastRow(state, tableState, gridTable, false);
+                        TerminateLastRow(processor, tableState, gridTable, false);
                     }
 
                     for (int i = 0; i < columns.Count;)
@@ -191,8 +191,8 @@ namespace Textamina.Markdig.Extensions.Tables
                         }
 
                         // Process the content of the cell
-                        column.BlockParserState.LineIndex = state.LineIndex;
-                        column.BlockParserState.ProcessLine(sliceForCell);
+                        column.BlockProcessor.LineIndex = processor.LineIndex;
+                        column.BlockProcessor.ProcessLine(sliceForCell);
 
                         // Go to next column
                         i = nextColumnIndex;
@@ -202,30 +202,30 @@ namespace Textamina.Markdig.Extensions.Tables
                 }
             }
 
-            TerminateLastRow(state, tableState, gridTable, true);
+            TerminateLastRow(processor, tableState, gridTable, true);
 
             // If we don't have a row, it means that only the header was valid
             // So we need to remove the grid table, and create a ParagraphBlock
             // with the 2 slices 
             if (gridTable.Count == 0)
             {
-                var parser = state.Parsers.Find<ParagraphBlockParser>();
+                var parser = processor.Parsers.Find<ParagraphBlockParser>();
                 // Discard the grid table
                 var parent = gridTable.Parent;
-                state.Discard(gridTable);
+                processor.Discard(gridTable);
                 var paragraphBlock = new ParagraphBlock(parser)
                 {
                     Lines = tableState.Lines,
                 };
                 parent.Add(paragraphBlock);
-                state.Open(paragraphBlock);
+                processor.Open(paragraphBlock);
             }
 
             return BlockState.Break;
         }
 
 
-        private BlockState ParseRowSeparator(BlockParserState state, GridTableState tableState, Table gridTable)
+        private BlockState ParseRowSeparator(BlockProcessor state, GridTableState tableState, Table gridTable)
         {
             // A grid table must start with a line like this:
             // + ------------- + ------------ + ---------------------------------------- +
@@ -286,7 +286,7 @@ namespace Textamina.Markdig.Extensions.Tables
             return BlockState.ContinueDiscard;
         }
 
-        private void TerminateLastRow(BlockParserState state, GridTableState tableState, Table gridTable, bool isLastRow)
+        private void TerminateLastRow(BlockProcessor state, GridTableState tableState, Table gridTable, bool isLastRow)
         {
             var columns = tableState.ColumnSlices;
             TableRow currentRow = null;
@@ -299,14 +299,14 @@ namespace Textamina.Markdig.Extensions.Tables
                         currentRow = new TableRow();
                     }
                     currentRow.Add(columnSlice.CurrentCell);
-                    columnSlice.BlockParserState.Close(columnSlice.CurrentCell);
+                    columnSlice.BlockProcessor.Close(columnSlice.CurrentCell);
                 }
 
-                // Renew the block parser state (or reset it for the last row)
-                if (columnSlice.BlockParserState != null)
+                // Renew the block parser processor (or reset it for the last row)
+                if (columnSlice.BlockProcessor != null)
                 {
-                    columnSlice.BlockParserState.ReleaseChild();
-                    columnSlice.BlockParserState = isLastRow ? null : state.CreateChild();
+                    columnSlice.BlockProcessor.ReleaseChild();
+                    columnSlice.BlockProcessor = isLastRow ? null : state.CreateChild();
                 }
 
                 // Create or erase the cell
@@ -324,13 +324,13 @@ namespace Textamina.Markdig.Extensions.Tables
                         ColumnSpan = columnSlice.CurrentColumnSpan
                     };
 
-                    if (columnSlice.BlockParserState == null)
+                    if (columnSlice.BlockProcessor == null)
                     {
-                        columnSlice.BlockParserState = state.CreateChild();
+                        columnSlice.BlockProcessor = state.CreateChild();
                     }
 
                     // Ensure that the BlockParser is aware that the TableCell is the top-level container
-                    columnSlice.BlockParserState.Open(columnSlice.CurrentCell);
+                    columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);
                 }
             }
 

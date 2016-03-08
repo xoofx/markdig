@@ -24,12 +24,12 @@ namespace Textamina.Markdig.Extensions.Attributes
             OpeningCharacters = new[] { '{' };
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             HtmlAttributes attributes;
             if (TryParse(ref slice, out attributes))
             {
-                var inline = state.Inline;
+                var inline = processor.Inline;
 
                 // If the curent object to attach is either a literal or delimiter
                 // try to find a suitable parent, otherwise attach the html attributes to the block
@@ -44,12 +44,12 @@ namespace Textamina.Markdig.Extensions.Attributes
                         }
                     }
                 }
-                var objectToAttach = inline == null || inline == state.Root ? (MarkdownObject) state.Block : inline;
+                var objectToAttach = inline == null || inline == processor.Root ? (MarkdownObject) processor.Block : inline;
 
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
                 attributes.CopyTo(currentHtmlAttributes);
 
-                // We don't set the state.Inline as we don't want to add attach attributes to a particular entity
+                // We don't set the processor.Inline as we don't want to add attach attributes to a particular entity
                 return true;
             }
 
@@ -224,7 +224,7 @@ namespace Textamina.Markdig.Extensions.Attributes
                     Properties = properties
                 };
 
-                // Assign back the current state of the line to 
+                // Assign back the current processor of the line to 
                 slice = line;
             }
             return isValid;

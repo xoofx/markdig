@@ -22,7 +22,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '*', '_' };
         }
 
-        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
+        public bool ProcessDelimiters(InlineProcessor state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             if (container == null)
@@ -63,7 +63,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             return true;
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
             // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
@@ -143,7 +143,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     Type = delimiterType,
                 };
 
-                state.Inline = delimiter;
+                processor.Inline = delimiter;
                 return true;
             }
 

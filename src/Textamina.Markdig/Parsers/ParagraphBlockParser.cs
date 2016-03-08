@@ -12,40 +12,40 @@ namespace Textamina.Markdig.Parsers
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class ParagraphBlockParser : BlockParser
     {
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
-            if (state.IsBlankLine)
+            if (processor.IsBlankLine)
             {
                 return BlockState.None;
             }
 
             // We continue trying to match by default
-            state.NewBlocks.Push(new ParagraphBlock(this) {Column = state.Column});
+            processor.NewBlocks.Push(new ParagraphBlock(this) {Column = processor.Column});
             return BlockState.Continue;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            if (state.IsBlankLine)
+            if (processor.IsBlankLine)
             {
                 return BlockState.BreakDiscard;
             }
 
-            if (!state.IsCodeIndent && !(block.Parent is QuoteBlock))
+            if (!processor.IsCodeIndent && !(block.Parent is QuoteBlock))
             {
-                return TryParseSetexHeading(state, block);
+                return TryParseSetexHeading(processor, block);
             }
             return BlockState.Continue;
         }
 
-        public override bool Close(BlockParserState state, Block block)
+        public override bool Close(BlockProcessor processor, Block block)
         {
             var paragraph = block as ParagraphBlock;
             if (paragraph != null)
             {
                 var lines = paragraph.Lines;
 
-                TryMatchLinkReferenceDefinition(lines, state);
+                TryMatchLinkReferenceDefinition(lines, processor);
 
                 // If Paragraph is empty, we can discard it
                 if (lines.Count == 0)
@@ -67,7 +67,7 @@ namespace Textamina.Markdig.Parsers
             return true;
         }
 
-        private BlockState TryParseSetexHeading(BlockParserState state, Block block)
+        private BlockState TryParseSetexHeading(BlockProcessor state, Block block)
         {
             var paragraph = (ParagraphBlock) block;
             var headingChar = (char)0;
@@ -137,7 +137,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private bool TryMatchLinkReferenceDefinition(StringLineGroup lines, BlockParserState state)
+        private bool TryMatchLinkReferenceDefinition(StringLineGroup lines, BlockProcessor state)
         {
             bool atLeastOneFound = false;
 

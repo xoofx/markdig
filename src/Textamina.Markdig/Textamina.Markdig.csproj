@@ -116,8 +116,8 @@
     <Compile Include="Parsers\IDelimiterProcessor.cs" />
     <Compile Include="Parsers\InlineParser.cs" />
     <Compile Include="Parsers\InlineParserList.cs" />
-    <Compile Include="Parsers\InlineParserState.cs" />
-    <Compile Include="Parsers\BlockParserState.cs" />
+    <Compile Include="Parsers\InlineProcessor.cs" />
+    <Compile Include="Parsers\BlockProcessor.cs" />
     <Compile Include="Parsers\Inlines\HtmlEntityParser.cs" />
     <Compile Include="Extensions\Tables\PipeTableParser.cs" />
     <Compile Include="Parsers\ParserBase.cs" />

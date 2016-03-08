@@ -34,16 +34,16 @@ namespace Textamina.Markdig.Extensions.Tables
         /// </summary>
         public bool RequireHeaderSeparator { get; set; }
 
-        public override void Initialize(InlineParserState state)
+        public override void Initialize(InlineProcessor processor)
         {
             // We are using the linebreak parser
-            lineBreakParser = state.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
+            lineBreakParser = processor.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Only working on Paragraph block
-            if (!(state.Block is ParagraphBlock))
+            if (!(processor.Block is ParagraphBlock))
             {
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
             // If we have not a delimiter on the first line of a paragraph, don't bother to continue 
             // tracking other delimiters on following lines
-            var tableState = state.ParserStates[Index] as TableState;
+            var tableState = processor.ParserStates[Index] as TableState;
             bool isFirstLineEmpty = false;
             if (tableState == null)
             {
@@ -61,18 +61,18 @@ namespace Textamina.Markdig.Extensions.Tables
                 // start for a table. Typically, with this, we can have an attributes {...}
                 // starting on the first line of a pipe table, even if the first line
                 // doesn't have a pipe
-                if (state.Inline != null &&(state.LocalLineIndex > 0 || c == '\n'))
+                if (processor.Inline != null &&(processor.LocalLineIndex > 0 || c == '\n'))
                 {
                     return false;
                 }
 
-                if (state.Inline == null)
+                if (processor.Inline == null)
                 {
                     isFirstLineEmpty = true;
                 }
-                // Else setup a table state
+                // Else setup a table processor
                 tableState = new TableState();
-                state.ParserStates[Index] = tableState;
+                processor.ParserStates[Index] = tableState;
             }
 
             if (c == '\n')
@@ -82,33 +82,33 @@ namespace Textamina.Markdig.Extensions.Tables
                     tableState.IsInvalidTable = true;
                 }
                 tableState.LineHasPipe = false;
-                lineBreakParser.Match(state, ref slice);
+                lineBreakParser.Match(processor, ref slice);
                 tableState.LineIndex++;
                 if (!isFirstLineEmpty)
                 {
-                    tableState.ColumnAndLineDelimiters.Add(state.Inline);
+                    tableState.ColumnAndLineDelimiters.Add(processor.Inline);
                 }
             }
             else
             {
-                state.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = state.LocalLineIndex };
-                var deltaLine = state.LocalLineIndex - tableState.LineIndex;
+                processor.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = processor.LocalLineIndex };
+                var deltaLine = processor.LocalLineIndex - tableState.LineIndex;
                 if (deltaLine > 0)
                 {
                     tableState.IsInvalidTable = true;
                 }
                 tableState.LineHasPipe = true;
-                tableState.LineIndex = state.LocalLineIndex;
+                tableState.LineIndex = processor.LocalLineIndex;
                 slice.NextChar(); // Skip the `|` character
 
-                tableState.ColumnAndLineDelimiters.Add(state.Inline);
+                tableState.ColumnAndLineDelimiters.Add(processor.Inline);
             }
 
 
             return true;
         }
 
-        public bool ProcessDelimiters(InlineParserState state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
+        public bool ProcessDelimiters(InlineProcessor state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             var tableState = state.ParserStates[Index] as TableState;
@@ -168,11 +168,11 @@ namespace Textamina.Markdig.Extensions.Tables
                             rightIsDelimiter = delimiterIndex + 1 < tableDelimiters.Count &&
                                                tableDelimiters[delimiterIndex + 1] is PiprTableDelimiterInline;
                         }
-                        // Remove this delimiter from the table state
+                        // Remove this delimiter from the table processor
                         tableState.ColumnAndLineDelimiters.Remove(pipeDelimiter);
                     }
 
-                    // If we didn't have any delimiter before and after the delimiters we jsut removed, we mark the state of the current line as no pipe
+                    // If we didn't have any delimiter before and after the delimiters we jsut removed, we mark the processor of the current line as no pipe
                     if (!leftIsDelimiter && !rightIsDelimiter)
                     {
                         tableState.LineHasPipe = false;

@@ -11,40 +11,40 @@ namespace Textamina.Markdig.Parsers
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class IndentedCodeBlockParser : BlockParser
     {
-        public override bool CanInterrupt(BlockParserState state, Block block)
+        public override bool CanInterrupt(BlockProcessor processor, Block block)
         {
             return !(block is ParagraphBlock);
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
-            var result = TryContinue(state, null);
+            var result = TryContinue(processor, null);
             if (result == BlockState.Continue)
             {
-                state.NewBlocks.Push(new CodeBlock(this) { Column = state.Column });
+                processor.NewBlocks.Push(new CodeBlock(this) { Column = processor.Column });
             }
             return result;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            if (!state.IsCodeIndent || state.IsBlankLine)
+            if (!processor.IsCodeIndent || processor.IsBlankLine)
             {
-                if (block == null || !state.IsBlankLine)
+                if (block == null || !processor.IsBlankLine)
                 {
                     return BlockState.None;
                 }
             }
 
             // If we don't have a blank line, we reset to the indent
-            if (state.Indent >= 4)
+            if (processor.Indent >= 4)
             {
-                state.GoToCodeIndent();
+                processor.GoToCodeIndent();
             }
             return BlockState.Continue;
         }
 
-        public override bool Close(BlockParserState state, Block block)
+        public override bool Close(BlockProcessor processor, Block block)
         {
             var codeBlock = (CodeBlock)block;
             if (codeBlock != null)

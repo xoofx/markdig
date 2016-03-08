@@ -21,25 +21,25 @@ namespace Textamina.Markdig.Parsers
             OpeningCharacters = new[] { '<' };
         }
            
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
-            var result = MatchStart(state);
+            var result = MatchStart(processor);
 
             // An end-tag can occur on the same line, so we try to parse it here
             if (result == BlockState.Continue)
             {
-                result = MatchEnd(state, (HtmlBlock) state.NewBlocks.Peek());
+                result = MatchEnd(processor, (HtmlBlock) processor.NewBlocks.Peek());
             }
             return result;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var htmlBlock = (HtmlBlock) block;
-            return MatchEnd(state, htmlBlock);
+            return MatchEnd(processor, htmlBlock);
         }
 
-        private BlockState MatchStart(BlockParserState state)
+        private BlockState MatchStart(BlockProcessor state)
         {
             if (state.IsCodeIndent)
             {
@@ -58,7 +58,7 @@ namespace Textamina.Markdig.Parsers
             return result;
         }
 
-        private BlockState TryParseTagType7(BlockParserState state, StringSlice line, int startColumn)
+        private BlockState TryParseTagType7(BlockProcessor state, StringSlice line, int startColumn)
         {
             var builder = StringBuilderCache.Local();
             var c = line.CurrentChar;
@@ -92,7 +92,7 @@ namespace Textamina.Markdig.Parsers
             return result;
         }
 
-        private BlockState TryParseTagType16(BlockParserState state, StringSlice line, int startColumn)
+        private BlockState TryParseTagType16(BlockProcessor state, StringSlice line, int startColumn)
         {
             char c;
             c = line.CurrentChar;
@@ -170,7 +170,7 @@ namespace Textamina.Markdig.Parsers
             return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock, startColumn);
         }
 
-        private BlockState MatchEnd(BlockParserState state, HtmlBlock htmlBlock)
+        private BlockState MatchEnd(BlockProcessor state, HtmlBlock htmlBlock)
         {
             state.GoToColumn(state.ColumnBeforeIndent);
 
@@ -226,7 +226,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private BlockState CreateHtmlBlock(BlockParserState state, HtmlBlockType type, int startColumn)
+        private BlockState CreateHtmlBlock(BlockProcessor state, HtmlBlockType type, int startColumn)
         {
             state.NewBlocks.Push(new HtmlBlock(this) {Column = startColumn, Type = type});
             return BlockState.Continue;

@@ -9,15 +9,15 @@ namespace Textamina.Markdig.Parsers
     /// <summary>
     /// Base class for parsing an <see cref="Syntax.Inlines.Inline"/>.
     /// </summary>
-    /// <seealso cref="InlineParserState" />
-    public abstract class InlineParser : ParserBase<InlineParserState>
+    /// <seealso cref="InlineProcessor" />
+    public abstract class InlineParser : ParserBase<InlineProcessor>
     {
         /// <summary>
         /// Tries to match the specified slice.
         /// </summary>
-        /// <param name="state">The parser state.</param>
+        /// <param name="processor">The parser processor.</param>
         /// <param name="slice">The text slice.</param>
         /// <returns><c>true</c> if this parser found a match; <c>false</c> otherwise</returns>
-        public abstract bool Match(InlineParserState state, ref StringSlice slice);
+        public abstract bool Match(InlineProcessor processor, ref StringSlice slice);
     }
 }

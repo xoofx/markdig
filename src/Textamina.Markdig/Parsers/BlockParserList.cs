@@ -7,7 +7,7 @@ namespace Textamina.Markdig.Parsers
     /// A List of <see cref="BlockParser"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.ParserList{Textamina.Markdig.Parsers.BlockParser, Textamina.Markdig.Parsers.BlockParserState}" />
-    public class BlockParserList : ParserList<BlockParser, BlockParserState>
+    public class BlockParserList : ParserList<BlockParser, BlockProcessor>
     {
     }
 }

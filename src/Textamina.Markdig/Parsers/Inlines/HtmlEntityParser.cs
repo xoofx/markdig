@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'&'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             string entityName;
             int entityValue;
@@ -41,7 +41,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
             if (literal != null)
             {
-                state.Inline = new LiteralInline() {Content = new StringSlice(literal)};
+                processor.Inline = new LiteralInline() {Content = new StringSlice(literal)};
                 slice.Start = slice.Start + match;
                 return true;
             }

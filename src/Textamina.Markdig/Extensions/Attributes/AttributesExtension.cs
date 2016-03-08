@@ -41,7 +41,7 @@ namespace Textamina.Markdig.Extensions.Attributes
             // to parse correctly an attributes
             var infoParser = parser.InfoParser;
 
-            parser.InfoParser = (BlockParserState state, ref StringSlice line, FencedCodeBlock fenced) =>
+            parser.InfoParser = (BlockProcessor state, ref StringSlice line, FencedCodeBlock fenced) =>
             {
                 // Try to find if there is any attributes { in the info string on the first line of a FencedCodeBlock
                 var indexOfAttributes = line.Text.IndexOf('{', line.Start);

@@ -6,8 +6,8 @@ namespace Textamina.Markdig.Parsers
     /// <summary>
     /// Base interface for a block or inline parser.
     /// </summary>
-    /// <typeparam name="TParserState">The type of the parser state.</typeparam>
-    public interface IMarkdownParser<in TParserState>
+    /// <typeparam name="TProcessor">The type of processor.</typeparam>
+    public interface IMarkdownParser<in TProcessor>
     {
         /// <summary>
         /// Gets the opening characters this parser will be triggered if the character is found.
@@ -15,10 +15,10 @@ namespace Textamina.Markdig.Parsers
         char[] OpeningCharacters { get; }
 
         /// <summary>
-        /// Initializes this parser with the specified parser state.
+        /// Initializes this parser with the specified parser processor.
         /// </summary>
-        /// <param name="state">The parser state.</param>
-        void Initialize(TParserState state);
+        /// <param name="processor">The parser processor.</param>
+        void Initialize(TProcessor processor);
 
         /// <summary>
         /// Gets the index of this parser in <see cref="BlockParserList"/> or <see cref="InlineParserList"/>.

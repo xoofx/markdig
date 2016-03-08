@@ -15,8 +15,8 @@ namespace Textamina.Markdig.Parsers
     /// </summary>
     public sealed class MarkdownParser
     {
-        private readonly BlockParserState blockParserState;
-        private readonly InlineParserState inlineParserState;
+        private readonly BlockProcessor blockProcessor;
+        private readonly InlineProcessor inlineProcessor;
         private readonly MarkdownDocument document;
 
         /// <summary>
@@ -41,12 +41,12 @@ namespace Textamina.Markdig.Parsers
             // Initialize the block parsers
             var blockParserList = new BlockParserList();
             blockParserList.AddRange(pipeline.BlockParsers);
-            blockParserState = new BlockParserState(stringBuilderCache, document, blockParserList);
+            blockProcessor = new BlockProcessor(stringBuilderCache, document, blockParserList);
 
             // Initialize the inline parsers
             var inlineParserList = new InlineParserList();
             inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineParserState = new InlineParserState(stringBuilderCache, document, inlineParserList)
+            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -99,9 +99,9 @@ namespace Textamina.Markdig.Parsers
                 }
                 FixupZero(lineText);
 
-                blockParserState.ProcessLine(new StringSlice(lineText));
+                blockProcessor.ProcessLine(new StringSlice(lineText));
             }
-            blockParserState.CloseAll(true);
+            blockProcessor.CloseAll(true);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Textamina.Markdig.Parsers
 
             // TODO: Use an ObjectCache for ContainerItem
             blocks.Push(new ContainerItem(document));
-            document.OnProcessInlinesBegin(inlineParserState);
+            document.OnProcessInlinesBegin(inlineProcessor);
             while (blocks.Count > 0)
             {
                 process_new_block:
@@ -145,21 +145,21 @@ namespace Textamina.Markdig.Parsers
                     var leafBlock = block as LeafBlock;
                     if (leafBlock != null)
                     {
-                        leafBlock.OnProcessInlinesBegin(inlineParserState);
+                        leafBlock.OnProcessInlinesBegin(inlineProcessor);
                         if (leafBlock.ProcessInlines)
                         {
-                            inlineParserState.ProcessInlineLeaf(leafBlock);
+                            inlineProcessor.ProcessInlineLeaf(leafBlock);
                             if (leafBlock.RemoveAfterProcessInlines)
                             {
                                 container.RemoveAt(item.Index);
                                 item.Index--;
                             }
-                            else if (inlineParserState.BlockNew != null)
+                            else if (inlineProcessor.BlockNew != null)
                             {
-                                container[item.Index] = inlineParserState.BlockNew;
+                                container[item.Index] = inlineProcessor.BlockNew;
                             }
                         }
-                        leafBlock.OnProcessInlinesEnd(inlineParserState);
+                        leafBlock.OnProcessInlinesEnd(inlineProcessor);
                     }
                     else if (block is ContainerBlock)
                     {
@@ -176,7 +176,7 @@ namespace Textamina.Markdig.Parsers
                         }
                         var newItem = cache.Get();
                         newItem.Container = (ContainerBlock)block;
-                        block.OnProcessInlinesBegin(inlineParserState);
+                        block.OnProcessInlinesBegin(inlineProcessor);
                         newItem.Index = 0;
                         blocks.Push(newItem);
                         goto process_new_block;
@@ -184,7 +184,7 @@ namespace Textamina.Markdig.Parsers
                 }
                 item = blocks.Pop();
                 container = item.Container;
-                container.OnProcessInlinesEnd(inlineParserState);
+                container.OnProcessInlinesEnd(inlineProcessor);
 
                 cache.Release(item);
             }

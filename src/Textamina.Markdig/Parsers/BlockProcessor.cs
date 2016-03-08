@@ -10,18 +10,18 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Parsers
 {
     /// <summary>
-    /// The <see cref="BlockParser"/> state used by all <see cref="BlockParser"/>.
+    /// The block processor.
     /// </summary>
-    public class BlockParserState
+    public class BlockProcessor
     {
-        private BlockParserState root;
+        private BlockProcessor root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
 
-        private BlockParserState(BlockParserState root)
+        private BlockProcessor(BlockProcessor root)
         {
-            // These properties are not changing between a parent and a children BlockParserState
+            // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
             this.parserStateCache = root.parserStateCache;
             StringBuilders = root.StringBuilders;
@@ -34,14 +34,14 @@ namespace Textamina.Markdig.Parsers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BlockParserState"/> class.
+        /// Initializes a new instance of the <see cref="BlockProcessor"/> class.
         /// </summary>
         /// <param name="stringBuilders">The string builders cache.</param>
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public BlockParserState(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers)
+        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -377,7 +377,7 @@ namespace Textamina.Markdig.Parsers
             LineIndex++;
         }
 
-        public BlockParserState CreateChild()
+        public BlockProcessor CreateChild()
         {
             var newState = parserStateCache.Get();
             return newState;
@@ -513,7 +513,7 @@ namespace Textamina.Markdig.Parsers
 
                 RestartIndent();
 
-                // In case the BlockParser has modified the blockParserState we are iterating on
+                // In case the BlockParser has modified the BlockProcessor we are iterating on
                 if (i >= OpenedBlocks.Count)
                 {
                     i = OpenedBlocks.Count - 1;
@@ -733,7 +733,7 @@ namespace Textamina.Markdig.Parsers
 
                 block.IsOpen = result.IsContinue();
 
-                // Add a block blockParserState to the stack (and leave it opened)
+                // Add a block BlockProcessor to the stack (and leave it opened)
                 OpenedBlocks.Add(block);
 
                 if (leaf != null)
@@ -765,21 +765,21 @@ namespace Textamina.Markdig.Parsers
             NewBlocks.Clear();
         }
 
-        private class BlockParserStateCache : ObjectCache<BlockParserState>
+        private class BlockParserStateCache : ObjectCache<BlockProcessor>
         {
-            private readonly BlockParserState root;
+            private readonly BlockProcessor root;
 
-            public BlockParserStateCache(BlockParserState root)
+            public BlockParserStateCache(BlockProcessor root)
             {
                 this.root = root;
             }
 
-            protected override BlockParserState NewInstance()
+            protected override BlockProcessor NewInstance()
             {
-                return new BlockParserState(root);
+                return new BlockProcessor(root);
             }
 
-            protected override void Reset(BlockParserState instance)
+            protected override void Reset(BlockProcessor instance)
             {
                 instance.Reset();
             }

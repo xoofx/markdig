@@ -57,7 +57,7 @@ namespace Textamina.Markdig.Extensions.Tables
 
             public int PreviousColumnSpan { get; set; }
 
-            public BlockParserState BlockParserState { get; set; }
+            public BlockProcessor BlockProcessor { get; set; }
 
             public TableCell CurrentCell { get; set; }
         }

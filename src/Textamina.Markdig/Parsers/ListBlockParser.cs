@@ -27,26 +27,26 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         public char[] OrderedDelimiters { get; set; }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
             // When both a thematic break and a list item are possible
             // interpretations of a line, the thematic break takes precedence
             var thematicParser = ThematicBreakParser.Default;
-            if (thematicParser.HasOpeningCharacter(state.CurrentChar))
+            if (thematicParser.HasOpeningCharacter(processor.CurrentChar))
             {
-                var result = thematicParser.TryOpen(state);
+                var result = thematicParser.TryOpen(processor);
                 if (result.IsBreak())
                 {
                     return result;
                 }
             }
 
-            return TryParseListItem(state, null);
+            return TryParseListItem(processor, null);
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            if (block is ListBlock && state.NextContinue is ListItemBlock)
+            if (block is ListBlock && processor.NextContinue is ListItemBlock)
             {
                 // We try to match only on item block if the ListBlock
                 return BlockState.Skip;
@@ -56,13 +56,13 @@ namespace Textamina.Markdig.Parsers
             // interpretations of a line, the thematic break takes precedence
             BlockState result;
             var thematicParser = ThematicBreakParser.Default;
-            if (thematicParser.HasOpeningCharacter(state.CurrentChar))
+            if (thematicParser.HasOpeningCharacter(processor.CurrentChar))
             {
-                result = thematicParser.TryOpen(state);
+                result = thematicParser.TryOpen(processor);
                 if (result.IsBreak())
                 {
                     // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
-                    state.NewBlocks.Pop();
+                    processor.NewBlocks.Pop();
                     return BlockState.None;
                 }
             }
@@ -75,18 +75,18 @@ namespace Textamina.Markdig.Parsers
             result = BlockState.None;
             if (listItem != null)
             {
-                result = TryContinueListItem(state, listItem);
+                result = TryContinueListItem(processor, listItem);
             }
 
             if (result == BlockState.None)
             {
-                result = TryParseListItem(state, block);
+                result = TryParseListItem(processor, block);
             }
 
             return result;
         }
 
-        private BlockState TryContinueListItem(BlockParserState state, ListItemBlock listItem)
+        private BlockState TryContinueListItem(BlockProcessor state, ListItemBlock listItem)
         {
             var list = (ListBlock)listItem.Parent;
 
@@ -147,7 +147,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.None;
         }
 
-        private BlockState TryParseListItem(BlockParserState state, Block block)
+        private BlockState TryParseListItem(BlockProcessor state, Block block)
         {
             var initStart = state.Start;
             var initColumnBeforeIndent = state.ColumnBeforeIndent;
@@ -297,7 +297,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        public override bool Close(BlockParserState state, Block blockToClose)
+        public override bool Close(BlockProcessor processor, Block blockToClose)
         {
             var listBlock = blockToClose as ListBlock;
 

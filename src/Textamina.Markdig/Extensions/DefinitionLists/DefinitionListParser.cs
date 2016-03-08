@@ -19,18 +19,18 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             OpeningCharacters = new [] {':', '~'};
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
-            var paragraphBlock = state.LastBlock as ParagraphBlock;
-            if (state.IsCodeIndent || paragraphBlock == null || paragraphBlock.LastLine - state.LineIndex > 1)
+            var paragraphBlock = processor.LastBlock as ParagraphBlock;
+            if (processor.IsCodeIndent || paragraphBlock == null || paragraphBlock.LastLine - processor.LineIndex > 1)
             {
                 return BlockState.None;
             }
 
-            var column = state.ColumnBeforeIndent;
-            state.NextChar();
-            state.ParseIndent();
-            var delta = state.Column - column;
+            var column = processor.ColumnBeforeIndent;
+            processor.NextChar();
+            processor.ParseIndent();
+            var delta = processor.Column - column;
 
             // We expect to have a least
             if (delta < 4)
@@ -40,14 +40,14 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
 
             if (delta > 4)
             {
-                state.GoToColumn(column + 4);
+                processor.GoToColumn(column + 4);
             }
 
             var previousParent = paragraphBlock.Parent;
             var indexOfParagraph = previousParent.IndexOf(paragraphBlock);
             var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent[indexOfParagraph - 1] as DefinitionList : null;
 
-            state.Discard(paragraphBlock);
+            processor.Discard(paragraphBlock);
 
             if (currentDefinitionList == null)
             {
@@ -57,8 +57,8 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
 
             var definitionItem = new DefinitionItem(this)
             {
-                Column =  state.Column,
-                OpeningCharacter = state.CurrentChar,
+                Column =  processor.Column,
+                OpeningCharacter = processor.CurrentChar,
             };
             currentDefinitionList.Add(definitionItem);
 
@@ -75,28 +75,28 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                 definitionItem.Add(term);
             }
 
-            state.Open(definitionItem);
+            processor.Open(definitionItem);
             return BlockState.Continue;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var definitionItem = (DefinitionItem)block;
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
-                state.GoToCodeIndent();
+                processor.GoToCodeIndent();
                 return BlockState.Continue;
             }
 
             var lastBlankLine = definitionItem.LastChild as BlankLineBlock;
 
             // Check if we have another definition list
-            if (Array.IndexOf(OpeningCharacters, state.CurrentChar) >= 0)
+            if (Array.IndexOf(OpeningCharacters, processor.CurrentChar) >= 0)
             {
-                var column = state.ColumnBeforeIndent;
-                state.NextChar();
-                state.ParseIndent();
-                var delta = state.Column - column;
+                var column = processor.ColumnBeforeIndent;
+                processor.NextChar();
+                processor.ParseIndent();
+                var delta = processor.Column - column;
 
                 // We expect to have a least
                 if (delta < 4)
@@ -111,24 +111,24 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
 
                 if (delta > 4)
                 {
-                    state.GoToColumn(column + 4);
+                    processor.GoToColumn(column + 4);
                 }
 
                 var list = (DefinitionList) definitionItem.Parent;
-                state.Close(definitionItem);
+                processor.Close(definitionItem);
                 var nextDefinitionItem = new DefinitionItem(this)
                 {
-                    Column = state.Column,
-                    OpeningCharacter = state.CurrentChar,
+                    Column = processor.Column,
+                    OpeningCharacter = processor.CurrentChar,
                 };
                 list.Add(nextDefinitionItem);
-                state.Open(nextDefinitionItem);
+                processor.Open(nextDefinitionItem);
 
                 return BlockState.Continue;
             }
 
             var isBreakable = definitionItem.LastChild?.IsBreakable ?? true;
-            if (state.IsBlankLine)
+            if (processor.IsBlankLine)
             {
                 if (lastBlankLine == null && isBreakable)
                 {

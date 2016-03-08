@@ -21,7 +21,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'[', ']', '!'};
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // The following methods are inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
@@ -50,7 +50,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                     // If the label is followed by either a ( or a [, this is not a shortcut
                     if (LinkHelper.TryParseLabel(ref slice, out label))
                     {
-                        if (!state.Document.ContainsLinkReferenceDefinition(label))
+                        if (!processor.Document.ContainsLinkReferenceDefinition(label))
                         {
                             label = null;
                         }
@@ -59,7 +59,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                     // Else we insert a LinkDelimiter
                     slice.NextChar();
-                    state.Inline = new LinkDelimiterInline(this)
+                    processor.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
                         Label = label,
@@ -69,9 +69,9 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                 case ']':
                     slice.NextChar();
-                    if (state.Inline != null)
+                    if (processor.Inline != null)
                     {
-                        if (TryProcessLinkOrImage(state, ref slice))
+                        if (TryProcessLinkOrImage(processor, ref slice))
                         {
                             return true;
                         }
@@ -86,7 +86,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineParserState state, string label, bool isImage, Inline child = null)
+        private bool ProcessLinkReference(InlineProcessor state, string label, bool isImage, Inline child = null)
         {
             bool isValidLink = false;
             LinkReferenceDefinition linkRef;
@@ -145,14 +145,14 @@ namespace Textamina.Markdig.Parsers.Inlines
             //    // that could be append to this one
             //    var literal = new LiteralInline()
             //    {
-            //        ContentBuilder = state.StringBuilders.Get().Append('[').Append(label).Append(']')
+            //        ContentBuilder = processor.StringBuilders.Get().Append('[').Append(label).Append(']')
             //    };
-            //    state.Inline = literal;
+            //    processor.Inline = literal;
             //}
             return isValidLink;
         }
 
-        private bool TryProcessLinkOrImage(InlineParserState inlineState, ref StringSlice text)
+        private bool TryProcessLinkOrImage(InlineProcessor inlineState, ref StringSlice text)
         {
             LinkDelimiterInline openParent = null;
             foreach (var parent in inlineState.Inline.FindParentOfType<LinkDelimiterInline>())

@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Syntax
         /// <param name="linkRef">The link reference.</param>
         /// <param name="child">The child.</param>
         /// <returns>An inline link or null to use the default implementation</returns>
-        public delegate Inline CreateLinkInlineDelegate(InlineParserState inlineState, LinkReferenceDefinition linkRef, Inline child = null);
+        public delegate Inline CreateLinkInlineDelegate(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline child = null);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinkReferenceDefinition"/> class.

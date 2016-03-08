@@ -9,14 +9,14 @@ namespace Textamina.Markdig.Parsers
     /// A list of <see cref="InlineParser"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.ParserList{Textamina.Markdig.Parsers.InlineParser, Textamina.Markdig.Parsers.InlineParserState}" />
-    public class InlineParserList : ParserList<InlineParser, InlineParserState>
+    public class InlineParserList : ParserList<InlineParser, InlineProcessor>
     {
         /// <summary>
         /// Gets the registered delimiter processors.
         /// </summary>
         public IDelimiterProcessor[] DelimiterProcessors { get; private set; }
 
-        public override void Initialize(InlineParserState initState)
+        public override void Initialize(InlineProcessor initState)
         {
             // Prepare the list of delimiter processors
             var delimiterProcessors = new List<IDelimiterProcessor>();

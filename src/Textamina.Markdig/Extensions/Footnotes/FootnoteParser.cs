@@ -25,39 +25,39 @@ namespace Textamina.Markdig.Extensions.Footnotes
             OpeningCharacters = new [] {'['};
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
             // We expect footnote to appear only at document level and not indented more than a code indent block
-            if (state.IsCodeIndent || state.CurrentContainer.GetType() != typeof(MarkdownDocument) )
+            if (processor.IsCodeIndent || processor.CurrentContainer.GetType() != typeof(MarkdownDocument) )
             {
                 return BlockState.None;
             }
 
-            var saved = state.Column;
+            var saved = processor.Column;
             string label;
-            int start = state.Start;
-            if (!LinkHelper.TryParseLabel(ref state.Line, false, out label) || !label.StartsWith("^") || state.CurrentChar != ':')
+            int start = processor.Start;
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out label) || !label.StartsWith("^") || processor.CurrentChar != ':')
             {
-                state.GoToColumn(saved);
+                processor.GoToColumn(saved);
                 return BlockState.None;
             }
            
             // Advance the column
-            int deltaColumn = state.Start - start;
-            state.Column = state.Column + deltaColumn;
+            int deltaColumn = processor.Start - start;
+            processor.Column = processor.Column + deltaColumn;
 
-            state.NextChar(); // Skip ':'
+            processor.NextChar(); // Skip ':'
 
             var footnote = new Footnote(this) {Label = label};
 
             // Maintain a list of all footnotes at document level
-            var footnotes = state.Document.GetData(DocumentKey) as FootnoteGroup;
+            var footnotes = processor.Document.GetData(DocumentKey) as FootnoteGroup;
             if (footnotes == null)
             {
                 footnotes = new FootnoteGroup(this);
-                state.Document.Add(footnotes);
-                state.Document.SetData(DocumentKey, footnotes);
-                state.Document.ProcessInlinesEnd += Document_ProcessInlinesEnd;
+                processor.Document.Add(footnotes);
+                processor.Document.SetData(DocumentKey, footnotes);
+                processor.Document.ProcessInlinesEnd += Document_ProcessInlinesEnd;
             }
             footnotes.Add(footnote);
 
@@ -66,33 +66,33 @@ namespace Textamina.Markdig.Extensions.Footnotes
                 Footnote = footnote,
                 CreateLinkInline = CreateLinkToFootnote
             };
-            state.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
-            state.NewBlocks.Push(footnote);
+            processor.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
+            processor.NewBlocks.Push(footnote);
             return BlockState.Continue;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var footnote = (Footnote) block;
 
-            if (state.LastBlock == null || state.LastBlock.IsBreakable)
+            if (processor.LastBlock == null || processor.LastBlock.IsBreakable)
             {
-                if (state.IsBlankLine)
+                if (processor.IsBlankLine)
                 {
                     footnote.IsLastLineEmpty = true;
                     return BlockState.ContinueDiscard;
                 }
 
-                if (footnote.IsLastLineEmpty && state.Start == 0)
+                if (footnote.IsLastLineEmpty && processor.Start == 0)
                 {
                     return BlockState.Break;
                 }
             }
             footnote.IsLastLineEmpty = false;
 
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
-                state.GoToCodeIndent();
+                processor.GoToCodeIndent();
             }
 
             return BlockState.Continue;
@@ -101,8 +101,8 @@ namespace Textamina.Markdig.Extensions.Footnotes
         /// <summary>
         /// Add footnotes to the end of the document
         /// </summary>
-        /// <param name="state">The state.</param>
-        private void Document_ProcessInlinesEnd(InlineParserState state)
+        /// <param name="state">The processor.</param>
+        private void Document_ProcessInlinesEnd(InlineProcessor state)
         {
             // Unregister
             state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
@@ -163,7 +163,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
             }
         }
 
-        private static Inline CreateLinkToFootnote(InlineParserState state, LinkReferenceDefinition linkRef, Inline child)
+        private static Inline CreateLinkToFootnote(InlineProcessor state, LinkReferenceDefinition linkRef, Inline child)
         {
             var footnote = ((FootnoteLinkReferenceDefinition)linkRef).Footnote;
             if (footnote.Order < 0)

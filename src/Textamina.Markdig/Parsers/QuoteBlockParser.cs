@@ -20,30 +20,30 @@ namespace Textamina.Markdig.Parsers
             OpeningCharacters = new[] {'>'};
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
                 return BlockState.None;
             }
 
-            var column = state.Column;
+            var column = processor.Column;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
-            var quoteChar = state.CurrentChar;
-            var c = state.NextChar();
+            var quoteChar = processor.CurrentChar;
+            var c = processor.NextChar();
             if (c.IsSpaceOrTab())
             {
-                state.NextColumn();
+                processor.NextColumn();
             }
-            state.NewBlocks.Push(new QuoteBlock(this) {QuoteChar = quoteChar, Column = column});
+            processor.NewBlocks.Push(new QuoteBlock(this) {QuoteChar = quoteChar, Column = column});
             return BlockState.Continue;
         }
 
-        public override BlockState TryContinue(BlockParserState state, Block block)
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
                 return BlockState.None;
             }
@@ -52,16 +52,16 @@ namespace Textamina.Markdig.Parsers
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
-            var c = state.CurrentChar;
+            var c = processor.CurrentChar;
             if (c != quote.QuoteChar)
             {
-                return state.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
+                return processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
             }
 
-            c = state.NextChar(); // Skip opening char
+            c = processor.NextChar(); // Skip opening char
             if (c.IsSpace())
             {
-                state.NextChar(); // Skip following space
+                processor.NextChar(); // Skip following space
             }
 
             return BlockState.Continue;

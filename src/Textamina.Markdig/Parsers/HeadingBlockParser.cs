@@ -20,10 +20,10 @@ namespace Textamina.Markdig.Parsers
             OpeningCharacters = new[] {'#'};
         }
 
-        public override BlockState TryOpen(BlockParserState state)
+        public override BlockState TryOpen(BlockProcessor processor)
         {
             // If we are in a CodeIndent, early exit
-            if (state.IsCodeIndent)
+            if (processor.IsCodeIndent)
             {
                 return BlockState.None;
             }
@@ -38,8 +38,8 @@ namespace Textamina.Markdig.Parsers
             // the heading are stripped of leading and trailing spaces before being parsed as 
             // inline content. The heading level is equal to the number of # characters in the 
             // opening sequence.
-            var column = state.Column;
-            var line = state.Line;
+            var column = processor.Column;
+            var line = processor.Line;
             var c = line.CurrentChar;
             var matchingChar = c;
 
@@ -58,8 +58,8 @@ namespace Textamina.Markdig.Parsers
             if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
             {
                 // Move to the content
-                state.Line.Start = line.Start + 1;
-                state.NewBlocks.Push(new HeadingBlock(this)
+                processor.Line.Start = line.Start + 1;
+                processor.NewBlocks.Push(new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
                     Level = leadingCount,
@@ -69,9 +69,9 @@ namespace Textamina.Markdig.Parsers
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;
                 int countClosingTags = 0;
-                for (int i = state.Line.End; i >= state.Line.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
+                for (int i = processor.Line.End; i >= processor.Line.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
                 {
-                    c = state.Line.Text[i];
+                    c = processor.Line.Text[i];
                     if (endState == 0)
                     {
                         if (c.IsSpace()) // TODO: Not clear if it is a space or space+tab in the specs
@@ -92,7 +92,7 @@ namespace Textamina.Markdig.Parsers
                         {
                             if (c.IsSpace())
                             {
-                                state.Line.End = i - 1;
+                                processor.Line.End = i - 1;
                             }
                             break;
                         }
@@ -111,7 +111,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.None;
         }
 
-        public override bool Close(BlockParserState state, Block block)
+        public override bool Close(BlockProcessor processor, Block block)
         {
             var heading = (HeadingBlock)block;
             heading.Lines.Trim();

@@ -24,13 +24,13 @@ namespace Textamina.Markdig.Parsers.Inlines
         {
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             var text = slice.Text;
 
             // Sligthly faster to perform our own search for opening characters
-            var nextStart = state.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
-            //var nextStart = str.IndexOfAny(state.SpecialCharacters, slice.Start + 1, slice.Length - 1);
+            var nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
+            //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
             int length;
 
             if (nextStart < 0)
@@ -54,7 +54,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
 
             // The LiteralInlineParser is always matching (at least an empty string)
-            state.Inline = length > 0 ? new LiteralInline {Content = new StringSlice(slice.Text, slice.Start, slice.Start + length - 1)} : new LiteralInline();
+            processor.Inline = length > 0 ? new LiteralInline {Content = new StringSlice(slice.Text, slice.Start, slice.Start + length - 1)} : new LiteralInline();
             slice.Start = nextStart;
             return true;
         }

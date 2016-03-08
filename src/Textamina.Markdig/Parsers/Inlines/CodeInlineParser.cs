@@ -20,7 +20,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             OpeningCharacters = new[] { '`' };
         }
 
-        public override bool Match(InlineParserState state, ref StringSlice slice)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             int openSticks = 0;
             var match = slice.CurrentChar;
@@ -39,7 +39,7 @@ namespace Textamina.Markdig.Parsers.Inlines
 
             bool isMatching = false;
 
-            var builder = state.StringBuilders.Get();
+            var builder = processor.StringBuilders.Get();
             int closeSticks = 0;
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
@@ -52,8 +52,8 @@ namespace Textamina.Markdig.Parsers.Inlines
                 // Transform '\n' into a single space
                 if (c == '\n')
                 {
-                    state.LocalLineIndex++;
-                    state.LineIndex++;
+                    processor.LocalLineIndex++;
+                    processor.LineIndex++;
                     c = ' ';
                 }
 
@@ -98,7 +98,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                         builder.Length--;
                     }
                 }
-                state.Inline = new CodeInline()
+                processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
                     Content = builder.ToString()
@@ -107,7 +107,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
 
             // Release the builder if not used
-            state.StringBuilders.Release(builder);
+            processor.StringBuilders.Release(builder);
             return isMatching;
         }
     }
