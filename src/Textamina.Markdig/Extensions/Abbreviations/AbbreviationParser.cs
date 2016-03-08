@@ -14,6 +14,9 @@ namespace Textamina.Markdig.Extensions.Abbreviations
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class AbbreviationParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbbreviationParser"/> class.
+        /// </summary>
         public AbbreviationParser()
         {
             OpeningCharacters = new[] {'*'};
@@ -74,6 +77,7 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                 return;
             }
 
+            // Build a text matcher from the abbreviations labels
             var labels = new HashSet<string>(abbreviations.Keys);
             var matcher = new TextMatchHelper(labels);
 
@@ -103,6 +107,7 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                         {
                             continue;
                         }
+                        i = indexAfterMatch - 1;
 
                         // We should have a match, but in case...
                         Abbreviation abbr;
@@ -130,6 +135,8 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                         // Appned the abbreviation
                         container.AppendChild(abbrInline);
 
+                        // If this is the end of the string, clear the literal 
+                        // and exit
                         if (content.End == indexAfterMatch - 1)
                         {
                             literal = null;
@@ -146,6 +153,7 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                 if (container != null)
                 {
                     processor.Inline = container;
+                    // If we have a pending literal, we can add it
                     if (literal != null)
                     {
                         container.AppendChild(literal);

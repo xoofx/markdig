@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Tests
         {
             var text = @" *[HTML]: Hypertext Markup Language
 
-Later in a text we are using HTML and it becomes an abbr tag.
+Later in a text we are using HTML and it becomes an abbr tag HTML
 ";
 
             //            var reader = new StringReader(@"> > toto tata
