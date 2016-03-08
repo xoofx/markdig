@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Textamina.Markdig.Helpers;
 
@@ -49,15 +50,19 @@ namespace Textamina.Markdig.Parsers
         /// <param name="end">The end.</param>
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public int IndexOfOpeningCharacter(string text, int start, int end)
+        public unsafe int IndexOfOpeningCharacter(string text, int start, int end)
         {
             var maxChar = isOpeningCharacter.Length;
-            for (int i = start; i <= end; i++)
+            fixed (char* pText = text)
+            fixed (bool* openingChars = isOpeningCharacter)
             {
-                var c = text[i];
-                if (c < maxChar && isOpeningCharacter[c])
+                for (int i = start; i <= end; i++)
                 {
-                    return i;
+                    var c = pText[i];
+                    if (c < maxChar && openingChars[c])
+                    {
+                        return i;
+                    }
                 }
             }
             return -1;
