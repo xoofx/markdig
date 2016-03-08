@@ -5,6 +5,7 @@ using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Extensions.Attributes;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
+using Textamina.Markdig.Extensions.Emoji;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.Tables;
 
@@ -29,8 +30,9 @@ namespace Textamina.Markdig
                 .UsePipeTable()
                 .UseSoftlineBreakAsHardlineBreak()
                 .UseFootnotes()
+                .UseEmojiAndSmiley()
                 .UseStrikethroughSuperAndSubScript()
-                .UseAttributes();
+                .UseAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
         /// <summary>
@@ -118,6 +120,17 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseAttributes(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<AttributesExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the emoji and smiley extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseEmojiAndSmiley(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<EmojiExtension>();
             return pipeline;
         }
     }

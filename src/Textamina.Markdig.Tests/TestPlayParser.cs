@@ -12,60 +12,67 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @"
-Term 1
-:   This is a definition item
-    With a paragraph
-    > This is a block quote
-
-    - This is a list
-    - item2
-
-    ```java
-    Test
-
-
-    ```
-
-    And a lazy line
-:   This ia another definition item
-
-Term2
-Term3 *with some inline*
-:   This is another definition for term2
-";
+            var text = @" This is a test with a :) and a :angry: smiley";
 
             //            var reader = new StringReader(@"> > toto tata
             //> titi toto
             //");
 
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseDefinitionList());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseEmojiAndSmiley());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
 
-
+// Test for definition lists:
+//
 //        var text = @"
-//+-----------------------------------+--------------------------------------+
-//| - this is a list                  | > We have a blockquote
-//| - this is a second item           |
-//|                                   |
-//| ```                               |
-//| Yes                               |
-//| ```                               |
-//+===================================+======================================+
-//| This is a second line             | 
-//+-----------------------------------+--------------------------------------+
+//Term 1
+//:   This is a definition item
+//    With a paragraph
+//    > This is a block quote
 
-//:::spoiler  {#yessss}
-//This is a spoiler
-//:::
+//    - This is a list
+//    - item2
 
-///| we have mult | paragraph    |
-///| we have a new colspan with a long line
-///| and lots of text
+//    ```java
+//    Test
+
+
+//    ```
+
+//    And a lazy line
+//:   This ia another definition item
+
+//Term2
+//Term3 *with some inline*
+//:   This is another definition for term2
 //";
+
+
+        // Test for grid table
+
+
+        //        var text = @"
+        //+-----------------------------------+--------------------------------------+
+        //| - this is a list                  | > We have a blockquote
+        //| - this is a second item           |
+        //|                                   |
+        //| ```                               |
+        //| Yes                               |
+        //| ```                               |
+        //+===================================+======================================+
+        //| This is a second line             | 
+        //+-----------------------------------+--------------------------------------+
+
+        //:::spoiler  {#yessss}
+        //This is a spoiler
+        //:::
+
+        ///| we have mult | paragraph    |
+        ///| we have a new colspan with a long line
+        ///| and lots of text
+        //";
 
 
     }

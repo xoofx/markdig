@@ -125,9 +125,19 @@ namespace Textamina.Markdig.Parsers
             }
         }
 
+
+        private class ContainerItemCache : DefaultObjectCache<ContainerItem>
+        {
+            protected override void Reset(ContainerItem instance)
+            {
+                instance.Container = null;
+                instance.Index = 0;
+            }
+        }
+
         private void ProcessInlines()
         {
-            var cache = new DefaultObjectCache<ContainerItem>();
+            var cache = new ContainerItemCache();
             var blocks = new Stack<ContainerItem>();
 
             // TODO: Use an ObjectCache for ContainerItem

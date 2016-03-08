@@ -23,6 +23,17 @@ namespace Textamina.Markdig.Helpers
         }
 
         /// <summary>
+        /// Clears this cache.
+        /// </summary>
+        public void Clear()
+        {
+            lock (builders)
+            {
+                builders.Clear();
+            }
+        }
+
+        /// <summary>
         /// Gets a new instance.
         /// </summary>
         /// <returns></returns>
@@ -64,8 +75,6 @@ namespace Textamina.Markdig.Helpers
         /// Resets the specified instance when <see cref="Release"/> is called before storing back to this cache.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        protected virtual void Reset(T instance)
-        {
-        }
+        protected abstract void Reset(T instance);
     }
 }

@@ -44,7 +44,9 @@
     <Compile Include="Extensions\DefinitionLists\DefinitionList.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionListParser.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionTerm.cs" />
+    <Compile Include="Extensions\Emoji\EmojiExtension.cs" />
     <Compile Include="Extensions\DefinitionLists\HtmlDefinitionListRenderer.cs" />
+    <Compile Include="Extensions\Emoji\EmojiInline.cs" />
     <Compile Include="Extensions\Emoji\EmojiParser.cs" />
     <Compile Include="Extensions\Footnotes\Footnote.cs" />
     <Compile Include="Extensions\Footnotes\FootnoteParser.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Helpers\DefaultObjectCache.cs" />
     <Compile Include="Helpers\ObjectCache.cs" />
     <Compile Include="Helpers\OrderedList.cs" />
+    <Compile Include="Helpers\TextMatcher.cs" />
     <Compile Include="IMarkdownExtension.cs" />
     <Compile Include="Markdown.cs" />
     <Compile Include="MarkdownExtensions.cs" />

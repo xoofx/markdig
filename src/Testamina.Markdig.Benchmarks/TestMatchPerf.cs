@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using BenchmarkDotNet.Attributes;
+using Textamina.Markdig.Helpers;
 
 namespace Testamina.Markdig.Benchmarks
 {
@@ -51,57 +52,6 @@ namespace Testamina.Markdig.Benchmarks
         }
     }
 
-    public class TextMatchHelper
-    {
-        private readonly string[] ordered;
-
-        public TextMatchHelper(HashSet<string> strings)
-        {
-            var orderedList = new List<string>(strings);
-            orderedList.Sort();
-            ordered = orderedList.ToArray();
-        }
-
-        public bool TryMatch(string text, int offset, int length, out string matchText)
-        {
-            matchText = null;
-            int start = 0;
-            int end = ordered.Length - 1;
-            while (start <= end)
-            {
-                int i = start + (end - start >> 1);
-                int num3 = Compare(text, offset, length, ordered[i]);
-                if (num3 == 0)
-                {
-                    matchText = ordered[i];
-                    return true;
-                }
-                if (num3 < 0)
-                    start = i + 1;
-                else
-                    end = i - 1;
-            }
-            return false;
-        }
-
-        private static int Compare(string text, int offset, int length, string value)
-        {
-            var maxLength = value.Length < length
-                ? value.Length
-                : length;
-            for (int i = 0; i < maxLength; i++, offset++)
-            {
-                var result = value[i].CompareTo(text[offset]);
-                if (result != 0)
-                {
-                    return result;
-                }
-            }
-            // Either we have a full match, or value string is longer than text
-            return maxLength == value.Length ? 0 : 1;
-        }
-    }
-
 
     public class TestMatchPerf
     {
@@ -119,7 +69,6 @@ namespace Testamina.Markdig.Benchmarks
             matcher = new TextMatchHelper(new HashSet<string>(replacers.Keys));
         }
 
-
         [Benchmark]
         public void TestMatch()
         {
@@ -128,7 +77,7 @@ namespace Testamina.Markdig.Benchmarks
             {
                 string matchText;
                 //var text = ":z150: this is a long string";
-                var text = ":z1";
+                var text = ":z1:";
                 matcher.TryMatch(text, 0, text.Length, out matchText);
             }
         }

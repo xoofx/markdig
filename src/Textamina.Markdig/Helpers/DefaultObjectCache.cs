@@ -8,7 +8,7 @@ namespace Textamina.Markdig.Helpers
     /// </summary>
     /// <typeparam name="T">The type of item to cache</typeparam>
     /// <seealso cref="Textamina.Markdig.Helpers.ObjectCache{T}" />
-    public class DefaultObjectCache<T> : ObjectCache<T> where T : class, new()
+    public abstract class DefaultObjectCache<T> : ObjectCache<T> where T : class, new()
     {
         protected override T NewInstance()
         {
