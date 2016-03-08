@@ -95,7 +95,7 @@ namespace Textamina.Markdig.Parsers
             // If > 1 blank line, terminate this list
             var isBlankLine = state.IsBlankLine;
 
-            var isCurrentBlockBreakable = state.LastBlock != null && state.LastBlock.IsBreakable;
+            var isCurrentBlockBreakable = state.CurrentBlock != null && state.CurrentBlock.IsBreakable;
             if (isBlankLine)
             {
                 if (isCurrentBlockBreakable)

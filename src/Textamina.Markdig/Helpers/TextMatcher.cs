@@ -14,7 +14,6 @@ namespace Textamina.Markdig.Helpers
     {
         private readonly CharNode root;
         private readonly ListCache listCache;
-        private readonly DictionaryCache dictCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextMatchHelper"/> class.
@@ -26,11 +25,9 @@ namespace Textamina.Markdig.Helpers
             if (matches == null) throw new ArgumentNullException(nameof(matches));
             var list = new List<string>(matches);
             root = new CharNode();
-            dictCache = new DictionaryCache();
             listCache = new ListCache();
-            BuildMap(ref root, 0, list);
+            BuildMap(root, 0, list);
             listCache.Clear();
-            dictCache.Clear();
         }
 
         /// <summary>
@@ -53,56 +50,37 @@ namespace Textamina.Markdig.Helpers
             while (length > 0)
             {
                 var c = text[offset];
-                var nextIndex = c - node.MinChar;
-                if (nextIndex < 0)
+                CharNode nextNode;
+                if (!node.TryGetValue(c, out nextNode))
                 {
                     return false;
                 }
-                var nextNodes = node.NextNodes;
-                if (nextNodes  == null || nextIndex >= nextNodes.Length)
-                {
-                    return false;
-                }
-
-                node = nextNodes[nextIndex];
-                if (node == null)
-                {
-                    return false;
-                }
+                node = nextNode;
                 if (node.Content != null)
                 {
                     match = node.Content;
                     return true;
                 }
-
                 offset++;
                 length--;
             }
             return false;
         }
 
-        private void BuildMap(ref CharNode node, int index, List<string> list)
+        private void BuildMap(CharNode node, int index, List<string> list)
         {
             // TODO(lazy): This code for building the nodes is not very efficient in terms of memory usage and could be optimized (using structs and indices)
-            // At least, we are using a cache for the temporary objects build (List<string> and Dictionary<char, CharNode>)
-            var charSet = dictCache.Get();
-            int minChar = int.MaxValue;
-            int maxChar = 0;
+            // At least, we are using a cache for the temporary objects build (List<string>)
             for (int i = 0; i < list.Count; i++)
             {
                 var str = list[i];
                 var c = str[index];
-                // Make sure that we don't get something to match that is too large
-                if (c > 127)
-                {
-                    throw new InvalidOperationException($"The string [{str}] contains a non ASCII character `{c}`");
-                }
 
                 CharNode nextNode;
-                if (!charSet.TryGetValue(c, out nextNode))
+                if (!node.TryGetValue(c, out nextNode))
                 {
                     nextNode = new CharNode();
-                    charSet.Add(c, nextNode);
+                    node.Add(c, nextNode);
                 }
 
                 // We have found a string for this node
@@ -118,31 +96,17 @@ namespace Textamina.Markdig.Helpers
                     }
                     nextNode.NextList.Add(str);
                 }
-
-                if (c < minChar)
-                {
-                    minChar = c;
-                }
-                if (c > maxChar)
-                {
-                    maxChar = c;
-                }
             }
-            node.MinChar = minChar;
-            var chars = new CharNode[maxChar - minChar + 1];
-            node.NextNodes = chars;
-            foreach (var charList in charSet)
+
+            foreach (var charList in node)
             {
-                var nodeIndex = charList.Key - minChar;
-                chars[nodeIndex] = charList.Value;
                 if (charList.Value.NextList != null)
                 {
-                    BuildMap(ref chars[charList.Key - minChar], index + 1, charList.Value.NextList);
+                    BuildMap(charList.Value, index + 1, charList.Value.NextList);
                     listCache.Release(charList.Value.NextList);
                     charList.Value.NextList = null;
                 }
             }
-            dictCache.Release(charSet);
         }
 
         private class ListCache : DefaultObjectCache<List<string>>
@@ -153,20 +117,8 @@ namespace Textamina.Markdig.Helpers
             }
         }
 
-        private class DictionaryCache : DefaultObjectCache<Dictionary<char, CharNode>>
+        private class CharNode : Dictionary<char, CharNode>
         {
-            protected override void Reset(Dictionary<char, CharNode> instance)
-            {
-                instance.Clear();
-            }
-        }
-
-        private class CharNode
-        {
-            public CharNode[] NextNodes;
-
-            public int MinChar;
-
             public List<string> NextList;
 
             public string Content { get; set; }

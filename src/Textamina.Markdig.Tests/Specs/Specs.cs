@@ -16719,7 +16719,7 @@ namespace Textamina.Markdig.Tests
     }
         // **Rule #7**
         //
-        // A backstick/code delimiter has a higher priority than a table column delimiter
+        // A backstick/code delimiter has a higher precedence than a column delimiter `|`:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16742,7 +16742,7 @@ namespace Textamina.Markdig.Tests
     }
         // **Rule #7**
         //
-        // A HTML inline inside a table can use `|`
+        // A HTML inline has a higher precedence than a column delimiter `|`:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16779,7 +16779,7 @@ namespace Textamina.Markdig.Tests
     }
         // **Rule #8**
         //
-        // The character `|` inside a link label is not recognize as a column delimiter
+        // Links have a higher precedence than the column delimiter character `|`:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17000,6 +17000,557 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Hardline break");
 			TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Grid Table
+        //
+        // A grid table allows to have multiple lines per cells and allows to span cells over multiple columns. The following shows a simple grid table
+        //
+        // ```
+        // +---------+---------+
+        // | Header  | Header  |
+        // | Column1 | Column2 |
+        // +=========+=========+
+        // | 1. ab   | > This is a quote
+        // | 2. cde  | > For the second column
+        // | 3. f    |
+        // +---------+---------+
+        // | Second row spanning
+        // | on two columns
+        // +---------+---------+
+        // | Back    |         |
+        // | to      |         |
+        // | one     |         |
+        // | column  |         |
+        // ```
+        //
+        // **Rule #1**
+        // The first line of a grid table must a **row separator**. It must start with the column separator character `+` used to separate columns in a row separator. Each column separator is:
+        // - starting by optional spaces
+        // - followed by an optional `:` to specify left align, followed by optional spaces
+        // - followed by a sequence of at least one `-` character, followed by optional spaces
+        // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+        // - ending by optional spaces
+        //
+        // The first row separator must be followed by a *regular row*. A regular row must start with the character `|` that is starting at the same position than the column separator `+` of the first row separator.
+        //
+        // The following is a valid row separator
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---------+---------+
+            //     | This is | a table |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col·style="width:50%">
+            //     <col·style="width:50%">
+            //     <tbody>
+            //     <tr>
+            //     <td>This is</td>
+            //     <td>a table</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Grid Table");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col·style=\"width:50%\">\n<col·style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+        }
+    }
+        // The following is not a valid row separator
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     |-----xxx----+---------+
+            //     | This is    | not a table
+            //
+            // Should be rendered as:
+            //     <p>|-----xxx----+---------+
+            //     | This is    | not a table</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Grid Table");
+			TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables");
+        }
+    }
+        // **Rule #2**
+        // A regular row can continue a previous regular row when column separator `|` are positioned at the same  position than the previous line. If they are positioned at the same location, the column may span over multiple columns:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---------+---------+---------+
+            //     | Col1    | Col2    | Col3    |
+            //     | Col1a   | Col2a   | Col3a   |
+            //     | Col12             | Col3b   |
+            //     | Col123                      |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <tbody>
+            //     <tr>
+            //     <td>Col1 Col1a</td>
+            //     <td>Col2 Col2a</td>
+            //     <td>Col3 Col3a</td>
+            //     </tr>
+            //     <tr>
+            //     <td colspan="2">Col12</td>
+            //     <td>Col3b</td>
+            //     </tr>
+            //     <tr>
+            //     <td colspan="3">Col123</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Grid Table");
+			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<tbody>\n<tr>\n<td>Col1 Col1a</td>\n<td>Col2 Col2a</td>\n<td>Col3 Col3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Custom Container
+        //
+        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     :::spoiler
+            //     This is a spoiler
+            //     :::
+            //
+            // Should be rendered as:
+            //     <div class="spoiler">This is a spoiler
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Custom Container");
+			TestParser.TestSpec(":::spoiler\nThis is a spoiler\n:::", "<div class=\"spoiler\">This is a spoiler\n</div>", "customcontainers+attributes");
+        }
+    }
+        // The text following the opened custom container is optional:
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     :::
+            //     This is a regular div
+            //     :::
+            //
+            // Should be rendered as:
+            //     <div>This is a regular div
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Custom Container");
+			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div>This is a regular div\n</div>", "customcontainers+attributes");
+        }
+    }
+        // Like for fenced code block, you can use more than 3 `:` characters as long as the closing has the same number of characters:
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     ::::::::::::spoiler
+            //     This is a spoiler
+            //     ::::::::::::
+            //
+            // Should be rendered as:
+            //     <div class="spoiler">This is a spoiler
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Custom Container");
+			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\">This is a spoiler\n</div>", "customcontainers+attributes");
+        }
+    }
+        // Like for fenced code block, a custom container can span over multiple empty lines in a list block:
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     - This is a list
+            //       :::spoiler
+            //       This is a spoiler
+            //     
+            //     
+            //       :::
+            //     - A second item in the list
+            //
+            // Should be rendered as:
+            //     <ul>
+            //     <li>This is a list
+            //     <div class="spoiler">This is a spoiler
+            //     
+            //     
+            //     </div>
+            //     </li>
+            //     <li>A second item in the list</li>
+            //     </ul>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Custom Container");
+			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n\n\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n\n\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes");
+        }
+    }
+        // Attributes extension is also supported for Custom Container, as long as the Attributes extension is activated after the CustomContainer extension (`.UseCustomContainer().UseAttributes()`)
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     :::spoiler {#myspoiler myprop=yes}
+            //     This is a spoiler
+            //     :::
+            //
+            // Should be rendered as:
+            //     <div id="myspoiler" class="spoiler" myprop="yes">This is a spoiler
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Custom Container");
+			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\">This is a spoiler\n</div>", "customcontainers+attributes");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Definition lists
+        //
+        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     Term 1
+            //     :   This is a definition item
+            //         With a paragraph
+            //         > This is a block quote
+            //     
+            //         - This is a list
+            //         - with an item2
+            //     
+            //         ```java
+            //         Test
+            //     
+            //     
+            //         ```
+            //     
+            //         And a last line
+            //     :   This ia another definition item
+            //     
+            //     Term2
+            //     Term3 *with some inline*
+            //     :   This is another definition for term2
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term 1</dt>
+            //     <dd>
+            //     <p>This is a definition item
+            //     With a paragraph</p>
+            //     <blockquote>
+            //     <p>This is a block quote</p>
+            //     </blockquote>
+            //     <ul>
+            //     <li>This is a list</li>
+            //     <li>with an item2</li>
+            //     </ul>
+            //     <pre><code class="language-java">Test
+            //     
+            //     
+            //     </code></pre>
+            //     <p>And a last line</p>
+            //     </dd>
+            //     <dd>This ia another definition item</dd>
+            //     <dt>Term2</dt>
+            //     <dt>Term3 <em>with some inline</em></dt>
+            //     <dd>This is another definition for term2</dd>
+            //     </dl>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Definition lists");
+			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd>\n<p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes");
+        }
+    }
+        // A definition term can be followed at most by one blank line. Lazy continuations are supported for definitions:
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     Term 1
+            //     
+            //     :   Definition
+            //     with lazy continuation.
+            //     
+            //         Second paragraph of the definition.
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term 1</dt>
+            //     <dd>
+            //     <p>Definition
+            //     with lazy continuation.</p>
+            //     <p>Second paragraph of the definition.</p>
+            //     </dd>
+            //     </dl>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Definition lists");
+			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd>\n<p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes");
+        }
+    }
+        // The definition must be indented to 4 characters including the `:`.
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     Term 1
+            //     :  Invalid with less than 3 characters
+            //
+            // Should be rendered as:
+            //     <p>Term 1
+            //     :  Invalid with less than 3 characters</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Definition lists");
+			TestParser.TestSpec("Term 1\n:  Invalid with less than 3 characters", "<p>Term 1\n:  Invalid with less than 3 characters</p>", "definitionlists+attributes");
+        }
+    }
+        // The `:` can be indented up to 3 spaces:
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     Term 1
+            //        : Valid even if `:` starts at most 3 spaces
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term 1</dt>
+            //     <dd>Valid even if <code>:</code> starts at most 3 spaces</dd>
+            //     </dl>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Definition lists");
+			TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes");
+        }
+    }
+        // But more than 3 spaces before `:` will trigger an indented code block:
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     Term 1
+            //     
+            //         : Not valid
+            //
+            // Should be rendered as:
+            //     <p>Term 1</p>
+            //     <pre><code>: Not valid
+            //     </code></pre>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Definition lists");
+			TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Emoji
+        //
+        // Emoji and smiley can be converted to their respective unicode characters:
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     This is a test with a :) and a :angry: smiley
+            //
+            // Should be rendered as:
+            //     <p>This is a test with a 😃 and a 😠 smiley</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Emoji");
+			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Abbreviation
+        //
+        // Abbreviation can be declared by using the `*[Abbreviation Label]: Abbreviation description`
+        //
+        // Abbreviation definition will be removed from the original document. Any Abbreviation label found in literals will be replaced by the abbreviation description:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[HTML]: Hypertext Markup Language
+            //     
+            //     Later in a text we are using HTML and it becomes an abbr tag HTML
+            //
+            // Should be rendered as:
+            //     <p>Later in a text we are using <abbr title="Hypertext Markup Language">HTML</abbr> and it becomes an abbr tag <abbr title="Hypertext Markup Language">HTML</abbr></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Abbreviation");
+			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations");
+        }
+    }
+        // An abbreviation definition can be indented at most 3 spaces
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[HTML]: Hypertext Markup Language
+            //         *[This]: is not an abbreviation
+            //
+            // Should be rendered as:
+            //     <pre><code>*[This]: is not an abbreviation
+            //     </code></pre>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Abbreviation");
+			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations");
+        }
+    }
+        // An abbreviation may contain spaces:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[SUPER HTML]: Super Hypertext Markup Language
+            //     
+            //     This is a SUPER HTML document    
+            //
+            // Should be rendered as:
+            //     <p>This is a <abbr title="Super Hypertext Markup Language">SUPER HTML</abbr> document</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Abbreviation");
+			TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations");
+        }
+    }
+        // Abbreviation may contain any unicode characters:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[😃 HTML]: Hypertext Markup Language
+            //     
+            //     This is a 😃 HTML document    
+            //
+            // Should be rendered as:
+            //     <p>This is a <abbr title="Hypertext Markup Language">😃 HTML</abbr> document</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Abbreviation");
+			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations");
         }
     }
 }

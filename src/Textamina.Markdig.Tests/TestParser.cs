@@ -65,6 +65,21 @@ namespace Textamina.Markdig.Tests
                         case "attributes":
                             pipeline.UseAttributes();
                             break;
+                        case "gridtables":
+                            pipeline.UseGridTable();
+                            break;
+                        case "abbreviations":
+                            pipeline.UseAbbreviation();
+                            break;
+                        case "emojis":
+                            pipeline.UseEmojiAndSmiley();
+                            break;
+                        case "definitionlists":
+                            pipeline.UseDefinitionList();
+                            break;
+                        case "customcontainers":
+                            pipeline.UseCustomContainer();
+                            break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");
                             break;

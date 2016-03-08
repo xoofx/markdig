@@ -51,7 +51,7 @@ namespace Textamina.Markdig.Parsers
             var result = TryParseTagType16(state, line, state.ColumnBeforeIndent);
 
             // HTML blocks of type 7 cannot interrupt a paragraph:
-            if (result == BlockState.None && !(state.LastBlock is ParagraphBlock))
+            if (result == BlockState.None && !(state.CurrentBlock is ParagraphBlock))
             {
                 result = TryParseTagType7(state, line, state.ColumnBeforeIndent);
             }

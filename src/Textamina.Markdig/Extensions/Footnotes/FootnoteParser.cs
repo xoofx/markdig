@@ -75,7 +75,7 @@ namespace Textamina.Markdig.Extensions.Footnotes
         {
             var footnote = (Footnote) block;
 
-            if (processor.LastBlock == null || processor.LastBlock.IsBreakable)
+            if (processor.CurrentBlock == null || processor.CurrentBlock.IsBreakable)
             {
                 if (processor.IsBlankLine)
                 {

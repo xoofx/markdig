@@ -39,6 +39,11 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("AttributesSpecs.md"), "attributes"),
 		new KeyValuePair<string, string>(Host.ResolvePath("StrikeSubAndSuperscriptSpecs.md"), "extra_emphasis"),
 		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "hardlinebreak"),
+		new KeyValuePair<string, string>(Host.ResolvePath("GridTableSpecs.md"), "gridtables"),
+		new KeyValuePair<string, string>(Host.ResolvePath("CustomContainerSpecs.md"), "customcontainers+attributes"),
+		new KeyValuePair<string, string>(Host.ResolvePath("DefinitionListSpecs.md"), "definitionlists+attributes"),
+		new KeyValuePair<string, string>(Host.ResolvePath("EmojiSpecs.md"), "emojis"),
+		new KeyValuePair<string, string>(Host.ResolvePath("AbbreviationSpecs.md"), "abbreviations"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

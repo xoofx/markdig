@@ -107,7 +107,6 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                         {
                             continue;
                         }
-                        i = indexAfterMatch - 1;
 
                         // We should have a match, but in case...
                         Abbreviation abbr;
@@ -147,6 +146,8 @@ namespace Textamina.Markdig.Extensions.Abbreviations
                         literal = new LiteralInline();
                         content.Start = indexAfterMatch;
                         literal.Content = content;
+
+                        i = indexAfterMatch - 1;
                     }
                 }
 

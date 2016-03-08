@@ -35,6 +35,8 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             // We expect to have a least
             if (delta < 4)
             {
+                // Return back to original position
+                processor.GoToColumn(column);
                 return BlockState.None;
             }
 
@@ -48,6 +50,12 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent[indexOfParagraph - 1] as DefinitionList : null;
 
             processor.Discard(paragraphBlock);
+
+            // If the paragraph block was not part of the opened blocks, we need to remove it manually from its parent container
+            if (paragraphBlock.Parent != null)
+            {
+                paragraphBlock.Parent.Remove(paragraphBlock);
+            }
 
             if (currentDefinitionList == null)
             {

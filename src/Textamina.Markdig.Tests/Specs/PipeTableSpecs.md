@@ -344,7 +344,7 @@ A column delimiter has a higher priority than emphasis delimiter
 
 **Rule #7**
 
-A backstick/code delimiter has a higher priority than a table column delimiter
+A backstick/code delimiter has a higher precedence than a column delimiter `|`:
  
 ```````````````````````````````` example
 a | b `
@@ -355,7 +355,7 @@ a | b `
 
 **Rule #7**
 
-A HTML inline inside a table can use `|` 
+A HTML inline has a higher precedence than a column delimiter `|`: 
  
 ```````````````````````````````` example
 a <a href="" title="|"></a> | b
@@ -380,7 +380,7 @@ a <a href="" title="|"></a> | b
 
 **Rule #8**
 
-The character `|` inside a link label is not recognize as a column delimiter
+Links have a higher precedence than the column delimiter character `|`:
 
 ```````````````````````````````` example
 a  | b

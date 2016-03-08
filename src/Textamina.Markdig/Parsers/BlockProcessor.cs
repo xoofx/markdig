@@ -74,7 +74,12 @@ namespace Textamina.Markdig.Parsers
         public ContainerBlock CurrentContainer { get; private set; }
 
         /// <summary>
-        /// Gets the last block that was created.
+        /// Gets the last block that is opened.
+        /// </summary>
+        public Block CurrentBlock { get; private set; }
+
+        /// <summary>
+        /// Gets the last block that is created.
         /// </summary>
         public Block LastBlock { get; private set; }
 
@@ -440,25 +445,27 @@ namespace Textamina.Markdig.Parsers
         }
         
         /// <summary>
-        /// Updates the <see cref="LastBlock"/> and <see cref="CurrentContainer"/>.
+        /// Updates the <see cref="CurrentBlock"/> and <see cref="CurrentContainer"/>.
         /// </summary>
         /// <param name="stackIndex">Index of a block in a stack considered as the last block to update from.</param>
         private void UpdateLastBlockAndContainer(int stackIndex = -1)
         {
             currentStackIndex = stackIndex < 0 ? OpenedBlocks.Count - 1 : stackIndex;
+            CurrentBlock = null;
             LastBlock = null;
             for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
             {
                 var block = OpenedBlocks[i];
-                if (LastBlock == null)
+                if (CurrentBlock == null)
                 {
-                    LastBlock = block;
+                    CurrentBlock = block;
                 }
 
                 var container = block as ContainerBlock;
                 if (container != null)
                 {
                     CurrentContainer = container;
+                    LastBlock = CurrentContainer.LastChild;
                     break;
                 }
             }
@@ -615,13 +622,13 @@ namespace Textamina.Markdig.Parsers
                     break;
                 }
 
-                // UpdateLastBlockAndContainer the state of LastBlock and LastContainer
+                // UpdateLastBlockAndContainer the state of CurrentBlock and LastContainer
                 UpdateLastBlockAndContainer();
 
                 // If a block parser cannot interrupt a paragraph, and the last block is a paragraph
                 // we can skip this parser
 
-                var lastBlock = LastBlock;
+                var lastBlock = CurrentBlock;
                 if (!blockParser.CanInterrupt(this, lastBlock))
                 {
                     continue;
@@ -648,7 +655,7 @@ namespace Textamina.Markdig.Parsers
                 // Special case for paragraph
                 UpdateLastBlockAndContainer();
 
-                var paragraph = LastBlock as ParagraphBlock;
+                var paragraph = CurrentBlock as ParagraphBlock;
                 if (isLazyParagraph && paragraph != null)
                 {
                     Debug.Assert(NewBlocks.Count == 0);

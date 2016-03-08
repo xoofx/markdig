@@ -65,7 +65,7 @@ namespace Textamina.Markdig.Parsers
             }
 
             // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it
-            var previousParagraph = processor.LastBlock as ParagraphBlock;
+            var previousParagraph = processor.CurrentBlock as ParagraphBlock;
 
             var isSetexHeading = previousParagraph != null && breakChar == '-' && !hasInnerSpaces;
             if (isSetexHeading)
