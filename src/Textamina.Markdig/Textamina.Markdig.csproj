@@ -35,10 +35,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Abbreviations\Abbreviation.cs" />
+    <Compile Include="Extensions\Abbreviations\AbbreviationHelper.cs" />
+    <Compile Include="Extensions\Abbreviations\AbbreviationInline.cs" />
+    <Compile Include="Extensions\Abbreviations\AbbreviationParser.cs" />
     <Compile Include="Extensions\Attributes\AttributesExtension.cs" />
+    <Compile Include="Extensions\Abbreviations\AbbreviationExtension.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainer.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainerParser.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainerExtension.cs" />
+    <Compile Include="Extensions\Abbreviations\HtmlAbbreviationRenderer.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionListExtension.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionItem.cs" />
     <Compile Include="Extensions\DefinitionLists\DefinitionList.cs" />
@@ -57,7 +63,7 @@
     <Compile Include="Extensions\CustomContainers\HtmlCustomContainerRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteGroupRenderer.cs" />
     <Compile Include="Extensions\Footnotes\HtmlFootnoteLinkRenderer.cs" />
-    <Compile Include="Extensions\StrikethroughSuperAndSubScriptExtension.cs" />
+    <Compile Include="Extensions\StrikeoutSuperAndSubScriptExtension.cs" />
     <Compile Include="Extensions\Tables\GridTableParser.cs" />
     <Compile Include="Extensions\Tables\GridTableExtension.cs" />
     <Compile Include="Extensions\Tables\GridTableState.cs" />

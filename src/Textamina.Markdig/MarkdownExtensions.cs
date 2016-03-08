@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Extensions;
+using Textamina.Markdig.Extensions.Abbreviations;
 using Textamina.Markdig.Extensions.Attributes;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
@@ -24,6 +25,7 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
         {
             return pipeline
+                .UseAbbreviation()
                 .UseDefinitionList()
                 .UseCustomContainer()
                 .UseGridTable()
@@ -31,7 +33,7 @@ namespace Textamina.Markdig
                 .UseSoftlineBreakAsHardlineBreak()
                 .UseFootnotes()
                 .UseEmojiAndSmiley()
-                .UseStrikethroughSuperAndSubScript()
+                .UseStrikeoutSuperAndSubScript()
                 .UseAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -43,6 +45,17 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the custom abbreviation extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseAbbreviation(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<AbbreviationExtension>();
             return pipeline;
         }
 
@@ -102,13 +115,13 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
-        /// Uses the strikethrough superscript and subscript extensions.
+        /// Uses the strikeout superscript and subscript extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseStrikethroughSuperAndSubScript(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseStrikeoutSuperAndSubScript(this MarkdownPipeline pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<StrikethroughSuperAndSubScriptExtension>();
+            pipeline.Extensions.AddIfNotAlready<StrikeoutSuperAndSubScriptExtension>();
             return pipeline;
         }
 

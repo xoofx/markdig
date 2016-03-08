@@ -13,16 +13,21 @@ namespace Textamina.Markdig.Parsers.Inlines
     /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     public sealed class LiteralInlineParser : InlineParser
     {
-        public static readonly LiteralInlineParser Default = new LiteralInlineParser();
+        public delegate void PostMatchDelegate(InlineProcessor processor, ref StringSlice slice);
 
         /// <summary>
         /// We don't expect the LiteralInlineParser to be instantiated a end-user, as it is part
         /// of the default parser pipeline (and should always be the last), working as a literal character
         /// collector.
         /// </summary>
-        private LiteralInlineParser()
+        public LiteralInlineParser()
         {
         }
+
+        /// <summary>
+        /// Gets or sets the post match delegate called after the inline has been processed.
+        /// </summary>
+        public PostMatchDelegate PostMatch { get; set; }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
@@ -56,6 +61,13 @@ namespace Textamina.Markdig.Parsers.Inlines
             // The LiteralInlineParser is always matching (at least an empty string)
             processor.Inline = length > 0 ? new LiteralInline {Content = new StringSlice(slice.Text, slice.Start, slice.Start + length - 1)} : new LiteralInline();
             slice.Start = nextStart;
+
+            // Call only PostMatch if necessary
+            if (PostMatch != null)
+            {
+                PostMatch(processor, ref slice);
+            }
+
             return true;
         }
     }

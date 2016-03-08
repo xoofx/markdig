@@ -26,6 +26,15 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteralInline"/> class.
         /// </summary>
+        /// <param name="content">The content.</param>
+        public LiteralInline(StringSlice content)
+        {
+            Content = content;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LiteralInline"/> class.
+        /// </summary>
         /// <param name="text">The text.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public LiteralInline(string text)

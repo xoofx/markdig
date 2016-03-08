@@ -12,17 +12,24 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestSimple()
         {
-            var text = @" This is a test with a :) and a :angry: smiley";
+            var text = @" *[HTML]: Hypertext Markup Language
+
+Later in a text we are using HTML and it becomes an abbr tag.
+";
 
             //            var reader = new StringReader(@"> > toto tata
             //> titi toto
             //");
 
-            //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikethroughSuperAndSubScript());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseEmojiAndSmiley());
+            //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikeoutSuperAndSubScript());
+            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAbbreviation());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
+
+// Test for emoji and smileys
+//        var text = @" This is a test with a :) and a :angry: smiley";
+
 
 // Test for definition lists:
 //

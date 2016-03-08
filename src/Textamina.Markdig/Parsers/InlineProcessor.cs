@@ -37,6 +37,7 @@ namespace Textamina.Markdig.Parsers
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
+            LiteralInlineParser = new LiteralInlineParser();
         }
 
         /// <summary>
@@ -93,6 +94,11 @@ namespace Textamina.Markdig.Parsers
         /// Gets or sets the debug log writer. No log if null.
         /// </summary>
         public TextWriter DebugLog { get; set; }
+
+        /// <summary>
+        /// Gets the literal inline parser.
+        /// </summary>
+        public LiteralInlineParser LiteralInlineParser { get; }
 
         /// <summary>
         /// Processes the inline of the specified <see cref="LeafBlock"/>.
@@ -154,7 +160,7 @@ namespace Textamina.Markdig.Parsers
 
                 text = textSaved;
                 // Else match using the default literal inline parser
-                LiteralInlineParser.Default.Match(this, ref text);
+                LiteralInlineParser.Match(this, ref text);
 
                 done:
                 var nextInline = Inline;

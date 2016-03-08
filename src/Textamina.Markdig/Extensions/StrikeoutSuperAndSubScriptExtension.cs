@@ -10,10 +10,10 @@ using Textamina.Markdig.Syntax.Inlines;
 namespace Textamina.Markdig.Extensions
 {
     /// <summary>
-    /// Extension for strikethrough, subscript and superscript.
+    /// Extension for strikeout, subscript and superscript.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
-    public class StrikethroughSuperAndSubScriptExtension : IMarkdownExtension
+    public class StrikeoutSuperAndSubScriptExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipeline pipeline)
         {

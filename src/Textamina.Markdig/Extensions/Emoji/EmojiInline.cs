@@ -13,6 +13,8 @@ namespace Textamina.Markdig.Extensions.Emoji
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.Inline" />
     public class EmojiInline : LiteralInline
     {
+        // Inherit from LiteralInline so that rendering is already handled by default
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmojiInline"/> class.
         /// </summary>
