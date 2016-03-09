@@ -17054,8 +17054,8 @@ namespace Textamina.Markdig.Tests
             //
             // Should be rendered as:
             //     <table>
-            //     <col·style="width:50%">
-            //     <col·style="width:50%">
+            //     <col style="width:50%">
+            //     <col style="width:50%">
             //     <tbody>
             //     <tr>
             //     <td>This is</td>
@@ -17065,7 +17065,7 @@ namespace Textamina.Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col·style=\"width:50%\">\n<col·style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables");
         }
     }
         // The following is not a valid row separator
@@ -17110,15 +17110,21 @@ namespace Textamina.Markdig.Tests
             //
             // Should be rendered as:
             //     <table>
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
             //     <tbody>
             //     <tr>
-            //     <td>Col1 Col1a</td>
-            //     <td>Col2 Col2a</td>
-            //     <td>Col3 Col3a</td>
+            //     <td>Col1
+            //     Col1a</td>
+            //     <td>Col2
+            //     Col2a</td>
+            //     <td>Col3
+            //     Col3a</td>
             //     </tr>
             //     <tr>
             //     <td colspan="2">Col12</td>
-            //     <td>Col3b</td>
+            //     <td></td>
             //     </tr>
             //     <tr>
             //     <td colspan="3">Col123</td>
@@ -17127,7 +17133,7 @@ namespace Textamina.Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<tbody>\n<tr>\n<td>Col1 Col1a</td>\n<td>Col2 Col2a</td>\n<td>Col3 Col3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td></td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables");
         }
     }
         // # Extensions

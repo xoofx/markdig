@@ -38,7 +38,7 @@ namespace Textamina.Markdig.Extensions.Tables
             {
                 foreach (var tableColumnDefinition in table.ColumnDefinitions)
                 {
-                    renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width)}%\">");
+                    renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width*100)/100}%\">");
                 }
             }
 

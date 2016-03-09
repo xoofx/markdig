@@ -42,8 +42,8 @@ The following is a valid row separator
 | This is | a table |
 .
 <table>
-<col·style="width:50%">
-<col·style="width:50%">
+<col style="width:50%">
+<col style="width:50%">
 <tbody>
 <tr>
 <td>This is</td>
@@ -74,15 +74,21 @@ A regular row can continue a previous regular row when column separator `|` are 
 | Col123                      |
 .
 <table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
 <tbody>
 <tr>
-<td>Col1 Col1a</td>
-<td>Col2 Col2a</td>
-<td>Col3 Col3a</td>
+<td>Col1
+Col1a</td>
+<td>Col2
+Col2a</td>
+<td>Col3
+Col3a</td>
 </tr>
 <tr>
 <td colspan="2">Col12</td>
-<td>Col3b</td>
+<td></td>
 </tr>
 <tr>
 <td colspan="3">Col123</td>

@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Syntax;
 
@@ -189,6 +190,7 @@ namespace Textamina.Markdig.Extensions.Tables
                                 sliceForCell.End = columnEnd;
                             }
                         }
+                        sliceForCell.TrimEnd();
 
                         // Process the content of the cell
                         column.BlockProcessor.LineIndex = processor.LineIndex;
@@ -224,6 +226,17 @@ namespace Textamina.Markdig.Extensions.Tables
             return BlockState.Break;
         }
 
+        public override bool Close(BlockProcessor processor, Block block)
+        {
+            // Work only on Table, not on TableCell
+            var gridTable = block as Table;
+            if (gridTable != null)
+            {
+                var tableState = (GridTableState) block.GetData(typeof (GridTableState));
+                TerminateLastRow(processor, tableState, gridTable, true);
+            }
+            return true;
+        }
 
         private BlockState ParseRowSeparator(BlockProcessor state, GridTableState tableState, Table gridTable)
         {
