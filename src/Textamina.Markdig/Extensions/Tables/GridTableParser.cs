@@ -82,7 +82,7 @@ namespace Textamina.Markdig.Extensions.Tables
             int totalWidth = 0;
             foreach (var columnSlice in tableState.ColumnSlices)
             {
-                totalWidth += columnSlice.End - columnSlice.Start + 1;
+                totalWidth += columnSlice.End - columnSlice.Start;
             }
 
             // Store the column width and alignment
@@ -91,7 +91,7 @@ namespace Textamina.Markdig.Extensions.Tables
                 var columnDefinition = new TableColumnDefinition
                 {
                     // Column width proportional to the total width
-                    Width = (float)(columnSlice.End - columnSlice.Start + 1) * 100.0f / totalWidth,
+                    Width = (float)(columnSlice.End - columnSlice.Start) * 100.0f / totalWidth,
                     Alignment = columnSlice.Align,
                 };
                 table.ColumnDefinitions.Add(columnDefinition);

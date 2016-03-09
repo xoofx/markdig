@@ -15,29 +15,9 @@ namespace Textamina.Markdig.Extensions.CustomContainers
         protected override void Write(HtmlRenderer renderer, CustomContainer obj)
         {
             renderer.EnsureLine();
-            renderer.Write("<div");
-            
-            // If the custom container has already some attributes, try to use them before adding the class for the target
-            var attributes = obj.TryGetAttributes();
-            if (attributes == null)
-            {
-                if (!string.IsNullOrEmpty(obj.Language))
-                {
-                    renderer.Write(" class=\"");
-                    renderer.WriteEscape(obj.Language);
-                    renderer.Write("\"");
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(obj.Language))
-                {
-                    attributes.AddClass(obj.Language);
-                }
-                renderer.WriteAttributes(obj);
-            }
-            renderer.Write(">");
-            renderer.WriteLeafRawLines(obj, true, true);
+            renderer.Write("<div").WriteAttributes(obj).Write(">");
+            // We don't escape a CustomContainer
+            renderer.WriteLeafRawLines(obj, true, false);
             renderer.WriteLine("</div>");
         }
     }

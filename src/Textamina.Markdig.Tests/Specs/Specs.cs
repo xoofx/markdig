@@ -16895,11 +16895,18 @@ namespace Textamina.Markdig.Tests
         //
         // ## Attributes
         //
-        // Attributes can be attached to a previous inline element or the current block if the previous inline element is a literal. Attributes can be:
+        // Attributes can be attached to:
+        // - The previous inline element if the previous element is not a literal
+        // - The next block if the current block is a paragraph and the attributes is the only inline present in the paragraph
+        // - Or the current block
+        //
+        // Attributes can be of 3 kinds:
         //
         // - An id element, starting by `#` that will be used to set the `id` property of the HTML element
         // - A class element, starting by `.` that will be appended to the CSS class property of the HTML element
         // - a `name=value` or `name="value"` that will be appended as an attribute of the HTML element
+        //
+        // The following shows that attributes is attached to the current block or the previous inline:
     [TestFixture]
     public partial class TestExtensionsAttributes
     {
@@ -16924,6 +16931,30 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Attributes");
 			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>", "attributes");
+        }
+    }
+        // The following shows that the attributes is attached to the next fenced code block:
+    [TestFixture]
+    public partial class TestExtensionsAttributes
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Attributes
+            //
+            // The following CommonMark:
+            //     {#fenced-id .fenced-class}
+            //     ~~~
+            //     This is a fenced with attached attributes
+            //     ~~~ 
+            //
+            // Should be rendered as:
+            //     <pre><code id="fenced-id" class="fenced-class">This is a fenced with attached attributes
+            //     </code></pre>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Attributes");
+			TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes");
         }
     }
         // # Extensions
@@ -17136,6 +17167,141 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td></td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables");
         }
     }
+        // A row header is separated using `+========+` instead of `+---------+`:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---------+---------+
+            //     | This is | a table |
+            //     +=========+=========+
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:50%">
+            //     <col style="width:50%">
+            //     <thead>
+            //     <tr>
+            //     <th>This is</th>
+            //     <th>a table</th>
+            //     </tr>
+            //     </thead>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Grid Table");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables");
+        }
+    }
+        // The last column separator `|` may be omitted:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---------+---------+
+            //     | This is | a table with a longer text in the second column
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:50%">
+            //     <col style="width:50%">
+            //     <tbody>
+            //     <tr>
+            //     <td>This is</td>
+            //     <td>a table with a longer text in the second column</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Grid Table");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+        }
+    }
+        // The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
+        //
+        // Total size is : 16
+        //
+        // - `----` -> 4
+        // - `--------` -> 8
+        // - `----` -> 4
+        //
+        // So the width would be 4/16 = 25%, 8/16 = 50%, 4/16 = 25%
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +----+--------+----+
+            //     | A  |  B C D | E  |
+            //     +----+--------+----+
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:25%">
+            //     <col style="width:50%">
+            //     <col style="width:25%">
+            //     <tbody>
+            //     <tr>
+            //     <td>A</td>
+            //     <td>B C D</td>
+            //     <td>E</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Grid Table");
+			TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\">\n<col style=\"width:50%\">\n<col style=\"width:25%\">\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+        }
+    }
+        // Alignment might be specified on the first row using the character `:`:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +-----+:---:+-----+
+            //     |  A  |  B  |  C  |
+            //     +-----+-----+-----+
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <tbody>
+            //     <tr>
+            //     <td>A</td>
+            //     <td style="text-align: center;">B</td>
+            //     <td>C</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Grid Table");
+			TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
@@ -17266,6 +17432,29 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Custom Container");
 			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\">This is a spoiler\n</div>", "customcontainers+attributes");
+        }
+    }
+        // The content of a custom container is not HTML escaped:
+    [TestFixture]
+    public partial class TestExtensionsCustomContainer
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Custom Container
+            //
+            // The following CommonMark:
+            //     :::mycontainer
+            //     <p>This is a raw spoiler</p>
+            //     :::
+            //
+            // Should be rendered as:
+            //     <div class="mycontainer"><p>This is a raw spoiler</p>
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Custom Container");
+			TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes");
         }
     }
         // # Extensions

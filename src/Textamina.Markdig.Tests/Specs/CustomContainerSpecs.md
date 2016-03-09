@@ -70,3 +70,14 @@ This is a spoiler
 <div id="myspoiler" class="spoiler" myprop="yes">This is a spoiler
 </div>
 ````````````````````````````````
+
+The content of a custom container is not HTML escaped:
+
+```````````````````````````````` example
+:::mycontainer
+<p>This is a raw spoiler</p>
+:::
+.
+<div class="mycontainer"><p>This is a raw spoiler</p>
+</div>
+````````````````````````````````

@@ -46,6 +46,21 @@ namespace Textamina.Markdig.Extensions.Attributes
                 }
                 var objectToAttach = inline == null || inline == processor.Root ? (MarkdownObject) processor.Block : inline;
 
+                // If the current block is a Paragraph, but only the HtmlAttributes is used,
+                // Try to attach the attributes to the following block
+                var paragraph = objectToAttach as ParagraphBlock;
+                if (paragraph != null && paragraph.Inline.FirstChild == null && processor.Inline == null && slice.IsEmptyOrWhitespace())
+                {
+                    var parent = paragraph.Parent;
+                    var indexOfParagraph = parent.IndexOf(paragraph);
+                    if (indexOfParagraph + 1 < parent.Count)
+                    {
+                        objectToAttach = parent[indexOfParagraph + 1];
+                        // We can remove the paragraph as it is empty
+                        parent.RemoveAt(indexOfParagraph);
+                    }
+                }
+
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
                 attributes.CopyTo(currentHtmlAttributes);
 

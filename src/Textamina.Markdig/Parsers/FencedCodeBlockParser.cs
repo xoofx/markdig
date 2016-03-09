@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
@@ -28,12 +29,19 @@ namespace Textamina.Markdig.Parsers
         {
             OpeningCharacters = new[] {'`', '~'};
             InfoParser = DefaultInfoParser;
+            LanguagePrefix = "language-";
         }
 
         /// <summary>
         /// Gets or sets the information parser.
         /// </summary>
         public InfoParserDelegate InfoParser { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the language prefix (default is "language-")
+        /// </summary>
+        public string LanguagePrefix { get; set; }
 
         /// <summary>
         /// The default parser for the information after the fenced code block special characters (usually ` or ~)
@@ -67,7 +75,7 @@ namespace Textamina.Markdig.Parsers
 
             if (firstSpace > 0)
             {
-                infoString = line.Text.Substring(line.Start, firstSpace - line.Start);
+                infoString = line.Text.Substring(line.Start, firstSpace - line.Start).Trim();
 
                 // Skip any spaces after info string
                 firstSpace++;
@@ -84,11 +92,11 @@ namespace Textamina.Markdig.Parsers
                     }
                 }
 
-                argString = line.Text.Substring(firstSpace, line.End - firstSpace + 1);
+                argString = line.Text.Substring(firstSpace, line.End - firstSpace + 1).Trim();
             }
             else
             {
-                infoString = line.ToString();
+                infoString = line.ToString().Trim();
             }
 
             fenced.Language = HtmlHelper.Unescape(infoString);
@@ -141,6 +149,19 @@ namespace Textamina.Markdig.Parsers
             if (InfoParser != null && !InfoParser(processor, ref line, fenced))
             {
                 return BlockState.None;
+            }
+
+            // Add the language as an attribute by default
+            if (!string.IsNullOrEmpty(fenced.Language))
+            {
+                if (string.IsNullOrEmpty(LanguagePrefix))
+                {
+                    fenced.GetAttributes().AddClass(fenced.Language);
+                }
+                else
+                {
+                    fenced.GetAttributes().AddClass(LanguagePrefix + fenced.Language);
+                }
             }
 
             // Store the number of matched string into the context

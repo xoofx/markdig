@@ -47,6 +47,9 @@ namespace Textamina.Markdig.Extensions.Tables
                 CurrentColumnSpan = -1;
             }
 
+            /// <summary>
+            /// Gets or sets the index position of this column (after the |)
+            /// </summary>
             public int Start { get; set; }
 
             public int End { get; set; }

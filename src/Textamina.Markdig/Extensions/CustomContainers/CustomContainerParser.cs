@@ -11,6 +11,8 @@ namespace Textamina.Markdig.Extensions.CustomContainers
         public CustomContainerParser()
         {
             OpeningCharacters = new [] {':'};
+            // We don't prefix by LanguagePrefix
+            LanguagePrefix = null;
         }
 
         protected override FencedCodeBlock CreateFencedCodeBlock()

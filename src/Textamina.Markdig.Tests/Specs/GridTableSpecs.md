@@ -96,3 +96,91 @@ Col3a</td>
 </tbody>
 </table>
 ````````````````````````````````
+
+A row header is separated using `+========+` instead of `+---------+`:
+
+```````````````````````````````` example
++---------+---------+
+| This is | a table |
++=========+=========+
+.
+<table>
+<col style="width:50%">
+<col style="width:50%">
+<thead>
+<tr>
+<th>This is</th>
+<th>a table</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
+The last column separator `|` may be omitted:
+
+```````````````````````````````` example
++---------+---------+
+| This is | a table with a longer text in the second column
+.
+<table>
+<col style="width:50%">
+<col style="width:50%">
+<tbody>
+<tr>
+<td>This is</td>
+<td>a table with a longer text in the second column</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
+
+Total size is : 16 
+
+- `----` -> 4
+- `--------` -> 8
+- `----` -> 4
+
+So the width would be 4/16 = 25%, 8/16 = 50%, 4/16 = 25%
+
+```````````````````````````````` example
++----+--------+----+
+| A  |  B C D | E  |
++----+--------+----+
+.
+<table>
+<col style="width:25%">
+<col style="width:50%">
+<col style="width:25%">
+<tbody>
+<tr>
+<td>A</td>
+<td>B C D</td>
+<td>E</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+Alignment might be specified on the first row using the character `:`:
+
+
+```````````````````````````````` example
++-----+:---:+-----+
+|  A  |  B  |  C  |
++-----+-----+-----+
+.
+<table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
+<tbody>
+<tr>
+<td>A</td>
+<td style="text-align: center;">B</td>
+<td>C</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
