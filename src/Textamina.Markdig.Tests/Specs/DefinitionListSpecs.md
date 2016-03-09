@@ -31,8 +31,7 @@ Term3 *with some inline*
 .
 <dl>
 <dt>Term 1</dt>
-<dd>
-<p>This is a definition item
+<dd><p>This is a definition item
 With a paragraph</p>
 <blockquote>
 <p>This is a block quote</p>
@@ -66,8 +65,7 @@ with lazy continuation.
 .
 <dl>
 <dt>Term 1</dt>
-<dd>
-<p>Definition
+<dd><p>Definition
 with lazy continuation.</p>
 <p>Second paragraph of the definition.</p>
 </dd>

@@ -17309,8 +17309,7 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <dl>
             //     <dt>Term 1</dt>
-            //     <dd>
-            //     <p>This is a definition item
+            //     <dd><p>This is a definition item
             //     With a paragraph</p>
             //     <blockquote>
             //     <p>This is a block quote</p>
@@ -17332,7 +17331,7 @@ namespace Textamina.Markdig.Tests
             //     </dl>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd>\n<p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd><p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes");
         }
     }
         // A definition term can be followed at most by one blank line. Lazy continuations are supported for definitions:
@@ -17356,15 +17355,14 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <dl>
             //     <dt>Term 1</dt>
-            //     <dd>
-            //     <p>Definition
+            //     <dd><p>Definition
             //     with lazy continuation.</p>
             //     <p>Second paragraph of the definition.</p>
             //     </dd>
             //     </dl>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd>\n<p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd><p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes");
         }
     }
         // The definition must be indented to 4 characters including the `:`.

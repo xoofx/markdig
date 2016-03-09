@@ -15,7 +15,10 @@ namespace Textamina.Markdig.Renderers.Html
         {
             if (!renderer.ImplicitParagraph)
             {
-                renderer.EnsureLine();
+                if (!renderer.IsFirstInContainer)
+                {
+                    renderer.EnsureLine();
+                }
                 renderer.Write("<p").WriteAttributes(obj).Write(">");
             }
             renderer.WriteLeafInline(obj);

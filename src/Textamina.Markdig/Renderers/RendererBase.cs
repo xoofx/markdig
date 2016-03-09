@@ -31,6 +31,10 @@ namespace Textamina.Markdig.Renderers
 
         public abstract object Render(MarkdownObject markdownObject);
 
+        public bool IsFirstInContainer { get; private set; }
+
+        public bool IsLastInContainer { get; private set; }
+
         /// <summary>
         /// Writes the children of the specified <see cref="ContainerBlock"/>.
         /// </summary>
@@ -45,7 +49,15 @@ namespace Textamina.Markdig.Renderers
             var children = containerBlock;
             for (int i = 0; i < children.Count; i++)
             {
+                var saveIsFirstInContainer = IsFirstInContainer;
+                var saveIsLastInContainer = IsLastInContainer;
+
+                IsFirstInContainer = i == 0;
+                IsLastInContainer = i + 1 == children.Count;
                 Write(children[i]);
+
+                IsFirstInContainer = saveIsFirstInContainer;
+                IsLastInContainer = saveIsLastInContainer;
             }
         }
 
@@ -60,11 +72,22 @@ namespace Textamina.Markdig.Renderers
                 return;
             }
 
+            bool isFirst = true;
             var inline = containerInline.FirstChild;
             while (inline != null)
             {
+                var saveIsFirstInContainer = IsFirstInContainer;
+                var saveIsLastInContainer = IsLastInContainer;
+                IsFirstInContainer = isFirst;
+                IsLastInContainer = inline.NextSibling == null;
+
                 Write(inline);
                 inline = inline.NextSibling;
+
+                IsFirstInContainer = saveIsFirstInContainer;
+                IsLastInContainer = saveIsLastInContainer;
+
+                isFirst = false;
             }
         }
 
