@@ -63,7 +63,7 @@ namespace Textamina.Markdig.Tests
                             pipeline.UseFootnotes();
                             break;
                         case "attributes":
-                            pipeline.UseAttributes();
+                            pipeline.UseGenericAttributes();
                             break;
                         case "gridtables":
                             pipeline.UseGridTable();

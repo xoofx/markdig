@@ -53,9 +53,7 @@ namespace Textamina.Markdig.Syntax
                 Lines = new StringLineGroup();
             }
 
-            var stringLine = new StringLine(ref slice, line, column); // TODO: POSITION
-
-
+            var stringLine = new StringLine(ref slice, line, column);
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {

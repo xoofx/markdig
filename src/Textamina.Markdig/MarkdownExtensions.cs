@@ -3,11 +3,11 @@
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Extensions.Abbreviations;
-using Textamina.Markdig.Extensions.Attributes;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Emoji;
 using Textamina.Markdig.Extensions.Footnotes;
+using Textamina.Markdig.Extensions.GenericAttributes;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -34,7 +34,7 @@ namespace Textamina.Markdig
                 .UseFootnotes()
                 .UseEmojiAndSmiley()
                 .UseStrikeoutSuperAndSubScript()
-                .UseAttributes(); // Must be last as it is one parser that is modifying other parsers
+                .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
         /// <summary>
@@ -126,13 +126,13 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
-        /// Uses the attributes extension.
+        /// Uses the generic attributes extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseAttributes(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseGenericAttributes(this MarkdownPipeline pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<AttributesExtension>();
+            pipeline.Extensions.AddIfNotAlready<GenericAttributesExtension>();
             return pipeline;
         }
 

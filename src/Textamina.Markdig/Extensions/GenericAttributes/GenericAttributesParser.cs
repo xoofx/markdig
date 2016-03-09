@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
@@ -8,18 +9,18 @@ using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
-namespace Textamina.Markdig.Extensions.Attributes
+namespace Textamina.Markdig.Extensions.GenericAttributes
 {
     /// <summary>
     /// An inline parser used to parse a HTML attributes that can be attached to the previous <see cref="Inline"/> or current <see cref="Block"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
-    public class AttributesParser : InlineParser
+    public class GenericAttributesParser : InlineParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttributesParser"/> class.
+        /// Initializes a new instance of the <see cref="GenericAttributesParser"/> class.
         /// </summary>
-        public AttributesParser()
+        public GenericAttributesParser()
         {
             OpeningCharacters = new[] { '{' };
         }

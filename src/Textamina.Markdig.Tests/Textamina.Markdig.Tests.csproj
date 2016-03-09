@@ -68,7 +68,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Specs\AbbreviationSpecs.md" />
-    <None Include="Specs\AttributesSpecs.md" />
+    <None Include="Specs\GenericAttributesSpecs.md" />
     <None Include="Specs\CustomContainerSpecs.md" />
     <None Include="Specs\DefinitionListSpecs.md" />
     <None Include="Specs\EmojiSpecs.md" />

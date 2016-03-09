@@ -2,7 +2,7 @@
 
 This section describes the different extensions supported:
 
-## Attributes
+## Generic Attributes
 
 Attributes can be attached to:
 - The previous inline element if the previous element is not a literal
@@ -30,7 +30,7 @@ This is a heading{#heading-link2}
 <h2 id="heading-link2">This is a heading</h2>
 ````````````````````````````````
 
-The following shows that the attributes is attached to the next fenced code block:
+The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
 
 ```````````````````````````````` example
 {#fenced-id .fenced-class}

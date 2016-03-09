@@ -31,7 +31,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestCommonMarkCpp()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -39,7 +39,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMarkNet()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -84,7 +84,7 @@ namespace Testamina.Markdig.Benchmarks
                 {
                     if (markdig)
                     {
-                        program.TestCommonMarkCpp();
+                        program.TestMarkdig();
                     }
                     else
                     {

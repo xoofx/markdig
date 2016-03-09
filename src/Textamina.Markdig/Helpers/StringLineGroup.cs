@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Textamina.Markdig.Helpers
 {
@@ -14,14 +15,12 @@ namespace Textamina.Markdig.Helpers
     /// <seealso cref="System.Collections.IEnumerable" />
     public class StringLineGroup : IEnumerable
     {
-        private static readonly StringLine[] Empty = new StringLine[0];
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         public StringLineGroup()
         {
-            Lines = Empty;
+            Lines = new StringLine[4];
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace Textamina.Markdig.Helpers
         public StringLineGroup(string text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
-            Lines = Empty;
+            Lines = new StringLine[1];
             Add(new StringSlice(text));
         }
 
@@ -77,6 +76,7 @@ namespace Textamina.Markdig.Helpers
         /// Adds the specified line to this instance.
         /// </summary>
         /// <param name="line">The line.</param>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void Add(ref StringLine line)
         {
             if (Count == Lines.Length) IncreaseCapacity();
@@ -87,6 +87,7 @@ namespace Textamina.Markdig.Helpers
         /// Adds the specified slice to this instance.
         /// </summary>
         /// <param name="slice">The slice.</param>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public void Add(StringSlice slice)
         {
             if (Count == Lines.Length) IncreaseCapacity();
@@ -167,8 +168,7 @@ namespace Textamina.Markdig.Helpers
 
         private void IncreaseCapacity()
         {
-            int newCapacity = Lines.Length == 0 ? 4 : Lines.Length * 2;
-            var newItems = new StringLine[newCapacity];
+            var newItems = new StringLine[Lines.Length * 2];
             if (Count > 0)
             {
                 Array.Copy(Lines, 0, newItems, 0, Count);

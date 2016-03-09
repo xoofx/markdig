@@ -6,22 +6,22 @@ using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
+using Textamina.Markdig.Syntax.Inlines;
 
-
-namespace Textamina.Markdig.Extensions.Attributes
+namespace Textamina.Markdig.Extensions.GenericAttributes
 {
     /// <summary>
     /// Extension that allows to attach HTML attributes to the previous <see cref="Inline"/> or current <see cref="Block"/>.
     /// This extension should be enabled last after enabling other extensions.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
-    public class AttributesExtension : IMarkdownExtension
+    public class GenericAttributesExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipeline pipeline)
         {
-            if (!pipeline.InlineParsers.Contains<AttributesParser>())
+            if (!pipeline.InlineParsers.Contains<GenericAttributesParser>())
             {
-                pipeline.InlineParsers.Insert(0, new AttributesParser());
+                pipeline.InlineParsers.Insert(0, new GenericAttributesParser());
             }
 
             // Modify all existing FencedBlockParser
@@ -51,7 +51,7 @@ namespace Textamina.Markdig.Extensions.Attributes
                     var copy = line;
                     copy.Start = indexOfAttributes;
                     HtmlAttributes attributes;
-                    if (AttributesParser.TryParse(ref copy, out attributes))
+                    if (GenericAttributesParser.TryParse(ref copy, out attributes))
                     {
                         var htmlAttributes = fenced.GetAttributes();
                         attributes.CopyTo(htmlAttributes);

@@ -16893,7 +16893,7 @@ namespace Textamina.Markdig.Tests
         //
         // This section describes the different extensions supported:
         //
-        // ## Attributes
+        // ## Generic Attributes
         //
         // Attributes can be attached to:
         // - The previous inline element if the previous element is not a literal
@@ -16908,13 +16908,13 @@ namespace Textamina.Markdig.Tests
         //
         // The following shows that attributes is attached to the current block or the previous inline:
     [TestFixture]
-    public partial class TestExtensionsAttributes
+    public partial class TestExtensionsGenericAttributes
     {
         [Test]
         public void Example001()
         {
             // Example 1
-            // Section: Extensions Attributes
+            // Section: Extensions Generic Attributes
             //
             // The following CommonMark:
             //     # This is a heading with an an attribute{#heading-link}
@@ -16929,19 +16929,19 @@ namespace Textamina.Markdig.Tests
             //     <p><a href="http://google.com" id="a-link" class="myclass" data-lang="fr" data-value="This is a value">This is a link</a></p>
             //     <h2 id="heading-link2">This is a heading</h2>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Attributes");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Generic Attributes");
 			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>", "attributes");
         }
     }
-        // The following shows that the attributes is attached to the next fenced code block:
+        // The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
     [TestFixture]
-    public partial class TestExtensionsAttributes
+    public partial class TestExtensionsGenericAttributes
     {
         [Test]
         public void Example002()
         {
             // Example 2
-            // Section: Extensions Attributes
+            // Section: Extensions Generic Attributes
             //
             // The following CommonMark:
             //     {#fenced-id .fenced-class}
@@ -16953,7 +16953,7 @@ namespace Textamina.Markdig.Tests
             //     <pre><code id="fenced-id" class="fenced-class">This is a fenced with attached attributes
             //     </code></pre>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Attributes");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Generic Attributes");
 			TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes");
         }
     }

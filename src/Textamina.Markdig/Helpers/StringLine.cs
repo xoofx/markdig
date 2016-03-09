@@ -23,6 +23,19 @@ namespace Textamina.Markdig.Helpers
         /// <param name="slice">The slice.</param>
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
+        public StringLine(StringSlice slice, int line, int column)
+        {
+            Slice = slice;
+            Line = line;
+            Column = column;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLine"/> struct.
+        /// </summary>
+        /// <param name="slice">The slice.</param>
+        /// <param name="line">The line.</param>
+        /// <param name="column">The column.</param>
         public StringLine(ref StringSlice slice, int line, int column)
         {
             Slice = slice;

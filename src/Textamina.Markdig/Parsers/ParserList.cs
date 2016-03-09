@@ -42,6 +42,7 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
             T[] parsers = null;
@@ -70,12 +71,26 @@ namespace Textamina.Markdig.Parsers
             fixed (char* pText = text)
             fixed (bool* openingChars = isOpeningCharacter)
             {
-                for (int i = start; i <= end; i++)
+                if (parsersForNonAscii == null)
                 {
-                    var c = pText[i];
-                    if ((c < maxChar && openingChars[c]) || (parsersForNonAscii != null && parsersForNonAscii.ContainsKey(c)))
+                    for (int i = start; i <= end; i++)
                     {
-                        return i;
+                        var c = pText[i];
+                        if (c < maxChar && openingChars[c])
+                        {
+                            return i;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = start; i <= end; i++)
+                    {
+                        var c = pText[i];
+                        if ((c < maxChar && openingChars[c]) || parsersForNonAscii.ContainsKey(c))
+                        {
+                            return i;
+                        }
                     }
                 }
             }

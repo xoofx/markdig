@@ -39,7 +39,7 @@
     <Compile Include="Extensions\Abbreviations\AbbreviationHelper.cs" />
     <Compile Include="Extensions\Abbreviations\AbbreviationInline.cs" />
     <Compile Include="Extensions\Abbreviations\AbbreviationParser.cs" />
-    <Compile Include="Extensions\Attributes\AttributesExtension.cs" />
+    <Compile Include="Extensions\GenericAttributes\GenericAttributesExtension.cs" />
     <Compile Include="Extensions\Abbreviations\AbbreviationExtension.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainer.cs" />
     <Compile Include="Extensions\CustomContainers\CustomContainerParser.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="Markdown.cs" />
     <Compile Include="MarkdownExtensions.cs" />
     <Compile Include="MarkdownPipeline.cs" />
-    <Compile Include="Extensions\Attributes\AttributesParser.cs" />
+    <Compile Include="Extensions\GenericAttributes\GenericAttributesParser.cs" />
     <Compile Include="Parsers\BlockStateExtensions.cs" />
     <Compile Include="Renderers\Html\HtmlAttributes.cs" />
     <Compile Include="Renderers\Html\HtmlBlockRenderer.cs" />
