@@ -19,8 +19,13 @@ namespace Textamina.Markdig.Parsers
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
         private T[][] parsersWithOpeningCharacters;
+        private Dictionary<char, T[]> parsersWithOpeningCharactersFallback;
         private T[] globalParsers;
         private bool[] isOpeningCharacter;
+
+        protected ParserList()
+        {
+        }
 
         /// <summary>
         /// Gets the list of global parsers (that don't have any opening characters defined)
@@ -39,7 +44,16 @@ namespace Textamina.Markdig.Parsers
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
-            return openingChar < parsersWithOpeningCharacters.Length ? parsersWithOpeningCharacters[openingChar] : null;
+            T[] parsers = null;
+            if (openingChar < parsersWithOpeningCharacters.Length)
+            {
+                parsers = parsersWithOpeningCharacters[openingChar];
+            }
+            else if (parsersWithOpeningCharactersFallback != null)
+            {
+                parsersWithOpeningCharactersFallback.TryGetValue(openingChar, out parsers);
+            }
+            return parsers;
         }
 
         /// <summary>
@@ -59,7 +73,7 @@ namespace Textamina.Markdig.Parsers
                 for (int i = start; i <= end; i++)
                 {
                     var c = pText[i];
-                    if (c < maxChar && openingChars[c])
+                    if ((c < maxChar && openingChars[c]) || (parsersWithOpeningCharactersFallback != null && parsersWithOpeningCharactersFallback.ContainsKey(c)))
                     {
                         return i;
                     }
@@ -81,6 +95,7 @@ namespace Textamina.Markdig.Parsers
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
             int maxChar = 0;
+
             for (int i = 0; i < Count; i++)
             {
                 var parser = this[i];
@@ -95,20 +110,20 @@ namespace Textamina.Markdig.Parsers
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-                        if (openingChar >= 127)
-                        {
-                            throw new InvalidOperationException(
-                                $"Invalid non-ascii character `{openingChar}` used by the parser [{parser.GetType().Name}]. Only ASCII < 127 are allowed");
-                        }
 
                         if (!charCounter.ContainsKey(openingChar))
                         {
                             charCounter[openingChar] = 0;
                         }
                         charCounter[openingChar]++;
-                        if (openingChar > maxChar)
+
+                        if (openingChar < 127 && openingChar > maxChar)
                         {
                             maxChar = openingChar;
+                        }
+                        else if (openingChar >= 127 && parsersWithOpeningCharactersFallback == null)
+                        {
+                            parsersWithOpeningCharactersFallback = new Dictionary<char, T[]>();
                         }
                     }
                 }
@@ -133,15 +148,28 @@ namespace Textamina.Markdig.Parsers
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-                        if (parsersWithOpeningCharacters[openingChar] == null)
+                        T[] parsersByChar;
+                        if (openingChar < 127)
                         {
-                            parsersWithOpeningCharacters[openingChar] = new T[charCounter[openingChar]];
+                            parsersByChar = parsersWithOpeningCharacters[openingChar];
+
+                            if (parsersByChar == null)
+                            {
+                                parsersWithOpeningCharacters[openingChar] = parsersByChar = new T[charCounter[openingChar]];
+                            }
+                            isOpeningCharacter[openingChar] = true;
                         }
-                        var list = parsersWithOpeningCharacters[openingChar];
-                        var index = list.Length - charCounter[openingChar];
-                        list[index] = parser;
+                        else
+                        {
+                            if (!parsersWithOpeningCharactersFallback.TryGetValue(openingChar, out parsersByChar))
+                            {
+                                parsersByChar = new T[charCounter[openingChar]];
+                            }
+                        }
+
+                        var index = parsersByChar.Length - charCounter[openingChar];
+                        parsersByChar[index] = parser;
                         charCounter[openingChar]--;
-                        isOpeningCharacter[openingChar] = true;
                     }
                 }
                 else
