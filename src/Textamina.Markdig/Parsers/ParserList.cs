@@ -18,8 +18,8 @@ namespace Textamina.Markdig.Parsers
     /// <seealso cref="Textamina.Markdig.Helpers.OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
-        private T[][] parsersWithOpeningCharacters;
-        private Dictionary<char, T[]> parsersWithOpeningCharactersFallback;
+        private T[][] parsersForAscii;
+        private Dictionary<char, T[]> parsersForNonAscii;
         private T[] globalParsers;
         private bool[] isOpeningCharacter;
 
@@ -45,13 +45,13 @@ namespace Textamina.Markdig.Parsers
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
             T[] parsers = null;
-            if (openingChar < parsersWithOpeningCharacters.Length)
+            if (openingChar < parsersForAscii.Length)
             {
-                parsers = parsersWithOpeningCharacters[openingChar];
+                parsers = parsersForAscii[openingChar];
             }
-            else if (parsersWithOpeningCharactersFallback != null)
+            else if (parsersForNonAscii != null)
             {
-                parsersWithOpeningCharactersFallback.TryGetValue(openingChar, out parsers);
+                parsersForNonAscii.TryGetValue(openingChar, out parsers);
             }
             return parsers;
         }
@@ -73,7 +73,7 @@ namespace Textamina.Markdig.Parsers
                 for (int i = start; i <= end; i++)
                 {
                     var c = pText[i];
-                    if ((c < maxChar && openingChars[c]) || (parsersWithOpeningCharactersFallback != null && parsersWithOpeningCharactersFallback.ContainsKey(c)))
+                    if ((c < maxChar && openingChars[c]) || (parsersForNonAscii != null && parsersForNonAscii.ContainsKey(c)))
                     {
                         return i;
                     }
@@ -121,9 +121,10 @@ namespace Textamina.Markdig.Parsers
                         {
                             maxChar = openingChar;
                         }
-                        else if (openingChar >= 127 && parsersWithOpeningCharactersFallback == null)
+                        else if (openingChar >= 127 && parsersForNonAscii == null)
                         {
-                            parsersWithOpeningCharactersFallback = new Dictionary<char, T[]>();
+                            // Initialize only if with have an actual non-ASCII opening character
+                            parsersForNonAscii = new Dictionary<char, T[]>();
                         }
                     }
                 }
@@ -139,7 +140,7 @@ namespace Textamina.Markdig.Parsers
             {
                 globalParsers = new T[globalCounter];
             }
-            parsersWithOpeningCharacters = new T[maxChar + 1][];
+            parsersForAscii = new T[maxChar + 1][];
             isOpeningCharacter = new bool[maxChar + 1];
 
             foreach (var parser in this)
@@ -151,17 +152,17 @@ namespace Textamina.Markdig.Parsers
                         T[] parsersByChar;
                         if (openingChar < 127)
                         {
-                            parsersByChar = parsersWithOpeningCharacters[openingChar];
+                            parsersByChar = parsersForAscii[openingChar];
 
                             if (parsersByChar == null)
                             {
-                                parsersWithOpeningCharacters[openingChar] = parsersByChar = new T[charCounter[openingChar]];
+                                parsersForAscii[openingChar] = parsersByChar = new T[charCounter[openingChar]];
                             }
                             isOpeningCharacter[openingChar] = true;
                         }
                         else
                         {
-                            if (!parsersWithOpeningCharactersFallback.TryGetValue(openingChar, out parsersByChar))
+                            if (!parsersForNonAscii.TryGetValue(openingChar, out parsersByChar))
                             {
                                 parsersByChar = new T[charCounter[openingChar]];
                             }
