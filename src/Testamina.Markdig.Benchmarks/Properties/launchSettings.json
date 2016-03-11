@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CLASSIC": {
+      "executablePath": "Testamina.Markdig.Benchmarks.dll",
+      "workingDirectory": "..\\..\\artifacts\\bin\\Testamina.Markdig.Benchmarks\\Debug\\net45"
+    }
+  }
+}

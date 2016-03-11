@@ -211,7 +211,6 @@ namespace Textamina.Markdig.Extensions.Tables
             int maxColumn = 0;
             var cells = tableState.Cells;
             cells.Clear();
-            TableRow currentRow = null;
 
             Inline column = container.FirstChild;
             if (column is PiprTableDelimiterInline)

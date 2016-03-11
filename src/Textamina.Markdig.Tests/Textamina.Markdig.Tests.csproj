@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Textamina.Markdig.Tests</RootNamespace>
     <AssemblyName>Textamina.Markdig.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <CopyNuGetImplementations>true</CopyNuGetImplementations>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,9 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.0.5797.27534, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Textamina.Markdig">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\net45\Textamina.Markdig.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -66,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="project.json" />
     <None Include="Specs\AbbreviationSpecs.md" />
     <None Include="Specs\GenericAttributesSpecs.md" />
     <None Include="Specs\CustomContainerSpecs.md" />
@@ -77,12 +79,6 @@
     <None Include="Specs\HardlineBreakSpecs.md" />
     <None Include="Specs\PipeTableSpecs.md" />
     <None Include="Specs\StrikeSubAndSuperscriptSpecs.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Textamina.Markdig\Textamina.Markdig.csproj">
-      <Project>{8a58a7e2-627c-4f41-933f-5ac92adfab48}</Project>
-      <Name>Textamina.Markdig</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Specs\Specs.tt">

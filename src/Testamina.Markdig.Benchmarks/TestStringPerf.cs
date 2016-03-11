@@ -6,8 +6,6 @@ namespace Testamina.Markdig.Benchmarks
 {
     public class TestStringPerf
     {
-        private HtmlRenderer htmlRenderer;
-        private StringWriter writer;
         private string text;
 
         public TestStringPerf()

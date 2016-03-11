@@ -1,0 +1,23 @@
+﻿{
+  "runtimes": {
+    "win": {}
+  },
+  "frameworks": {
+    "net45": {
+      "compilationOptions": {
+        "define": [
+          "CLASSIC"
+        ]
+      },
+      "frameworkAssemblies": {
+        "Microsoft.Build": "4.0.0.0",
+        "Microsoft.Build.Framework": "4.0.0.0",
+        "Microsoft.Build.Utilities.v4.0": "4.0.0.0",
+        "System.Management": "4.0.0.0"
+      }
+    }
+  },
+  "dependencies": {
+    "NUnit": "3.2.0"
+  }
+}

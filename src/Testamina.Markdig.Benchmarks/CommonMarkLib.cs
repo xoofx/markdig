@@ -24,7 +24,9 @@ namespace Testamina.Markdig.Benchmarks
                     {
                         length++;
                     }
-                    var result = Encoding.UTF8.GetString(ptr, length);
+                    var buffer = new byte[length];
+                    Marshal.Copy(new IntPtr(ptr), buffer, 0, length);
+                    var result = Encoding.UTF8.GetString(buffer);
                     Marshal.FreeHGlobal(new IntPtr(ptr));
                     return result;
                 }
