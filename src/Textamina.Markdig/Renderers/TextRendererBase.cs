@@ -157,14 +157,14 @@ namespace Textamina.Markdig.Renderers
             {
                 if (length > buffer.Length)
                 {
-                    buffer = content.ToCharArray(offset, length);
+                    buffer = content.ToCharArray();
+                    Writer.Write(buffer, offset, length);
                 }
                 else
                 {
                     content.CopyTo(offset, buffer, 0, length);
+                    Writer.Write(buffer, 0, length);
                 }
-
-                Writer.Write(buffer, 0, length);
             }
             return (T) this;
         }

@@ -111,18 +111,19 @@ namespace Textamina.Markdig.Parsers
         private unsafe void FixupZero(string text)
         {
             // Perform an inline modification on the "immutable" string instead of making a copy.
-            fixed (char* pText = text)
-            {
-                int length = text.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    var c = pText[i];
-                    if (c == '\0')
-                    {
-                        pText[i] = '\ufffd';
-                    }
-                }
-            }
+            // TODO
+            //fixed (char* pText = text)
+            //{
+            //    int length = text.Length;
+            //    for (int i = 0; i < length; i++)
+            //    {
+            //        var c = pText[i];
+            //        if (c == '\0')
+            //        {
+            //            pText[i] = '\ufffd';
+            //        }
+            //    }
+            //}
         }
 
 

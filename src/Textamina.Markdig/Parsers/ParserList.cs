@@ -68,14 +68,13 @@ namespace Textamina.Markdig.Parsers
         public unsafe int IndexOfOpeningCharacter(string text, int start, int end)
         {
             var maxChar = isOpeningCharacter.Length;
-            fixed (char* pText = text)
             fixed (bool* openingChars = isOpeningCharacter)
             {
                 if (parsersForNonAscii == null)
                 {
                     for (int i = start; i <= end; i++)
                     {
-                        var c = pText[i];
+                        var c = text[i];
                         if (c < maxChar && openingChars[c])
                         {
                             return i;
@@ -86,7 +85,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     for (int i = start; i <= end; i++)
                     {
-                        var c = pText[i];
+                        var c = text[i];
                         if ((c < maxChar && openingChars[c]) || parsersForNonAscii.ContainsKey(c))
                         {
                             return i;

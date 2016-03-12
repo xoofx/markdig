@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="Textamina.Markdig">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\net45\Textamina.Markdig.dll</HintPath>
+      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\portable-net40+sl50+win+wpa81+wp80\Textamina.Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
