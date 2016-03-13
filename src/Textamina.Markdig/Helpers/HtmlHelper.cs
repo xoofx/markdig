@@ -49,7 +49,7 @@ namespace Textamina.Markdig.Helpers
             var builder = StringBuilderCache.Local();
             var result = TryParseHtmlTag(ref text, builder);
             htmlTag = builder.ToString();
-            builder.Clear();
+            builder.Length = 0;
             return result;
         }
 
@@ -457,7 +457,7 @@ namespace Textamina.Markdig.Helpers
                 if (sb == null)
                 {
                     sb = StringBuilderCache.Local();
-                    sb.Clear();
+                    sb.Length = 0;
                 }
                 c = text[searchPos];
                 if (removeBackSlash && c == '\\')
@@ -529,7 +529,7 @@ namespace Textamina.Markdig.Helpers
 
             sb.Append(text, lastPos, text.Length - lastPos);
             var result = sb.ToString();
-            sb.Clear();
+            sb.Length = 0;
             return result;
         }
 

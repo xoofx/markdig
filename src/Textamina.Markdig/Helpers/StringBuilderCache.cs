@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Helpers
             var sb = local ?? (local = new StringBuilder());
             if (sb.Length > 0)
             {
-                sb.Clear();
+                sb.Length = 0;
             }
             return sb;
         }
@@ -36,7 +36,7 @@ namespace Textamina.Markdig.Helpers
         {
             if (instance.Length > 0)
             {
-                instance.Clear();
+                instance.Length = 0;
             }
         }
     }

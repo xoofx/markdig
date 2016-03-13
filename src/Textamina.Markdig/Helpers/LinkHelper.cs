@@ -90,7 +90,7 @@ namespace Textamina.Markdig.Helpers
                     // a scheme is any sequence of 2–32 characters 
                     if (state > 0 && builder.Length >= 32)
                     {
-                        builder.Clear();
+                        builder.Length = 0;
                         return false;
                     }
                     builder.Append(c);
@@ -99,7 +99,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     if (state < 0 || builder.Length <= 2)
                     {
-                        builder.Clear();
+                        builder.Length = 0;
                         return false;
                     }
                     state = 1;
@@ -108,7 +108,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     if (state > 0)
                     {
-                        builder.Clear();
+                        builder.Length = 0;
                         return false;
                     }
                     state = -1;
@@ -116,7 +116,7 @@ namespace Textamina.Markdig.Helpers
                 }
                 else
                 {
-                    builder.Clear();
+                    builder.Length = 0;
                     return false;
                 }
             }
@@ -146,7 +146,7 @@ namespace Textamina.Markdig.Helpers
 
                         text.NextChar();
                         link = builder.ToString();
-                        builder.Clear();
+                        builder.Length = 0;
                         return true;
                     }
 
@@ -193,7 +193,7 @@ namespace Textamina.Markdig.Helpers
                     {
                         text.NextChar();
                         link = builder.ToString();
-                        builder.Clear();
+                        builder.Length = 0;
                         return true;
                     }
 
@@ -209,7 +209,7 @@ namespace Textamina.Markdig.Helpers
                 }
             }
 
-            builder.Clear();
+            builder.Length = 0;
             return false;
         }
 
@@ -288,7 +288,7 @@ namespace Textamina.Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Clear();
+            buffer.Length = 0;
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
@@ -367,7 +367,7 @@ namespace Textamina.Markdig.Helpers
             }
 
             title = isValid ? buffer.ToString() : null;
-            buffer.Clear();
+            buffer.Length = 0;
             return isValid;
         }
 
@@ -380,7 +380,7 @@ namespace Textamina.Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Clear();
+            buffer.Length = 0;
 
             var c = text.CurrentChar;
 
@@ -490,7 +490,7 @@ namespace Textamina.Markdig.Helpers
             }
 
             link = isValid ? buffer.ToString() : null;
-            buffer.Clear();
+            buffer.Length = 0;
             return isValid;
         }
 
@@ -677,7 +677,7 @@ namespace Textamina.Markdig.Helpers
                 previousWhitespace = isWhitespace;
             }
 
-            buffer.Clear();
+            buffer.Length = 0;
 
             return isValid;
         }

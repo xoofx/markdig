@@ -148,7 +148,7 @@ namespace Textamina.Markdig.Helpers
                 lineOffsets.Add(builder.Length); // Add 1 for \0
             }
             var str = builder.ToString();
-            builder.Clear();
+            builder.Length = 0;
             return new StringSlice(str);
         }
 

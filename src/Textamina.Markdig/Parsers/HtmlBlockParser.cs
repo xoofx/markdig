@@ -88,7 +88,7 @@ namespace Textamina.Markdig.Parsers
                 }
             }
 
-            builder.Clear();
+            builder.Length = 0;
             return result;
         }
 

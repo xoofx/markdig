@@ -28,6 +28,20 @@
   },
 
   "frameworks": {
+    "net20": {
+      "frameworkAssemblies": {
+        "mscorlib": "",
+        "System": "",
+        "System.Core": ""
+      }
+    },
+    "net35": {
+      "frameworkAssemblies": {
+        "mscorlib": "",
+        "System": "",
+        "System.Core": ""
+      }
+    },
     ".NETPortable,Version=v4.0,Profile=Profile328": {
       "frameworkAssemblies": {
         "mscorlib": "",
