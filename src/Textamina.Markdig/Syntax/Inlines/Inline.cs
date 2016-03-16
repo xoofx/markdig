@@ -12,7 +12,7 @@ namespace Textamina.Markdig.Syntax.Inlines
     /// Base class for all syntax tree inlines.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.MarkdownObject" />
-    public abstract class Inline : MarkdownObject
+    public abstract class Inline : MarkdownObject, IInline
     {
         /// <summary>
         /// Gets the parent container of this inline.

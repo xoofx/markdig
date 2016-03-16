@@ -5,8 +5,15 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Extensions.CustomContainers
 {
+    /// <summary>
+    /// The block parser for a <see cref="CustomContainer"/>.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Parsers.FencedBlockParserBase{Textamina.Markdig.Extensions.CustomContainers.CustomContainer}" />
     public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomContainerParser"/> class.
+        /// </summary>
         public CustomContainerParser()
         {
             OpeningCharacters = new [] {':'};

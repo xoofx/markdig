@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax
     /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.MarkdownObject" />
-    public abstract class Block : MarkdownObject
+    public abstract class Block : MarkdownObject, IBlock
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Block"/> class.

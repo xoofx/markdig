@@ -6,8 +6,17 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.CustomContainers
 {
+    /// <summary>
+    /// A custom container.
+    /// </summary>
+    /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="Textamina.Markdig.Syntax.IFencedBlock" />
     public class CustomContainer : ContainerBlock, IFencedBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomContainer"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public CustomContainer(BlockParser parser) : base(parser)
         {
         }

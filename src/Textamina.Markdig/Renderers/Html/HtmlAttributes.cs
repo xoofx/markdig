@@ -103,7 +103,7 @@ namespace Textamina.Markdig.Renderers.Html
         /// </summary>
         /// <param name="obj">The markdown object.</param>
         /// <returns>The attached html attributes or null if not found</returns>
-        public static HtmlAttributes TryGetAttributes(this MarkdownObject obj)
+        public static HtmlAttributes TryGetAttributes(this IMarkdownObject obj)
         {
             return obj.GetData(Key) as HtmlAttributes;
         }
@@ -113,7 +113,7 @@ namespace Textamina.Markdig.Renderers.Html
         /// </summary>
         /// <param name="obj">The markdown object.</param>
         /// <returns>The attached html attributes</returns>
-        public static HtmlAttributes GetAttributes(this MarkdownObject obj)
+        public static HtmlAttributes GetAttributes(this IMarkdownObject obj)
         {
             var attributes = obj.GetData(Key) as HtmlAttributes;
             if (attributes == null)

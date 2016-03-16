@@ -7,9 +7,9 @@ using System.Collections.Generic;
 namespace Textamina.Markdig.Syntax
 {
     /// <summary>
-    /// Base class for a the Markdown syntax tree.
+    /// Base implementation for a the Markdown syntax tree.
     /// </summary>
-    public class MarkdownObject
+    public abstract class MarkdownObject : IMarkdownObject
     {
         /// <summary>
         /// The attached datas.

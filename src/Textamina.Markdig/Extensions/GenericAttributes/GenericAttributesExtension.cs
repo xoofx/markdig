@@ -53,7 +53,7 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                     HtmlAttributes attributes;
                     if (GenericAttributesParser.TryParse(ref copy, out attributes))
                     {
-                        var htmlAttributes = ((Block)fenced).GetAttributes();
+                        var htmlAttributes = fenced.GetAttributes();
                         attributes.CopyTo(htmlAttributes);
                         line.End = indexOfAttributes - 1;
                     }
