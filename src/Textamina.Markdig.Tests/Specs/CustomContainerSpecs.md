@@ -8,10 +8,10 @@ A custom container is similar to a fenced code block, but it is using the charac
 
 ```````````````````````````````` example
 :::spoiler
-This is a spoiler
+This is a *spoiler*
 :::
 .
-<div class="spoiler">This is a spoiler
+<div class="spoiler"><p>This is a <em>spoiler</em></p>
 </div>
 ````````````````````````````````
 
@@ -22,7 +22,7 @@ The text following the opened custom container is optional:
 This is a regular div
 :::
 .
-<div>This is a regular div
+<div><p>This is a regular div</p>
 </div>
 ````````````````````````````````
 
@@ -34,7 +34,7 @@ Like for fenced code block, you can use more than 3 `:` characters as long as th
 This is a spoiler
 ::::::::::::
 .
-<div class="spoiler">This is a spoiler
+<div class="spoiler"><p>This is a spoiler</p>
 </div>
 ````````````````````````````````
 
@@ -44,16 +44,18 @@ Like for fenced code block, a custom container can span over multiple empty line
 - This is a list
   :::spoiler
   This is a spoiler
-
-
+  - item1
+  - item2
   :::
 - A second item in the list
 .
 <ul>
 <li>This is a list
 <div class="spoiler">This is a spoiler
-
-
+<ul>
+<li>item1</li>
+<li>item2</li>
+</ul>
 </div>
 </li>
 <li>A second item in the list</li>
@@ -67,11 +69,11 @@ Attributes extension is also supported for Custom Container, as long as the Attr
 This is a spoiler
 :::
 .
-<div id="myspoiler" class="spoiler" myprop="yes">This is a spoiler
+<div id="myspoiler" class="spoiler" myprop="yes"><p>This is a spoiler</p>
 </div>
 ````````````````````````````````
 
-The content of a custom container is not HTML escaped:
+The content of a custom container can contain any blocks:
 
 ```````````````````````````````` example
 :::mycontainer

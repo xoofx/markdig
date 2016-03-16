@@ -2,20 +2,20 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Parsers;
-using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.CustomContainers
 {
-    public class CustomContainerParser : FencedCodeBlockParser
+    public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
     {
         public CustomContainerParser()
         {
             OpeningCharacters = new [] {':'};
-            // We don't prefix by LanguagePrefix
-            LanguagePrefix = null;
+
+            // We don't need a prefix
+            InfoPrefix = null;
         }
 
-        protected override FencedCodeBlock CreateFencedCodeBlock()
+        protected override CustomContainer CreateFencedBlock(BlockProcessor processor)
         {
             return new CustomContainer(this);
         }

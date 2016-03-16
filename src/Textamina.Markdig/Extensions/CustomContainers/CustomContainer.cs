@@ -6,10 +6,18 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Extensions.CustomContainers
 {
-    public class CustomContainer : FencedCodeBlock
+    public class CustomContainer : ContainerBlock, IFencedBlock
     {
         public CustomContainer(BlockParser parser) : base(parser)
         {
         }
+
+        public string Info { get; set; }
+
+        public string Arguments { get; set; }
+
+        public int FencedCharCount { get; set; }
+
+        public char FencedChar { get; set; }
     }
 }

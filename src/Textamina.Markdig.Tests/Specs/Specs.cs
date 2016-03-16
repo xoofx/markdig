@@ -17320,15 +17320,15 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //     :::spoiler
-            //     This is a spoiler
+            //     This is a *spoiler*
             //     :::
             //
             // Should be rendered as:
-            //     <div class="spoiler">This is a spoiler
+            //     <div class="spoiler"><p>This is a <em>spoiler</em></p>
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Custom Container");
-			TestParser.TestSpec(":::spoiler\nThis is a spoiler\n:::", "<div class=\"spoiler\">This is a spoiler\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes");
         }
     }
         // The text following the opened custom container is optional:
@@ -17347,11 +17347,11 @@ namespace Textamina.Markdig.Tests
             //     :::
             //
             // Should be rendered as:
-            //     <div>This is a regular div
+            //     <div><p>This is a regular div</p>
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Custom Container");
-			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div>This is a regular div\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes");
         }
     }
         // Like for fenced code block, you can use more than 3 `:` characters as long as the closing has the same number of characters:
@@ -17370,11 +17370,11 @@ namespace Textamina.Markdig.Tests
             //     ::::::::::::
             //
             // Should be rendered as:
-            //     <div class="spoiler">This is a spoiler
+            //     <div class="spoiler"><p>This is a spoiler</p>
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Custom Container");
-			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\">This is a spoiler\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes");
         }
     }
         // Like for fenced code block, a custom container can span over multiple empty lines in a list block:
@@ -17391,8 +17391,8 @@ namespace Textamina.Markdig.Tests
             //     - This is a list
             //       :::spoiler
             //       This is a spoiler
-            //     
-            //     
+            //       - item1
+            //       - item2
             //       :::
             //     - A second item in the list
             //
@@ -17400,15 +17400,17 @@ namespace Textamina.Markdig.Tests
             //     <ul>
             //     <li>This is a list
             //     <div class="spoiler">This is a spoiler
-            //     
-            //     
+            //     <ul>
+            //     <li>item1</li>
+            //     <li>item2</li>
+            //     </ul>
             //     </div>
             //     </li>
             //     <li>A second item in the list</li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Custom Container");
-			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n\n\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n\n\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes");
+			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes");
         }
     }
         // Attributes extension is also supported for Custom Container, as long as the Attributes extension is activated after the CustomContainer extension (`.UseCustomContainer().UseAttributes()`)
@@ -17427,14 +17429,14 @@ namespace Textamina.Markdig.Tests
             //     :::
             //
             // Should be rendered as:
-            //     <div id="myspoiler" class="spoiler" myprop="yes">This is a spoiler
+            //     <div id="myspoiler" class="spoiler" myprop="yes"><p>This is a spoiler</p>
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Custom Container");
-			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\">This is a spoiler\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes");
         }
     }
-        // The content of a custom container is not HTML escaped:
+        // The content of a custom container can contain any blocks:
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {

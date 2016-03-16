@@ -11,7 +11,7 @@ namespace Textamina.Markdig.Syntax
     /// <remarks>
     /// Related to CommonMark spec: 4.5 Fenced code blocks
     /// </remarks>
-    public class FencedCodeBlock : CodeBlock
+    public class FencedCodeBlock : CodeBlock, IFencedBlock
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedCodeBlock"/> class.
@@ -30,10 +30,10 @@ namespace Textamina.Markdig.Syntax
         /// Gets or sets the language parsed after the first line of 
         /// the fenced code block. May be null.
         /// </summary>
-        public string Language { get; set; }
+        public string Info { get; set; }
 
         /// <summary>
-        /// Gets or sets the arguments after the <see cref="Language"/>.
+        /// Gets or sets the arguments after the <see cref="Info"/>.
         /// May be null.
         /// </summary>
         public string Arguments { get; set; }

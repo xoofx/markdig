@@ -17,7 +17,7 @@ namespace Textamina.Markdig.Extensions.CustomContainers
             renderer.EnsureLine();
             renderer.Write("<div").WriteAttributes(obj).Write(">");
             // We don't escape a CustomContainer
-            renderer.WriteLeafRawLines(obj, true, false);
+            renderer.WriteChildren(obj);
             renderer.WriteLine("</div>");
         }
     }

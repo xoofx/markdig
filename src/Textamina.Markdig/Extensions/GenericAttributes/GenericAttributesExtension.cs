@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
             // Modify all existing FencedBlockParser
             foreach (var parser in pipeline.BlockParsers)
             {
-                var fencedParser = parser as FencedCodeBlockParser;
+                var fencedParser = parser as FencedBlockParserBase;
                 if (fencedParser != null)
                 {
                     InstallInfoParserForFenced(fencedParser);
@@ -35,13 +35,13 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
             }
         }
 
-        private static void InstallInfoParserForFenced(FencedCodeBlockParser parser)
+        private static void InstallInfoParserForFenced(FencedBlockParserBase parser)
         {
             // Special case for FencedCodeBlock, as we need to plug into the InfoParser in order
             // to parse correctly an attributes
             var infoParser = parser.InfoParser;
 
-            parser.InfoParser = (BlockProcessor state, ref StringSlice line, FencedCodeBlock fenced) =>
+            parser.InfoParser = (BlockProcessor state, ref StringSlice line, IFencedBlock fenced) =>
             {
                 // Try to find if there is any attributes { in the info string on the first line of a FencedCodeBlock
                 var indexOfAttributes = line.Text.IndexOf('{', line.Start);
@@ -53,7 +53,7 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                     HtmlAttributes attributes;
                     if (GenericAttributesParser.TryParse(ref copy, out attributes))
                     {
-                        var htmlAttributes = fenced.GetAttributes();
+                        var htmlAttributes = ((Block)fenced).GetAttributes();
                         attributes.CopyTo(htmlAttributes);
                         line.End = indexOfAttributes - 1;
                     }
