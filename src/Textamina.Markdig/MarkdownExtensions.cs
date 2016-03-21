@@ -33,7 +33,7 @@ namespace Textamina.Markdig
                 .UseSoftlineBreakAsHardlineBreak()
                 .UseFootnotes()
                 .UseEmojiAndSmiley()
-                .UseStrikeoutSuperAndSubScript()
+                .UseEmphasisExtra()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -115,13 +115,19 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
-        /// Uses the strikeout superscript and subscript extensions.
+        /// Uses the strikeout superscript, subscript, inserted and marked text extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseStrikeoutSuperAndSubScript(this MarkdownPipeline pipeline)
+        /// <param name="options">The options to enable.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UseEmphasisExtra(this MarkdownPipeline pipeline, EmphasisExtraOptions options = EmphasisExtraOptions.Default)
         {
-            pipeline.Extensions.AddIfNotAlready<StrikeoutSuperAndSubScriptExtension>();
+            if (!pipeline.Extensions.Contains<EmphasisExtraExtension>())
+            {
+                pipeline.Extensions.Add(new EmphasisExtraExtension(options));
+            }
             return pipeline;
         }
 

@@ -21,7 +21,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
             //> titi toto
             //");
 
-            //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseStrikeoutSuperAndSubScript());
+            //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseEmphasisExtra());
             var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAbbreviation());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);

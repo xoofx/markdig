@@ -21,3 +21,23 @@ H~2~O is a liquid. 2^10^ is 1024
 .
 <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 ````````````````````````````````
+
+## Inserted
+
+Inserted text can be used to specify that a text has been added to a document.
+ 
+```````````````````````````````` example
+++Inserted text++
+.
+<p><ins>Inserted text</ins></p>
+````````````````````````````````
+
+## Marked
+
+Marked text can be used to specify that a text has been marked in a document.
+ 
+```````````````````````````````` example
+==Marked text==
+.
+<p><mark>Marked text</mark></p>
+````````````````````````````````

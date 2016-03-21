@@ -17005,6 +17005,50 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "extra_emphasis");
         }
     }
+        // ## Inserted
+        //
+        // Inserted text can be used to specify that a text has been added to a document.
+    [TestFixture]
+    public partial class TestExtensionsInserted
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Inserted
+            //
+            // The following CommonMark:
+            //     ++Inserted text++
+            //
+            // Should be rendered as:
+            //     <p><ins>Inserted text</ins></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Inserted");
+			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "extra_emphasis");
+        }
+    }
+        // ## Marked
+        //
+        // Marked text can be used to specify that a text has been marked in a document.
+    [TestFixture]
+    public partial class TestExtensionsMarked
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Marked
+            //
+            // The following CommonMark:
+            //     ==Marked text==
+            //
+            // Should be rendered as:
+            //     <p><mark>Marked text</mark></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Marked");
+			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "extra_emphasis");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
