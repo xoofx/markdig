@@ -20,16 +20,28 @@ namespace Textamina.Markdig.Extensions
             var parser = pipeline.InlineParsers.Find<EmphasisInlineParser>();
             if (parser != null)
             {
-                var chars = new List<char>(parser.OpeningCharacters);
-                if (!chars.Contains('~'))
+                var hasTilde = false;
+                var hasSup = false;
+                foreach (var emphasis in parser.EmphasisDescriptors)
                 {
-                    chars.Add('~');
+                    if (emphasis.Character == '~')
+                    {
+                        hasTilde = true;
+                    }
+                    if (emphasis.Character == '^')
+                    {
+                        hasSup = true;
+                    }
                 }
-                if (!chars.Contains('^'))
+
+                if (!hasTilde)
                 {
-                    chars.Add('^');
+                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', 1, 2, true));
                 }
-                parser.OpeningCharacters = chars.ToArray();
+                if (!hasSup)
+                {
+                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('^', 1, 1, true));
+                }
             }
 
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;
@@ -50,7 +62,7 @@ namespace Textamina.Markdig.Extensions
             var c = emphasisInline.DelimiterChar;
             if (c == '~')
             {
-                return emphasisInline.Strong ? "del" : "sub";
+                return emphasisInline.IsDouble ? "del" : "sub";
             }
             else if (c == '^')
             {

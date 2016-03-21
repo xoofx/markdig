@@ -55,7 +55,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
         {
             if (obj.DelimiterChar == '*' || obj.DelimiterChar == '_')
             {
-                return obj.Strong ? "strong" : "em";
+                return obj.IsDouble ? "strong" : "em";
             }
             return null;
         }

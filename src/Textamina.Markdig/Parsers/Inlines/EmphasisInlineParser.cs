@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax.Inlines;
@@ -14,12 +16,42 @@ namespace Textamina.Markdig.Parsers.Inlines
     /// <seealso cref="Textamina.Markdig.Parsers.IDelimiterProcessor" />
     public class EmphasisInlineParser : InlineParser, IDelimiterProcessor
     {
+        private CharacterMap<EmphasisDescriptor> emphasisMap;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisInlineParser"/> class.
         /// </summary>
         public EmphasisInlineParser()
         {
-            OpeningCharacters = new[] { '*', '_' };
+            EmphasisDescriptors = new List<EmphasisDescriptor>()
+            {
+                new EmphasisDescriptor('*', 1, 2, true),
+                new EmphasisDescriptor('_', 1, 2, false)
+            };
+        }
+
+        public List<EmphasisDescriptor> EmphasisDescriptors { get; }
+
+        public override void Initialize(InlineProcessor processor)
+        {
+            OpeningCharacters = new char[EmphasisDescriptors.Count];
+
+            var tempMap = new List<KeyValuePair<char, EmphasisDescriptor>>();
+            for (int i = 0; i < EmphasisDescriptors.Count; i++)
+            {
+                var emphasis = EmphasisDescriptors[i];
+                if (Array.IndexOf(OpeningCharacters, emphasis.Character) >= 0)
+                {
+                    throw new InvalidOperationException(
+                        $"The character `{emphasis.Character}` is already used by another emphasis descriptor");
+                }
+
+                OpeningCharacters[i] = emphasis.Character;
+
+                tempMap.Add(new KeyValuePair<char, EmphasisDescriptor>(emphasis.Character, emphasis));
+            }
+
+            emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
         }
 
         public bool ProcessDelimiters(InlineProcessor state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
@@ -70,6 +102,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             // is not preceded or followed by a _ character.
 
             var delimiterChar = slice.CurrentChar;
+            var emphasisDesc = emphasisMap[delimiterChar];
             var pc = slice.PeekCharExtra(-1);
             if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
             {
@@ -84,6 +117,12 @@ namespace Textamina.Markdig.Parsers.Inlines
                 c = slice.NextChar();
             } while (c == delimiterChar);
 
+
+            // If the emphasis doesn't have the minimum required character
+            if (delimiterCount < emphasisDesc.MinimumCount)
+            {
+                return false;
+            }
 
             // A left-flanking delimiter run is a delimiter run that is 
             // (a) not followed by Unicode whitespace, and
@@ -109,7 +148,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             bool canClose = !prevIsWhiteSpace &&
                             (!prevIsPunctuation || nextIsWhiteSpace || nextIsPunctuation);
 
-            if (delimiterChar == '_')
+            if (!emphasisDesc.EnableWithinWord)
             {
                 var temp = canOpen;
                 // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
@@ -136,9 +175,8 @@ namespace Textamina.Markdig.Parsers.Inlines
                     delimiterType |= DelimiterType.Close;
                 }
 
-                var delimiter = new EmphasisDelimiterInline(this)
+                var delimiter = new EmphasisDelimiterInline(this, emphasisDesc)
                 {
-                    DelimiterChar = delimiterChar,
                     DelimiterCount = delimiterCount,
                     Type = delimiterType,
                 };
@@ -192,7 +230,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                             var emphasis = new EmphasisInline()
                             {
                                 DelimiterChar = closeDelimiter.DelimiterChar,
-                                Strong = isStrong
+                                IsDouble = isStrong
                             };
 
 
@@ -202,7 +240,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                             while (true)
                             {
                                 var previousEmphasis = embracer.FirstChild as EmphasisInline;
-                                if (previousEmphasis != null && previousEmphasis.Strong && !isStrong && embracer.FirstChild == embracer.LastChild)
+                                if (previousEmphasis != null && previousEmphasis.IsDouble && !isStrong && embracer.FirstChild == embracer.LastChild)
                                 {
                                     embracer = previousEmphasis;
                                 }

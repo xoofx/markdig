@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax.Inlines
     /// An emphasis and strong emphasis (Section 6.4 CommonMark specs).
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.ContainerInline" />
-    [DebuggerDisplay("{DelimiterChar} Strong: {Strong}")]
+    [DebuggerDisplay("{DelimiterChar} Strong: {IsDouble}")]
     public class EmphasisInline : ContainerInline
     {
         /// <summary>
@@ -21,6 +21,6 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="EmphasisInline"/> is strong.
         /// </summary>
-        public bool Strong { get; set; }
+        public bool IsDouble { get; set; }
     }
 }

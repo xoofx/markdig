@@ -1,7 +1,10 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using Textamina.Markdig.Parsers;
+using Textamina.Markdig.Parsers.Inlines;
 
 namespace Textamina.Markdig.Syntax.Inlines
 {
@@ -12,17 +15,27 @@ namespace Textamina.Markdig.Syntax.Inlines
     public class EmphasisDelimiterInline : DelimiterInline
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmphasisDelimiterInline"/> class.
+        /// Initializes a new instance of the <see cref="EmphasisDelimiterInline" /> class.
         /// </summary>
         /// <param name="parser">The parser.</param>
-        public EmphasisDelimiterInline(InlineParser parser) : base(parser)
+        /// <param name="descriptor">The descriptor.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor) : base(parser)
         {
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
+            Descriptor = descriptor;
+            DelimiterChar = descriptor.Character;
         }
+
+        /// <summary>
+        /// Gets the descriptor for this emphasis.
+        /// </summary>
+        public EmphasisDescriptor Descriptor { get; }
 
         /// <summary>
         /// The delimiter character found.
         /// </summary>
-        public char DelimiterChar { get; set; }
+        public char DelimiterChar { get; }
 
         /// <summary>
         /// The number of delimiter characters found for this delimiter.
