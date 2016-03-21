@@ -27,12 +27,17 @@ namespace Textamina.Markdig.Syntax
         /// <summary>
         /// Gets or sets the bullet character used by this list.
         /// </summary>
-        public char BulletChar { get; set; }
+        public char BulletType { get; set; }
 
         /// <summary>
         /// Gets or sets the ordered start number (valid when <see cref="IsOrdered"/> is <c>true</c>)
         /// </summary>
-        public int OrderedStart { get; set; }
+        public string OrderedStart { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default ordered start ("1" for BulletType = '1')
+        /// </summary>
+        public string DefaultOrderedStart { get; set; }
 
         /// <summary>
         /// Gets or sets the ordered delimiter character (usually `.` or `)`) found after an ordered list item.

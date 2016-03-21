@@ -18,11 +18,14 @@ namespace Textamina.Markdig.Renderers.Html
             if (listBlock.IsOrdered)
             {
                 renderer.Write("<ol");
-                if (listBlock.OrderedStart != 1)
+                if (listBlock.BulletType != '1')
                 {
-                    renderer.Write(" start=\"");
-                    renderer.Write(listBlock.OrderedStart.ToString(CultureInfo.InvariantCulture));
-                    renderer.Write("\"");
+                    renderer.Write(" type=\"").Write(listBlock.BulletType).Write("\"");
+                }
+
+                if (listBlock.OrderedStart != null && (listBlock.DefaultOrderedStart != listBlock.OrderedStart))
+                {
+                    renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write("\"");
                 }
                 renderer.WriteAttributes(listBlock);
                 renderer.WriteLine(">");
