@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -97,7 +98,7 @@ namespace Textamina.Markdig.Parsers
                 {
                     break;
                 }
-                FixupZero(lineText);
+                lineText = FixupZero(lineText);
 
                 blockProcessor.ProcessLine(new StringSlice(lineText));
             }
@@ -108,22 +109,32 @@ namespace Textamina.Markdig.Parsers
         /// Fixups the zero character by replacing it to a secure character (Section 2.3 Insecure characters, CommonMark specs)
         /// </summary>
         /// <param name="text">The text to secure.</param>
-        private unsafe void FixupZero(string text)
+        private string FixupZero(string text)
         {
-            // Perform an inline modification on the "immutable" string instead of making a copy.
-            // TODO
-            //fixed (char* pText = text)
-            //{
-            //    int length = text.Length;
-            //    for (int i = 0; i < length; i++)
-            //    {
-            //        var c = pText[i];
-            //        if (c == '\0')
-            //        {
-            //            pText[i] = '\ufffd';
-            //        }
-            //    }
-            //}
+
+            int startPos = 0;
+            int nextZero;
+            StringBuilder newLine = null;
+            while ((nextZero = text.IndexOf('\0', startPos)) >= 0)
+            {
+                if (newLine == null)
+                {
+                    newLine = StringBuilderCache.Local();
+                }
+                newLine.Append(text, startPos, nextZero - startPos);
+                newLine.Append(CharHelper.ZeroSafeChar);
+                startPos = nextZero + 1;
+            }
+
+            if (newLine == null)
+            {
+                return text;
+            }
+            newLine.Append(text, startPos, text.Length - startPos);
+
+            var result = newLine.ToString();
+            newLine.Length = 0;
+            return result;
         }
 
 

@@ -14,7 +14,9 @@ namespace Textamina.Markdig.Helpers
     {
         public const int TabSize = 4;
 
-        public static readonly string ZeroSafeString = string.Empty + '\uFFFD';
+        public const char ZeroSafeChar = '\uFFFD';
+
+        public const string ZeroSafeString = "\uFFFD";
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static int AddTab(int column)
