@@ -2,6 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Syntax;
 
@@ -11,10 +14,10 @@ namespace Textamina.Markdig.Parsers
 
     public abstract class ListItemParser
     {
-        public char[] OpeningCharacters { get; }
+        public char[] OpeningCharacters { get; protected set; }
 
 
-        public abstract bool TryParse(BlockProcessor state, out char type);
+        public abstract bool TryParse(BlockProcessor state, out char type, out int start, out char delimiter);
     }
 
 
@@ -30,46 +33,76 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         public char[] OrderedDelimiters { get; set; }
 
-        public bool TryParse(BlockProcessor state, out char type)
+        protected bool ParseDelimiter(char c)
         {
-            type = (char) 0;
+            // Check if we have an ordered delimiter
+            for (int i = 0; i < OrderedDelimiters.Length; i++)
+            {
+                if (OrderedDelimiters[i] == c)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+
+    public class UnorderedListItemParser : ListItemParser
+    {
+        public UnorderedListItemParser()
+        {
+            OpeningCharacters = new [] {'-', '+', '*'};
+        }
+
+        public override bool TryParse(BlockProcessor state, out char type, out int start, out char delimiter)
+        {
+            start = 0;
+            delimiter = (char)0;
+            type = state.CurrentChar;
+            return true;
+        }
+    }
+
+
+    public class NumberedListItemParser : OrderedListItemParser
+    {
+        public NumberedListItemParser()
+        {
+            OpeningCharacters = new char[10];
+            for (int i = 0; i < 10; i++)
+            {
+                OpeningCharacters[i] = (char) ('0' + i);
+            }
+        }
+
+        public override bool TryParse(BlockProcessor state, out char type, out int orderedStart, out char delimiter)
+        {
+            type = (char)0;
+            delimiter = (char) 0;
             var c = state.CurrentChar;
-            int orderedStart = 0;
-            var orderedDelimiter = (char) 0;
+            orderedStart = 0;
 
             if (!c.IsDigit())
             {
                 return false;
             }
+
             int countDigit = 0;
             while (c.IsDigit())
             {
-                orderedStart = orderedStart*10 + c - '0';
+                orderedStart = orderedStart * 10 + c - '0';
                 c = state.NextChar();
                 countDigit++;
             }
 
             // Note that ordered list start numbers must be nine digits or less:
-            if (countDigit > 9)
+            if (countDigit > 9 || !ParseDelimiter(c))
             {
                 return false;
             }
 
-            // Check if we have an ordered delimiter
-            bool isOrderedDelimiter = false;
-            for (int i = 0; i < OrderedDelimiters.Length; i++)
-            {
-                if (OrderedDelimiters[i] == c)
-                {
-                    isOrderedDelimiter = true;
-                    break;
-                }
-            }
-            if (!isOrderedDelimiter)
-            {
-                return false;
-            }
-
+            delimiter = c;
             type = '1';
             return true;
         }
@@ -82,12 +115,44 @@ namespace Textamina.Markdig.Parsers
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class ListBlockParser : BlockParser
     {
+        private CharacterMap<ListItemParser> mapItemParsers;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListBlockParser"/> class.
         /// </summary>
         public ListBlockParser()
         {
-            OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+            //OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+            ItemParsers = new List<ListItemParser>()
+            {
+                new UnorderedListItemParser(),
+                new NumberedListItemParser()
+            };
+        }
+
+        /// <summary>
+        /// Gets the parsers for items.
+        /// </summary>
+        public List<ListItemParser> ItemParsers { get; }
+
+        public override void Initialize(BlockProcessor processor)
+        {
+            var tempMap = new Dictionary<char, ListItemParser>();
+
+            foreach (var itemParser in ItemParsers)
+            {
+                foreach (var openingCharacter in itemParser.OpeningCharacters)
+                {
+                    if (tempMap.ContainsKey(openingCharacter))
+                    {
+                        throw new InvalidOperationException(
+                            $"A list item parser with the same opening character `{openingCharacter}` is already registered");
+                    }
+                    tempMap.Add(openingCharacter, itemParser);
+                }
+            }
+            mapItemParsers = new CharacterMap<ListItemParser>(tempMap);
         }
 
         public override BlockState TryOpen(BlockProcessor processor)
@@ -212,66 +277,28 @@ namespace Textamina.Markdig.Parsers
 
         private BlockState TryParseListItem(BlockProcessor state, Block block)
         {
-            var initStart = state.Start;
-            var initColumnBeforeIndent = state.ColumnBeforeIndent;
-            var initColumn = state.Column;
-
             // If we have a code indent and we are not in a ListItem, early exit
             if (!(block is ListItemBlock) && state.IsCodeIndent)
             {
                 return BlockState.None;
             }
 
-            var isOrdered = false;
-            var bulletChar = (char) 0;
-            int orderedStart = 0;
-            var orderedDelimiter = (char) 0;
+            var initColumnBeforeIndent = state.ColumnBeforeIndent;
+            var initColumn = state.Column;
 
             var c = state.CurrentChar;
-            if (c.IsDigit())
+            var itemParser = mapItemParsers[c];
+            bool isOrdered = itemParser is OrderedListItemParser;
+            if (itemParser == null)
             {
-                int countDigit = 0;
-                while (c.IsDigit())
-                {
-                    orderedStart = orderedStart*10 + c - '0';
-                    c = state.NextChar();
-                    countDigit++;
-                }
-
-                // Note that ordered list start numbers must be nine digits or less:
-                if (countDigit > 9)
-                {
-                    // Reset to an a start position
-                    state.GoToColumn(initColumn);
-                    return BlockState.None;
-                }
-
-                // Check if we have an ordered delimiter
-                bool isOrderedDelimiter = false;
-                for (int i = 0; i < OrderedDelimiters.Length; i++)
-                {
-                    if (OrderedDelimiters[i] == c)
-                    {
-                        isOrderedDelimiter = true;
-                        break;
-                    }
-                }
-                if (!isOrderedDelimiter)
-                {
-                    // Reset to an a start position
-                    state.GoToColumn(initColumn);
-                    return BlockState.None;
-                }
-
-                isOrdered = true;
-                orderedDelimiter = c;
+                return BlockState.None;
             }
-            else if (OpeningCharacters.Contains(c))
-            {
-                // Else we have a bullet char
-                bulletChar = c;
-            }
-            else
+
+            // Try to parse the list item
+            char bulletChar;
+            int orderedStart;
+            char orderedDelimiter;
+            if (!itemParser.TryParse(state, out bulletChar, out orderedStart, out orderedDelimiter))
             {
                 // Reset to an a start position
                 state.GoToColumn(initColumn);
