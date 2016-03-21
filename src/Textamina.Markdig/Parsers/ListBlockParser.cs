@@ -7,6 +7,75 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
+
+
+    public abstract class ListItemParser
+    {
+        public char[] OpeningCharacters { get; }
+
+
+        public abstract bool TryParse(BlockProcessor state, out char type);
+    }
+
+
+    public abstract class OrderedListItemParser : ListItemParser
+    {
+        protected OrderedListItemParser()
+        {
+            OrderedDelimiters = new[] { '.', ')' };
+        }
+
+        /// <summary>
+        /// Gets or sets the ordered delimiters used after a digit/number (by default `.` and `)`)
+        /// </summary>
+        public char[] OrderedDelimiters { get; set; }
+
+        public bool TryParse(BlockProcessor state, out char type)
+        {
+            type = (char) 0;
+            var c = state.CurrentChar;
+            int orderedStart = 0;
+            var orderedDelimiter = (char) 0;
+
+            if (!c.IsDigit())
+            {
+                return false;
+            }
+            int countDigit = 0;
+            while (c.IsDigit())
+            {
+                orderedStart = orderedStart*10 + c - '0';
+                c = state.NextChar();
+                countDigit++;
+            }
+
+            // Note that ordered list start numbers must be nine digits or less:
+            if (countDigit > 9)
+            {
+                return false;
+            }
+
+            // Check if we have an ordered delimiter
+            bool isOrderedDelimiter = false;
+            for (int i = 0; i < OrderedDelimiters.Length; i++)
+            {
+                if (OrderedDelimiters[i] == c)
+                {
+                    isOrderedDelimiter = true;
+                    break;
+                }
+            }
+            if (!isOrderedDelimiter)
+            {
+                return false;
+            }
+
+            type = '1';
+            return true;
+        }
+    }
+
+
     /// <summary>
     /// A parser for a list block and list item block.
     /// </summary>
@@ -18,14 +87,8 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         public ListBlockParser()
         {
-            OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            OrderedDelimiters = new[] {'.', ')'};
+            OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         }
-
-        /// <summary>
-        /// Gets or sets the ordered delimiters used after a digit/number (by default `.` and `)`)
-        /// </summary>
-        public char[] OrderedDelimiters { get; set; }
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
