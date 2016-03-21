@@ -148,6 +148,11 @@ namespace Textamina.Markdig.Parsers
 
             foreach (var itemParser in ItemParsers)
             {
+                if (itemParser.OpeningCharacters == null)
+                {
+                    throw new InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
+                }
+
                 foreach (var openingCharacter in itemParser.OpeningCharacters)
                 {
                     if (tempMap.ContainsKey(openingCharacter))

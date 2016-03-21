@@ -16980,7 +16980,7 @@ namespace Textamina.Markdig.Tests
             //     <p>The following text <del>is deleted</del></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikeout");
-			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "extra_emphasis");
+			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasis_extra");
         }
     }
         // ## Superscript and Subscript
@@ -17002,7 +17002,7 @@ namespace Textamina.Markdig.Tests
             //     <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Superscript and Subscript");
-			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "extra_emphasis");
+			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasis_extra");
         }
     }
         // ## Inserted
@@ -17024,7 +17024,7 @@ namespace Textamina.Markdig.Tests
             //     <p><ins>Inserted text</ins></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Inserted");
-			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "extra_emphasis");
+			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasis_extra");
         }
     }
         // ## Marked
@@ -17046,7 +17046,7 @@ namespace Textamina.Markdig.Tests
             //     <p><mark>Marked text</mark></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Marked");
-			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "extra_emphasis");
+			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasis_extra");
         }
     }
         // # Extensions
@@ -17790,6 +17790,68 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Abbreviation");
 			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations");
+        }
+    }
+        // # Extensions
+        //
+        // The following additional list items are supported:
+        //
+        // ## Ordered list with alpha letter
+        //
+        // Allows to use a list using an alpha letter instead of a number
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithalphaletter
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Ordered list with alpha letter
+            //
+            // The following CommonMark:
+            //     a. First item
+            //     b. Second item
+            //     c. Last item
+            //
+            // Should be rendered as:
+            //     <ol type="a">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     <li>Last item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Ordered list with alpha letter");
+			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+        }
+    }
+        // ## Ordered list with roman letter
+        //
+        // Allows to use a list using a roman number instead of a number.
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithromanletter
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Ordered list with roman letter
+            //
+            // The following CommonMark:
+            //     i. First item
+            //     ii. Second item
+            //     iii. Third item
+            //     iv. Last item
+            //
+            // Should be rendered as:
+            //     <ol type="i">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     <li>Third item</li>
+            //     <li>Last item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Ordered list with roman letter");
+			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "list_extra");
         }
     }
 }

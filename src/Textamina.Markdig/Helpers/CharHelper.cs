@@ -19,6 +19,27 @@ namespace Textamina.Markdig.Helpers
         public const string ZeroSafeString = "\uFFFD";
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsRomanLetterPartial(char c)
+        {
+            // We don't support LCDM
+            return IsRomanLetterLowerPartial(c) || IsRomanLetterUpperPartial(c);
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsRomanLetterLowerPartial(char c)
+        {
+            // We don't support LCDM
+            return c == 'i' || c == 'v' || c == 'x';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsRomanLetterUpperPartial(char c)
+        {
+            // We don't support LCDM
+            return c == 'I' || c == 'V' || c == 'X';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static int AddTab(int column)
         {
             return ((column + TabSize) / TabSize) * TabSize;

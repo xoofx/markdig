@@ -53,8 +53,11 @@ namespace Textamina.Markdig.Tests
                         case "pipetables":
                             pipeline.UsePipeTable();
                             break;
-                        case "extra_emphasis":
+                        case "emphasis_extra":
                             pipeline.UseEmphasisExtra();
+                            break;
+                        case "list_extra":
+                            pipeline.UseListExtra();
                             break;
                         case "hardlinebreak":
                             pipeline.UseSoftlineBreakAsHardlineBreak();

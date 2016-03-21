@@ -8,6 +8,7 @@ using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Emoji;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.GenericAttributes;
+using Textamina.Markdig.Extensions.ListExtra;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -127,6 +128,23 @@ namespace Textamina.Markdig
             if (!pipeline.Extensions.Contains<EmphasisExtraExtension>())
             {
                 pipeline.Extensions.Add(new EmphasisExtraExtension(options));
+            }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the list extra extension to add support for `a.`, `A.`, `i.` and `I.` ordered list items.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The options to enable.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UseListExtra(this MarkdownPipeline pipeline, ListExtraOptions options = ListExtraOptions.Default)
+        {
+            if (!pipeline.Extensions.Contains<ListExtraExtension>())
+            {
+                pipeline.Extensions.Add(new ListExtraExtension(options));
             }
             return pipeline;
         }
