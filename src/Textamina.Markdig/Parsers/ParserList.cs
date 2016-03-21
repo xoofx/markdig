@@ -3,8 +3,6 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Textamina.Markdig.Helpers;
 
@@ -18,10 +16,8 @@ namespace Textamina.Markdig.Parsers
     /// <seealso cref="Textamina.Markdig.Helpers.OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
-        private T[][] parsersForAscii;
-        private Dictionary<char, T[]> parsersForNonAscii;
+        private CharacterMap<T[]> charMap;
         private T[] globalParsers;
-        private bool[] isOpeningCharacter;
 
         protected ParserList()
         {
@@ -35,7 +31,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets all the opening characters defined.
         /// </summary>
-        public char[] OpeningCharacters { get; private set; }
+        public char[] OpeningCharacters => charMap.OpeningCharacters;
 
         /// <summary>
         /// Gets the list of parsers valid for the specified opening character.
@@ -45,16 +41,7 @@ namespace Textamina.Markdig.Parsers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T[] GetParsersForOpeningCharacter(char openingChar)
         {
-            T[] parsers = null;
-            if (openingChar < parsersForAscii.Length)
-            {
-                parsers = parsersForAscii[openingChar];
-            }
-            else if (parsersForNonAscii != null)
-            {
-                parsersForNonAscii.TryGetValue(openingChar, out parsers);
-            }
-            return parsers;
+            return charMap[openingChar];
         }
 
         /// <summary>
@@ -65,35 +52,9 @@ namespace Textamina.Markdig.Parsers
         /// <param name="end">The end.</param>
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public unsafe int IndexOfOpeningCharacter(string text, int start, int end)
+        public int IndexOfOpeningCharacter(string text, int start, int end)
         {
-            var maxChar = isOpeningCharacter.Length;
-            fixed (bool* openingChars = isOpeningCharacter)
-            {
-                if (parsersForNonAscii == null)
-                {
-                    for (int i = start; i <= end; i++)
-                    {
-                        var c = text[i];
-                        if (c < maxChar && openingChars[c])
-                        {
-                            return i;
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = start; i <= end; i++)
-                    {
-                        var c = text[i];
-                        if ((c < maxChar && openingChars[c]) || parsersForNonAscii.ContainsKey(c))
-                        {
-                            return i;
-                        }
-                    }
-                }
-            }
-            return -1;
+            return charMap.IndexOfOpeningCharacter(text, start, end);
         }
 
         /// <summary>
@@ -108,7 +69,6 @@ namespace Textamina.Markdig.Parsers
         {
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
-            int maxChar = 0;
 
             for (int i = 0; i < Count; i++)
             {
@@ -124,22 +84,11 @@ namespace Textamina.Markdig.Parsers
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-
                         if (!charCounter.ContainsKey(openingChar))
                         {
                             charCounter[openingChar] = 0;
                         }
                         charCounter[openingChar]++;
-
-                        if (openingChar < 127 && openingChar > maxChar)
-                        {
-                            maxChar = openingChar;
-                        }
-                        else if (openingChar >= 127 && parsersForNonAscii == null)
-                        {
-                            // Initialize only if with have an actual non-ASCII opening character
-                            parsersForNonAscii = new Dictionary<char, T[]>();
-                        }
                     }
                 }
                 else
@@ -147,43 +96,28 @@ namespace Textamina.Markdig.Parsers
                     globalCounter++;
                 }
             }
-            OpeningCharacters = charCounter.Keys.ToArray();
-            Array.Sort(OpeningCharacters);
 
             if (globalCounter > 0)
             {
                 globalParsers = new T[globalCounter];
             }
-            parsersForAscii = new T[maxChar + 1][];
-            isOpeningCharacter = new bool[maxChar + 1];
 
+            var tempCharMap = new Dictionary<char, T[]>();
             foreach (var parser in this)
             {
                 if (parser.OpeningCharacters != null && parser.OpeningCharacters.Length != 0)
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-                        T[] parsersByChar;
-                        if (openingChar < 127)
+                        T[] parsers;
+                        if (!tempCharMap.TryGetValue(openingChar, out parsers))
                         {
-                            parsersByChar = parsersForAscii[openingChar];
-
-                            if (parsersByChar == null)
-                            {
-                                parsersForAscii[openingChar] = parsersByChar = new T[charCounter[openingChar]];
-                            }
-                            isOpeningCharacter[openingChar] = true;
-                        }
-                        else
-                        {
-                            if (!parsersForNonAscii.TryGetValue(openingChar, out parsersByChar))
-                            {
-                                parsersByChar = new T[charCounter[openingChar]];
-                            }
+                            parsers = new T[charCounter[openingChar]];
+                            tempCharMap[openingChar] = parsers;
                         }
 
-                        var index = parsersByChar.Length - charCounter[openingChar];
-                        parsersByChar[index] = parser;
+                        var index = parsers.Length - charCounter[openingChar];
+                        parsers[index] = parser;
                         charCounter[openingChar]--;
                     }
                 }
@@ -193,6 +127,8 @@ namespace Textamina.Markdig.Parsers
                     globalCounter--;
                 }
             }
+
+            charMap = new CharacterMap<T[]>(tempCharMap);
         }
     }
 }
