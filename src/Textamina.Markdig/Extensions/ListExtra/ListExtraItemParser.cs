@@ -7,8 +7,18 @@ using Textamina.Markdig.Parsers;
 
 namespace Textamina.Markdig.Extensions.ListExtra
 {
+    /// <summary>
+    /// Parser that adds supports for parsing alpha/roman list items (e.g: `a)` or `a.` or `ii.` or `II.`)
+    /// </summary>
+    /// <remarks>
+    /// Note that we don't validate roman numbers.
+    /// </remarks>
+    /// <seealso cref="Textamina.Markdig.Parsers.OrderedListItemParser" />
     public class ListExtraItemParser : OrderedListItemParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListExtraItemParser"/> class.
+        /// </summary>
         public ListExtraItemParser()
         {
             OpeningCharacters = new char[('z' - 'a' + 1)*2];
@@ -20,7 +30,7 @@ namespace Textamina.Markdig.Extensions.ListExtra
             }
         }
 
-        public override bool TryParse(BlockProcessor state, char previousBulletType, out ListInfo result)
+        public override bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result)
         {
             result = new ListInfo();
 
@@ -28,10 +38,14 @@ namespace Textamina.Markdig.Extensions.ListExtra
 
             var isRomanLow = CharHelper.IsRomanLetterLowerPartial(c);
             var isRomanUp = !isRomanLow && CharHelper.IsRomanLetterUpperPartial(c);
-            if ((isRomanLow || isRomanUp) && (previousBulletType == '\0' || previousBulletType == 'i' || previousBulletType == 'I'))
+
+            // We allow to parse roman only if we start on a new list or the pending list is already a roman list)
+            if ((isRomanLow || isRomanUp) && (pendingBulletType == '\0' || pendingBulletType == 'i' || pendingBulletType == 'I'))
             {
                 int startChar = state.Start;
                 int endChar = 0;
+                // With a roman, we can have multiple characters
+                // Note that we don't validate roman numbers
                 while (isRomanLow ? CharHelper.IsRomanLetterLowerPartial(c) : CharHelper.IsRomanLetterUpperPartial(c))
                 {
                     endChar = state.Start;
@@ -44,6 +58,7 @@ namespace Textamina.Markdig.Extensions.ListExtra
             }
             else
             {
+                // otherwise we expect a regular alpha lettered list with a single character.
                 var isUpper = c.IsAlphaUpper();
                 result.BulletType = isUpper ? 'A' : 'a';
                 result.OrderedStart = state.CurrentChar.ToString();
@@ -51,6 +66,7 @@ namespace Textamina.Markdig.Extensions.ListExtra
                 state.NextChar();
             }
 
+            // Finally we expect to always have a delimiter '.' or ')'
             char orderedDelimiter;
             if (!TryParseDelimiter(state, out orderedDelimiter))
             {

@@ -17824,6 +17824,84 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "list_extra");
         }
     }
+        // It works also for uppercase alpha:
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithalphaletter
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Ordered list with alpha letter
+            //
+            // The following CommonMark:
+            //     A. First item
+            //     B. Second item
+            //     C. Last item
+            //
+            // Should be rendered as:
+            //     <ol type="A">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     <li>Last item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Ordered list with alpha letter");
+			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+        }
+    }
+        // Like for numbered list, a list can start with a different letter
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithalphaletter
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Ordered list with alpha letter
+            //
+            // The following CommonMark:
+            //     b. First item
+            //     c. Second item
+            //
+            // Should be rendered as:
+            //     <ol type="a" start="b">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Ordered list with alpha letter");
+			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "list_extra");
+        }
+    }
+        // A different type of list will break the existing list:
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithalphaletter
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Ordered list with alpha letter
+            //
+            // The following CommonMark:
+            //     a. First item1
+            //     b. Last item
+            //     A. First item2
+            //
+            // Should be rendered as:
+            //     <ol type="a">
+            //     <li>First item1</li>
+            //     <li>Second item</li>
+            //     </ol>
+            //     <ol type="A">
+            //     <li>First item2</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Ordered list with alpha letter");
+			TestParser.TestSpec("a. First item1\nb. Last item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "list_extra");
+        }
+    }
         // ## Ordered list with roman letter
         //
         // Allows to use a list using a roman number instead of a number.
@@ -17831,9 +17909,9 @@ namespace Textamina.Markdig.Tests
     public partial class TestExtensionsOrderedlistwithromanletter
     {
         [Test]
-        public void Example002()
+        public void Example005()
         {
-            // Example 2
+            // Example 5
             // Section: Extensions Ordered list with roman letter
             //
             // The following CommonMark:
@@ -17850,8 +17928,60 @@ namespace Textamina.Markdig.Tests
             //     <li>Last item</li>
             //     </ol>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Ordered list with roman letter");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Ordered list with roman letter");
 			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+        }
+    }
+        // It works also for uppercase alpha:
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithromanletter
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Ordered list with roman letter
+            //
+            // The following CommonMark:
+            //     I. First item
+            //     II. Second item
+            //     III. Third item
+            //     IV. Last item
+            //
+            // Should be rendered as:
+            //     <ol type="I">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     <li>Third item</li>
+            //     <li>Last item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Ordered list with roman letter");
+			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+        }
+    }
+        // Like for numbered list, a list can start with a different letter
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithromanletter
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Ordered list with roman letter
+            //
+            // The following CommonMark:
+            //     ii. First item
+            //     iii. Second item
+            //
+            // Should be rendered as:
+            //     <ol type="i" start="ii">
+            //     <li>First item</li>
+            //     <li>Second item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Ordered list with roman letter");
+			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "list_extra");
         }
     }
 }
