@@ -61,12 +61,12 @@ namespace Textamina.Markdig.Syntax
         /// <summary>
         /// Occurs when the process of inlines begin.
         /// </summary>
-        public event Action<InlineProcessor> ProcessInlinesBegin;
+        public event ProcessInlineDelegate ProcessInlinesBegin;
 
         /// <summary>
         /// Occurs when the process of inlines ends for this instance.
         /// </summary>
-        public event Action<InlineProcessor> ProcessInlinesEnd;
+        public event ProcessInlineDelegate ProcessInlinesEnd;
 
         /// <summary>
         /// Called when the process of inlines begin.
@@ -74,7 +74,7 @@ namespace Textamina.Markdig.Syntax
         /// <param name="state">The inline parser state.</param>
         internal void OnProcessInlinesBegin(InlineProcessor state)
         {
-            ProcessInlinesBegin?.Invoke(state);
+            ProcessInlinesBegin?.Invoke(state, null);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Textamina.Markdig.Syntax
         /// <param name="state">The inline parser state.</param>
         internal void OnProcessInlinesEnd(InlineProcessor state)
         {
-            ProcessInlinesEnd?.Invoke(state);
+            ProcessInlinesEnd?.Invoke(state, null);
         }
     }
 }

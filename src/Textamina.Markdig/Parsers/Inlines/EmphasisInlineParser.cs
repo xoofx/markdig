@@ -91,7 +91,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 //}
             }
 
-            ProcessEmphasis(delimiters);
+            ProcessEmphasis(state, delimiters);
             return true;
         }
 
@@ -189,7 +189,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-        private static void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
+        private static void ProcessEmphasis(InlineProcessor processor, List<EmphasisDelimiterInline> delimiters)
         {
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
@@ -267,6 +267,9 @@ namespace Textamina.Markdig.Parsers.Inlines
                                 };
 
                                 literalDelimiter.ReplaceBy(literal);
+                                // Notifies processor as we are creating an inline locally
+                                processor.OnInlineCreated(literal);
+                                
                                 delimiters.RemoveAt(k);
                                 i--;
                             }
@@ -316,6 +319,8 @@ namespace Textamina.Markdig.Parsers.Inlines
                             };
 
                             closeDelimiter.ReplaceBy(literal);
+                            // Notifies processor as we are creating an inline locally
+                            processor.OnInlineCreated(literal);
                             delimiters.RemoveAt(i);
                             i--;
                             break;
@@ -339,6 +344,8 @@ namespace Textamina.Markdig.Parsers.Inlines
                 };
 
                 delimiter.ReplaceBy(literal);
+                // Notifies processor as we are creating an inline locally
+                processor.OnInlineCreated(literal);
             }
             delimiters.Clear();
         }

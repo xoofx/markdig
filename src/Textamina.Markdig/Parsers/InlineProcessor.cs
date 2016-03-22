@@ -12,21 +12,30 @@ using Textamina.Markdig.Syntax.Inlines;
 namespace Textamina.Markdig.Parsers
 {
     /// <summary>
+    /// A delegate called at inline processing stage.
+    /// </summary>
+    /// <param name="processor">The processor.</param>
+    /// <param name="inline">The inline being processed.</param>
+    public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline inline);
+
+    /// <summary>
     /// The inline parser state used by all <see cref="InlineParser"/>.
     /// </summary>
     public class InlineProcessor
     {
         private readonly List<int> lineOffsets;
+        private readonly ProcessInlineDelegate inlineCreated;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InlineProcessor"/> class.
+        /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
         /// </summary>
         /// <param name="stringBuilders">The string builders.</param>
         /// <param name="document">The document.</param>
         /// <param name="parsers">The parsers.</param>
+        /// <param name="inlineCreated">The inline created event.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
+        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, ProcessInlineDelegate inlineCreated = null)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -34,6 +43,7 @@ namespace Textamina.Markdig.Parsers
             StringBuilders = stringBuilders;
             Document = document;
             Parsers = parsers;
+            this.inlineCreated = inlineCreated;
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
@@ -170,6 +180,8 @@ namespace Textamina.Markdig.Parsers
                     {
                         // Get deepest container
                         FindLastContainer().AppendChild(nextInline);
+
+                        OnInlineCreated(nextInline);
                     }
                 }
                 else
@@ -239,6 +251,11 @@ namespace Textamina.Markdig.Parsers
                 }
             }
             return container;
+        }
+
+        public virtual void OnInlineCreated(Inline inline)
+        {
+            inlineCreated?.Invoke(this, inline);
         }
     }
 }

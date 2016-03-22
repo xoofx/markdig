@@ -50,11 +50,11 @@ namespace Textamina.Markdig.Syntax
         /// <summary>
         /// Occurs when the process of inlines begin.
         /// </summary>
-        event Action<InlineProcessor> ProcessInlinesBegin;
+        event ProcessInlineDelegate ProcessInlinesBegin;
 
         /// <summary>
         /// Occurs when the process of inlines ends for this instance.
         /// </summary>
-        event Action<InlineProcessor> ProcessInlinesEnd;
+        event ProcessInlineDelegate ProcessInlinesEnd;
     }
 }

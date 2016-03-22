@@ -40,7 +40,7 @@
   <ItemGroup>
     <Reference Include="Textamina.Markdig">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10\Textamina.Markdig.dll</HintPath>
+      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\portable-net40+sl50+win+wpa81+wp80\Textamina.Markdig.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

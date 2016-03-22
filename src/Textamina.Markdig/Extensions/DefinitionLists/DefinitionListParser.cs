@@ -84,6 +84,8 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
             }
 
             processor.Open(definitionItem);
+            processor.OnBlockCreated(definitionItem);
+
             return BlockState.Continue;
         }
 
@@ -131,6 +133,7 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                 };
                 list.Add(nextDefinitionItem);
                 processor.Open(nextDefinitionItem);
+                processor.OnBlockCreated(nextDefinitionItem);
 
                 return BlockState.Continue;
             }

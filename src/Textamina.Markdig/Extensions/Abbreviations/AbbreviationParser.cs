@@ -66,7 +66,7 @@ namespace Textamina.Markdig.Extensions.Abbreviations
             return BlockState.BreakDiscard;
         }
 
-        private void DocumentOnProcessInlinesBegin(InlineProcessor inlineProcessor)
+        private void DocumentOnProcessInlinesBegin(InlineProcessor inlineProcessor, Inline inline)
         {
             inlineProcessor.Document.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
 

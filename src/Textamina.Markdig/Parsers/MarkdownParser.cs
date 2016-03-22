@@ -42,12 +42,12 @@ namespace Textamina.Markdig.Parsers
             // Initialize the block parsers
             var blockParserList = new BlockParserList();
             blockParserList.AddRange(pipeline.BlockParsers);
-            blockProcessor = new BlockProcessor(stringBuilderCache, document, blockParserList);
+            blockProcessor = new BlockProcessor(stringBuilderCache, document, blockParserList, pipeline.GetBlockCreated);
 
             // Initialize the inline parsers
             var inlineParserList = new InlineParserList();
             inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList)
+            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList, pipeline.GetInlineCreated)
             {
                 DebugLog = pipeline.DebugLog
             };

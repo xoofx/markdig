@@ -60,8 +60,8 @@ namespace Textamina.Markdig.Extensions.ListExtra
             {
                 // otherwise we expect a regular alpha lettered list with a single character.
                 var isUpper = c.IsAlphaUpper();
+                result.OrderedStart = c.ToString();
                 result.BulletType = isUpper ? 'A' : 'a';
-                result.OrderedStart = state.CurrentChar.ToString();
                 result.DefaultOrderedStart = isUpper ? "A" : "a";
                 state.NextChar();
             }

@@ -81,7 +81,7 @@ namespace Textamina.Markdig.Syntax
                     }
                 }
             }
-            else if (typeof(Inline).IsAssignableFrom(typeof(T)))
+            else // if (typeof(Inline).IsAssignableFrom(typeof(T)))  // TODO: Optimize for the case where T is not an inline
             {
                 var inline = markdownObject as ContainerInline;
                 if (inline != null)

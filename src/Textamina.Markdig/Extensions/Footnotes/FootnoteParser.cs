@@ -102,7 +102,8 @@ namespace Textamina.Markdig.Extensions.Footnotes
         /// Add footnotes to the end of the document
         /// </summary>
         /// <param name="state">The processor.</param>
-        private void Document_ProcessInlinesEnd(InlineProcessor state)
+        /// <param name="inline">The inline.</param>
+        private void Document_ProcessInlinesEnd(InlineProcessor state, Inline inline)
         {
             // Unregister
             state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;

@@ -264,9 +264,8 @@ namespace Textamina.Markdig.Parsers
 
                 // Reset the list if it is a new list or a new type of bullet
                 if (currentParent.IsOrdered != isOrdered ||
-                    (isOrdered && currentParent.OrderedDelimiter != listInfo.OrderedDelimiter) ||
-                    (!isOrdered && currentParent.BulletType != listInfo.BulletType)
-                    )
+                    currentParent.OrderedDelimiter != listInfo.OrderedDelimiter ||
+                    currentParent.BulletType != listInfo.BulletType)
                 {
                     state.Close(currentParent);
                     currentParent = null;

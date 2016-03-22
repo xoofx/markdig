@@ -153,7 +153,9 @@ namespace Textamina.Markdig.Extensions.Tables
                     for (int i = 0; i < delimitersToRemove.Count; i++)
                     {
                         var pipeDelimiter = delimitersToRemove[i];
-                        pipeDelimiter.ReplaceBy(new LiteralInline() {Content = new StringSlice("|"), IsClosed = true});
+                        var literalInline = new LiteralInline() {Content = new StringSlice("|"), IsClosed = true};
+                        pipeDelimiter.ReplaceBy(literalInline);
+                        state.OnInlineCreated(literalInline);
 
                         // Check that the pipe that is being removed is not going to make a line without pipe delimiters
                         var tableDelimiters = tableState.ColumnAndLineDelimiters;
