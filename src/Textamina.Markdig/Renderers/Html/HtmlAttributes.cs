@@ -40,6 +40,7 @@ namespace Textamina.Markdig.Renderers.Html
         /// <param name="name">The css class name.</param>
         public void AddClass(string name)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
             if (Classes == null)
             {
                 Classes = new List<string>();
@@ -54,6 +55,7 @@ namespace Textamina.Markdig.Renderers.Html
         /// <param name="value">The value.</param>
         public void AddProperty(string name, string value)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
             if (Properties == null)
             {
                 Properties = new List<KeyValuePair<string, string>>();

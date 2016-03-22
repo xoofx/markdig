@@ -143,11 +143,11 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                 if (!c.IsWhitespace())
                 {
                     // Parse the attribute name
-                    var startName = line.Start;
-                    if (!(c.IsAlpha() || c == '_' || c == ':'))
+                    if (!IsStartAttributeName(c))
                     {
                         break;
                     }
+                    var startName = line.Start;
                     while (true)
                     {
                         c = line.NextChar();
@@ -156,11 +156,26 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                             break;
                         }
                     }
-                    var endName = line.Start - 1;
+                    var name = slice.Text.Substring(startName, line.Start - startName);
+
+                    var hasSpace = c.IsSpaceOrTab();
 
                     // Skip any whitespaces
                     line.TrimStart();
 
+                    // Handle boolean properties that are not followed by = 
+                    if ((hasSpace && (line.CurrentChar == '.' || line.CurrentChar == '#' || IsStartAttributeName(line.CurrentChar))) || line.CurrentChar == '}')
+                    {
+                        if (properties == null)
+                        {
+                            properties = new List<KeyValuePair<string, string>>();
+                        }
+                        // Add a null value for the property
+                        properties.Add(new KeyValuePair<string, string>(name, null));
+                        continue;
+                    }
+                    
+                    // Else we expect a regular property
                     if (line.CurrentChar != '=')
                     {
                         break;
@@ -217,7 +232,6 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                         }
                     }
 
-                    var name = slice.Text.Substring(startName, endName - startName + 1);
                     var value = slice.Text.Substring(startValue, endValue - startValue + 1);
 
                     if (properties == null)
@@ -246,6 +260,9 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
             return isValid;
         }
 
-
+        private static bool IsStartAttributeName(char c)
+        {
+            return c.IsAlpha() || c == '_' || c == ':';
+        }
     }
 }

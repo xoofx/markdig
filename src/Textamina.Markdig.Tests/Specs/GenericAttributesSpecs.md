@@ -24,10 +24,13 @@ The following shows that attributes is attached to the current block or the prev
 
 This is a heading{#heading-link2}
 -----------------
+
+This is a paragraph with an attached attributes {#myparagraph attached-bool-property}
 .
 <h1 id="heading-link">This is a heading with an an attribute</h1>
 <p><a href="http://google.com" id="a-link" class="myclass" data-lang="fr" data-value="This is a value">This is a link</a></p>
 <h2 id="heading-link2">This is a heading</h2>
+<p id="myparagraph" attached-bool-property>This is a paragraph with an attached attributes </p>
 ````````````````````````````````
 
 The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
