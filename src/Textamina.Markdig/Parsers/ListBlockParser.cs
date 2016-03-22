@@ -13,11 +13,35 @@ namespace Textamina.Markdig.Parsers
     {
         public char[] OpeningCharacters { get; protected set; }
 
-        public string DefaultOrderedStart { get; protected set; }
-
-        public abstract bool TryParse(BlockProcessor state, out char bulletType, out string orderedStart, out char orderedDelimiter);
+        public abstract bool TryParse(BlockProcessor state, char previousBulletType, out ListInfo result);
     }
 
+    public struct ListInfo
+    {
+        public ListInfo(char bulletType)
+        {
+            BulletType = bulletType;
+            OrderedStart = null;
+            OrderedDelimiter = (char)0;
+            DefaultOrderedStart = null;
+        }
+
+        public ListInfo(char bulletType, string orderedStart, char orderedDelimiter, string defaultOrderedStart)
+        {
+            BulletType = bulletType;
+            OrderedStart = orderedStart;
+            OrderedDelimiter = orderedDelimiter;
+            DefaultOrderedStart = defaultOrderedStart;
+        }
+
+        public char BulletType { get; set; }
+
+        public string OrderedStart { get; set; }
+
+        public char OrderedDelimiter { get; set; }
+
+        public string DefaultOrderedStart { get; set; }
+    }
 
     public abstract class OrderedListItemParser : ListItemParser
     {
@@ -31,13 +55,15 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         public char[] OrderedDelimiters { get; set; }
 
-        protected bool ParseDelimiter(char c)
+        protected bool TryParseDelimiter(BlockProcessor state, out char orderedDelimiter)
         {
             // Check if we have an ordered delimiter
+            orderedDelimiter = state.CurrentChar;
             for (int i = 0; i < OrderedDelimiters.Length; i++)
             {
-                if (OrderedDelimiters[i] == c)
+                if (OrderedDelimiters[i] == orderedDelimiter)
                 {
+                    state.NextChar();
                     return true;
                 }
             }
@@ -53,11 +79,10 @@ namespace Textamina.Markdig.Parsers
             OpeningCharacters = new [] {'-', '+', '*'};
         }
 
-        public override bool TryParse(BlockProcessor state, out char bulletType, out string orderedStart, out char orderedDelimiter)
+        public override bool TryParse(BlockProcessor state, char previousBulletType, out ListInfo result)
         {
-            orderedStart = null;
-            orderedDelimiter = (char)0;
-            bulletType = state.CurrentChar;
+            result = new ListInfo(state.CurrentChar);
+            state.NextChar();
             return true;
         }
     }
@@ -72,15 +97,12 @@ namespace Textamina.Markdig.Parsers
             {
                 OpeningCharacters[i] = (char) ('0' + i);
             }
-            DefaultOrderedStart = "1";
         }
 
-        public override bool TryParse(BlockProcessor state, out char bulletType, out string orderedStart, out char orderedDelimiter)
+        public override bool TryParse(BlockProcessor state, char previousBulletType, out ListInfo result)
         {
-            bulletType = (char)0;
-            orderedDelimiter = (char) 0;
+            result = new ListInfo();
             var c = state.CurrentChar;
-            orderedStart = null;
 
             int countDigit = 0;
             int startChar = -1;
@@ -102,14 +124,16 @@ namespace Textamina.Markdig.Parsers
             }
 
             // Note that ordered list start numbers must be nine digits or less:
-            if (countDigit > 9 || !ParseDelimiter(c))
+            char orderedDelimiter;
+            if (countDigit > 9 || !TryParseDelimiter(state, out orderedDelimiter))
             {
                 return false;
             }
 
-            orderedStart = state.Line.Text.Substring(startChar, endChar - startChar + 1);
-            orderedDelimiter = c;
-            bulletType = '1';
+            result.OrderedStart = state.Line.Text.Substring(startChar, endChar - startChar + 1);
+            result.OrderedDelimiter = orderedDelimiter;
+            result.BulletType = '1';
+            result.DefaultOrderedStart = "1";
             return true;
         }
     }
@@ -130,7 +154,7 @@ namespace Textamina.Markdig.Parsers
         {
             //OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-            ItemParsers = new List<ListItemParser>()
+            ItemParsers = new OrderedList<ListItemParser>()
             {
                 new UnorderedListItemParser(),
                 new NumberedListItemParser()
@@ -140,7 +164,7 @@ namespace Textamina.Markdig.Parsers
         /// <summary>
         /// Gets the parsers for items.
         /// </summary>
-        public List<ListItemParser> ItemParsers { get; }
+        public OrderedList<ListItemParser> ItemParsers { get; }
 
         public override void Initialize(BlockProcessor processor)
         {
@@ -294,6 +318,9 @@ namespace Textamina.Markdig.Parsers
                 return BlockState.None;
             }
 
+            var currentListItem = block as ListItemBlock;
+            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent;
+
             var initColumnBeforeIndent = state.ColumnBeforeIndent;
             var initColumn = state.Column;
 
@@ -306,18 +333,16 @@ namespace Textamina.Markdig.Parsers
             }
 
             // Try to parse the list item
-            char bulletType;
-            string orderedStart;
-            char orderedDelimiter;
-            if (!itemParser.TryParse(state, out bulletType, out orderedStart, out orderedDelimiter))
+            ListInfo listInfo;
+            if (!itemParser.TryParse(state, currentParent?.BulletType ?? '\0', out listInfo))
             {
                 // Reset to an a start position
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
 
-            // Skip Bullet or '.' or ')'
-            c = state.NextChar();
+            // Gets the current character after a succesfull parsing of the list information
+            c = state.CurrentChar;
 
             // Item starting with a blank line
             int columnWidth;
@@ -360,9 +385,6 @@ namespace Textamina.Markdig.Parsers
             };
             state.NewBlocks.Push(newListItem);
 
-            var currentListItem = block as ListItemBlock;
-            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent;
-
             if (currentParent != null)
             {
                 // If we have a new list item, close the previous one
@@ -373,8 +395,8 @@ namespace Textamina.Markdig.Parsers
 
                 // Reset the list if it is a new list or a new type of bullet
                 if (currentParent.IsOrdered != isOrdered ||
-                    (isOrdered && currentParent.OrderedDelimiter != orderedDelimiter) ||
-                    (!isOrdered && currentParent.BulletType != bulletType)
+                    (isOrdered && currentParent.OrderedDelimiter != listInfo.OrderedDelimiter) ||
+                    (!isOrdered && currentParent.BulletType != listInfo.BulletType)
                     )
                 {
                     state.Close(currentParent);
@@ -388,10 +410,10 @@ namespace Textamina.Markdig.Parsers
                 {
                     Column = initColumn,
                     IsOrdered = isOrdered,
-                    BulletType = bulletType,
-                    OrderedDelimiter = orderedDelimiter,
-                    DefaultOrderedStart = itemParser.DefaultOrderedStart,
-                    OrderedStart = orderedStart,
+                    BulletType = listInfo.BulletType,
+                    OrderedDelimiter = listInfo.OrderedDelimiter,
+                    DefaultOrderedStart = listInfo.DefaultOrderedStart,
+                    OrderedStart = listInfo.OrderedStart,
                 };
                 state.NewBlocks.Push(newList);
             }

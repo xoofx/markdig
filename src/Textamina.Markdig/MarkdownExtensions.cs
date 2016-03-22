@@ -136,16 +136,12 @@ namespace Textamina.Markdig
         /// Uses the list extra extension to add support for `a.`, `A.`, `i.` and `I.` ordered list items.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <param name="options">The options to enable.</param>
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseListExtra(this MarkdownPipeline pipeline, ListExtraOptions options = ListExtraOptions.Default)
+        public static MarkdownPipeline UseListExtra(this MarkdownPipeline pipeline)
         {
-            if (!pipeline.Extensions.Contains<ListExtraExtension>())
-            {
-                pipeline.Extensions.Add(new ListExtraExtension(options));
-            }
+            pipeline.Extensions.AddIfNotAlready<ListExtraExtension>();
             return pipeline;
         }
 
