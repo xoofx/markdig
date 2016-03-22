@@ -116,7 +116,7 @@ namespace Textamina.Markdig
         }
 
         /// <summary>
-        /// Uses the strikeout superscript, subscript, inserted and marked text extensions.
+        /// Uses the strikethrough superscript, subscript, inserted and marked text extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="options">The options to enable.</param>

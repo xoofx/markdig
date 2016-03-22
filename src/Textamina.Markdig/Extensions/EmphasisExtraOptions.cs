@@ -15,12 +15,12 @@ namespace Textamina.Markdig.Extensions
         /// <summary>
         /// Allows all extra emphasis (default).
         /// </summary>
-        Default = Strikeout | Subscript | Superscript | Inserted | Marked,
+        Default = Strikethrough | Subscript | Superscript | Inserted | Marked,
 
         /// <summary>
-        /// A text that can be strikeout using the double character ~~
+        /// A text that can be strikethrough using the double character ~~
         /// </summary>
-        Strikeout = 1,
+        Strikethrough = 1,
 
         /// <summary>
         /// A text that can be rendered as a subscript using the character ~

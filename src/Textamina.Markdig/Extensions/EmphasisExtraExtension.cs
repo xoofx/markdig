@@ -10,7 +10,7 @@ using Textamina.Markdig.Syntax.Inlines;
 namespace Textamina.Markdig.Extensions
 {
     /// <summary>
-    /// Extension for strikeout, subscript, superscript, inserted and marked.
+    /// Extension for strikethrough, subscript, superscript, inserted and marked.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class EmphasisExtraExtension : IMarkdownExtension
@@ -39,7 +39,7 @@ namespace Textamina.Markdig.Extensions
                 var hasPlus = false;
                 var hasEqual = false;
 
-                var requireTilde = ((Options & EmphasisExtraOptions.Strikeout) != 0 ||
+                var requireTilde = ((Options & EmphasisExtraOptions.Strikethrough) != 0 ||
                                     (Options & EmphasisExtraOptions.Subscript) != 0);
 
                 var requireSup = (Options & EmphasisExtraOptions.Superscript) != 0;

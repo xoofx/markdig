@@ -2,9 +2,9 @@
 
 The following additional emphasis are supported:
 
-## Strikeout
+## Strikethrough
  
-Allows to strikeout a span of text by surrounding it by `~~`
+Allows to strikethrough a span of text by surrounding it by `~~`. The semantic used for the generated HTML is the tag `<del>`.
 
 ```````````````````````````````` example
 The following text ~~is deleted~~
@@ -14,7 +14,7 @@ The following text ~~is deleted~~
 
 ## Superscript and Subscript
  
-Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters:
+Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters
 
 ```````````````````````````````` example
 H~2~O is a liquid. 2^10^ is 1024
@@ -24,7 +24,7 @@ H~2~O is a liquid. 2^10^ is 1024
 
 ## Inserted
 
-Inserted text can be used to specify that a text has been added to a document.
+Inserted text can be used to specify that a text has been added to a document.  The semantic used for the generated HTML is the tag `<ins>`.
  
 ```````````````````````````````` example
 ++Inserted text++
@@ -34,7 +34,7 @@ Inserted text can be used to specify that a text has been added to a document.
 
 ## Marked
 
-Marked text can be used to specify that a text has been marked in a document.
+Marked text can be used to specify that a text has been marked in a document.  The semantic used for the generated HTML is the tag `<mark>`.
  
 ```````````````````````````````` example
 ==Marked text==

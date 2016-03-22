@@ -16964,17 +16964,17 @@ namespace Textamina.Markdig.Tests
         //
         // The following additional emphasis are supported:
         //
-        // ## Strikeout
+        // ## Strikethrough
         //
-        // Allows to strikeout a span of text by surrounding it by `~~`
+        // Allows to strikethrough a span of text by surrounding it by `~~`. The semantic used for the generated HTML is the tag `<del>`.
     [TestFixture]
-    public partial class TestExtensionsStrikeout
+    public partial class TestExtensionsStrikethrough
     {
         [Test]
         public void Example001()
         {
             // Example 1
-            // Section: Extensions Strikeout
+            // Section: Extensions Strikethrough
             //
             // The following CommonMark:
             //     The following text ~~is deleted~~
@@ -16982,13 +16982,13 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>The following text <del>is deleted</del></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikeout");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikethrough");
 			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasis_extra");
         }
     }
         // ## Superscript and Subscript
         //
-        // Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters:
+        // Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters
     [TestFixture]
     public partial class TestExtensionsSuperscriptandSubscript
     {
@@ -17010,7 +17010,7 @@ namespace Textamina.Markdig.Tests
     }
         // ## Inserted
         //
-        // Inserted text can be used to specify that a text has been added to a document.
+        // Inserted text can be used to specify that a text has been added to a document.  The semantic used for the generated HTML is the tag `<ins>`.
     [TestFixture]
     public partial class TestExtensionsInserted
     {
@@ -17032,7 +17032,7 @@ namespace Textamina.Markdig.Tests
     }
         // ## Marked
         //
-        // Marked text can be used to specify that a text has been marked in a document.
+        // Marked text can be used to specify that a text has been marked in a document.  The semantic used for the generated HTML is the tag `<mark>`.
     [TestFixture]
     public partial class TestExtensionsMarked
     {
