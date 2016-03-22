@@ -48,7 +48,7 @@ A different type of list will break the existing list:
 
 ```````````````````````````````` example
 a. First item1
-b. Last item
+b. Second item
 A. First item2
 .
 <ol type="a">

@@ -17886,7 +17886,7 @@ namespace Textamina.Markdig.Tests
             //
             // The following CommonMark:
             //     a. First item1
-            //     b. Last item
+            //     b. Second item
             //     A. First item2
             //
             // Should be rendered as:
@@ -17899,7 +17899,7 @@ namespace Textamina.Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("a. First item1\nb. Last item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "list_extra");
         }
     }
         // ## Ordered list with roman letter
