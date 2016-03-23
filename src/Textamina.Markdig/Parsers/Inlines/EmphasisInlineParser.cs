@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
@@ -258,6 +259,13 @@ namespace Textamina.Markdig.Parsers.Inlines
                                 {
                                     break;
                                 }
+                            }
+
+                            // Copy attributes attached to delimiter to the emphasis
+                            var attributes = closeDelimiter.TryGetAttributes();
+                            if (attributes != null)
+                            {
+                                emphasis.SetAttributes(attributes);
                             }
 
                             // Embrace all delimiters

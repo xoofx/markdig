@@ -34,7 +34,7 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
 
                 // If the curent object to attach is either a literal or delimiter
                 // try to find a suitable parent, otherwise attach the html attributes to the block
-                if (inline is LiteralInline || inline is DelimiterInline)
+                if (inline is LiteralInline)
                 {
                     while (true)
                     {

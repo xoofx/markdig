@@ -17548,6 +17548,26 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes");
         }
     }
+        // Attributes can be attached to a inline custom container:
+    [TestFixture]
+    public partial class TestExtensionsInlineCustomContainer
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions Inline Custom Container 
+            //
+            // The following CommonMark:
+            //     This is a text ::with special emphasis::{#myId .myemphasis}
+            //
+            // Should be rendered as:
+            //     <p>This is a text <span id="myId" class="myemphasis">with special emphasis</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Inline Custom Container ");
+			TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:

@@ -121,9 +121,19 @@ namespace Textamina.Markdig.Renderers.Html
             if (attributes == null)
             {
                 attributes = new HtmlAttributes();
-                obj.SetData(Key, attributes);
+                obj.SetAttributes(attributes);
             }
             return attributes;
+        }
+
+        /// <summary>
+        /// Sets <see cref="HtmlAttributes" /> to the <see cref="MarkdownObject" />
+        /// </summary>
+        /// <param name="obj">The markdown object.</param>
+        /// <param name="attributes">The attributes to attach.</param>
+        public static void SetAttributes(this IMarkdownObject obj, HtmlAttributes attributes)
+        {
+            obj.SetData(Key, attributes);
         }
     }
 }

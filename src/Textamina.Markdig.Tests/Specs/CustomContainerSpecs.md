@@ -101,3 +101,12 @@ This is a text ::with special *emphasis*::
 .
 <p>This is a text <span>with special <em>emphasis</em></span></p>
 ````````````````````````````````
+
+Attributes can be attached to a inline custom container:
+
+
+```````````````````````````````` example
+This is a text ::with special emphasis::{#myId .myemphasis}
+.
+<p>This is a text <span id="myId" class="myemphasis">with special emphasis</span></p>
+````````````````````````````````
