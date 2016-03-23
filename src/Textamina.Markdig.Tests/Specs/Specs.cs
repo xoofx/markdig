@@ -17987,4 +17987,35 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "list_extra");
         }
     }
+        // # Extensions
+        //
+        // The following the figure extension:
+        //
+        // ## Figures
+        //
+        // A figure can be defined by using a pattern equivalent to a fenced code block but with the character `^`
+    [TestFixture]
+    public partial class TestExtensionsFigures
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Figures
+            //
+            // The following CommonMark:
+            //     ^^^
+            //     This is a figure
+            //     ^^^ This is a *caption*
+            //
+            // Should be rendered as:
+            //     <figure>
+            //     <p>This is a figure</p>
+            //     <figcaption>This is a <em>caption</em></figcaption>
+            //     </figure>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Figures");
+			TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures");
+        }
+    }
 }

@@ -83,6 +83,9 @@ namespace Textamina.Markdig.Tests
                         case "customcontainers":
                             pipeline.UseCustomContainer();
                             break;
+                        case "figures":
+                            pipeline.UseFigure();
+                            break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");
                             break;

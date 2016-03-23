@@ -6,6 +6,7 @@ using Textamina.Markdig.Extensions.Abbreviations;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Emoji;
+using Textamina.Markdig.Extensions.Figures;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.GenericAttributes;
 using Textamina.Markdig.Extensions.ListExtra;
@@ -29,6 +30,7 @@ namespace Textamina.Markdig
                 .UseAbbreviation()
                 .UseDefinitionList()
                 .UseCustomContainer()
+                .UseFigure()
                 .UseGridTable()
                 .UsePipeTable()
                 .UseSoftlineBreakAsHardlineBreak()
@@ -46,6 +48,17 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the figure extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseFigure(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<FigureExtension>();
             return pipeline;
         }
 
