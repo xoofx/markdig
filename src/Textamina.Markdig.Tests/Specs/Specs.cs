@@ -17506,6 +17506,48 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes");
         }
     }
+        // ## Inline Custom Container
+        //
+        // A custom container can also be used within an inline container (e.g: paragraph, heading...) by enclosing a text by a new emphasis `::`
+    [TestFixture]
+    public partial class TestExtensionsInlineCustomContainer
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Inline Custom Container 
+            //
+            // The following CommonMark:
+            //     This is a text ::with special emphasis::
+            //
+            // Should be rendered as:
+            //     <p>This is a text <span>with special emphasis</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Inline Custom Container ");
+			TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes");
+        }
+    }
+        // Any other emphasis inline can be used within this emphasis inline container:
+    [TestFixture]
+    public partial class TestExtensionsInlineCustomContainer
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Inline Custom Container 
+            //
+            // The following CommonMark:
+            //     This is a text ::with special *emphasis*::
+            //
+            // Should be rendered as:
+            //     <p>This is a text <span>with special <em>emphasis</em></span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Inline Custom Container ");
+			TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:

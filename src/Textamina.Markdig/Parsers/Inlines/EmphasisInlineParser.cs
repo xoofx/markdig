@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Parsers.Inlines
@@ -18,6 +19,8 @@ namespace Textamina.Markdig.Parsers.Inlines
     {
         private CharacterMap<EmphasisDescriptor> emphasisMap;
 
+        public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisInlineParser"/> class.
         /// </summary>
@@ -30,7 +33,15 @@ namespace Textamina.Markdig.Parsers.Inlines
             };
         }
 
+        /// <summary>
+        /// Gets the emphasis descriptors.
+        /// </summary>
         public List<EmphasisDescriptor> EmphasisDescriptors { get; }
+
+        /// <summary>
+        /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
+        /// </summary>
+        public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }
 
         public override void Initialize(InlineProcessor processor)
         {
@@ -189,7 +200,7 @@ namespace Textamina.Markdig.Parsers.Inlines
             return false;
         }
 
-        private static void ProcessEmphasis(InlineProcessor processor, List<EmphasisDelimiterInline> delimiters)
+        private void ProcessEmphasis(InlineProcessor processor, List<EmphasisDelimiterInline> delimiters)
         {
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
@@ -226,13 +237,12 @@ namespace Textamina.Markdig.Parsers.Inlines
                             bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2;
 
                             // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
-
-                            var emphasis = new EmphasisInline()
-                            {
-                                DelimiterChar = closeDelimiter.DelimiterChar,
-                                IsDouble = isStrong
-                            };
-
+                            var emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong)
+                                ?? new EmphasisInline()
+                                {
+                                    DelimiterChar = closeDelimiter.DelimiterChar,
+                                    IsDouble = isStrong
+                                };
 
                             var embracer = (ContainerInline)openDelimiter;
 

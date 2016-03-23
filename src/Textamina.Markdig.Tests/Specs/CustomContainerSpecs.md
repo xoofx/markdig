@@ -83,3 +83,21 @@ The content of a custom container can contain any blocks:
 <div class="mycontainer"><p>This is a raw spoiler</p>
 </div>
 ````````````````````````````````
+
+## Inline Custom Container 
+
+A custom container can also be used within an inline container (e.g: paragraph, heading...) by enclosing a text by a new emphasis `::`
+
+```````````````````````````````` example
+This is a text ::with special emphasis::
+.
+<p>This is a text <span>with special emphasis</span></p>
+````````````````````````````````
+
+Any other emphasis inline can be used within this emphasis inline container:
+
+```````````````````````````````` example
+This is a text ::with special *emphasis*::
+.
+<p>This is a text <span>with special <em>emphasis</em></span></p>
+````````````````````````````````

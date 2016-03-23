@@ -7,7 +7,7 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Extensions.CustomContainers
 {
     /// <summary>
-    /// A custom container.
+    /// A block custom container.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     /// <seealso cref="Textamina.Markdig.Syntax.IFencedBlock" />
