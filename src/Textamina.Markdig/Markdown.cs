@@ -12,7 +12,7 @@ namespace Textamina.Markdig
     /// <summary>
     /// Provides methods for parsing a Markdown string to a syntax tree and converting it to other formats.
     /// </summary>
-    public class Markdown
+    public static class Markdown
     {
         /// <summary>
         /// Converts a Markdown string to HTML.
