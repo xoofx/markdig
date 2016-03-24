@@ -62,6 +62,7 @@ namespace Textamina.Markdig.Extensions.Figures
                 var caption = new FigureCaption(this) {IsOpen = false};
                 caption.AppendLine(ref line, line.Start, processor.LineIndex);
                 figure.Add(caption);
+                processor.OnBlockCreated(caption);
             }
             processor.NewBlocks.Push(figure);
 
@@ -94,6 +95,7 @@ namespace Textamina.Markdig.Extensions.Figures
                     var caption = new FigureCaption(this) {IsOpen = false};
                     caption.AppendLine(ref line, line.Start, processor.LineIndex);
                     figure.Add(caption);
+                    processor.OnBlockCreated(caption);
                 }
 
                 // Don't keep the last line
