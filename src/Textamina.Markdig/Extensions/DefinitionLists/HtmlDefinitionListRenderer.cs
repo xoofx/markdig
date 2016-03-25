@@ -64,8 +64,6 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
                             renderer.ImplicitParagraph = true;
                             lastWasSimpleParagraph = true;
                         }
-
-                        // TODO: If paragraph is alone, make it implicit instead
                         renderer.Write(definitionTermOrContent);
                         renderer.ImplicitParagraph = saveImplicitParagraph;
                         countdd++;

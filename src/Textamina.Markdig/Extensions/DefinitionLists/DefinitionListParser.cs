@@ -14,6 +14,9 @@ namespace Textamina.Markdig.Extensions.DefinitionLists
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
     public class DefinitionListParser : BlockParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefinitionListParser"/> class.
+        /// </summary>
         public DefinitionListParser()
         {
             OpeningCharacters = new [] {':', '~'};
