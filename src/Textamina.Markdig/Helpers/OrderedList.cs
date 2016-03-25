@@ -40,6 +40,18 @@ namespace Textamina.Markdig.Helpers
             return default(TElement);
         }
 
+        public TElement FindExact<TElement>() where TElement : T
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i].GetType() == typeof(TElement))
+                {
+                    return (TElement)this[i];
+                }
+            }
+            return default(TElement);
+        }
+
         public void AddIfNotAlready<TElement>() where TElement : class, T, new()
         {
             if (!Contains<TElement>())

@@ -86,6 +86,9 @@ namespace Textamina.Markdig.Tests
                         case "figures":
                             pipeline.UseFigure();
                             break;
+                        case "math":
+                            pipeline.UseMath();
+                            break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");
                             break;

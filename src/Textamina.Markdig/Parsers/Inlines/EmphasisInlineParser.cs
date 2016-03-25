@@ -211,6 +211,12 @@ namespace Textamina.Markdig.Parsers.Inlines
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var closeDelimiter = delimiters[i];
+                // Skip delimiters not supported by this instance
+                if (emphasisMap[closeDelimiter.DelimiterChar] == null)
+                {
+                    continue;
+                }
+
                 if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount > 0)
                 {
                     while (true)

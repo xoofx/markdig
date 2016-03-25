@@ -51,6 +51,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("AbbreviationSpecs.md"), "abbreviations"),
 		new KeyValuePair<string, string>(Host.ResolvePath("ListExtraSpecs.md"), "list_extra"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FigureSpecs.md"), "figures"),
+		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "math"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

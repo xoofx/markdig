@@ -10,6 +10,7 @@ using Textamina.Markdig.Extensions.Figures;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.GenericAttributes;
 using Textamina.Markdig.Extensions.ListExtra;
+using Textamina.Markdig.Extensions.Mathematics;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -37,6 +38,7 @@ namespace Textamina.Markdig
                 .UseFootnotes()
                 .UseEmojiAndSmiley()
                 .UseEmphasisExtra()
+                .UseMath()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -48,6 +50,17 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the math extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseMath(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<MathExtension>();
             return pipeline;
         }
 

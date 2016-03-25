@@ -31,7 +31,7 @@ namespace Textamina.Markdig.Extensions
 
         public void Setup(MarkdownPipeline pipeline)
         {
-            var parser = pipeline.InlineParsers.Find<EmphasisInlineParser>();
+            var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
             if (parser != null)
             {
                 var hasTilde = false;
@@ -88,7 +88,7 @@ namespace Textamina.Markdig.Extensions
             if (htmlRenderer != null)
             {
                 // Extend the rendering here.
-                var emphasisRenderer = htmlRenderer.ObjectRenderers.Find<EmphasisInlineRenderer>();
+                var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
                 if (emphasisRenderer != null)
                 {
                     var previousTag = emphasisRenderer.GetTag;

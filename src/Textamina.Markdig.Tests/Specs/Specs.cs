@@ -6,8 +6,8 @@ namespace Textamina.Markdig.Tests
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
-        // version: 0.24
-        // date: '2016-01-12'
+        // version: 0.25
+        // date: '2016-03-24'
         // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
         // ...
         //
@@ -18078,6 +18078,52 @@ namespace Textamina.Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Figures");
 			TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures");
+        }
+    }
+        // # Extensions
+        //
+        // Adds support for mathematics spans:
+        //
+        // ## Math spans
+        //
+        // Allows to define a mathematic block embraced by `$....$`
+    [TestFixture]
+    public partial class TestExtensionsMathspans
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Math spans
+            //
+            // The following CommonMark:
+            //     This is a $math block$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math block</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Math spans");
+			TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">math block</span></p>", "math");
+        }
+    }
+        // A mathematic block takes precedence over standard emphasis `*` `_`:
+    [TestFixture]
+    public partial class TestExtensionsMathspans
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Math spans
+            //
+            // The following CommonMark:
+            //     This is *a $math* block$
+            //
+            // Should be rendered as:
+            //     <p>This is *a <span class="math">math* block</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Math spans");
+			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "math");
         }
     }
 }
