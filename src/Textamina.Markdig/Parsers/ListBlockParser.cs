@@ -21,8 +21,6 @@ namespace Textamina.Markdig.Parsers
         /// </summary>
         public ListBlockParser()
         {
-            //OpeningCharacters = new[] {'-', '+', '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
             ItemParsers = new OrderedList<ListItemParser>()
             {
                 new UnorderedListItemParser(),
@@ -165,7 +163,6 @@ namespace Textamina.Markdig.Parsers
                 columWidth = -columWidth;
             }
 
-            // TODO: Handle code indent
             if (state.Indent >= columWidth)
             {
                 if (state.Indent > columWidth && state.IsCodeIndent)

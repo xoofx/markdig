@@ -8,9 +8,9 @@ namespace Textamina.Markdig.Parsers
     /// <summary>
     /// Base interface for a <see cref="BlockParser"/>.
     /// </summary>
-    /// <typeparam name="TParserState"></typeparam>
+    /// <typeparam name="TProcessor"></typeparam>
     /// <seealso cref="Textamina.Markdig.Parsers.IMarkdownParser{T}" />
-    public interface IBlockParser<in TParserState> : IMarkdownParser<TParserState>
+    public interface IBlockParser<in TProcessor> : IMarkdownParser<TProcessor>
     {
         /// <summary>
         /// Determines whether this instance can interrupt the specified block being processed.
@@ -18,14 +18,14 @@ namespace Textamina.Markdig.Parsers
         /// <param name="processor">The parser processor.</param>
         /// <param name="block">The block being processed.</param>
         /// <returns><c>true</c> if this parser can interrupt the specified block being processed.</returns>
-        bool CanInterrupt(BlockProcessor processor, Block block);
+        bool CanInterrupt(TProcessor processor, Block block);
 
         /// <summary>
         /// Tries to match a block opening.
         /// </summary>
         /// <param name="processor">The parser processor.</param>
         /// <returns>The result of the match</returns>
-        BlockState TryOpen(BlockProcessor processor);
+        BlockState TryOpen(TProcessor processor);
 
         /// <summary>
         /// Tries to continue matching a block already opened.
@@ -33,7 +33,7 @@ namespace Textamina.Markdig.Parsers
         /// <param name="processor">The parser processor.</param>
         /// <param name="block">The block already opened.</param>
         /// <returns>The result of the match. By default, don't expect any newline</returns>
-        BlockState TryContinue(BlockProcessor processor, Block block);
+        BlockState TryContinue(TProcessor processor, Block block);
 
         /// <summary>
         /// Called when a block matched by this parser is being closed (to allow final computation on the block).
@@ -41,6 +41,6 @@ namespace Textamina.Markdig.Parsers
         /// <param name="processor">The parser processor.</param>
         /// <param name="block">The block being closed.</param>
         /// <returns><c>true</c> to keep the block; <c>false</c> to remove it. True by default.</returns>
-        bool Close(BlockProcessor processor, Block block);
+        bool Close(TProcessor processor, Block block);
     }
 }
