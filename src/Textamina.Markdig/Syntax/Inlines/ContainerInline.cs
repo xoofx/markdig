@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,7 +12,7 @@ namespace Textamina.Markdig.Syntax.Inlines
     /// A base class for container for <see cref="Inline"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.Inline" />
-    public class ContainerInline : Inline
+    public class ContainerInline : Inline, IEnumerable<Inline>
     {
         /// <summary>
         /// Gets the first child.
@@ -204,6 +205,60 @@ namespace Textamina.Markdig.Syntax.Inlines
                 level++;
                 FirstChild.DumpTo(writer, level);
             }
+        }
+
+        public struct Enumerator : IEnumerator<Inline>
+        {
+            private readonly ContainerInline container;
+            private Inline currentChild;
+            private Inline nextChild;
+
+            public Enumerator(ContainerInline container) : this()
+            {
+                if (container == null) throw new ArgumentNullException(nameof(container));
+                this.container = container;
+                currentChild = nextChild = container.FirstChild;
+            }
+
+            public Inline Current => currentChild;
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+                currentChild = nextChild;
+                if (currentChild != null)
+                {
+                    nextChild = currentChild.NextSibling;
+                    return true;
+                }
+                nextChild = null;
+                return false;
+            }
+
+            public void Reset()
+            {
+                currentChild = nextChild = container.FirstChild;
+            }
+        }
+
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
+        IEnumerator<Inline> IEnumerable<Inline>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

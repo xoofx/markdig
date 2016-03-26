@@ -223,6 +223,11 @@ namespace Textamina.Markdig.Syntax
                 current = null;
             }
 
+            public Block Current => current;
+
+            object IEnumerator.Current => Current;
+
+
             public void Dispose()
             {
             }
@@ -244,10 +249,6 @@ namespace Textamina.Markdig.Syntax
                 current = null;
                 return false;
             }
-
-            public Block Current => current;
-
-            object IEnumerator.Current => Current;
 
             void IEnumerator.Reset()
             {

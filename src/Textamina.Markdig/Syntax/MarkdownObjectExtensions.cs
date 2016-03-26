@@ -30,6 +30,16 @@ namespace Textamina.Markdig.Syntax
                     {
                         yield return sub;
                     }
+
+                    // Visit leaf block that have inlines
+                    var leafBlock = subBlock as LeafBlock;
+                    if (leafBlock?.Inline != null)
+                    {
+                        foreach (var subInline in Descendants(leafBlock.Inline))
+                        {
+                            yield return subInline;
+                        }
+                    }
                 }
             }
             else
@@ -55,53 +65,62 @@ namespace Textamina.Markdig.Syntax
         }
 
         /// <summary>
-        /// Iterates over the descendant elements for the specified markdown element and filters by the type {T}, including <see cref="Block" /> and <see cref="Inline" />.
+        /// Iterates over the descendant elements for the specified markdown <see cref="Inline" /> element and filters by the type {T}.
         /// </summary>
         /// <typeparam name="T">Type to use for filtering the descendants</typeparam>
-        /// <param name="markdownObject">The markdown object.</param>
+        /// <param name="inline">The inline markdown object.</param>
         /// <returns>
         /// An iteration over the descendant elements
         /// </returns>
-        public static IEnumerable<T> Descendants<T>(this MarkdownObject markdownObject) where T : MarkdownObject
+        public static IEnumerable<T> Descendants<T>(this ContainerInline inline) where T : Inline
         {
-            var block = markdownObject as ContainerBlock;
-            if (block != null)
+            var child = inline.FirstChild;
+            while (child != null)
             {
-                foreach (var subBlock in block)
+                var next = child.NextSibling;
+                var childT = child as T;
+                if (childT != null)
                 {
-                    var subBlockT = subBlock as T;
-                    if (subBlockT != null)
-                    {
-                        yield return subBlockT;
-                    }
+                    yield return childT;
+                }
 
-                    foreach (var sub in subBlock.Descendants<T>())
+                var subContainer = child as ContainerInline;
+                if (subContainer != null)
+                {
+                    foreach (var sub in subContainer.Descendants<T>())
                     {
                         yield return sub;
                     }
                 }
+
+                child = next;
             }
-            else // if (typeof(Inline).IsAssignableFrom(typeof(T)))  // TODO: Optimize for the case where T is not an inline
+        }
+
+        /// <summary>
+        /// Iterates over the descendant elements for the specified markdown <see cref="Block" /> element and filters by the type {T}.
+        /// </summary>
+        /// <typeparam name="T">Type to use for filtering the descendants</typeparam>
+        /// <param name="block">The markdown object.</param>
+        /// <returns>
+        /// An iteration over the descendant elements
+        /// </returns>
+        public static IEnumerable<T> Descendants<T>(this ContainerBlock block) where T : Block
+        {
+            foreach (var subBlock in block)
             {
-                var inline = markdownObject as ContainerInline;
-                if (inline != null)
+                var subBlockT = subBlock as T;
+                if (subBlockT != null)
                 {
-                    var child = inline.FirstChild;
-                    while (child != null)
+                    yield return subBlockT;
+                }
+
+                var subBlockContainer = subBlock as ContainerBlock;
+                if (subBlockContainer != null)
+                {
+                    foreach (var sub in subBlockContainer.Descendants<T>())
                     {
-                        var next = child.NextSibling;
-                        var childT = child as T;
-                        if (childT != null)
-                        {
-                            yield return childT;
-                        }
-
-                        foreach (var sub in child.Descendants<T>())
-                        {
-                            yield return sub;
-                        }
-
-                        child = next;
+                        yield return sub;
                     }
                 }
             }
