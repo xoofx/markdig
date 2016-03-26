@@ -12,6 +12,12 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Parsers
 {
     /// <summary>
+    /// Delegates called when processing a document
+    /// </summary>
+    /// <param name="document">The markdown document.</param>
+    public delegate void ProcessDocumentDelegate(MarkdownDocument document);
+
+    /// <summary>
     /// The Markdown parser.
     /// </summary>
     public sealed class MarkdownParser
@@ -19,6 +25,7 @@ namespace Textamina.Markdig.Parsers
         private readonly BlockProcessor blockProcessor;
         private readonly InlineProcessor inlineProcessor;
         private readonly MarkdownDocument document;
+        private readonly ProcessDocumentDelegate documentProcessed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownParser" /> class.
@@ -51,6 +58,8 @@ namespace Textamina.Markdig.Parsers
             {
                 DebugLog = pipeline.DebugLog
             };
+
+            documentProcessed = pipeline.GetDocumentProcessed;
         }
 
         /// <summary>
@@ -83,6 +92,9 @@ namespace Textamina.Markdig.Parsers
         {
             ProcessBlocks();
             ProcessInlines();
+            
+            // Allow to call a hook after processing a document
+            documentProcessed?.Invoke(document);
             return document;
         }
 
@@ -111,7 +123,6 @@ namespace Textamina.Markdig.Parsers
         /// <param name="text">The text to secure.</param>
         private string FixupZero(string text)
         {
-
             int startPos = 0;
             int nextZero;
             StringBuilder newLine = null;
@@ -137,7 +148,6 @@ namespace Textamina.Markdig.Parsers
             return result;
         }
 
-
         private class ContainerItemCache : DefaultObjectCache<ContainerItem>
         {
             protected override void Reset(ContainerItem instance)
@@ -149,6 +159,7 @@ namespace Textamina.Markdig.Parsers
 
         private void ProcessInlines()
         {
+            // "stackless" processor
             var cache = new ContainerItemCache();
             var blocks = new Stack<ContainerItem>();
 

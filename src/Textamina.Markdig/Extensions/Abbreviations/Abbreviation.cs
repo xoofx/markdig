@@ -30,7 +30,7 @@ namespace Textamina.Markdig.Extensions.Abbreviations
         public string Label { get; set; }
 
         /// <summary>
-        /// The text
+        /// The text associated to this label.
         /// </summary>
         public StringSlice Text;
     }

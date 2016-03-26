@@ -10,13 +10,6 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Parsers
 {
     /// <summary>
-    /// A delegate called at block processing stage.
-    /// </summary>
-    /// <param name="processor">The processor.</param>
-    /// <param name="block">The block being processed.</param>
-    public delegate void ProcessBlockDelegate(BlockProcessor processor, Block block);
-
-    /// <summary>
     /// The block processor.
     /// </summary>
     public class BlockProcessor
