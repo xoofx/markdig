@@ -173,8 +173,6 @@ namespace Textamina.Markdig.Parsers.Inlines
                         Content = new StringSlice("[")
                     };
                     openParent.ReplaceBy(inlineState.Inline);
-                    // Notifies processor as we are creating an inline locally
-                    inlineState.OnInlineCreated(inlineState.Inline);
                     return false;
                 }
 
@@ -201,7 +199,6 @@ namespace Textamina.Markdig.Parsers.Inlines
 
                             openParent.ReplaceBy(link);
                             // Notifies processor as we are creating an inline locally
-                            inlineState.OnInlineCreated(link);
                             inlineState.Inline = link;
 
                             // Process emphasis delimiters
@@ -269,9 +266,6 @@ namespace Textamina.Markdig.Parsers.Inlines
                 };
 
                 inlineState.Inline = openParent.ReplaceBy(literal);
-
-                // Notifies processor as we are creating an inline locally
-                inlineState.OnInlineCreated(literal);
                 return false;
             }
 

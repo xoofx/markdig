@@ -24,14 +24,12 @@ namespace Textamina.Markdig.Parsers
         private BlockProcessor root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
-        private readonly ProcessBlockDelegate blockCreated;
         private int originalLineStart = 0;
 
         private BlockProcessor(BlockProcessor root)
         {
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
-            this.blockCreated = root.blockCreated;
             this.parserStateCache = root.parserStateCache;
             StringBuilders = root.StringBuilders;
             Document = root.Document;
@@ -48,10 +46,9 @@ namespace Textamina.Markdig.Parsers
         /// <param name="stringBuilders">The string builders cache.</param>
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
-        /// <param name="blockCreated">The block created event.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers, ProcessBlockDelegate blockCreated = null)
+        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -62,7 +59,6 @@ namespace Textamina.Markdig.Parsers
             document.IsOpen = true;
             Parsers = parsers;
             parsers.Initialize(this);
-            this.blockCreated = blockCreated;
             OpenedBlocks = new List<Block>();
             NewBlocks = new Stack<Block>();
             root = this;
@@ -736,9 +732,6 @@ namespace Textamina.Markdig.Parsers
                     }
                 }
 
-                // Notifies block listeners
-                OnBlockCreated(block);
-
                 if (allowClosing)
                 {
                     // Close any previous blocks not opened
@@ -804,11 +797,6 @@ namespace Textamina.Markdig.Parsers
             {
                 instance.Reset();
             }
-        }
-
-        public virtual void OnBlockCreated(Block block)
-        {
-            blockCreated?.Invoke(this, block);
         }
     }
 }

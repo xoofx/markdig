@@ -83,20 +83,6 @@ namespace Textamina.Markdig
         public TextWriter DebugLog { get; set; }
 
         /// <summary>
-        /// Occurs when a block is created.
-        /// </summary>
-        public event ProcessBlockDelegate BlockCreated;
-
-        /// <summary>
-        /// Occurs when when an inline is created.
-        /// </summary>
-        public event ProcessInlineDelegate InlineCreated;
-
-        internal ProcessBlockDelegate GetBlockCreated => BlockCreated;
-
-        internal ProcessInlineDelegate GetInlineCreated => InlineCreated;
-
-        /// <summary>
         /// Initializes this instance.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>

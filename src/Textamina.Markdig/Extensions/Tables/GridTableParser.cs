@@ -218,7 +218,6 @@ namespace Textamina.Markdig.Extensions.Tables
                 };
                 parent.Add(paragraphBlock);
                 processor.Open(paragraphBlock);
-                processor.OnBlockCreated(paragraphBlock);
             }
 
             return BlockState.Break;
@@ -342,7 +341,6 @@ namespace Textamina.Markdig.Extensions.Tables
 
                     // Ensure that the BlockParser is aware that the TableCell is the top-level container
                     columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);
-                    columnSlice.BlockProcessor.OnBlockCreated(columnSlice.CurrentCell);
                 }
             }
 

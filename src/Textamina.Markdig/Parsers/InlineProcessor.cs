@@ -24,7 +24,6 @@ namespace Textamina.Markdig.Parsers
     public class InlineProcessor
     {
         private readonly List<int> lineOffsets;
-        private readonly ProcessInlineDelegate inlineCreated;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
@@ -35,7 +34,7 @@ namespace Textamina.Markdig.Parsers
         /// <param name="inlineCreated">The inline created event.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, ProcessInlineDelegate inlineCreated = null)
+        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -43,7 +42,6 @@ namespace Textamina.Markdig.Parsers
             StringBuilders = stringBuilders;
             Document = document;
             Parsers = parsers;
-            this.inlineCreated = inlineCreated;
             lineOffsets = new List<int>();
             Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
@@ -180,8 +178,6 @@ namespace Textamina.Markdig.Parsers
                     {
                         // Get deepest container
                         FindLastContainer().AppendChild(nextInline);
-
-                        OnInlineCreated(nextInline);
                     }
                 }
                 else
@@ -251,11 +247,6 @@ namespace Textamina.Markdig.Parsers
                 }
             }
             return container;
-        }
-
-        public virtual void OnInlineCreated(Inline inline)
-        {
-            inlineCreated?.Invoke(this, inline);
         }
     }
 }
