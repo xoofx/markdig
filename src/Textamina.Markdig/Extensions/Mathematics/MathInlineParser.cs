@@ -1,9 +1,10 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using Textamina.Markdig.Parsers.Inlines;
+
+using Textamina.Markdig.Helpers;
+using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers.Html;
-using Textamina.Markdig.Syntax.Inlines;
 
 namespace Textamina.Markdig.Extensions.Mathematics
 {
@@ -12,26 +13,120 @@ namespace Textamina.Markdig.Extensions.Mathematics
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.InlineParser" />
     /// <seealso cref="Textamina.Markdig.Parsers.IDelimiterProcessor" />
-    public class MathInlineParser : EmphasisInlineParser
+    public class MathInlineParser : InlineParser
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MathInlineParser"/> class.
         /// </summary>
         public MathInlineParser()
         {
-            EmphasisDescriptors.Clear();
-            EmphasisDescriptors.Add(new EmphasisDescriptor('$', 1, 1, false));
-            CreateEmphasisInline = CreateMathInline;
+            OpeningCharacters = new[] {'$'};
             DefaultClass = "math";
         }
 
+        /// <summary>
+        /// Gets or sets the default class to use when creating a math inline block.
+        /// </summary>
         public string DefaultClass { get; set; }
 
-        private EmphasisInline CreateMathInline(char emphasisChar, bool isStrong)
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            var inline = new MathInline() {DelimiterChar = emphasisChar, IsDouble = isStrong};
-            inline.GetAttributes().AddClass(DefaultClass);
-            return inline;
+            var match = slice.CurrentChar;
+            var pc = slice.PeekCharExtra(-1);
+            if (pc == match)
+            {
+                return false;
+            }
+
+            // Match the opened $ or $$
+            int openDollars = 1; // we have at least a $
+            var c = slice.NextChar();
+            if (c == match)
+            {
+                openDollars++;
+                c = slice.NextChar();
+            }
+
+            bool canOpen;
+            bool canClose;
+            // Check that opening $/$$ is correct, using the same heuristics than for emphasis delimiters
+            CharHelper.CheckOpenCloseDelimiter(pc, c, false, out canOpen, out canClose);
+            if (!canOpen)
+            {
+                return false;
+            }
+
+            bool isMatching = false;
+            int closeDollars = 0;
+
+            var start = slice.Start;
+            pc = match;
+            while (c != '\0')
+            {
+                // Count new '\n'
+                if (c == '\n')
+                {
+                    processor.LocalLineIndex++;
+                    processor.LineIndex++;
+                }
+
+                // Don't process sticks if we have a '\' as a previous char
+                if (pc != '\\' )
+                {
+                    while (c == match)
+                    {
+                        closeDollars++;
+                        c = slice.NextChar();
+                    }
+
+                    if (closeDollars >= openDollars)
+                    {
+                        break;
+                    }
+                    pc = match;
+                }
+
+                if (closeDollars > 0)
+                {
+                    closeDollars = 0;
+                }
+                else
+                {
+                    pc = c;
+                    c = slice.NextChar();
+                }
+            }
+
+            if (closeDollars >= openDollars)
+            {
+                // Check that closing $/$$ is correct
+                CharHelper.CheckOpenCloseDelimiter(pc, c, false, out canOpen, out canClose);
+                if (!canClose || c.IsDigit())
+                {
+                    return false;
+                }
+
+                // Create a new MathInline
+                var inline = new MathInline()
+                {
+                    Delimiter = match,
+                    DelimiterCount = openDollars,
+                    Content = slice
+                };
+                inline.Content.Start = start;
+                // We substract the end to the number of opening $ to keep inside the block the additionals $
+                inline.Content.End = inline.Content.End - openDollars;
+
+                // Add the default class if necessary
+                if (DefaultClass != null)
+                {
+                    inline.GetAttributes().AddClass(DefaultClass);
+                }
+                processor.Inline = inline;
+                isMatching = true;
+            }
+
+            return isMatching;
         }
     }
 }

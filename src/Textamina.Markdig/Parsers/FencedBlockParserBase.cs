@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
@@ -38,12 +40,18 @@ namespace Textamina.Markdig.Parsers
         protected FencedBlockParserBase()
         {
             InfoParser = DefaultInfoParser;
+            MinimumMatchCount = 3;
+            MaximumMatchCount = Int32.MaxValue;
         }
 
         /// <summary>
         /// Gets or sets the language prefix (default is "language-")
         /// </summary>
         public string InfoPrefix { get; set; }
+
+        public int MinimumMatchCount { get; set; }
+
+        public int MaximumMatchCount { get; set; }
 
         /// <summary>
         /// The default parser for the information after the fenced code block special characters (usually ` or ~)
@@ -131,7 +139,7 @@ namespace Textamina.Markdig.Parsers
             }
 
             // A fenced codeblock requires at least 3 opening chars
-            if (count < 3)
+            if (count < MinimumMatchCount || count > MaximumMatchCount)
             {
                 return BlockState.None;
             }

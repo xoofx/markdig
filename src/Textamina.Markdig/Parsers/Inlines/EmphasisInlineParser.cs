@@ -136,43 +136,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                 return false;
             }
 
-            // A left-flanking delimiter run is a delimiter run that is 
-            // (a) not followed by Unicode whitespace, and
-            // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
-            // or a punctuation character. 
-            // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-            bool nextIsPunctuation;
-            bool nextIsWhiteSpace;
-            bool prevIsPunctuation;
-            bool prevIsWhiteSpace;
-            pc.CheckUnicodeCategory(out prevIsWhiteSpace, out prevIsPunctuation);
-            c.CheckUnicodeCategory(out nextIsWhiteSpace, out nextIsPunctuation);
-
-            bool canOpen = !nextIsWhiteSpace &&
-                           (!nextIsPunctuation || prevIsWhiteSpace || prevIsPunctuation);
-
-
-            // A right-flanking delimiter run is a delimiter run that is 
-            // (a) not preceded by Unicode whitespace, and 
-            // (b) either not preceded by a punctuation character, or followed by Unicode whitespace 
-            // or a punctuation character. 
-            // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-            bool canClose = !prevIsWhiteSpace &&
-                            (!prevIsPunctuation || nextIsWhiteSpace || nextIsPunctuation);
-
-            if (!emphasisDesc.EnableWithinWord)
-            {
-                var temp = canOpen;
-                // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
-                // (a) not part of a right-flanking delimiter run or 
-                // (b) part of a right-flanking delimiter run preceded by punctuation.
-                canOpen = canOpen && (!canClose || prevIsPunctuation);
-
-                // A single _ character can close emphasis iff it is part of a right-flanking delimiter run and either
-                // (a) not part of a left-flanking delimiter run or 
-                // (b) part of a left-flanking delimiter run followed by punctuation.
-                canClose = canClose && (!temp || nextIsPunctuation);
-            }
+            // Calculate Open-Close for current character
+            bool canOpen;
+            bool canClose;
+            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out canOpen, out canClose);
 
             // We have potentially an open or close emphasis
             if (canOpen || canClose)

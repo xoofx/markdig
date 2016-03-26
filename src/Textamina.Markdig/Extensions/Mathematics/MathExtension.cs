@@ -18,16 +18,26 @@ namespace Textamina.Markdig.Extensions.Mathematics
             // Adds the inline parser
             if (!pipeline.InlineParsers.Contains<MathInlineParser>())
             {
-                // Insert before EmphasisInlineParser to take precedence
-                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new MathInlineParser());
+                pipeline.InlineParsers.Insert(0, new MathInlineParser());
             }
+
+            // Adds the block parser
+            if (!pipeline.BlockParsers.Contains<MathBlockParser>())
+            {
+                // Insert before EmphasisInlineParser to take precedence
+                pipeline.BlockParsers.Insert(0, new MathBlockParser());
+            }
+
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlMathInlineRenderer>())
                 {
-                    // Insert before EmphasisInlineRenderer to take precedence
-                    htmlRenderer.ObjectRenderers.InsertBefore<EmphasisInlineRenderer>(new HtmlMathInlineRenderer());
+                    htmlRenderer.ObjectRenderers.Insert(0, new HtmlMathInlineRenderer());
+                }
+                if (!htmlRenderer.ObjectRenderers.Contains<HtmlMathBlockRenderer>())
+                {
+                    htmlRenderer.ObjectRenderers.Insert(0, new HtmlMathBlockRenderer());
                 }
             }
         }

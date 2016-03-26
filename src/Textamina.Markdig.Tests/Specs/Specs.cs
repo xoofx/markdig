@@ -18084,17 +18084,17 @@ namespace Textamina.Markdig.Tests
         //
         // Adds support for mathematics spans:
         //
-        // ## Math spans
+        // ## Math Inline
         //
-        // Allows to define a mathematic block embraced by `$....$`
+        // Allows to define a mathematic block embraced by `$...$`
     [TestFixture]
-    public partial class TestExtensionsMathspans
+    public partial class TestExtensionsMathInline
     {
         [Test]
         public void Example001()
         {
             // Example 1
-            // Section: Extensions Math spans
+            // Section: Extensions Math Inline
             //
             // The following CommonMark:
             //     This is a $math block$
@@ -18102,19 +18102,159 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a <span class="math">math block</span></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Math spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Math Inline");
 			TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">math block</span></p>", "math");
         }
     }
-        // A mathematic block takes precedence over standard emphasis `*` `_`:
+        // Or by `$$...$$` embracing it by:
     [TestFixture]
-    public partial class TestExtensionsMathspans
+    public partial class TestExtensionsMathInline
     {
         [Test]
         public void Example002()
         {
             // Example 2
-            // Section: Extensions Math spans
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $$math block$$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math block</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">math block</span></p>", "math");
+        }
+    }
+        // The opening `$` and closing `$` is following the rules of the emphasis delimiter `_`:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is not a $ math block $
+            //
+            // Should be rendered as:
+            //     <p>This is not a $ math block $</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Math Inline");
+			TestParser.TestSpec("This is not a $ math block $", "<p>This is not a $ math block $</p>", "math");
+        }
+    }
+        // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is not a m$ath block$
+            //
+            // Should be rendered as:
+            //     <p>This is not a m$ath block$</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Math Inline");
+			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "math");
+        }
+    }
+        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is not a $math bloc$k
+            //
+            // Should be rendered as:
+            //     <p>This is not a $math bloc$k</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Math Inline");
+			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "math");
+        }
+    }
+        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is should not match a 16$ or a $15
+            //
+            // Should be rendered as:
+            //     <p>This is should not match a 16$ or a $15</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Math Inline");
+			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "math");
+        }
+    }
+        // A `$` can be escaped between a math inline block by using the escape `\\`
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $math \$ block$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math \$ block</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "math");
+        }
+    }
+        // At most, two `$` will be matched for the opening and closing:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $$$math block$$$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">$math block$</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "math");
+        }
+    }
+        // A mathematic block takes precedence over standard emphasis `*` `_`:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions Math Inline
             //
             // The following CommonMark:
             //     This is *a $math* block$
@@ -18122,8 +18262,40 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is *a <span class="math">math* block</span></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Math spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Math Inline");
 			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "math");
+        }
+    }
+        // ## Math Block
+        //
+        // The match block can spawn on multiple lines by having a $$ starting on a line.
+        // It is working as a fenced code block.
+    [TestFixture]
+    public partial class TestExtensionsMathBlock
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions Math Block
+            //
+            // The following CommonMark:
+            //     $$
+            //     \begin{equation}
+            //       \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15}
+            //       \label{eq:sample}
+            //     \end{equation}
+            //     $$
+            //
+            // Should be rendered as:
+            //     <div class="math">\begin{equation}
+            //       \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15}
+            //       \label{eq:sample}
+            //     \end{equation}
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Block");
+			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "math");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Textamina.Markdig.Extensions.Mathematics
         protected override void Write(HtmlRenderer renderer, MathInline obj)
         {
             renderer.Write("<span").WriteAttributes(obj).Write(">");
-            renderer.WriteChildren(obj);
+            renderer.WriteEscape(ref obj.Content);
             renderer.Write("</span>");
         }
     }
