@@ -18406,4 +18406,33 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("![Image Link](/url)", "<p><img src=\"/url\" class=\"img-fluid\" alt=\"Image Link\" /></p>", "bootstrap+pipetables+figures+attributes");
         }
     }
+        // # Extensions
+        //
+        // Adds support for media links:
+        //
+        // ## Media links
+        //
+        // Allows to embed audio/video links to popular website:
+    [TestFixture]
+    public partial class TestExtensionsMedialinks
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Media links
+            //
+            // The following CommonMark:
+            //     ![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)
+            //     
+            //     ![Video2](https://vimeo.com/8607834)
+            //
+            // Should be rendered as:
+            //     <p><iframe width="420" height="315" src="https://www.youtube.com/embed/mswPy5bt3TQ" frameborder="0" allowfullscreen></iframe></p>
+            //     <p><iframe width="500" height="281" src="https://player.vimeo.com/video/8607834" frameborder="0" allowfullscreen></iframe></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Media links");
+			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe width=\"420\" height=\"315\" src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe width=\"500\" height=\"281\" src=\"https://player.vimeo.com/video/8607834\" frameborder=\"0\" allowfullscreen></iframe></p>", "medias");
+        }
+    }
 }

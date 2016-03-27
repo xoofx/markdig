@@ -13,6 +13,7 @@ using Textamina.Markdig.Extensions.GenericAttributes;
 using Textamina.Markdig.Extensions.Hardlines;
 using Textamina.Markdig.Extensions.ListExtra;
 using Textamina.Markdig.Extensions.Mathematics;
+using Textamina.Markdig.Extensions.Medias;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -41,6 +42,8 @@ namespace Textamina.Markdig
                 .UseEmojiAndSmiley()
                 .UseEmphasisExtra()
                 .UseMath()
+                .UseBootstrap()
+                .UseMedia()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -55,7 +58,16 @@ namespace Textamina.Markdig
             return pipeline;
         }
 
-
+        /// <summary>
+        /// Uses the media extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseMedia(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<MediaExtension>();
+            return pipeline;
+        }
         /// <summary>
         /// Uses the boostrap extension.
         /// </summary>
