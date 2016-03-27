@@ -62,12 +62,19 @@ namespace Textamina.Markdig
         /// Uses the media extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseMedia(this MarkdownPipeline pipeline)
+        /// <param name="options">The options.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UseMedia(this MarkdownPipeline pipeline, MediaOptions options = null)
         {
-            pipeline.Extensions.AddIfNotAlready<MediaExtension>();
+            if (!pipeline.Extensions.Contains<MediaExtension>())
+            {
+                pipeline.Extensions.Add(new MediaExtension(options));
+            }
             return pipeline;
         }
+
         /// <summary>
         /// Uses the boostrap extension.
         /// </summary>
