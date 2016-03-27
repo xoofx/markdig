@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using Textamina.Markdig.Extensions;
 using Textamina.Markdig.Extensions.Abbreviations;
+using Textamina.Markdig.Extensions.Bootstrap;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Emoji;
+using Textamina.Markdig.Extensions.EmphasisExtra;
 using Textamina.Markdig.Extensions.Figures;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.GenericAttributes;
+using Textamina.Markdig.Extensions.Hardlines;
 using Textamina.Markdig.Extensions.ListExtra;
 using Textamina.Markdig.Extensions.Mathematics;
 using Textamina.Markdig.Extensions.Tables;
@@ -50,6 +52,18 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
+            return pipeline;
+        }
+
+
+        /// <summary>
+        /// Uses the boostrap extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseBootstrap(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<BootstrapExtension>();
             return pipeline;
         }
 

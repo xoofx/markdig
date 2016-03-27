@@ -18298,4 +18298,112 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "math");
         }
     }
+        // # Extensions
+        //
+        // Adds support for outputing bootstrap ready tags:
+        //
+        // ## Bootstrap
+        //
+        // Adds bootstrap `.table` class to `<table>`:
+    [TestFixture]
+    public partial class TestExtensionsBootstrap
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Bootstrap
+            //
+            // The following CommonMark:
+            //     Name | Value
+            //     -----| -----
+            //     Abc  | 16
+            //
+            // Should be rendered as:
+            //     <table class="table">
+            //     <thead>
+            //     <tr>
+            //     <th>Name</th>
+            //     <th>Value</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Abc</td>
+            //     <td>16</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Bootstrap");
+			TestParser.TestSpec("Name | Value\n-----| -----\nAbc  | 16", "<table class=\"table\">\n<thead>\n<tr>\n<th>Name</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Abc</td>\n<td>16</td>\n</tr>\n</tbody>\n</table>", "bootstrap+pipetables+figures+attributes");
+        }
+    }
+        // Adds bootstrap `.blockquote` class to `<blockquote>`:
+    [TestFixture]
+    public partial class TestExtensionsBootstrap
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Bootstrap
+            //
+            // The following CommonMark:
+            //     > This is a blockquote
+            //
+            // Should be rendered as:
+            //     <blockquote class="blockquote">
+            //     <p>This is a blockquote</p>
+            //     </blockquote>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Bootstrap");
+			TestParser.TestSpec("> This is a blockquote", "<blockquote class=\"blockquote\">\n<p>This is a blockquote</p>\n</blockquote>", "bootstrap+pipetables+figures+attributes");
+        }
+    }
+        // Adds bootstrap `.figure` class to `<figure>` and `.figure-caption` to `<figcaption>`
+    [TestFixture]
+    public partial class TestExtensionsBootstrap
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Bootstrap
+            //
+            // The following CommonMark:
+            //     ^^^
+            //     This is a text in a caption
+            //     ^^^ This is the caption
+            //
+            // Should be rendered as:
+            //     <figure class="figure">
+            //     <p>This is a text in a caption</p>
+            //     <figcaption class="figure-caption">This is the caption</figcaption>
+            //     </figure>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Bootstrap");
+			TestParser.TestSpec("^^^\nThis is a text in a caption\n^^^ This is the caption", "<figure class=\"figure\">\n<p>This is a text in a caption</p>\n<figcaption class=\"figure-caption\">This is the caption</figcaption>\n</figure>", "bootstrap+pipetables+figures+attributes");
+        }
+    }
+        // Adds the `.img-fluid` class to all image links `<img>`
+    [TestFixture]
+    public partial class TestExtensionsBootstrap
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Bootstrap
+            //
+            // The following CommonMark:
+            //     ![Image Link](/url)
+            //
+            // Should be rendered as:
+            //     <p><img src="/url" class="img-fluid" alt="Image Link" /></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Bootstrap");
+			TestParser.TestSpec("![Image Link](/url)", "<p><img src=\"/url\" class=\"img-fluid\" alt=\"Image Link\" /></p>", "bootstrap+pipetables+figures+attributes");
+        }
+    }
 }

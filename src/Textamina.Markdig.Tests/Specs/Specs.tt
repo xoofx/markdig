@@ -52,6 +52,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("ListExtraSpecs.md"), "list_extra"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FigureSpecs.md"), "figures"),
 		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "math"),
+		new KeyValuePair<string, string>(Host.ResolvePath("BootstrapSpecs.md"), "bootstrap+pipetables+figures+attributes"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

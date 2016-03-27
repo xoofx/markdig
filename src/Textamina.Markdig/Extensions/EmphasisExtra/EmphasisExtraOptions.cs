@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.EmphasisExtra
 {
     /// <summary>
     /// Options for enabling support for extra emphasis.

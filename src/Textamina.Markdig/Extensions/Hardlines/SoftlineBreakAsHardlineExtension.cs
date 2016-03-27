@@ -4,7 +4,7 @@
 
 using Textamina.Markdig.Parsers.Inlines;
 
-namespace Textamina.Markdig.Extensions
+namespace Textamina.Markdig.Extensions.Hardlines
 {
     /// <summary>
     /// Extension to generate hardline break for softline breaks.
