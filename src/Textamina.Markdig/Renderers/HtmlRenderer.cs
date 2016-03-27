@@ -200,40 +200,51 @@ namespace Textamina.Markdig.Renderers
         public HtmlRenderer WriteAttributes(MarkdownObject obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            var attributes = obj.TryGetAttributes();
-            if (attributes != null)
+            return WriteAttributes(obj.TryGetAttributes());
+        }
+
+        /// <summary>
+        /// Writes the specified <see cref="HtmlAttributes"/>.
+        /// </summary>
+        /// <param name="attributes">The attributes to render.</param>
+        /// <returns>This instance</returns>
+        public HtmlRenderer WriteAttributes(HtmlAttributes attributes)
+        {
+            if (attributes == null)
             {
-                if (attributes.Id != null)
-                {
-                    Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
-                }
+                return this;
+            }
 
-                if (attributes.Classes != null && attributes.Classes.Count > 0)
+            if (attributes.Id != null)
+            {
+                Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
+            }
+
+            if (attributes.Classes != null && attributes.Classes.Count > 0)
+            {
+                Write(" class=\"");
+                for (int i = 0; i < attributes.Classes.Count; i++)
                 {
-                    Write(" class=\"");
-                    for (int i = 0; i < attributes.Classes.Count; i++)
+                    var cssClass = attributes.Classes[i];
+                    if (i > 0)
                     {
-                        var cssClass = attributes.Classes[i];
-                        if (i > 0)
-                        {
-                            Write(" ");
-                        }
-                        WriteEscape(cssClass);
+                        Write(" ");
                     }
-                    Write("\"");
+                    WriteEscape(cssClass);
                 }
+                Write("\"");
+            }
 
-                if (attributes.Properties != null && attributes.Properties.Count > 0)
+            if (attributes.Properties != null && attributes.Properties.Count > 0)
+            {
+                foreach (var property in attributes.Properties)
                 {
-                    foreach (var property in attributes.Properties)
+                    Write(" ").Write(property.Key);
+                    if (property.Value != null)
                     {
-                        Write(" ").Write(property.Key);
-                        if (property.Value != null)
-                        {
-                            Write("=").Write("\"");
-                            WriteEscape(property.Value);
-                            Write("\"");
-                        }
+                        Write("=").Write("\"");
+                        WriteEscape(property.Value);
+                        Write("\"");
                     }
                 }
             }

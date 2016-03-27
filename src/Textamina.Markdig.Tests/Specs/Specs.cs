@@ -18428,11 +18428,11 @@ namespace Textamina.Markdig.Tests
             //     ![Video2](https://vimeo.com/8607834)
             //
             // Should be rendered as:
-            //     <p><iframe width="420" height="315" src="https://www.youtube.com/embed/mswPy5bt3TQ" frameborder="0" allowfullscreen></iframe></p>
-            //     <p><iframe width="500" height="281" src="https://player.vimeo.com/video/8607834" frameborder="0" allowfullscreen></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen></iframe></p>
+            //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen></iframe></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Media links");
-			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe width=\"420\" height=\"315\" src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe width=\"500\" height=\"281\" src=\"https://player.vimeo.com/video/8607834\" frameborder=\"0\" allowfullscreen></iframe></p>", "medias");
+			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>", "medias");
         }
     }
 }
