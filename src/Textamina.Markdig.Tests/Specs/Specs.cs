@@ -18435,4 +18435,125 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>", "medias");
         }
     }
+        // # Extensions
+        //
+        // Adds support for smarty pants:
+        //
+        // ## SmartyPants
+        //
+        // Converts the following character to smarty pants:
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a "text"
+            //
+            // Should be rendered as:
+            //     <p>This is a &ldquo;text&rdquo;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a 'text'
+            //
+            // Should be rendered as:
+            //     <p>This is a &lsquo;text&rsquo;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a <<text>>
+            //
+            // Should be rendered as:
+            //     <p>This is a &ldquo;text&rdquo;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a <<text>>", "<p>This is a &ldquo;text&rdquo;</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a -- text
+            //
+            // Should be rendered as:
+            //     <p>This is a &ndash; text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a --- text
+            //
+            // Should be rendered as:
+            //     <p>This is a &mdash; text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPants
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions SmartyPants
+            //
+            // The following CommonMark:
+            //     This is a en ellipsis...
+            //
+            // Should be rendered as:
+            //     <p>This is a en ellipsis&hellip;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions SmartyPants");
+			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
+        }
+    }
 }

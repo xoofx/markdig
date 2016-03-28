@@ -95,6 +95,9 @@ namespace Textamina.Markdig.Tests
                         case "medias":
                             pipeline.UseMedia();
                             break;
+                        case "smartypants":
+                            pipeline.UseSmartyPants();
+                            break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");
                             break;

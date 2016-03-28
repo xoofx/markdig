@@ -80,6 +80,7 @@
     <None Include="Specs\GridTableSpecs.md" />
     <None Include="Specs\HardlineBreakSpecs.md" />
     <None Include="Specs\BootstrapSpecs.md" />
+    <None Include="Specs\SmartyPantsSpecs.md" />
     <None Include="Specs\MediaSpecs.md" />
     <None Include="Specs\MathSpecs.md" />
     <None Include="Specs\PipeTableSpecs.md" />

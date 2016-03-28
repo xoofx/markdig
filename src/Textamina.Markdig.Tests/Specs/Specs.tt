@@ -54,6 +54,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "math"),
 		new KeyValuePair<string, string>(Host.ResolvePath("BootstrapSpecs.md"), "bootstrap+pipetables+figures+attributes"),
 		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medias"),
+		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "smartypants"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

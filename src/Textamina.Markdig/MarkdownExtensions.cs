@@ -14,6 +14,7 @@ using Textamina.Markdig.Extensions.Hardlines;
 using Textamina.Markdig.Extensions.ListExtra;
 using Textamina.Markdig.Extensions.Mathematics;
 using Textamina.Markdig.Extensions.Medias;
+using Textamina.Markdig.Extensions.SmartyPants;
 using Textamina.Markdig.Extensions.Tables;
 
 namespace Textamina.Markdig
@@ -71,6 +72,23 @@ namespace Textamina.Markdig
             if (!pipeline.Extensions.Contains<MediaExtension>())
             {
                 pipeline.Extensions.Add(new MediaExtension(options));
+            }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the SmartyPants extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UseSmartyPants(this MarkdownPipeline pipeline, SmartyPantOptions options = null)
+        {
+            if (!pipeline.Extensions.Contains<SmartyPantsExtension>())
+            {
+                pipeline.Extensions.Add(new SmartyPantsExtension(options));
             }
             return pipeline;
         }
