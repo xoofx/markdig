@@ -18439,17 +18439,17 @@ namespace Textamina.Markdig.Tests
         //
         // Adds support for smarty pants:
         //
-        // ## SmartyPants
+        // ## SmartyPants Quotes
         //
         // Converts the following character to smarty pants:
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
         public void Example001()
         {
             // Example 1
-            // Section: Extensions SmartyPants
+            // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
             //     This is a "text"
@@ -18457,18 +18457,18 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &ldquo;text&rdquo;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions SmartyPants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions SmartyPants Quotes");
 			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "smartypants");
         }
     }
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
         public void Example002()
         {
             // Example 2
-            // Section: Extensions SmartyPants
+            // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
             //     This is a 'text'
@@ -18476,37 +18476,271 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &lsquo;text&rsquo;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions SmartyPants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions SmartyPants Quotes");
 			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "smartypants");
         }
     }
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
         public void Example003()
         {
             // Example 3
-            // Section: Extensions SmartyPants
+            // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
             //     This is a <<text>>
             //
             // Should be rendered as:
-            //     <p>This is a &ldquo;text&rdquo;</p>
+            //     <p>This is a &laquo;text&raquo;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions SmartyPants");
-			TestParser.TestSpec("This is a <<text>>", "<p>This is a &ldquo;text&rdquo;</p>", "smartypants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "smartypants");
         }
     }
+        // Unbalanced quotes are not changed:
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
         public void Example004()
         {
             // Example 4
-            // Section: Extensions SmartyPants
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a "text
+            //
+            // Should be rendered as:
+            //     <p>This is a &quot;text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a 'text
+            //
+            // Should be rendered as:
+            //     <p>This is a 'text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a <<text
+            //
+            // Should be rendered as:
+            //     <p>This is a &lt;&lt;text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "smartypants");
+        }
+    }
+        // Unbalanced quotes inside other quotes are not changed:
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a "text 'with" a another text'
+            //
+            // Should be rendered as:
+            //     <p>This is a &ldquo;text 'with&rdquo; a another text'</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a 'text <<with' a another text>>
+            //
+            // Should be rendered as:
+            //     <p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is a <<text 'with>> a another text'
+            //
+            // Should be rendered as:
+            //     <p>This is a &laquo;text 'with&raquo; a another text'</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "smartypants");
+        }
+    }
+        // Quotes requires to have the same rules than emphasis `_` regarding left/right frankling rules:
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     It's not quotes'
+            //
+            // Should be rendered as:
+            //     <p>It's not quotes'</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     They are ' not matching quotes '
+            //
+            // Should be rendered as:
+            //     <p>They are ' not matching quotes '</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     They are' not matching 'quotes
+            //
+            // Should be rendered as:
+            //     <p>They are' not matching 'quotes</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "smartypants");
+        }
+    }
+        // Double quotes using ``` `` ``` are working if they match another `''` pair, and there is no other double quotes on the line (otherwise they would be parsed as a code span):
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is ``a double quote''
+            //
+            // Should be rendered as:
+            //     <p>This is &ldquo;a double quote&rdquo;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is ``a double quote''", "<p>This is &ldquo;a double quote&rdquo;</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example014()
+        {
+            // Example 14
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is ``a code span''`` 
+            //
+            // Should be rendered as:
+            //     <p>This is <code>a code span''</code></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is ``a code span''`` ", "<p>This is <code>a code span''</code></p>", "smartypants");
+        }
+    }
+        // An emphasis starting inside left/right quotes will span over the right quote:
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsQuotes
+    {
+        [Test]
+        public void Example015()
+        {
+            // Example 15
+            // Section: Extensions SmartyPants Quotes
+            //
+            // The following CommonMark:
+            //     This is "a *text" with an emphasis*
+            //
+            // Should be rendered as:
+            //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "smartypants");
+        }
+    }
+        // ## SmartyPants Separators
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsSeparators
+    {
+        [Test]
+        public void Example016()
+        {
+            // Example 16
+            // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
             //     This is a -- text
@@ -18514,18 +18748,18 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &ndash; text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions SmartyPants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
         }
     }
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example005()
+        public void Example017()
         {
-            // Example 5
-            // Section: Extensions SmartyPants
+            // Example 17
+            // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
             //     This is a --- text
@@ -18533,18 +18767,18 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &mdash; text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions SmartyPants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
         }
     }
     [TestFixture]
-    public partial class TestExtensionsSmartyPants
+    public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example006()
+        public void Example018()
         {
-            // Example 6
-            // Section: Extensions SmartyPants
+            // Example 18
+            // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
             //     This is a en ellipsis...
@@ -18552,7 +18786,7 @@ namespace Textamina.Markdig.Tests
             // Should be rendered as:
             //     <p>This is a en ellipsis&hellip;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions SmartyPants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
         }
     }

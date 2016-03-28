@@ -45,6 +45,7 @@ namespace Textamina.Markdig
                 .UseMath()
                 .UseBootstrap()
                 .UseMedia()
+                .UseSmartyPants()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
