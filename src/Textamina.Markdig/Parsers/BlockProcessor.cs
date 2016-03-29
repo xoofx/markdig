@@ -405,9 +405,18 @@ namespace Textamina.Markdig.Parsers
         {
             var block = OpenedBlocks[index];
             // If the pending object is removed, we need to remove it from the parent container
-            if (block.Parser != null && !block.Parser.Close(this, block))
+            if (block.Parser != null)
             {
-                block.Parent?.Remove(block);
+                if (!block.Parser.Close(this, block))
+                {
+                    block.Parent?.Remove(block);
+                }
+                else
+                {
+                    // Invoke the Closed event
+                    var blockClosed = block.Parser.GetClosedEvent;
+                    blockClosed?.Invoke(this, block);
+                }
             }
             OpenedBlocks.RemoveAt(index);
         }

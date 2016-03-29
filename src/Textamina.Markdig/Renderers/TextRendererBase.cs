@@ -122,6 +122,17 @@ namespace Textamina.Markdig.Renderers
         }
 
         /// <summary>
+        /// Writes the specified slice.
+        /// </summary>
+        /// <param name="slice">The slice.</param>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public T Write(StringSlice slice)
+        {
+            return Write(ref slice);
+        }
+
+        /// <summary>
         /// Writes the specified character.
         /// </summary>
         /// <param name="content">The content.</param>

@@ -98,6 +98,9 @@ namespace Textamina.Markdig.Tests
                         case "smartypants":
                             pipeline.UseSmartyPants();
                             break;
+                        case "autoidentifiers":
+                            pipeline.UseAutoIdentifier();
+                            break;
                         default:
                             Console.WriteLine($"Unsupported extension: {extension}");
                             break;

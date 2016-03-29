@@ -39,9 +39,16 @@ namespace Textamina.Markdig.Parsers.Inlines
             {
                 literal = (entityValue == 0 ? null : EntityHelper.DecodeEntity(entityValue)) ?? CharHelper.ZeroSafeString;
             }
+
             if (literal != null)
             {
-                processor.Inline = new LiteralInline() {Content = new StringSlice(literal)};
+                var matched = slice;
+                matched.End = match - 1;
+                processor.Inline = new HtmlEntityInline()
+                {
+                    Original = matched,
+                    ReplaceBy = new StringSlice(literal)
+                };
                 slice.Start = slice.Start + match;
                 return true;
             }

@@ -18790,4 +18790,156 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
         }
     }
+        // # Extensions
+        //
+        // This section describes the auto identifier extension
+        //
+        // ## Heading Auto Identifiers
+        //
+        // Allows to automatically creates an identifier for a heading:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This is a heading
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">This is a heading</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+        }
+    }
+        // Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
+        // Consecutive same character `-`, `_` or `.` are rendered into a single one
+        // Characters `-`, `_` and `.` at the end of the string are also discarded.
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This - is a &@! heading _ with . and ! -
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading_with.and">This - is a &amp;@! heading _ with . and ! -</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers");
+        }
+    }
+        // Formatting (emphasis) are also discarded:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This is a *heading*
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">This is a <em>heading</em></h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers");
+        }
+    }
+        // Links are also removed:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This is a [heading](/url)
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">This is a <a href="/url">heading</a></h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers");
+        }
+    }
+        // If multiple heading have the same text, -1, -2...-n will be postfix to the header id.
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This is a heading
+            //     # This is a heading
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">This is a heading</h1>
+            //     <h1 id="this-is-a-heading-1">This is a heading</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers");
+        }
+    }
+        // The heading Id will start on the first letter character of the heading, all previous characters will be discarded:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # 1.0 This is a heading
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">1.0 This is a heading</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers");
+        }
+    }
+        // If the heading is all stripped by the previous rules, the id `section` will be used instead:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # 1.0 & ^ % *
+            //     # 1.0 & ^ % *
+            //
+            // Should be rendered as:
+            //     <h1 id="section">1.0 &amp; ^ % *</h1>
+            //     <h1 id="section-1">1.0 &amp; ^ % *</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers");
+        }
+    }
 }

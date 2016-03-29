@@ -6,6 +6,11 @@ using Textamina.Markdig.Syntax;
 namespace Textamina.Markdig.Parsers
 {
     /// <summary>
+    /// Delegates called when processing a block
+    /// </summary>
+    public delegate void ProcessBlockDelegate(BlockProcessor processor, Block block);
+
+    /// <summary>
     /// Base class for a parser of a <see cref="Block"/>
     /// </summary>
     /// <seealso cref="ParserBase{BlockProcessor}" />
@@ -30,6 +35,11 @@ namespace Textamina.Markdig.Parsers
             }
             return false;
         }
+
+        // TODO: Add comment
+        public event ProcessBlockDelegate Closed;
+
+        internal ProcessBlockDelegate GetClosedEvent => Closed;
 
         /// <summary>
         /// Determines whether this instance can interrupt the specified block being processed.

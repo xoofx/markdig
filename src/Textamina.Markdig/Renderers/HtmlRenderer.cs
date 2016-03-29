@@ -42,10 +42,12 @@ namespace Textamina.Markdig.Renderers
             ObjectRenderers.Add(new HardlineBreakInlineRenderer());
             ObjectRenderers.Add(new SoftlineBreakInlineRenderer());
             ObjectRenderers.Add(new HtmlInlineRenderer());
+            ObjectRenderers.Add(new HtmlEntityInlineRenderer());            
             ObjectRenderers.Add(new LinkInlineRenderer());
             ObjectRenderers.Add(new LiteralInlineRenderer());
 
             EnableHtmlForInline = true;
+            EnableHtmlEscape = true;
         }
 
         /// <summary>
@@ -55,6 +57,8 @@ namespace Textamina.Markdig.Renderers
         /// This is used by some renderers to disable HTML tags when rendering some inlines (for image links).
         /// </remarks>
         public bool EnableHtmlForInline { get; set; }
+
+        public bool EnableHtmlEscape { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use implicit paragraph (optional &lt;p&gt;)
@@ -94,6 +98,17 @@ namespace Textamina.Markdig.Renderers
         /// <summary>
         /// Writes the content escaped for HTML.
         /// </summary>
+        /// <param name="slice">The slice.</param>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public HtmlRenderer WriteEscape(StringSlice slice)
+        {
+            return WriteEscape(ref slice);
+        }
+
+        /// <summary>
+        /// Writes the content escaped for HTML.
+        /// </summary>
         /// <param name="content">The content.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="length">The length.</param>
@@ -111,22 +126,34 @@ namespace Textamina.Markdig.Renderers
                 {
                     case '<':
                         Write(content, previousOffset, offset - previousOffset);
-                        Write("&lt;");
+                        if (EnableHtmlEscape)
+                        {
+                            Write("&lt;");
+                        }
                         previousOffset = offset + 1;
                         break;
                     case '>':
                         Write(content, previousOffset, offset - previousOffset);
-                        Write("&gt;");
+                        if (EnableHtmlEscape)
+                        {
+                            Write("&gt;");
+                        }
                         previousOffset = offset + 1;
                         break;
                     case '&':
                         Write(content, previousOffset, offset - previousOffset);
-                        Write("&amp;");
+                        if (EnableHtmlEscape)
+                        {
+                            Write("&amp;");
+                        }
                         previousOffset = offset + 1;
                         break;
                     case '"':
                         Write(content, previousOffset, offset - previousOffset);
-                        Write("&quot;");
+                        if (EnableHtmlEscape)
+                        {
+                            Write("&quot;");
+                        }
                         previousOffset = offset + 1;
                         break;
                 }

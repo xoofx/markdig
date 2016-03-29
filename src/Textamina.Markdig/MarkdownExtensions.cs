@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Textamina.Markdig.Extensions.Abbreviations;
+using Textamina.Markdig.Extensions.AutoIdentifiers;
 using Textamina.Markdig.Extensions.Bootstrap;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
@@ -29,7 +30,7 @@ namespace Textamina.Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseEnhanced(this MarkdownPipeline pipeline)
         {
             return pipeline
                 .UseAbbreviation()
@@ -46,6 +47,7 @@ namespace Textamina.Markdig
                 .UseBootstrap()
                 .UseMedia()
                 .UseSmartyPants()
+                .UseAutoIdentifier()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -74,6 +76,19 @@ namespace Textamina.Markdig
             {
                 pipeline.Extensions.Add(new MediaExtension(options));
             }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the auto-identifier extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<AutoIdentifierExtension>();
             return pipeline;
         }
 

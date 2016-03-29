@@ -13,7 +13,10 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
     {
         protected override void Write(HtmlRenderer renderer, HtmlInline obj)
         {
-            renderer.Write(obj.Tag);
+            if (renderer.EnableHtmlForInline)
+            {
+                renderer.Write(obj.Tag);
+            }
         }
     }
 }
