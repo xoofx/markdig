@@ -83,12 +83,16 @@ namespace Textamina.Markdig
         /// Uses the auto-identifier extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The options.</param>
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.AutoLink)
         {
-            pipeline.Extensions.AddIfNotAlready<AutoIdentifierExtension>();
+            if (!pipeline.Extensions.Contains<AutoIdentifierExtension>())
+            {
+                pipeline.Extensions.Add(new AutoIdentifierExtension(options));
+            }
             return pipeline;
         }
 

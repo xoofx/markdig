@@ -103,13 +103,17 @@ namespace Textamina.Markdig.Parsers.Inlines
                 if (link == null)
                 {
                     // Inline Link
-                    var containerLink = new LinkInline()
+                    link = new LinkInline()
                     {
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         IsImage = isImage,
                     };
-                    link = containerLink;
+                }
+
+                var containerLink = link as ContainerInline;
+                if (containerLink != null)
+                {
                     if (child == null)
                     {
                         child = new LiteralInline()
@@ -131,6 +135,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                         }
                     }
                 }
+
                 link.IsClosed = true;
 
                 // Process emphasis delimiters

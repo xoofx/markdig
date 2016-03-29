@@ -14,6 +14,13 @@ namespace Textamina.Markdig.Syntax.Inlines
     public class LinkInline : ContainerInline
     {
         /// <summary>
+        /// A delegate to use if it is setup on this instance to allow late binding 
+        /// of a Url.
+        /// </summary>
+        /// <returns></returns>
+        public delegate string GetUrlDelegate();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LinkInline"/> class.
         /// </summary>
         public LinkInline()
@@ -35,6 +42,12 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// Gets or sets the GetDynamicUrl delegate. If this property is set, 
+        /// it is used instead of <see cref="Url"/> to get the Url from this instance.
+        /// </summary>
+        public GetUrlDelegate GetDynamicUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the title.

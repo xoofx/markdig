@@ -18942,4 +18942,49 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers");
         }
     }
+        // When the options "AutoLink" is setup, it is possible to link to an existing heading by using the
+        // exact same Label text as the heading:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     # This is a heading
+            //     [This is a heading]
+            //
+            // Should be rendered as:
+            //     <h1 id="this-is-a-heading">This is a heading</h1>
+            //     <p><a href="#this-is-a-heading">This is a heading</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers");
+        }
+    }
+        // Links before the heading are also working:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     [This is a heading]
+            //     # This is a heading
+            //
+            // Should be rendered as:
+            //     <p><a href="#this-is-a-heading">This is a heading</a></p>
+            //     <h1 id="this-is-a-heading">This is a heading</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+        }
+    }
 }

@@ -17,6 +17,11 @@ namespace Textamina.Markdig.Extensions.SmartyPants
 
         private readonly SmartyPantOptions options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlSmartyPantRenderer"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public HtmlSmartyPantRenderer(SmartyPantOptions options)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
