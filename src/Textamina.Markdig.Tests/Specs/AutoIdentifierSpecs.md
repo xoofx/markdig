@@ -86,3 +86,13 @@ Links before the heading are also working:
 <p><a href="#this-is-a-heading">This is a heading</a></p>
 <h1 id="this-is-a-heading">This is a heading</h1>
 ````````````````````````````````
+
+The text of the link can be changed:
+
+```````````````````````````````` example
+[With a new text][This is a heading]
+# This is a heading
+.
+<p><a href="#this-is-a-heading">With a new text</a></p>
+<h1 id="this-is-a-heading">This is a heading</h1>
+````````````````````````````````

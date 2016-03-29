@@ -18987,4 +18987,26 @@ namespace Textamina.Markdig.Tests
 			TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
         }
     }
+        // The text of the link can be changed:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     [With a new text][This is a heading]
+            //     # This is a heading
+            //
+            // Should be rendered as:
+            //     <p><a href="#this-is-a-heading">With a new text</a></p>
+            //     <h1 id="this-is-a-heading">This is a heading</h1>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+        }
+    }
 }
