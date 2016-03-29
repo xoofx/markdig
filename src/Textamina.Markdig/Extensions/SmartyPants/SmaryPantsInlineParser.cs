@@ -13,6 +13,9 @@ namespace Textamina.Markdig.Extensions.SmartyPants
     /// </summary>
     public class SmaryPantsInlineParser : InlineParser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SmaryPantsInlineParser"/> class.
+        /// </summary>
         public SmaryPantsInlineParser()
         {
             OpeningCharacters = new[] {'`', '\'', '"', '<', '>', '.', '-'};
@@ -245,7 +248,7 @@ namespace Textamina.Markdig.Extensions.SmartyPants
                         {
                             var toReplace = pants[j];
                             pants.RemoveAt(j);
-                            toReplace.ReplaceBy(new LiteralInline(toReplace.ToLiteral()));
+                            toReplace.ReplaceBy(new LiteralInline(toReplace.ToString()));
                             i--;
                         }
 
@@ -263,7 +266,7 @@ namespace Textamina.Markdig.Extensions.SmartyPants
             // If we have any quotes lefts, replace them by there literal equivalent
             foreach (var quote in pants)
             {
-                quote.ReplaceBy(new LiteralInline(quote.ToLiteral()));
+                quote.ReplaceBy(new LiteralInline(quote.ToString()));
             }
 
             pants.Clear();

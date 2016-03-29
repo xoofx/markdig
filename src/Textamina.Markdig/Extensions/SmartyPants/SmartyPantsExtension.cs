@@ -12,11 +12,18 @@ namespace Textamina.Markdig.Extensions.SmartyPants
     /// </summary>
     public class SmartyPantsExtension : IMarkdownExtension
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SmartyPantsExtension"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         public SmartyPantsExtension(SmartyPantOptions options)
         {
             Options = options ?? new SmartyPantOptions();
         }
 
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
         public SmartyPantOptions Options { get; }
 
         public void Setup(MarkdownPipeline pipeline)

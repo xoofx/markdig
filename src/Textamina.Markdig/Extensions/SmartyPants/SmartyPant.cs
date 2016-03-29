@@ -9,14 +9,18 @@ namespace Textamina.Markdig.Extensions.SmartyPants
     /// <summary>
     /// An inline for SmartyPant.
     /// </summary>
-    [DebuggerDisplay("SmartyPant {ToLiteral()}")]
+    [DebuggerDisplay("SmartyPant {ToString()}")]
     public class SmartyPant : LeafInline
     {
         public char OpeningCharacter { get; set; }
 
         public SmartyPantType Type { get; set; }
 
-        public string ToLiteral()
+        /// <summary>
+        /// Converts this instance to a literal text.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
         {
             switch (Type)
             {

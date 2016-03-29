@@ -10,6 +10,9 @@ namespace Textamina.Markdig.Extensions.SmartyPants
     /// </summary>
     public class SmartyPantOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SmartyPantOptions"/> class.
+        /// </summary>
         public SmartyPantOptions()
         {
             Mapping = new Dictionary<SmartyPantType, string>()
@@ -28,6 +31,10 @@ namespace Textamina.Markdig.Extensions.SmartyPants
             };
         }
 
+        /// <summary>
+        /// Gets the mapping between a <see cref="SmartyPantType"/> and its textual representation
+        /// (usually an HTML entity).
+        /// </summary>
         public Dictionary<SmartyPantType, string> Mapping { get; }
     }
 }
