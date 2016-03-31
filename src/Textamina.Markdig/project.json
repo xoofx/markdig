@@ -29,6 +29,9 @@
 
   "frameworks": {
     "net20": {
+      "compilationOptions": {
+        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
+      },
       "frameworkAssemblies": {
         "mscorlib": "",
         "System": "",
@@ -36,6 +39,9 @@
       }
     },
     "net35": {
+      "compilationOptions": {
+        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
+      },
       "frameworkAssemblies": {
         "mscorlib": "",
         "System": "",
@@ -43,6 +49,9 @@
       }
     },
     "net40": {
+      "compilationOptions": {
+        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
+      },
       "frameworkAssemblies": {
         "mscorlib": "",
         "System": "",
@@ -58,7 +67,7 @@
     },
     "dotnet5.4": {
       "compilationOptions": {
-        "define": [ "CORE", "SUPPORT_NORMALIZE" ]
+        "define": [ "CORE", "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
       },
       "dependencies": {
         "Microsoft.NETCore": "5.0.1-beta-23516",

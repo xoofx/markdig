@@ -32,11 +32,7 @@ namespace Textamina.Markdig.Helpers
         }
         public static string EscapeUrlCharacter(char c)
         {
-            if (c < 128)
-            {
-                return EscapeUrlsForAscii[c];
-            }
-            return null;
+            return c < 128 ? EscapeUrlsForAscii[c] : null;
         }
 
         public static bool TryParseHtmlTag(StringSlice text, out string htmlTag)

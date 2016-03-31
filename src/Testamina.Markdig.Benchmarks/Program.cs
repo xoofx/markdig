@@ -1,14 +1,17 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+extern alias newcmark;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnostics;
 using BenchmarkDotNet.Running;
-using Sundown;
 using Textamina.Markdig;
+
 
 namespace Testamina.Markdig.Benchmarks
 {
@@ -48,7 +51,21 @@ namespace Testamina.Markdig.Benchmarks
             //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
             //var writer = new StringWriter();
-            CommonMark.CommonMarkConverter.Convert(text);
+            global::CommonMark.CommonMarkConverter.Convert(text);
+            //writer.Flush();
+            //writer.ToString();
+        }
+
+        [Benchmark]
+        public void TestCommonMarkNetNew()
+        {
+            ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+            // var reader = new StringReader(text);
+            //CommonMark.CommonMarkConverter.Parse(reader);
+            //CommonMark.CommonMarkConverter.Parse(reader);
+            //reader.Dispose();
+            //var writer = new StringWriter();
+            newcmark::CommonMark.CommonMarkConverter.Convert(text);
             //writer.Flush();
             //writer.ToString();
         }
@@ -66,10 +83,10 @@ namespace Testamina.Markdig.Benchmarks
         }
 
         //[Benchmark]
-        public void TestMoonshine()
-        {
-            MoonShine.Markdownify(text);
-        }
+        //public void TestMoonshine()
+        //{
+        //    Sundown.MoonShine.Markdownify(text);
+        //}
 
         static void Main(string[] args)
         {
@@ -97,9 +114,10 @@ namespace Testamina.Markdig.Benchmarks
             else
             {
                 //new TestMatchPerf().TestMatch();
-                
 
-                BenchmarkRunner.Run<Program>();
+                var gcDiagnoser = new GCDiagnoser();
+                var config = DefaultConfig.Instance.With(gcDiagnoser);
+                BenchmarkRunner.Run<Program>(config);
                 //BenchmarkRunner.Run<TestMatchPerf>();
                 //BenchmarkRunner.Run<TestStringPerf>();
             }

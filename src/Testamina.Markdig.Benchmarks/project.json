@@ -1,9 +1,10 @@
 ﻿{
   "runtimes": {
-    "win-x86": {}
+    "win-x86": { },
+    "win-x64": { }
   },
   "frameworks": {
-    "net452": {
+    "net451": {
       "compilationOptions": {
         "define": [
           "CLASSIC"
@@ -18,8 +19,10 @@
     }
   },
   "dependencies": {
-    "BenchmarkDotNet": "0.9.3",
+    "BenchmarkDotNet": "0.9.4",
     "CommonMark.NET": "0.11.0",
-    "MarkdownSharp": "1.13.0.0"
+    "MarkdownSharp": "1.13.0.0",
+    "Microsoft.Diagnostics.Runtime": "0.8.31-beta",
+    "Microsoft.Diagnostics.Tracing.TraceEvent": "1.0.41.0"
   }
 }

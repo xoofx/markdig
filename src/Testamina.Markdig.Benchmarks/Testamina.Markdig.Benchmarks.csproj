@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Testamina.Markdig.Benchmarks</RootNamespace>
     <AssemblyName>Testamina.Markdig.Benchmarks</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -39,9 +39,18 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BenchmarkDotNet.Diagnostics">
+      <HintPath>..\..\..\..\BenchmarkDotNet\artifacts\bin\BenchmarkDotNet.Diagnostics\Debug\net40\BenchmarkDotNet.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonMarkNew, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
+      <HintPath>lib\CommonMarkNew.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>newcmark</Aliases>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Textamina.Markdig">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\portable-net40+sl50+win+wpa81+wp80\Textamina.Markdig.dll</HintPath>
+      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\net40\Textamina.Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -81,6 +90,7 @@
     <Content Include="spec.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup />

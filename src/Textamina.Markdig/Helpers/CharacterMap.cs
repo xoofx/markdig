@@ -115,17 +115,21 @@ namespace Textamina.Markdig.Helpers
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public unsafe int IndexOfOpeningCharacter(string text, int start, int end)
         {
             var maxChar = isOpeningCharacter.Length;
+#if SUPPORT_FIXED_STRING
+            fixed (char* pText = text)
+#else
+            var pText = text;
+#endif
             fixed (bool* openingChars = isOpeningCharacter)
             {
                 if (nonAsciiMap == null)
                 {
                     for (int i = start; i <= end; i++)
                     {
-                        var c = text[i];
+                        var c = pText[i];
                         if (c < maxChar && openingChars[c])
                         {
                             return i;
@@ -136,7 +140,7 @@ namespace Textamina.Markdig.Helpers
                 {
                     for (int i = start; i <= end; i++)
                     {
-                        var c = text[i];
+                        var c = pText[i];
                         if ((c < maxChar && openingChars[c]) || nonAsciiMap.ContainsKey(c))
                         {
                             return i;
