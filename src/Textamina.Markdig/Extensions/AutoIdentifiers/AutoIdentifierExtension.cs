@@ -3,14 +3,17 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers;
 using Textamina.Markdig.Renderers.Html;
 using Textamina.Markdig.Syntax;
 using Textamina.Markdig.Syntax.Inlines;
+using System;
 
 namespace Textamina.Markdig.Extensions.AutoIdentifiers
 {
@@ -134,6 +137,14 @@ namespace Textamina.Markdig.Extensions.AutoIdentifiers
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
 
+#if SUPPORT_NORMALIZE
+            // Normalzie the string if we don't allow UTF8
+            if ((options & AutoIdentifierOptions.AllowOnlyAscii) != 0)
+            {
+                headingText = headingText.Normalize(NormalizationForm.FormD);
+            }
+#endif
+
             var headingBuffer = StringBuilderCache.Local();
             bool hasLetter = false;
             bool previousIsSpace = false;
@@ -142,6 +153,12 @@ namespace Textamina.Markdig.Extensions.AutoIdentifiers
                 var c = headingText[i];
                 if (char.IsLetter(c))
                 {
+#if SUPPORT_NORMALIZE
+                    if ((options & AutoIdentifierOptions.AllowOnlyAscii) != 0 && (c < ' ' || c  >= 127))
+                    {
+                        continue;
+                    }
+#endif
                     c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
                     headingBuffer.Append(c);
                     hasLetter = true;

@@ -14,11 +14,21 @@ namespace Textamina.Markdig.Extensions.AutoIdentifiers
         /// <summary>
         /// No options
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
-        /// Allows to link to a header by using the same text as the header for the link label.
+        /// Default (<see cref="AutoLink"/>)
         /// </summary>
-        AutoLink
+        Default = AutoLink | AllowOnlyAscii,
+
+        /// <summary>
+        /// Allows to link to a header by using the same text as the header for the link label. Default is <c>true</c>
+        /// </summary>
+        AutoLink = 1,
+
+        /// <summary>
+        /// Allows only ASCII characters in the url (HTML 5 allows to have UTF8 characters). Default is <c>true</c>
+        /// </summary>
+        AllowOnlyAscii = 2,
     }
 }

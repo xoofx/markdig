@@ -13,7 +13,7 @@ namespace Textamina.Markdig.Renderers.Html.Inlines
     {
         protected override void Write(HtmlRenderer renderer, HtmlEntityInline obj)
         {
-            renderer.WriteEscape(obj.ReplaceBy);
+            renderer.WriteEscape(obj.Transcoded);
         }
     }
 }

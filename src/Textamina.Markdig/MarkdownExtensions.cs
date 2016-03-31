@@ -87,7 +87,7 @@ namespace Textamina.Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.AutoLink)
+        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.Default)
         {
             if (!pipeline.Extensions.Contains<AutoIdentifierExtension>())
             {

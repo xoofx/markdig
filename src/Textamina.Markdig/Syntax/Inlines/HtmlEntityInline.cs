@@ -10,7 +10,7 @@ namespace Textamina.Markdig.Syntax.Inlines
     /// An entity HTML.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Syntax.Inlines.LeafInline" />
-    [DebuggerDisplay("{Original} -> {ReplaceBy}")]
+    [DebuggerDisplay("{Original} -> {Transcoded}")]
     public class HtmlEntityInline : LeafInline
     {
         /// <summary>
@@ -21,6 +21,6 @@ namespace Textamina.Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the transcoded literal that will be used for output
         /// </summary>
-        public StringSlice ReplaceBy { get; set; }
+        public StringSlice Transcoded { get; set; }
     }
 }

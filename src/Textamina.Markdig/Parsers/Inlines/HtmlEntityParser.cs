@@ -47,7 +47,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 processor.Inline = new HtmlEntityInline()
                 {
                     Original = matched,
-                    ReplaceBy = new StringSlice(literal)
+                    Transcoded = new StringSlice(literal)
                 };
                 slice.Start = slice.Start + match;
                 return true;
