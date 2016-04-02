@@ -26,28 +26,27 @@ namespace Textamina.Markdig
     public static class MarkdownExtensions
     {
         /// <summary>
-        /// Uses all extensions (Pipe tables, Hardline breaks, Footnotes, Strikethrough, subscript, superscript, attributes)
+        /// Uses all extensions except the Emoji.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseEnhanced(this MarkdownPipeline pipeline)
+        public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
         {
             return pipeline
                 .UseAbbreviation()
-                .UseDefinitionList()
+                .UseAutoIdentifier()
+                .UseBootstrap()
                 .UseCustomContainer()
+                .UseDefinitionList()
+                .UseEmphasisExtra()
                 .UseFigure()
+                .UseFootnotes()
                 .UseGridTable()
+                .UseMath()
+                .UseMedia()
                 .UsePipeTable()
                 .UseSoftlineBreakAsHardlineBreak()
-                .UseFootnotes()
-                .UseEmojiAndSmiley()
-                .UseEmphasisExtra()
-                .UseMath()
-                .UseBootstrap()
-                .UseMedia()
                 .UseSmartyPants()
-                .UseAutoIdentifier()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 

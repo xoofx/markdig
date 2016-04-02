@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
 using Textamina.Markdig.Helpers;
 using Textamina.Markdig.Parsers;
 using Textamina.Markdig.Renderers.Html;
@@ -24,27 +25,23 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                 pipeline.InlineParsers.Insert(0, new GenericAttributesParser());
             }
 
-            // Modify all existing FencedBlockParser
+            // Plug into all IAttributesParseable
             foreach (var parser in pipeline.BlockParsers)
             {
-                var fencedParser = parser as FencedBlockParserBase;
-                if (fencedParser != null)
+                var attributesParseable = parser as IAttributesParseable;
+                if (attributesParseable != null)
                 {
-                    InstallInfoParserForFenced(fencedParser);
+                    attributesParseable.TryParseAttributes = TryProcessAttributesForHeading;
                 }
             }
         }
 
-        private static void InstallInfoParserForFenced(FencedBlockParserBase parser)
+        private bool TryProcessAttributesForHeading(BlockProcessor processor, ref StringSlice line, IBlock block)
         {
-            // Special case for FencedCodeBlock, as we need to plug into the InfoParser in order
-            // to parse correctly an attributes
-            var infoParser = parser.InfoParser;
-
-            parser.InfoParser = (BlockProcessor state, ref StringSlice line, IFencedBlock fenced) =>
+            // Try to find if there is any attributes { in the info string on the first line of a FencedCodeBlock
+            if (line.Start < line.End)
             {
-                // Try to find if there is any attributes { in the info string on the first line of a FencedCodeBlock
-                var indexOfAttributes = line.Text.IndexOf('{', line.Start);
+                var indexOfAttributes = line.Text.LastIndexOf('{', line.End);
                 if (indexOfAttributes >= 0)
                 {
                     // Work on a copy
@@ -53,19 +50,14 @@ namespace Textamina.Markdig.Extensions.GenericAttributes
                     HtmlAttributes attributes;
                     if (GenericAttributesParser.TryParse(ref copy, out attributes))
                     {
-                        var htmlAttributes = fenced.GetAttributes();
+                        var htmlAttributes = block.GetAttributes();
                         attributes.CopyTo(htmlAttributes);
                         line.End = indexOfAttributes - 1;
+                        return true;
                     }
                 }
-
-                if (infoParser != null)
-                {
-                    return infoParser(state, ref line, fenced);
-                }
-                return true;
-            };
+            }
+            return false;
         }
-
     }
 }

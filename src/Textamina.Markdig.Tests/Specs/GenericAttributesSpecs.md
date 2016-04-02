@@ -20,6 +20,8 @@ The following shows that attributes is attached to the current block or the prev
 ```````````````````````````````` example
 # This is a heading with an an attribute{#heading-link}
 
+# This is a heading # {#heading-link2}
+
 [This is a link](http://google.com){#a-link .myclass data-lang=fr data-value="This is a value"}
 
 This is a heading{#heading-link2}
@@ -28,6 +30,7 @@ This is a heading{#heading-link2}
 This is a paragraph with an attached attributes {#myparagraph attached-bool-property}
 .
 <h1 id="heading-link">This is a heading with an an attribute</h1>
+<h1 id="heading-link2">This is a heading</h1>
 <p><a href="http://google.com" id="a-link" class="myclass" data-lang="fr" data-value="This is a value">This is a link</a></p>
 <h2 id="heading-link2">This is a heading</h2>
 <p id="myparagraph" attached-bool-property>This is a paragraph with an attached attributes </p>

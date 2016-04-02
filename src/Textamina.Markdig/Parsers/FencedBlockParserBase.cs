@@ -9,7 +9,7 @@ using Textamina.Markdig.Syntax;
 
 namespace Textamina.Markdig.Parsers
 {
-    public abstract class FencedBlockParserBase : BlockParser
+    public abstract class FencedBlockParserBase : BlockParser, IAttributesParseable
     {
         /// <summary>
         /// Delegate used to parse the string on the first line after the fenced code block special characters (usually ` or ~)
@@ -25,6 +25,11 @@ namespace Textamina.Markdig.Parsers
         /// Gets or sets the information parser.
         /// </summary>
         public InfoParserDelegate InfoParser { get; set; }
+
+        /// <summary>
+        /// A delegates that allows to process attached attributes
+        /// </summary>
+        public TryParseAttributesDelegate TryParseAttributes { get; set; }
     }
 
     /// <summary>
@@ -153,6 +158,12 @@ namespace Textamina.Markdig.Parsers
                 fenced.FencedChar = matchChar;
                 fenced.FencedCharCount = count;
             };
+
+            // Try to parse any attached attributes
+            if (TryParseAttributes != null)
+            {
+                TryParseAttributes(processor, ref line, fenced);
+            }
 
             // If the info parser was not successfull, early exit
             if (InfoParser != null && !InfoParser(processor, ref line, fenced))

@@ -10,8 +10,9 @@ namespace Textamina.Markdig.Parsers
     /// Block parser for a <see cref="HeadingBlock"/>.
     /// </summary>
     /// <seealso cref="Textamina.Markdig.Parsers.BlockParser" />
-    public class HeadingBlockParser : BlockParser
+    public class HeadingBlockParser : BlockParser, IAttributesParseable
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadingBlockParser"/> class.
         /// </summary>
@@ -19,6 +20,11 @@ namespace Textamina.Markdig.Parsers
         {
             OpeningCharacters = new[] {'#'};
         }
+
+        /// <summary>
+        /// A delegates that allows to process attached attributes after #
+        /// </summary>
+        public TryParseAttributesDelegate TryParseAttributes { get; set; }
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
@@ -59,12 +65,19 @@ namespace Textamina.Markdig.Parsers
             {
                 // Move to the content
                 processor.Line.Start = line.Start + 1;
-                processor.NewBlocks.Push(new HeadingBlock(this)
+                var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
                     Level = leadingCount,
                     Column = column
-                });
+                };
+                processor.NewBlocks.Push(headingBlock);
+
+                // Gives a chance to parse attributes
+                if (TryParseAttributes != null)
+                {
+                    TryParseAttributes(processor, ref processor.Line, headingBlock);
+                }
 
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;
