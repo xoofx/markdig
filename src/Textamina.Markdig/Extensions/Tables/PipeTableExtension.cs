@@ -12,11 +12,25 @@ namespace Textamina.Markdig.Extensions.Tables
     /// <seealso cref="Textamina.Markdig.IMarkdownExtension" />
     public class PipeTableExtension : IMarkdownExtension
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PipeTableExtension"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        public PipeTableExtension(PipeTableOptions options = null)
+        {
+            Options = options ?? new PipeTableOptions();
+        }
+
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        public PipeTableOptions Options { get; }
+
         public void Setup(MarkdownPipeline pipeline)
         {
             if (!pipeline.InlineParsers.Contains<PipeTableParser>())
             {
-                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser());
+                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(Options));
             }
 
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;

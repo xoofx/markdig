@@ -13,10 +13,17 @@ namespace Textamina.Markdig.Extensions.Tables
     /// <seealso cref="Textamina.Markdig.Syntax.LeafBlock" />
     public class TableCell : ContainerBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableCell"/> class.
+        /// </summary>
         public TableCell() : this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableCell"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public TableCell(BlockParser parser) : base(parser)
         {
             ColumnSpan = 1;

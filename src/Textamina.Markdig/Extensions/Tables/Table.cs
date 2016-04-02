@@ -14,10 +14,17 @@ namespace Textamina.Markdig.Extensions.Tables
     /// <seealso cref="Textamina.Markdig.Syntax.ContainerBlock" />
     public class Table : ContainerBlock
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Table"/> class.
+        /// </summary>
         public Table() : this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Table"/> class.
+        /// </summary>
+        /// <param name="parser">The parser used to create this block.</param>
         public Table(BlockParser parser) : base(parser)
         {
             ColumnDefinitions = new List<TableColumnDefinition>();

@@ -172,10 +172,16 @@ namespace Textamina.Markdig
         /// Uses the pipe table extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UsePipeTable(this MarkdownPipeline pipeline)
+        /// <param name="options">The options.</param>
+        /// <returns>
+        /// The modified pipeline
+        /// </returns>
+        public static MarkdownPipeline UsePipeTable(this MarkdownPipeline pipeline, PipeTableOptions options = null)
         {
-            pipeline.Extensions.AddIfNotAlready<PipeTableExtension>();
+            if (!pipeline.Extensions.Contains<PipeTableExtension>())
+            {
+                pipeline.Extensions.Add(new PipeTableExtension(options));
+            }
             return pipeline;
         }
 

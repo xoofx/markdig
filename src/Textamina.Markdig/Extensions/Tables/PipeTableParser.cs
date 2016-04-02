@@ -21,18 +21,19 @@ namespace Textamina.Markdig.Extensions.Tables
         private LineBreakInlineParser lineBreakParser;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PipeTableParser"/> class.
+        /// Initializes a new instance of the <see cref="PipeTableParser" /> class.
         /// </summary>
-        public PipeTableParser()
+        /// <param name="options">The options.</param>
+        public PipeTableParser(PipeTableOptions options = null)
         {
             OpeningCharacters = new[] { '|', '\n' };
-            RequireHeaderSeparator = true;
+            Options = options ?? new PipeTableOptions();
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to require header separator. True by default (false to have Kramdown behaviour)
+        /// Gets the options.
         /// </summary>
-        public bool RequireHeaderSeparator { get; set; }
+        public PipeTableOptions Options { get; }
 
         public override void Initialize(InlineProcessor processor)
         {
@@ -193,7 +194,7 @@ namespace Textamina.Markdig.Extensions.Tables
             delimiters.Add(null);
             var aligns = FindHeaderRow(delimiters);
 
-            if (RequireHeaderSeparator && aligns == null)
+            if (Options.RequireHeaderSeparator && aligns == null)
             {
                 return true;
             }
