@@ -43,24 +43,22 @@ namespace Textamina.Markdig.Parsers
             var paragraph = block as ParagraphBlock;
             if (paragraph != null)
             {
-                var lines = paragraph.Lines;
-
-                TryMatchLinkReferenceDefinition(lines, processor);
+                TryMatchLinkReferenceDefinition(ref paragraph.Lines, processor);
 
                 // If Paragraph is empty, we can discard it
-                if (lines.Count == 0)
+                if (paragraph.Lines.Count == 0)
                 {
                     return false;
                 }
 
-                var lineCount = lines.Count;
+                var lineCount = paragraph.Lines.Count;
                 for (int i = 0; i < lineCount; i++)
                 {
-                    lines.Lines[i].Slice.TrimStart();
+                    paragraph.Lines.Lines[i].Slice.TrimStart();
                 }
                 if (lineCount > 0)
                 {
-                    lines.Lines[lineCount - 1].Slice.TrimEnd();
+                    paragraph.Lines.Lines[lineCount - 1].Slice.TrimEnd();
                 }
             }
 
@@ -116,7 +114,7 @@ namespace Textamina.Markdig.Parsers
 
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
                 // lines are empty, we can early exit and remove the paragraph
-                if (!(TryMatchLinkReferenceDefinition(paragraph.Lines, state) && paragraph.Lines.Count == 0))
+                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
                 {
                     var level = headingChar == '=' ? 1 : 2;
 
@@ -137,7 +135,7 @@ namespace Textamina.Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private bool TryMatchLinkReferenceDefinition(StringLineGroup lines, BlockProcessor state)
+        private bool TryMatchLinkReferenceDefinition(ref StringLineGroup lines, BlockProcessor state)
         {
             bool atLeastOneFound = false;
 

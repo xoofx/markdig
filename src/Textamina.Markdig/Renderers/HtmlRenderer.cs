@@ -289,7 +289,7 @@ namespace Textamina.Markdig.Renderers
         public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
         {
             if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
-            if (leafBlock.Lines != null)
+            if (leafBlock.Lines.Lines != null)
             {
                 var lines = leafBlock.Lines;
                 var slices = lines.Lines;

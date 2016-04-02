@@ -13,14 +13,17 @@ namespace Textamina.Markdig.Helpers
     /// A group of <see cref="StringLine"/>.
     /// </summary>
     /// <seealso cref="System.Collections.IEnumerable" />
-    public class StringLineGroup : IEnumerable
+    public struct StringLineGroup : IEnumerable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
-        public StringLineGroup()
+        /// <param name="capacity"></param>
+        public StringLineGroup(int capacity)
         {
-            Lines = new StringLine[4];
+            if (capacity <= 0) throw new ArgumentOutOfRangeException(nameof(capacity));
+            Lines = new StringLine[capacity];
+            Count = 0;
         }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace Textamina.Markdig.Helpers
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
             Lines = new StringLine[1];
+            Count = 0;
             Add(new StringSlice(text));
         }
 
@@ -159,6 +163,17 @@ namespace Textamina.Markdig.Helpers
         public Iterator ToCharIterator()
         {
             return new Iterator(this);
+        }
+
+        /// <summary>
+        /// Trims each lines of the specified <see cref="StringLineGroup"/>.
+        /// </summary>
+        public void Trim()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                Lines[i].Slice.Trim();
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

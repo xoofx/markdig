@@ -127,7 +127,7 @@ namespace Textamina.Markdig.Parsers
             lineOffsets.Clear();
             LocalLineIndex = 0;
             var text = leafBlock.Lines.ToSlice(lineOffsets);
-            leafBlock.Lines = null;
+            leafBlock.Lines = new StringLineGroup();
 
             while (!text.IsEmpty)
             {

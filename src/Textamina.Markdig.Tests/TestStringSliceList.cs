@@ -15,7 +15,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupSimple()
         {
-            var text = new StringLineGroup()
+            var text = new StringLineGroup(4)
             {
                 new StringSlice("ABC"),
                 new StringSlice("E"),
@@ -32,7 +32,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupWithSlices()
         {
-            var text = new StringLineGroup()
+            var text = new StringLineGroup(4)
             {
                 new StringSlice("XABC") { Start = 1},
                 new StringSlice("YYE") { Start = 2},
@@ -58,7 +58,7 @@ namespace Textamina.Markdig.Tests
         [Test]
         public void TestStringLineGroupSaveAndRestore()
         {
-            var text = new StringLineGroup()
+            var text = new StringLineGroup(4)
             {
                 new StringSlice("ABCD"),
                 new StringSlice("EF"),
@@ -95,7 +95,7 @@ namespace Textamina.Markdig.Tests
             var line2 = new StringSlice("  DEF ");
             line2.Trim();
 
-            var text = new StringLineGroup() {line1, line2};
+            var text = new StringLineGroup(4) {line1, line2};
 
             var result = ToString(text.ToCharIterator());
             TextAssert.AreEqual("ABC\nDEF", result);
@@ -110,7 +110,7 @@ namespace Textamina.Markdig.Tests
 
             var line2 = new StringSlice("  DEF ");
 
-            var text = new StringLineGroup() { line1, line2}.ToCharIterator();
+            var text = new StringLineGroup(4) { line1, line2}.ToCharIterator();
             text.TrimStart();
 
             var result = ToString(text);

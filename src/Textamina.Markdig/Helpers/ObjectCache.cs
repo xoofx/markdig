@@ -19,7 +19,7 @@ namespace Textamina.Markdig.Helpers
         /// </summary>
         protected ObjectCache()
         {
-            builders = new Stack<T>();
+            builders = new Stack<T>(4);
         }
 
         /// <summary>

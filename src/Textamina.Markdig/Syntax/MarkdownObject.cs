@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
-using System.Collections.Generic;
 
 namespace Textamina.Markdig.Syntax
 {
@@ -12,9 +11,12 @@ namespace Textamina.Markdig.Syntax
     public abstract class MarkdownObject : IMarkdownObject
     {
         /// <summary>
-        /// The attached datas.
+        /// The attached datas. Use internally a simple array instead of a Dictionary{Object,Object}
+        /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)
+        /// so it will gives faster access than a Dictionary, and lower memory occupation
         /// </summary>
-        private Dictionary<object, object> attachedDatas;
+        private DataEntry[] attachedDatas;
+        private int count;
 
         /// <summary>
         /// Stores a key/value pair for this instance.
@@ -27,9 +29,27 @@ namespace Textamina.Markdig.Syntax
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (attachedDatas == null)
             {
-                attachedDatas = new Dictionary<object, object>();
+                attachedDatas = new DataEntry[1];
             }
-            attachedDatas[key] = value;
+            else
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    if (attachedDatas[i].Key == key)
+                    {
+                        attachedDatas[i].Value = value;
+                        return;
+                    }
+                }
+                if (count == attachedDatas.Length)
+                {
+                    var temp = new DataEntry[attachedDatas.Length + 1];
+                    Array.Copy(attachedDatas, 0, temp, 0, count);
+                    attachedDatas = temp;
+                }
+            }
+            attachedDatas[count] = new DataEntry(key, value);
+            count++;
         }
 
         /// <summary>
@@ -45,7 +65,15 @@ namespace Textamina.Markdig.Syntax
             {
                 return false;
             }
-            return attachedDatas.ContainsKey(key);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (attachedDatas[i].Key == key)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -61,9 +89,14 @@ namespace Textamina.Markdig.Syntax
             {
                 return null;
             }
-            object value;
-            attachedDatas.TryGetValue(key, out value);
-            return value;
+            for (int i = 0; i < count; i++)
+            {
+                if (attachedDatas[i].Key == key)
+                {
+                    return attachedDatas[i].Value;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -79,7 +112,37 @@ namespace Textamina.Markdig.Syntax
             {
                 return true;
             }
-            return attachedDatas.Remove(key);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (attachedDatas[i].Key == key)
+                {
+                    if (i < count - 1)
+                    {
+                        Array.Copy(attachedDatas, i + 1, attachedDatas, i, count - i - 1);
+                    }
+                    count--;
+                    attachedDatas[count] = new DataEntry();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Store a Key/Value pair.
+        /// </summary>
+        private struct DataEntry
+        {
+            public DataEntry(object key, object value)
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public readonly object Key;
+
+            public object Value;
         }
     }
 }

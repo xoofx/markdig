@@ -19,6 +19,7 @@ namespace Textamina.Markdig.Parsers.Inlines
     public class EmphasisInlineParser : InlineParser, IDelimiterProcessor
     {
         private CharacterMap<EmphasisDescriptor> emphasisMap;
+        private readonly DelimitersObjectCache inlinesCache;
 
         public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
 
@@ -32,6 +33,7 @@ namespace Textamina.Markdig.Parsers.Inlines
                 new EmphasisDescriptor('*', 1, 2, true),
                 new EmphasisDescriptor('_', 1, 2, false)
             };
+            inlinesCache = new DelimitersObjectCache();
         }
 
         /// <summary>
@@ -74,10 +76,10 @@ namespace Textamina.Markdig.Parsers.Inlines
                 return true;
             }
 
-            var delimiters = new List<EmphasisDelimiterInline>();
-
+            List<EmphasisDelimiterInline> delimiters = null;
             if (container is EmphasisDelimiterInline)
             {
+                delimiters = inlinesCache.Get();
                 delimiters.Add((EmphasisDelimiterInline)container);
             }
 
@@ -93,17 +95,21 @@ namespace Textamina.Markdig.Parsers.Inlines
                 var delimiter = child as EmphasisDelimiterInline;
                 if (delimiter != null)
                 {
+                    if (delimiters == null)
+                    {
+                        delimiters = inlinesCache.Get();
+                    }
                     delimiters.Add(delimiter);
                 }
                 var subContainer = child as ContainerInline;
                 child = subContainer?.LastChild;
-                //if (delimiter == null && subContainer is DelimiterInline)
-                //{
-                //    subContainer.ReplaceBy(new LiteralInline() { Content = new StringSlice(((DelimiterInline)subContainer).ToLiteral()), IsClosed = true });
-                //}
             }
 
-            ProcessEmphasis(state, delimiters);
+            if (delimiters != null)
+            {
+                ProcessEmphasis(state, delimiters);
+                inlinesCache.Release(delimiters);
+            }
             return true;
         }
 
@@ -335,5 +341,18 @@ namespace Textamina.Markdig.Parsers.Inlines
             }
             delimiters.Clear();
         }
-   }
+
+        public class DelimitersObjectCache : ObjectCache<List<EmphasisDelimiterInline>>
+        {
+            protected override List<EmphasisDelimiterInline> NewInstance()
+            {
+                return new List<EmphasisDelimiterInline>(4);
+            }
+
+            protected override void Reset(List<EmphasisDelimiterInline> instance)
+            {
+                instance.Clear();
+            }
+        }
+    }
 }

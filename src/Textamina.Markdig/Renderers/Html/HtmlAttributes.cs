@@ -44,7 +44,7 @@ namespace Textamina.Markdig.Renderers.Html
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (Classes == null)
             {
-                Classes = new List<string>();
+                Classes = new List<string>(2); // Use half list compare to default capacity (4), as we don't expect lots of classes
             }
             Classes.Add(name);
         }
@@ -59,7 +59,7 @@ namespace Textamina.Markdig.Renderers.Html
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (Properties == null)
             {
-                Properties = new List<KeyValuePair<string, string>>();
+                Properties = new List<KeyValuePair<string, string>>(2); // Use half list compare to default capacity (4), as we don't expect lots of classes
             }
             Properties.Add(new KeyValuePair<string, string>(name, value));
         }
@@ -74,7 +74,7 @@ namespace Textamina.Markdig.Renderers.Html
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (Properties == null)
             {
-                Properties = new List<KeyValuePair<string, string>> {new KeyValuePair<string, string>(name, value == null ? null : Convert.ToString(value, CultureInfo.InvariantCulture))};
+                Properties = new List<KeyValuePair<string, string>>(4) {new KeyValuePair<string, string>(name, value == null ? null : Convert.ToString(value, CultureInfo.InvariantCulture))};
             }
             else
             {

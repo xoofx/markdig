@@ -27,7 +27,7 @@ namespace Textamina.Markdig.Syntax
         /// Gets or sets the string lines accumulated for this leaf block. 
         /// May be null after process inlines have occured.
         /// </summary>
-        public StringLineGroup Lines { get; set; }
+        public StringLineGroup Lines;
 
         /// <summary>
         /// Gets or sets the inline syntax tree (may be null).
@@ -48,9 +48,9 @@ namespace Textamina.Markdig.Syntax
         /// <param name="line">The line.</param>
         public void AppendLine(ref StringSlice slice, int column, int line)
         {
-            if (Lines == null)
+            if (Lines.Lines == null)
             {
-                Lines = new StringLineGroup();
+                Lines = new StringLineGroup(4);
             }
 
             var stringLine = new StringLine(ref slice, line, column);

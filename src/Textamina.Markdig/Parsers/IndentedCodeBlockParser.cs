@@ -49,13 +49,12 @@ namespace Textamina.Markdig.Parsers
             var codeBlock = (CodeBlock)block;
             if (codeBlock != null)
             {
-                var lines = codeBlock.Lines;
                 // Remove any trailing blankline
-                for (int i = lines.Count - 1; i >= 0; i--)
+                for (int i = codeBlock.Lines.Count - 1; i >= 0; i--)
                 {
-                    if (lines.Lines[i].Slice.IsEmpty)
+                    if (codeBlock.Lines.Lines[i].Slice.IsEmpty)
                     {
-                        lines.RemoveAt(i);
+                        codeBlock.Lines.RemoveAt(i);
                     }
                     else
                     {

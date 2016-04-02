@@ -14,7 +14,7 @@ namespace Textamina.Markdig.Extensions.Tables
     {
         public int Start { get; set; }
 
-        public StringLineGroup Lines { get; private set; }
+        public StringLineGroup Lines;
 
         public List<ColumnSlice> ColumnSlices { get; private set; }
 
@@ -24,9 +24,9 @@ namespace Textamina.Markdig.Extensions.Tables
 
         public void AddLine(ref StringSlice line)
         {
-            if (Lines == null)
+            if (Lines.Lines == null)
             {
-                Lines = new StringLineGroup();
+                Lines = new StringLineGroup(4);
             }
             Lines.Add(line);
         }
