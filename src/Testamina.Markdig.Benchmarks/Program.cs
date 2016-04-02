@@ -9,7 +9,9 @@ using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnostics;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
+using newcmark::CommonMark.Extension;
 using Textamina.Markdig;
 
 
@@ -26,6 +28,7 @@ namespace Testamina.Markdig.Benchmarks
             text = File.ReadAllText("spec.md");
         }
 
+        //[Benchmark(Description = "TestMarkdig", OperationsPerInvoke = 4096)]
         [Benchmark]
         public void TestMarkdig()
         {
@@ -42,7 +45,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestCommonMarkNet()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -56,7 +59,7 @@ namespace Testamina.Markdig.Benchmarks
             //writer.ToString();
         }
 
-        [Benchmark]
+        //[Benchmark]
         public void TestCommonMarkNetNew()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -83,10 +86,10 @@ namespace Testamina.Markdig.Benchmarks
         }
 
         //[Benchmark]
-        //public void TestMoonshine()
-        //{
-        //    Sundown.MoonShine.Markdownify(text);
-        //}
+        public void TestMoonshine()
+        {
+            Sundown.MoonShine.Markdownify(text);
+        }
 
         static void Main(string[] args)
         {
@@ -97,7 +100,15 @@ namespace Testamina.Markdig.Benchmarks
             {
                 var clock = Stopwatch.StartNew();
                 var program = new Program();
-                for (int i = 0; i < 1000; i++)
+
+                GC.Collect(2, GCCollectionMode.Forced, true);
+
+                var gc0 = GC.CollectionCount(0);
+                var gc1 = GC.CollectionCount(1);
+                var gc2 = GC.CollectionCount(2);
+
+                const int count = 12*64;
+                for (int i = 0; i < count; i++)
                 {
                     if (markdig)
                     {
@@ -105,29 +116,35 @@ namespace Testamina.Markdig.Benchmarks
                     }
                     else
                     {
-                        program.TestCommonMarkNet();
+                        program.TestCommonMarkNetNew();
                     }
                 }
-                Console.WriteLine((markdig ? "MarkDig" : "CommonMark") +  $" => time: {clock.ElapsedMilliseconds}ms");
-                DumpGC();
+                clock.Stop();
+                Console.WriteLine((markdig ? "MarkDig" : "CommonMark") +  $" => time: {(double)clock.ElapsedMilliseconds/count}ms (total {clock.ElapsedMilliseconds}ms)");
+                DumpGC(gc0, gc1, gc2);
             }
             else
             {
                 //new TestMatchPerf().TestMatch();
 
+                var config = ManualConfig.Create(DefaultConfig.Instance);
                 var gcDiagnoser = new GCDiagnoser();
-                var config = DefaultConfig.Instance.With(gcDiagnoser);
+                config.Add(new Job { Mode = Mode.SingleRun, LaunchCount = 2, WarmupCount = 2, IterationTime = 1024, TargetCount = 10 });
+                config.Add(gcDiagnoser);
+
+                //var  config = DefaultConfig.Instance;
                 BenchmarkRunner.Run<Program>(config);
+                //BenchmarkRunner.Run<TestDictionary>(config);
                 //BenchmarkRunner.Run<TestMatchPerf>();
                 //BenchmarkRunner.Run<TestStringPerf>();
             }
         }
 
-        static void DumpGC()
+        private static void DumpGC(int gc0, int gc1, int gc2)
         {
-            Console.WriteLine($"gc0: {GC.CollectionCount(0)}");
-            Console.WriteLine($"gc1: {GC.CollectionCount(1)}");
-            Console.WriteLine($"gc2: {GC.CollectionCount(2)}");
+            Console.WriteLine($"gc0: {GC.CollectionCount(0)-gc0}");
+            Console.WriteLine($"gc1: {GC.CollectionCount(1)-gc1}");
+            Console.WriteLine($"gc2: {GC.CollectionCount(2)-gc2}");
         }
     }
 }

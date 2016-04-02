@@ -1,7 +1,7 @@
 ﻿{
   "runtimes": {
-    "win-x86": { },
-    "win-x64": { }
+    "win-x86": {},
+    "win-x64": {}
   },
   "frameworks": {
     "net451": {
@@ -19,7 +19,6 @@
     }
   },
   "dependencies": {
-    "BenchmarkDotNet": "0.9.4",
     "CommonMark.NET": "0.11.0",
     "MarkdownSharp": "1.13.0.0",
     "Microsoft.Diagnostics.Runtime": "0.8.31-beta",

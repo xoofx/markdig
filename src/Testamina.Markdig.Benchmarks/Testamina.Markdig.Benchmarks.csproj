@@ -39,6 +39,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BenchmarkDotNet, Version=0.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\BenchmarkDotNet\artifacts\bin\BenchmarkDotNet\Release\net45\BenchmarkDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="BenchmarkDotNet.Diagnostics">
       <HintPath>..\..\..\..\BenchmarkDotNet\artifacts\bin\BenchmarkDotNet.Diagnostics\Debug\net40\BenchmarkDotNet.Diagnostics.dll</HintPath>
     </Reference>
@@ -50,7 +54,7 @@
     </Reference>
     <Reference Include="Textamina.Markdig">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\net40\Textamina.Markdig.dll</HintPath>
+      <HintPath>..\..\artifacts\bin\Textamina.Markdig\$(Configuration)\dotnet5.3\Textamina.Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
