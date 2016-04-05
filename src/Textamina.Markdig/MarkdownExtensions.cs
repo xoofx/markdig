@@ -4,11 +4,13 @@
 using Textamina.Markdig.Extensions.Abbreviations;
 using Textamina.Markdig.Extensions.AutoIdentifiers;
 using Textamina.Markdig.Extensions.Bootstrap;
+using Textamina.Markdig.Extensions.Cites;
 using Textamina.Markdig.Extensions.CustomContainers;
 using Textamina.Markdig.Extensions.DefinitionLists;
 using Textamina.Markdig.Extensions.Emoji;
 using Textamina.Markdig.Extensions.EmphasisExtra;
 using Textamina.Markdig.Extensions.Figures;
+using Textamina.Markdig.Extensions.Footers;
 using Textamina.Markdig.Extensions.Footnotes;
 using Textamina.Markdig.Extensions.GenericAttributes;
 using Textamina.Markdig.Extensions.Hardlines;
@@ -36,10 +38,12 @@ namespace Textamina.Markdig
                 .UseAbbreviation()
                 .UseAutoIdentifier()
                 .UseBootstrap()
+                .UseCite()
                 .UseCustomContainer()
                 .UseDefinitionList()
                 .UseEmphasisExtra()
                 .UseFigure()
+                .UseFooter()
                 .UseFootnotes()
                 .UseGridTable()
                 .UseMath()
@@ -192,6 +196,29 @@ namespace Textamina.Markdig
         public static MarkdownPipeline UseGridTable(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<GridTableExtension>();
+            return pipeline;
+        }
+
+
+        /// <summary>
+        /// Uses the cite extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseCite(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<CiteExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the footer extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline UseFooter(this MarkdownPipeline pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<FooterExtension>();
             return pipeline;
         }
 

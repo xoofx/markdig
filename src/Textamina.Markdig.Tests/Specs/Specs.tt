@@ -50,7 +50,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("EmojiSpecs.md"), "emojis"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AbbreviationSpecs.md"), "abbreviations"),
 		new KeyValuePair<string, string>(Host.ResolvePath("ListExtraSpecs.md"), "list_extra"),
-		new KeyValuePair<string, string>(Host.ResolvePath("FigureSpecs.md"), "figures"),
+		new KeyValuePair<string, string>(Host.ResolvePath("FigureFooterAndCiteSpecs.md"), "figures+footers+cites"),
 		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "math"),
 		new KeyValuePair<string, string>(Host.ResolvePath("BootstrapSpecs.md"), "bootstrap+pipetables+figures+attributes"),
 		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medias"),

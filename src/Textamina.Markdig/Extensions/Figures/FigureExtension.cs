@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Textamina.Markdig.Extensions.Cites;
+using Textamina.Markdig.Extensions.Footers;
 using Textamina.Markdig.Renderers;
 
 namespace Textamina.Markdig.Extensions.Figures
@@ -14,7 +16,18 @@ namespace Textamina.Markdig.Extensions.Figures
     {
         public void Setup(MarkdownPipeline pipeline)
         {
-            pipeline.BlockParsers.AddIfNotAlready<FigureBlockParser>();
+            if (!pipeline.BlockParsers.Contains<FigureBlockParser>())
+            {
+                // The Figure extension must come before the Footer extension
+                if (pipeline.BlockParsers.Contains<FooterBlockParser>())
+                {
+                    pipeline.BlockParsers.InsertBefore<FooterBlockParser>(new FigureBlockParser());
+                }
+                else
+                {
+                    pipeline.BlockParsers.Insert(0, new FigureBlockParser());
+                }
+            }
             var htmlRenderer = pipeline.Renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {

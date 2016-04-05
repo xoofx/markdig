@@ -71,7 +71,7 @@
     <None Include="project.json" />
     <None Include="Specs\AutoIdentifierSpecs.md" />
     <None Include="Specs\AbbreviationSpecs.md" />
-    <None Include="Specs\FigureSpecs.md" />
+    <None Include="Specs\FigureFooterAndCiteSpecs.md" />
     <None Include="Specs\ListExtraSpecs.md" />
     <None Include="Specs\GenericAttributesSpecs.md" />
     <None Include="Specs\CustomContainerSpecs.md" />

@@ -65,6 +65,12 @@ namespace Textamina.Markdig.Tests
                         case "footnotes":
                             pipeline.UseFootnotes();
                             break;
+                        case "footers":
+                            pipeline.UseFooter();
+                            break;
+                        case "cites":
+                            pipeline.UseCite();
+                            break;
                         case "attributes":
                             pipeline.UseGenericAttributes();
                             break;
