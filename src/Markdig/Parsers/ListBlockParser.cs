@@ -241,7 +241,9 @@ namespace Markdig.Parsers
                 }
 
                 // Number of spaces required for the following content to be part of this list item
-                columnWidth = state.Column - initColumnBeforeIndent;
+                // If the list item starts with a blank line, the number of spaces
+                // following the list marker doesn't change the required indentation
+                columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
             }
 
             var newListItem = new ListItemBlock(this)
