@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Textamina.Markdig", "Textamina.Markdig\Textamina.Markdig.xproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Markdig", "Markdig\Markdig.xproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Textamina.Markdig.Tests", "Textamina.Markdig.Tests\Textamina.Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Tests", "Markdig.Tests\Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2
 		..\license.txt = ..\license.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testamina.Markdig.Benchmarks", "Testamina.Markdig.Benchmarks\Testamina.Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markdig.Benchmarks\Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
