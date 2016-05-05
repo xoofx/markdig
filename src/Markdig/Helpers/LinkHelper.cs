@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -14,6 +16,86 @@ namespace Markdig.Helpers
         public static bool TryParseAutolink(StringSlice text, out string link, out bool isEmail)
         {
             return TryParseAutolink(ref text, out link, out isEmail);
+        }
+
+        public static string Urilize(string headingText, bool allowOnlyAscii)
+        {
+#if SUPPORT_NORMALIZE
+            // Normalzie the string if we don't allow UTF8
+            if (allowOnlyAscii)
+            {
+                headingText = headingText.Normalize(NormalizationForm.FormD);
+            }
+#endif
+
+            var headingBuffer = StringBuilderCache.Local();
+            bool hasLetter = false;
+            bool previousIsSpace = false;
+            for (int i = 0; i < headingText.Length; i++)
+            {
+                var c = headingText[i];
+                if (char.IsLetter(c))
+                {
+#if SUPPORT_NORMALIZE
+                    if (allowOnlyAscii && (c < ' ' || c >= 127))
+                    {
+                        continue;
+                    }
+#endif
+                    c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
+                    headingBuffer.Append(c);
+                    hasLetter = true;
+                    previousIsSpace = false;
+                }
+                else if (hasLetter)
+                {
+                    if (IsReservedPunctuation(c))
+                    {
+                        if (previousIsSpace)
+                        {
+                            headingBuffer.Length--;
+                        }
+                        if (headingBuffer[headingBuffer.Length - 1] != c)
+                        {
+                            headingBuffer.Append(c);
+                        }
+                        previousIsSpace = false;
+                    }
+                    else if (!previousIsSpace && c.IsWhitespace())
+                    {
+                        var pc = headingBuffer[headingBuffer.Length - 1];
+                        if (!IsReservedPunctuation(pc))
+                        {
+                            headingBuffer.Append('-');
+                        }
+                        previousIsSpace = true;
+                    }
+                }
+            }
+
+            // Trim trailing _ - .
+            while (headingBuffer.Length > 0)
+            {
+                var c = headingBuffer[headingBuffer.Length - 1];
+                if (IsReservedPunctuation(c))
+                {
+                    headingBuffer.Length--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            var text = headingBuffer.ToString();
+            headingBuffer.Length = 0;
+            return text;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsReservedPunctuation(char c)
+        {
+            return c == '_' || c == '-' || c == '.';
         }
 
         public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)

@@ -3,17 +3,13 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
-using System;
 
 namespace Markdig.Extensions.AutoIdentifiers
 {
@@ -136,78 +132,12 @@ namespace Markdig.Extensions.AutoIdentifiers
             stripRenderer.Render(headingBlock.Inline);
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
+            headingText = LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
 
-#if SUPPORT_NORMALIZE
-            // Normalzie the string if we don't allow UTF8
-            if ((options & AutoIdentifierOptions.AllowOnlyAscii) != 0)
-            {
-                headingText = headingText.Normalize(NormalizationForm.FormD);
-            }
-#endif
-
-            var headingBuffer = StringBuilderCache.Local();
-            bool hasLetter = false;
-            bool previousIsSpace = false;
-            for (int i = 0; i < headingText.Length; i++)
-            {
-                var c = headingText[i];
-                if (char.IsLetter(c))
-                {
-#if SUPPORT_NORMALIZE
-                    if ((options & AutoIdentifierOptions.AllowOnlyAscii) != 0 && (c < ' ' || c  >= 127))
-                    {
-                        continue;
-                    }
-#endif
-                    c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
-                    headingBuffer.Append(c);
-                    hasLetter = true;
-                    previousIsSpace = false;
-                }
-                else if (hasLetter)
-                {
-                    if (IsReservedPunctuation(c))
-                    {
-                        if (previousIsSpace)
-                        {
-                            headingBuffer.Length--;
-                        }
-                        if (headingBuffer[headingBuffer.Length - 1] != c)
-                        {
-                            headingBuffer.Append(c);
-                        }
-                        previousIsSpace = false;
-                    }
-                    else if (!previousIsSpace && c.IsWhitespace())
-                    {
-                        var pc = headingBuffer[headingBuffer.Length - 1];
-                        if (!IsReservedPunctuation(pc))
-                        {
-                            headingBuffer.Append('-');
-                        }
-                        previousIsSpace = true;
-                    }
-                }
-            }
-
-            // Trim trailing _ - .
-            while (headingBuffer.Length > 0)
-            {
-                var c = headingBuffer[headingBuffer.Length - 1];
-                if (IsReservedPunctuation(c))
-                {
-                    headingBuffer.Length--;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            var baseHeadingId = headingBuffer.Length == 0 ? "section" : headingBuffer.ToString();
-            headingBuffer.Length = 0;
+            var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
             int index = 0;
             var headingId = baseHeadingId;
+            var headingBuffer = StringBuilderCache.Local();
             while (!identifiers.Add(headingId))
             {
                 index++;
@@ -219,12 +149,6 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
 
             processor.Block.GetAttributes().Id = headingId;
-        }
-
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        private static bool IsReservedPunctuation(char c)
-        {
-            return c == '_' || c == '-' || c == '.';
         }
     }
 }
