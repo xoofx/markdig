@@ -62,7 +62,7 @@ In order to activate all extensions (except Emoji)
 var result = Markdown.ToHtml("This is a text with some **emphasis**", new MarkdownPipeline().UseAllExtensions());
 ```
 
-You can have a look at the [MarkdownPipeline](https://github.com/lunet-io/markdig/blob/src/Markdig/MarkdownPipeline.cs) file that describes all actionable extensions.
+You can have a look at the [MarkdownPipeline](https://github.com/lunet-io/markdig/blob/master/src/Markdig/MarkdownPipeline.cs) file that describes all actionable extensions.
 
 ## License
 
