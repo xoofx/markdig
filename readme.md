@@ -39,7 +39,8 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
   - Tables:
     - **Pipe tables** (inspired from Kramdown/[PanDoc](http://pandoc.org/README.html#pipe_tables))
     - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#grid_tables)) 
-
+- Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
+	
 ## Download
 
 Markdig is available as a NuGet package: [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
