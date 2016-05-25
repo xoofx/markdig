@@ -39,22 +39,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BenchmarkDotNet, Version=0.9.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BenchmarkDotNet\artifacts\bin\BenchmarkDotNet\Release\net45\BenchmarkDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BenchmarkDotNet.Diagnostics">
-      <HintPath>..\..\..\..\BenchmarkDotNet\artifacts\bin\BenchmarkDotNet.Diagnostics\Debug\net40\BenchmarkDotNet.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="CommonMarkNew, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <HintPath>lib\CommonMarkNew.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Aliases>newcmark</Aliases>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Markdig">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Markdig\$(Configuration)\dotnet5.3\Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -97,7 +86,12 @@
     <None Include="app.config" />
     <None Include="project.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Markdig">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Markdig\Bin\$(Configuration)\net40\Markdig.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

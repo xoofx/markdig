@@ -3,7 +3,7 @@
     "win": {}
   },
   "frameworks": {
-    "net45": {
+    "net451": {
       "compilationOptions": {
         "define": [
           "CLASSIC"

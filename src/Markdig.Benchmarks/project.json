@@ -19,6 +19,8 @@
     }
   },
   "dependencies": {
+    "BenchmarkDotNet": "0.9.6",
+    "BenchmarkDotNet.Diagnostics.Windows": "0.9.6",
     "CommonMark.NET": "0.11.0",
     "MarkdownSharp": "1.13.0.0",
     "Microsoft.Diagnostics.Runtime": "0.8.31-beta",

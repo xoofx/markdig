@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Markdig.Tests</RootNamespace>
     <AssemblyName>Markdig.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <CopyNuGetImplementations>true</CopyNuGetImplementations>
@@ -40,7 +40,7 @@
   <ItemGroup>
     <Reference Include="Markdig">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\artifacts\bin\Markdig\$(Configuration)\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10\Markdig.dll</HintPath>
+      <HintPath>..\Markdig\Bin\$(Configuration)\net40\Markdig.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

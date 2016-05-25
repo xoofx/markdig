@@ -9,6 +9,7 @@ using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnostics;
+using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using newcmark::CommonMark.Extension;
@@ -37,7 +38,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMarkCpp()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -45,7 +46,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMarkNet()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -59,7 +60,7 @@ namespace Testamina.Markdig.Benchmarks
             //writer.ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestCommonMarkNetNew()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -73,19 +74,19 @@ namespace Testamina.Markdig.Benchmarks
             //writer.ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMarkdownDeep()
         {
             new MarkdownDeep.Markdown().Transform(text);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMarkdownSharp()
         {
             new MarkdownSharp.Markdown().Transform(text);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void TestMoonshine()
         {
             Sundown.MoonShine.Markdownify(text);
@@ -128,9 +129,10 @@ namespace Testamina.Markdig.Benchmarks
                 //new TestMatchPerf().TestMatch();
 
                 var config = ManualConfig.Create(DefaultConfig.Instance);
-                var gcDiagnoser = new GCDiagnoser();
-                config.Add(new Job { Mode = Mode.SingleRun, LaunchCount = 2, WarmupCount = 2, IterationTime = 1024, TargetCount = 10 });
-                config.Add(gcDiagnoser);
+                //var gcDiagnoser = new MemoryDiagnoser();
+                //config.Add(new Job { Mode = Mode.SingleRun, LaunchCount = 2, WarmupCount = 2, IterationTime = 1024, TargetCount = 10 });
+                config.Add(new Job { Mode = Mode.Throughput, LaunchCount = 2, WarmupCount = 2, TargetCount = 10 });
+                //config.Add(gcDiagnoser);
 
                 //var  config = DefaultConfig.Instance;
                 BenchmarkRunner.Run<Program>(config);
