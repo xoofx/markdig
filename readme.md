@@ -83,35 +83,63 @@ This is an early preview of the benchmarking against various implementations:
 
 Markdig is roughly x100 times faster than MarkdownSharp and extremelly competitive to other implems (that are not feature wise comparable) 
 
+Performance in x86:
+
 ```
 // * Summary *
 
-BenchmarkDotNet=v0.9.6.0
+BenchmarkDotNet-Dev=v0.9.6.0+
 OS=Microsoft Windows NT 6.2.9200.0
 Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
 Frequency=3319351 ticks, Resolution=301.2637 ns, Timer=TSC
 HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
 JitModules=clrjit-v4.6.1080.0
 
-Type=Program  Mode=Throughput  LaunchCount=2
+Type=Program  Mode=SingleRun  LaunchCount=2
 WarmupCount=2  TargetCount=10
 
-               Method |      Median |    StdDev |
---------------------- |------------ |---------- |
-              Markdig |   5.7798 ms | 0.0704 ms |
-        CommonMarkCpp |   4.2094 ms | 0.0814 ms |
-        CommonMarkNet |   4.8176 ms | 0.0536 ms |
-CommonMarkNet (devel) |   5.7454 ms | 0.0907 ms |
-         MarkdownDeep |   7.9569 ms | 0.0622 ms |
-        MarkdownSharp | 689.4781 ms | 1.6341 ms |
-            Moonshine |   6.1299 ms | 0.2440 ms |
+               Method |    Median |    StdDev |  Gen 0 | Gen 1 |  Gen 2 | Bytes Allocated/Op |
+--------------------- |---------- |---------- |------- |------ |------- |------------------- |
+          TestMarkdig | 5.4870 ms | 0.0158 ms | 193.00 | 12.00 |  84.00 |       1,425,192.72 |
+    TestCommonMarkCpp | 4.0134 ms | 0.1008 ms |      - |     - | 180.00 |         454,859.74 |
+    TestCommonMarkNet | 4.6139 ms | 0.0581 ms | 193.00 | 12.00 |  84.00 |       1,406,367.27 |
+ TestCommonMarkNetNew | 5.5327 ms | 0.0461 ms | 193.00 | 96.00 |  84.00 |       1,738,465.42 |
+     TestMarkdownDeep | 7.5910 ms | 0.1006 ms | 205.00 | 96.00 |  84.00 |       1,758,383.79 |
+        TestMoonshine | 5.8843 ms | 0.1758 ms |      - |     - | 215.00 |         565,000.73 |
+
+// * Diagnostic Output - MemoryDiagnoser *
+
 
 // ***** BenchmarkRunner: End *****
 ```
 
+Performance for x64:
+
+```
+// * Summary *
+
+BenchmarkDotNet-Dev=v0.9.6.0+
+OS=Microsoft Windows NT 6.2.9200.0
+Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
+Frequency=3319351 ticks, Resolution=301.2637 ns, Timer=TSC
+HostCLR=MS.NET 4.0.30319.42000, Arch=64-bit RELEASE [RyuJIT]
+JitModules=clrjit-v4.6.1080.0
+
+Type=Program  Mode=SingleRun  LaunchCount=2
+WarmupCount=2  TargetCount=10
+
+               Method |    Median |    StdDev |  Gen 0 |  Gen 1 | Gen 2 | Bytes Allocated/Op |
+--------------------- |---------- |---------- |------- |------- |------ |------------------- |
+          TestMarkdig | 5.9539 ms | 0.0495 ms | 157.00 |  96.00 | 84.00 |       1,767,834.52 |
+    TestCommonMarkNet | 4.3158 ms | 0.0161 ms | 157.00 |  96.00 | 84.00 |       1,747,432.06 |
+ TestCommonMarkNetNew | 5.3421 ms | 0.0435 ms | 229.00 | 168.00 | 84.00 |       2,323,922.97 |
+     TestMarkdownDeep | 7.4750 ms | 0.0281 ms | 318.00 | 186.00 | 84.00 |       2,576,728.69 |
+
+// * Diagnostic Output - MemoryDiagnoser *
 
 
-
+// ***** BenchmarkRunner: End *****
+```
 
 ## Credits
 
