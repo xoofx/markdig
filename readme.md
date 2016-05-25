@@ -68,6 +68,51 @@ You can have a look at the [MarkdownPipeline](https://github.com/lunet-io/markdi
 
 This software is released under the [BSD-Clause 2 license](http://opensource.org/licenses/BSD-2-Clause).
 
+
+## Benchmarking
+
+This is an early preview of the benchmarking against various implementations:
+
+- Markdig: itself
+- CommonMarkCpp: [cmark](https://github.com/jgm/cmark), Reference C implementation of CommonMark 
+- [CommonMark.NET](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, not extensible, port of cmark
+  - [CommonMarkNet (devel)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET that is extensible, not released yet
+- [MarkdownDeep](https://github.com/toptensoftware/markdowndeep) another .NET implementation
+- [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
+- [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
+
+Markdig is roughly x100 times faster than MarkdownSharp and extremelly competitive to other implems (that are not feature wise comparable) 
+
+```
+// * Summary *
+
+BenchmarkDotNet=v0.9.6.0
+OS=Microsoft Windows NT 6.2.9200.0
+Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
+Frequency=3319351 ticks, Resolution=301.2637 ns, Timer=TSC
+HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
+JitModules=clrjit-v4.6.1080.0
+
+Type=Program  Mode=Throughput  LaunchCount=2
+WarmupCount=2  TargetCount=10
+
+               Method |      Median |    StdDev |
+--------------------- |------------ |---------- |
+              Markdig |   5.7798 ms | 0.0704 ms |
+        CommonMarkCpp |   4.2094 ms | 0.0814 ms |
+        CommonMarkNet |   4.8176 ms | 0.0536 ms |
+CommonMarkNet (devel) |   5.7454 ms | 0.0907 ms |
+         MarkdownDeep |   7.9569 ms | 0.0622 ms |
+        MarkdownSharp | 689.4781 ms | 1.6341 ms |
+            Moonshine |   6.1299 ms | 0.2440 ms |
+
+// ***** BenchmarkRunner: End *****
+```
+
+
+
+
+
 ## Credits
 
 Thanks to the fantastic work done by [John Mac Farlane](http://johnmacfarlane.net/) for the CommonMark specs and all the people involved in making Markdown a better standard!
