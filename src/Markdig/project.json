@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "authors": [ "Alexandre Mutel" ],
   "owners": [ "Alexandre Mutel" ],
   "licenseUrl": "https://github.com/lunet-io/markdig/blob/master/license.txt",
@@ -28,16 +28,6 @@
   },
 
   "frameworks": {
-    "net20": {
-      "compilationOptions": {
-        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
-      },
-      "frameworkAssemblies": {
-        "mscorlib": "",
-        "System": "",
-        "System.Core": ""
-      }
-    },
     "net35": {
       "compilationOptions": {
         "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
