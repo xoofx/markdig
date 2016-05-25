@@ -68,6 +68,12 @@ You can have a look at the [MarkdownPipeline](https://github.com/lunet-io/markdi
 
 This software is released under the [BSD-Clause 2 license](http://opensource.org/licenses/BSD-2-Clause).
 
+## Credits
+
+Thanks to the fantastic work done by [John Mac Farlane](http://johnmacfarlane.net/) for the CommonMark specs and all the people involved in making Markdown a better standard!
+
+This project would not have been possible without this huge foundation.
+
 ## Author
 
 Alexandre MUTEL aka [xoofx](http://xoofx.com)
