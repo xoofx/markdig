@@ -1,4 +1,4 @@
-# Markdig  [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
+# Markdig [![Build status](https://ci.appveyor.com/api/projects/status/hk391x8jcskxt1u8?svg=true)](https://ci.appveyor.com/project/xoofx/markdig) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
 
 Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, extensible Markdown processor for .NET.
 
