@@ -19,6 +19,8 @@ using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.Medias;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
+using Markdig.Parsers;
+using Markdig.Parsers.Inlines;
 
 namespace Markdig
 {
@@ -293,6 +295,27 @@ namespace Markdig
         public static MarkdownPipeline UseEmojiAndSmiley(this MarkdownPipeline pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<EmojiExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipeline DisableHtml(this MarkdownPipeline pipeline)
+        {
+            var parser = pipeline.BlockParsers.Find<HtmlBlockParser>();
+            if (parser != null)
+            {
+                pipeline.BlockParsers.Remove(parser);
+            }
+
+            var inlineParser = pipeline.InlineParsers.Find<AutolineInlineParser>();
+            if (inlineParser != null)
+            {
+                inlineParser.EnableHtmlParsing = false;
+            }
             return pipeline;
         }
     }

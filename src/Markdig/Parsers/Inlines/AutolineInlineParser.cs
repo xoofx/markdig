@@ -18,7 +18,13 @@ namespace Markdig.Parsers.Inlines
         public AutolineInlineParser()
         {
             OpeningCharacters = new[] {'<'};
+            EnableHtmlParsing = true;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable HTML parsing. Default is <c>true</c>
+        /// </summary>
+        public bool EnableHtmlParsing { get; set; }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
@@ -29,7 +35,7 @@ namespace Markdig.Parsers.Inlines
             {
                 processor.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
             }
-            else
+            else if (EnableHtmlParsing)
             {
                 slice = saved;
                 string htmlTag;
