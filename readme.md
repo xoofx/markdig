@@ -48,7 +48,7 @@ Markdig is available as a NuGet package: [![NuGet](https://img.shields.io/nuget/
 
 ## Usage
 
-The main entry point for the API is the `Markdown` class:
+The main entry point for the API is the `Markdig.Markdown` class:
 
 By default, without any options, Markdig is using the plain CommonMark parser:
 
@@ -60,7 +60,9 @@ Console.WriteLine(result);   // prints: <p>This is a text with some <em>emphasis
 In order to activate all extensions (except Emoji)
 
 ```csharp
-var result = Markdown.ToHtml("This is a text with some *emphasis*", new MarkdownPipeline().UseAllExtensions());
+// Configure the pipeline with all extensions active
+var pipeline = new MarkdownPipeline().UseAllExtensions();
+var result = Markdown.ToHtml("This is a text with some *emphasis*", pipeline);
 ```
 
 You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/markdig/blob/master/src/Markdig/MarkdownExtensions.cs) that describes all actionable extensions (by modifying the MarkdownPipeline)
