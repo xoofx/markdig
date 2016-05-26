@@ -15,31 +15,31 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
 - **Extensible** architecture
   - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
 - Built-in with **18+ extensions**, including:
-  - **Abbreviations** (inspired from [PHP Markdown Extra - Abbreviations](https://michelf.ca/projects/php-markdown/extra/#abbr))
-  - **Auto-identifiers** for headings (similar to [Pandoc](http://pandoc.org/README.html#extension-auto_identifiers)
-  - **Bootstrap** class (to output bootstrap class)
-  - **Citation** text by enclosing `""...""` (inspired by this [CommonMark discussion ](https://talk.commonmark.org/t/referencing-creative-works-with-cite/892))
-  - **Custom containers** similar to fenced code block `:::` for generating a proper `<div>...</div>` instead (inspired by this [CommonMark discussion ](https://talk.commonmark.org/t/custom-container-for-block-and-inline/2051))
-  - **Definition lists** (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
-  - **Emoji** support (inspired from [Markdown-it](https://markdown-it.github.io/))
+  - 2 kind of tables:
+    - **Pipe tables** (inspired from Github tables and [PanDoc](http://pandoc.org/README.html#pipe_tables))
+    - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#grid_tables)) 
   - **Extra emphasis** (inspired from [Pandoc](http://pandoc.org/README.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
     - strike through `~~`,
     - Subscript `~`
     - Superscript `^` 
     - Inserted `++`
     - Marked `==`
+  - **Special attributes** or attached HTML attributes (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#spe-attr))
+  - **Definition lists** (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
+  - **Footnotes** (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
+  - **Auto-identifiers** for headings (similar to [Pandoc](http://pandoc.org/README.html#extension-auto_identifiers)
+  - **Extra bullet lists**, supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
+  - **Media support** for media url (youtube, vimeo, mp4...etc.) (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/embedded-audio-and-video/441))
+  - **Abbreviations** (inspired from [PHP Markdown Extra - Abbreviations](https://michelf.ca/projects/php-markdown/extra/#abbr))
+  - **Citation** text by enclosing `""...""` (inspired by this [CommonMark discussion ](https://talk.commonmark.org/t/referencing-creative-works-with-cite/892))
+  - **Custom containers** similar to fenced code block `:::` for generating a proper `<div>...</div>` instead (inspired by this [CommonMark discussion ](https://talk.commonmark.org/t/custom-container-for-block-and-inline/2051))
   - **Figures** (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/image-tag-should-expand-to-figure-when-used-with-title/265/5))
   - **Footers** (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/syntax-for-footer/2070))
-  - **Footnotes** (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
-  - **Special attributes** or attached HTML attributes (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#spe-attr))
-  - **Soft lines as hard lines**
-  - **Extra bullet lists**, supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
   - **Mathematics**/Latex extension by enclosing `$$` for block and `$` for inline math (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/mathematics-extension/457/31))
-  - **Embed player** for media url (youtube, vimeo, mp4...etc.) (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/embedded-audio-and-video/441))
+  - **Soft lines as hard lines**
+  - **Emoji** support (inspired from [Markdown-it](https://markdown-it.github.io/))
   - **SmartyPants** (inspired from [Daring Fireball - SmartyPants](https://daringfireball.net/projects/smartypants/))
-  - Tables:
-    - **Pipe tables** (inspired from Kramdown/[PanDoc](http://pandoc.org/README.html#pipe_tables))
-    - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#grid_tables)) 
+  - **Bootstrap** class (to output bootstrap class)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
 ## Download
@@ -53,14 +53,14 @@ The main entry point for the API is the `Markdown` class:
 By default, without any options, Markdig is using the plain CommonMark parser:
 
 ```csharp
-var result = Markdown.ToHtml("This is a text with some **emphasis**");
+var result = Markdown.ToHtml("This is a text with some *emphasis*");
 Console.WriteLine(result);   // prints: <p>This is a text with some <em>emphasis</em></p>
 ```
 
 In order to activate all extensions (except Emoji)
 
 ```csharp
-var result = Markdown.ToHtml("This is a text with some **emphasis**", new MarkdownPipeline().UseAllExtensions());
+var result = Markdown.ToHtml("This is a text with some *emphasis*", new MarkdownPipeline().UseAllExtensions());
 ```
 
 You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/markdig/blob/master/src/Markdig/MarkdownExtensions.cs) that describes all actionable extensions (by modifying the MarkdownPipeline)
