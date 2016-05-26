@@ -13,6 +13,7 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
 - Includes all the core elements of CommonMark:
   - including GFM fenced code blocks. 
 - **Extensible** architecture
+  - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
 - Built-in with **18+ extensions**, including:
   - **Abbreviations** (inspired from [PHP Markdown Extra - Abbreviations](https://michelf.ca/projects/php-markdown/extra/#abbr))
   - **Auto-identifiers** for headings (similar to [Pandoc](http://pandoc.org/README.html#extension-auto_identifiers)
