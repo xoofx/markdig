@@ -67,7 +67,7 @@ You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/mark
 
 ## License
 
-This software is released under the [BSD-Clause 2 license](http://opensource.org/licenses/BSD-2-Clause).
+This software is released under the [BSD-Clause 2 license](https://github.com/lunet-io/markdig/blob/master/license.txt).
 
 
 ## Benchmarking
@@ -75,9 +75,9 @@ This software is released under the [BSD-Clause 2 license](http://opensource.org
 This is an early preview of the benchmarking against various implementations:
 
 - Markdig: itself
-- CommonMarkCpp: [cmark](https://github.com/jgm/cmark), Reference C implementation of CommonMark 
-- [CommonMark.NET](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, not extensible, port of cmark
-  - [CommonMarkNet (devel)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET that is extensible, not released yet
+- CommonMarkCpp: [cmark](https://github.com/jgm/cmark), Reference C implementation of CommonMark, no support for extensions
+- [CommonMark.NET](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, no support for extensions, port of cmark
+  - [CommonMarkNet (devel)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET, supports extensions, not released yet
 - [MarkdownDeep](https://github.com/toptensoftware/markdowndeep) another .NET implementation
 - [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
 - [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
@@ -151,16 +151,3 @@ This project would not have been possible without this huge foundation.
 ## Author
 
 Alexandre MUTEL aka [xoofx](http://xoofx.com)
-
-
-
-
-
-
-
-
-
-
-
-
-
