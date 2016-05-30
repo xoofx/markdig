@@ -15,19 +15,22 @@ namespace Markdig.Extensions.Cites
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class CiteExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
             if (parser != null && !parser.HasEmphasisChar('"'))
             {
                 parser.EmphasisDescriptors.Add(new EmphasisDescriptor('"', 2, 2, false));
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 // Extend the rendering here.
-                var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
+                var emphasisRenderer = renderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
                 if (emphasisRenderer != null)
                 {
                     // TODO: Use an ordered list instead as we don't know if this specific GetTag has been already added

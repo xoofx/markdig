@@ -13,7 +13,7 @@ namespace Markdig.Extensions.Mathematics
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class MathExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             // Adds the inline parser
             if (!pipeline.InlineParsers.Contains<MathInlineParser>())
@@ -27,8 +27,11 @@ namespace Markdig.Extensions.Mathematics
                 // Insert before EmphasisInlineParser to take precedence
                 pipeline.BlockParsers.Insert(0, new MathBlockParser());
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlMathInlineRenderer>())

@@ -26,9 +26,13 @@ namespace Markdig.Extensions.Medias
 
         public MediaOptions Options { get; }
 
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 var inlineRenderer = htmlRenderer.ObjectRenderers.FindExact<LinkInlineRenderer>();

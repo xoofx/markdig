@@ -12,18 +12,18 @@ namespace Markdig.Extensions.Abbreviations
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class AbbreviationExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             pipeline.BlockParsers.AddIfNotAlready<AbbreviationParser>();
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
+            if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlAbbreviationRenderer>())
             {
-                if (!htmlRenderer.ObjectRenderers.Contains<HtmlAbbreviationRenderer>())
-                {
-                    // Must be inserted before CodeBlockRenderer
-                    htmlRenderer.ObjectRenderers.Insert(0, new HtmlAbbreviationRenderer());
-                }
+                // Must be inserted before CodeBlockRenderer
+                htmlRenderer.ObjectRenderers.Insert(0, new HtmlAbbreviationRenderer());
             }
         }
     }

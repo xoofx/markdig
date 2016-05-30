@@ -38,14 +38,14 @@ namespace Markdig.Tests
         {
             if (string.IsNullOrEmpty(extensionsGroupText))
             {
-                yield return new MarkdownPipeline();
+                yield return new MarkdownPipelineBuilder().Build();
                 yield break;
             }
 
             var extensionGroups = extensionsGroupText.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var extensionsText in extensionGroups)
             {
-                var pipeline = new MarkdownPipeline();
+                var pipeline = new MarkdownPipelineBuilder();
                 foreach (var extension in extensionsText.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     switch (extension.ToLowerInvariant())
@@ -113,7 +113,7 @@ namespace Markdig.Tests
                     }
                 }
 
-                yield return pipeline;
+                yield return pipeline.Build();
             }
         }
 

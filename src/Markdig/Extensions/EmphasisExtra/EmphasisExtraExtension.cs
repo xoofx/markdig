@@ -29,7 +29,7 @@ namespace Markdig.Extensions.EmphasisExtra
         /// </summary>
         public EmphasisExtraOptions Options { get; }
 
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
             if (parser != null)
@@ -83,8 +83,11 @@ namespace Markdig.Extensions.EmphasisExtra
                     parser.EmphasisDescriptors.Add(new EmphasisDescriptor('=', 2, 2, true));
                 }
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 // Extend the rendering here.

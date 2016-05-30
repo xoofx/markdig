@@ -22,7 +22,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
             //");
 
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseEmphasisExtra());
-            var result = Markdown.ToHtml(text, new MarkdownPipeline().UseAbbreviation());
+            var result = Markdown.ToHtml(text, new MarkdownPipelineBuilder().UseAbbreviation().Build());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
         }
@@ -30,7 +30,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         [Test]
         public void TestSamePipelineAllExtensions()
         {
-            var pipeline = new MarkdownPipeline().UseAllExtensions();
+            var pipeline = new MarkdownPipelineBuilder().UseAllExtensions().Build();
 
             // Reuse the same pipeline 
             var result1 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);

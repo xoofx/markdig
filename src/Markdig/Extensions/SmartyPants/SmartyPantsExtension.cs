@@ -26,15 +26,18 @@ namespace Markdig.Extensions.SmartyPants
         /// </summary>
         public SmartyPantOptions Options { get; }
 
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<SmaryPantsInlineParser>())
             {
                 // Insert the parser after the code span parser
                 pipeline.InlineParsers.InsertAfter<CodeInlineParser>(new SmaryPantsInlineParser());
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlSmartyPantRenderer>())

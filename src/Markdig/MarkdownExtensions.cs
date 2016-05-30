@@ -34,7 +34,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseAllExtensions(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseAllExtensions(this MarkdownPipelineBuilder pipeline)
         {
             return pipeline
                 .UseAbbreviation()
@@ -61,7 +61,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseCustomContainer(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseCustomContainer(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
             return pipeline;
@@ -75,7 +75,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseMedia(this MarkdownPipeline pipeline, MediaOptions options = null)
+        public static MarkdownPipelineBuilder UseMedia(this MarkdownPipelineBuilder pipeline, MediaOptions options = null)
         {
             if (!pipeline.Extensions.Contains<MediaExtension>())
             {
@@ -92,7 +92,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseAutoIdentifier(this MarkdownPipeline pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.Default)
+        public static MarkdownPipelineBuilder UseAutoIdentifier(this MarkdownPipelineBuilder pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.Default)
         {
             if (!pipeline.Extensions.Contains<AutoIdentifierExtension>())
             {
@@ -109,7 +109,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseSmartyPants(this MarkdownPipeline pipeline, SmartyPantOptions options = null)
+        public static MarkdownPipelineBuilder UseSmartyPants(this MarkdownPipelineBuilder pipeline, SmartyPantOptions options = null)
         {
             if (!pipeline.Extensions.Contains<SmartyPantsExtension>())
             {
@@ -123,7 +123,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseBootstrap(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseBootstrap(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<BootstrapExtension>();
             return pipeline;
@@ -134,7 +134,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseMath(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseMath(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<MathExtension>();
             return pipeline;
@@ -145,7 +145,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseFigure(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseFigure(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FigureExtension>();
             return pipeline;
@@ -156,7 +156,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseAbbreviation(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseAbbreviation(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<AbbreviationExtension>();
             return pipeline;
@@ -167,7 +167,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseDefinitionList(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseDefinitionList(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<DefinitionListExtension>();
             return pipeline;
@@ -181,7 +181,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UsePipeTable(this MarkdownPipeline pipeline, PipeTableOptions options = null)
+        public static MarkdownPipelineBuilder UsePipeTable(this MarkdownPipelineBuilder pipeline, PipeTableOptions options = null)
         {
             if (!pipeline.Extensions.Contains<PipeTableExtension>())
             {
@@ -195,7 +195,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseGridTable(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseGridTable(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<GridTableExtension>();
             return pipeline;
@@ -207,7 +207,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseCite(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseCite(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CiteExtension>();
             return pipeline;
@@ -218,7 +218,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseFooter(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseFooter(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FooterExtension>();
             return pipeline;
@@ -229,7 +229,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseFootnotes(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseFootnotes(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FootnoteExtension>();
             return pipeline;
@@ -240,7 +240,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseSoftlineBreakAsHardlineBreak(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseSoftlineBreakAsHardlineBreak(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<SoftlineBreakAsHardlineExtension>();
             return pipeline;
@@ -254,7 +254,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseEmphasisExtra(this MarkdownPipeline pipeline, EmphasisExtraOptions options = EmphasisExtraOptions.Default)
+        public static MarkdownPipelineBuilder UseEmphasisExtra(this MarkdownPipelineBuilder pipeline, EmphasisExtraOptions options = EmphasisExtraOptions.Default)
         {
             if (!pipeline.Extensions.Contains<EmphasisExtraExtension>())
             {
@@ -270,7 +270,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipeline UseListExtra(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseListExtra(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<ListExtraExtension>();
             return pipeline;
@@ -281,7 +281,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseGenericAttributes(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseGenericAttributes(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<GenericAttributesExtension>();
             return pipeline;
@@ -292,7 +292,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline UseEmojiAndSmiley(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<EmojiExtension>();
             return pipeline;
@@ -303,7 +303,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipeline DisableHtml(this MarkdownPipeline pipeline)
+        public static MarkdownPipelineBuilder DisableHtml(this MarkdownPipelineBuilder pipeline)
         {
             var parser = pipeline.BlockParsers.Find<HtmlBlockParser>();
             if (parser != null)

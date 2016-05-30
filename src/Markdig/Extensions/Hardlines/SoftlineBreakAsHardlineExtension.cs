@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Parsers.Inlines;
+using Markdig.Renderers;
 
 namespace Markdig.Extensions.Hardlines
 {
@@ -12,7 +13,7 @@ namespace Markdig.Extensions.Hardlines
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class SoftlineBreakAsHardlineExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             // Simply modify the LineBreakInlineParser
             // TODO: We might want more options (like pandoc)
@@ -21,6 +22,10 @@ namespace Markdig.Extensions.Hardlines
             {
                 parser.EnableSoftAsHard = true;
             }
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
         }
     }
 }

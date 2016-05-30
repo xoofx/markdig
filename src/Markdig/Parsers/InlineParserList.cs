@@ -11,6 +11,14 @@ namespace Markdig.Parsers
     /// <seealso cref="Markdig.Parsers.ParserList{Markdig.Parsers.InlineParser, Markdig.Parsers.InlineParserState}" />
     public class InlineParserList : ParserList<InlineParser, InlineProcessor>
     {
+        public InlineParserList()
+        {
+        }
+
+        public InlineParserList(IEnumerable<InlineParser> parsers) : base(parsers)
+        {
+        }
+
         /// <summary>
         /// Gets the registered delimiter processors.
         /// </summary>

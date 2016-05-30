@@ -14,6 +14,14 @@ namespace Markdig.Helpers
     /// <remarks>We use a typed list and don't use extension methods because it would pollute all list implemts and the top level namespace.</remarks>
     public class OrderedList<T> : List<T>
     {
+        public OrderedList()
+        {
+        }
+
+        public OrderedList(IEnumerable<T> collection) : base(collection)
+        {
+        }
+
         public bool InsertBefore<TElement>(T element) where TElement : T
         {
             if (element == null) throw new ArgumentNullException(nameof(element));

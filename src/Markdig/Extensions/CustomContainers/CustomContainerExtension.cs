@@ -13,7 +13,7 @@ namespace Markdig.Extensions.CustomContainers
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class CustomContainerExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<CustomContainerParser>())
             {
@@ -36,8 +36,11 @@ namespace Markdig.Extensions.CustomContainers
                     return previousCreateEmphasisInline?.Invoke(emphasisChar, strong);
                 };
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlCustomContainerRenderer>())
@@ -51,6 +54,7 @@ namespace Markdig.Extensions.CustomContainers
                     htmlRenderer.ObjectRenderers.Insert(0, new HtmlCustomContainerInlineRenderer());
                 }
             }
+
         }
     }
 }

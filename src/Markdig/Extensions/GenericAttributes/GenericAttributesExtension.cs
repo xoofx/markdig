@@ -5,6 +5,7 @@
 using System;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -18,7 +19,7 @@ namespace Markdig.Extensions.GenericAttributes
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class GenericAttributesExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<GenericAttributesParser>())
             {
@@ -34,6 +35,10 @@ namespace Markdig.Extensions.GenericAttributes
                     attributesParseable.TryParseAttributes = TryProcessAttributesForHeading;
                 }
             }
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
         }
 
         private bool TryProcessAttributesForHeading(BlockProcessor processor, ref StringSlice line, IBlock block)

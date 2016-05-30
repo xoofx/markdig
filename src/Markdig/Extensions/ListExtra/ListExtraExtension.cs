@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Parsers;
+using Markdig.Renderers;
 
 namespace Markdig.Extensions.ListExtra
 {
@@ -12,13 +13,17 @@ namespace Markdig.Extensions.ListExtra
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class ListExtraExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             var parser = pipeline.BlockParsers.Find<ListBlockParser>();
             if (parser != null)
             {
                 parser.ItemParsers.AddIfNotAlready<ListExtraItemParser>();
             }
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
         }
     }
 }

@@ -11,15 +11,18 @@ namespace Markdig.Extensions.DefinitionLists
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class DefinitionListExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<DefinitionListParser>())
             {
                 // Insert the parser before any other parsers
                 pipeline.BlockParsers.Insert(0, new DefinitionListParser());
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlDefinitionListRenderer>())

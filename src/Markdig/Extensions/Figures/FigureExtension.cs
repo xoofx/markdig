@@ -14,7 +14,7 @@ namespace Markdig.Extensions.Figures
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class FigureExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<FigureBlockParser>())
             {
@@ -28,7 +28,11 @@ namespace Markdig.Extensions.Figures
                     pipeline.BlockParsers.Insert(0, new FigureBlockParser());
                 }
             }
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFigureRenderer>();

@@ -41,7 +41,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             };
         }
 
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             var headingBlockParser = pipeline.BlockParsers.Find<HeadingBlockParser>();
             if (headingBlockParser != null)
@@ -57,6 +57,10 @@ namespace Markdig.Extensions.AutoIdentifiers
                 paragraphBlockParser.Closed -= HeadingBlockParser_Closed;
                 paragraphBlockParser.Closed += HeadingBlockParser_Closed;
             }
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
         }
 
         /// <summary>

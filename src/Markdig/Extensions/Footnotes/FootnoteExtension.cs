@@ -11,15 +11,18 @@ namespace Markdig.Extensions.Footnotes
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class FootnoteExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<FootnoteParser>())
             {
                 // Insert the parser before any other parsers
                 pipeline.BlockParsers.Insert(0, new FootnoteParser());
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer());

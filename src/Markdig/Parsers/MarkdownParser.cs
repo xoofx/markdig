@@ -41,7 +41,6 @@ namespace Markdig.Parsers
             Reader = reader;
 
             // Initialize the pipeline
-            pipeline.Initialize();
             var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
 
             document = new MarkdownDocument();
@@ -59,7 +58,7 @@ namespace Markdig.Parsers
                 DebugLog = pipeline.DebugLog
             };
 
-            documentProcessed = pipeline.GetDocumentProcessed;
+            documentProcessed = pipeline.DocumentProcessed;
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace Markdig.Parsers
         public static MarkdownDocument Parse(TextReader reader, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
-            pipeline = pipeline ?? new MarkdownPipeline();
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
             var markdownParser = new MarkdownParser(reader, pipeline);

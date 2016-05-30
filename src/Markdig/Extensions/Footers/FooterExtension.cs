@@ -13,7 +13,7 @@ namespace Markdig.Extensions.Footers
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class FooterExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<FooterBlockParser>())
             {
@@ -27,8 +27,11 @@ namespace Markdig.Extensions.Footers
                     pipeline.BlockParsers.Insert(0, new FooterBlockParser());
                 }
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)
             {
                 htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFooterBlockRenderer());

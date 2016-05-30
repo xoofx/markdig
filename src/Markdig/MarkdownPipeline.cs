@@ -5,110 +5,51 @@ using System;
 using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
-using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
 namespace Markdig
 {
     /// <summary>
-    /// This class allows to modify the pipeline to parse and render a Markdown document.
+    /// This class is the Markdown pipeline build from a <see cref="MarkdownPipelineBuilder"/>.
     /// </summary>
-    /// <remarks>NOTE: A pipeline is not thread-safe.</remarks>
     public class MarkdownPipeline
     {
+        // This class is immutable
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
         /// </summary>
-        public MarkdownPipeline()
+        internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, StringBuilderCache cache, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
         {
+            if (blockParsers == null) throw new ArgumentNullException(nameof(blockParsers));
+            if (inlineParsers == null) throw new ArgumentNullException(nameof(inlineParsers));
             // Add all default parsers
-            BlockParsers = new BlockParserList()
-            {
-                new ThematicBreakParser(),
-                new HeadingBlockParser(),
-                new QuoteBlockParser(),
-                new ListBlockParser(),
-
-                new HtmlBlockParser(),
-                new FencedCodeBlockParser(),
-                new IndentedCodeBlockParser(),
-                new ParagraphBlockParser(),
-            };
-
-            InlineParsers = new InlineParserList()
-            {
-                new HtmlEntityParser(),
-                new LinkInlineParser(),
-                new EscapeInlineParser(),
-                new EmphasisInlineParser(),
-                new CodeInlineParser(),
-                new AutolineInlineParser(),
-                new LineBreakInlineParser(),
-            };
-
-            Extensions = new OrderedList<IMarkdownExtension>();
-
-            Renderer = new HtmlRenderer(new StringWriter());
-
-            StringBuilderCache = new StringBuilderCache();
+            Extensions = extensions;
+            BlockParsers = blockParsers;
+            InlineParsers = inlineParsers;
+            StringBuilderCache = cache;
+            DebugLog = debugLog;
+            DocumentProcessed = documentProcessed;
         }
+        internal OrderedList<IMarkdownExtension> Extensions { get; }
 
-        /// <summary>
-        /// Gets the block parsers.
-        /// </summary>
-        public BlockParserList BlockParsers { get; private set; }
+        internal BlockParserList BlockParsers { get; }
 
-        /// <summary>
-        /// Gets the inline parsers.
-        /// </summary>
-        public InlineParserList InlineParsers { get; private set; }
+        internal InlineParserList InlineParsers { get; }
 
-        /// <summary>
-        /// Gets or sets the renderer.
-        /// </summary>
-        public IMarkdownRenderer Renderer { get; set; }
+        internal StringBuilderCache StringBuilderCache { get; }
 
-        /// <summary>
-        /// Gets the register extensions.
-        /// </summary>
-        public OrderedList<IMarkdownExtension> Extensions { get; }
+        // TODO: Move the log to a better place
+        internal TextWriter DebugLog { get; }
 
-        /// <summary>
-        /// Gets or sets the string builder cache used by the parsers.
-        /// </summary>
-        public StringBuilderCache StringBuilderCache { get; set; }
+        internal ProcessDocumentDelegate DocumentProcessed;
 
-        /// <summary>
-        /// Gets or sets the debug log.
-        /// </summary>
-        public TextWriter DebugLog { get; set; }
-
-        /// <summary>
-        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse"/> method.
-        /// </summary>
-        public event ProcessDocumentDelegate DocumentProcessed;
-
-        internal ProcessDocumentDelegate GetDocumentProcessed => DocumentProcessed;
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
-        public void Initialize()
+        internal void Setup(IMarkdownRenderer renderer)
         {
-            // TODO: Review the whole initialization process for extensions
-            // - It does not prevent a user to modify the pipeline after it has been used
-            // - a pipeline is not thread safe.
-            // We should find a proper way to make the pipeline safely modifiable/freezable (PipelineBuilder -> Pipeline)
-
-            // Allow extensions to modify existing BlockParsers, InlineParsers and Renderer
+            if (renderer == null) throw new ArgumentNullException(nameof(renderer));
             foreach (var extension in Extensions)
             {
-                if (extension == null)
-                {
-                    throw new InvalidOperationException("An extension cannot be null");
-                }
-                extension.Setup(this);
+                extension.Setup(renderer);
             }
         }
     }

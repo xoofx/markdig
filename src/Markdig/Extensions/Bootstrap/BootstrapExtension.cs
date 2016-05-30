@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -14,11 +15,15 @@ namespace Markdig.Extensions.Bootstrap
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class BootstrapExtension : IMarkdownExtension
     {
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             // Make sure we don't have a delegate twice
             pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
             pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
+        }
+
+        public void Setup(IMarkdownRenderer renderer)
+        {
         }
 
         private static void PipelineOnDocumentProcessed(MarkdownDocument document)

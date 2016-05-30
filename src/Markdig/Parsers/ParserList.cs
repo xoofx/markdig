@@ -23,6 +23,10 @@ namespace Markdig.Parsers
         {
         }
 
+        protected ParserList(IEnumerable<T> parsers) : base(parsers)
+        {
+        }
+
         /// <summary>
         /// Gets the list of global parsers (that don't have any opening characters defined)
         /// </summary>

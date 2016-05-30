@@ -54,33 +54,33 @@ namespace Markdig
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
-            pipeline = pipeline ?? new MarkdownPipeline();
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             // We override the renderer with our own writer
-            pipeline.Renderer = new HtmlRenderer(writer);
+            var renderer = new HtmlRenderer(writer);
+            pipeline.Setup(renderer);
 
             var document = Parse(reader, pipeline);
-            pipeline.Renderer.Render(document);
+            renderer.Render(document);
             writer.Flush();
         }
 
         /// <summary>
-        /// Converts a Markdown string using a custom <see cref="IMarkdownRenderer"/> specified in the <see cref="MarkdownPipeline.Renderer"/>.
+        /// Converts a Markdown string using a custom <see cref="IMarkdownRenderer"/>.
         /// </summary>
         /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
+        /// <param name="renderer">The renderer to convert Markdown to.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
-        public static object Convert(TextReader reader, MarkdownPipeline pipeline = null)
+        public static object Convert(TextReader reader, IMarkdownRenderer renderer, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
-            pipeline = pipeline ?? new MarkdownPipeline();
-            if (pipeline.Renderer == null)
-            {
-                throw new InvalidOperationException("The property MarkdownPipeline.Renderer cannot be null");
-            }
+            if (renderer == null) throw new ArgumentNullException(nameof(renderer));
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             var document = Parse(reader, pipeline);
-            return pipeline.Renderer.Render(document);
+            pipeline.Setup(renderer);
+            return renderer.Render(document);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Markdig
         public static MarkdownDocument Parse(string markdown)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
-            return Parse(new StringReader(markdown), new MarkdownPipeline());
+            return Parse(new StringReader(markdown));
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Markdig
         public static MarkdownDocument Parse(TextReader reader, MarkdownPipeline pipeline = null)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
-            pipeline = pipeline ?? new MarkdownPipeline();
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             return MarkdownParser.Parse(reader, pipeline);
         }

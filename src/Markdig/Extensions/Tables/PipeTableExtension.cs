@@ -26,14 +26,17 @@ namespace Markdig.Extensions.Tables
         /// </summary>
         public PipeTableOptions Options { get; }
 
-        public void Setup(MarkdownPipeline pipeline)
+        public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<PipeTableParser>())
             {
                 pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(Options));
             }
+        }
 
-            var htmlRenderer = pipeline.Renderer as HtmlRenderer;
+        public void Setup(IMarkdownRenderer renderer)
+        {
+            var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
             {
                 htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
