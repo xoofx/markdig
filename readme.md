@@ -61,7 +61,7 @@ In order to activate all extensions (except Emoji)
 
 ```csharp
 // Configure the pipeline with all extensions active
-var pipeline = new MarkdownPipeline().UseAllExtensions();
+var pipeline = new MarkdownPipelineBuilder().UseAllExtensions().Build();
 var result = Markdown.ToHtml("This is a text with some *emphasis*", pipeline);
 ```
 
