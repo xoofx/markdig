@@ -150,6 +150,8 @@ Thanks to the fantastic work done by [John Mac Farlane](http://johnmacfarlane.ne
 
 This project would not have been possible without this huge foundation.
 
+Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/BenchmarkDotNet) that makes benchmarking so easy to setup!  
+
 ## Author
 
 Alexandre MUTEL aka [xoofx](http://xoofx.com)
