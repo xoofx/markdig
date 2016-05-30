@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -10,7 +10,7 @@
     "licenseUrl": "https://github.com/lunet-io/markdig/blob/master/license.txt",
     "projectUrl": "https://github.com/lunet-io/markdig",
     "requireLicenseAcceptance": false,
-    "tags": [ "Markdown CommonMark md html" ]
+    "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
     "Debug": {
