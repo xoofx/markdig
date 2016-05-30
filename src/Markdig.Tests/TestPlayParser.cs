@@ -27,34 +27,47 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
             Console.WriteLine(result);
         }
 
-// Test for emoji and smileys
-//        var text = @" This is a test with a :) and a :angry: smiley";
+        [Test]
+        public void TestSamePipelineAllExtensions()
+        {
+            var pipeline = new MarkdownPipeline().UseAllExtensions();
+
+            // Reuse the same pipeline 
+            var result1 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);
+            var result2 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);
+
+            Assert.AreEqual("<p>This is a <cite>citation</cite></p>", result1.Trim());
+            Assert.AreEqual(result1, result2);
+        }
+
+        // Test for emoji and smileys
+        //        var text = @" This is a test with a :) and a :angry: smiley";
 
 
-// Test for definition lists:
-//
-//        var text = @"
-//Term 1
-//:   This is a definition item
-//    With a paragraph
-//    > This is a block quote
+        // Test for definition lists:
+        //
+        //        var text = @"
+        //Term 1
+        //:   This is a definition item
+        //    With a paragraph
+        //    > This is a block quote
 
-//    - This is a list
-//    - item2
+        //    - This is a list
+        //    - item2
 
-//    ```java
-//    Test
+        //    ```java
+        //    Test
 
 
-//    ```
+        //    ```
 
-//    And a lazy line
-//:   This ia another definition item
+        //    And a lazy line
+        //:   This ia another definition item
 
-//Term2
-//Term3 *with some inline*
-//:   This is another definition for term2
-//";
+        //Term2
+        //Term3 *with some inline*
+        //:   This is another definition for term2
+        //";
 
 
         // Test for grid table

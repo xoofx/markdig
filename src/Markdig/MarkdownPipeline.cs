@@ -13,6 +13,7 @@ namespace Markdig
     /// <summary>
     /// This class allows to modify the pipeline to parse and render a Markdown document.
     /// </summary>
+    /// <remarks>NOTE: A pipeline is not thread-safe.</remarks>
     public class MarkdownPipeline
     {
         /// <summary>
@@ -95,6 +96,11 @@ namespace Markdig
         /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
         public void Initialize()
         {
+            // TODO: Review the whole initialization process for extensions
+            // - It does not prevent a user to modify the pipeline after it has been used
+            // - a pipeline is not thread safe.
+            // We should find a proper way to make the pipeline safely modifiable/freezable (PipelineBuilder -> Pipeline)
+
             // Allow extensions to modify existing BlockParsers, InlineParsers and Renderer
             foreach (var extension in Extensions)
             {

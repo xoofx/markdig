@@ -23,7 +23,7 @@ namespace Markdig.Extensions.CustomContainers
 
             // Plug the inline parser for CustomContainerInline
             var inlineParser = pipeline.InlineParsers.Find<EmphasisInlineParser>();
-            if (inlineParser != null)
+            if (inlineParser != null && !inlineParser.HasEmphasisChar(':'))
             {
                 inlineParser.EmphasisDescriptors.Add(new EmphasisDescriptor(':', 2, 2, true));
                 var previousCreateEmphasisInline = inlineParser.CreateEmphasisInline;

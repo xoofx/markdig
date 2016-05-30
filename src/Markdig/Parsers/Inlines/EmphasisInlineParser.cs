@@ -42,6 +42,23 @@ namespace Markdig.Parsers.Inlines
         public List<EmphasisDescriptor> EmphasisDescriptors { get; }
 
         /// <summary>
+        /// Determines whether this parser is using the specified character as an emphasis delimiter.
+        /// </summary>
+        /// <param name="c">The character to look for.</param>
+        /// <returns><c>true</c> if this parser is using the specified character as an emphasis delimiter; otherwise <c>false</c></returns>
+        public bool HasEmphasisChar(char c)
+        {
+            foreach (var emphasis in EmphasisDescriptors)
+            {
+                if (emphasis.Character == c)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
         /// </summary>
         public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }

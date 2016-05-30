@@ -18,15 +18,8 @@ namespace Markdig.Extensions.Cites
         public void Setup(MarkdownPipeline pipeline)
         {
             var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
-            if (parser != null)
+            if (parser != null && !parser.HasEmphasisChar('"'))
             {
-                foreach (var emphasis in parser.EmphasisDescriptors)
-                {
-                    if (emphasis.Character == '"')
-                    {
-                        return;
-                    }
-                }
                 parser.EmphasisDescriptors.Add(new EmphasisDescriptor('"', 2, 2, false));
             }
 
@@ -37,6 +30,7 @@ namespace Markdig.Extensions.Cites
                 var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
                 if (emphasisRenderer != null)
                 {
+                    // TODO: Use an ordered list instead as we don't know if this specific GetTag has been already added
                     var previousTag = emphasisRenderer.GetTag;
                     emphasisRenderer.GetTag = inline => GetTag(inline) ?? previousTag(inline);
                 }
