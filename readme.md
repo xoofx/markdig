@@ -16,18 +16,18 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
   - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
 - Built-in with **18+ extensions**, including:
   - 2 kind of tables:
-    - **Pipe tables** (inspired from Github tables and [PanDoc](http://pandoc.org/README.html#extension-pipe_tables))
-    - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#extension-grid_tables)) 
-  - **Extra emphasis** (inspired from [Pandoc](http://pandoc.org/README.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
+    - **Pipe tables** (inspired from Github tables and [PanDoc - Pipe Tables](http://pandoc.org/README.html#extension-pipe_tables))
+    - **Grid tables** (inspired from [Pandoc - Grid Tables](http://pandoc.org/README.html#extension-grid_tables)) 
+  - **Extra emphasis** (inspired from [Pandoc - Emphasis](http://pandoc.org/README.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
     - strike through `~~`,
     - Subscript `~`
     - Superscript `^` 
     - Inserted `++`
     - Marked `==`
-  - **Special attributes** or attached HTML attributes (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#spe-attr))
+  - **Special attributes** or attached HTML attributes (inspired from [PHP Markdown Extra - Special Attributes](https://michelf.ca/projects/php-markdown/extra/#spe-attr))
   - **Definition lists** (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
   - **Footnotes** (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
-  - **Auto-identifiers** for headings (similar to [Pandoc](http://pandoc.org/README.html#extension-auto_identifiers)
+  - **Auto-identifiers** for headings (similar to [Pandoc - Auto Identifiers](http://pandoc.org/README.html#extension-auto_identifiers))
   - **Extra bullet lists**, supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
   - **Media support** for media url (youtube, vimeo, mp4...etc.) (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/embedded-audio-and-video/441))
   - **Abbreviations** (inspired from [PHP Markdown Extra - Abbreviations](https://michelf.ca/projects/php-markdown/extra/#abbr))
