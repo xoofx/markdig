@@ -16,8 +16,8 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
   - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
 - Built-in with **18+ extensions**, including:
   - 2 kind of tables:
-    - **Pipe tables** (inspired from Github tables and [PanDoc](http://pandoc.org/README.html#pipe_tables))
-    - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#grid_tables)) 
+    - **Pipe tables** (inspired from Github tables and [PanDoc](http://pandoc.org/README.html#extension-pipe_tables))
+    - **Grid tables** (inspired from [Pandoc](http://pandoc.org/README.html#extension-grid_tables)) 
   - **Extra emphasis** (inspired from [Pandoc](http://pandoc.org/README.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
     - strike through `~~`,
     - Subscript `~`
