@@ -18,5 +18,13 @@ using System.Reflection;
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.0")]
+[assembly: AssemblyVersion(Markdig.Markdown.Version)]
+[assembly: AssemblyFileVersion(Markdig.Markdown.Version)]
+
+namespace Markdig
+{
+    public static partial class Markdown
+    {
+        public const string Version = "0.2.1";
+    }
+}

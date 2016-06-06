@@ -12,7 +12,7 @@ namespace Markdig
     /// <summary>
     /// Provides methods for parsing a Markdown string to a syntax tree and converting it to other formats.
     /// </summary>
-    public static class Markdown
+    public static partial class Markdown
     {
         /// <summary>
         /// Converts a Markdown string to HTML.
