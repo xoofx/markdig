@@ -98,6 +98,14 @@ This is ``a code span''``
 <p>This is <code>a code span''</code></p>
 ````````````````````````````````
 
+```````````````````````````````` example
+hello ``there```
+test
+.
+<p>hello &ldquo;there&rdquo;`
+test</p>
+````````````````````````````````
+
 An emphasis starting inside left/right quotes will span over the right quote:
 
 ```````````````````````````````` example

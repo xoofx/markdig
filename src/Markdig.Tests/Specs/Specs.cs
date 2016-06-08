@@ -29,7 +29,7 @@ namespace Markdig.Tests
         // articles, slide shows, letters, and lecture notes.
         //
         // What distinguishes Markdown from many other lightweight markup
-        // syntaxes, which are often easier to write, is its readibility.
+        // syntaxes, which are often easier to write, is its readability.
         // As Gruber writes:
         //
         // > The overriding design goal for Markdown's formatting syntax is
@@ -18863,7 +18863,6 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is ``a code span''`` ", "<p>This is <code>a code span''</code></p>", "smartypants");
         }
     }
-        // An emphasis starting inside left/right quotes will span over the right quote:
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -18874,35 +18873,38 @@ namespace Markdig.Tests
             // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
-            //     This is "a *text" with an emphasis*
+            //     hello ``there```
+            //     test
             //
             // Should be rendered as:
-            //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
+            //     <p>hello &ldquo;there&rdquo;`
+            //     test</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "smartypants");
+			TestParser.TestSpec("hello ``there```\ntest", "<p>hello &ldquo;there&rdquo;`\ntest</p>", "smartypants");
         }
     }
-        // ## SmartyPants Separators
+        // An emphasis starting inside left/right quotes will span over the right quote:
     [TestFixture]
-    public partial class TestExtensionsSmartyPantsSeparators
+    public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
         public void Example016()
         {
             // Example 16
-            // Section: Extensions SmartyPants Separators
+            // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
-            //     This is a -- text
+            //     This is "a *text" with an emphasis*
             //
             // Should be rendered as:
-            //     <p>This is a &ndash; text</p>
+            //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Quotes");
+			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "smartypants");
         }
     }
+        // ## SmartyPants Separators
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -18913,13 +18915,13 @@ namespace Markdig.Tests
             // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
-            //     This is a --- text
+            //     This is a -- text
             //
             // Should be rendered as:
-            //     <p>This is a &mdash; text</p>
+            //     <p>This is a &ndash; text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
+			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
         }
     }
     [TestFixture]
@@ -18932,12 +18934,31 @@ namespace Markdig.Tests
             // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
+            //     This is a --- text
+            //
+            // Should be rendered as:
+            //     <p>This is a &mdash; text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions SmartyPants Separators");
+			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsSeparators
+    {
+        [Test]
+        public void Example019()
+        {
+            // Example 19
+            // Section: Extensions SmartyPants Separators
+            //
+            // The following CommonMark:
             //     This is a en ellipsis...
             //
             // Should be rendered as:
             //     <p>This is a en ellipsis&hellip;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions SmartyPants Separators");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
         }
     }
