@@ -45,74 +45,7 @@ namespace Markdig.Tests
             var extensionGroups = extensionsGroupText.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var extensionsText in extensionGroups)
             {
-                var pipeline = new MarkdownPipelineBuilder();
-                foreach (var extension in extensionsText.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    switch (extension.ToLowerInvariant())
-                    {
-                        case "pipetables":
-                            pipeline.UsePipeTable();
-                            break;
-                        case "emphasis_extra":
-                            pipeline.UseEmphasisExtra();
-                            break;
-                        case "list_extra":
-                            pipeline.UseListExtra();
-                            break;
-                        case "hardlinebreak":
-                            pipeline.UseSoftlineBreakAsHardlineBreak();
-                            break;
-                        case "footnotes":
-                            pipeline.UseFootnotes();
-                            break;
-                        case "footers":
-                            pipeline.UseFooter();
-                            break;
-                        case "cites":
-                            pipeline.UseCite();
-                            break;
-                        case "attributes":
-                            pipeline.UseGenericAttributes();
-                            break;
-                        case "gridtables":
-                            pipeline.UseGridTable();
-                            break;
-                        case "abbreviations":
-                            pipeline.UseAbbreviation();
-                            break;
-                        case "emojis":
-                            pipeline.UseEmojiAndSmiley();
-                            break;
-                        case "definitionlists":
-                            pipeline.UseDefinitionList();
-                            break;
-                        case "customcontainers":
-                            pipeline.UseCustomContainer();
-                            break;
-                        case "figures":
-                            pipeline.UseFigure();
-                            break;
-                        case "math":
-                            pipeline.UseMath();
-                            break;
-                        case "bootstrap":
-                            pipeline.UseBootstrap();
-                            break;
-                        case "medias":
-                            pipeline.UseMedia();
-                            break;
-                        case "smartypants":
-                            pipeline.UseSmartyPants();
-                            break;
-                        case "autoidentifiers":
-                            pipeline.UseAutoIdentifier();
-                            break;
-                        default:
-                            Console.WriteLine($"Unsupported extension: {extension}");
-                            break;
-                    }
-                }
-
+                var pipeline = new MarkdownPipelineBuilder().Configure(extensionsText);
                 yield return pipeline.Build();
             }
         }

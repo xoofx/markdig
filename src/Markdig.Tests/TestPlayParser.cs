@@ -30,7 +30,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         [Test]
         public void TestSamePipelineAllExtensions()
         {
-            var pipeline = new MarkdownPipelineBuilder().UseAllExtensions().Build();
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
             // Reuse the same pipeline 
             var result1 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);

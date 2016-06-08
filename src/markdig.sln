@@ -13,6 +13,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
 	ProjectSection(SolutionItems) = preProject
 		..\license.txt = ..\license.txt
+		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markdig.Benchmarks\Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"

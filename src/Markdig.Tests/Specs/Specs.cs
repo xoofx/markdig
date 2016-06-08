@@ -17088,7 +17088,7 @@ namespace Markdig.Tests
             //     <p>The following text <del>is deleted</del></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikethrough");
-			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasis_extra");
+			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextra");
         }
     }
         // ## Superscript and Subscript
@@ -17110,7 +17110,7 @@ namespace Markdig.Tests
             //     <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Superscript and Subscript");
-			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasis_extra");
+			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextra");
         }
     }
         // ## Inserted
@@ -17132,7 +17132,7 @@ namespace Markdig.Tests
             //     <p><ins>Inserted text</ins></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Inserted");
-			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasis_extra");
+			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextra");
         }
     }
         // ## Marked
@@ -17154,7 +17154,7 @@ namespace Markdig.Tests
             //     <p><mark>Marked text</mark></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Marked");
-			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasis_extra");
+			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextra");
         }
     }
         // # Extensions
@@ -17991,7 +17991,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextra");
         }
     }
         // It works also for uppercase alpha:
@@ -18017,7 +18017,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextra");
         }
     }
         // Like for numbered list, a list can start with a different letter
@@ -18041,7 +18041,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextra");
         }
     }
         // A different type of list will break the existing list:
@@ -18069,7 +18069,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextra");
         }
     }
         // ## Ordered list with roman letter
@@ -18099,7 +18099,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextra");
         }
     }
         // It works also for uppercase alpha:
@@ -18127,7 +18127,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextra");
         }
     }
         // Like for numbered list, a list can start with a different letter
@@ -18151,7 +18151,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "list_extra");
+			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextra");
         }
     }
         // # Extensions

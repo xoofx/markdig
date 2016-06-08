@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.Bootstrap;
@@ -34,7 +36,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAllExtensions(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseAdvancedExtensions(this MarkdownPipelineBuilder pipeline)
         {
             return pipeline
                 .UseAbbreviation()
@@ -313,6 +315,90 @@ namespace Markdig
             if (inlineParser != null)
             {
                 inlineParser.EnableHtmlParsing = false;
+            }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Configures the pipeline using a string that defines the extensions to activate.
+        /// </summary>
+        /// <param name="pipeline">The pipeline (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTable"/> and <see cref="UseGridTable"/></param>
+        /// <param name="extensions">The extensions to activate as a string</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string extensions)
+        {
+            if (extensions == null)
+            {
+                return pipeline;
+            }
+
+            foreach (var extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                switch (extension.ToLowerInvariant())
+                {
+                    case "advanced":
+                        pipeline.UseAdvancedExtensions();
+                        break;
+                    case "pipetables":
+                        pipeline.UsePipeTable();
+                        break;
+                    case "emphasisextra":
+                        pipeline.UseEmphasisExtra();
+                        break;
+                    case "listextra":
+                        pipeline.UseListExtra();
+                        break;
+                    case "hardlinebreak":
+                        pipeline.UseSoftlineBreakAsHardlineBreak();
+                        break;
+                    case "footnotes":
+                        pipeline.UseFootnotes();
+                        break;
+                    case "footers":
+                        pipeline.UseFooter();
+                        break;
+                    case "cites":
+                        pipeline.UseCite();
+                        break;
+                    case "attributes":
+                        pipeline.UseGenericAttributes();
+                        break;
+                    case "gridtables":
+                        pipeline.UseGridTable();
+                        break;
+                    case "abbreviations":
+                        pipeline.UseAbbreviation();
+                        break;
+                    case "emojis":
+                        pipeline.UseEmojiAndSmiley();
+                        break;
+                    case "definitionlists":
+                        pipeline.UseDefinitionList();
+                        break;
+                    case "customcontainers":
+                        pipeline.UseCustomContainer();
+                        break;
+                    case "figures":
+                        pipeline.UseFigure();
+                        break;
+                    case "math":
+                        pipeline.UseMath();
+                        break;
+                    case "bootstrap":
+                        pipeline.UseBootstrap();
+                        break;
+                    case "medias":
+                        pipeline.UseMedia();
+                        break;
+                    case "smartypants":
+                        pipeline.UseSmartyPants();
+                        break;
+                    case "autoidentifiers":
+                        pipeline.UseAutoIdentifier();
+                        break;
+                    default:
+                        throw new ArgumentException($"unknown extension {extension}");
+                }
             }
             return pipeline;
         }
