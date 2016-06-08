@@ -30,7 +30,7 @@ namespace Markdig
     public static class MarkdownExtensions
     {
         /// <summary>
-        /// Uses all extensions except the Emoji.
+        /// Uses all extensions except the Emoji, SmartyPants and soft line as hard line breaks.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
@@ -51,8 +51,6 @@ namespace Markdig
                 .UseMath()
                 .UseMedia()
                 .UsePipeTable()
-                .UseSoftlineBreakAsHardlineBreak()
-                .UseSmartyPants()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
