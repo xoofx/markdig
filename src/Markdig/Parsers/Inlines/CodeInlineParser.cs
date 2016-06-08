@@ -47,13 +47,13 @@ namespace Markdig.Parsers.Inlines
             // The contents of the code span are the characters between the two backtick strings, with leading and trailing spaces and line endings removed, and whitespace collapsed to single spaces.
             var pc = ' ';
 
+            int newLinesFound = 0;
             while (c != '\0')
             {
                 // Transform '\n' into a single space
                 if (c == '\n')
                 {
-                    processor.LocalLineIndex++;
-                    processor.LineIndex++;
+                    newLinesFound++;
                     c = ' ';
                 }
 
@@ -104,6 +104,9 @@ namespace Markdig.Parsers.Inlines
                     Content = builder.ToString()
                 };
                 isMatching = true;
+
+                processor.LocalLineIndex += newLinesFound;
+                processor.LineIndex += newLinesFound;
             }
 
             // Release the builder if not used
