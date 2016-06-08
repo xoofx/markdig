@@ -27,6 +27,8 @@ namespace Markdig.Renderers
         {
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             this.Writer = writer;
+            // By default we output a newline with '\n' only even on Windows platforms
+            Writer.NewLine = "\n";
         }
 
         /// <summary>
