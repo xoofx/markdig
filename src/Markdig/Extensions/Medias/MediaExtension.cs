@@ -49,7 +49,8 @@ namespace Markdig.Extensions.Medias
             if (linkInline.IsImage && linkInline.Url != null)
             {
                 Uri uri;
-                if (Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out uri))
+                // Only process absolute Uri
+                if (Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out uri) && uri.IsAbsoluteUri)
                 {
                     var htmlAttributes = new HtmlAttributes();
                     var fromAttributes = linkInline.TryGetAttributes();
