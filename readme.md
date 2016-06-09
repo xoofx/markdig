@@ -4,6 +4,8 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
 
 > NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
 
+You can **try Markdig online** and compare it to other implems on [babelmark3](http://babelmark.github.io/) 
+
 ## Features
 
 - **Very fast parser** (no-regexp), very lightweight in terms of GC pressure. See benchmarks
