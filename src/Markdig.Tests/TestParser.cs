@@ -14,10 +14,10 @@ namespace Markdig.Tests
         {
             foreach (var pipeline in GetPipeline(extensions))
             {
-                Console.WriteLine($"Pipeline configured with extensions: {extensions}");
+                Console.WriteLine($"Pipeline configured with extensions: {pipeline.Key}");
                 // Uncomment this line to get more debug information for process inlines.
                 //pipeline.DebugLog = Console.Out;
-                var result = Markdown.ToHtml(inputText, pipeline);
+                var result = Markdown.ToHtml(inputText, pipeline.Value);
 
                 result = Compact(result);
                 expectedOutputText = Compact(expectedOutputText);
@@ -34,11 +34,30 @@ namespace Markdig.Tests
             }
         }
 
-        private static IEnumerable<MarkdownPipeline> GetPipeline(string extensionsGroupText)
+        private static IEnumerable<KeyValuePair<string, MarkdownPipeline>> GetPipeline(string extensionsGroupText)
         {
+            // For the standard case, we make sure that both the CommmonMark core and Extra/Advanced are CommonMark compliant!
             if (string.IsNullOrEmpty(extensionsGroupText))
             {
-                yield return new MarkdownPipelineBuilder().Build();
+                yield return new KeyValuePair<string, MarkdownPipeline>("default", new MarkdownPipelineBuilder().Build());
+
+                yield return new KeyValuePair<string, MarkdownPipeline>("advanced", new MarkdownPipelineBuilder()  // Use similar to advanced extension without auto-identifier
+                 .UseAbbreviation()
+                //.UseAutoIdentifier()
+                .UseCite()
+                .UseCustomContainer()
+                .UseDefinitionList()
+                .UseEmphasisExtra()
+                .UseFigure()
+                .UseFooter()
+                .UseFootnotes()
+                .UseGridTable()
+                .UseMath()
+                .UseMedia()
+                .UsePipeTable()
+                .UseListExtra()
+                .UseGenericAttributes().Build());
+
                 yield break;
             }
 
@@ -46,7 +65,7 @@ namespace Markdig.Tests
             foreach (var extensionsText in extensionGroups)
             {
                 var pipeline = new MarkdownPipelineBuilder().Configure(extensionsText);
-                yield return pipeline.Build();
+                yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, pipeline.Build());
             }
         }
 
