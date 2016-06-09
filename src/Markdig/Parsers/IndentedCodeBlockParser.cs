@@ -37,7 +37,7 @@ namespace Markdig.Parsers
             }
 
             // If we don't have a blank line, we reset to the indent
-            if (processor.Indent >= 4)
+            if (processor.Indent > 4)
             {
                 processor.GoToCodeIndent();
             }

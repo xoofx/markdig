@@ -260,12 +260,10 @@ namespace Markdig.Parsers
         public void GoToColumn(int newColumn)
         {
             // Optimized path when we are moving above the previous start of indent
-            if (newColumn > ColumnBeforeIndent)
+            if (newColumn >= ColumnBeforeIndent)
             {
                 Line.Start = StartBeforeIndent;
                 Column = ColumnBeforeIndent;
-                ColumnBeforeIndent = 0;
-                StartBeforeIndent = 0;
             }
             else
             {
