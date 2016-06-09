@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -10,7 +10,7 @@
     "licenseUrl": "https://github.com/lunet-io/markdig/blob/master/license.txt",
     "projectUrl": "https://github.com/lunet-io/markdig",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "Add ListExtra as part of the UseAdvancedExtensions()",
+    "releaseNotes": "Fix exception when Media extension was used with non absolute URI. Make the UseAdvancedExtensions() CommonMark compliant on core specs",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
