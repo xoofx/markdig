@@ -32,7 +32,7 @@ namespace Markdig
     public static class MarkdownExtensions
     {
         /// <summary>
-        /// Uses all extensions except the Emoji, SmartyPants and soft line as hard line breaks.
+        /// Uses all extensions except the BootStrap, Emoji, SmartyPants and soft line as hard line breaks extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
@@ -41,7 +41,6 @@ namespace Markdig
             return pipeline
                 .UseAbbreviation()
                 .UseAutoIdentifier()
-                .UseBootstrap()
                 .UseCite()
                 .UseCustomContainer()
                 .UseDefinitionList()
@@ -53,6 +52,7 @@ namespace Markdig
                 .UseMath()
                 .UseMedia()
                 .UsePipeTable()
+                .UseListExtra()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
