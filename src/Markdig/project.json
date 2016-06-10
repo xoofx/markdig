@@ -9,7 +9,7 @@
     "owners": [ "Alexandre Mutel" ],
     "licenseUrl": "https://github.com/lunet-io/markdig/blob/master/license.txt",
     "projectUrl": "https://github.com/lunet-io/markdig",
-	"iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/images/markdig64.png"
+    "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/images/markdig64.png",
     "requireLicenseAcceptance": false,
     "releaseNotes": "Update logo for NuGet",
     "tags": [ "Markdown CommonMark md html md2html" ]
