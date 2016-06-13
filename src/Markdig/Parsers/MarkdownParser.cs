@@ -122,29 +122,7 @@ namespace Markdig.Parsers
         /// <param name="text">The text to secure.</param>
         private string FixupZero(string text)
         {
-            int startPos = 0;
-            int nextZero;
-            StringBuilder newLine = null;
-            while ((nextZero = text.IndexOf('\0', startPos)) >= 0)
-            {
-                if (newLine == null)
-                {
-                    newLine = StringBuilderCache.Local();
-                }
-                newLine.Append(text, startPos, nextZero - startPos);
-                newLine.Append(CharHelper.ZeroSafeChar);
-                startPos = nextZero + 1;
-            }
-
-            if (newLine == null)
-            {
-                return text;
-            }
-            newLine.Append(text, startPos, text.Length - startPos);
-
-            var result = newLine.ToString();
-            newLine.Length = 0;
-            return result;
+            return text.Replace('\0', CharHelper.ZeroSafeChar);
         }
 
         private class ContainerItemCache : DefaultObjectCache<ContainerItem>
