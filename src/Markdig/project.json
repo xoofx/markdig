@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -9,9 +9,9 @@
     "owners": [ "Alexandre Mutel" ],
     "licenseUrl": "https://github.com/lunet-io/markdig/blob/master/license.txt",
     "projectUrl": "https://github.com/lunet-io/markdig",
-    "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/images/markdig.png",
+    "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "Update logo for NuGet",
+    "releaseNotes": "Breaking change: Rename several extension method UseXXX with an UseXXXs (e.g UseListExtras instead of UseListExtra). Fix pipe tables limitation to avoid conflict with list items.",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
