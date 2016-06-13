@@ -16358,7 +16358,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
-        // While the following would be considered as a plain paragraph with a list item:
+        // The following is also considered as a table, even if the second line starts like a list:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16374,14 +16374,23 @@ namespace Markdig.Tests
             //     0 | 1
             //
             // Should be rendered as:
-            //     <p>a | b</p>
-            //     <ul>
-            //     <li>| -
-            //     0 | 1</li>
-            //     </ul>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<p>a | b</p>\n<ul>\n<li>| -\n0 | 1</li>\n</ul>", "pipetables");
+			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
         // A pipe table with only one header row is allowed:

@@ -28,6 +28,10 @@ namespace Markdig.Extensions.Tables
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
+            if (!pipeline.BlockParsers.Contains<PipeTableBlockParser>())
+            {
+                pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());
+            }
             if (!pipeline.InlineParsers.Contains<PipeTableParser>())
             {
                 pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(Options));

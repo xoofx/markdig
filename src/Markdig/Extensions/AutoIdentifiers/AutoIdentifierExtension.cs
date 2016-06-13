@@ -50,7 +50,7 @@ namespace Markdig.Extensions.AutoIdentifiers
                 headingBlockParser.Closed -= HeadingBlockParser_Closed;
                 headingBlockParser.Closed += HeadingBlockParser_Closed;
             }
-            var paragraphBlockParser = pipeline.BlockParsers.Find<ParagraphBlockParser>();
+            var paragraphBlockParser = pipeline.BlockParsers.FindExact<ParagraphBlockParser>();
             if (paragraphBlockParser != null)
             {
                 // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a Setex heading

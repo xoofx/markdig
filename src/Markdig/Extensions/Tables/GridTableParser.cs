@@ -208,7 +208,7 @@ namespace Markdig.Extensions.Tables
             // with the 2 slices 
             if (gridTable.Count == 0)
             {
-                var parser = processor.Parsers.Find<ParagraphBlockParser>();
+                var parser = processor.Parsers.FindExact<ParagraphBlockParser>();
                 // Discard the grid table
                 var parent = gridTable.Parent;
                 processor.Discard(gridTable);

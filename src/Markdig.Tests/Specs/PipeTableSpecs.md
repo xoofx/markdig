@@ -38,18 +38,27 @@ a | b
 </table>
 ````````````````````````````````
 
-While the following would be considered as a plain paragraph with a list item:
+The following is also considered as a table, even if the second line starts like a list:
 
 ```````````````````````````````` example
 a | b
 - | -
 0 | 1
 .
-<p>a | b</p>
-<ul>
-<li>| -
-0 | 1</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
 ````````````````````````````````
 
 A pipe table with only one header row is allowed:
