@@ -1,25 +1,26 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Medias
+namespace Markdig.Extensions.MediaLinks
 {
     /// <summary>
     /// Extension for extending image Markdown links in case a video or an audio file is linked and output proper link.
     /// </summary>
     /// <seealso cref="Markdig.IMarkdownExtension" />
-    public class MediaExtension : IMarkdownExtension
+    public class MediaLinkExtension : IMarkdownExtension
     {
-        public MediaExtension() : this(new MediaOptions())
+        public MediaLinkExtension() : this(new MediaOptions())
         {
         }
 
-        public MediaExtension(MediaOptions options)
+        public MediaLinkExtension(MediaOptions options)
         {
             Options = options ?? new MediaOptions();
         }

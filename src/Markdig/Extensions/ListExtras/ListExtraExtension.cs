@@ -5,7 +5,7 @@
 using Markdig.Parsers;
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.ListExtra
+namespace Markdig.Extensions.ListExtras
 {
     /// <summary>
     /// Extension for adding new type of list items (a., A., i., I.)

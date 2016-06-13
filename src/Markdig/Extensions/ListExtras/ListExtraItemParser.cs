@@ -5,7 +5,7 @@
 using Markdig.Helpers;
 using Markdig.Parsers;
 
-namespace Markdig.Extensions.ListExtra
+namespace Markdig.Extensions.ListExtras
 {
     /// <summary>
     /// Parser that adds supports for parsing alpha/roman list items (e.g: `a)` or `a.` or `ii.` or `II.`)

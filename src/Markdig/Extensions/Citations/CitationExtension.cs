@@ -7,13 +7,13 @@ using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Cites
+namespace Markdig.Extensions.Citations
 {
     /// <summary>
     /// Extension for cite ""...""
     /// </summary>
     /// <seealso cref="Markdig.IMarkdownExtension" />
-    public class CiteExtension : IMarkdownExtension
+    public class CitationExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
         {

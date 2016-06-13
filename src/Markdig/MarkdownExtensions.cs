@@ -6,19 +6,19 @@ using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.Bootstrap;
-using Markdig.Extensions.Cites;
+using Markdig.Extensions.Citations;
 using Markdig.Extensions.CustomContainers;
 using Markdig.Extensions.DefinitionLists;
 using Markdig.Extensions.Emoji;
-using Markdig.Extensions.EmphasisExtra;
+using Markdig.Extensions.EmphasisExtras;
 using Markdig.Extensions.Figures;
 using Markdig.Extensions.Footers;
 using Markdig.Extensions.Footnotes;
 using Markdig.Extensions.GenericAttributes;
 using Markdig.Extensions.Hardlines;
-using Markdig.Extensions.ListExtra;
+using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
-using Markdig.Extensions.Medias;
+using Markdig.Extensions.MediaLinks;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
 using Markdig.Parsers;
@@ -39,20 +39,20 @@ namespace Markdig
         public static MarkdownPipelineBuilder UseAdvancedExtensions(this MarkdownPipelineBuilder pipeline)
         {
             return pipeline
-                .UseAbbreviation()
-                .UseAutoIdentifier()
-                .UseCite()
-                .UseCustomContainer()
-                .UseDefinitionList()
-                .UseEmphasisExtra()
-                .UseFigure()
-                .UseFooter()
+                .UseAbbreviations()
+                .UseAutoIdentifiers()
+                .UseCitations()
+                .UseCustomContainers()
+                .UseDefinitionLists()
+                .UseEmphasisExtras()
+                .UseFigures()
+                .UseFooters()
                 .UseFootnotes()
-                .UseGridTable()
-                .UseMath()
-                .UseMedia()
-                .UsePipeTable()
-                .UseListExtra()
+                .UseGridTables()
+                .UseMathematics()
+                .UseMediaLinks()
+                .UsePipeTables()
+                .UseListExtras()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -61,7 +61,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseCustomContainer(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseCustomContainers(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<CustomContainerExtension>();
             return pipeline;
@@ -75,11 +75,11 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseMedia(this MarkdownPipelineBuilder pipeline, MediaOptions options = null)
+        public static MarkdownPipelineBuilder UseMediaLinks(this MarkdownPipelineBuilder pipeline, MediaOptions options = null)
         {
-            if (!pipeline.Extensions.Contains<MediaExtension>())
+            if (!pipeline.Extensions.Contains<MediaLinkExtension>())
             {
-                pipeline.Extensions.Add(new MediaExtension(options));
+                pipeline.Extensions.Add(new MediaLinkExtension(options));
             }
             return pipeline;
         }
@@ -92,7 +92,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseAutoIdentifier(this MarkdownPipelineBuilder pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.Default)
+        public static MarkdownPipelineBuilder UseAutoIdentifiers(this MarkdownPipelineBuilder pipeline, AutoIdentifierOptions options = AutoIdentifierOptions.Default)
         {
             if (!pipeline.Extensions.Contains<AutoIdentifierExtension>())
             {
@@ -134,7 +134,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseMath(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseMathematics(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<MathExtension>();
             return pipeline;
@@ -145,7 +145,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseFigure(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseFigures(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FigureExtension>();
             return pipeline;
@@ -156,7 +156,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAbbreviation(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseAbbreviations(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<AbbreviationExtension>();
             return pipeline;
@@ -167,7 +167,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseDefinitionList(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseDefinitionLists(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<DefinitionListExtension>();
             return pipeline;
@@ -181,7 +181,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UsePipeTable(this MarkdownPipelineBuilder pipeline, PipeTableOptions options = null)
+        public static MarkdownPipelineBuilder UsePipeTables(this MarkdownPipelineBuilder pipeline, PipeTableOptions options = null)
         {
             if (!pipeline.Extensions.Contains<PipeTableExtension>())
             {
@@ -195,7 +195,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseGridTable(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseGridTables(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<GridTableExtension>();
             return pipeline;
@@ -207,9 +207,9 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseCite(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseCitations(this MarkdownPipelineBuilder pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<CiteExtension>();
+            pipeline.Extensions.AddIfNotAlready<CitationExtension>();
             return pipeline;
         }
 
@@ -218,7 +218,7 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseFooter(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseFooters(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<FooterExtension>();
             return pipeline;
@@ -254,7 +254,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseEmphasisExtra(this MarkdownPipelineBuilder pipeline, EmphasisExtraOptions options = EmphasisExtraOptions.Default)
+        public static MarkdownPipelineBuilder UseEmphasisExtras(this MarkdownPipelineBuilder pipeline, EmphasisExtraOptions options = EmphasisExtraOptions.Default)
         {
             if (!pipeline.Extensions.Contains<EmphasisExtraExtension>())
             {
@@ -270,7 +270,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseListExtra(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseListExtras(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<ListExtraExtension>();
             return pipeline;
@@ -322,7 +322,7 @@ namespace Markdig
         /// <summary>
         /// Configures the pipeline using a string that defines the extensions to activate.
         /// </summary>
-        /// <param name="pipeline">The pipeline (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTable"/> and <see cref="UseGridTable"/></param>
+        /// <param name="pipeline">The pipeline (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTables"/> and <see cref="UseGridTables"/></param>
         /// <param name="extensions">The extensions to activate as a string</param>
         /// <returns>The modified pipeline</returns>
         public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string extensions)
@@ -340,13 +340,13 @@ namespace Markdig
                         pipeline.UseAdvancedExtensions();
                         break;
                     case "pipetables":
-                        pipeline.UsePipeTable();
+                        pipeline.UsePipeTables();
                         break;
-                    case "emphasisextra":
-                        pipeline.UseEmphasisExtra();
+                    case "emphasisextras":
+                        pipeline.UseEmphasisExtras();
                         break;
-                    case "listextra":
-                        pipeline.UseListExtra();
+                    case "listextras":
+                        pipeline.UseListExtras();
                         break;
                     case "hardlinebreak":
                         pipeline.UseSoftlineBreakAsHardlineBreak();
@@ -355,46 +355,46 @@ namespace Markdig
                         pipeline.UseFootnotes();
                         break;
                     case "footers":
-                        pipeline.UseFooter();
+                        pipeline.UseFooters();
                         break;
-                    case "cites":
-                        pipeline.UseCite();
+                    case "citations":
+                        pipeline.UseCitations();
                         break;
                     case "attributes":
                         pipeline.UseGenericAttributes();
                         break;
                     case "gridtables":
-                        pipeline.UseGridTable();
+                        pipeline.UseGridTables();
                         break;
                     case "abbreviations":
-                        pipeline.UseAbbreviation();
+                        pipeline.UseAbbreviations();
                         break;
                     case "emojis":
                         pipeline.UseEmojiAndSmiley();
                         break;
                     case "definitionlists":
-                        pipeline.UseDefinitionList();
+                        pipeline.UseDefinitionLists();
                         break;
                     case "customcontainers":
-                        pipeline.UseCustomContainer();
+                        pipeline.UseCustomContainers();
                         break;
                     case "figures":
-                        pipeline.UseFigure();
+                        pipeline.UseFigures();
                         break;
-                    case "math":
-                        pipeline.UseMath();
+                    case "mathematics":
+                        pipeline.UseMathematics();
                         break;
                     case "bootstrap":
                         pipeline.UseBootstrap();
                         break;
-                    case "medias":
-                        pipeline.UseMedia();
+                    case "medialinks":
+                        pipeline.UseMediaLinks();
                         break;
                     case "smartypants":
                         pipeline.UseSmartyPants();
                         break;
                     case "autoidentifiers":
-                        pipeline.UseAutoIdentifier();
+                        pipeline.UseAutoIdentifiers();
                         break;
                     default:
                         throw new ArgumentException($"unknown extension {extension}");

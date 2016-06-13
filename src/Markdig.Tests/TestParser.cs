@@ -42,20 +42,20 @@ namespace Markdig.Tests
                 yield return new KeyValuePair<string, MarkdownPipeline>("default", new MarkdownPipelineBuilder().Build());
 
                 yield return new KeyValuePair<string, MarkdownPipeline>("advanced", new MarkdownPipelineBuilder()  // Use similar to advanced extension without auto-identifier
-                 .UseAbbreviation()
-                //.UseAutoIdentifier()
-                .UseCite()
-                .UseCustomContainer()
-                .UseDefinitionList()
-                .UseEmphasisExtra()
-                .UseFigure()
-                .UseFooter()
+                 .UseAbbreviations()
+                //.UseAutoIdentifiers()
+                .UseCitations()
+                .UseCustomContainers()
+                .UseDefinitionLists()
+                .UseEmphasisExtras()
+                .UseFigures()
+                .UseFooters()
                 .UseFootnotes()
-                .UseGridTable()
-                .UseMath()
-                .UseMedia()
-                .UsePipeTable()
-                .UseListExtra()
+                .UseGridTables()
+                .UseMathematics()
+                .UseMediaLinks()
+                .UsePipeTables()
+                .UseListExtras()
                 .UseGenericAttributes().Build());
 
                 yield break;

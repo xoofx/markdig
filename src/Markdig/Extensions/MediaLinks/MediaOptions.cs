@@ -1,13 +1,14 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 
-namespace Markdig.Extensions.Medias
+namespace Markdig.Extensions.MediaLinks
 {
     /// <summary>
-    /// Options for the <see cref="MediaExtension"/>.
+    /// Options for the <see cref="MediaLinkExtension"/>.
     /// </summary>
     public class MediaOptions
     {

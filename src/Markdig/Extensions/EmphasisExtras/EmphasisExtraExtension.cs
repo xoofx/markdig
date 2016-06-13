@@ -7,7 +7,7 @@ using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.EmphasisExtra
+namespace Markdig.Extensions.EmphasisExtras
 {
     /// <summary>
     /// Extension for strikethrough, subscript, superscript, inserted and marked.

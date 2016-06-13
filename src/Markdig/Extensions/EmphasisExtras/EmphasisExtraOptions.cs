@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Markdig.Extensions.EmphasisExtra
+namespace Markdig.Extensions.EmphasisExtras
 {
     /// <summary>
     /// Options for enabling support for extra emphasis.
