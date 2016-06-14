@@ -26,6 +26,9 @@ namespace Markdig.Parsers
         private readonly InlineProcessor inlineProcessor;
         private readonly MarkdownDocument document;
         private readonly ProcessDocumentDelegate documentProcessed;
+        private readonly bool preciseSourceLocation;
+
+        private readonly LineReader lineReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownParser" /> class.
@@ -39,6 +42,8 @@ namespace Markdig.Parsers
             if (reader == null) throw new ArgumentNullException(nameof(reader));
             if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
             Reader = reader;
+            lineReader = new LineReader(Reader, pipeline.PreciseSourceLocation);
+            preciseSourceLocation = pipeline.PreciseSourceLocation;
 
             // Initialize the pipeline
             var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
@@ -53,7 +58,7 @@ namespace Markdig.Parsers
             // Initialize the inline parsers
             var inlineParserList = new InlineParserList();
             inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList)
+            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList, pipeline.PreciseSourceLocation)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -101,9 +106,10 @@ namespace Markdig.Parsers
         {
             while (true)
             {
-                // TODO: A TextReader doesn't allow to precisely track position in file due to line endings
-                var lineText = Reader.ReadLine();
-
+                // Get the precise position of the begining of the line
+                var position = lineReader.SourcePosition;
+                var lineText = lineReader.ReadLine();
+                
                 // If this is the end of file and the last line is empty
                 if (lineText == null)
                 {
@@ -111,6 +117,7 @@ namespace Markdig.Parsers
                 }
                 lineText = FixupZero(lineText);
 
+                blockProcessor.SourceLinePosition = position;
                 blockProcessor.ProcessLine(new StringSlice(lineText));
             }
             blockProcessor.CloseAll(true);

@@ -108,15 +108,11 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="lineOffsets">The position of the `\n` line offsets from the beginning of the returned slice.</param>
         /// <returns>A single slice concatenating the lines of this instance</returns>
-        public StringSlice ToSlice(List<int> lineOffsets = null)
+        public StringSlice ToSlice(List<LineOffset> lineOffsets = null)
         {
             // Optimization case when no lines
             if (Count == 0)
             {
-                if (lineOffsets != null)
-                {
-                    lineOffsets.Add(1);
-                }
                 return new StringSlice(string.Empty);
             }
 
@@ -125,7 +121,7 @@ namespace Markdig.Helpers
             {
                 if (lineOffsets != null)
                 {
-                    lineOffsets.Add(Lines[0].Slice.End + 1);
+                    lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Slice.End + 1));
                 }
                 return Lines[0];
             }
@@ -138,7 +134,7 @@ namespace Markdig.Helpers
                 {
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(builder.Length + 1); // Add 1 for \n and 1 for next line
+                        lineOffsets.Add(new LineOffset(Lines[i-1].Position, builder.Length + 1)); // Add 1 for \n and 1 for next line
                     }
                     builder.Append('\n');
                 }
@@ -149,7 +145,7 @@ namespace Markdig.Helpers
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(builder.Length); // Add 1 for \0
+                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, builder.Length)); // Add 1 for \0
             }
             var str = builder.ToString();
             builder.Length = 0;
@@ -264,6 +260,19 @@ namespace Markdig.Helpers
                 }
                 return hasSpaces;
             }
+        }
+
+        public struct LineOffset
+        {
+            public LineOffset(int linePosition, int endOfLine)
+            {
+                LinePosition = linePosition;
+                EndOfLine = endOfLine;
+            }
+
+            public readonly int LinePosition;
+
+            public readonly int EndOfLine;
         }
     }
 }

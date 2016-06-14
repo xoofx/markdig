@@ -69,7 +69,7 @@ namespace Markdig.Tests
             }
         }
 
-        private static string DisplaySpaceAndTabs(string text)
+        public static string DisplaySpaceAndTabs(string text)
         {
             // Output special characters to check correctly the results
             return text.Replace('\t', '→').Replace(' ', '·');

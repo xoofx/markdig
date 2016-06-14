@@ -57,6 +57,17 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Uses precise source code location (useful for syntax highlighting).
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UsePreciseSourceLocation(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.PreciseSourceLocation = true;
+            return pipeline;
+        }
+
+        /// <summary>
         /// Uses the custom container extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>

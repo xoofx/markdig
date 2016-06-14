@@ -144,6 +144,8 @@ namespace Markdig.Parsers.Inlines
                 return false;
             }
 
+            var startPosition = slice.Start;
+
             int delimiterCount = 0;
             char c;
             do
@@ -181,6 +183,8 @@ namespace Markdig.Parsers.Inlines
                 {
                     DelimiterCount = delimiterCount,
                     Type = delimiterType,
+                    SourceStartPosition = processor.GetSourcePosition(startPosition),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
                 };
 
                 processor.Inline = delimiter;
@@ -241,6 +245,9 @@ namespace Markdig.Parsers.Inlines
                                     IsDouble = isStrong
                                 };
 
+                            emphasis.SourceStartPosition = openDelimiter.SourceStartPosition;
+                            emphasis.SourceEndPosition = closeDelimiter.SourceEndPosition;
+
                             var embracer = (ContainerInline)openDelimiter;
 
                             // Go down to the first emphasis with a lower level
@@ -277,7 +284,9 @@ namespace Markdig.Parsers.Inlines
                                 var literal = new LiteralInline()
                                 {
                                     Content = new StringSlice(literalDelimiter.ToLiteral()),
-                                    IsClosed = true
+                                    IsClosed = true,
+                                    SourceStartPosition = literalDelimiter.SourceStartPosition,
+                                    SourceEndPosition = literalDelimiter.SourceEndPosition
                                 };
 
                                 literalDelimiter.ReplaceBy(literal);
@@ -327,7 +336,9 @@ namespace Markdig.Parsers.Inlines
                             var literal = new LiteralInline()
                             {
                                 Content = new StringSlice(closeDelimiter.ToLiteral()),
-                                IsClosed = true
+                                IsClosed = true,
+                                SourceStartPosition = closeDelimiter.SourceStartPosition,
+                                SourceEndPosition = closeDelimiter.SourceEndPosition
                             };
 
                             closeDelimiter.ReplaceBy(literal);
@@ -351,7 +362,9 @@ namespace Markdig.Parsers.Inlines
                 var literal = new LiteralInline()
                 {
                     Content = new StringSlice(delimiter.ToLiteral()),
-                    IsClosed = true
+                    IsClosed = true,
+                    SourceStartPosition = delimiter.SourceStartPosition,
+                    SourceEndPosition = delimiter.SourceEndPosition
                 };
 
                 delimiter.ReplaceBy(literal);

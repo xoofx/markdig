@@ -98,6 +98,19 @@ namespace Markdig
         /// <summary>
         /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
+        /// <param name="markdown">The markdown text.</param>
+        /// <param name="pipeline">The pipeline used for the parsing.</param>
+        /// <returns>An AST Markdown document</returns>
+        /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
+        public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline)
+        {
+            if (markdown == null) throw new ArgumentNullException(nameof(markdown));
+            return Parse(new StringReader(markdown), pipeline);
+        }
+
+        /// <summary>
+        /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
+        /// </summary>
         /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>

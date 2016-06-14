@@ -48,17 +48,17 @@ namespace Markdig.Parsers
 
             var line = state.Line;
             line.NextChar();
-            var result = TryParseTagType16(state, line, state.ColumnBeforeIndent);
+            var result = TryParseTagType16(state, line, state.ColumnBeforeIndent, state.SourcePosition);
 
             // HTML blocks of type 7 cannot interrupt a paragraph:
             if (result == BlockState.None && !(state.CurrentBlock is ParagraphBlock))
             {
-                result = TryParseTagType7(state, line, state.ColumnBeforeIndent);
+                result = TryParseTagType7(state, line, state.ColumnBeforeIndent, state.SourcePosition);
             }
             return result;
         }
 
-        private BlockState TryParseTagType7(BlockProcessor state, StringSlice line, int startColumn)
+        private BlockState TryParseTagType7(BlockProcessor state, StringSlice line, int startColumn, int startPosition)
         {
             var builder = StringBuilderCache.Local();
             var c = line.CurrentChar;
@@ -84,7 +84,7 @@ namespace Markdig.Parsers
 
                 if (hasOnlySpaces)
                 {
-                    result = CreateHtmlBlock(state, HtmlBlockType.NonInterruptingBlock, startColumn);
+                    result = CreateHtmlBlock(state, HtmlBlockType.NonInterruptingBlock, startColumn, startPosition);
                 }
             }
 
@@ -92,7 +92,7 @@ namespace Markdig.Parsers
             return result;
         }
 
-        private BlockState TryParseTagType16(BlockProcessor state, StringSlice line, int startColumn)
+        private BlockState TryParseTagType16(BlockProcessor state, StringSlice line, int startColumn, int startPosition)
         {
             char c;
             c = line.CurrentChar;
@@ -101,15 +101,15 @@ namespace Markdig.Parsers
                 c = line.NextChar();
                 if (c == '-' && line.PeekChar(1) == '-')
                 {
-                    return CreateHtmlBlock(state, HtmlBlockType.Comment, startColumn); // group 2
+                    return CreateHtmlBlock(state, HtmlBlockType.Comment, startColumn, startPosition); // group 2
                 }
                 if (c.IsAlphaUpper())
                 {
-                    return CreateHtmlBlock(state, HtmlBlockType.DocumentType, startColumn); // group 4
+                    return CreateHtmlBlock(state, HtmlBlockType.DocumentType, startColumn, startPosition); // group 4
                 }
                 if (c == '[' && line.Match("CDATA[", 1))
                 {
-                    return CreateHtmlBlock(state, HtmlBlockType.CData, startColumn); // group 5
+                    return CreateHtmlBlock(state, HtmlBlockType.CData, startColumn, startPosition); // group 5
                 }
 
                 return BlockState.None;
@@ -117,7 +117,7 @@ namespace Markdig.Parsers
 
             if (c == '?')
             {
-                return CreateHtmlBlock(state, HtmlBlockType.ProcessingInstruction, startColumn); // group 3
+                return CreateHtmlBlock(state, HtmlBlockType.ProcessingInstruction, startColumn, startPosition); // group 3
             }
 
             var hasLeadingClose = c == '/';
@@ -164,10 +164,10 @@ namespace Markdig.Parsers
                 {
                     return BlockState.None;
                 }
-                return CreateHtmlBlock(state, HtmlBlockType.ScriptPreOrStyle, startColumn);
+                return CreateHtmlBlock(state, HtmlBlockType.ScriptPreOrStyle, startColumn, startPosition);
             }
 
-            return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock, startColumn);
+            return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock, startColumn, startPosition);
         }
 
         private BlockState MatchEnd(BlockProcessor state, HtmlBlock htmlBlock)
@@ -177,58 +177,77 @@ namespace Markdig.Parsers
             // Early exit if it is not starting by an HTML tag
             var line = state.Line;
             var c = line.CurrentChar;
+            var result = BlockState.Continue;
             switch (htmlBlock.Type)
             {
                 case HtmlBlockType.Comment:
                     if (line.Search("-->"))
                     {
-                        return BlockState.Break;
+                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
                     if (line.Search("]]>"))
                     {
-                        return BlockState.Break;
+                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
                     if (line.Search("?>"))
                     {
-                        return BlockState.Break;
+                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
                     if (line.Search(">"))
                     {
-                        return BlockState.Break;
+                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
                     if (line.SearchLowercase("</script>") || line.SearchLowercase("</pre>") || line.SearchLowercase("</style>"))
                     {
-                        return BlockState.Break;
+                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.InterruptingBlock:
                     if (state.IsBlankLine)
                     {
-                        return BlockState.BreakDiscard;
+                        result = BlockState.BreakDiscard;
                     }
                     break;
                 case HtmlBlockType.NonInterruptingBlock:
                     if (state.IsBlankLine)
                     {
-                        return BlockState.BreakDiscard;
+                        result = BlockState.BreakDiscard;
                     }
                     break;
             }
 
-            return BlockState.Continue;
+            // Update only if we don't have a break discard
+            if (result != BlockState.BreakDiscard)
+            {
+                htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+            }
+
+            return result;
         }
 
-        private BlockState CreateHtmlBlock(BlockProcessor state, HtmlBlockType type, int startColumn)
+        private BlockState CreateHtmlBlock(BlockProcessor state, HtmlBlockType type, int startColumn, int startPosition)
         {
-            state.NewBlocks.Push(new HtmlBlock(this) {Column = startColumn, Type = type});
+            state.NewBlocks.Push(new HtmlBlock(this)
+            {
+                Column = startColumn,
+                Type = type,
+                SourceStartPosition = startPosition,
+                // By default, setup to the end of line
+                SourceEndPosition = startPosition + state.Line.End
+            });
             return BlockState.Continue;
         }
 

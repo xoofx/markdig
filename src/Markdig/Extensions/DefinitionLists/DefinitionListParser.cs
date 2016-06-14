@@ -82,7 +82,7 @@ namespace Markdig.Extensions.DefinitionLists
                     Line = line.Line,
                     IsOpen = false
                 };
-                term.AppendLine(ref line.Slice, line.Column, line.Line);
+                term.AppendLine(ref line.Slice, line.Column, line.Line, line.Position);
                 definitionItem.Add(term);
             }
 

@@ -31,6 +31,9 @@ namespace Markdig
             DebugLog = debugLog;
             DocumentProcessed = documentProcessed;
         }
+
+        internal bool PreciseSourceLocation { get; set; }
+
         internal OrderedList<IMarkdownExtension> Extensions { get; }
 
         internal BlockParserList BlockParsers { get; }

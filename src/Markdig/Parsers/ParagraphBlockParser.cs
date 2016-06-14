@@ -20,7 +20,12 @@ namespace Markdig.Parsers
             }
 
             // We continue trying to match by default
-            processor.NewBlocks.Push(new ParagraphBlock(this) {Column = processor.Column});
+            processor.NewBlocks.Push(new ParagraphBlock(this)
+            {
+                Column = processor.Column,
+                SourceStartPosition = processor.SourcePosition,
+                SourceEndPosition = processor.SourceLinePosition + processor.Line.End
+            });
             return BlockState.Continue;
         }
 
@@ -35,6 +40,8 @@ namespace Markdig.Parsers
             {
                 return TryParseSetexHeading(processor, block);
             }
+
+            block.SourceEndPosition = processor.SourceLinePosition + processor.Line.End;
             return BlockState.Continue;
         }
 
@@ -121,6 +128,8 @@ namespace Markdig.Parsers
                     var heading = new HeadingBlock(this)
                     {
                         Column = paragraph.Column,
+                        SourceStartPosition = paragraph.SourceStartPosition,
+                        SourceEndPosition = state.SourceLinePosition + line.Start,
                         Level = level,
                         Lines = paragraph.Lines,
                     };

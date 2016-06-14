@@ -33,7 +33,13 @@ namespace Markdig.Parsers.Inlines
             var saved = slice;
             if (LinkHelper.TryParseAutolink(ref slice, out link, out isEmail))
             {
-                processor.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
+                processor.Inline = new AutolinkInline()
+                {
+                    IsEmail = isEmail,
+                    Url = link,
+                    SourceStartPosition = processor.GetSourcePosition(saved.Start),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                };
             }
             else if (EnableHtmlParsing)
             {
@@ -44,7 +50,12 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
 
-                processor.Inline = new HtmlInline() { Tag = htmlTag };
+                processor.Inline = new HtmlInline()
+                {
+                    Tag = htmlTag,
+                    SourceStartPosition = processor.GetSourcePosition(saved.Start),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                };
             }
 
             return true;

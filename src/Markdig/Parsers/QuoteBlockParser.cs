@@ -28,6 +28,7 @@ namespace Markdig.Parsers
             }
 
             var column = processor.Column;
+            var sourcePosition = processor.SourcePosition;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
@@ -37,7 +38,13 @@ namespace Markdig.Parsers
             {
                 processor.NextColumn();
             }
-            processor.NewBlocks.Push(new QuoteBlock(this) {QuoteChar = quoteChar, Column = column});
+            processor.NewBlocks.Push(new QuoteBlock(this)
+            {
+                QuoteChar = quoteChar,
+                Column = column,
+                SourceStartPosition = sourcePosition,
+                SourceEndPosition = processor.SourcePosition
+            });
             return BlockState.Continue;
         }
 
@@ -55,6 +62,7 @@ namespace Markdig.Parsers
             var c = processor.CurrentChar;
             if (c != quote.QuoteChar)
             {
+                block.SourceEndPosition = processor.SourcePosition - 1;
                 return processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
             }
 
@@ -64,6 +72,7 @@ namespace Markdig.Parsers
                 processor.NextChar(); // Skip following space
             }
 
+            block.SourceEndPosition = processor.SourcePosition - 1;
             return BlockState.Continue;
         }
     }

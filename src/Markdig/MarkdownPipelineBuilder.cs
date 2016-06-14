@@ -74,6 +74,11 @@ namespace Markdig
         public StringBuilderCache StringBuilderCache { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to enable precise source location (slower parsing but accurate position for block and inline elements)
+        /// </summary>
+        public bool PreciseSourceLocation { get; set; }
+
+        /// <summary>
         /// Gets or sets the debug log.
         /// </summary>
         public TextWriter DebugLog { get; set; }
@@ -111,7 +116,9 @@ namespace Markdig
                 extension.Setup(this);
             }
 
-            pipeline = new MarkdownPipeline(new OrderedList<IMarkdownExtension>(Extensions), new BlockParserList(BlockParsers), new InlineParserList(InlineParsers), StringBuilderCache, DebugLog, GetDocumentProcessed);
+            pipeline = new MarkdownPipeline(new OrderedList<IMarkdownExtension>(Extensions),
+                new BlockParserList(BlockParsers), new InlineParserList(InlineParsers), StringBuilderCache, DebugLog,
+                GetDocumentProcessed) {PreciseSourceLocation = PreciseSourceLocation};
             return pipeline;
         }
     }

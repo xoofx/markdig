@@ -32,6 +32,8 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
+            var startPosition = processor.SourcePosition;
+
             var line = processor.Line;
 
             // 4.1 Thematic breaks 
@@ -83,7 +85,12 @@ namespace Markdig.Parsers
             }
 
             // Push a new block
-            processor.NewBlocks.Push(new ThematicBreakBlock(this) { Column = processor.Column });
+            processor.NewBlocks.Push(new ThematicBreakBlock(this)
+            {
+                Column = processor.Column,
+                SourceStartPosition = startPosition,
+                SourceEndPosition = processor.SourcePosition - 1
+            });
             return BlockState.BreakDiscard;
         }
     }

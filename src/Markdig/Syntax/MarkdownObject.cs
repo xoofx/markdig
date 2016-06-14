@@ -19,6 +19,21 @@ namespace Markdig.Syntax
         private int count;
 
         /// <summary>
+        /// Gets or sets the source position.
+        /// </summary>
+        public int SourceStartPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the length of the source.
+        /// </summary>
+        public int SourceEndPosition { get; set; }
+
+        /// <summary>
+        /// Gets the character length of this element within the original source code.
+        /// </summary>
+        public int SourceLength => SourceEndPosition - SourceStartPosition + 1;
+
+        /// <summary>
         /// Stores a key/value pair for this instance.
         /// </summary>
         /// <param name="key">The key.</param>

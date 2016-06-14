@@ -34,10 +34,13 @@ namespace Markdig.Parsers.Inlines
                 return false;
             }
 
+            var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
             processor.Inline = !EnableSoftAsHard && (slice.Start == 0 || !hasDoubleSpacesBefore) ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
+            processor.Inline.SourceStartPosition = processor.GetSourcePosition(startPosition);
+            processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
             return true;
         }
     }

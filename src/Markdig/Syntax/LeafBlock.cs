@@ -46,14 +46,15 @@ namespace Markdig.Syntax
         /// <param name="slice">The slice.</param>
         /// <param name="column">The column.</param>
         /// <param name="line">The line.</param>
-        public void AppendLine(ref StringSlice slice, int column, int line)
+        /// <param name="sourceLinePosition"></param>
+        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition)
         {
             if (Lines.Lines == null)
             {
                 Lines = new StringLineGroup(4);
             }
 
-            var stringLine = new StringLine(ref slice, line, column);
+            var stringLine = new StringLine(ref slice, line, column, sourceLinePosition);
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {

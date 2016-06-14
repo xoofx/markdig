@@ -152,6 +152,9 @@ namespace Markdig.Parsers
                     return BlockState.Continue;
                 }
 
+                // Update list-item source end position
+                listItem.SourceEndPosition = state.SourceLinePosition + state.Line.End;
+                
                 return BlockState.Continue;
             }
 
@@ -169,6 +172,9 @@ namespace Markdig.Parsers
                 {
                     state.GoToColumn(columWidth);
                 }
+
+                // Update list-item source end position
+                listItem.SourceEndPosition = state.SourceLinePosition + state.Line.End;
 
                 return BlockState.Continue;
             }
@@ -189,6 +195,8 @@ namespace Markdig.Parsers
 
             var initColumnBeforeIndent = state.ColumnBeforeIndent;
             var initColumn = state.Column;
+            var sourcePosition = state.SourcePosition;
+            var sourceEndPosition = state.SourceLinePosition + state.Line.End;
 
             var c = state.CurrentChar;
             var itemParser = mapItemParsers[c];
@@ -249,7 +257,9 @@ namespace Markdig.Parsers
             var newListItem = new ListItemBlock(this)
             {
                 Column = initColumn,
-                ColumnWidth = columnWidth
+                ColumnWidth = columnWidth,
+                SourceStartPosition = sourcePosition,
+                SourceEndPosition = sourceEndPosition
             };
             state.NewBlocks.Push(newListItem);
 
@@ -276,6 +286,8 @@ namespace Markdig.Parsers
                 var newList = new ListBlock(this)
                 {
                     Column = initColumn,
+                    SourceStartPosition = sourcePosition,
+                    SourceEndPosition = sourceEndPosition,
                     IsOrdered = isOrdered,
                     BulletType = listInfo.BulletType,
                     OrderedDelimiter = listInfo.OrderedDelimiter,
@@ -340,6 +352,12 @@ namespace Markdig.Parsers
                     isLastElement = false;
                 }
                 isLastListItem = false;
+            }
+
+            // Update end-position for the list
+            if (listBlock.Count > 0)
+            {
+                listBlock.SourceEndPosition = listBlock[listBlock.Count - 1].SourceEndPosition;
             }
 
             return true;

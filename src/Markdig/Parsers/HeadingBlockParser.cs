@@ -45,6 +45,7 @@ namespace Markdig.Parsers
             // inline content. The heading level is equal to the number of # characters in the 
             // opening sequence.
             var column = processor.Column;
+            var sourcePosition = processor.SourcePosition;
             var line = processor.Line;
             var c = line.CurrentChar;
             var matchingChar = c;
@@ -69,7 +70,8 @@ namespace Markdig.Parsers
                 {
                     HeaderChar = matchingChar,
                     Level = leadingCount,
-                    Column = column
+                    Column = column,
+                    SourceStartPosition =  sourcePosition
                 };
                 processor.NewBlocks.Push(headingBlock);
 
@@ -115,6 +117,9 @@ namespace Markdig.Parsers
                         }
                     }
                 }
+
+                // Setup the source end position of this element
+                headingBlock.SourceEndPosition = processor.SourceLinePosition + processor.Line.End;
 
                 // We expect a single line, so don't continue
                 return BlockState.Break;

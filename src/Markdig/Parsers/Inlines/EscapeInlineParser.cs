@@ -23,7 +23,12 @@ namespace Markdig.Parsers.Inlines
             var c = slice.NextChar();
             if (c.IsAsciiPunctuation())
             {
-                processor.Inline = new LiteralInline() {Content = new StringSlice(new string(c, 1))};
+                processor.Inline = new LiteralInline()
+                {
+                    Content = new StringSlice(new string(c, 1)),
+                    SourceStartPosition = processor.GetSourcePosition(slice.Start)
+                };
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
                 slice.NextChar();
                 return true;
             }
@@ -31,7 +36,11 @@ namespace Markdig.Parsers.Inlines
             // A backslash at the end of the line is a [hard line break]:
             if (c == '\n')
             {
-                processor.Inline = new HardlineBreakInline();
+                processor.Inline = new HardlineBreakInline()
+                {
+                    SourceStartPosition = processor.GetSourcePosition(slice.Start)
+                };
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
                 slice.NextChar();
                 return true;
             }

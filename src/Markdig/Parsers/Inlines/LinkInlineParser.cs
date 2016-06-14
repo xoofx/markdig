@@ -28,6 +28,8 @@ namespace Markdig.Parsers.Inlines
 
             var c = slice.CurrentChar;
 
+            var startPosition = processor.GetSourcePosition(slice.Start);
+
             bool isImage = false;
             if (c == '!')
             {
@@ -63,7 +65,9 @@ namespace Markdig.Parsers.Inlines
                     {
                         Type = DelimiterType.Open,
                         Label = label,
-                        IsImage = isImage
+                        IsImage = isImage,
+                        SourceStartPosition = startPosition,
+                        SourceEndPosition = processor.GetSourcePosition(slice.Start - 1)
                     };
                     return true;
 
@@ -86,7 +90,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineProcessor state, string label, bool isImage, Inline child = null)
+        private bool ProcessLinkReference(InlineProcessor state, string label, bool isImage, Inline child, int startPosition, int endPosition)
         {
             bool isValidLink = false;
             LinkReferenceDefinition linkRef;
@@ -108,6 +112,8 @@ namespace Markdig.Parsers.Inlines
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         IsImage = isImage,
+                        SourceStartPosition = startPosition,
+                        SourceEndPosition = endPosition
                     };
                 }
 
@@ -119,7 +125,10 @@ namespace Markdig.Parsers.Inlines
                         child = new LiteralInline()
                         {
                             Content = new StringSlice(label),
-                            IsClosed = true
+                            IsClosed = true,
+                            // Not exact but we leave it like this
+                            SourceStartPosition = startPosition,
+                            SourceEndPosition = endPosition
                         };
                         containerLink.AppendChild(child);
                     }
@@ -175,7 +184,9 @@ namespace Markdig.Parsers.Inlines
                 {
                     inlineState.Inline = new LiteralInline()
                     {
-                        Content = new StringSlice("[")
+                        Content = new StringSlice("["),
+                        SourceStartPosition = openParent.SourceStartPosition,
+                        SourceEndPosition = openParent.SourceStartPosition
                     };
                     openParent.ReplaceBy(inlineState.Inline);
                     return false;
@@ -200,6 +211,8 @@ namespace Markdig.Parsers.Inlines
                                 Url = HtmlHelper.Unescape(url),
                                 Title = HtmlHelper.Unescape(title),
                                 IsImage = openParent.IsImage,
+                                SourceStartPosition = openParent.SourceStartPosition,
+                                SourceEndPosition = inlineState.GetSourcePosition(text.Start -1)
                             };
 
                             openParent.ReplaceBy(link);
@@ -242,8 +255,7 @@ namespace Markdig.Parsers.Inlines
 
                         if (label != null || LinkHelper.TryParseLabel(ref text, true, out label))
                         {
-                            if (ProcessLinkReference(inlineState, label, openParent.IsImage,
-                                openParent.FirstChild))
+                            if (ProcessLinkReference(inlineState, label, openParent.IsImage, openParent.FirstChild, openParent.SourceStartPosition, inlineState.GetSourcePosition(text.Start - 1)))
                             {
                                 // Remove the open parent
                                 openParent.Remove();
