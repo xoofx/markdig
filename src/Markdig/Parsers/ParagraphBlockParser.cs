@@ -23,8 +23,8 @@ namespace Markdig.Parsers
             processor.NewBlocks.Push(new ParagraphBlock(this)
             {
                 Column = processor.Column,
-                SourceStartPosition = processor.SourcePosition,
-                SourceEndPosition = processor.SourceLinePosition + processor.Line.End
+                SourceStartPosition = processor.Line.Start,
+                SourceEndPosition = processor.Line.End
             });
             return BlockState.Continue;
         }
@@ -41,7 +41,7 @@ namespace Markdig.Parsers
                 return TryParseSetexHeading(processor, block);
             }
 
-            block.SourceEndPosition = processor.SourceLinePosition + processor.Line.End;
+            block.SourceEndPosition = processor.Line.End;
             return BlockState.Continue;
         }
 
@@ -129,7 +129,7 @@ namespace Markdig.Parsers
                     {
                         Column = paragraph.Column,
                         SourceStartPosition = paragraph.SourceStartPosition,
-                        SourceEndPosition = state.SourceLinePosition + line.Start,
+                        SourceEndPosition = line.Start,
                         Level = level,
                         Lines = paragraph.Lines,
                     };

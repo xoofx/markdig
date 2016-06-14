@@ -153,7 +153,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.SourceEndPosition = state.SourceLinePosition + state.Line.End;
+                listItem.SourceEndPosition = state.Line.End;
                 
                 return BlockState.Continue;
             }
@@ -174,7 +174,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.SourceEndPosition = state.SourceLinePosition + state.Line.End;
+                listItem.SourceEndPosition = state.Line.End;
 
                 return BlockState.Continue;
             }
@@ -195,8 +195,8 @@ namespace Markdig.Parsers
 
             var initColumnBeforeIndent = state.ColumnBeforeIndent;
             var initColumn = state.Column;
-            var sourcePosition = state.SourcePosition;
-            var sourceEndPosition = state.SourceLinePosition + state.Line.End;
+            var sourcePosition = state.Start;
+            var sourceEndPosition = state.Line.End;
 
             var c = state.CurrentChar;
             var itemParser = mapItemParsers[c];

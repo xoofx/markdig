@@ -60,7 +60,7 @@ namespace Markdig.Extensions.Figures
             if (!line.IsEmpty)
             {
                 var caption = new FigureCaption(this) {IsOpen = false};
-                caption.AppendLine(ref line, line.Start, processor.LineIndex, processor.SourceLinePosition);
+                caption.AppendLine(ref line, line.Start, processor.LineIndex, line.Start);
                 figure.Add(caption);
             }
             processor.NewBlocks.Push(figure);
@@ -92,7 +92,7 @@ namespace Markdig.Extensions.Figures
                 if (!line.IsEmpty)
                 {
                     var caption = new FigureCaption(this) {IsOpen = false};
-                    caption.AppendLine(ref line, line.Start, processor.LineIndex, processor.SourceLinePosition);
+                    caption.AppendLine(ref line, line.Start, processor.LineIndex, line.Start);
                     figure.Add(caption);
                 }
 

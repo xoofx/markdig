@@ -99,16 +99,6 @@ namespace Markdig.Parsers
         public StringSlice Line;
 
         /// <summary>
-        /// Gets the source position of the current character, only valid if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is set to <c>true</c>
-        /// </summary>
-        public int SourcePosition => SourceLinePosition + Start;
-
-        /// <summary>
-        /// Gets the source position of the current line, only valid if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is set to <c>true</c>
-        /// </summary>
-        internal int SourceLinePosition { get; set; }
-
-        /// <summary>
         /// Gets the index of the line in the source text.
         /// </summary>
         public int LineIndex { get; set; }
@@ -556,7 +546,7 @@ namespace Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex, SourceLinePosition);
+                        leaf.AppendLine(ref Line, Column, LineIndex, Line.Start);
                     }
 
                     if (NewBlocks.Count > 0)
@@ -679,7 +669,7 @@ namespace Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
-                        paragraph.AppendLine(ref Line, Column, LineIndex, SourceLinePosition);
+                        paragraph.AppendLine(ref Line, Column, LineIndex, Line.Start);
                     }
 
                     // We have just found a lazy continuation for a paragraph, early exit
@@ -732,7 +722,7 @@ namespace Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex, SourceLinePosition);
+                        leaf.AppendLine(ref Line, Column, LineIndex, Line.Start);
                     }
 
                     if (newBlocks.Count > 0)

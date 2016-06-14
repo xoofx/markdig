@@ -47,13 +47,14 @@ namespace Markdig.Parsers
             }
 
             var line = state.Line;
+            var startPosition = line.Start;
             line.NextChar();
-            var result = TryParseTagType16(state, line, state.ColumnBeforeIndent, state.SourcePosition);
+            var result = TryParseTagType16(state, line, state.ColumnBeforeIndent, startPosition);
 
             // HTML blocks of type 7 cannot interrupt a paragraph:
             if (result == BlockState.None && !(state.CurrentBlock is ParagraphBlock))
             {
-                result = TryParseTagType7(state, line, state.ColumnBeforeIndent, state.SourcePosition);
+                result = TryParseTagType7(state, line, state.ColumnBeforeIndent, startPosition);
             }
             return result;
         }
@@ -183,35 +184,35 @@ namespace Markdig.Parsers
                 case HtmlBlockType.Comment:
                     if (line.Search("-->"))
                     {
-                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        htmlBlock.SourceEndPosition = line.End;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
                     if (line.Search("]]>"))
                     {
-                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        htmlBlock.SourceEndPosition = line.End;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
                     if (line.Search("?>"))
                     {
-                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        htmlBlock.SourceEndPosition = line.End;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
                     if (line.Search(">"))
                     {
-                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        htmlBlock.SourceEndPosition = line.End;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
                     if (line.SearchLowercase("</script>") || line.SearchLowercase("</pre>") || line.SearchLowercase("</style>"))
                     {
-                        htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                        htmlBlock.SourceEndPosition = line.End;
                         result = BlockState.Break;
                     }
                     break;
@@ -232,7 +233,7 @@ namespace Markdig.Parsers
             // Update only if we don't have a break discard
             if (result != BlockState.BreakDiscard)
             {
-                htmlBlock.SourceEndPosition = state.SourceLinePosition + line.End;
+                htmlBlock.SourceEndPosition = line.End;
             }
 
             return result;

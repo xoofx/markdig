@@ -102,7 +102,6 @@ namespace Markdig.Parsers
             while (true)
             {
                 // Get the precise position of the begining of the line
-                var position = lineReader.SourcePosition;
                 var lineText = lineReader.ReadLine();
                 
                 // If this is the end of file and the last line is empty
@@ -110,7 +109,6 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
-                blockProcessor.SourceLinePosition = position;
                 blockProcessor.ProcessLine(lineText.Value);
             }
             blockProcessor.CloseAll(true);
