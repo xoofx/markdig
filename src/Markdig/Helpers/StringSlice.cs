@@ -113,6 +113,16 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
+        /// Peeks a character at the specified offset from the current beginning of the string, without taking into account <see cref="Start"/> and <see cref="End"/>
+        /// </summary>
+        /// <returns>The character at offset, returns `\0` if none.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public char PeekCharAbsolute(int index)
+        {
+            return index >= 0 && index < Text.Length ? Text[index] : (char)0;
+        }
+
+        /// <summary>
         /// Peeks a character at the specified offset from the current begining of the slice
         /// without using the range <see cref="Start"/> or <see cref="End"/>, returns `\0` if outside the <see cref="Text"/>.
         /// </summary>

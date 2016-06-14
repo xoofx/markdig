@@ -11,33 +11,20 @@ namespace Markdig.Helpers
     /// <summary>
     /// A line reader from a <see cref="TextReader"/> that can provide precise source position
     /// </summary>
-    public class LineReader
+    public struct LineReader
     {
-        private readonly TextReader reader;
-        private readonly char[] buffer;
-        private readonly bool preciseSourceLocation;
-
-        private int positionInBuffer;
-        private int length;
-
-        public const int DefaultBufferSize = 4096;
+        private readonly string text;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineReader"/> class.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="preciseSourceLocation">if set to <c>true</c> provides precise source location through the <see cref="SourcePosition"/>.</param>
-        /// <param name="bufferSize">Size of the buffer.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException">bufferSize cannot be &lt;= 0</exception>
-        public LineReader(TextReader reader, bool preciseSourceLocation, int bufferSize = DefaultBufferSize)
+        public LineReader(string text)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
-            if (bufferSize <= 0) throw new ArgumentOutOfRangeException(nameof(bufferSize), "bufferSize cannot be <= 0");
-            this.reader = reader;
-            this.preciseSourceLocation = preciseSourceLocation;
-            buffer = new char[bufferSize];
-            positionInBuffer = -1;
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            this.text = text;
+            SourcePosition = 0;
         }
 
         /// <summary>
@@ -49,81 +36,36 @@ namespace Markdig.Helpers
         /// Reads a new line from the underlying <see cref="TextReader"/> and update the <see cref="SourcePosition"/> for the next line.
         /// </summary>
         /// <returns>A new line or null if the end of <see cref="TextReader"/> has been reached</returns>
-        public string ReadLine()
+        public StringSlice? ReadLine()
         {
-            if (!preciseSourceLocation)
+            if (SourcePosition >= text.Length)
             {
-                return reader.ReadLine();
+                return null;
             }
 
-            StringBuilder lineBuffer = null;
-
-            var eol = false;
-            while (!eol)
+            var startPosition = SourcePosition;
+            var position = SourcePosition;
+            var slice = new StringSlice(text, startPosition, startPosition);
+            for (;position < text.Length; position++)
             {
-                if (!ReadBuffer())
+                var c = text[position];
+                if (c == '\r' || c == '\n')
                 {
-                    break;
-                }
-                int positionEol = length;
-                int start = positionInBuffer;
-                char c = '\0';
-                for (;positionInBuffer < length; positionInBuffer++)
-                {
-                    c = buffer[positionInBuffer];
-                    if (c == '\r' || c == '\n')
+                    slice.End = position - 1;
+                    if (c == '\r' && position + 1 < text.Length && text[position + 1] == '\n')
                     {
-                        positionEol = positionInBuffer;
-                        positionInBuffer++;
-                        SourcePosition++;
-                        eol = true;
-                        break;
+                        position++;
                     }
-                }
-
-                var nextLength = positionEol - start;
-                if (lineBuffer == null)
-                {
-                    lineBuffer = StringBuilderCache.Local();
-                }
-                lineBuffer.Append(buffer, start, nextLength);
-                SourcePosition += nextLength;
-
-                if (eol && c == '\r')
-                {
-                    // If we have reached the end of the buffer, try to load
-                    // the next part to read if `\r` is actually followed by a `\n`
-                    if (positionInBuffer == length)
-                    {
-                        ReadBuffer();
-                    }
-
-                    if (positionInBuffer < length)
-                    {
-                        if (buffer[positionInBuffer] == '\n')
-                        {
-                            positionInBuffer++;
-                            SourcePosition++;
-                        }
-                    }
+                    position++;
+                    SourcePosition = position;
+                    return slice;
                 }
             }
 
-            return lineBuffer?.ToString();
+            slice.End = position - 1;
+            SourcePosition = position;
+
+            return slice;
         }
-
-        private bool ReadBuffer()
-        {
-            if (positionInBuffer < 0 || positionInBuffer == buffer.Length)
-            {
-                positionInBuffer = 0;
-                length = reader.Read(buffer, 0, buffer.Length);
-                if (length == 0)
-                {
-                    return false;
-                }
-            }
-            return positionInBuffer < length;
-        }
-    }
+   }
 }

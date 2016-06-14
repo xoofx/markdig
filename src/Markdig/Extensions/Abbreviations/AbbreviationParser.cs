@@ -96,13 +96,13 @@ namespace Markdig.Extensions.Abbreviations
                     if (matcher.TryMatch(text, i, content.End - i + 1, out match))
                     {
                         // The word matched must be embraced by punctuation or whitespace or \0.
-                        var c = content.PeekCharExtra(i - 1);
+                        var c = content.PeekCharAbsolute(i - 1);
                         if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
                         {
                             continue;
                         }
                         var indexAfterMatch = i + match.Length;
-                        c = content.PeekCharExtra(indexAfterMatch);
+                        c = content.PeekCharAbsolute(indexAfterMatch);
                         if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
                         {
                             continue;

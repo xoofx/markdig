@@ -15,136 +15,114 @@ namespace Markdig.Tests
     public class TestLineReader
     {
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestEmpty(bool limited)
+        public void TestEmpty()
         {
-            var lineReader = new LineReader(new StringReader(""), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.Null(lineReader.ReadLine());
+            var lineReader = new LineReader("");
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLinesOnlyLf(bool limited)
+        public void TestLinesOnlyLf()
         {
-            var lineReader = new LineReader(new StringReader("\n\n\n"), true, limited ? 2 : LineReader.DefaultBufferSize);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            var lineReader = new LineReader("\n\n\n");
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(1, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(2, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLinesOnlyCr(bool limited)
+        public void TestLinesOnlyCr()
         {
-            var lineReader = new LineReader(new StringReader("\r\r\r"), true, limited ? 2 : LineReader.DefaultBufferSize);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            var lineReader = new LineReader("\r\r\r");
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(1, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(2, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLinesOnlyCrLf(bool limited)
+        public void TestLinesOnlyCrLf()
         {
-            var lineReader = new LineReader(new StringReader("\r\n\r\n\r\n"), true, limited ? 3 : LineReader.DefaultBufferSize);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            var lineReader = new LineReader("\r\n\r\n\r\n");
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(2, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
             Assert.AreEqual(4, lineReader.SourcePosition);
-            Assert.AreEqual(string.Empty, lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual(string.Empty, lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestNoEndOfLine(bool limited)
+        public void TestNoEndOfLine()
         {
-            var lineReader = new LineReader(new StringReader("123"), true);
-            Assert.AreEqual("123", lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            var lineReader = new LineReader("123");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLf(bool limited)
+        public void TestLf()
         {
-            var lineReader = new LineReader(new StringReader("123\n"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\n");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(4, lineReader.SourcePosition);
-            Assert.Null(lineReader.ReadLine());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLf2(bool limited)
+        public void TestLf2()
         {
             // When limited == true, we limit the internal buffer exactly after the first new line char '\n'
-            var lineReader = new LineReader(new StringReader("123\n456"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\n456");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(4, lineReader.SourcePosition);
-            Assert.AreEqual("456", lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual("456", lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestCr(bool limited)
+        public void TestCr()
         {
-            var lineReader = new LineReader(new StringReader("123\r"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\r");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(4, lineReader.SourcePosition);
-            Assert.Null(lineReader.ReadLine());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestCr2(bool limited)
+        public void TestCr2()
         {
-            var lineReader = new LineReader(new StringReader("123\r456"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\r456");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(4, lineReader.SourcePosition);
-            Assert.AreEqual("456", lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual("456", lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestCrLf(bool limited)
+        public void TestCrLf()
         {
             // When limited == true, we limit the internal buffer exactly after the first new line char '\r'
             // and we check that we don't get a new line for `\n` 
-            var lineReader = new LineReader(new StringReader("123\r\n"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\r\n");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(5, lineReader.SourcePosition);
-            Assert.Null(lineReader.ReadLine());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
 
         [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestCrLf2(bool limited)
+        public void TestCrLf2()
         {
-            var lineReader = new LineReader(new StringReader("123\r\n456"), true, limited ? 4 : LineReader.DefaultBufferSize);
-            Assert.AreEqual("123", lineReader.ReadLine());
+            var lineReader = new LineReader("123\r\n456");
+            Assert.AreEqual("123", lineReader.ReadLine()?.ToString());
             Assert.AreEqual(5, lineReader.SourcePosition);
-            Assert.AreEqual("456", lineReader.ReadLine());
-            Assert.Null(lineReader.ReadLine());
+            Assert.AreEqual("456", lineReader.ReadLine()?.ToString());
+            Assert.Null(lineReader.ReadLine()?.ToString());
         }
     }
 }

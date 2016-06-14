@@ -29,6 +29,7 @@ namespace Markdig.Extensions.Tables
 
             GridTableState tableState = null;
             var c = line.CurrentChar;
+            var startPosition = processor.Start;
             while (true)
             {
                 if (c == '+')
@@ -51,11 +52,11 @@ namespace Markdig.Extensions.Tables
                         {
                             tableState = new GridTableState()
                             {
-                                Start = processor.Column,
+                                Start = processor.Start,
                                 ExpectRow = true,
                             };
                         }
-                        tableState.AddColumn(startCharacter, line.Start - 1, align);
+                        tableState.AddColumn(startCharacter - startPosition, line.Start - 1 - startPosition, align);
 
                         c = line.CurrentChar;
                         continue;
@@ -105,7 +106,7 @@ namespace Markdig.Extensions.Tables
             var tableState = (GridTableState)block.GetData(typeof(GridTableState));
 
             // We expect to start at the same 
-            if (processor.Start == tableState.Start)
+            //if (processor.Start == tableState.Start)
             {
                 var columns = tableState.ColumnSlices;
 
@@ -172,10 +173,10 @@ namespace Markdig.Extensions.Tables
                         var nextColumn = nextColumnIndex < columns.Count ? columns[nextColumnIndex] : null;
 
                         var sliceForCell = line;
-                        sliceForCell.Start = column.Start + 1;
+                        sliceForCell.Start = line.Start + column.Start + 1;
                         if (nextColumn != null)
                         {
-                            sliceForCell.End = nextColumn.Start - 1;
+                            sliceForCell.End = line.Start + nextColumn.Start - 1;
                         }
                         else
                         {
@@ -184,7 +185,7 @@ namespace Markdig.Extensions.Tables
                             // otherwise we allow to have the last cell of a row to be open for longer cell content
                             if (line.PeekCharExtra(columnEnd + 1) == '|')
                             {
-                                sliceForCell.End = columnEnd;
+                                sliceForCell.End = line.Start + columnEnd;
                             }
                         }
                         sliceForCell.TrimEnd();
