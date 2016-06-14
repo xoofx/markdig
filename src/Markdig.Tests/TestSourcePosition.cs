@@ -17,19 +17,19 @@ namespace Markdig.Tests
         public void TestParagraph()
         {
             Check("0123456789", @"
-paragraph 0-9
-literal 0-9
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-9
 ");
         }
 
         [Test]
-        public void TestParagraphEmphasis()
+        public void TestParagraphFalseEmphasis()
         {
             Check("0123456789**0123", @"
-paragraph 0-15
-literal 0-9
-literal 10-11
-literal 12-15
+paragraph    ( 0, 0)  0-15
+literal      ( 0, 0)  0-9
+literal      ( 0, 0) 10-11
+literal      ( 0,12) 12-15
 ");
         }
 
@@ -37,14 +37,30 @@ literal 12-15
         public void TestParagraphAndNewLine()
         {
             Check("0123456789\n0123456789", @"
-paragraph 0-9
-literal 0-9
-softlinebreak 10-10
-literal 11-21
+paragraph    ( 0, 0)  0-20
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+literal      ( 1, 0) 11-20
+");
+
+            Check("0123456789\r\n0123456789", @"
+paragraph    ( 0, 0)  0-21
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+literal      ( 1, 0) 12-21
 ");
         }
 
-
+        [Test]
+        public void TestParagraph2()
+        {
+            Check("0123456789\n\n0123456789", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-9
+paragraph    ( 2, 0) 12-21
+literal      ( 2, 0) 12-21
+");
+        }
 
         private static void Check(string text, string expectedResult)
         {
@@ -55,7 +71,7 @@ literal 11-21
             foreach (var val in document.Descendants())
             {
                 var name = GetTypeName(val.GetType());
-                build.Append($"{name} {val.SourceStartPosition}-{val.SourceEndPosition}\n");
+                build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.SourceStartPosition,2}-{val.SourceEndPosition}\n");
             }
             var result = build.ToString().Trim();
 
@@ -83,8 +99,5 @@ literal 11-21
                 .Replace("block", string.Empty)
                 .Replace("inline", string.Empty);
         }
-
-
-
     }
 }

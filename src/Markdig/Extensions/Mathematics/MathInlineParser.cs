@@ -63,13 +63,6 @@ namespace Markdig.Extensions.Mathematics
             pc = match;
             while (c != '\0')
             {
-                // Count new '\n'
-                if (c == '\n')
-                {
-                    processor.LocalLineIndex++;
-                    processor.LineIndex++;
-                }
-
                 // Don't process sticks if we have a '\' as a previous char
                 if (pc != '\\' )
                 {

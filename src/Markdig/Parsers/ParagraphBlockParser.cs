@@ -141,6 +141,8 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
+            block.SourceEndPosition = state.Line.End;
+
             return BlockState.Continue;
         }
 

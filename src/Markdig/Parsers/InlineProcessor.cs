@@ -24,6 +24,8 @@ namespace Markdig.Parsers
     public class InlineProcessor
     {
         private readonly List<StringLineGroup.LineOffset> lineOffsets;
+        private int previousSliceOffset;
+        private int previousLineIndexForSliceOffset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
@@ -92,19 +94,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the index of the line from the begining of the document being processed.
         /// </summary>
-        public int LineIndex { get; set; }
-
-        /// <summary>
-        /// Gets the source line position.
-        /// </summary>
-        public int SourceLinePosition => LocalLineIndex >= 0 && LocalLineIndex < lineOffsets.Count
-                                             ? lineOffsets[LocalLineIndex].LinePosition
-                                             : 0;
-
-        /// <summary>
-        /// Gets or sets the index of the local line from the beginning of the block being processed.
-        /// </summary>
-        public int LocalLineIndex { get; set; }
+        public int LineIndex { get; private set; }
 
         /// <summary>
         /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="InlineParser.Index"/> property.
@@ -121,25 +111,39 @@ namespace Markdig.Parsers
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; }
 
+
+        public int GetSourcePosition(int sliceOffset)
+        {
+            int column;
+            int lineIndex;
+            return GetSourcePosition(sliceOffset, out lineIndex, out column);
+        }
+
         /// <summary>
         /// Gets the source position for the specified offset within the current slice.
         /// </summary>
         /// <param name="sliceOffset">The slice offset.</param>
         /// <returns>The source position</returns>
-        public int GetSourcePosition(int sliceOffset)
+        public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
         {
-            if (PreciseSourceLocation)
+            lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
+            column = 0;
+            int position = 0;
+            for (; lineIndex < lineOffsets.Count; lineIndex++)
             {
-                for (int i = 0; i < lineOffsets.Count; i++)
+                var lineOffset = lineOffsets[lineIndex];
+                if (sliceOffset <= lineOffset.End)
                 {
-                    var lineOffset = lineOffsets[i];
-                    if (sliceOffset <= lineOffset.EndOfLine)
-                    {
-                        return lineOffset.LinePosition + (i > 0 ? sliceOffset - lineOffsets[i - 1].EndOfLine + 1 : sliceOffset);
-                    }
+                    column = sliceOffset - lineOffsets[lineIndex].Start;
+                    position = lineOffset.LinePosition + column;
+                    previousSliceOffset = sliceOffset;
+                    previousLineIndexForSliceOffset = lineIndex;
+                    // Return an absolute line index
+                    lineIndex = lineIndex + LineIndex;
+                    break;
                 }
             }
-            return SourceLinePosition;
+            return position;
         }
 
         /// <summary>
@@ -158,21 +162,15 @@ namespace Markdig.Parsers
             BlockNew = null;
             LineIndex = leafBlock.Line;
 
+            previousSliceOffset = 0;
+            previousLineIndexForSliceOffset = 0;
             lineOffsets.Clear();
-            LocalLineIndex = 0;
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines = new StringLineGroup();
 
             while (!text.IsEmpty)
             {
                 var c = text.CurrentChar;
-
-                // Update line index
-                if (text.Start >= lineOffsets[LocalLineIndex].EndOfLine)
-                {
-                    LineIndex++;
-                    LocalLineIndex++;
-                }
 
                 var textSaved = text;
                 var parsers = Parsers.GetParsersForOpeningCharacter(c);

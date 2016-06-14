@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
@@ -121,22 +122,24 @@ namespace Markdig.Helpers
             {
                 if (lineOffsets != null)
                 {
-                    lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Slice.End + 1));
+                    lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Slice.Start, Lines[0].Slice.End + 1));
                 }
                 return Lines[0];
             }
 
             // Else use a builder
             var builder = StringBuilderCache.Local();
+            int previousStartOfLine = 0;
             for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(new LineOffset(Lines[i-1].Position, builder.Length + 1)); // Add 1 for \n and 1 for next line
+                        lineOffsets.Add(new LineOffset(Lines[i - 1].Position, previousStartOfLine, builder.Length));
                     }
                     builder.Append('\n');
+                    previousStartOfLine = builder.Length;
                 }
                 if (!Lines[i].Slice.IsEmpty)
                 {
@@ -145,7 +148,7 @@ namespace Markdig.Helpers
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, builder.Length)); // Add 1 for \0
+                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, previousStartOfLine, builder.Length));
             }
             var str = builder.ToString();
             builder.Length = 0;
@@ -264,15 +267,18 @@ namespace Markdig.Helpers
 
         public struct LineOffset
         {
-            public LineOffset(int linePosition, int endOfLine)
+            public LineOffset(int linePosition, int start, int end)
             {
                 LinePosition = linePosition;
-                EndOfLine = endOfLine;
+                Start = start;
+                End = end;
             }
 
             public readonly int LinePosition;
 
-            public readonly int EndOfLine;
+            public readonly int Start;
+
+            public readonly int End;
         }
     }
 }

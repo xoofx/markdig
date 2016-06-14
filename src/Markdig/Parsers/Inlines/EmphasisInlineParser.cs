@@ -179,12 +179,16 @@ namespace Markdig.Parsers.Inlines
                     delimiterType |= DelimiterType.Close;
                 }
 
+                int line;
+                int column;
                 var delimiter = new EmphasisDelimiterInline(this, emphasisDesc)
                 {
                     DelimiterCount = delimiterCount,
                     Type = delimiterType,
-                    SourceStartPosition = processor.GetSourcePosition(startPosition),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
                     SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                    Column = column,
+                    Line = line,
                 };
 
                 processor.Inline = delimiter;

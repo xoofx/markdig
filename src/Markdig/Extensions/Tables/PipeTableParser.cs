@@ -55,14 +55,22 @@ namespace Markdig.Extensions.Tables
             // tracking other delimiters on following lines
             var tableState = processor.ParserStates[Index] as TableState;
             bool isFirstLineEmpty = false;
+
+
+            int globalLineIndex;
+            int column;
+            processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var localLineIndex = globalLineIndex - processor.LineIndex;
+
             if (tableState == null)
             {
+
                 // A table could be preceded by an empty line or a line containing an inline
                 // that has not been added to the stack, so we consider this as a valid 
                 // start for a table. Typically, with this, we can have an attributes {...}
                 // starting on the first line of a pipe table, even if the first line
                 // doesn't have a pipe
-                if (processor.Inline != null &&(processor.LocalLineIndex > 0 || c == '\n'))
+                if (processor.Inline != null && (localLineIndex > 0 || c == '\n'))
                 {
                     return false;
                 }
@@ -92,14 +100,14 @@ namespace Markdig.Extensions.Tables
             }
             else
             {
-                processor.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = processor.LocalLineIndex };
-                var deltaLine = processor.LocalLineIndex - tableState.LineIndex;
+                processor.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = localLineIndex };
+                var deltaLine = localLineIndex - tableState.LineIndex;
                 if (deltaLine > 0)
                 {
                     tableState.IsInvalidTable = true;
                 }
                 tableState.LineHasPipe = true;
-                tableState.LineIndex = processor.LocalLineIndex;
+                tableState.LineIndex = localLineIndex;
                 slice.NextChar(); // Skip the `|` character
 
                 tableState.ColumnAndLineDelimiters.Add(processor.Inline);
@@ -185,7 +193,7 @@ namespace Markdig.Extensions.Tables
             }
 
             // Continue
-            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe || tableState.LineIndex != state.LocalLineIndex)
+            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
             }

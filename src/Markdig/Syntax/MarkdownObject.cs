@@ -19,6 +19,16 @@ namespace Markdig.Syntax
         private int count;
 
         /// <summary>
+        /// Gets or sets the text column this instance was declared (zero-based).
+        /// </summary>
+        public int Column { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text line this instance was declared (zero-based).
+        /// </summary>
+        public int Line { get; set; }
+
+        /// <summary>
         /// Gets or sets the source position.
         /// </summary>
         public int SourceStartPosition { get; set; }

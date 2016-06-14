@@ -39,8 +39,7 @@ namespace Markdig.Renderers
             ObjectRenderers.Add(new CodeInlineRenderer());
             ObjectRenderers.Add(new DelimiterInlineRenderer());
             ObjectRenderers.Add(new EmphasisInlineRenderer());
-            ObjectRenderers.Add(new HardlineBreakInlineRenderer());
-            ObjectRenderers.Add(new SoftlineBreakInlineRenderer());
+            ObjectRenderers.Add(new LineBreakInlineRenderer());
             ObjectRenderers.Add(new HtmlInlineRenderer());
             ObjectRenderers.Add(new HtmlEntityInlineRenderer());            
             ObjectRenderers.Add(new LinkInlineRenderer());
