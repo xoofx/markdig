@@ -52,7 +52,7 @@ namespace Markdig.Parsers.Inlines
                     Original = matched,
                     Transcoded = new StringSlice(literal),
                     SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
-                    SourceEndPosition = processor.GetSourcePosition(matched.End),
+                    SourceEndPosition = processor.GetSourcePosition(matched.End + 1),
                     Line = line,
                     Column = column
                 };

@@ -277,6 +277,18 @@ literal      ( 0, 2)  2-3
 ");
         }
 
+        [Test]
+        public void TestHtmlEntityInline()
+        {
+            //     01234567
+            Check("0&nbsp;1", @"
+paragraph    ( 0, 0)  0-7
+literal      ( 0, 0)  0-0
+htmlentity   ( 0, 1)  1-6
+literal      ( 0, 7)  7-7
+");
+        }
+
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
