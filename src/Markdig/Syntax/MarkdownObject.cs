@@ -29,12 +29,14 @@ namespace Markdig.Syntax
         public int Line { get; set; }
 
         /// <summary>
-        /// Gets or sets the source position.
+        /// Gets or sets the starting character position from the original text source. 
+        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
         /// </summary>
         public int SourceStartPosition { get; set; }
 
         /// <summary>
-        /// Gets or sets the length of the source.
+        /// Gets or sets the ending character position from the original text source.
+        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
         /// </summary>
         public int SourceEndPosition { get; set; }
 

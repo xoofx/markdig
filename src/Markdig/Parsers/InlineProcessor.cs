@@ -126,25 +126,28 @@ namespace Markdig.Parsers
         /// <returns>The source position</returns>
         public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
         {
+            column = 0;            
             lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
-            column = 0;
             int position = 0;
-            for (; lineIndex < lineOffsets.Count; lineIndex++)
+            if (PreciseSourceLocation)
             {
-                var lineOffset = lineOffsets[lineIndex];
-                if (sliceOffset <= lineOffset.End)
+                for (; lineIndex < lineOffsets.Count; lineIndex++)
                 {
-                    // Use the beginning of the line as a previous slice offset 
-                    // (since it is on the same line)
-                    previousSliceOffset = lineOffsets[lineIndex].Start;
-                    var delta = sliceOffset - previousSliceOffset;
-                    column = lineOffsets[lineIndex].Column + delta;
-                    position = lineOffset.LinePosition + delta + lineOffsets[lineIndex].Offset;
-                    previousLineIndexForSliceOffset = lineIndex;
+                    var lineOffset = lineOffsets[lineIndex];
+                    if (sliceOffset <= lineOffset.End)
+                    {
+                        // Use the beginning of the line as a previous slice offset 
+                        // (since it is on the same line)
+                        previousSliceOffset = lineOffsets[lineIndex].Start;
+                        var delta = sliceOffset - previousSliceOffset;
+                        column = lineOffsets[lineIndex].Column + delta;
+                        position = lineOffset.LinePosition + delta + lineOffsets[lineIndex].Offset;
+                        previousLineIndexForSliceOffset = lineIndex;
 
-                    // Return an absolute line index
-                    lineIndex = lineIndex + LineIndex;
-                    break;
+                        // Return an absolute line index
+                        lineIndex = lineIndex + LineIndex;
+                        break;
+                    }
                 }
             }
             return position;

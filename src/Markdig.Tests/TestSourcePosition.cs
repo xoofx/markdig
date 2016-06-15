@@ -562,6 +562,35 @@ literal      ( 4, 2) 13-13
 ", "pipetables");
         }
 
+        [Test]
+        public void TestDocument()
+        {
+            //     L0       L0           L1L2         L3         L4         L5L6                    L7L8         
+            //     0        10        20          30         40         50          60        70          80        90
+            //     012345678901234567890 1 2345678901 2345678901 2345678901 2 345678901234567890123 4 5678901234567890123
+            Check("# This is a document\n\n1) item 1\n2) item 2\n3) item 4\n\nWith an **emphasis**\n\n> and a blockquote\n", @"
+heading      ( 0, 0)  0-19
+literal      ( 0, 2)  2-19
+list         ( 2, 0) 22-51
+listitem     ( 2, 0) 22-30
+paragraph    ( 2, 3) 25-30
+literal      ( 2, 3) 25-30
+listitem     ( 3, 0) 32-40
+paragraph    ( 3, 3) 35-40
+literal      ( 3, 3) 35-40
+listitem     ( 4, 0) 42-51
+paragraph    ( 4, 3) 45-50
+literal      ( 4, 3) 45-50
+paragraph    ( 6, 0) 53-72
+literal      ( 6, 0) 53-60
+emphasis     ( 6, 8) 61-72
+literal      ( 6,10) 63-70
+quote        ( 8, 0) 75-92
+paragraph    ( 8, 2) 77-92
+literal      ( 8, 2) 77-92
+");
+        }
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
