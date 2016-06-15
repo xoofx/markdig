@@ -204,6 +204,18 @@ literal      ( 4, 0) 16-16
 ");
         }
 
+        [Test]
+        public void TestThematicBreak()
+        {
+            //     0123 4567
+            Check("---\n---\n", @"
+thematicbreak ( 0, 0)  0-2
+thematicbreak ( 1, 0)  4-6
+");
+        }
+
+
+
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();

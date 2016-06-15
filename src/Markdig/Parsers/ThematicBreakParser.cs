@@ -89,7 +89,7 @@ namespace Markdig.Parsers
             {
                 Column = processor.Column,
                 SourceStartPosition = startPosition,
-                SourceEndPosition = processor.Start - 1
+                SourceEndPosition = line.End
             });
             return BlockState.BreakDiscard;
         }
