@@ -5,6 +5,7 @@
 using System;
 using System.Text;
 using Markdig.Helpers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using NUnit.Framework;
 
@@ -445,6 +446,30 @@ literal      ( 2, 3) 11-12
 ", "footers");
         }
 
+
+        [Test]
+        public void TestAttributes()
+        {
+            //     0123456789
+            Check("0123{#456}", @"
+paragraph    ( 0, 0)  0-9
+attributes   ( 0, 4)  4-9
+literal      ( 0, 0)  0-3
+", "attributes");
+        }
+
+        [Test]
+        public void TestAttributesForHeading()
+        {
+            //     0123456789ABC
+            Check("# 01 {#456}", @"
+heading      ( 0, 0)  0-4
+attributes   ( 0, 5)  5-10
+literal      ( 0, 2)  2-3
+", "attributes");
+        }
+
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
@@ -461,6 +486,11 @@ literal      ( 2, 3) 11-12
             {
                 var name = GetTypeName(val.GetType());
                 build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.SourceStartPosition,2}-{val.SourceEndPosition}\n");
+                var attributes = val.TryGetAttributes();
+                if (attributes != null)
+                {
+                    build.Append($"{"attributes",-12} ({attributes.Line,2},{attributes.Column,2}) {attributes.SourceStartPosition,2}-{attributes.SourceEndPosition}\n");
+                }
             }
             var result = build.ToString().Trim();
 
