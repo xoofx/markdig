@@ -59,7 +59,7 @@ namespace Markdig.Extensions.Tables
 
             int globalLineIndex;
             int column;
-            processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var position = processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
             var localLineIndex = globalLineIndex - processor.LineIndex;
 
             if (tableState == null)
@@ -100,7 +100,14 @@ namespace Markdig.Extensions.Tables
             }
             else
             {
-                processor.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = localLineIndex };
+                processor.Inline = new PiprTableDelimiterInline(this)
+                {
+                    SourceStartPosition = position,
+                    SourceEndPosition = position,
+                    Line = globalLineIndex,
+                    Column = column,
+                    LocalLineIndex = localLineIndex
+                };
                 var deltaLine = localLineIndex - tableState.LineIndex;
                 if (deltaLine > 0)
                 {
@@ -228,6 +235,12 @@ namespace Markdig.Extensions.Tables
                 column = ((PiprTableDelimiterInline)column).FirstChild;
             }
 
+            // TODO: This is not accurate for the table
+            table.SourceStartPosition = column.SourceStartPosition;
+            table.SourceEndPosition = column.SourceEndPosition;
+            table.Line = column.Line;
+            table.Column = column.Column;
+            
             int lastIndex = 0;
             for (int i = 0; i < delimiters.Count; i++)
             {
@@ -237,8 +250,7 @@ namespace Markdig.Extensions.Tables
                     var beforeDelimiter = delimiter?.PreviousSibling;
                     var nextLineColumn = delimiter?.NextSibling;
 
-                    var row = new TableRow();
-                    table.Add(row);
+                    TableRow row = null;
 
                     for (int j = lastIndex; j <= i; j++)
                     {
@@ -262,20 +274,55 @@ namespace Markdig.Extensions.Tables
                             continue;
                         }
 
-                        var columnContainer = new ContainerInline();
+                        var cellContainer = new ContainerInline();
                         var item = column;
+                        var isFirstItem = true;
                         TrimStart(item);
                         while (item != null && !IsLine(item) && !(item is PiprTableDelimiterInline))
                         {
                             var nextSibling = item.NextSibling;
                             item.Remove();
-                            columnContainer.AppendChild(item);
+                            cellContainer.AppendChild(item);
+                            if (isFirstItem)
+                            {
+                                cellContainer.Line = item.Line;
+                                cellContainer.Column = item.Column;
+                                cellContainer.SourceStartPosition = item.SourceStartPosition;
+                                isFirstItem = false;
+                            }
+                            cellContainer.SourceEndPosition = item.SourceEndPosition;
                             item = nextSibling;
                         }
 
-                        var tableCell = new TableCell();
-                        var tableParagraph = new ParagraphBlock() {Inline = columnContainer};
+                        var tableParagraph = new ParagraphBlock()
+                        {
+                            SourceStartPosition = cellContainer.SourceStartPosition,
+                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            Line = cellContainer.Line,
+                            Column = cellContainer.Column,
+                            Inline = cellContainer
+                        };
+
+                        var tableCell = new TableCell()
+                        {
+                            SourceStartPosition = cellContainer.SourceStartPosition,
+                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            Line = cellContainer.Line,
+                            Column = cellContainer.Column,
+                        };
+
                         tableCell.Add(tableParagraph);
+
+                        if (row == null)
+                        {
+                            row = new TableRow()
+                            {
+                                SourceStartPosition = cellContainer.SourceStartPosition,
+                                SourceEndPosition = cellContainer.SourceEndPosition,
+                                Line = cellContainer.Line,
+                                Column = cellContainer.Column,
+                            };
+                        }
                         row.Add(tableCell);
                         cells.Add(tableCell);
 
@@ -297,6 +344,11 @@ namespace Markdig.Extensions.Tables
                             }
                             columnSeparator.Remove();
                         }
+                    }
+
+                    if (row != null)
+                    {
+                        table.Add(row);
                     }
 
                     TrimEnd(beforeDelimiter);

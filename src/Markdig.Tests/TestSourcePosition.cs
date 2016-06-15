@@ -514,8 +514,53 @@ literal      ( 1, 4)  6-7
 ", "smartypants");
         }
 
+        [Test]
+        public void TestPipeTable()
+        {
+            //     0123 4567 89AB
+            Check("a|b\n-|-\n0|1\n", @"
+table        ( 0, 0)  0-10
+tablerow     ( 0, 0)  0-2
+tablecell    ( 0, 0)  0-0
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+tablecell    ( 0, 2)  2-2
+paragraph    ( 0, 2)  2-2
+literal      ( 0, 2)  2-2
+tablerow     ( 2, 0)  8-10
+tablecell    ( 2, 0)  8-8
+paragraph    ( 2, 0)  8-8
+literal      ( 2, 0)  8-8
+tablecell    ( 2, 2) 10-10
+paragraph    ( 2, 2) 10-10
+literal      ( 2, 2) 10-10
+", "pipetables");
+        }
 
-
+        [Test]
+        public void TestPipeTable2()
+        {
+            //     01 2 3456 789A BCD
+            Check("0\n\na|b\n-|-\n0|1\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+table        ( 2, 0)  3-13
+tablerow     ( 2, 0)  3-5
+tablecell    ( 2, 0)  3-3
+paragraph    ( 2, 0)  3-3
+literal      ( 2, 0)  3-3
+tablecell    ( 2, 2)  5-5
+paragraph    ( 2, 2)  5-5
+literal      ( 2, 2)  5-5
+tablerow     ( 4, 0) 11-13
+tablecell    ( 4, 0) 11-11
+paragraph    ( 4, 0) 11-11
+literal      ( 4, 0) 11-11
+tablecell    ( 4, 2) 13-13
+paragraph    ( 4, 2) 13-13
+literal      ( 4, 2) 13-13
+", "pipetables");
+        }
 
         private static void Check(string text, string expectedResult, string extensions = null)
         {
