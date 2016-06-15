@@ -154,7 +154,9 @@ Thanks to the fantastic work done by [John Mac Farlane](http://johnmacfarlane.ne
 
 This project would not have been possible without this huge foundation.
 
-Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/BenchmarkDotNet) that makes benchmarking so easy to setup!  
+Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/BenchmarkDotNet) that makes benchmarking so easy to setup!
+
+Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET]()
 
 ## Author
 
