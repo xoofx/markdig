@@ -196,9 +196,11 @@ fencedcode   ( 1, 0)  3-11
         [Test]
         public void TestHtmlBlock()
         {
-            //     012345 67 89ABCDE
-            Check("<div>\n0\n</div>\n", @"
+            //     012345 67 89ABCDE F 0
+            Check("<div>\n0\n</div>\n\n1", @"
 html         ( 0, 0)  0-13
+paragraph    ( 4, 0) 16-16
+literal      ( 4, 0) 16-16
 ");
         }
 
