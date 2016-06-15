@@ -179,40 +179,41 @@ namespace Markdig.Parsers
             var line = state.Line;
             var c = line.CurrentChar;
             var result = BlockState.Continue;
+            int endof;
             switch (htmlBlock.Type)
             {
                 case HtmlBlockType.Comment:
-                    if (line.Search("-->"))
+                    if (line.Search("-->", out endof))
                     {
-                        htmlBlock.SourceEndPosition = line.End;
+                        htmlBlock.SourceEndPosition = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
-                    if (line.Search("]]>"))
+                    if (line.Search("]]>", out endof))
                     {
-                        htmlBlock.SourceEndPosition = line.End;
+                        htmlBlock.SourceEndPosition = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
-                    if (line.Search("?>"))
+                    if (line.Search("?>", out endof))
                     {
-                        htmlBlock.SourceEndPosition = line.End;
+                        htmlBlock.SourceEndPosition = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
-                    if (line.Search(">"))
+                    if (line.Search(">", out endof))
                     {
-                        htmlBlock.SourceEndPosition = line.End;
+                        htmlBlock.SourceEndPosition = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
-                    if (line.SearchLowercase("</script>") || line.SearchLowercase("</pre>") || line.SearchLowercase("</style>"))
+                    if (line.SearchLowercase("</script>", out endof) || line.SearchLowercase("</pre>", out endof) || line.SearchLowercase("</style>", out endof))
                     {
-                        htmlBlock.SourceEndPosition = line.End;
+                        htmlBlock.SourceEndPosition = endof - 1;
                         result = BlockState.Break;
                     }
                     break;

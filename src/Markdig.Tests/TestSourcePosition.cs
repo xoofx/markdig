@@ -192,6 +192,16 @@ literal      ( 0, 0)  0-1
 fencedcode   ( 1, 0)  3-11
 ");
         }
+
+        [Test]
+        public void TestHtmlBlock()
+        {
+            //     012345 67 89ABCDE
+            Check("<div>\n0\n</div>\n", @"
+html         ( 0, 0)  0-13
+");
+        }
+
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();

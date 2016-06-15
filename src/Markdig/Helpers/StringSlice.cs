@@ -194,15 +194,27 @@ namespace Markdig.Helpers
         /// Searches the specified text within this slice.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
+        public bool Search(string text, out int index)
+        {
+            return Search(text, 0, out index);
+        }
+
+        /// <summary>
+        /// Searches the specified text within this slice.
+        /// </summary>
+        /// <param name="text">The text.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public bool Search(string text, int offset = 0)
+        public bool Search(string text, int offset, out int index)
         {
             var end = End - text.Length + 1;
-            for (int i = Start; i <= end; i++)
+            index = Start + offset;
+            for (int i = index; i <= end; i ++)
             {
                 if (Match(text, End, i))
                 {
+                    index = i + text.Length;
                     return true;
                 }
             }
@@ -215,13 +227,15 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public bool SearchLowercase(string text, int offset = 0)
+        public bool SearchLowercase(string text, out int endOfIndex)
         {
             var end = End - text.Length + 1;
+            endOfIndex = 0;
             for (int i = Start; i <= end; i++)
             {
                 if (MatchLowercase(text, End, i))
                 {
+                    endOfIndex = i + text.Length;
                     return true;
                 }
             }
