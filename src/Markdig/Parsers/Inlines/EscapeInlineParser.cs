@@ -19,11 +19,21 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
+            var startPosition = slice.Start;
             // Go to escape character
             var c = slice.NextChar();
+            int line;
+            int column;
             if (c.IsAsciiPunctuation())
             {
-                processor.Inline = new LiteralInline() {Content = new StringSlice(new string(c, 1))};
+                processor.Inline = new LiteralInline()
+                {
+                    Content = new StringSlice(new string(c, 1)),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    Line = line,
+                    Column = column
+                };
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
                 slice.NextChar();
                 return true;
             }
@@ -31,7 +41,14 @@ namespace Markdig.Parsers.Inlines
             // A backslash at the end of the line is a [hard line break]:
             if (c == '\n')
             {
-                processor.Inline = new HardlineBreakInline();
+                processor.Inline = new LineBreakInline()
+                {
+                    IsHard = true,
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    Line = line,
+                    Column = column
+                };
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
                 slice.NextChar();
                 return true;
             }

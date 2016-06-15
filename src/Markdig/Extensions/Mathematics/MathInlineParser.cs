@@ -38,6 +38,8 @@ namespace Markdig.Extensions.Mathematics
                 return false;
             }
 
+            var startPosition = slice.Start;
+
             // Match the opened $ or $$
             int openDollars = 1; // we have at least a $
             var c = slice.NextChar();
@@ -63,13 +65,6 @@ namespace Markdig.Extensions.Mathematics
             pc = match;
             while (c != '\0')
             {
-                // Count new '\n'
-                if (c == '\n')
-                {
-                    processor.LocalLineIndex++;
-                    processor.LineIndex++;
-                }
-
                 // Don't process sticks if we have a '\' as a previous char
                 if (pc != '\\' )
                 {
@@ -107,8 +102,14 @@ namespace Markdig.Extensions.Mathematics
                 }
 
                 // Create a new MathInline
+                int line;
+                int column;
                 var inline = new MathInline()
                 {
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    SourceEndPosition = processor.GetSourcePosition(slice.End),
+                    Line = line,
+                    Column = column,
                     Delimiter = match,
                     DelimiterCount = openDollars,
                     Content = slice

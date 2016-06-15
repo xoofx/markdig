@@ -52,11 +52,19 @@ namespace Markdig.Extensions.GenericAttributes
                     // Work on a copy
                     var copy = line;
                     copy.Start = indexOfAttributes;
+                    var startOfAttributes = copy.Start;
                     HtmlAttributes attributes;
                     if (GenericAttributesParser.TryParse(ref copy, out attributes))
                     {
                         var htmlAttributes = block.GetAttributes();
                         attributes.CopyTo(htmlAttributes);
+
+                        // Update position for HtmlAttributes
+                        htmlAttributes.Line = processor.LineIndex;
+                        htmlAttributes.Column = startOfAttributes - processor.CurrentLineStartPosition; // This is not accurate with tabs!
+                        htmlAttributes.SourceStartPosition = startOfAttributes;
+                        htmlAttributes.SourceEndPosition = copy.Start - 1;
+
                         line.End = indexOfAttributes - 1;
                         return true;
                     }

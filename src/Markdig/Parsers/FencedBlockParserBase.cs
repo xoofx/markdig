@@ -128,6 +128,8 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
+            var startPosition = processor.Start;
+
             // Match fenced char
             int count = 0;
             var line = processor.Line;
@@ -157,6 +159,8 @@ namespace Markdig.Parsers
                 fenced.Column = processor.Column;
                 fenced.FencedChar = matchChar;
                 fenced.FencedCharCount = count;
+                fenced.SourceStartPosition = startPosition;
+                fenced.SourceEndPosition = line.Start;
             };
 
             // Try to parse any attached attributes
@@ -212,6 +216,8 @@ namespace Markdig.Parsers
             // The line must contain only fence opening character followed only by whitespaces.
             if (count <=0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
+                block.SourceEndPosition = line.Start - 1;
+
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
             }

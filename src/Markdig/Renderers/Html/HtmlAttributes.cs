@@ -11,7 +11,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// Attached HTML attributes to a <see cref="MarkdownObject"/>.
     /// </summary>
-    public class HtmlAttributes
+    public class HtmlAttributes : MarkdownObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlAttributes"/> class.

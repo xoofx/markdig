@@ -24,16 +24,6 @@ namespace Markdig.Syntax
         }
 
         /// <summary>
-        /// Gets or sets the text column this instance was declared (zero-based).
-        /// </summary>
-        public int Column { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text line this instance was declared (zero-based).
-        /// </summary>
-        public int Line { get; set; }
-
-        /// <summary>
         /// Gets the parent of this container. May be null.
         /// </summary>
         public ContainerBlock Parent { get; internal set;  }

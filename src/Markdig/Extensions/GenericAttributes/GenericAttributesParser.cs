@@ -28,6 +28,7 @@ namespace Markdig.Extensions.GenericAttributes
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             HtmlAttributes attributes;
+            var startPosition = slice.Start;
             if (TryParse(ref slice, out attributes))
             {
                 var inline = processor.Inline;
@@ -64,6 +65,14 @@ namespace Markdig.Extensions.GenericAttributes
 
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
                 attributes.CopyTo(currentHtmlAttributes);
+
+                // Update the position of the attributes
+                int line;
+                int column;
+                currentHtmlAttributes.SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column);
+                currentHtmlAttributes.Line = line;
+                currentHtmlAttributes.Column = column;
+                currentHtmlAttributes.SourceEndPosition = currentHtmlAttributes.SourceStartPosition + slice.Start - startPosition - 1;
 
                 // We don't set the processor.Inline as we don't want to add attach attributes to a particular entity
                 return true;

@@ -46,6 +46,7 @@ namespace Markdig.Parsers
             // opening sequence.
             var column = processor.Column;
             var line = processor.Line;
+            var sourcePosition = line.Start;
             var c = line.CurrentChar;
             var matchingChar = c;
 
@@ -64,14 +65,15 @@ namespace Markdig.Parsers
             if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
             {
                 // Move to the content
-                processor.Line.Start = line.Start + 1;
                 var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
                     Level = leadingCount,
-                    Column = column
+                    Column = column,
+                    SourceStartPosition =  sourcePosition
                 };
                 processor.NewBlocks.Push(headingBlock);
+                processor.GoToColumn(column + leadingCount + 1);
 
                 // Gives a chance to parse attributes
                 if (TryParseAttributes != null)
@@ -115,6 +117,9 @@ namespace Markdig.Parsers
                         }
                     }
                 }
+
+                // Setup the source end position of this element
+                headingBlock.SourceEndPosition = processor.Line.End;
 
                 // We expect a single line, so don't continue
                 return BlockState.Break;

@@ -19,6 +19,33 @@ namespace Markdig.Syntax
         private int count;
 
         /// <summary>
+        /// Gets or sets the text column this instance was declared (zero-based).
+        /// </summary>
+        public int Column { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text line this instance was declared (zero-based).
+        /// </summary>
+        public int Line { get; set; }
+
+        /// <summary>
+        /// Gets or sets the starting character position from the original text source. 
+        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
+        /// </summary>
+        public int SourceStartPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ending character position from the original text source.
+        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
+        /// </summary>
+        public int SourceEndPosition { get; set; }
+
+        /// <summary>
+        /// Gets the character length of this element within the original source code.
+        /// </summary>
+        public int SourceLength => SourceEndPosition - SourceStartPosition + 1;
+
+        /// <summary>
         /// Stores a key/value pair for this instance.
         /// </summary>
         /// <param name="key">The key.</param>

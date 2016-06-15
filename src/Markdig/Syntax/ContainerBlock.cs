@@ -68,6 +68,11 @@ namespace Markdig.Syntax
             }
             children[Count++] = item;
             item.Parent = this;
+
+            if (item.SourceEndPosition > SourceEndPosition)
+            {
+                SourceEndPosition = item.SourceEndPosition;
+            }
         }
 
         private void EnsureCapacity(int min)

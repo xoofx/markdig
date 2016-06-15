@@ -23,7 +23,9 @@ namespace Markdig.Parsers
     /// </summary>
     public class InlineProcessor
     {
-        private readonly List<int> lineOffsets;
+        private readonly List<StringLineGroup.LineOffset> lineOffsets;
+        private int previousSliceOffset;
+        private int previousLineIndexForSliceOffset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
@@ -34,7 +36,7 @@ namespace Markdig.Parsers
         /// <param name="inlineCreated">The inline created event.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers)
+        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -42,7 +44,8 @@ namespace Markdig.Parsers
             StringBuilders = stringBuilders;
             Document = document;
             Parsers = parsers;
-            lineOffsets = new List<int>();
+            PreciseSourceLocation = preciseSourcelocation;
+            lineOffsets = new List<StringLineGroup.LineOffset>();
             Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
             LiteralInlineParser = new LiteralInlineParser();
@@ -52,6 +55,11 @@ namespace Markdig.Parsers
         /// Gets the current block being proessed.
         /// </summary>
         public LeafBlock Block { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether to provide precise source location.
+        /// </summary>
+        public bool PreciseSourceLocation { get; }
 
         /// <summary>
         /// Gets or sets the new block to replace the block being processed.
@@ -86,12 +94,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the index of the line from the begining of the document being processed.
         /// </summary>
-        public int LineIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the index of the local line from the beginning of the block being processed.
-        /// </summary>
-        public int LocalLineIndex { get; set; }
+        public int LineIndex { get; private set; }
 
         /// <summary>
         /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="InlineParser.Index"/> property.
@@ -107,6 +110,48 @@ namespace Markdig.Parsers
         /// Gets the literal inline parser.
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; }
+
+
+        public int GetSourcePosition(int sliceOffset)
+        {
+            int column;
+            int lineIndex;
+            return GetSourcePosition(sliceOffset, out lineIndex, out column);
+        }
+
+        /// <summary>
+        /// Gets the source position for the specified offset within the current slice.
+        /// </summary>
+        /// <param name="sliceOffset">The slice offset.</param>
+        /// <returns>The source position</returns>
+        public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
+        {
+            column = 0;            
+            lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
+            int position = 0;
+            if (PreciseSourceLocation)
+            {
+                for (; lineIndex < lineOffsets.Count; lineIndex++)
+                {
+                    var lineOffset = lineOffsets[lineIndex];
+                    if (sliceOffset <= lineOffset.End)
+                    {
+                        // Use the beginning of the line as a previous slice offset 
+                        // (since it is on the same line)
+                        previousSliceOffset = lineOffsets[lineIndex].Start;
+                        var delta = sliceOffset - previousSliceOffset;
+                        column = lineOffsets[lineIndex].Column + delta;
+                        position = lineOffset.LinePosition + delta + lineOffsets[lineIndex].Offset;
+                        previousLineIndexForSliceOffset = lineIndex;
+
+                        // Return an absolute line index
+                        lineIndex = lineIndex + LineIndex;
+                        break;
+                    }
+                }
+            }
+            return position;
+        }
 
         /// <summary>
         /// Processes the inline of the specified <see cref="LeafBlock"/>.
@@ -124,21 +169,15 @@ namespace Markdig.Parsers
             BlockNew = null;
             LineIndex = leafBlock.Line;
 
+            previousSliceOffset = 0;
+            previousLineIndexForSliceOffset = 0;
             lineOffsets.Clear();
-            LocalLineIndex = 0;
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines = new StringLineGroup();
 
             while (!text.IsEmpty)
             {
                 var c = text.CurrentChar;
-
-                // Update line index
-                if (text.Start >= lineOffsets[LocalLineIndex])
-                {
-                    LineIndex++;
-                    LocalLineIndex++;
-                }
 
                 var textSaved = text;
                 var parsers = Parsers.GetParsersForOpeningCharacter(c);

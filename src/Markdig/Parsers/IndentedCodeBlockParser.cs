@@ -18,10 +18,16 @@ namespace Markdig.Parsers
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
+            var startPosition = processor.Line.Start;
             var result = TryContinue(processor, null);
             if (result == BlockState.Continue)
             {
-                processor.NewBlocks.Push(new CodeBlock(this) { Column = processor.Column });
+                processor.NewBlocks.Push(new CodeBlock(this)
+                {
+                    Column = processor.Column,
+                    SourceStartPosition = startPosition,
+                    SourceEndPosition = processor.Line.End
+                });
             }
             return result;
         }
@@ -40,6 +46,10 @@ namespace Markdig.Parsers
             if (processor.Indent > 4)
             {
                 processor.GoToCodeIndent();
+            }
+            if (block != null)
+            {
+                block.SourceEndPosition = processor.Line.End;
             }
             return BlockState.Continue;
         }

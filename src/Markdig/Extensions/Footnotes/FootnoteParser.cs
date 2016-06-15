@@ -83,7 +83,7 @@ namespace Markdig.Extensions.Footnotes
                     return BlockState.ContinueDiscard;
                 }
 
-                if (footnote.IsLastLineEmpty && processor.Start == 0)
+                if (footnote.IsLastLineEmpty && processor.Column == 0)
                 {
                     return BlockState.Break;
                 }

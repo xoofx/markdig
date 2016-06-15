@@ -30,6 +30,8 @@ namespace Markdig.Extensions.DefinitionLists
                 return BlockState.None;
             }
 
+            var startPosition = processor.Start;
+
             var column = processor.ColumnBeforeIndent;
             processor.NextChar();
             processor.ParseIndent();
@@ -62,16 +64,24 @@ namespace Markdig.Extensions.DefinitionLists
 
             if (currentDefinitionList == null)
             {
-                currentDefinitionList = new DefinitionList(this);
+                currentDefinitionList = new DefinitionList(this)
+                {
+                    SourceStartPosition = paragraphBlock.SourceStartPosition,
+                    SourceEndPosition = processor.Line.End,
+                    Column = paragraphBlock.Column,
+                    Line = paragraphBlock.Line,
+                };
                 previousParent.Add(currentDefinitionList);
             }
 
             var definitionItem = new DefinitionItem(this)
             {
-                Column =  processor.Column,
+                Line = processor.LineIndex,
+                Column = column,
+                SourceStartPosition = startPosition,
+                SourceEndPosition = processor.Line.End,
                 OpeningCharacter = processor.CurrentChar,
             };
-            currentDefinitionList.Add(definitionItem);
 
             for (int i = 0; i < paragraphBlock.Lines.Count; i++)
             {
@@ -80,13 +90,18 @@ namespace Markdig.Extensions.DefinitionLists
                 {
                     Column =  paragraphBlock.Column,
                     Line = line.Line,
+                    SourceStartPosition = paragraphBlock.SourceStartPosition,
+                    SourceEndPosition = paragraphBlock.SourceEndPosition,
                     IsOpen = false
                 };
-                term.AppendLine(ref line.Slice, line.Column, line.Line);
+                term.AppendLine(ref line.Slice, line.Column, line.Line, line.Position);
                 definitionItem.Add(term);
             }
-
+            currentDefinitionList.Add(definitionItem);
             processor.Open(definitionItem);
+
+            // Update the end position
+            currentDefinitionList.SourceEndPosition = processor.Line.End;
 
             return BlockState.Continue;
         }
@@ -100,11 +115,13 @@ namespace Markdig.Extensions.DefinitionLists
                 return BlockState.Continue;
             }
 
+            var list = (DefinitionList)definitionItem.Parent;
             var lastBlankLine = definitionItem.LastChild as BlankLineBlock;
 
             // Check if we have another definition list
             if (Array.IndexOf(OpeningCharacters, processor.CurrentChar) >= 0)
             {
+                var startPosition = processor.Start;
                 var column = processor.ColumnBeforeIndent;
                 processor.NextChar();
                 processor.ParseIndent();
@@ -118,6 +135,8 @@ namespace Markdig.Extensions.DefinitionLists
                     {
                         definitionItem.RemoveAt(definitionItem.Count - 1);
                     }
+
+                    list.SourceEndPosition = list.LastChild.SourceEndPosition;
                     return BlockState.None;
                 }
 
@@ -126,10 +145,12 @@ namespace Markdig.Extensions.DefinitionLists
                     processor.GoToColumn(column + 4);
                 }
 
-                var list = (DefinitionList) definitionItem.Parent;
                 processor.Close(definitionItem);
                 var nextDefinitionItem = new DefinitionItem(this)
                 {
+                    SourceStartPosition = startPosition,
+                    SourceEndPosition = processor.Line.End,
+                    Line = processor.LineIndex,
                     Column = processor.Column,
                     OpeningCharacter = processor.CurrentChar,
                 };
@@ -161,6 +182,7 @@ namespace Markdig.Extensions.DefinitionLists
                 definitionItem.RemoveAt(definitionItem.Count - 1);
             }
 
+            list.SourceEndPosition = list.LastChild.SourceEndPosition;
             return BlockState.Break;
         }
     }

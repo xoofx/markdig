@@ -37,6 +37,8 @@ namespace Markdig.Extensions.SmartyPants
             var c = slice.CurrentChar;
             var openingChar = c;
 
+            var startingPosition = slice.Start;
+
             // undefined first
             var type = (SmartyPantType) 0;
 
@@ -161,11 +163,17 @@ namespace Markdig.Extensions.SmartyPants
             }
 
             // Create the SmartyPant inline
+            int line;
+            int column;
             var pant = new SmartyPant()
             {
+                SourceStartPosition = processor.GetSourcePosition(startingPosition, out line, out column),
+                Line = line,
+                Column = column,
                 OpeningCharacter = openingChar,
                 Type = type
             };
+            pant.SourceEndPosition = pant.SourceStartPosition + slice.Start - startingPosition - 1;
 
             // We will check in a post-process step for balanaced open/close quotes
             if (postProcess)
@@ -241,14 +249,20 @@ namespace Markdig.Extensions.SmartyPants
                 {
                     if (quote.Type == expectedRightQuote)
                     {
-                        // Replace all intermediate unmatched left or right SmartyPants to there literal equivalent
+                        // Replace all intermediate unmatched left or right SmartyPants to their literal equivalent
                         pants.RemoveAt(i);
                         i--;
                         for (int j = i; j > previousIndex; j--)
                         {
                             var toReplace = pants[j];
                             pants.RemoveAt(j);
-                            toReplace.ReplaceBy(new LiteralInline(toReplace.ToString()));
+                            toReplace.ReplaceBy(new LiteralInline(toReplace.ToString())
+                            {
+                                SourceStartPosition = toReplace.SourceStartPosition,
+                                SourceEndPosition = toReplace.SourceEndPosition,
+                                Line = toReplace.Line,
+                                Column = toReplace.Column,
+                            });
                             i--;
                         }
 
@@ -266,7 +280,13 @@ namespace Markdig.Extensions.SmartyPants
             // If we have any quotes lefts, replace them by there literal equivalent
             foreach (var quote in pants)
             {
-                quote.ReplaceBy(new LiteralInline(quote.ToString()));
+                quote.ReplaceBy(new LiteralInline(quote.ToString())
+                {
+                    SourceStartPosition = quote.SourceStartPosition,
+                    SourceEndPosition = quote.SourceEndPosition,
+                    Line = quote.Line,
+                    Column = quote.Column,
+                });
             }
 
             pants.Clear();

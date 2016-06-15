@@ -29,6 +29,8 @@ namespace Markdig.Parsers.Inlines
                 return false;
             }
 
+            var startPosition = slice.Start;
+
             // Match the opened sticks
             var c = slice.CurrentChar;
             while (c == match)
@@ -98,15 +100,18 @@ namespace Markdig.Parsers.Inlines
                         builder.Length--;
                     }
                 }
+                int line;
+                int column;
                 processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
-                    Content = builder.ToString()
+                    Content = builder.ToString(),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                    Line = line,
+                    Column = column
                 };
                 isMatching = true;
-
-                processor.LocalLineIndex += newLinesFound;
-                processor.LineIndex += newLinesFound;
             }
 
             // Release the builder if not used

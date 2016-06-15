@@ -7,7 +7,8 @@ namespace Markdig.Syntax.Inlines
     /// A base class for a line break.
     /// </summary>
     /// <seealso cref="Markdig.Syntax.Inlines.LeafInline" />
-    public abstract class LineBreakInline : LeafInline
+    public class LineBreakInline : LeafInline
     {
+        public bool IsHard { get; set; }
     }
 }

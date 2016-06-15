@@ -8,7 +8,7 @@ using Markdig.Syntax.Inlines;
 namespace Markdig.Parsers.Inlines
 {
     /// <summary>
-    /// An inline parser for <see cref="SoftlineBreakInline"/> and <see cref="HardlineBreakInline"/>.
+    /// An inline parser for <see cref="LineBreakInline"/>.
     /// </summary>
     /// <seealso cref="Markdig.Parsers.InlineParser" />
     public class LineBreakInlineParser : InlineParser
@@ -34,10 +34,20 @@ namespace Markdig.Parsers.Inlines
                 return false;
             }
 
+            var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
-            processor.Inline = !EnableSoftAsHard && (slice.Start == 0 || !hasDoubleSpacesBefore) ? (Inline)new SoftlineBreakInline() : new HardlineBreakInline();
+            int line;
+            int column;
+            processor.Inline = new LineBreakInline
+            {
+                SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
+                Line = line,
+                Column = column
+            };
+            processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
             return true;
         }
     }

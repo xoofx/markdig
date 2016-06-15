@@ -24,6 +24,7 @@ namespace Markdig.Parsers.Inlines
         {
             string entityName;
             int entityValue;
+            var startPosition = slice.Start;
             int match = HtmlHelper.ScanEntity(slice.Text, slice.Start, slice.Length, out entityName, out entityValue);
             if (match == 0)
             {
@@ -44,10 +45,16 @@ namespace Markdig.Parsers.Inlines
             {
                 var matched = slice;
                 matched.End = match - 1;
+                int line;
+                int column;
                 processor.Inline = new HtmlEntityInline()
                 {
                     Original = matched,
-                    Transcoded = new StringSlice(literal)
+                    Transcoded = new StringSlice(literal),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    SourceEndPosition = processor.GetSourcePosition(matched.End + 1),
+                    Line = line,
+                    Column = column
                 };
                 slice.Start = slice.Start + match;
                 return true;

@@ -23,11 +23,12 @@ namespace Markdig.Helpers
         /// <param name="slice">The slice.</param>
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
-        public StringLine(StringSlice slice, int line, int column)
+        public StringLine(StringSlice slice, int line, int column, int position)
         {
             Slice = slice;
             Line = line;
             Column = column;
+            Position = position;
         }
 
         /// <summary>
@@ -36,11 +37,12 @@ namespace Markdig.Helpers
         /// <param name="slice">The slice.</param>
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
-        public StringLine(ref StringSlice slice, int line, int column)
+        public StringLine(ref StringSlice slice, int line, int column, int position)
         {
             Slice = slice;
             Line = line;
             Column = column;
+            Position = position;
         }
 
         /// <summary>
@@ -52,6 +54,11 @@ namespace Markdig.Helpers
         /// The line position.
         /// </summary>
         public int Line;
+
+        /// <summary>
+        /// The position of the start of this line within the original source code
+        /// </summary>
+        public int Position;
 
         /// <summary>
         /// The column position.

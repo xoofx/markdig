@@ -26,19 +26,24 @@ namespace Markdig.Parsers
         private readonly InlineProcessor inlineProcessor;
         private readonly MarkdownDocument document;
         private readonly ProcessDocumentDelegate documentProcessed;
+        private readonly bool preciseSourceLocation;
+
+        private LineReader lineReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownParser" /> class.
         /// </summary>
-        /// <param name="reader">The reader.</param>
+        /// <param name="text">The reader.</param>
         /// <param name="pipeline">The pipeline.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        private MarkdownParser(TextReader reader, MarkdownPipeline pipeline)
+        private MarkdownParser(string text, MarkdownPipeline pipeline)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (text == null) throw new ArgumentNullException(nameof(text));
             if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
-            Reader = reader;
+            text = FixupZero(text);
+            lineReader = new LineReader(text);
+            preciseSourceLocation = pipeline.PreciseSourceLocation;
 
             // Initialize the pipeline
             var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
@@ -53,7 +58,7 @@ namespace Markdig.Parsers
             // Initialize the inline parsers
             var inlineParserList = new InlineParserList();
             inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList)
+            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList, pipeline.PreciseSourceLocation)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -64,24 +69,19 @@ namespace Markdig.Parsers
         /// <summary>
         /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
-        /// <param name="reader">A Markdown text from a <see cref="TextReader"/>.</param>
+        /// <param name="text">A Markdown text</param>
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
-        public static MarkdownDocument Parse(TextReader reader, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (text == null) throw new ArgumentNullException(nameof(text));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
-            var markdownParser = new MarkdownParser(reader, pipeline);
+            var markdownParser = new MarkdownParser(text, pipeline);
             return markdownParser.Parse();
         }
-
-        /// <summary>
-        /// Gets the text reader used.
-        /// </summary>
-        private TextReader Reader { get; }
 
         /// <summary>
         /// Parses the current <see cref="Reader"/> into a Markdown <see cref="MarkdownDocument"/>.
@@ -101,17 +101,15 @@ namespace Markdig.Parsers
         {
             while (true)
             {
-                // TODO: A TextReader doesn't allow to precisely track position in file due to line endings
-                var lineText = Reader.ReadLine();
-
+                // Get the precise position of the begining of the line
+                var lineText = lineReader.ReadLine();
+                
                 // If this is the end of file and the last line is empty
                 if (lineText == null)
                 {
                     break;
                 }
-                lineText = FixupZero(lineText);
-
-                blockProcessor.ProcessLine(new StringSlice(lineText));
+                blockProcessor.ProcessLine(lineText.Value);
             }
             blockProcessor.CloseAll(true);
         }

@@ -6,21 +6,21 @@ using Markdig.Syntax.Inlines;
 namespace Markdig.Renderers.Html.Inlines
 {
     /// <summary>
-    /// A HTML renderer for a <see cref="SoftlineBreakInline"/>.
+    /// A HTML renderer for a <see cref="LineBreakInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.SoftlineBreakInline}" />
-    public class SoftlineBreakInlineRenderer : HtmlObjectRenderer<SoftlineBreakInline>
+    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.LineBreakInline}" />
+    public class LineBreakInlineRenderer : HtmlObjectRenderer<LineBreakInline>
     {
         /// <summary>
         /// Gets or sets a value indicating whether to render this softline break as a HTML hardline break tag (&lt;br /&gt;)
         /// </summary>
         public bool RenderAsHardlineBreak { get; set; }
 
-        protected override void Write(HtmlRenderer renderer, SoftlineBreakInline obj)
+        protected override void Write(HtmlRenderer renderer, LineBreakInline obj)
         {
             if (renderer.EnableHtmlForInline)
             {
-                if (RenderAsHardlineBreak)
+                if (obj.IsHard || RenderAsHardlineBreak)
                 {
                     renderer.WriteLine("<br />");
                 }

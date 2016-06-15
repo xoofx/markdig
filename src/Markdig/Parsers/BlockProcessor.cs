@@ -99,6 +99,11 @@ namespace Markdig.Parsers
         public StringSlice Line;
 
         /// <summary>
+        /// Gets or sets the current line start position.
+        /// </summary>
+        public int CurrentLineStartPosition { get; private set; }
+
+        /// <summary>
         /// Gets the index of the line in the source text.
         /// </summary>
         public int LineIndex { get; set; }
@@ -365,6 +370,8 @@ namespace Markdig.Parsers
         /// <param name="newLine">The new line.</param>
         public void ProcessLine(StringSlice newLine)
         {
+            CurrentLineStartPosition = newLine.Start;
+
             ContinueProcessingLine = true;
 
             ResetLine(newLine);
@@ -546,7 +553,7 @@ namespace Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex);
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
 
                     if (NewBlocks.Count > 0)
@@ -669,7 +676,7 @@ namespace Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
-                        paragraph.AppendLine(ref Line, Column, LineIndex);
+                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
 
                     // We have just found a lazy continuation for a paragraph, early exit
@@ -722,7 +729,7 @@ namespace Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex);
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
 
                     if (newBlocks.Count > 0)

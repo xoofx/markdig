@@ -31,9 +31,19 @@ namespace Markdig.Parsers.Inlines
             string link;
             bool isEmail;
             var saved = slice;
+            int line;
+            int column;
             if (LinkHelper.TryParseAutolink(ref slice, out link, out isEmail))
             {
-                processor.Inline = new AutolinkInline() {IsEmail = isEmail, Url = link};
+                processor.Inline = new AutolinkInline()
+                {
+                    IsEmail = isEmail,
+                    Url = link,
+                    SourceStartPosition = processor.GetSourcePosition(saved.Start, out line, out column),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                    Line = line,
+                    Column = column
+                };
             }
             else if (EnableHtmlParsing)
             {
@@ -44,7 +54,14 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
 
-                processor.Inline = new HtmlInline() { Tag = htmlTag };
+                processor.Inline = new HtmlInline()
+                {
+                    Tag = htmlTag,
+                    SourceStartPosition = processor.GetSourcePosition(saved.Start, out line, out column),
+                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                    Line = line,
+                    Column = column
+                };
             }
 
             return true;

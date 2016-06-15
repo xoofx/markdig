@@ -31,6 +31,7 @@ namespace Markdig.Extensions.Abbreviations
 
             // A link must be of the form *[Some Text]: An abbreviation 
             var slice = processor.Line;
+            var startPosition = slice.Start;
             var c = slice.NextChar();
             if (c != '[')
             {
@@ -55,7 +56,11 @@ namespace Markdig.Extensions.Abbreviations
             var abbr = new Abbreviation(this)
             {
                 Label = label,
-                Text = slice, Line = processor.LineIndex, Column = processor.Column
+                Text = slice,
+                SourceStartPosition = startPosition,
+                SourceEndPosition = slice.End,
+                Line = processor.LineIndex,
+                Column = processor.Column
             };
             if (!processor.Document.HasAbbreviations())
             {
@@ -84,6 +89,7 @@ namespace Markdig.Extensions.Abbreviations
             inlineProcessor.LiteralInlineParser.PostMatch += (InlineProcessor processor, ref StringSlice slice) =>
             {
                 var literal = (LiteralInline) processor.Inline;
+                var originalLiteral = literal;
 
                 ContainerInline container = null;
 
@@ -96,13 +102,13 @@ namespace Markdig.Extensions.Abbreviations
                     if (matcher.TryMatch(text, i, content.End - i + 1, out match))
                     {
                         // The word matched must be embraced by punctuation or whitespace or \0.
-                        var c = content.PeekCharExtra(i - 1);
+                        var c = content.PeekCharAbsolute(i - 1);
                         if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
                         {
                             continue;
                         }
                         var indexAfterMatch = i + match.Length;
-                        c = content.PeekCharExtra(indexAfterMatch);
+                        c = content.PeekCharAbsolute(indexAfterMatch);
                         if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
                         {
                             continue;
@@ -118,15 +124,31 @@ namespace Markdig.Extensions.Abbreviations
                         // If we don't have a container, create a new one
                         if (container == null)
                         {
-                            container = new ContainerInline();
+                            container = new ContainerInline()
+                            {
+                                SourceStartPosition = originalLiteral.SourceStartPosition,
+                                SourceEndPosition = originalLiteral.SourceEndPosition,
+                                Line = originalLiteral.Line,
+                                Column = originalLiteral.Column,
+                            };
                         }
 
-                        var abbrInline = new AbbreviationInline(abbr);
+                        int line;
+                        int column;
+                        var abbrInline = new AbbreviationInline(abbr)
+                        {
+                            SourceStartPosition = processor.GetSourcePosition(i, out line, out column),
+                            Line = line,
+                            Column = column
+                        };
+                        abbrInline.SourceEndPosition = abbrInline.SourceStartPosition + match.Length - 1;
 
                         // Append the previous literal
                         if (i > content.Start)
                         {
                             container.AppendChild(literal);
+
+                            literal.SourceEndPosition = abbrInline.SourceStartPosition - 1;
                             // Truncate it before the abbreviation
                             literal.Content.End = i - 1;
                         }
@@ -143,7 +165,13 @@ namespace Markdig.Extensions.Abbreviations
                         }
 
                         // Process the remaining literal
-                        literal = new LiteralInline();
+                        literal = new LiteralInline()
+                        {
+                            SourceStartPosition = abbrInline.SourceEndPosition + 1,
+                            SourceEndPosition = literal.SourceEndPosition,
+                            Line = line,
+                            Column = column + match.Length,
+                        };
                         content.Start = indexAfterMatch;
                         literal.Content = content;
 
@@ -153,12 +181,11 @@ namespace Markdig.Extensions.Abbreviations
 
                 if (container != null)
                 {
-                    processor.Inline = container;
-                    // If we have a pending literal, we can add it
                     if (literal != null)
                     {
                         container.AppendChild(literal);
                     }
+                    processor.Inline = container;
                 }
             };
         }

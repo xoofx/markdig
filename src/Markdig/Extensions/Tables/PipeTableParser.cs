@@ -55,14 +55,22 @@ namespace Markdig.Extensions.Tables
             // tracking other delimiters on following lines
             var tableState = processor.ParserStates[Index] as TableState;
             bool isFirstLineEmpty = false;
+
+
+            int globalLineIndex;
+            int column;
+            var position = processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var localLineIndex = globalLineIndex - processor.LineIndex;
+
             if (tableState == null)
             {
+
                 // A table could be preceded by an empty line or a line containing an inline
                 // that has not been added to the stack, so we consider this as a valid 
                 // start for a table. Typically, with this, we can have an attributes {...}
                 // starting on the first line of a pipe table, even if the first line
                 // doesn't have a pipe
-                if (processor.Inline != null &&(processor.LocalLineIndex > 0 || c == '\n'))
+                if (processor.Inline != null && (localLineIndex > 0 || c == '\n'))
                 {
                     return false;
                 }
@@ -92,14 +100,21 @@ namespace Markdig.Extensions.Tables
             }
             else
             {
-                processor.Inline = new PiprTableDelimiterInline(this) { LocalLineIndex = processor.LocalLineIndex };
-                var deltaLine = processor.LocalLineIndex - tableState.LineIndex;
+                processor.Inline = new PiprTableDelimiterInline(this)
+                {
+                    SourceStartPosition = position,
+                    SourceEndPosition = position,
+                    Line = globalLineIndex,
+                    Column = column,
+                    LocalLineIndex = localLineIndex
+                };
+                var deltaLine = localLineIndex - tableState.LineIndex;
                 if (deltaLine > 0)
                 {
                     tableState.IsInvalidTable = true;
                 }
                 tableState.LineHasPipe = true;
-                tableState.LineIndex = processor.LocalLineIndex;
+                tableState.LineIndex = localLineIndex;
                 slice.NextChar(); // Skip the `|` character
 
                 tableState.ColumnAndLineDelimiters.Add(processor.Inline);
@@ -185,7 +200,7 @@ namespace Markdig.Extensions.Tables
             }
 
             // Continue
-            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe || tableState.LineIndex != state.LocalLineIndex)
+            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
             }
@@ -220,6 +235,12 @@ namespace Markdig.Extensions.Tables
                 column = ((PiprTableDelimiterInline)column).FirstChild;
             }
 
+            // TODO: This is not accurate for the table
+            table.SourceStartPosition = column.SourceStartPosition;
+            table.SourceEndPosition = column.SourceEndPosition;
+            table.Line = column.Line;
+            table.Column = column.Column;
+            
             int lastIndex = 0;
             for (int i = 0; i < delimiters.Count; i++)
             {
@@ -229,8 +250,7 @@ namespace Markdig.Extensions.Tables
                     var beforeDelimiter = delimiter?.PreviousSibling;
                     var nextLineColumn = delimiter?.NextSibling;
 
-                    var row = new TableRow();
-                    table.Add(row);
+                    TableRow row = null;
 
                     for (int j = lastIndex; j <= i; j++)
                     {
@@ -254,20 +274,55 @@ namespace Markdig.Extensions.Tables
                             continue;
                         }
 
-                        var columnContainer = new ContainerInline();
+                        var cellContainer = new ContainerInline();
                         var item = column;
+                        var isFirstItem = true;
                         TrimStart(item);
                         while (item != null && !IsLine(item) && !(item is PiprTableDelimiterInline))
                         {
                             var nextSibling = item.NextSibling;
                             item.Remove();
-                            columnContainer.AppendChild(item);
+                            cellContainer.AppendChild(item);
+                            if (isFirstItem)
+                            {
+                                cellContainer.Line = item.Line;
+                                cellContainer.Column = item.Column;
+                                cellContainer.SourceStartPosition = item.SourceStartPosition;
+                                isFirstItem = false;
+                            }
+                            cellContainer.SourceEndPosition = item.SourceEndPosition;
                             item = nextSibling;
                         }
 
-                        var tableCell = new TableCell();
-                        var tableParagraph = new ParagraphBlock() {Inline = columnContainer};
+                        var tableParagraph = new ParagraphBlock()
+                        {
+                            SourceStartPosition = cellContainer.SourceStartPosition,
+                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            Line = cellContainer.Line,
+                            Column = cellContainer.Column,
+                            Inline = cellContainer
+                        };
+
+                        var tableCell = new TableCell()
+                        {
+                            SourceStartPosition = cellContainer.SourceStartPosition,
+                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            Line = cellContainer.Line,
+                            Column = cellContainer.Column,
+                        };
+
                         tableCell.Add(tableParagraph);
+
+                        if (row == null)
+                        {
+                            row = new TableRow()
+                            {
+                                SourceStartPosition = cellContainer.SourceStartPosition,
+                                SourceEndPosition = cellContainer.SourceEndPosition,
+                                Line = cellContainer.Line,
+                                Column = cellContainer.Column,
+                            };
+                        }
                         row.Add(tableCell);
                         cells.Add(tableCell);
 
@@ -289,6 +344,11 @@ namespace Markdig.Extensions.Tables
                             }
                             columnSeparator.Remove();
                         }
+                    }
+
+                    if (row != null)
+                    {
+                        table.Add(row);
                     }
 
                     TrimEnd(beforeDelimiter);
