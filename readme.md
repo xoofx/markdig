@@ -18,7 +18,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - including GFM fenced code blocks. 
 - **Extensible** architecture
   - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
-- Built-in with **18+ extensions**, including:
+- Built-in with **20+ extensions**, including:
   - 2 kind of tables:
     - **Pipe tables** (inspired from Github tables and [PanDoc - Pipe Tables](http://pandoc.org/README.html#extension-pipe_tables))
     - **Grid tables** (inspired from [Pandoc - Grid Tables](http://pandoc.org/README.html#extension-grid_tables)) 
@@ -32,6 +32,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - **Definition lists** (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
   - **Footnotes** (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
   - **Auto-identifiers** for headings (similar to [Pandoc - Auto Identifiers](http://pandoc.org/README.html#extension-auto_identifiers))
+  - **Task Lists** inspired from [Github Task lists](https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments).
   - **Extra bullet lists**, supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
   - **Media support** for media url (youtube, vimeo, mp4...etc.) (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/embedded-audio-and-video/441))
   - **Abbreviations** (inspired from [PHP Markdown Extra - Abbreviations](https://michelf.ca/projects/php-markdown/extra/#abbr))
