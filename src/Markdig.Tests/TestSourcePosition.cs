@@ -430,6 +430,21 @@ literal      ( 3, 3) 11-12
 ", "figures");
         }
 
+        [Test]
+        public void TestFooters()
+        {
+            //     01 234567 89ABCD
+            Check("0\n^^ 12\n^^ 34\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+footer       ( 1, 0)  2-12
+paragraph    ( 1, 3)  5-12
+literal      ( 1, 3)  5-6
+linebreak    ( 1, 5)  7-7
+literal      ( 2, 3) 11-12
+", "footers");
+        }
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();

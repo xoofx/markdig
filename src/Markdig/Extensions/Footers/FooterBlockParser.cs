@@ -30,6 +30,7 @@ namespace Markdig.Extensions.Footers
             }
 
             var column = processor.Column;
+            var startPosition = processor.Start;
 
             // A footer
             // A Footer marker consists of 0-3 spaces of initial indent, plus (a) the characters ^^ together with a following space, or (b) a double character ^^ not followed by a space.
@@ -44,7 +45,14 @@ namespace Markdig.Extensions.Footers
             {
                 processor.NextColumn();
             }
-            processor.NewBlocks.Push(new FooterBlock(this) { OpeningCharacter = openingChar, Column = column});
+            processor.NewBlocks.Push(new FooterBlock(this)
+            {
+                SourceStartPosition = startPosition,
+                SourceEndPosition = processor.Line.End,
+                OpeningCharacter = openingChar,
+                Column = column,
+                Line = processor.LineIndex,
+            });
             return BlockState.Continue;
         }
 
@@ -60,19 +68,22 @@ namespace Markdig.Extensions.Footers
             // A footer
             // A Footer marker consists of 0-3 spaces of initial indent, plus (a) the characters ^^ together with a following space, or (b) a double character ^^ not followed by a space.
             var c = processor.CurrentChar;
+            var result = BlockState.Continue;
             if (c != quote.OpeningCharacter || processor.PeekChar(1) != c)
             {
-                return processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
+                result = processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
             }
-
-            processor.NextChar(); // Skip ^^ char (1st)
-            c = processor.NextChar(); // Skip ^^ char (2nd)
-            if (c.IsSpace())
+            else
             {
-                processor.NextChar(); // Skip following space
+                processor.NextChar(); // Skip ^^ char (1st)
+                c = processor.NextChar(); // Skip ^^ char (2nd)
+                if (c.IsSpace())
+                {
+                    processor.NextChar(); // Skip following space
+                }
+                block.SourceEndPosition = processor.Line.End;
             }
-
-            return BlockState.Continue;
+            return result;
         }
     }
 }
