@@ -137,8 +137,9 @@ namespace Markdig.Parsers
                     // Use the beginning of the line as a previous slice offset 
                     // (since it is on the same line)
                     previousSliceOffset = lineOffsets[lineIndex].Start;
-                    column = sliceOffset - previousSliceOffset;
-                    position = lineOffset.LinePosition + column;
+                    var delta = sliceOffset - previousSliceOffset;
+                    column = lineOffsets[lineIndex].Column + delta;
+                    position = lineOffset.LinePosition + delta + lineOffsets[lineIndex].Offset;
                     previousLineIndexForSliceOffset = lineIndex;
 
                     // Return an absolute line index

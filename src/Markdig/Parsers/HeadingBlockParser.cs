@@ -65,7 +65,6 @@ namespace Markdig.Parsers
             if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
             {
                 // Move to the content
-                processor.Line.Start = line.Start + 1;
                 var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
@@ -74,6 +73,7 @@ namespace Markdig.Parsers
                     SourceStartPosition =  sourcePosition
                 };
                 processor.NewBlocks.Push(headingBlock);
+                processor.GoToColumn(column + leadingCount + 1);
 
                 // Gives a chance to parse attributes
                 if (TryParseAttributes != null)

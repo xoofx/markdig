@@ -23,17 +23,6 @@ literal      ( 0, 0)  0-9
         }
 
         [Test]
-        public void TestParagraphFalseEmphasis()
-        {
-            Check("0123456789**0123", @"
-paragraph    ( 0, 0)  0-15
-literal      ( 0, 0)  0-9
-literal      ( 0, 0) 10-11
-literal      ( 0,12) 12-15
-");
-        }
-
-        [Test]
         public void TestParagraphAndNewLine()
         {
             Check("0123456789\n0123456789", @"
@@ -59,6 +48,78 @@ paragraph    ( 0, 0)  0-9
 literal      ( 0, 0)  0-9
 paragraph    ( 2, 0) 12-21
 literal      ( 2, 0) 12-21
+");
+        }
+
+        [Test]
+        public void TestEmphasis()
+        {
+            Check("012**3456789**", @"
+paragraph    ( 0, 0)  0-13
+literal      ( 0, 0)  0-2
+emphasis     ( 0, 3)  3-13
+literal      ( 0, 5)  5-11
+");
+        }
+
+        [Test]
+        public void TestEmphasis2()
+        {
+            //     01234567
+            Check("01*2**3*", @"
+paragraph    ( 0, 0)  0-7
+literal      ( 0, 0)  0-1
+emphasis     ( 0, 2)  2-4
+literal      ( 0, 3)  3-3
+emphasis     ( 0, 5)  5-7
+literal      ( 0, 6)  6-6
+");
+        }
+
+        [Test]
+        public void TestEmphasis3()
+        {
+            //     0123456789
+            Check("01**2***3*", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-1
+emphasis     ( 0, 2)  2-6
+literal      ( 0, 4)  4-4
+emphasis     ( 0, 7)  7-9
+literal      ( 0, 8)  8-8
+");
+        }
+
+        [Test]
+        public void TestEmphasisFalse()
+        {
+            Check("0123456789**0123", @"
+paragraph    ( 0, 0)  0-15
+literal      ( 0, 0)  0-9
+literal      ( 0,10) 10-11
+literal      ( 0,12) 12-15
+");
+        }
+
+        [Test]
+        public void TestHeading()
+        {
+            //     012345
+            Check("# 2345", @"
+heading      ( 0, 0)  0-5
+literal      ( 0, 2)  2-5
+");
+        }
+
+        [Test]
+        public void TestHeadingWithEmphasis()
+        {
+            //     0123456789
+            Check("# 23**45**", @"
+heading      ( 0, 0)  0-9
+literal      ( 0, 2)  2-3
+emphasis     ( 0, 4)  4-9
+literal      ( 0, 6)  6-7
 ");
         }
 

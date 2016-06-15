@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Markdig.Extensions.Tables;
 
 namespace Markdig.Helpers
 {
@@ -122,7 +123,7 @@ namespace Markdig.Helpers
             {
                 if (lineOffsets != null)
                 {
-                    lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Slice.Start, Lines[0].Slice.End + 1));
+                    lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Column, Lines[0].Slice.Start - Lines[0].Position, Lines[0].Slice.Start, Lines[0].Slice.End + 1));
                 }
                 return Lines[0];
             }
@@ -136,7 +137,7 @@ namespace Markdig.Helpers
                 {
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(new LineOffset(Lines[i - 1].Position, previousStartOfLine, builder.Length));
+                        lineOffsets.Add(new LineOffset(Lines[i - 1].Position, Lines[i - 1].Column, 0, previousStartOfLine, builder.Length));
                     }
                     builder.Append('\n');
                     previousStartOfLine = builder.Length;
@@ -148,7 +149,7 @@ namespace Markdig.Helpers
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, previousStartOfLine, builder.Length));
+                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, Lines[Count - 1].Column, 0, previousStartOfLine, builder.Length));
             }
             var str = builder.ToString();
             builder.Length = 0;
@@ -267,14 +268,20 @@ namespace Markdig.Helpers
 
         public struct LineOffset
         {
-            public LineOffset(int linePosition, int start, int end)
+            public LineOffset(int linePosition, int column, int offset, int start, int end)
             {
                 LinePosition = linePosition;
+                Column = column;
+                Offset = offset;
                 Start = start;
                 End = end;
             }
 
             public readonly int LinePosition;
+
+            public readonly int Column;
+
+            public readonly int Offset;
 
             public readonly int Start;
 
