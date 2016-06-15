@@ -483,6 +483,40 @@ attributes   ( 0, 0)  0-0
 ", "mathematics");
         }
 
+        [Test]
+        public void TestSmartyPants()
+        {
+            //        01234567
+            //     01 23456789
+            Check("0\n2 <<45>>", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-0
+linebreak    ( 0, 1)  1-1
+literal      ( 1, 0)  2-3
+smartypant   ( 1, 2)  4-5
+literal      ( 1, 4)  6-7
+smartypant   ( 1, 6)  8-9
+", "smartypants");
+        }
+
+        [Test]
+        public void TestSmartyPantsUnbalanced()
+        {
+            //        012345
+            //     01 234567
+            Check("0\n2 <<45", @"
+paragraph    ( 0, 0)  0-7
+literal      ( 0, 0)  0-0
+linebreak    ( 0, 1)  1-1
+literal      ( 1, 0)  2-3
+literal      ( 1, 2)  4-5
+literal      ( 1, 4)  6-7
+", "smartypants");
+        }
+
+
+
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
