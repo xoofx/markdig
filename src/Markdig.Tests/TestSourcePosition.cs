@@ -469,6 +469,19 @@ literal      ( 0, 2)  2-3
 ", "attributes");
         }
 
+        [Test]
+        public void TestMathematicsInline()
+        {
+            //     01 23456789AB
+            Check("0\n012 $abcd$", @"
+paragraph    ( 0, 0)  0-11
+literal      ( 0, 0)  0-0
+linebreak    ( 0, 1)  1-1
+literal      ( 1, 0)  2-5
+math         ( 1, 4)  6-11
+attributes   ( 0, 0)  0-0
+", "mathematics");
+        }
 
         private static void Check(string text, string expectedResult, string extensions = null)
         {
