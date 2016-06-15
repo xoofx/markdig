@@ -400,6 +400,36 @@ literal      ( 2, 0)  6-6
 ", "figures");
         }
 
+        [Test]
+        public void TestFiguresCaption1()
+        {
+            //     01 234567 89 ABCD
+            Check("0\n^^^ab\n0\n^^^\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+figure       ( 1, 0)  2-12
+figurecaption ( 1, 3)  5-6
+literal      ( 1, 3)  5-6
+paragraph    ( 2, 0)  8-8
+literal      ( 2, 0)  8-8
+", "figures");
+        }
+
+        [Test]
+        public void TestFiguresCaption2()
+        {
+            //     01 2345 67 89ABCD
+            Check("0\n^^^\n0\n^^^ab\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+figure       ( 1, 0)  2-12
+paragraph    ( 2, 0)  6-6
+literal      ( 2, 0)  6-6
+figurecaption ( 3, 3) 11-12
+literal      ( 3, 3) 11-12
+", "figures");
+        }
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
