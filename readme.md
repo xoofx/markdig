@@ -6,7 +6,7 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
 
 > NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
 
-You can **try Markdig online** and compare it to other implems on [babelmark3](http://babelmark.github.io/) 
+You can **try Markdig online** and compare it to other implementations on [babelmark3](http://babelmark.github.io/) 
 
 ## Features
 
@@ -88,13 +88,16 @@ This is an early preview of the benchmarking against various implementations:
 - [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
 - [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
 
-Markdig is roughly x100 times faster than MarkdownSharp and extremelly competitive to other implems (that are not feature wise comparable) 
+### Analysis of the results:
 
-Performance in x86:
+- Markdig is roughly **x100 times faster than MarkdownSharp**
+- **Among the best in CPU**, Extremelly competitive and often faster than other implementations (not feature wise equivalent) 
+- **15% to 30% less allocations** and GC pressure
+
+
+### Performance in x86:
 
 ```
-// * Summary *
-
 BenchmarkDotNet-Dev=v0.9.6.0+
 OS=Microsoft Windows NT 6.2.9200.0
 Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
@@ -107,24 +110,17 @@ WarmupCount=2  TargetCount=10
 
                Method |    Median |    StdDev |  Gen 0 | Gen 1 |  Gen 2 | Bytes Allocated/Op |
 --------------------- |---------- |---------- |------- |------ |------- |------------------- |
-          TestMarkdig | 5.4870 ms | 0.0158 ms | 193.00 | 12.00 |  84.00 |       1,425,192.72 |
-    TestCommonMarkCpp | 4.0134 ms | 0.1008 ms |      - |     - | 180.00 |         454,859.74 |
-    TestCommonMarkNet | 4.6139 ms | 0.0581 ms | 193.00 | 12.00 |  84.00 |       1,406,367.27 |
- TestCommonMarkNetNew | 5.5327 ms | 0.0461 ms | 193.00 | 96.00 |  84.00 |       1,738,465.42 |
-     TestMarkdownDeep | 7.5910 ms | 0.1006 ms | 205.00 | 96.00 |  84.00 |       1,758,383.79 |
-        TestMoonshine | 5.8843 ms | 0.1758 ms |      - |     - | 215.00 |         565,000.73 |
-
-// * Diagnostic Output - MemoryDiagnoser *
-
-
-// ***** BenchmarkRunner: End *****
+          TestMarkdig | 5.4332 ms | 0.0809 ms |  96.00 | 36.00 |  84.00 |       1,218,643.59 |
+    TestCommonMarkCpp | 4.0150 ms | 0.1208 ms |      - |     - | 180.00 |         454,859.74 |
+    TestCommonMarkNet | 4.5448 ms | 0.0323 ms | 193.00 | 12.00 |  84.00 |       1,406,367.27 |
+ TestCommonMarkNetNew | 5.4811 ms | 0.0327 ms | 193.00 | 96.00 |  84.00 |       1,738,465.42 |
+     TestMarkdownDeep | 7.5881 ms | 0.0554 ms | 205.00 | 96.00 |  84.00 |       1,758,383.79 |
+        TestMoonshine | 5.8586 ms | 0.0764 ms |      - |     - | 215.00 |         565,000.72 |
 ```
 
-Performance for x64:
+### Performance for x64:
 
 ```
-// * Summary *
-
 BenchmarkDotNet-Dev=v0.9.6.0+
 OS=Microsoft Windows NT 6.2.9200.0
 Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
@@ -137,15 +133,10 @@ WarmupCount=2  TargetCount=10
 
                Method |    Median |    StdDev |  Gen 0 |  Gen 1 | Gen 2 | Bytes Allocated/Op |
 --------------------- |---------- |---------- |------- |------- |------ |------------------- |
-          TestMarkdig | 5.9539 ms | 0.0495 ms | 157.00 |  96.00 | 84.00 |       1,767,834.52 |
-    TestCommonMarkNet | 4.3158 ms | 0.0161 ms | 157.00 |  96.00 | 84.00 |       1,747,432.06 |
- TestCommonMarkNetNew | 5.3421 ms | 0.0435 ms | 229.00 | 168.00 | 84.00 |       2,323,922.97 |
-     TestMarkdownDeep | 7.4750 ms | 0.0281 ms | 318.00 | 186.00 | 84.00 |       2,576,728.69 |
-
-// * Diagnostic Output - MemoryDiagnoser *
-
-
-// ***** BenchmarkRunner: End *****
+          TestMarkdig | 5.5276 ms | 0.0402 ms | 109.00 |  96.00 | 84.00 |       1,537,027.66 |
+    TestCommonMarkNet | 4.4661 ms | 0.1190 ms | 157.00 |  96.00 | 84.00 |       1,747,432.06 |
+ TestCommonMarkNetNew | 5.3151 ms | 0.0815 ms | 229.00 | 168.00 | 84.00 |       2,323,922.97 |
+     TestMarkdownDeep | 7.4076 ms | 0.0617 ms | 318.00 | 186.00 | 84.00 |       2,576,728.69 |
 ```
 
 ## Credits
@@ -156,7 +147,7 @@ This project would not have been possible without this huge foundation.
 
 Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/BenchmarkDotNet) that makes benchmarking so easy to setup!
 
-Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET]()
+Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET](https://github.com/Knagis/CommonMark.NET)
 
 ## Author
 
