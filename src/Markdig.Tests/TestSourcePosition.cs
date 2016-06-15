@@ -41,6 +41,18 @@ literal      ( 1, 0) 12-21
         }
 
         [Test]
+        public void TestParagraphNewLineAndSpaces()
+        {
+            //     0123 45678
+            Check("012\n  345", @"
+paragraph    ( 0, 0)  0-8
+literal      ( 0, 0)  0-2
+linebreak    ( 0, 3)  3-3
+literal      ( 1, 2)  6-8
+");
+        }
+
+        [Test]
         public void TestParagraph2()
         {
             Check("0123456789\n\n0123456789", @"

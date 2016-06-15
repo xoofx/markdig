@@ -137,7 +137,7 @@ namespace Markdig.Helpers
                 {
                     if (lineOffsets != null)
                     {
-                        lineOffsets.Add(new LineOffset(Lines[i - 1].Position, Lines[i - 1].Column, 0, previousStartOfLine, builder.Length));
+                        lineOffsets.Add(new LineOffset(Lines[i - 1].Position, Lines[i - 1].Column, Lines[i - 1].Slice.Start - Lines[i - 1].Position, previousStartOfLine, builder.Length));
                     }
                     builder.Append('\n');
                     previousStartOfLine = builder.Length;
@@ -149,7 +149,7 @@ namespace Markdig.Helpers
             }
             if (lineOffsets != null)
             {
-                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, Lines[Count - 1].Column, 0, previousStartOfLine, builder.Length));
+                lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, Lines[Count - 1].Column, Lines[Count - 1].Slice.Start - Lines[Count - 1].Position, previousStartOfLine, builder.Length));
             }
             var str = builder.ToString();
             builder.Length = 0;
