@@ -135,6 +135,63 @@ literal      ( 0, 6)  6-7
 ");
         }
 
+        [Test]
+        public void TestCodeSpan()
+        {
+            //     012345678
+            Check("0123`456`", @"
+paragraph    ( 0, 0)  0-8
+literal      ( 0, 0)  0-3
+code         ( 0, 4)  4-8
+");
+        }
+
+        [Test]
+        public void TestLink()
+        {
+            //     0123456789
+            Check("012[45](#)", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-2
+link         ( 0, 3)  3-9
+literal      ( 0, 4)  4-5
+");
+        }
+
+        [Test]
+        public void TestHtmlInline()
+        {
+            //     0123456789
+            Check("01<b>4</b>", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-1
+html         ( 0, 2)  2-4
+literal      ( 0, 5)  5-5
+html         ( 0, 6)  6-9
+");
+        }
+
+        [Test]
+        public void TestAutolinkInline()
+        {
+            //     0123456789ABCD
+            Check("01<http://yes>", @"
+paragraph    ( 0, 0)  0-13
+literal      ( 0, 0)  0-1
+autolink     ( 0, 2)  2-13
+");
+        }
+
+        [Test]
+        public void TestFencedCodeBlock()
+        {
+            //     012 3456 78 9ABC
+            Check("01\n```\n3\n```\n", @"
+paragraph    ( 0, 0)  0-1
+literal      ( 0, 0)  0-1
+fencedcode   ( 1, 0)  3-11
+");
+        }
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
