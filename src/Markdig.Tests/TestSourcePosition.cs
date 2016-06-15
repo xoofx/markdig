@@ -302,6 +302,64 @@ abbreviation ( 2,61) 99-102
 ", "abbreviations");
         }
 
+        [Test]
+        public void TestCitation()
+        {
+            //     0123 4 567 8
+            Check("01 \"\"23\"\"", @"
+paragraph    ( 0, 0)  0-8
+literal      ( 0, 0)  0-2
+emphasis     ( 0, 3)  3-8
+literal      ( 0, 5)  5-6
+", "citations");
+        }
+
+        [Test]
+        public void TestCustomContainer()
+        {
+            //     01 2345 678 9ABC DEF
+            Check("0\n:::\n23\n:::\n45\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+customcontainer ( 1, 0)  2-11
+paragraph    ( 2, 0)  6-7
+literal      ( 2, 0)  6-7
+paragraph    ( 4, 0) 13-14
+literal      ( 4, 0) 13-14
+", "customcontainers");
+        }
+
+        [Test]
+        public void TestDefinitionList()
+        {
+            //     012 3456789A
+            Check("a0\n:   1234", @"
+definitionlist ( 0, 0)  0-10
+definitionitem ( 1, 0)  3-10
+definitionterm ( 0, 0)  0-1
+literal      ( 0, 0)  0-1
+paragraph    ( 1, 4)  7-10
+literal      ( 1, 4)  7-10
+", "definitionlists");
+        }
+
+        [Test]
+        public void TestDefinitionList2()
+        {
+            //     012 3456789AB CDEF01234
+            Check("a0\n:   1234\n:    5678", @"
+definitionlist ( 0, 0)  0-20
+definitionitem ( 1, 0)  3-10
+definitionterm ( 0, 0)  0-1
+literal      ( 0, 0)  0-1
+paragraph    ( 1, 4)  7-10
+literal      ( 1, 4)  7-10
+definitionitem ( 2, 4) 12-20
+paragraph    ( 2, 5) 17-20
+literal      ( 2, 5) 17-20
+", "definitionlists");
+        }
+
 
         private static void Check(string text, string expectedResult, string extensions = null)
         {
