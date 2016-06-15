@@ -289,9 +289,31 @@ literal      ( 0, 7)  7-7
 ");
         }
 
-        private static void Check(string text, string expectedResult)
+        [Test]
+        public void TestAbbreviations()
         {
-            var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
+            Check(@"*[HTML]: Hypertext Markup Language
+
+Later in a text we are using HTML and it becomes an abbr tag HTML", @"
+paragraph    ( 2, 0) 38-102
+container    ( 2, 0) 38-102
+literal      ( 2, 0) 38-66
+abbreviation ( 2,29) 67-70
+literal      ( 2,33) 71-98
+abbreviation ( 2,61) 99-102
+", "abbreviations");
+        }
+
+
+        private static void Check(string text, string expectedResult, string extensions = null)
+        {
+            var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
+            if (extensions != null)
+            {
+                pipelineBuilder.Configure(extensions);
+            }
+            var pipeline = pipelineBuilder.Build();
+
             var document = Markdown.Parse(text, pipeline);
 
             var build = new StringBuilder();
