@@ -30,7 +30,9 @@ namespace Markdig.Extensions.Figures
 
             // Match fenced char
             int count = 0;
+            var column = processor.Column;
             var line = processor.Line;
+            var startPosition = line.Start;
             char c = line.CurrentChar;
             var matchChar = c;
             while (c != '\0')
@@ -51,6 +53,9 @@ namespace Markdig.Extensions.Figures
 
             var figure = new Figure(this)
             {
+                SourceStartPosition = startPosition,
+                SourceEndPosition = line.End,
+                Line = processor.LineIndex,
                 Column = processor.Column,
                 OpeningCharacter = matchChar,
                 OpeningCharacterCount = count
@@ -59,7 +64,14 @@ namespace Markdig.Extensions.Figures
             line.TrimStart();
             if (!line.IsEmpty)
             {
-                var caption = new FigureCaption(this) {IsOpen = false};
+                var caption = new FigureCaption(this)
+                {
+                    SourceStartPosition = line.Start,
+                    SourceEndPosition = line.End,
+                    Line = processor.LineIndex,
+                    Column = column + line.Start - startPosition,
+                    IsOpen = false
+                };
                 caption.AppendLine(ref line, line.Start, processor.LineIndex, line.Start);
                 figure.Add(caption);
             }
@@ -76,8 +88,10 @@ namespace Markdig.Extensions.Figures
             var matchChar = figure.OpeningCharacter;
             var c = processor.CurrentChar;
 
+            var column = processor.Column;
             // Match if we have a closing fence
             var line = processor.Line;
+            var startPosition = line.Start;
             while (c == matchChar)
             {
                 c = line.NextChar();
@@ -91,10 +105,19 @@ namespace Markdig.Extensions.Figures
                 line.TrimStart();
                 if (!line.IsEmpty)
                 {
-                    var caption = new FigureCaption(this) {IsOpen = false};
+                    var caption = new FigureCaption(this)
+                    {
+                        SourceStartPosition = line.Start,
+                        SourceEndPosition = line.End,
+                        Line = processor.LineIndex,
+                        Column = column + line.Start - startPosition,
+                        IsOpen = false
+                    };
                     caption.AppendLine(ref line, line.Start, processor.LineIndex, line.Start);
                     figure.Add(caption);
                 }
+
+                figure.SourceEndPosition = line.End;
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
@@ -102,6 +125,8 @@ namespace Markdig.Extensions.Figures
 
             // Reset the indentation to the column before the indent
             processor.GoToColumn(processor.ColumnBeforeIndent);
+
+            figure.SourceEndPosition = line.End;
 
             return BlockState.Continue;
         }

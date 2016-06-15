@@ -10,6 +10,9 @@ using NUnit.Framework;
 
 namespace Markdig.Tests
 {
+    /// <summary>
+    /// Test the precise source location of all Markdown elements, including extensions
+    /// </summary>
     [TestFixture]
     public class TestSourcePosition
     {
@@ -383,6 +386,20 @@ emphasis     ( 0, 2)  2-6
 literal      ( 0, 4)  4-4
 ", "emphasisextras");
         }
+
+        [Test]
+        public void TestFigures()
+        {
+            //     01 2345 67 89AB
+            Check("0\n^^^\n0\n^^^\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+figure       ( 1, 0)  2-10
+paragraph    ( 2, 0)  6-6
+literal      ( 2, 0)  6-6
+", "figures");
+        }
+
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
