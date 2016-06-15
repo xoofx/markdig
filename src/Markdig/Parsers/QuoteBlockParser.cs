@@ -43,7 +43,7 @@ namespace Markdig.Parsers
                 QuoteChar = quoteChar,
                 Column = column,
                 SourceStartPosition = sourcePosition,
-                SourceEndPosition = processor.Start
+                SourceEndPosition = processor.Line.End,
             });
             return BlockState.Continue;
         }
@@ -72,8 +72,18 @@ namespace Markdig.Parsers
                 processor.NextChar(); // Skip following space
             }
 
-            block.SourceEndPosition = processor.Start - 1;
+            block.SourceEndPosition = processor.Line.End;
             return BlockState.Continue;
+        }
+
+        public override bool Close(BlockProcessor processor, Block block)
+        {
+            var quoteBlock = block as QuoteBlock;
+            if (quoteBlock?.LastChild != null)
+            {
+                quoteBlock.SourceEndPosition = quoteBlock.LastChild.SourceEndPosition;
+            }
+            return true;
         }
     }
 }

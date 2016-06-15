@@ -214,7 +214,42 @@ thematicbreak ( 1, 0)  4-6
 ");
         }
 
+        [Test]
+        public void TestQuoteBlock()
+        {
+            //     0123456
+            Check("> 2345\n", @"
+quote        ( 0, 0)  0-5
+paragraph    ( 0, 2)  2-5
+literal      ( 0, 2)  2-5
+");
+        }
 
+        [Test]
+        public void TestQuoteBlockWithLines()
+        {
+            //     01234 56789A
+            Check("> 01\n>  23\n", @"
+quote        ( 0, 0)  0-9
+paragraph    ( 0, 2)  2-9
+literal      ( 0, 2)  2-3
+linebreak    ( 0, 4)  4-4
+literal      ( 1, 3)  8-9
+");
+        }
+
+        [Test]
+        public void TestQuoteBlockWithLazyContinuation()
+        {
+            //     01234 56
+            Check("> 01\n23\n", @"
+quote        ( 0, 0)  0-6
+paragraph    ( 0, 2)  2-6
+literal      ( 0, 2)  2-3
+linebreak    ( 0, 4)  4-4
+literal      ( 1, 0)  5-6
+");
+        }
 
         private static void Check(string text, string expectedResult)
         {
