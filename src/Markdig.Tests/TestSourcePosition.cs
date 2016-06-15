@@ -292,9 +292,7 @@ literal      ( 0, 7)  7-7
         [Test]
         public void TestAbbreviations()
         {
-            Check(@"*[HTML]: Hypertext Markup Language
-
-Later in a text we are using HTML and it becomes an abbr tag HTML", @"
+            Check("*[HTML]: Hypertext Markup Language\r\n\r\nLater in a text we are using HTML and it becomes an abbr tag HTML", @"
 paragraph    ( 2, 0) 38-102
 container    ( 2, 0) 38-102
 literal      ( 2, 0) 38-66
