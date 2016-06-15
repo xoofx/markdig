@@ -360,6 +360,17 @@ literal      ( 2, 5) 17-20
 ", "definitionlists");
         }
 
+        [Test]
+        public void TestEmoji()
+        {
+            //     01 2345
+            Check("0\n :)\n", @"
+paragraph    ( 0, 0)  0-4
+literal      ( 0, 0)  0-0
+linebreak    ( 0, 1)  1-1
+emoji        ( 1, 1)  3-4
+", "emojis");
+        }
 
         private static void Check(string text, string expectedResult, string extensions = null)
         {

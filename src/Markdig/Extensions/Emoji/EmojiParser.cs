@@ -67,6 +67,7 @@ namespace Markdig.Extensions.Emoji
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             string match;
+            var startPosition = slice.Start;
             if (!textMatchHelper.TryMatch(slice.Text, slice.Start, slice.Length, out match))
             {
                 return false;
@@ -89,7 +90,16 @@ namespace Markdig.Extensions.Emoji
             slice.Start += match.Length;
 
             // Push the EmojiInline
-            processor.Inline = new EmojiInline(unicode) {Match = match};
+            int line;
+            int column;
+            processor.Inline = new EmojiInline(unicode)
+            {
+                SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                Line = line,
+                Column = column,
+                Match = match
+            };
+            processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + match.Length - 1;
 
             return true;
         }
