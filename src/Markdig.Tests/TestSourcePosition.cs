@@ -251,6 +251,20 @@ literal      ( 1, 0)  5-6
 ");
         }
 
+        [Test]
+        public void TestListBlock()
+        {
+            //     0123 4567
+            Check("- 0\n- 1\n", @"
+list         ( 0, 0)  0-6
+listitem     ( 0, 0)  0-2
+paragraph    ( 0, 2)  2-2
+literal      ( 0, 2)  2-2
+listitem     ( 1, 0)  4-6
+paragraph    ( 1, 2)  6-6
+literal      ( 1, 2)  6-6
+");
+        }
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
