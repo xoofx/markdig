@@ -372,6 +372,17 @@ emoji        ( 1, 1)  3-4
 ", "emojis");
         }
 
+        [Test]
+        public void TestEmphasisExtra()
+        {
+            //     0123456
+            Check("0 ~~1~~", @"
+paragraph    ( 0, 0)  0-6
+literal      ( 0, 0)  0-1
+emphasis     ( 0, 2)  2-6
+literal      ( 0, 4)  4-4
+", "emphasisextras");
+        }
         private static void Check(string text, string expectedResult, string extensions = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
