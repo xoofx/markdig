@@ -56,6 +56,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medialinks"),
 		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "smartypants"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers"),
+		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

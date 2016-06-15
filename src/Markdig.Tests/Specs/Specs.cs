@@ -19190,4 +19190,58 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
         }
     }
+        // # Extensions
+        //
+        // Adds support for task lists:
+        //
+        // ## TaskLists
+        //
+        // A task list item consist of `[ ]` or `[x]` or `[X]` inside a list item (ordered or unordered)
+    [TestFixture]
+    public partial class TestExtensionsTaskLists
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions TaskLists
+            //
+            // The following CommonMark:
+            //     - [ ] Item1
+            //     - [x] Item2
+            //     - [ ] Item3
+            //     - Item4
+            //
+            // Should be rendered as:
+            //     <ul>
+            //     <li><input disabled="disabled" type="checkbox" /> Item1</li>
+            //     <li><input disabled="disabled" type="checkbox" checked="checked" /> Item2</li>
+            //     <li><input disabled="disabled" type="checkbox" /> Item3</li>
+            //     <li>Item4</li>
+            //     </ul>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions TaskLists");
+			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul>\n<li><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists");
+        }
+    }
+        // A task is not recognized outside a list item:
+    [TestFixture]
+    public partial class TestExtensionsTaskLists
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions TaskLists
+            //
+            // The following CommonMark:
+            //     [ ] This is not a task list
+            //
+            // Should be rendered as:
+            //     <p>[ ] This is not a task list</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions TaskLists");
+			TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists");
+        }
+    }
 }

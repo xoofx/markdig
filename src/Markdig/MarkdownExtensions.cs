@@ -21,6 +21,7 @@ using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
+using Markdig.Extensions.TaskLists;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 
@@ -53,6 +54,7 @@ namespace Markdig
                 .UseMediaLinks()
                 .UsePipeTables()
                 .UseListExtras()
+                .UseTaskLists()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -64,6 +66,17 @@ namespace Markdig
         public static MarkdownPipelineBuilder UsePreciseSourceLocation(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.PreciseSourceLocation = true;
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the task list extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseTaskLists(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<TaskListExtension>();
             return pipeline;
         }
 
@@ -406,6 +419,9 @@ namespace Markdig
                         break;
                     case "autoidentifiers":
                         pipeline.UseAutoIdentifiers();
+                        break;
+                    case "tasklists":
+                        pipeline.UseTaskLists();
                         break;
                     default:
                         throw new ArgumentException($"unknown extension {extension}");
