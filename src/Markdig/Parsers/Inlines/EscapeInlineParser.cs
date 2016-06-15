@@ -19,6 +19,7 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
+            var startPosition = slice.Start;
             // Go to escape character
             var c = slice.NextChar();
             int line;
@@ -28,11 +29,11 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new LiteralInline()
                 {
                     Content = new StringSlice(new string(c, 1)),
-                    SourceStartPosition = processor.GetSourcePosition(slice.Start, out line, out column),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
                     Line = line,
                     Column = column
                 };
-                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
                 slice.NextChar();
                 return true;
             }
@@ -43,11 +44,11 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new LineBreakInline()
                 {
                     IsHard = true,
-                    SourceStartPosition = processor.GetSourcePosition(slice.Start, out line, out column),
+                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
                     Line = line,
                     Column = column
                 };
-                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition;
+                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
                 slice.NextChar();
                 return true;
             }

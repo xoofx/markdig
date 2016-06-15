@@ -265,6 +265,18 @@ paragraph    ( 1, 2)  6-6
 literal      ( 1, 2)  6-6
 ");
         }
+
+        [Test]
+        public void TestEscapeInline()
+        {
+            //      0123
+            Check(@"\-\)", @"
+paragraph    ( 0, 0)  0-3
+literal      ( 0, 0)  0-1
+literal      ( 0, 2)  2-3
+");
+        }
+
         private static void Check(string text, string expectedResult)
         {
             var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
