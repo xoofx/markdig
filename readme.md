@@ -125,17 +125,17 @@ JitModules=clrjit-v4.6.1080.0
 Type=Program  Mode=SingleRun  LaunchCount=2
 WarmupCount=2  TargetCount=10
 
-                      Method |      Median |    StdDev | Scaled | Gen 0  | Gen 1 | Gen 2  | Bytes Allocated/Op |
----------------------------- |------------ |---------- |------- |------  |------ |------  |------------------- |
-                     Markdig |   5.5316 ms | 0.0372 ms |   0.71 |  56.00 | 21.00 |  49.00 |       1,285,917.31 |
-      CommonMark.NET(master) |   4.7035 ms | 0.0422 ms |   0.60 | 113.00 |  7.00 |  49.00 |       1,502,404.60 |
- CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |   0.72 | 111.00 | 56.00 |  49.00 |       1,863,128.13 |
-                MarkdownDeep |   7.8193 ms | 0.0334 ms |   1.00 | 120.00 | 56.00 |  49.00 |       1,884,854.85 |
-                       cmark |   4.2698 ms | 0.1526 ms |   0.55 |      - |     - |      - |                 NA |
-                   Moonshine |   6.0929 ms | 0.1053 ms |   1.28 |      - |     - |      - |                 NA |
-                   Strike.V8 |  10.5895 ms | 0.0492 ms |   1.35 |      - |     - |      - |                 NA |
-                  Marked.NET | 207.3169 ms | 5.2628 ms |  26.51 |  0.00  |  0.00 |  0.00  |     303,125,228.65 |
-               MarkdownSharp | 675.0185 ms | 2.8447 ms |  86.32 | 40.00  | 27.00 | 41.00  |       2,413,394.17 |
+                     Method |      Median |    StdDev |Scaled | Gen 0  | Gen 1 | Gen 2  |Bytes Allocated/Op |
+--------------------------- |------------ |---------- |------ |------  |------ |------  |------------------ |
+                    Markdig |   5.5316 ms | 0.0372 ms |  0.71 |  56.00 | 21.00 |  49.00 |      1,285,917.31 |
+     CommonMark.NET(master) |   4.7035 ms | 0.0422 ms |  0.60 | 113.00 |  7.00 |  49.00 |      1,502,404.60 |
+CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |  0.72 | 111.00 | 56.00 |  49.00 |      1,863,128.13 |
+               MarkdownDeep |   7.8193 ms | 0.0334 ms |  1.00 | 120.00 | 56.00 |  49.00 |      1,884,854.85 |
+                      cmark |   4.2698 ms | 0.1526 ms |  0.55 |      - |     - |      - |                NA |
+                  Moonshine |   6.0929 ms | 0.1053 ms |  1.28 |      - |     - |      - |                NA |
+                  Strike.V8 |  10.5895 ms | 0.0492 ms |  1.35 |      - |     - |      - |                NA |
+                 Marked.NET | 207.3169 ms | 5.2628 ms | 26.51 |  0.00  |  0.00 |  0.00  |    303,125,228.65 |
+              MarkdownSharp | 675.0185 ms | 2.8447 ms | 86.32 | 40.00  | 27.00 | 41.00  |      2,413,394.17 |
 ```
 
 ### Performance for x64:
