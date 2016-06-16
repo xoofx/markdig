@@ -112,7 +112,7 @@ Because Marked.NET and MarkdownSharp are way too slow, we couldn't include them 
 ![BenchMark Memory](img/BenchmarkMemory.png)
 
 
-### Performance in x86:
+### Performance for x86:
 
 ```
 BenchmarkDotNet-Dev=v0.9.7.0+
