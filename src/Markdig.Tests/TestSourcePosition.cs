@@ -574,6 +574,43 @@ code         ( 2, 4)  7-13
         }
 
         [Test]
+        public void TestIndentedCodeWithTabs()
+        {
+            //     01 2 3 45 6 78
+            Check("0\n\n\t0\n\t1\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+code         ( 2, 4)  4-7
+");
+        }
+
+        [Test]
+        public void TestIndentedCodeWithMixedTabs()
+        {
+            //     01 2 34 56 78 9
+            Check("0\n\n \t0\n \t1\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+code         ( 2, 4)  5-9
+");
+        }
+
+        [Test]
+        public void TestTabsInList()
+        {
+            //     012 34 567 89
+            Check("- \t0\n- \t1\n", @"
+list         ( 0, 0)  0-8
+listitem     ( 0, 0)  0-3
+paragraph    ( 0, 4)  3-3
+literal      ( 0, 4)  3-3
+listitem     ( 1, 0)  5-8
+paragraph    ( 1, 4)  8-8
+literal      ( 1, 4)  8-8
+");
+        }
+
+        [Test]
         public void TestDocument()
         {
             //     L0       L0           L1L2         L3         L4         L5L6                    L7L8         
