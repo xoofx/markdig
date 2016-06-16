@@ -6,7 +6,7 @@ Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, ex
 
 > NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
 
-You can **try Markdig online** and compare it to other implementations on [babelmark3](http://babelmark.github.io/) 
+You can **try Markdig online** and compare it to other implementations on [babelmark3](https://babelmark.github.io/) 
 
 ## Features
 
