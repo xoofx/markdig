@@ -563,6 +563,17 @@ literal      ( 4, 2) 13-13
         }
 
         [Test]
+        public void TestIndentedCode()
+        {
+            //     01 2 345678 9ABCDE
+            Check("0\n\n    0\n    1\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+code         ( 2, 4)  7-13
+");
+        }
+
+        [Test]
         public void TestDocument()
         {
             //     L0       L0           L1L2         L3         L4         L5L6                    L7L8         
