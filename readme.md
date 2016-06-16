@@ -47,6 +47,13 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - **Bootstrap** class (to output bootstrap class)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
+## Documentation
+
+> The repository is under construction. There will be a dedicated website and proper documentation at some point!
+
+In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](http://xoofx.com/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
+
+
 ## Download
 
 Markdig is available as a NuGet package: [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
