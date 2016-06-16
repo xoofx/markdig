@@ -29,11 +29,11 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new LiteralInline()
                 {
                     Content = new StringSlice(new string(c, 1)),
-                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    SourceSpan = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                     Line = line,
                     Column = column
                 };
-                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
+                processor.Inline.SourceSpan.End = processor.Inline.SourceSpan.Start + 1;
                 slice.NextChar();
                 return true;
             }
@@ -44,11 +44,11 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new LineBreakInline()
                 {
                     IsHard = true,
-                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                    SourceSpan = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                     Line = line,
                     Column = column
                 };
-                processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + 1;
+                processor.Inline.SourceSpan.End = processor.Inline.SourceSpan.Start + 1;
                 slice.NextChar();
                 return true;
             }

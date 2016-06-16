@@ -654,11 +654,11 @@ literal      ( 8, 2) 77-92
             foreach (var val in document.Descendants())
             {
                 var name = GetTypeName(val.GetType());
-                build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.SourceStartPosition,2}-{val.SourceEndPosition}\n");
+                build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.SourceSpan.Start,2}-{val.SourceSpan.End}\n");
                 var attributes = val.TryGetAttributes();
                 if (attributes != null)
                 {
-                    build.Append($"{"attributes",-12} ({attributes.Line,2},{attributes.Column,2}) {attributes.SourceStartPosition,2}-{attributes.SourceEndPosition}\n");
+                    build.Append($"{"attributes",-12} ({attributes.Line,2},{attributes.Column,2}) {attributes.SourceSpan.Start,2}-{attributes.SourceSpan.End}\n");
                 }
             }
             var result = build.ToString().Trim();

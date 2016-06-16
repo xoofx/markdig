@@ -102,8 +102,7 @@ namespace Markdig.Extensions.Tables
             {
                 processor.Inline = new PiprTableDelimiterInline(this)
                 {
-                    SourceStartPosition = position,
-                    SourceEndPosition = position,
+                    SourceSpan = new SourceSpan(position, position),
                     Line = globalLineIndex,
                     Column = column,
                     LocalLineIndex = localLineIndex
@@ -236,8 +235,8 @@ namespace Markdig.Extensions.Tables
             }
 
             // TODO: This is not accurate for the table
-            table.SourceStartPosition = column.SourceStartPosition;
-            table.SourceEndPosition = column.SourceEndPosition;
+            table.SourceSpan.Start = column.SourceSpan.Start;
+            table.SourceSpan.End = column.SourceSpan.End;
             table.Line = column.Line;
             table.Column = column.Column;
             
@@ -287,17 +286,16 @@ namespace Markdig.Extensions.Tables
                             {
                                 cellContainer.Line = item.Line;
                                 cellContainer.Column = item.Column;
-                                cellContainer.SourceStartPosition = item.SourceStartPosition;
+                                cellContainer.SourceSpan.Start = item.SourceSpan.Start;
                                 isFirstItem = false;
                             }
-                            cellContainer.SourceEndPosition = item.SourceEndPosition;
+                            cellContainer.SourceSpan.End = item.SourceSpan.End;
                             item = nextSibling;
                         }
 
                         var tableParagraph = new ParagraphBlock()
                         {
-                            SourceStartPosition = cellContainer.SourceStartPosition,
-                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            SourceSpan = cellContainer.SourceSpan,
                             Line = cellContainer.Line,
                             Column = cellContainer.Column,
                             Inline = cellContainer
@@ -305,8 +303,7 @@ namespace Markdig.Extensions.Tables
 
                         var tableCell = new TableCell()
                         {
-                            SourceStartPosition = cellContainer.SourceStartPosition,
-                            SourceEndPosition = cellContainer.SourceEndPosition,
+                            SourceSpan = cellContainer.SourceSpan,
                             Line = cellContainer.Line,
                             Column = cellContainer.Column,
                         };
@@ -317,8 +314,7 @@ namespace Markdig.Extensions.Tables
                         {
                             row = new TableRow()
                             {
-                                SourceStartPosition = cellContainer.SourceStartPosition,
-                                SourceEndPosition = cellContainer.SourceEndPosition,
+                                SourceSpan = cellContainer.SourceSpan,
                                 Line = cellContainer.Line,
                                 Column = cellContainer.Column,
                             };

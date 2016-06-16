@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Parsers.Inlines
@@ -51,8 +52,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     Original = matched,
                     Transcoded = new StringSlice(literal),
-                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
-                    SourceEndPosition = processor.GetSourcePosition(matched.End + 1),
+                    SourceSpan = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(matched.End + 1)),
                     Line = line,
                     Column = column
                 };

@@ -5,6 +5,7 @@
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
+using Markdig.Syntax;
 
 namespace Markdig.Extensions.Mathematics
 {
@@ -106,8 +107,7 @@ namespace Markdig.Extensions.Mathematics
                 int column;
                 var inline = new MathInline()
                 {
-                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
-                    SourceEndPosition = processor.GetSourcePosition(slice.End),
+                    SourceSpan = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.End)),
                     Line = line,
                     Column = column,
                     Delimiter = match,

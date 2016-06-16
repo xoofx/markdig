@@ -68,8 +68,7 @@ namespace Markdig.Parsers.Inlines
                         Type = DelimiterType.Open,
                         Label = label,
                         IsImage = isImage,
-                        SourceStartPosition = startPosition,
-                        SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                        SourceSpan = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
                         Line = line,
                         Column = column
                     };
@@ -116,8 +115,7 @@ namespace Markdig.Parsers.Inlines
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         IsImage = parent.IsImage,
-                        SourceStartPosition = parent.SourceStartPosition,
-                        SourceEndPosition = endPosition,
+                        SourceSpan = new SourceSpan(parent.SourceSpan.Start, endPosition),
                         Line = parent.Line,
                         Column = parent.Column,
                     };
@@ -134,8 +132,7 @@ namespace Markdig.Parsers.Inlines
                             Content = new StringSlice(label),
                             IsClosed = true,
                             // Not exact but we leave it like this
-                            SourceStartPosition = parent.SourceStartPosition,
-                            SourceEndPosition = parent.SourceEndPosition,
+                            SourceSpan = parent.SourceSpan,
                             Line = parent.Line,
                             Column = parent.Column,
                         };
@@ -194,8 +191,7 @@ namespace Markdig.Parsers.Inlines
                     inlineState.Inline = new LiteralInline()
                     {
                         Content = new StringSlice("["),
-                        SourceStartPosition = openParent.SourceStartPosition,
-                        SourceEndPosition = openParent.SourceStartPosition,
+                        SourceSpan = openParent.SourceSpan,
                         Line = openParent.Line,
                         Column = openParent.Column,
                     };
@@ -222,8 +218,7 @@ namespace Markdig.Parsers.Inlines
                                 Url = HtmlHelper.Unescape(url),
                                 Title = HtmlHelper.Unescape(title),
                                 IsImage = openParent.IsImage,
-                                SourceStartPosition = openParent.SourceStartPosition,
-                                SourceEndPosition = inlineState.GetSourcePosition(text.Start -1),
+                                SourceSpan = new SourceSpan(openParent.SourceSpan.Start, inlineState.GetSourcePosition(text.Start -1)),
                                 Line = openParent.Line,
                                 Column = openParent.Column,
                             };

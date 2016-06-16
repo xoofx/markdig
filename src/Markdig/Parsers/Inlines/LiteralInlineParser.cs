@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Parsers.Inlines
@@ -67,8 +68,7 @@ namespace Markdig.Parsers.Inlines
             processor.Inline = new LiteralInline()
             {
                 Content = length > 0 ? new StringSlice(slice.Text, slice.Start, endPosition) : StringSlice.Empty,
-                SourceStartPosition = startPosition,
-                SourceEndPosition = processor.GetSourcePosition(endPosition),
+                SourceSpan = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),
                 Line = line,
                 Column = column,
             };

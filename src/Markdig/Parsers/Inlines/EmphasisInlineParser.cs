@@ -185,8 +185,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     DelimiterCount = delimiterCount,
                     Type = delimiterType,
-                    SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
-                    SourceEndPosition = processor.GetSourcePosition(slice.Start - 1),
+                    SourceSpan = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
                     Column = column,
                     Line = line,
                 };
@@ -254,14 +253,14 @@ namespace Markdig.Parsers.Inlines
                             var closeDelimitercount = closeDelimiter.DelimiterCount;
                             var delimiterDelta = isStrong ? 2 : 1;
 
-                            emphasis.SourceStartPosition = openDelimiter.SourceStartPosition;
+                            emphasis.SourceSpan.Start = openDelimiter.SourceSpan.Start;
                             emphasis.Line = openDelimiter.Line;
                             emphasis.Column = openDelimiter.Column;
-                            emphasis.SourceEndPosition = closeDelimiter.SourceEndPosition - closeDelimitercount + delimiterDelta;
+                            emphasis.SourceSpan.End = closeDelimiter.SourceSpan.End - closeDelimitercount + delimiterDelta;
 
-                            openDelimiter.SourceStartPosition += delimiterDelta;
+                            openDelimiter.SourceSpan.Start += delimiterDelta;
                             openDelimiter.Column += delimiterDelta;
-                            closeDelimiter.SourceStartPosition += delimiterDelta;
+                            closeDelimiter.SourceSpan.Start += delimiterDelta;
                             closeDelimiter.Column += delimiterDelta;
 
                             openDelimiter.DelimiterCount -= delimiterDelta;
@@ -301,8 +300,7 @@ namespace Markdig.Parsers.Inlines
                                 {
                                     Content = new StringSlice(literalDelimiter.ToLiteral()),
                                     IsClosed = true,
-                                    SourceStartPosition = literalDelimiter.SourceStartPosition,
-                                    SourceEndPosition = literalDelimiter.SourceEndPosition,
+                                    SourceSpan = literalDelimiter.SourceSpan,
                                     Line = literalDelimiter.Line,
                                     Column = literalDelimiter.Column
                                 };
@@ -355,8 +353,7 @@ namespace Markdig.Parsers.Inlines
                             {
                                 Content = new StringSlice(closeDelimiter.ToLiteral()),
                                 IsClosed = true,
-                                SourceStartPosition = closeDelimiter.SourceStartPosition,
-                                SourceEndPosition = closeDelimiter.SourceEndPosition,
+                                SourceSpan = closeDelimiter.SourceSpan,
                                 Line = closeDelimiter.Line,
                                 Column = closeDelimiter.Column
                             };
@@ -383,8 +380,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     Content = new StringSlice(delimiter.ToLiteral()),
                     IsClosed = true,
-                    SourceStartPosition = delimiter.SourceStartPosition,
-                    SourceEndPosition = delimiter.SourceEndPosition,
+                    SourceSpan = delimiter.SourceSpan,
                     Line = delimiter.Line,
                     Column = delimiter.Column
                 };

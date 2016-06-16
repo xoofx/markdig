@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.Abbreviations
@@ -57,8 +58,7 @@ namespace Markdig.Extensions.Abbreviations
             {
                 Label = label,
                 Text = slice,
-                SourceStartPosition = startPosition,
-                SourceEndPosition = slice.End,
+                SourceSpan = new SourceSpan(startPosition, slice.End),
                 Line = processor.LineIndex,
                 Column = processor.Column
             };
@@ -126,8 +126,7 @@ namespace Markdig.Extensions.Abbreviations
                         {
                             container = new ContainerInline()
                             {
-                                SourceStartPosition = originalLiteral.SourceStartPosition,
-                                SourceEndPosition = originalLiteral.SourceEndPosition,
+                                SourceSpan = originalLiteral.SourceSpan,
                                 Line = originalLiteral.Line,
                                 Column = originalLiteral.Column,
                             };
@@ -137,18 +136,21 @@ namespace Markdig.Extensions.Abbreviations
                         int column;
                         var abbrInline = new AbbreviationInline(abbr)
                         {
-                            SourceStartPosition = processor.GetSourcePosition(i, out line, out column),
+                            SourceSpan =
+                            {
+                                Start = processor.GetSourcePosition(i, out line, out column),
+                            },
                             Line = line,
                             Column = column
                         };
-                        abbrInline.SourceEndPosition = abbrInline.SourceStartPosition + match.Length - 1;
+                        abbrInline.SourceSpan.End = abbrInline.SourceSpan.Start + match.Length - 1;
 
                         // Append the previous literal
                         if (i > content.Start)
                         {
                             container.AppendChild(literal);
 
-                            literal.SourceEndPosition = abbrInline.SourceStartPosition - 1;
+                            literal.SourceSpan.End = abbrInline.SourceSpan.Start - 1;
                             // Truncate it before the abbreviation
                             literal.Content.End = i - 1;
                         }
@@ -167,8 +169,7 @@ namespace Markdig.Extensions.Abbreviations
                         // Process the remaining literal
                         literal = new LiteralInline()
                         {
-                            SourceStartPosition = abbrInline.SourceEndPosition + 1,
-                            SourceEndPosition = literal.SourceEndPosition,
+                            SourceSpan = new SourceSpan(abbrInline.SourceSpan.End + 1, literal.SourceSpan.End),
                             Line = line,
                             Column = column + match.Length,
                         };

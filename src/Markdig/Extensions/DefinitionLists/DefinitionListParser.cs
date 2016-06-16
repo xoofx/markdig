@@ -66,8 +66,7 @@ namespace Markdig.Extensions.DefinitionLists
             {
                 currentDefinitionList = new DefinitionList(this)
                 {
-                    SourceStartPosition = paragraphBlock.SourceStartPosition,
-                    SourceEndPosition = processor.Line.End,
+                    SourceSpan = new SourceSpan(paragraphBlock.SourceSpan.Start, processor.Line.End),
                     Column = paragraphBlock.Column,
                     Line = paragraphBlock.Line,
                 };
@@ -78,8 +77,7 @@ namespace Markdig.Extensions.DefinitionLists
             {
                 Line = processor.LineIndex,
                 Column = column,
-                SourceStartPosition = startPosition,
-                SourceEndPosition = processor.Line.End,
+                SourceSpan = new SourceSpan(startPosition, processor.Line.End),
                 OpeningCharacter = processor.CurrentChar,
             };
 
@@ -90,8 +88,7 @@ namespace Markdig.Extensions.DefinitionLists
                 {
                     Column =  paragraphBlock.Column,
                     Line = line.Line,
-                    SourceStartPosition = paragraphBlock.SourceStartPosition,
-                    SourceEndPosition = paragraphBlock.SourceEndPosition,
+                    SourceSpan = new SourceSpan(paragraphBlock.SourceSpan.Start, paragraphBlock.SourceSpan.End),
                     IsOpen = false
                 };
                 term.AppendLine(ref line.Slice, line.Column, line.Line, line.Position);
@@ -101,7 +98,7 @@ namespace Markdig.Extensions.DefinitionLists
             processor.Open(definitionItem);
 
             // Update the end position
-            currentDefinitionList.SourceEndPosition = processor.Line.End;
+            currentDefinitionList.SourceSpan.End = processor.Line.End;
 
             return BlockState.Continue;
         }
@@ -136,7 +133,7 @@ namespace Markdig.Extensions.DefinitionLists
                         definitionItem.RemoveAt(definitionItem.Count - 1);
                     }
 
-                    list.SourceEndPosition = list.LastChild.SourceEndPosition;
+                    list.SourceSpan.End = list.LastChild.SourceSpan.End;
                     return BlockState.None;
                 }
 
@@ -148,8 +145,7 @@ namespace Markdig.Extensions.DefinitionLists
                 processor.Close(definitionItem);
                 var nextDefinitionItem = new DefinitionItem(this)
                 {
-                    SourceStartPosition = startPosition,
-                    SourceEndPosition = processor.Line.End,
+                    SourceSpan = new SourceSpan(startPosition, processor.Line.End),
                     Line = processor.LineIndex,
                     Column = processor.Column,
                     OpeningCharacter = processor.CurrentChar,
@@ -182,7 +178,7 @@ namespace Markdig.Extensions.DefinitionLists
                 definitionItem.RemoveAt(definitionItem.Count - 1);
             }
 
-            list.SourceEndPosition = list.LastChild.SourceEndPosition;
+            list.SourceSpan.End = list.LastChild.SourceSpan.End;
             return BlockState.Break;
         }
     }

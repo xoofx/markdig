@@ -29,25 +29,17 @@ namespace Markdig.Syntax
         public int Line { get; set; }
 
         /// <summary>
-        /// Gets or sets the starting character position from the original text source. 
-        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
+        /// The source span
         /// </summary>
-        public int SourceStartPosition { get; set; }
+        public SourceSpan SourceSpan;
 
         /// <summary>
-        /// Gets or sets the ending character position from the original text source.
-        /// Note that for inline elements, this is only valid if <see cref="MarkdownExtensions.UsePreciseSourceLocation"/> is setup on the pipeline.
+        /// Gets a string of the location in the text.
         /// </summary>
-        public int SourceEndPosition { get; set; }
-
-        /// <summary>
-        /// Gets the character length of this element within the original source code.
-        /// </summary>
-        public int SourceLength => SourceEndPosition - SourceStartPosition + 1;
-
+        /// <returns></returns>
         public string ToPositionText()
         {
-            return $"${Line}, {Column}, {SourceStartPosition}-{SourceEndPosition}";
+            return $"${Line}, {Column}, {SourceSpan.Start}-{SourceSpan.End}";
         }
 
         /// <summary>

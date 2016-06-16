@@ -94,12 +94,15 @@ namespace Markdig.Extensions.Emoji
             int column;
             processor.Inline = new EmojiInline(unicode)
             {
-                SourceStartPosition = processor.GetSourcePosition(startPosition, out line, out column),
+                SourceSpan =
+                {
+                    Start = processor.GetSourcePosition(startPosition, out line, out column),
+                },
                 Line = line,
                 Column = column,
                 Match = match
             };
-            processor.Inline.SourceEndPosition = processor.Inline.SourceStartPosition + match.Length - 1;
+            processor.Inline.SourceSpan.End = processor.Inline.SourceSpan.Start + match.Length - 1;
 
             return true;
         }
