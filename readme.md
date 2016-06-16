@@ -81,13 +81,23 @@ This software is released under the [BSD-Clause 2 license](https://github.com/lu
 
 This is an early preview of the benchmarking against various implementations:
 
-- Markdig: itself
-- CommonMarkCpp: [cmark](https://github.com/jgm/cmark), Reference C implementation of CommonMark, no support for extensions
-- [CommonMark.NET](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, no support for extensions, port of cmark
-  - [CommonMarkNet (devel)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET, supports extensions, not released yet
+**C implementations**:
+
+- [cmark](https://github.com/jgm/cmark): Reference C implementation of CommonMark, no support for extensions
+- [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
+
+**.NET implementations**:
+
+- [Markdig](https://github.com/lunet-io/markdig): itself
+- [CommonMark.NET(master)](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, no support for extensions, port of cmark
+  - [CommonMark.NET(pipe_tables)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET, supports extensions, not released yet
 - [MarkdownDeep](https://github.com/toptensoftware/markdowndeep) another .NET implementation
 - [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
-- [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
+- [Marked.NET](https://github.com/T-Alex/MarkedNet) port of original [marked.js](https://github.com/chjj/marked) project
+
+**JavaScript/V8 implementations**:
+
+- [Strike.V8](https://github.com/SimonCropp/Strike) [marked.js](https://github.com/chjj/marked) running in Google V8 (not .NET based)
 
 ### Analysis of the results:
 
@@ -95,13 +105,19 @@ This is an early preview of the benchmarking against various implementations:
 - **Among the best in CPU**, Extremelly competitive and often faster than other implementations (not feature wise equivalent) 
 - **15% to 30% less allocations** and GC pressure
 
+Because Marked.NET and MarkdownSharp are way too slow, we couldn't include them in the following charts:
+
+![BenchMark CPU Time](img/BenchmarkCPU.png)
+
+![BenchMark Memory](img/BenchmarkMemory.png)
+
 
 ### Performance in x86:
 
 ```
-BenchmarkDotNet-Dev=v0.9.6.0+
+BenchmarkDotNet-Dev=v0.9.7.0+
 OS=Microsoft Windows NT 6.2.9200.0
-Processor=Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz, ProcessorCount=8
+Processor=Intel(R) Core(TM) i7-4770 CPU 3.40GHz, ProcessorCount=8
 Frequency=3319351 ticks, Resolution=301.2637 ns, Timer=TSC
 HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
 JitModules=clrjit-v4.6.1080.0
@@ -109,14 +125,17 @@ JitModules=clrjit-v4.6.1080.0
 Type=Program  Mode=SingleRun  LaunchCount=2
 WarmupCount=2  TargetCount=10
 
-               Method |    Median |    StdDev |  Gen 0 | Gen 1 |  Gen 2 | Bytes Allocated/Op |
---------------------- |---------- |---------- |------- |------ |------- |------------------- |
-          TestMarkdig | 5.4332 ms | 0.0809 ms |  96.00 | 36.00 |  84.00 |       1,218,643.59 |
-    TestCommonMarkCpp | 4.0150 ms | 0.1208 ms |      - |     - | 180.00 |         454,859.74 |
-    TestCommonMarkNet | 4.5448 ms | 0.0323 ms | 193.00 | 12.00 |  84.00 |       1,406,367.27 |
- TestCommonMarkNetNew | 5.4811 ms | 0.0327 ms | 193.00 | 96.00 |  84.00 |       1,738,465.42 |
-     TestMarkdownDeep | 7.5881 ms | 0.0554 ms | 205.00 | 96.00 |  84.00 |       1,758,383.79 |
-        TestMoonshine | 5.8586 ms | 0.0764 ms |      - |     - | 215.00 |         565,000.72 |
+                      Method |      Median |    StdDev | Scaled | Gen 0  | Gen 1 | Gen 2  | Bytes Allocated/Op |
+---------------------------- |------------ |---------- |------- |------  |------ |------  |------------------- |
+                     Markdig |   5.5316 ms | 0.0372 ms |   0.71 |  56.00 | 21.00 |  49.00 |       1,285,917.31 |
+      CommonMark.NET(master) |   4.7035 ms | 0.0422 ms |   0.60 | 113.00 |  7.00 |  49.00 |       1,502,404.60 |
+ CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |   0.72 | 111.00 | 56.00 |  49.00 |       1,863,128.13 |
+                MarkdownDeep |   7.8193 ms | 0.0334 ms |   1.00 | 120.00 | 56.00 |  49.00 |       1,884,854.85 |
+                       cmark |   4.2698 ms | 0.1526 ms |   0.55 |      - |     - |      - |                 NA |
+                   Moonshine |   6.0929 ms | 0.1053 ms |   1.28 |      - |     - |      - |                 NA |
+                   Strike.V8 |  10.5895 ms | 0.0492 ms |   1.35 |      - |     - |      - |                 NA |
+                  Marked.NET | 207.3169 ms | 5.2628 ms |  26.51 |  0.00  |  0.00 |  0.00  |     303,125,228.65 |
+               MarkdownSharp | 675.0185 ms | 2.8447 ms |  86.32 | 40.00  | 27.00 | 41.00  |       2,413,394.17 |
 ```
 
 ### Performance for x64:
