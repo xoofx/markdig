@@ -590,8 +590,16 @@ namespace Markdig.Parsers
         /// </summary>
         private void TryOpenBlocks()
         {
+            int previousStart = -1;
             while (ContinueProcessingLine)
             {
+                // Security check so that the parser can't go into a crazy infinite loop if one extension is messing
+                if (previousStart == Start)
+                {
+                    throw new InvalidOperationException($"The parser is in an invalid infinite loop while trying to parse blocks at line [{LineIndex}] with line [{Line}]");
+                }
+                previousStart = Start;
+
                 // Eat indent spaces before checking the character
                 ParseIndent();
 

@@ -45,6 +45,11 @@ namespace Markdig.Syntax
         /// </summary>
         public int SourceLength => SourceEndPosition - SourceStartPosition + 1;
 
+        public string ToPositionText()
+        {
+            return $"${Line}, {Column}, {SourceStartPosition}-{SourceEndPosition}";
+        }
+
         /// <summary>
         /// Stores a key/value pair for this instance.
         /// </summary>
