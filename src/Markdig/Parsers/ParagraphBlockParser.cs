@@ -23,7 +23,7 @@ namespace Markdig.Parsers
             processor.NewBlocks.Push(new ParagraphBlock(this)
             {
                 Column = processor.Column,
-                SourceSpan = new SourceSpan(processor.Line.Start, processor.Line.End)
+                Span = new SourceSpan(processor.Line.Start, processor.Line.End)
             });
             return BlockState.Continue;
         }
@@ -40,7 +40,7 @@ namespace Markdig.Parsers
                 return TryParseSetexHeading(processor, block);
             }
 
-            block.SourceSpan.End = processor.Line.End;
+            block.Span.End = processor.Line.End;
             return BlockState.Continue;
         }
 
@@ -127,7 +127,7 @@ namespace Markdig.Parsers
                     var heading = new HeadingBlock(this)
                     {
                         Column = paragraph.Column,
-                        SourceSpan = new SourceSpan(paragraph.SourceSpan.Start, line.Start),
+                        Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
                     };
@@ -139,7 +139,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            block.SourceSpan.End = state.Line.End;
+            block.Span.End = state.Line.End;
 
             return BlockState.Continue;
         }

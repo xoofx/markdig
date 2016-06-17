@@ -107,7 +107,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     Delimiter = match,
                     Content = builder.ToString(),
-                    SourceSpan = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column
                 };

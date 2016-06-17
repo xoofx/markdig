@@ -69,10 +69,10 @@ namespace Markdig.Extensions.GenericAttributes
                 // Update the position of the attributes
                 int line;
                 int column;
-                currentHtmlAttributes.SourceSpan.Start = processor.GetSourcePosition(startPosition, out line, out column);
+                currentHtmlAttributes.Span.Start = processor.GetSourcePosition(startPosition, out line, out column);
                 currentHtmlAttributes.Line = line;
                 currentHtmlAttributes.Column = column;
-                currentHtmlAttributes.SourceSpan.End = currentHtmlAttributes.SourceSpan.Start + slice.Start - startPosition - 1;
+                currentHtmlAttributes.Span.End = currentHtmlAttributes.Span.Start + slice.Start - startPosition - 1;
 
                 // We don't set the processor.Inline as we don't want to add attach attributes to a particular entity
                 return true;

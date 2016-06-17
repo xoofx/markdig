@@ -69,9 +69,9 @@ namespace Markdig.Syntax
             children[Count++] = item;
             item.Parent = this;
 
-            if (item.SourceSpan.End > SourceSpan.End)
+            if (item.Span.End > Span.End)
             {
-                SourceSpan.End = item.SourceSpan.End;
+                Span.End = item.Span.End;
             }
         }
 

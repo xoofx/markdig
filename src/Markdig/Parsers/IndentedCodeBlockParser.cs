@@ -25,7 +25,7 @@ namespace Markdig.Parsers
                 processor.NewBlocks.Push(new CodeBlock(this)
                 {
                     Column = processor.Column,
-                    SourceSpan = new SourceSpan(startPosition, processor.Line.End)
+                    Span = new SourceSpan(startPosition, processor.Line.End)
                 });
             }
             return result;
@@ -48,7 +48,7 @@ namespace Markdig.Parsers
             }
             if (block != null)
             {
-                block.SourceSpan.End = processor.Line.End;
+                block.Span.End = processor.Line.End;
             }
             return BlockState.Continue;
         }

@@ -107,7 +107,7 @@ namespace Markdig.Extensions.Mathematics
                 int column;
                 var inline = new MathInline()
                 {
-                    SourceSpan = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.End)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.End)),
                     Line = line,
                     Column = column,
                     Delimiter = match,

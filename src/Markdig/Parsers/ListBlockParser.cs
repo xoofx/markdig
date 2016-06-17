@@ -153,7 +153,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.SourceSpan.End = state.Line.End;
+                listItem.Span.End = state.Line.End;
                 
                 return BlockState.Continue;
             }
@@ -174,7 +174,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.SourceSpan.End = state.Line.End;
+                listItem.Span.End = state.Line.End;
 
                 return BlockState.Continue;
             }
@@ -258,7 +258,7 @@ namespace Markdig.Parsers
             {
                 Column = initColumn,
                 ColumnWidth = columnWidth,
-                SourceSpan = new SourceSpan(sourcePosition, sourceEndPosition)
+                Span = new SourceSpan(sourcePosition, sourceEndPosition)
             };
             state.NewBlocks.Push(newListItem);
 
@@ -285,7 +285,7 @@ namespace Markdig.Parsers
                 var newList = new ListBlock(this)
                 {
                     Column = initColumn,
-                    SourceSpan = new SourceSpan(sourcePosition, sourceEndPosition),
+                    Span = new SourceSpan(sourcePosition, sourceEndPosition),
                     IsOrdered = isOrdered,
                     BulletType = listInfo.BulletType,
                     OrderedDelimiter = listInfo.OrderedDelimiter,
@@ -355,7 +355,7 @@ namespace Markdig.Parsers
             // Update end-position for the list
             if (listBlock.Count > 0)
             {
-                listBlock.SourceSpan.End = listBlock[listBlock.Count - 1].SourceSpan.End;
+                listBlock.Span.End = listBlock[listBlock.Count - 1].Span.End;
             }
 
             return true;

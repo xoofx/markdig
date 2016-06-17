@@ -167,13 +167,13 @@ namespace Markdig.Extensions.SmartyPants
             int column;
             var pant = new SmartyPant()
             {
-                SourceSpan = {Start = processor.GetSourcePosition(startingPosition, out line, out column)},
+                Span = {Start = processor.GetSourcePosition(startingPosition, out line, out column)},
                 Line = line,
                 Column = column,
                 OpeningCharacter = openingChar,
                 Type = type
             };
-            pant.SourceSpan.End = pant.SourceSpan.Start + slice.Start - startingPosition - 1;
+            pant.Span.End = pant.Span.Start + slice.Start - startingPosition - 1;
 
             // We will check in a post-process step for balanaced open/close quotes
             if (postProcess)
@@ -258,7 +258,7 @@ namespace Markdig.Extensions.SmartyPants
                             pants.RemoveAt(j);
                             toReplace.ReplaceBy(new LiteralInline(toReplace.ToString())
                             {
-                                SourceSpan = toReplace.SourceSpan,
+                                Span = toReplace.Span,
                                 Line = toReplace.Line,
                                 Column = toReplace.Column,
                             });
@@ -281,7 +281,7 @@ namespace Markdig.Extensions.SmartyPants
             {
                 quote.ReplaceBy(new LiteralInline(quote.ToString())
                 {
-                    SourceSpan = quote.SourceSpan,
+                    Span = quote.Span,
                     Line = quote.Line,
                     Column = quote.Column,
                 });

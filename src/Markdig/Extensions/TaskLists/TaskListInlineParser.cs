@@ -49,12 +49,12 @@ namespace Markdig.Extensions.TaskLists
             int column;
             var taskItem = new TaskList()
             {
-                SourceSpan = { Start = processor.GetSourcePosition(startingPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startingPosition, out line, out column)},
                 Line = line,
                 Column = column,
                 Checked = !c.IsSpace()
             };
-            taskItem.SourceSpan.End = taskItem.SourceSpan.Start + 2;
+            taskItem.Span.End = taskItem.Span.Start + 2;
             processor.Inline = taskItem;
             return true;
         }

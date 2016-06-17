@@ -12,7 +12,7 @@ namespace Markdig.Syntax
     {
         protected MarkdownObject()
         {
-            SourceSpan = SourceSpan.Empty;
+            Span = SourceSpan.Empty;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// The source span
         /// </summary>
-        public SourceSpan SourceSpan;
+        public SourceSpan Span;
 
         /// <summary>
         /// Gets a string of the location in the text.
@@ -44,7 +44,7 @@ namespace Markdig.Syntax
         /// <returns></returns>
         public string ToPositionText()
         {
-            return $"${Line}, {Column}, {SourceSpan.Start}-{SourceSpan.End}";
+            return $"${Line}, {Column}, {Span.Start}-{Span.End}";
         }
 
         /// <summary>

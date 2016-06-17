@@ -70,7 +70,7 @@ namespace Markdig.Parsers
                     HeaderChar = matchingChar,
                     Level = leadingCount,
                     Column = column,
-                    SourceSpan = { Start =  sourcePosition }
+                    Span = { Start =  sourcePosition }
                 };
                 processor.NewBlocks.Push(headingBlock);
                 processor.GoToColumn(column + leadingCount + 1);
@@ -119,7 +119,7 @@ namespace Markdig.Parsers
                 }
 
                 // Setup the source end position of this element
-                headingBlock.SourceSpan.End = processor.Line.End;
+                headingBlock.Span.End = processor.Line.End;
 
                 // We expect a single line, so don't continue
                 return BlockState.Break;

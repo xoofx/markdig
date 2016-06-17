@@ -53,7 +53,7 @@ namespace Markdig.Extensions.Figures
 
             var figure = new Figure(this)
             {
-                SourceSpan = new SourceSpan(startPosition, line.End),
+                Span = new SourceSpan(startPosition, line.End),
                 Line = processor.LineIndex,
                 Column = processor.Column,
                 OpeningCharacter = matchChar,
@@ -65,7 +65,7 @@ namespace Markdig.Extensions.Figures
             {
                 var caption = new FigureCaption(this)
                 {
-                    SourceSpan = new SourceSpan(line.Start, line.End),
+                    Span = new SourceSpan(line.Start, line.End),
                     Line = processor.LineIndex,
                     Column = column + line.Start - startPosition,
                     IsOpen = false
@@ -105,7 +105,7 @@ namespace Markdig.Extensions.Figures
                 {
                     var caption = new FigureCaption(this)
                     {
-                        SourceSpan = new SourceSpan(line.Start, line.End),
+                        Span = new SourceSpan(line.Start, line.End),
                         Line = processor.LineIndex,
                         Column = column + line.Start - startPosition,
                         IsOpen = false
@@ -114,7 +114,7 @@ namespace Markdig.Extensions.Figures
                     figure.Add(caption);
                 }
 
-                figure.SourceSpan.End = line.End;
+                figure.Span.End = line.End;
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
@@ -123,7 +123,7 @@ namespace Markdig.Extensions.Figures
             // Reset the indentation to the column before the indent
             processor.GoToColumn(processor.ColumnBeforeIndent);
 
-            figure.SourceSpan.End = line.End;
+            figure.Span.End = line.End;
 
             return BlockState.Continue;
         }

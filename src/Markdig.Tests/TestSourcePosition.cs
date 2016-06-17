@@ -200,7 +200,7 @@ literal      ( 0, 4)  4-5
             var link = Markdown.Parse("0\n\n01![234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
             Assert.NotNull(link);
 
-            Assert.AreEqual(new SourceSpan(5, 15), link.SourceSpan);
+            Assert.AreEqual(new SourceSpan(5, 15), link.Span);
             Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
             Assert.AreEqual(new SourceSpan(12, 14), link.UrlSpan);
             Assert.AreEqual(SourceSpan.Empty, link.TitleSpan);
@@ -698,11 +698,11 @@ literal      ( 8, 2) 77-92
             foreach (var val in document.Descendants())
             {
                 var name = GetTypeName(val.GetType());
-                build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.SourceSpan.Start,2}-{val.SourceSpan.End}\n");
+                build.Append($"{name,-12} ({val.Line,2},{val.Column,2}) {val.Span.Start,2}-{val.Span.End}\n");
                 var attributes = val.TryGetAttributes();
                 if (attributes != null)
                 {
-                    build.Append($"{"attributes",-12} ({attributes.Line,2},{attributes.Column,2}) {attributes.SourceSpan.Start,2}-{attributes.SourceSpan.End}\n");
+                    build.Append($"{"attributes",-12} ({attributes.Line,2},{attributes.Column,2}) {attributes.Span.Start,2}-{attributes.Span.End}\n");
                 }
             }
             var result = build.ToString().Trim();

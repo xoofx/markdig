@@ -40,7 +40,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     IsEmail = isEmail,
                     Url = link,
-                    SourceSpan = new SourceSpan(processor.GetSourcePosition(saved.Start, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(saved.Start, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column
                 };
@@ -57,7 +57,7 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new HtmlInline()
                 {
                     Tag = htmlTag,
-                    SourceSpan = new SourceSpan(processor.GetSourcePosition(saved.Start, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(saved.Start, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column
                 };

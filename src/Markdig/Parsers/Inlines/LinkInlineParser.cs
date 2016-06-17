@@ -70,7 +70,7 @@ namespace Markdig.Parsers.Inlines
                         Label = label,
                         LabelSpan = processor.GetSourcePositionFromLocalSpan(labelSpan),
                         IsImage = isImage,
-                        SourceSpan = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
+                        Span = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
                         Line = line,
                         Column = column
                     };
@@ -120,7 +120,7 @@ namespace Markdig.Parsers.Inlines
                         LabelSpan = labelSpan,
                         IsImage = parent.IsImage,
                         Reference = linkRef,
-                        SourceSpan = new SourceSpan(parent.SourceSpan.Start, endPosition),
+                        Span = new SourceSpan(parent.Span.Start, endPosition),
                         Line = parent.Line,
                         Column = parent.Column,
                     };
@@ -137,7 +137,7 @@ namespace Markdig.Parsers.Inlines
                             Content = new StringSlice(label),
                             IsClosed = true,
                             // Not exact but we leave it like this
-                            SourceSpan = parent.SourceSpan,
+                            Span = parent.Span,
                             Line = parent.Line,
                             Column = parent.Column,
                         };
@@ -196,7 +196,7 @@ namespace Markdig.Parsers.Inlines
                     inlineState.Inline = new LiteralInline()
                     {
                         Content = new StringSlice("["),
-                        SourceSpan = openParent.SourceSpan,
+                        Span = openParent.Span,
                         Line = openParent.Line,
                         Column = openParent.Column,
                     };
@@ -228,7 +228,7 @@ namespace Markdig.Parsers.Inlines
                                 LabelSpan = openParent.LabelSpan,
                                 UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
                                 TitleSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan),
-                                SourceSpan = new SourceSpan(openParent.SourceSpan.Start, inlineState.GetSourcePosition(text.Start -1)),
+                                Span = new SourceSpan(openParent.Span.Start, inlineState.GetSourcePosition(text.Start -1)),
                                 Line = openParent.Line,
                                 Column = openParent.Column,
                             };
@@ -306,7 +306,7 @@ namespace Markdig.Parsers.Inlines
 
                 var literal = new LiteralInline()
                 {
-                    SourceSpan = openParent.SourceSpan,
+                    Span = openParent.Span,
                     Content = new StringSlice(openParent.IsImage ? "![" : "[")
                 };
 

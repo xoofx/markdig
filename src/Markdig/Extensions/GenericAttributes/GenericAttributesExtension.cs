@@ -62,8 +62,8 @@ namespace Markdig.Extensions.GenericAttributes
                         // Update position for HtmlAttributes
                         htmlAttributes.Line = processor.LineIndex;
                         htmlAttributes.Column = startOfAttributes - processor.CurrentLineStartPosition; // This is not accurate with tabs!
-                        htmlAttributes.SourceSpan.Start = startOfAttributes;
-                        htmlAttributes.SourceSpan.End = copy.Start - 1;
+                        htmlAttributes.Span.Start = startOfAttributes;
+                        htmlAttributes.Span.End = copy.Start - 1;
 
                         line.End = indexOfAttributes - 1;
                         return true;

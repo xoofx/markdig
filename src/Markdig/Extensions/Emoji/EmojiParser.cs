@@ -94,7 +94,7 @@ namespace Markdig.Extensions.Emoji
             int column;
             processor.Inline = new EmojiInline(unicode)
             {
-                SourceSpan =
+                Span =
                 {
                     Start = processor.GetSourcePosition(startPosition, out line, out column),
                 },
@@ -102,7 +102,7 @@ namespace Markdig.Extensions.Emoji
                 Column = column,
                 Match = match
             };
-            processor.Inline.SourceSpan.End = processor.Inline.SourceSpan.Start + match.Length - 1;
+            processor.Inline.Span.End = processor.Inline.Span.Start + match.Length - 1;
 
             return true;
         }

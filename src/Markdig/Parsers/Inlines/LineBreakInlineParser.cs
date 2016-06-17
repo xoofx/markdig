@@ -42,12 +42,12 @@ namespace Markdig.Parsers.Inlines
             int column;
             processor.Inline = new LineBreakInline
             {
-                SourceSpan = { Start = processor.GetSourcePosition(startPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startPosition, out line, out column)},
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
                 Column = column
             };
-            processor.Inline.SourceSpan.End = processor.Inline.SourceSpan.Start;
+            processor.Inline.Span.End = processor.Inline.Span.Start;
             return true;
         }
     }

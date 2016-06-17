@@ -47,7 +47,7 @@ namespace Markdig.Extensions.Footers
             }
             processor.NewBlocks.Push(new FooterBlock(this)
             {
-                SourceSpan = new SourceSpan(startPosition, processor.Line.End),
+                Span = new SourceSpan(startPosition, processor.Line.End),
                 OpeningCharacter = openingChar,
                 Column = column,
                 Line = processor.LineIndex,
@@ -80,7 +80,7 @@ namespace Markdig.Extensions.Footers
                 {
                     processor.NextChar(); // Skip following space
                 }
-                block.SourceSpan.End = processor.Line.End;
+                block.Span.End = processor.Line.End;
             }
             return result;
         }

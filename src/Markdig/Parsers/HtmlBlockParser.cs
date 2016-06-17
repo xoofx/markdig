@@ -185,35 +185,35 @@ namespace Markdig.Parsers
                 case HtmlBlockType.Comment:
                     if (line.Search("-->", out endof))
                     {
-                        htmlBlock.SourceSpan.End = endof - 1;
+                        htmlBlock.Span.End = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
                     if (line.Search("]]>", out endof))
                     {
-                        htmlBlock.SourceSpan.End = endof - 1;
+                        htmlBlock.Span.End = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
                     if (line.Search("?>", out endof))
                     {
-                        htmlBlock.SourceSpan.End = endof - 1;
+                        htmlBlock.Span.End = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
                     if (line.Search(">", out endof))
                     {
-                        htmlBlock.SourceSpan.End = endof - 1;
+                        htmlBlock.Span.End = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
                     if (line.SearchLowercase("</script>", out endof) || line.SearchLowercase("</pre>", out endof) || line.SearchLowercase("</style>", out endof))
                     {
-                        htmlBlock.SourceSpan.End = endof - 1;
+                        htmlBlock.Span.End = endof - 1;
                         result = BlockState.Break;
                     }
                     break;
@@ -234,7 +234,7 @@ namespace Markdig.Parsers
             // Update only if we don't have a break discard
             if (result != BlockState.BreakDiscard)
             {
-                htmlBlock.SourceSpan.End = line.End;
+                htmlBlock.Span.End = line.End;
             }
 
             return result;
@@ -247,7 +247,7 @@ namespace Markdig.Parsers
                 Column = startColumn,
                 Type = type,
                 // By default, setup to the end of line
-                SourceSpan = new SourceSpan(startPosition, startPosition + state.Line.End)
+                Span = new SourceSpan(startPosition, startPosition + state.Line.End)
             });
             return BlockState.Continue;
         }
