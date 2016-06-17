@@ -3,10 +3,13 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -160,6 +163,47 @@ literal      ( 0, 0)  0-2
 link         ( 0, 3)  3-9
 literal      ( 0, 4)  4-5
 ");
+        }
+
+        [Test]
+        public void TestLinkParts1()
+        {
+            //                         0           1
+            //                         01 2 3456789012345
+            var link = Markdown.Parse("0\n\n01 [234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(12, 14), link.UrlSpan);
+            Assert.AreEqual(SourceSpan.Empty, link.TitleSpan);
+        }
+
+        [Test]
+        public void TestLinkParts2()
+        {
+            //                         0           1
+            //                         01 2 34567890123456789
+            var link = Markdown.Parse("0\n\n01 [234](/56 'yo')", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(12, 14), link.UrlSpan);
+            Assert.AreEqual(new SourceSpan(16, 19), link.TitleSpan);
+        }
+
+
+        [Test]
+        public void TestLinkParts3()
+        {
+            //                         0           1
+            //                         01 2 3456789012345
+            var link = Markdown.Parse("0\n\n01![234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(new SourceSpan(5, 15), link.SourceSpan);
+            Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(12, 14), link.UrlSpan);
+            Assert.AreEqual(SourceSpan.Empty, link.TitleSpan);
         }
 
         [Test]

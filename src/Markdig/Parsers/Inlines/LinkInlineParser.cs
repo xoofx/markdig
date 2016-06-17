@@ -68,7 +68,7 @@ namespace Markdig.Parsers.Inlines
                     {
                         Type = DelimiterType.Open,
                         Label = label,
-                        LabelSpan = label != null ? processor.GetSourcePositionFromLocalSpan(labelSpan) : SourceSpan.Empty,
+                        LabelSpan = processor.GetSourcePositionFromLocalSpan(labelSpan),
                         IsImage = isImage,
                         SourceSpan = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
                         Line = line,
@@ -225,19 +225,13 @@ namespace Markdig.Parsers.Inlines
                                 Url = HtmlHelper.Unescape(url),
                                 Title = HtmlHelper.Unescape(title),
                                 IsImage = openParent.IsImage,
+                                LabelSpan = openParent.LabelSpan,
+                                UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
+                                TitleSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan),
                                 SourceSpan = new SourceSpan(openParent.SourceSpan.Start, inlineState.GetSourcePosition(text.Start -1)),
                                 Line = openParent.Line,
                                 Column = openParent.Column,
                             };
-                            if (url != null)
-                            {
-                                link.UrlSourceSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan);
-                            }
-
-                            if (title != null)
-                            {
-                                link.TitleSourceSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan);
-                            }
 
                             openParent.ReplaceBy(link);
                             // Notifies processor as we are creating an inline locally
@@ -312,6 +306,7 @@ namespace Markdig.Parsers.Inlines
 
                 var literal = new LiteralInline()
                 {
+                    SourceSpan = openParent.SourceSpan,
                     Content = new StringSlice(openParent.IsImage ? "![" : "[")
                 };
 

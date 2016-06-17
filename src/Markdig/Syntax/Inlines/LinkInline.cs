@@ -72,12 +72,12 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The URL source span.
         /// </summary>
-        public SourceSpan? UrlSourceSpan;
+        public SourceSpan? UrlSpan;
 
         /// <summary>
         /// The title source span.
         /// </summary>
-        public SourceSpan? TitleSourceSpan;
+        public SourceSpan? TitleSpan;
 
         /// <summary>
         /// The label span
