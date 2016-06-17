@@ -51,8 +51,9 @@ namespace Markdig.Parsers.Inlines
                     var saved = slice;
                     string label;
 
+                    SourceSpan labelSpan;
                     // If the label is followed by either a ( or a [, this is not a shortcut
-                    if (LinkHelper.TryParseLabel(ref slice, out label))
+                    if (LinkHelper.TryParseLabel(ref slice, out label, out labelSpan))
                     {
                         if (!processor.Document.ContainsLinkReferenceDefinition(label))
                         {
@@ -67,6 +68,7 @@ namespace Markdig.Parsers.Inlines
                     {
                         Type = DelimiterType.Open,
                         Label = label,
+                        LabelSpan = label != null ? processor.GetSourcePositionFromLocalSpan(labelSpan) : SourceSpan.Empty,
                         IsImage = isImage,
                         SourceSpan = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
                         Line = line,
@@ -93,7 +95,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineProcessor state, string label, LinkDelimiterInline parent, int endPosition)
+        private bool ProcessLinkReference(InlineProcessor state, string label, SourceSpan labelSpan, LinkDelimiterInline parent, int endPosition)
         {
             bool isValidLink = false;
             LinkReferenceDefinition linkRef;
@@ -114,7 +116,10 @@ namespace Markdig.Parsers.Inlines
                     {
                         Url = HtmlHelper.Unescape(linkRef.Url),
                         Title = HtmlHelper.Unescape(linkRef.Title),
+                        Label = label,
+                        LabelSpan = labelSpan,
                         IsImage = parent.IsImage,
+                        Reference = linkRef,
                         SourceSpan = new SourceSpan(parent.SourceSpan.Start, endPosition),
                         Line = parent.Line,
                         Column = parent.Column,
@@ -210,7 +215,9 @@ namespace Markdig.Parsers.Inlines
                     case '(':
                         string url;
                         string title;
-                        if (LinkHelper.TryParseInlineLink(ref text, out url, out title))
+                        SourceSpan linkSpan;
+                        SourceSpan titleSpan;
+                        if (LinkHelper.TryParseInlineLink(ref text, out url, out title, out linkSpan, out titleSpan))
                         {
                             // Inline Link
                             var link = new LinkInline()
@@ -222,6 +229,15 @@ namespace Markdig.Parsers.Inlines
                                 Line = openParent.Line,
                                 Column = openParent.Column,
                             };
+                            if (url != null)
+                            {
+                                link.UrlSourceSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan);
+                            }
+
+                            if (title != null)
+                            {
+                                link.TitleSourceSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan);
+                            }
 
                             openParent.ReplaceBy(link);
                             // Notifies processor as we are creating an inline locally
@@ -245,13 +261,17 @@ namespace Markdig.Parsers.Inlines
                         break;
                     default:
 
+                        var labelSpan = SourceSpan.Empty;
                         string label = null;
+                        bool isLabelSpanLocal = true;
                         // Handle Collapsed links
                         if (text.CurrentChar == '[')
                         {
                             if (text.PeekChar(1) == ']')
                             {
                                 label = openParent.Label;
+                                labelSpan = openParent.LabelSpan;
+                                isLabelSpanLocal = false;
                                 text.NextChar(); // Skip [
                                 text.NextChar(); // Skip ]
                             }
@@ -261,9 +281,14 @@ namespace Markdig.Parsers.Inlines
                             label = openParent.Label;
                         }
 
-                        if (label != null || LinkHelper.TryParseLabel(ref text, true, out label))
+                        if (label != null || LinkHelper.TryParseLabel(ref text, true, out label, out labelSpan))
                         {
-                            if (ProcessLinkReference(inlineState, label, openParent, inlineState.GetSourcePosition(text.Start - 1)))
+                            if (isLabelSpanLocal)
+                            {
+                                labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
+                            }
+
+                            if (ProcessLinkReference(inlineState, label, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1)))
                             {
                                 // Remove the open parent
                                 openParent.Remove();

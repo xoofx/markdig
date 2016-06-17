@@ -39,8 +39,9 @@ namespace Markdig.Extensions.Abbreviations
                 return BlockState.None;
             }
 
+            SourceSpan labelSpan;
             string label;
-            if (!LinkHelper.TryParseLabel(ref slice, out label))
+            if (!LinkHelper.TryParseLabel(ref slice, out label, out labelSpan))
             {
                 return BlockState.None;
             }
@@ -60,7 +61,8 @@ namespace Markdig.Extensions.Abbreviations
                 Text = slice,
                 SourceSpan = new SourceSpan(startPosition, slice.End),
                 Line = processor.LineIndex,
-                Column = processor.Column
+                Column = processor.Column,
+                LabelSpan = labelSpan,
             };
             if (!processor.Document.HasAbbreviations())
             {

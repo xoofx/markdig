@@ -55,8 +55,33 @@ namespace Markdig.Syntax.Inlines
         public string Title { get; set; }
 
         /// <summary>
+        /// Gets or sets the label.
+        /// </summary>
+        public string Label { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is an image link.
         /// </summary>
         public bool IsImage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference this link is attached to. May be null.
+        /// </summary>
+        public LinkReferenceDefinition Reference { get; set; }
+
+        /// <summary>
+        /// The URL source span.
+        /// </summary>
+        public SourceSpan? UrlSourceSpan;
+
+        /// <summary>
+        /// The title source span.
+        /// </summary>
+        public SourceSpan? TitleSourceSpan;
+
+        /// <summary>
+        /// The label span
+        /// </summary>
+        public SourceSpan? LabelSpan;
     }
 }

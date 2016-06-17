@@ -10,6 +10,11 @@ namespace Markdig.Syntax
     /// </summary>
     public abstract class MarkdownObject : IMarkdownObject
     {
+        protected MarkdownObject()
+        {
+            SourceSpan = SourceSpan.Empty;
+        }
+
         /// <summary>
         /// The attached datas. Use internally a simple array instead of a Dictionary{Object,Object}
         /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)

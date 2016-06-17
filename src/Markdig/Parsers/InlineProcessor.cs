@@ -119,6 +119,18 @@ namespace Markdig.Parsers
             return GetSourcePosition(sliceOffset, out lineIndex, out column);
         }
 
+        public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
+        {
+            if (span.IsEmpty)
+            {
+                return SourceSpan.Empty;
+            }
+
+            int column;
+            int lineIndex;
+            return new SourceSpan(GetSourcePosition(span.Start, out lineIndex, out column), GetSourcePosition(span.End, out lineIndex, out column));
+        }
+
         /// <summary>
         /// Gets the source position for the specified offset within the current slice.
         /// </summary>

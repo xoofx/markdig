@@ -11,56 +11,46 @@ namespace Markdig.Syntax
     /// </summary>
     public static class LinkReferenceDefinitionExtensions
     {
-        private static readonly object DocumentKey = typeof(LinkReferenceDefinition);
+        private static readonly object DocumentKey = typeof(LinkReferenceDefinitionGroup);
 
         public static bool ContainsLinkReferenceDefinition(this MarkdownDocument document, string label)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
-            var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
+            var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)
             {
                 return false;
             }
-            return references.ContainsKey(label);
+            return references.Links.ContainsKey(label);
         }
 
         public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             var references = document.GetLinkReferenceDefinitions();
-            references[label] = linkReferenceDefinition;
-        }
-
-        public static bool RemoveLinkReferenceDefinition(this MarkdownDocument document, string label)
-        {
-            if (label == null) throw new ArgumentNullException(nameof(label));
-            var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
-            if (references == null)
-            {
-                return false;
-            }
-            return references.Remove(label);
+            references.Set(label, linkReferenceDefinition);
         }
 
         public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, out LinkReferenceDefinition linkReferenceDefinition)
         {
             if (label == null) throw new ArgumentNullException(nameof(label));
             linkReferenceDefinition = null;
-            var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
+            var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)
             {
                 return false;
             }
-            return references.TryGetValue(label, out linkReferenceDefinition);
+            return references.TryGet(label, out linkReferenceDefinition);
         }
 
-        public static Dictionary<string, LinkReferenceDefinition> GetLinkReferenceDefinitions(this MarkdownDocument document)
+        public static LinkReferenceDefinitionGroup GetLinkReferenceDefinitions(this MarkdownDocument document)
         {
-            var references = document.GetData(DocumentKey) as Dictionary<string, LinkReferenceDefinition>;
+            var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)
             {
-                references = new Dictionary<string, LinkReferenceDefinition>(StringComparer.OrdinalIgnoreCase);
+                references = new LinkReferenceDefinitionGroup();
                 document.SetData(DocumentKey, references);
+                document.Add(references);
             }
             return references;
         }

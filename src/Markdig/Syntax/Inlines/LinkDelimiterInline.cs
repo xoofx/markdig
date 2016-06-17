@@ -25,6 +25,11 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Label { get; set; }
 
+        /// <summary>
+        /// The label span
+        /// </summary>
+        public SourceSpan LabelSpan;
+
         public override string ToLiteral()
         {
             return IsImage ? "![" : "[";

@@ -479,7 +479,7 @@ literal      ( 0, 0)  0-0
 linebreak    ( 0, 1)  1-1
 literal      ( 1, 0)  2-5
 math         ( 1, 4)  6-11
-attributes   ( 0, 0)  0-0
+attributes   ( 0, 0)  0--1
 ", "mathematics");
         }
 

@@ -33,5 +33,10 @@ namespace Markdig.Extensions.Abbreviations
         /// The text associated to this label.
         /// </summary>
         public StringSlice Text;
+
+        /// <summary>
+        /// The label span
+        /// </summary>
+        public SourceSpan LabelSpan;
     }
 }

@@ -36,7 +36,8 @@ namespace Markdig.Extensions.Footnotes
             var saved = processor.Column;
             string label;
             int start = processor.Start;
-            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out label) || !label.StartsWith("^") || processor.CurrentChar != ':')
+            SourceSpan labelSpan;
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out label, out labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
             {
                 processor.GoToColumn(saved);
                 return BlockState.None;
@@ -48,7 +49,11 @@ namespace Markdig.Extensions.Footnotes
 
             processor.NextChar(); // Skip ':'
 
-            var footnote = new Footnote(this) {Label = label};
+            var footnote = new Footnote(this)
+            {
+                Label = label,
+                LabelSpan = labelSpan,
+            };
 
             // Maintain a list of all footnotes at document level
             var footnotes = processor.Document.GetData(DocumentKey) as FootnoteGroup;

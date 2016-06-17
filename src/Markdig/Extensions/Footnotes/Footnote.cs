@@ -34,6 +34,11 @@ namespace Markdig.Extensions.Footnotes
         /// </summary>
         public List<FootnoteLink> Links { get; private set; }
 
+        /// <summary>
+        /// The label span
+        /// </summary>
+        public SourceSpan LabelSpan;
+
         internal bool IsLastLineEmpty { get; set; }
     }
 }
