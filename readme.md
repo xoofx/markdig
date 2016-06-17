@@ -90,29 +90,30 @@ This is an early preview of the benchmarking against various implementations:
 
 **C implementations**:
 
-- [cmark](https://github.com/jgm/cmark): Reference C implementation of CommonMark, no support for extensions
-- [Moonshine](https://github.com/brandonc/moonshine): popular C Markdown processor
+- [cmark](https://github.com/jgm/cmark) (version: 0.25.0): Reference C implementation of CommonMark, no support for extensions
+- [Moonshine](https://github.com/brandonc/moonshine) (version: : popular C Markdown processor
 
 **.NET implementations**:
 
-- [Markdig](https://github.com/lunet-io/markdig): itself
-- [CommonMark.NET(master)](https://github.com/Knagis/CommonMark.NET): CommonMark implementation for .NET, no support for extensions, port of cmark
+- [Markdig](https://github.com/lunet-io/markdig) (version: 0.5.x): itself
+- [CommonMark.NET(master)](https://github.com/Knagis/CommonMark.NET) (version: 0.11.0): CommonMark implementation for .NET, no support for extensions, port of cmark
   - [CommonMark.NET(pipe_tables)](https://github.com/AMDL/CommonMark.NET/tree/pipe-tables): An evolution of CommonMark.NET, supports extensions, not released yet
-- [MarkdownDeep](https://github.com/toptensoftware/markdowndeep) another .NET implementation
-- [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
-- [Marked.NET](https://github.com/T-Alex/MarkedNet) port of original [marked.js](https://github.com/chjj/marked) project
+- [MarkdownDeep](https://github.com/toptensoftware/markdowndeep) (version: 1.5.0): another .NET implementation
+- [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp) (version: 1.13.0): Open source C# implementation of Markdown processor, as featured on Stack Overflow, regexp based.
+- [Marked.NET](https://github.com/T-Alex/MarkedNet) (version: 1.0.5) port of original [marked.js](https://github.com/chjj/marked) project
+- [Microsoft.DocAsCode.MarkdownLite](https://github.com/dotnet/docfx/tree/dev/src/Microsoft.DocAsCode.MarkdownLite) (version: 2.0.1) used by the [docfx](https://github.com/dotnet/docfx) project
 
 **JavaScript/V8 implementations**:
 
-- [Strike.V8](https://github.com/SimonCropp/Strike) [marked.js](https://github.com/chjj/marked) running in Google V8 (not .NET based)
+- [Strike.V8](https://github.com/SimonCropp/Strike) (version: 1.5.0)  [marked.js](https://github.com/chjj/marked) running in Google V8 (not .NET based)
 
 ### Analysis of the results:
 
-- Markdig is roughly **x100 times faster than MarkdownSharp**
+- Markdig is roughly **x100 times faster than MarkdownSharp**, **30x times faster than docfx**
 - **Among the best in CPU**, Extremelly competitive and often faster than other implementations (not feature wise equivalent) 
 - **15% to 30% less allocations** and GC pressure
 
-Because Marked.NET and MarkdownSharp are way too slow, we couldn't include them in the following charts:
+Because Marked.NET,  MarkdownSharp and DocAsCode.MarkdownLite are way too slow, they are not included in the following charts:
 
 ![BenchMark CPU Time](img/BenchmarkCPU.png)
 
@@ -132,17 +133,18 @@ JitModules=clrjit-v4.6.1080.0
 Type=Program  Mode=SingleRun  LaunchCount=2
 WarmupCount=2  TargetCount=10
 
-                     Method |      Median |    StdDev |Scaled | Gen 0  | Gen 1 | Gen 2  |Bytes Allocated/Op |
---------------------------- |------------ |---------- |------ |------  |------ |------  |------------------ |
-                    Markdig |   5.5316 ms | 0.0372 ms |  0.71 |  56.00 | 21.00 |  49.00 |      1,285,917.31 |
-     CommonMark.NET(master) |   4.7035 ms | 0.0422 ms |  0.60 | 113.00 |  7.00 |  49.00 |      1,502,404.60 |
-CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |  0.72 | 111.00 | 56.00 |  49.00 |      1,863,128.13 |
-               MarkdownDeep |   7.8193 ms | 0.0334 ms |  1.00 | 120.00 | 56.00 |  49.00 |      1,884,854.85 |
-                      cmark |   4.2698 ms | 0.1526 ms |  0.55 |      - |     - |      - |                NA |
-                  Moonshine |   6.0929 ms | 0.1053 ms |  1.28 |      - |     - |      - |                NA |
-                  Strike.V8 |  10.5895 ms | 0.0492 ms |  1.35 |      - |     - |      - |                NA |
-                 Marked.NET | 207.3169 ms | 5.2628 ms | 26.51 |  0.00  |  0.00 |  0.00  |    303,125,228.65 |
-              MarkdownSharp | 675.0185 ms | 2.8447 ms | 86.32 | 40.00  | 27.00 | 41.00  |      2,413,394.17 |
+                     Method |      Median |    StdDev |Scaled |  Gen 0 | Gen 1|    Gen 2|Bytes Allocated/Op |
+--------------------------- |------------ |---------- |------ | ------ |------|---------|------------------ |
+                    Markdig |   5.5316 ms | 0.0372 ms |  0.71 |   56.00| 21.00|    49.00|      1,285,917.31 |
+     CommonMark.NET(master) |   4.7035 ms | 0.0422 ms |  0.60 |  113.00|  7.00|    49.00|      1,502,404.60 |
+CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |  0.72 |  111.00| 56.00|    49.00|      1,863,128.13 |
+               MarkdownDeep |   7.8193 ms | 0.0334 ms |  1.00 |  120.00| 56.00|    49.00|      1,884,854.85 |
+                      cmark |   4.2698 ms | 0.1526 ms |  0.55 |       -|     -|        -|                NA |
+                  Moonshine |   6.0929 ms | 0.1053 ms |  1.28 |       -|     -|        -|                NA |
+                  Strike.V8 |  10.5895 ms | 0.0492 ms |  1.35 |       -|     -|        -|                NA |
+                 Marked.NET | 207.3169 ms | 5.2628 ms | 26.51 |    0.00|  0.00|     0.00|    303,125,228.65 |
+              MarkdownSharp | 675.0185 ms | 2.8447 ms | 86.32 |   40.00| 27.00|    41.00|      2,413,394.17 |
+Microsoft DocfxMarkdownLite | 166.3357 ms | 0.4529 ms | 21.27 |4,452.00|948.00|11,167.00|    180,218,359.60 |
 ```
 
 ### Performance for x64:
