@@ -444,8 +444,8 @@ namespace Markdig.Extensions.Tables
                         }
 
                         // Check the left side of a `|` delimiter
-                        TableColumnAlign align;
-                        if (!ParseHeaderString(delimiter.PreviousSibling, out align))
+                        TableColumnAlign align = TableColumnAlign.Left;
+                        if (delimiter.PreviousSibling != null && !ParseHeaderString(delimiter.PreviousSibling, out align))
                         {
                             break;
                         }

@@ -28,6 +28,8 @@ namespace Markdig.Extensions.Tables
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
+            // Pipe tables require precise source location
+            pipeline.PreciseSourceLocation = true;
             if (!pipeline.BlockParsers.Contains<PipeTableBlockParser>())
             {
                 pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());

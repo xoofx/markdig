@@ -214,6 +214,76 @@ Column delimiters `|` at the very beginning of a line or just before a line endi
 </tbody>
 </table>
 ````````````````````````````````
+
+A pipe may be present at both the beginning/ending of each line:
+
+```````````````````````````````` example
+|a|b|
+|-|-|
+|0|1|
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+Or may be ommitted on one side:
+
+```````````````````````````````` example
+a|b|
+-|-|
+0|1|
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+```````````````````````````````` example
+|a|b
+|-|-
+|0|1
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+
+
 Single column table can be declared with lines starting only by a column delimiter: 
 
 ```````````````````````````````` example

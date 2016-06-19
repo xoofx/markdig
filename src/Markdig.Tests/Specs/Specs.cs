@@ -16631,7 +16631,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
-        // Single column table can be declared with lines starting only by a column delimiter:
+        // A pipe may be present at both the beginning/ending of each line:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16639,6 +16639,110 @@ namespace Markdig.Tests
         public void Example010()
         {
             // Example 10
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     |a|b|
+            //     |-|-|
+            //     |0|1|
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
+			TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+        }
+    }
+        // Or may be ommitted on one side:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a|b|
+            //     -|-|
+            //     0|1|
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
+			TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     |a|b
+            //     |-|-
+            //     |0|1
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
+			TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+        }
+    }
+        // Single column table can be declared with lines starting only by a column delimiter:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16664,7 +16768,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
 			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
@@ -16681,9 +16785,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example011()
+        public void Example014()
         {
-            // Example 11
+            // Example 14
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16712,7 +16816,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
@@ -16722,9 +16826,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example012()
+        public void Example015()
         {
-            // Example 12
+            // Example 15
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16756,7 +16860,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
@@ -16765,9 +16869,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example013()
+        public void Example016()
         {
-            // Example 13
+            // Example 16
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16782,7 +16886,7 @@ namespace Markdig.Tests
             //     0     | 1
             //     2     | 3</p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
 			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "pipetables");
         }
     }
@@ -16793,9 +16897,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example014()
+        public void Example017()
         {
-            // Example 14
+            // Example 17
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16824,7 +16928,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions Pipe Table");
 			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
@@ -16835,9 +16939,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example015()
+        public void Example018()
         {
-            // Example 15
+            // Example 18
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16847,7 +16951,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>a | b <code>0 |</code></p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions Pipe Table");
 			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "pipetables");
         }
     }
@@ -16858,9 +16962,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example016()
+        public void Example019()
         {
-            // Example 16
+            // Example 19
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16884,7 +16988,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions Pipe Table");
 			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
@@ -16895,9 +16999,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example017()
+        public void Example020()
         {
-            // Example 17
+            // Example 20
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16921,7 +17025,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 20, "Extensions Pipe Table");
 			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
         }
     }
