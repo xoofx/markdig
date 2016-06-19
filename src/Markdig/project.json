@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "> 0.5.2:\nAdd better support for precise source location for link parts (label, url...)\n> 0.5.1:\nAdd support for task lists.\nAdd support for precise source location pipelineBuilder.UsePreciseSourceLocation.\nBreaking change: Markdown.ToHtml() accept now only a string instead of a TextReader as this improve the overall performance.",
+    "releaseNotes": "> 0.5.3:\nFix bug in pipetables when a trailing `|` was put on the header row separator.\n> 0.5.2:\nAdd better support for precise source location for link parts (label, url...)\n> 0.5.1:\nAdd support for task lists.\nAdd support for precise source location pipelineBuilder.UsePreciseSourceLocation.\nBreaking change: Markdown.ToHtml() accept now only a string instead of a TextReader as this improve the overall performance.",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
