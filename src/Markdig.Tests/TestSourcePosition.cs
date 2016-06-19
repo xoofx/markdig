@@ -207,19 +207,6 @@ literal      ( 0, 4)  4-5
         }
 
         [Test]
-        public void TestHtmlInline()
-        {
-            //     0123456789
-            Check("01<b>4</b>", @"
-paragraph    ( 0, 0)  0-9
-literal      ( 0, 0)  0-1
-html         ( 0, 2)  2-4
-literal      ( 0, 5)  5-5
-html         ( 0, 6)  6-9
-");
-        }
-
-        [Test]
         public void TestAutolinkInline()
         {
             //     0123456789ABCD
@@ -251,6 +238,64 @@ paragraph    ( 4, 0) 16-16
 literal      ( 4, 0) 16-16
 ");
         }
+
+        [Test]
+        public void TestHtmlBlock1()
+        {
+            //     0           1
+            //     01 2 345678901 23
+            Check("0\n\n<!--A-->\n1\n", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+html         ( 2, 0)  3-10
+paragraph    ( 3, 0) 12-12
+literal      ( 3, 0) 12-12
+");
+        }
+
+        [Test]
+        public void TestHtmlComment()
+        {
+            //     0         1          2
+            //     012345678901 234567890 1234
+            Check("# 012345678\n<!--0-->\n123\n", @"
+heading      ( 0, 0)  0-10
+literal      ( 0, 2)  2-10
+html         ( 1, 0) 12-19
+paragraph    ( 2, 0) 21-23
+literal      ( 2, 0) 21-23
+");
+        }
+
+        [Test]
+        public void TestHtmlInline()
+        {
+            //     0123456789
+            Check("01<b>4</b>", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-1
+html         ( 0, 2)  2-4
+literal      ( 0, 5)  5-5
+html         ( 0, 6)  6-9
+");
+        }
+
+        [Test]
+        public void TestHtmlInline1()
+        {
+            //     0         
+            //     0123456789
+            Check("0<!--A-->1", @"
+paragraph    ( 0, 0)  0-9
+literal      ( 0, 0)  0-0
+html         ( 0, 1)  1-8
+literal      ( 0, 9)  9-9
+");
+        }
+
+
+
+
 
         [Test]
         public void TestThematicBreak()

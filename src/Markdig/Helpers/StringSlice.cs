@@ -212,7 +212,7 @@ namespace Markdig.Helpers
             index = Start + offset;
             for (int i = index; i <= end; i ++)
             {
-                if (Match(text, End, i))
+                if (Match(text, End, i - Start))
                 {
                     index = i + text.Length;
                     return true;
