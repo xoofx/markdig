@@ -47,7 +47,11 @@ namespace Markdig
 
         internal ProcessDocumentDelegate DocumentProcessed;
 
-        internal void Setup(IMarkdownRenderer renderer)
+        /// <summary>
+        /// Allows to setup a <see cref="IMarkdownRenderer"/>.
+        /// </summary>
+        /// <param name="renderer">The markdown renderer to setup</param>
+        public void Setup(IMarkdownRenderer renderer)
         {
             if (renderer == null) throw new ArgumentNullException(nameof(renderer));
             foreach (var extension in Extensions)

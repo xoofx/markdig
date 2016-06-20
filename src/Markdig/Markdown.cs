@@ -30,13 +30,14 @@ namespace Markdig
         }
 
         /// <summary>
-        /// Converts a Markdown string to HTML.
+        /// Converts a Markdown string to HTML and output to the specified writer.
         /// </summary>
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <returns>The Markdown document that has been parsed</returns>
         /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
-        public static void ToHtml(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument ToHtml(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -49,6 +50,8 @@ namespace Markdig
             var document = Parse(markdown, pipeline);
             renderer.Render(document);
             writer.Flush();
+
+            return document;
         }
 
         /// <summary>
