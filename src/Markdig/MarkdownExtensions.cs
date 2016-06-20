@@ -19,6 +19,7 @@ using Markdig.Extensions.Hardlines;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
+using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
@@ -56,6 +57,17 @@ namespace Markdig
                 .UseListExtras()
                 .UseTaskLists()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+
+        /// <summary>
+        /// Uses pragma lines to output span with an id containing the line number (pragma-line#line_number_zero_based`)
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UsePragmaLines(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<PragmaLineExtension>();
+            return pipeline;
         }
 
         /// <summary>
