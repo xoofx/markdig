@@ -2,8 +2,12 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
+using Markdig.Helpers;
 using Markdig.Renderers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.PragmaLines
 {
@@ -15,26 +19,61 @@ namespace Markdig.Extensions.PragmaLines
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
+            pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
+            pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
         }
 
         public void Setup(IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+        }
+
+        private static void PipelineOnDocumentProcessed(MarkdownDocument document)
+        {
+            int index = 0;
+            AddPragmas(document, ref index);
+        }
+
+        private static void AddPragmas(Block block, ref int index)
+        {
+            var attribute = block.GetAttributes();
+            var pragmaId = GetPragmaId(block);
+            if ( attribute.Id == null)
             {
-                htmlRenderer.ObjectWriteBefore -= HtmlRendererOnObjectWriteBefore;
-                htmlRenderer.ObjectWriteBefore += HtmlRendererOnObjectWriteBefore;
+                attribute.Id = pragmaId;
+            }
+            else if (block.Parent != null)
+            {
+                var heading = block as HeadingBlock;
+
+                // If we have a heading, we will try to add the tag inside it
+                // otherwise we will add it just before
+                var tag = $"<a id=\"{pragmaId}\"></a>";
+                if (heading?.Inline?.FirstChild != null)
+                {
+                    heading.Inline.FirstChild.InsertBefore(new HtmlInline() { Tag = tag });
+
+                }
+                else
+                {
+                    block.Parent.Insert(index, new HtmlBlock(null) { Lines = new StringLineGroup(tag) });
+                    index++;
+                }
+            }
+
+            var container = block as ContainerBlock;
+            if (container != null)
+            {
+                for (int i = 0; i < container.Count; i++)
+                {
+                    var subBlock = container[i];
+                    AddPragmas(subBlock, ref i);
+                }
             }
         }
 
-        private static void HtmlRendererOnObjectWriteBefore(IMarkdownRenderer renderer, MarkdownObject markdownObject)
+        private static string GetPragmaId(Block block)
         {
-            if (markdownObject is Block)
-            {
-                var htmlRenderer = (HtmlRenderer) renderer;
-                htmlRenderer.EnsureLine();
-                htmlRenderer.WriteLine($"<span id=\"pragma-line-{markdownObject.Line}\"></span>");
-            }
+            return $"pragma-line-{block.Line}";
         }
     }
 }
