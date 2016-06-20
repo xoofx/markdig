@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
 namespace Markdig.Extensions.TaskLists
@@ -18,7 +19,19 @@ namespace Markdig.Extensions.TaskLists
         public TaskListInlineParser()
         {
             OpeningCharacters = new[] {'['};
+            ListClass = "contains-task-list";
+            ListItemClass = "task-list-item";
         }
+
+        /// <summary>
+        /// Gets or sets the list class used for a task list.
+        /// </summary>
+        public string ListClass { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list item class used for a task list.
+        /// </summary>
+        public string ListItemClass { get; set; }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
@@ -26,7 +39,9 @@ namespace Markdig.Extensions.TaskLists
             // [ ]
             // or [x] or [X]
 
-            if (!(processor.Block.Parent is ListItemBlock))
+            var listItemBlock = processor.Block.Parent as ListItemBlock;
+
+            if (listItemBlock == null)
             {
                 return false;
             }
@@ -56,6 +71,19 @@ namespace Markdig.Extensions.TaskLists
             };
             taskItem.Span.End = taskItem.Span.Start + 2;
             processor.Inline = taskItem;
+
+            // Add proper class for task list
+            if (!string.IsNullOrEmpty(ListItemClass))
+            {
+                listItemBlock.GetAttributes().AddClass(ListItemClass);
+            }
+
+            var listBlock = (ListBlock) listItemBlock.Parent;
+            if (!string.IsNullOrEmpty(ListClass))
+            {
+                listBlock.GetAttributes().AddClass(ListClass);
+            }
+
             return true;
         }
     }

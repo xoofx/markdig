@@ -12,10 +12,10 @@ A task list item consist of `[ ]` or `[x]` or `[X]` inside a list item (ordered 
 - [ ] Item3
 - Item4
 .
-<ul>
-<li><input disabled="disabled" type="checkbox" /> Item1</li>
-<li><input disabled="disabled" type="checkbox" checked="checked" /> Item2</li>
-<li><input disabled="disabled" type="checkbox" /> Item3</li>
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Item1</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Item2</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Item3</li>
 <li>Item4</li>
 </ul>
 ````````````````````````````````

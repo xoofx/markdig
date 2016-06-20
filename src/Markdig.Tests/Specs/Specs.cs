@@ -19317,15 +19317,15 @@ namespace Markdig.Tests
             //     - Item4
             //
             // Should be rendered as:
-            //     <ul>
-            //     <li><input disabled="disabled" type="checkbox" /> Item1</li>
-            //     <li><input disabled="disabled" type="checkbox" checked="checked" /> Item2</li>
-            //     <li><input disabled="disabled" type="checkbox" /> Item3</li>
+            //     <ul class="contains-task-list">
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" /> Item1</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Item2</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" /> Item3</li>
             //     <li>Item4</li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions TaskLists");
-			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul>\n<li><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists");
+			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists");
         }
     }
         // A task is not recognized outside a list item:
