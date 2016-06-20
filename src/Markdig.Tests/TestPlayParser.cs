@@ -28,6 +28,15 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         }
 
         [Test]
+        public void TestBugAdvancaed()
+        {
+            TestParser.TestSpec(@"`https://{domain}/callbacks`
+#### HEADING
+Paragraph
+", "<p><code>https://{domain}/callbacks</code></p>\n<h4 id=\"heading\">HEADING</h4>\n<p>Paragraph</p>", "advanced");
+        }
+
+        [Test]
         public void TestSamePipelineAllExtensions()
         {
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
