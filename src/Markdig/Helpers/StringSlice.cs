@@ -222,6 +222,22 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
+        /// Searches for the specified character within this slice.
+        /// </summary>
+        /// <returns>A value >= 0 if the character was found, otherwise &lt; 0</returns>
+        public int IndexOf(char c)
+        {
+            for (int i = Start; i <= End; i++)
+            {
+                if (Text[i] == c)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// Searches the specified text within this slice (matching lowercase).
         /// </summary>
         /// <param name="text">The text.</param>

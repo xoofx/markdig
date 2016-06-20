@@ -46,7 +46,7 @@ namespace Markdig.Extensions.GenericAttributes
             // Try to find if there is any attributes { in the info string on the first line of a FencedCodeBlock
             if (line.Start < line.End)
             {
-                var indexOfAttributes = line.Text.LastIndexOf('{', line.End);
+                int indexOfAttributes = line.IndexOf('{');
                 if (indexOfAttributes >= 0)
                 {
                     // Work on a copy
