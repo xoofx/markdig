@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "Fix bug in HTML block parsing which could break parsing of remaining document",
+    "releaseNotes": "> 0.5.5\n- Add same github class for task lists\n- Add pragma lines extension\n> 0.5.4:\nFix bug in HTML block parsing which could break parsing of remaining document",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
