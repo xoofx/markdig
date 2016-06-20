@@ -32,7 +32,9 @@ namespace Markdig.Renderers.Html
             }
             else
             {
-                renderer.WriteLine("<ul>");
+                renderer.Write("<ul");
+                renderer.WriteAttributes(listBlock);
+                renderer.WriteLine(">");
             }
             foreach (var item in listBlock)
             {
