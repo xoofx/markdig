@@ -36,6 +36,16 @@ namespace Markdig.Renderers
         public bool IsLastInContainer { get; private set; }
 
         /// <summary>
+        /// Occurs when before writing an object.
+        /// </summary>
+        public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteBefore;
+
+        /// <summary>
+        /// Occurs when after writing an object.
+        /// </summary>
+        public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteAfter;
+
+        /// <summary>
         /// Writes the children of the specified <see cref="ContainerBlock"/>.
         /// </summary>
         /// <param name="containerBlock">The container block.</param>
@@ -105,6 +115,10 @@ namespace Markdig.Renderers
 
             var objectType = obj.GetType();
 
+            // Calls before writing an object
+            var writeBefore = ObjectWriteBefore;
+            writeBefore?.Invoke(this, obj);
+
             // Handle regular renderers
             IMarkdownObjectRenderer renderer = previousObjectType == objectType ? previousRenderer : null;
             if (renderer == null && !renderersPerType.TryGetValue(objectType, out renderer))
@@ -142,6 +156,10 @@ namespace Markdig.Renderers
 
             previousObjectType = objectType;
             previousRenderer = renderer;
+
+            // Calls after writing an object
+            var writeAfter = ObjectWriteAfter;
+            writeAfter?.Invoke(this, obj);
         }
     }
 }
