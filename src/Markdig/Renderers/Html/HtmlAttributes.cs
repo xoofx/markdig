@@ -44,9 +44,14 @@ namespace Markdig.Renderers.Html
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (Classes == null)
             {
-                Classes = new List<string>(2); // Use half list compare to default capacity (4), as we don't expect lots of classes
+                Classes = new List<string>(2);
+                    // Use half list compare to default capacity (4), as we don't expect lots of classes
             }
-            Classes.Add(name);
+
+            if (!Classes.Contains(name))
+            {
+                Classes.Add(name);
+            }
         }
 
         /// <summary>
