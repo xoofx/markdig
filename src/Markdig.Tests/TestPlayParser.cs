@@ -28,6 +28,32 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         }
 
         [Test]
+        public void TestListBug()
+        {
+            // TODO: Add this test back to the CommonMark specs
+            var text = @"- item1
+  - item2
+    - item3
+      - item4";
+            TestParser.TestSpec(text, @"<ul>
+<li>item1
+<ul>
+<li>item2
+<ul>
+<li>item3
+<ul>
+<li>item4</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+");
+        }
+
+
+
+
+        [Test]
         public void TestBugAdvancaed()
         {
             TestParser.TestSpec(@"`https://{domain}/callbacks`

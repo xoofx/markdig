@@ -170,7 +170,7 @@ namespace Markdig.Parsers
             {
                 if (state.Indent > columWidth && state.IsCodeIndent)
                 {
-                    state.GoToColumn(columWidth);
+                    state.GoToColumn(state.ColumnBeforeIndent + columWidth);
                 }
 
                 // Update list-item source end position
