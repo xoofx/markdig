@@ -53,10 +53,6 @@ namespace Markdig.Syntax
 
         public static int FindClosestLine(this MarkdownDocument root, int line)
         {
-            // Forces the preview window to scroll to the top of the document
-            if (line <= 3)
-                return 0;
-
             var closestBlock = root.FindClosestBlock(line);
             return closestBlock?.Line ?? 0;
         }
@@ -89,7 +85,7 @@ namespace Markdig.Syntax
             }
 
             // If we are between two lines, try to find the best spot
-            if (lowerIndex >= 0 && lowerIndex < blocks.Count)
+            if (lowerIndex > 0 && lowerIndex < blocks.Count)
             {
                 var prevBlock = blocks[lowerIndex - 1].FindClosestBlock(line) ?? blocks[lowerIndex - 1];
                 var nextBlock = blocks[lowerIndex].FindClosestBlock(line) ?? blocks[lowerIndex];
@@ -111,6 +107,18 @@ namespace Markdig.Syntax
                 var middle = (line - prevLine) * 1.0 / (nextLine - prevLine);
                 // If  relative position < 0.5, we select the previous line, otherwise we select the line found
                 return middle < 0.5 ? prevBlock : nextBlock;
+            }
+
+            if (lowerIndex == 0)
+            {
+                var prevBlock = blocks[lowerIndex].FindClosestBlock(line) ?? blocks[lowerIndex];
+                return prevBlock;
+            }
+
+            if (lowerIndex == blocks.Count)
+            {
+                var prevBlock = blocks[lowerIndex - 1].FindClosestBlock(line) ?? blocks[lowerIndex - 1];
+                return prevBlock;
             }
 
             return null;

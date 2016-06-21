@@ -62,6 +62,7 @@
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
     <Compile Include="TestLinkHelper.cs" />
+    <Compile Include="TestPragmaLines.cs" />
     <Compile Include="TestSourcePosition.cs" />
     <Compile Include="TestStringSliceList.cs" />
     <Compile Include="TestPlayParser.cs" />
