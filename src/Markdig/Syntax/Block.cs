@@ -75,5 +75,19 @@ namespace Markdig.Syntax
         {
             ProcessInlinesEnd?.Invoke(state, null);
         }
+
+        public void UpdateSpanEnd(int spanEnd)
+        {
+            // Update parent spans
+            var parent = this;
+            while (parent != null)
+            {
+                if (spanEnd > parent.Span.End)
+                {
+                    parent.Span.End = spanEnd;
+                }
+                parent = parent.Parent;
+            }
+        }
     }
 }

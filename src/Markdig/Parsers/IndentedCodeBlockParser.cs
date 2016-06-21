@@ -48,7 +48,7 @@ namespace Markdig.Parsers
             }
             if (block != null)
             {
-                block.Span.End = processor.Line.End;
+                block.UpdateSpanEnd(processor.Line.End);
             }
             return BlockState.Continue;
         }

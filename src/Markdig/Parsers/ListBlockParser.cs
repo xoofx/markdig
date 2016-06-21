@@ -153,7 +153,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.Span.End = state.Line.End;
+                listItem.UpdateSpanEnd(state.Line.End);
                 
                 return BlockState.Continue;
             }
@@ -174,7 +174,7 @@ namespace Markdig.Parsers
                 }
 
                 // Update list-item source end position
-                listItem.Span.End = state.Line.End;
+                listItem.UpdateSpanEnd(state.Line.End);
 
                 return BlockState.Continue;
             }
@@ -352,11 +352,11 @@ namespace Markdig.Parsers
                 isLastListItem = false;
             }
 
-            // Update end-position for the list
-            if (listBlock.Count > 0)
-            {
-                listBlock.Span.End = listBlock[listBlock.Count - 1].Span.End;
-            }
+            //// Update end-position for the list
+            //if (listBlock.Count > 0)
+            //{
+            //    listBlock.Span.End = listBlock[listBlock.Count - 1].Span.End;
+            //}
 
             return true;
         }

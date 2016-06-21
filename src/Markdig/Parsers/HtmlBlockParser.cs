@@ -185,35 +185,35 @@ namespace Markdig.Parsers
                 case HtmlBlockType.Comment:
                     if (line.Search("-->", out endof))
                     {
-                        htmlBlock.Span.End = endof - 1;
+                        htmlBlock.UpdateSpanEnd(endof - 1);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
                     if (line.Search("]]>", out endof))
                     {
-                        htmlBlock.Span.End = endof - 1;
+                        htmlBlock.UpdateSpanEnd(endof - 1);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
                     if (line.Search("?>", out endof))
                     {
-                        htmlBlock.Span.End = endof - 1;
+                        htmlBlock.UpdateSpanEnd(endof - 1);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
                     if (line.Search(">", out endof))
                     {
-                        htmlBlock.Span.End = endof - 1;
+                        htmlBlock.UpdateSpanEnd(endof - 1);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
                     if (line.SearchLowercase("</script>", out endof) || line.SearchLowercase("</pre>", out endof) || line.SearchLowercase("</style>", out endof))
                     {
-                        htmlBlock.Span.End = endof - 1;
+                        htmlBlock.UpdateSpanEnd(endof - 1);
                         result = BlockState.Break;
                     }
                     break;

@@ -98,7 +98,7 @@ namespace Markdig.Extensions.DefinitionLists
             processor.Open(definitionItem);
 
             // Update the end position
-            currentDefinitionList.Span.End = processor.Line.End;
+            currentDefinitionList.UpdateSpanEnd(processor.Line.End);
 
             return BlockState.Continue;
         }

@@ -80,7 +80,7 @@ namespace Markdig.Extensions.Footers
                 {
                     processor.NextChar(); // Skip following space
                 }
-                block.Span.End = processor.Line.End;
+                block.UpdateSpanEnd(processor.Line.End);
             }
             return result;
         }

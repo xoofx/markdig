@@ -69,10 +69,7 @@ namespace Markdig.Syntax
             children[Count++] = item;
             item.Parent = this;
 
-            if (item.Span.End > Span.End)
-            {
-                Span.End = item.Span.End;
-            }
+            UpdateSpanEnd(item.Span.End);
         }
 
         private void EnsureCapacity(int min)

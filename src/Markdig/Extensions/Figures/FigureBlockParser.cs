@@ -114,7 +114,7 @@ namespace Markdig.Extensions.Figures
                     figure.Add(caption);
                 }
 
-                figure.Span.End = line.End;
+                figure.UpdateSpanEnd(line.End);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
@@ -123,7 +123,7 @@ namespace Markdig.Extensions.Figures
             // Reset the indentation to the column before the indent
             processor.GoToColumn(processor.ColumnBeforeIndent);
 
-            figure.Span.End = line.End;
+            figure.UpdateSpanEnd(line.End);
 
             return BlockState.Continue;
         }

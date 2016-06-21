@@ -40,7 +40,7 @@ namespace Markdig.Parsers
                 return TryParseSetexHeading(processor, block);
             }
 
-            block.Span.End = processor.Line.End;
+            block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }
 
@@ -139,7 +139,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            block.Span.End = state.Line.End;
+            block.UpdateSpanEnd(state.Line.End);
 
             return BlockState.Continue;
         }

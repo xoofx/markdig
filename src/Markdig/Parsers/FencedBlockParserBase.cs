@@ -216,7 +216,7 @@ namespace Markdig.Parsers
             // The line must contain only fence opening character followed only by whitespaces.
             if (count <=0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
-                block.Span.End = line.Start - 1;
+                block.UpdateSpanEnd(line.Start - 1);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;
