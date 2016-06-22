@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "- Fix ArgumentOutOfRangeException for FindClosestBlock\n- Fix bug in nested list items\n",
+    "releaseNotes": "- Fix bug with HTML blocks for end tag pre/script/style not being properly detected\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
