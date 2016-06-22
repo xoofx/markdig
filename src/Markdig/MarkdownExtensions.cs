@@ -155,7 +155,7 @@ namespace Markdig
         }
 
         /// <summary>
-        /// Uses the boostrap extension.
+        /// Uses the bootstrap extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
