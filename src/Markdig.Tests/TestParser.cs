@@ -78,7 +78,7 @@ namespace Markdig.Tests
         private static string Compact(string html)
         {
             // Normalize the output to make it compatible with CommonMark specs
-            html = html.Replace("\r", "").Trim();
+            html = html.Replace("\r\n", "\n").Replace(@"\r", @"\n").Trim();
             html = Regex.Replace(html, @"\s+</li>", "</li>");
             html = Regex.Replace(html, @"<li>\s+", "<li>");
             html = html.Normalize(NormalizationForm.FormKD);
