@@ -249,7 +249,7 @@ namespace Markdig.Helpers
             endOfIndex = 0;
             for (int i = Start; i <= end; i++)
             {
-                if (MatchLowercase(text, End, i))
+                if (MatchLowercase(text, End, i - Start))
                 {
                     endOfIndex = i + text.Length;
                     return true;

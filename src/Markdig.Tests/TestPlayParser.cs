@@ -51,6 +51,23 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         }
 
 
+        [Test]
+        public void TestHtmlBug()
+        {
+            TestParser.TestSpec(@" # header1
+
+<pre class='copy'>
+blabla
+</pre>
+
+# header2
+", @"<h1>header1</h1>
+<pre class='copy'>
+blabla
+</pre>
+<h1>header2</h1>");
+        }
+
 
 
         [Test]
