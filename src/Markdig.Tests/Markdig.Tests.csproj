@@ -59,6 +59,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Specs.tt</DependentUpon>
     </Compile>
+    <Compile Include="TestHtmlAttributes.cs" />
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
     <Compile Include="TestLinkHelper.cs" />

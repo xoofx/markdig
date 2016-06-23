@@ -118,7 +118,7 @@ namespace Markdig.Renderers.Html
             }
             if (htmlAttributes.Classes == null)
             {
-                htmlAttributes.Classes = shared ? Classes : new List<string>(Classes);
+                htmlAttributes.Classes = shared ? Classes : Classes != null ? new List<string>(Classes) : null;
             }
             else if (Classes != null)
             {
@@ -127,7 +127,7 @@ namespace Markdig.Renderers.Html
 
             if (htmlAttributes.Properties == null)
             {
-                htmlAttributes.Properties = shared ? Properties : new List<KeyValuePair<string, string>>(Properties);
+                htmlAttributes.Properties = shared ? Properties : Properties != null ? new List<KeyValuePair<string, string>>(Properties) : null;
             }
             else if (Properties != null)
             {
@@ -140,6 +140,10 @@ namespace Markdig.Renderers.Html
                 }
                 else
                 {
+                    if (htmlAttributes.Properties == null)
+                    {
+                        htmlAttributes.Properties = new List<KeyValuePair<string, string>>();
+                    }
                     htmlAttributes.Properties.AddRange(Properties);
                 }
             }
