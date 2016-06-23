@@ -28,10 +28,10 @@ namespace Markdig.Extensions.SmartyPants
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
-            if (!pipeline.InlineParsers.Contains<SmaryPantsInlineParser>())
+            if (!pipeline.InlineParsers.Contains<SmartyPantsInlineParser>())
             {
                 // Insert the parser after the code span parser
-                pipeline.InlineParsers.InsertAfter<CodeInlineParser>(new SmaryPantsInlineParser());
+                pipeline.InlineParsers.InsertAfter<CodeInlineParser>(new SmartyPantsInlineParser());
             }
         }
 

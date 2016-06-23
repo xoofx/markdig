@@ -11,14 +11,14 @@ namespace Markdig.Extensions.SmartyPants
     /// <summary>
     /// The inline parser for SmartyPants.
     /// </summary>
-    public class SmaryPantsInlineParser : InlineParser
+    public class SmartyPantsInlineParser : InlineParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SmaryPantsInlineParser"/> class.
+        /// Initializes a new instance of the <see cref="SmartyPantsInlineParser"/> class.
         /// </summary>
-        public SmaryPantsInlineParser()
+        public SmartyPantsInlineParser()
         {
-            OpeningCharacters = new[] {'`', '\'', '"', '<', '>', '.', '-'};
+            OpeningCharacters = new[] {'\'', '"', '<', '>', '.', '-'};
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -44,13 +44,6 @@ namespace Markdig.Extensions.SmartyPants
 
             switch (c)
             {
-                case '`':
-                    if (slice.PeekChar(1) == '`')
-                    {
-                        slice.NextChar();
-                        type = SmartyPantType.DoubleQuote; // We will resolve them at the end of parsing all inlines
-                    }
-                    break;
                 case '\'':
                     type = SmartyPantType.Quote; // We will resolve them at the end of parsing all inlines
                     if (slice.PeekChar(1) == '\'')
