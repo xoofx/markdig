@@ -5387,8 +5387,8 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "");
         }
     }
-        // The Laziness clause allows us to omit the `>` before a
-        // paragraph continuation line:
+        // The Laziness clause allows us to omit the `>` before
+        // [paragraph continuation text]:
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5561,8 +5561,8 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "");
         }
     }
-        // Note that in the following case, we have a paragraph
-        // continuation line:
+        // Note that in the following case, we have a [lazy
+        // continuation line]:
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5595,7 +5595,7 @@ namespace Markdig.Tests
         //
         // the `- bar` is indented too far to start a list, and can't
         // be an indented code block because indented code blocks cannot
-        // interrupt paragraphs, so it is a [paragraph continuation line].
+        // interrupt paragraphs, so it is [paragraph continuation text].
         //
         // A block quote can be empty:
     [TestFixture]
@@ -13868,7 +13868,7 @@ namespace Markdig.Tests
         // [link reference definition] elsewhere in the
         // document and is not followed by `[]` or a link label.
         // The contents of the first link label are parsed as inlines,
-        // which are used as the link's text.  the link's URI and title
+        // which are used as the link's text.  The link's URI and title
         // are provided by the matching link reference definition.
         // Thus, `[foo]` is equivalent to `[foo][]`.
     [TestFixture]
@@ -17977,6 +17977,26 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Emoji");
 			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis");
+        }
+    }
+        // An emoji needs to be preceded by a space and followed by a space
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     These are not:) an :)emoji with a:) x:angry:x
+            //
+            // Should be rendered as:
+            //     <p>These are not:) an :)emoji with a:) x:angry:x</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Emoji");
+			TestParser.TestSpec("These are not:) an :)emoji with a:) x:angry:x", "<p>These are not:) an :)emoji with a:) x:angry:x</p>", "emojis");
         }
     }
         // # Extensions

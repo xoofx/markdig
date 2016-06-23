@@ -67,18 +67,34 @@ namespace Markdig.Extensions.Emoji
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             string match;
+
+            // Previous char must be a space
+            if (!slice.PeekCharExtra(-1).IsWhiteSpaceOrZero())
+            {
+                return false;
+            }
+
+            // Try to match an existing emoji
             var startPosition = slice.Start;
             if (!textMatchHelper.TryMatch(slice.Text, slice.Start, slice.Length, out match))
             {
                 return false;
             }
 
+            // Following char must be a space
+            if (!slice.PeekCharExtra(match.Length).IsWhiteSpaceOrZero())
+            {
+                return false;
+            }
+
+            // If we have a smiley, we decode it to emoji
             string emoji;
             if (!SmileyToEmoji.TryGetValue(match, out emoji))
             {
                 emoji = match;
             }
 
+            // Decode the eomji to unicode
             string unicode;
             if (!EmojiToUnicode.TryGetValue(emoji, out unicode))
             {
