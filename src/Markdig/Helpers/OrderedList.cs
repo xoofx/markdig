@@ -101,19 +101,5 @@ namespace Markdig.Helpers
             }
             return false;
         }
-
-        public bool ReplacyBy<TElement>(T element) where TElement : T
-        {
-            if (element == null) throw new ArgumentNullException(nameof(element));
-            for (int i = 0; i < Count; i++)
-            {
-                if (this[i] is TElement)
-                {
-                    this[i] = element;
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
