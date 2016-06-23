@@ -118,7 +118,9 @@ namespace Markdig.Renderers.Html
             }
             if (htmlAttributes.Classes == null)
             {
-                htmlAttributes.Classes = shared ? Classes : new List<string>(Classes);
+                htmlAttributes.Classes = shared
+                    ? Classes
+                    : new List<string>(Classes ?? new List<string>());
             }
             else if (Classes != null)
             {
@@ -127,7 +129,10 @@ namespace Markdig.Renderers.Html
 
             if (htmlAttributes.Properties == null)
             {
-                htmlAttributes.Properties = shared ? Properties : new List<KeyValuePair<string, string>>(Properties);
+                htmlAttributes.Properties = shared
+                    ? Properties
+                    : new List<KeyValuePair<string, string>>(
+                        Properties ?? new List<KeyValuePair<string, string>>());
             }
             else if (Properties != null)
             {
