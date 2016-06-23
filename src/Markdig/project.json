@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "- Fix bug with HTML blocks for end tag pre/script/style not being properly detected\n",
+    "releaseNotes": "- Fix ArgumentNullException with MediaLinks extension in HtmlAttributes.CopyTo method\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
