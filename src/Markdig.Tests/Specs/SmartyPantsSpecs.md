@@ -83,29 +83,6 @@ They are' not matching 'quotes
 .
 <p>They are' not matching 'quotes</p>
 ````````````````````````````````
-
-Double quotes using ``` `` ``` are working if they match another `''` pair, and there is no other double quotes on the line (otherwise they would be parsed as a code span):
-
-```````````````````````````````` example
-This is ``a double quote''
-.
-<p>This is &ldquo;a double quote&rdquo;</p>
-````````````````````````````````
-
-```````````````````````````````` example
-This is ``a code span''`` 
-.
-<p>This is <code>a code span''</code></p>
-````````````````````````````````
-
-```````````````````````````````` example
-hello ``there```
-test
-.
-<p>hello &ldquo;there&rdquo;`
-test</p>
-````````````````````````````````
-
 An emphasis starting inside left/right quotes will span over the right quote:
 
 ```````````````````````````````` example

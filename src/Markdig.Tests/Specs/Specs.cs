@@ -3811,6 +3811,7 @@ namespace Markdig.Tests
             //     main :: IO ()
             //     main = print $ parseTags tags
             //     </code></pre>
+            //     okay
             //
             // Should be rendered as:
             //     <pre language="haskell"><code>
@@ -3819,9 +3820,10 @@ namespace Markdig.Tests
             //     main :: IO ()
             //     main = print $ parseTags tags
             //     </code></pre>
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 134, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>", "");
+			TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "");
         }
     }
         // A script tag (type 1):
@@ -3840,6 +3842,7 @@ namespace Markdig.Tests
             //     
             //     document.getElementById("demo").innerHTML = "Hello JavaScript!";
             //     </script>
+            //     okay
             //
             // Should be rendered as:
             //     <script type="text/javascript">
@@ -3847,9 +3850,10 @@ namespace Markdig.Tests
             //     
             //     document.getElementById("demo").innerHTML = "Hello JavaScript!";
             //     </script>
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 135, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>", "");
+			TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "");
         }
     }
         // A style tag (type 1):
@@ -3869,6 +3873,7 @@ namespace Markdig.Tests
             //     
             //     p {color:blue;}
             //     </style>
+            //     okay
             //
             // Should be rendered as:
             //     <style
@@ -3877,9 +3882,10 @@ namespace Markdig.Tests
             //     
             //     p {color:blue;}
             //     </style>
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 136, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>", "");
+			TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "");
         }
     }
         // If there is no matching end tag, the block will end at the
@@ -4044,15 +4050,17 @@ namespace Markdig.Tests
             //     
             //     bar
             //        baz -->
+            //     okay
             //
             // Should be rendered as:
             //     <!-- Foo
             //     
             //     bar
             //        baz -->
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 143, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->", "<!-- Foo\n\nbar\n   baz -->", "");
+			TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "");
         }
     }
         // A processing instruction (type 3):
@@ -4071,6 +4079,7 @@ namespace Markdig.Tests
             //       echo '>';
             //     
             //     ?>
+            //     okay
             //
             // Should be rendered as:
             //     <?php
@@ -4078,9 +4087,10 @@ namespace Markdig.Tests
             //       echo '>';
             //     
             //     ?>
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 144, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>", "<?php\n\n  echo '>';\n\n?>", "");
+			TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "");
         }
     }
         // A declaration (type 4):
@@ -4126,6 +4136,7 @@ namespace Markdig.Tests
             //       }
             //     }
             //     ]]>
+            //     okay
             //
             // Should be rendered as:
             //     <![CDATA[
@@ -4140,9 +4151,10 @@ namespace Markdig.Tests
             //       }
             //     }
             //     ]]>
+            //     <p>okay</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 146, "Leaf blocks HTML blocks");
-			TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>", "");
+			TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "");
         }
     }
         // The opening tag can be indented 1-3 spaces, but not 4:
@@ -7286,6 +7298,7 @@ namespace Markdig.Tests
             //     - foo
             //       - bar
             //         - baz
+            //           - boo
             //
             // Should be rendered as:
             //     <ul>
@@ -7293,7 +7306,11 @@ namespace Markdig.Tests
             //     <ul>
             //     <li>bar
             //     <ul>
-            //     <li>baz</li>
+            //     <li>baz
+            //     <ul>
+            //     <li>boo</li>
+            //     </ul>
+            //     </li>
             //     </ul>
             //     </li>
             //     </ul>
@@ -7301,7 +7318,7 @@ namespace Markdig.Tests
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 254, "Container blocks List items");
-			TestParser.TestSpec("- foo\n  - bar\n    - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
+			TestParser.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
         // One is not enough:
@@ -7318,16 +7335,18 @@ namespace Markdig.Tests
             //     - foo
             //      - bar
             //       - baz
+            //        - boo
             //
             // Should be rendered as:
             //     <ul>
             //     <li>foo</li>
             //     <li>bar</li>
             //     <li>baz</li>
+            //     <li>boo</li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 255, "Container blocks List items");
-			TestParser.TestSpec("- foo\n - bar\n  - baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n</ul>", "");
+			TestParser.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "");
         }
     }
         // Here we need four, because the list marker is wider:
@@ -17104,6 +17123,50 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes");
         }
     }
+        // Check with mulitple consecutive footnotes:
+    [TestFixture]
+    public partial class TestExtensionsFootontes
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions Footontes
+            //
+            // The following CommonMark:
+            //     Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].
+            //     
+            //     [^1]: Footnote 1 text
+            //     
+            //     [^2]: Footnote 2 text
+            //     
+            //     a
+            //     
+            //     [^3]: Footnote 3 text
+            //     
+            //     [^4]: Footnote 4 text
+            //
+            // Should be rendered as:
+            //     <p>Here is a footnote<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a>. And another one<a id="fnref:2" href="#fn:2" class="footnote-ref"><sup>2</sup></a>. And a third one<a id="fnref:3" href="#fn:3" class="footnote-ref"><sup>3</sup></a>. And a fourth<a id="fnref:4" href="#fn:4" class="footnote-ref"><sup>4</sup></a>.</p>
+            //     <p>a</p>
+            //     <div class="footnotes">
+            //     <hr />
+            //     <ol>
+            //     <li id="fn:1">
+            //     <p>Footnote 1 text<a href="#fnref:1" class="footnote-back-ref">&#8617;</a></p></li>
+            //     <li id="fn:2">
+            //     <p>Footnote 2 text<a href="#fnref:2" class="footnote-back-ref">&#8617;</a></p></li>
+            //     <li id="fn:3">
+            //     <p>Footnote 3 text<a href="#fnref:3" class="footnote-back-ref">&#8617;</a></p></li>
+            //     <li id="fn:4">
+            //     <p>Footnote 4 text<a href="#fnref:4" class="footnote-back-ref">&#8617;</a></p></li>
+            //     </ol>
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Footontes");
+			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n\n[^2]: Footnote 2 text\n\na\n\n[^3]: Footnote 3 text\n\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<p>a</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
@@ -17979,7 +18042,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis");
         }
     }
-        // An emoji needs to be preceded by a space and followed by a space
+        // An emoji needs to be preceded by a space and followed by a space:
     [TestFixture]
     public partial class TestExtensionsEmoji
     {
@@ -18957,7 +19020,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "smartypants");
         }
     }
-        // Double quotes using ``` `` ``` are working if they match another `''` pair, and there is no other double quotes on the line (otherwise they would be parsed as a code span):
+        // An emphasis starting inside left/right quotes will span over the right quote:
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -18968,72 +19031,12 @@ namespace Markdig.Tests
             // Section: Extensions SmartyPants Quotes
             //
             // The following CommonMark:
-            //     This is ``a double quote''
-            //
-            // Should be rendered as:
-            //     <p>This is &ldquo;a double quote&rdquo;</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is ``a double quote''", "<p>This is &ldquo;a double quote&rdquo;</p>", "smartypants");
-        }
-    }
-    [TestFixture]
-    public partial class TestExtensionsSmartyPantsQuotes
-    {
-        [Test]
-        public void Example014()
-        {
-            // Example 14
-            // Section: Extensions SmartyPants Quotes
-            //
-            // The following CommonMark:
-            //     This is ``a code span''`` 
-            //
-            // Should be rendered as:
-            //     <p>This is <code>a code span''</code></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is ``a code span''`` ", "<p>This is <code>a code span''</code></p>", "smartypants");
-        }
-    }
-    [TestFixture]
-    public partial class TestExtensionsSmartyPantsQuotes
-    {
-        [Test]
-        public void Example015()
-        {
-            // Example 15
-            // Section: Extensions SmartyPants Quotes
-            //
-            // The following CommonMark:
-            //     hello ``there```
-            //     test
-            //
-            // Should be rendered as:
-            //     <p>hello &ldquo;there&rdquo;`
-            //     test</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("hello ``there```\ntest", "<p>hello &ldquo;there&rdquo;`\ntest</p>", "smartypants");
-        }
-    }
-        // An emphasis starting inside left/right quotes will span over the right quote:
-    [TestFixture]
-    public partial class TestExtensionsSmartyPantsQuotes
-    {
-        [Test]
-        public void Example016()
-        {
-            // Example 16
-            // Section: Extensions SmartyPants Quotes
-            //
-            // The following CommonMark:
             //     This is "a *text" with an emphasis*
             //
             // Should be rendered as:
             //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Quotes");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions SmartyPants Quotes");
 			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "smartypants");
         }
     }
@@ -19042,9 +19045,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example017()
+        public void Example014()
         {
-            // Example 17
+            // Example 14
             // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
@@ -19053,7 +19056,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &ndash; text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions SmartyPants Separators");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
         }
     }
@@ -19061,9 +19064,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example018()
+        public void Example015()
         {
-            // Example 18
+            // Example 15
             // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
@@ -19072,7 +19075,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a &mdash; text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions SmartyPants Separators");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
         }
     }
@@ -19080,9 +19083,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example019()
+        public void Example016()
         {
-            // Example 19
+            // Example 16
             // Section: Extensions SmartyPants Separators
             //
             // The following CommonMark:
@@ -19091,7 +19094,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a en ellipsis&hellip;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions SmartyPants Separators");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Separators");
 			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
         }
     }

@@ -90,7 +90,11 @@ namespace Markdig.Extensions.Footnotes
 
                 if (footnote.IsLastLineEmpty && processor.Column == 0)
                 {
-                    return BlockState.Break;
+                    // Close the current footnote
+                    processor.Close(footnote);
+
+                    // Parse any opening footnote
+                    return TryOpen(processor);
                 }
             }
             footnote.IsLastLineEmpty = false;
