@@ -27,8 +27,13 @@ namespace Markdig.Extensions.Footnotes
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
+            return TryOpen(processor, false);
+        }
+
+        private BlockState TryOpen(BlockProcessor processor, bool isContinue)
+        {
             // We expect footnote to appear only at document level and not indented more than a code indent block
-            if (processor.IsCodeIndent || processor.CurrentContainer.GetType() != typeof(MarkdownDocument) )
+            if (processor.IsCodeIndent || (!isContinue && processor.CurrentContainer.GetType() != typeof(MarkdownDocument)) || (isContinue && !(processor.CurrentContainer is Footnote)))
             {
                 return BlockState.None;
             }
@@ -42,7 +47,7 @@ namespace Markdig.Extensions.Footnotes
                 processor.GoToColumn(saved);
                 return BlockState.None;
             }
-           
+
             // Advance the column
             int deltaColumn = processor.Start - start;
             processor.Column = processor.Column + deltaColumn;
@@ -88,13 +93,23 @@ namespace Markdig.Extensions.Footnotes
                     return BlockState.ContinueDiscard;
                 }
 
-                if (footnote.IsLastLineEmpty && processor.Column == 0)
+                if (processor.Column == 0)
                 {
-                    // Close the current footnote
-                    processor.Close(footnote);
+                    if (footnote.IsLastLineEmpty)
+                    {
+                        // Close the current footnote
+                        processor.Close(footnote);
 
-                    // Parse any opening footnote
-                    return TryOpen(processor);
+                        // Parse any opening footnote
+                        return TryOpen(processor);
+                    }
+
+                    // Make sure that consecutive footnotes without a blanklines are parsed correctly
+                    if (TryOpen(processor, true) == BlockState.Continue)
+                    {
+                        processor.Close(footnote);
+                        return BlockState.Continue;
+                    }
                 }
             }
             footnote.IsLastLineEmpty = false;
