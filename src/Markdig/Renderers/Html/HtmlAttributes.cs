@@ -140,10 +140,6 @@ namespace Markdig.Renderers.Html
                 }
                 else
                 {
-                    if (htmlAttributes.Properties == null)
-                    {
-                        htmlAttributes.Properties = new List<KeyValuePair<string, string>>();
-                    }
                     htmlAttributes.Properties.AddRange(Properties);
                 }
             }
