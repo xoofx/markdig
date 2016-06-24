@@ -132,6 +132,13 @@ namespace Markdig.Extensions.AutoIdentifiers
                 return;
             }
 
+            // If id is already set, don't try to modify it
+            var attributes = processor.Block.GetAttributes();
+            if (attributes.Id != null)
+            {
+                return;
+            }
+
             // Use a HtmlRenderer with 
             stripRenderer.Render(headingBlock.Inline);
             var headingText = headingWriter.ToString();
@@ -152,7 +159,7 @@ namespace Markdig.Extensions.AutoIdentifiers
                 headingBuffer.Length = 0;
             }
 
-            processor.Block.GetAttributes().Id = headingId;
+            attributes.Id = headingId;
         }
     }
 }
