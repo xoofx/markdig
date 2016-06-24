@@ -377,6 +377,31 @@ The text alignment can be changed by using the character `:` with the header col
 </table>
 ````````````````````````````````
 
+Test alignment with starting and ending pipes:
+
+```````````````````````````````` example
+| abc | def | ghi |
+|:---:|-----|----:|
+|  1  | 2   | 3   |
+.
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">abc</th>
+<th>def</th>
+<th style="text-align: right;">ghi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>2</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
 The following example shows a non matching header column separator:
  
 ```````````````````````````````` example

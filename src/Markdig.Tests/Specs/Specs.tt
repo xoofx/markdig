@@ -39,24 +39,24 @@ SOFTWARE.
 <#@ output extension=".cs" #><#
     var specFiles = new KeyValuePair<string, string>[] {
 		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
-		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables"),
-		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes"),
-		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes"),
-		new KeyValuePair<string, string>(Host.ResolvePath("EmphasisExtraSpecs.md"), "emphasisextras"),
-		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "hardlinebreak"),
-		new KeyValuePair<string, string>(Host.ResolvePath("GridTableSpecs.md"), "gridtables"),
-		new KeyValuePair<string, string>(Host.ResolvePath("CustomContainerSpecs.md"), "customcontainers+attributes"),
-		new KeyValuePair<string, string>(Host.ResolvePath("DefinitionListSpecs.md"), "definitionlists+attributes"),
-		new KeyValuePair<string, string>(Host.ResolvePath("EmojiSpecs.md"), "emojis"),
-		new KeyValuePair<string, string>(Host.ResolvePath("AbbreviationSpecs.md"), "abbreviations"),
-		new KeyValuePair<string, string>(Host.ResolvePath("ListExtraSpecs.md"), "listextras"),
-		new KeyValuePair<string, string>(Host.ResolvePath("FigureFooterAndCiteSpecs.md"), "figures+footers+citations"),
-		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "mathematics"),
+		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("EmphasisExtraSpecs.md"), "emphasisextras|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "hardlinebreak|advanced+hardlinebreak"),
+		new KeyValuePair<string, string>(Host.ResolvePath("GridTableSpecs.md"), "gridtables|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("CustomContainerSpecs.md"), "customcontainers+attributes|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("DefinitionListSpecs.md"), "definitionlists+attributes|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("EmojiSpecs.md"), "emojis|advanced+emojis"),
+		new KeyValuePair<string, string>(Host.ResolvePath("AbbreviationSpecs.md"), "abbreviations|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("ListExtraSpecs.md"), "listextras|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("FigureFooterAndCiteSpecs.md"), "figures+footers+citations|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "mathematics|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("BootstrapSpecs.md"), "bootstrap+pipetables+figures+attributes"),
-		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medialinks"),
-		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "pipetables+smartypants"),   // Check with smartypants to make sure that it doesn't break pipetables
-		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers"),
-		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists"),
+		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medialinks|advanced+medialinks"),
+		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "pipetables+smartypants|advanced+smartypants"),   // Check with smartypants to make sure that it doesn't break pipetables
+		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists|advanced"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

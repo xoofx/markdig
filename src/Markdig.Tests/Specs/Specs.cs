@@ -16374,7 +16374,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // The following is also considered as a table, even if the second line starts like a list:
@@ -16409,7 +16409,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // A pipe table with only one header row is allowed:
@@ -16437,7 +16437,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "pipetables");
+			TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced");
         }
     }
         // After a row separator header, they will be interpreted as plain column:
@@ -16472,7 +16472,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
@@ -16496,7 +16496,7 @@ namespace Markdig.Tests
             //     e | f</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Pipe Table");
-			TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "pipetables");
+			TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "pipetables|advanced");
         }
     }
         // If a line doesn't have a column delimiter `|` the table is not detected
@@ -16518,7 +16518,7 @@ namespace Markdig.Tests
             //     c no d</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "pipetables");
+			TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "pipetables|advanced");
         }
     }
         // The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
@@ -16562,7 +16562,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
-			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #2**
@@ -16601,7 +16601,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Pipe Table");
-			TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #4**
@@ -16647,7 +16647,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Pipe Table");
-			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // A pipe may be present at both the beginning/ending of each line:
@@ -16682,7 +16682,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Pipe Table");
-			TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // Or may be ommitted on one side:
@@ -16717,7 +16717,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Pipe Table");
-			TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
     [TestFixture]
@@ -16751,7 +16751,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Pipe Table");
-			TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // Single column table can be declared with lines starting only by a column delimiter:
@@ -16788,7 +16788,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Pipe Table");
-			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #5**
@@ -16836,7 +16836,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // The text alignment is defined by default to be left.
@@ -16880,10 +16880,10 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
-        // The following example shows a non matching header column separator:
+        // Test alignment with starting and ending pipes:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16891,6 +16891,43 @@ namespace Markdig.Tests
         public void Example016()
         {
             // Example 16
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     | abc | def | ghi |
+            //     |:---:|-----|----:|
+            //     |  1  | 2   | 3   |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th style="text-align: center;">abc</th>
+            //     <th>def</th>
+            //     <th style="text-align: right;">ghi</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td style="text-align: center;">1</td>
+            //     <td>2</td>
+            //     <td style="text-align: right;">3</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
+			TestParser.TestSpec("| abc | def | ghi |\n|:---:|-----|----:|\n|  1  | 2   | 3   |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: center;\">abc</th>\n<th>def</th>\n<th style=\"text-align: right;\">ghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\">1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+        }
+    }
+        // The following example shows a non matching header column separator:
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example017()
+        {
+            // Example 17
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16905,8 +16942,8 @@ namespace Markdig.Tests
             //     0     | 1
             //     2     | 3</p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "pipetables");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions Pipe Table");
+			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "pipetables|advanced");
         }
     }
         // **Rule #6**
@@ -16916,9 +16953,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example017()
+        public void Example018()
         {
-            // Example 17
+            // Example 18
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16947,8 +16984,8 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions Pipe Table");
-			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions Pipe Table");
+			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #7**
@@ -16958,9 +16995,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example018()
+        public void Example019()
         {
-            // Example 18
+            // Example 19
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -16970,8 +17007,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>a | b <code>0 |</code></p> 
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions Pipe Table");
-			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "pipetables");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "pipetables|advanced");
         }
     }
         // **Rule #7**
@@ -16981,9 +17018,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example019()
+        public void Example020()
         {
-            // Example 19
+            // Example 20
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -17007,8 +17044,8 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions Pipe Table");
-			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 20, "Extensions Pipe Table");
+			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #8**
@@ -17018,9 +17055,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example020()
+        public void Example021()
         {
-            // Example 20
+            // Example 21
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -17044,8 +17081,8 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 20, "Extensions Pipe Table");
-			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 21, "Extensions Pipe Table");
+			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // # Extensions
@@ -17120,7 +17157,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Footontes");
-			TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes");
+			TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
         // Check with mulitple consecutive footnotes:
@@ -17164,7 +17201,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Footontes");
-			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n\n[^2]: Footnote 2 text\n\na\n\n[^3]: Footnote 3 text\n\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<p>a</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes");
+			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n\n[^2]: Footnote 2 text\n\na\n\n[^3]: Footnote 3 text\n\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<p>a</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
         // Another test with consecutive footnotes without a blank line separator:
@@ -17202,7 +17239,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Footontes");
-			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n[^2]: Footnote 2 text\n[^3]: Footnote 3 text\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes");
+			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n[^2]: Footnote 2 text\n[^3]: Footnote 3 text\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
         // # Extensions
@@ -17252,7 +17289,7 @@ namespace Markdig.Tests
             //     <p id="myparagraph" attached-bool-property>This is a paragraph with an attached attributes </p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Generic Attributes");
-			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n# This is a heading # {#heading-link2}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------\n\nThis is a paragraph with an attached attributes {#myparagraph attached-bool-property}", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<h1 id=\"heading-link2\">This is a heading</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>\n<p id=\"myparagraph\" attached-bool-property>This is a paragraph with an attached attributes </p>", "attributes");
+			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n# This is a heading # {#heading-link2}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------\n\nThis is a paragraph with an attached attributes {#myparagraph attached-bool-property}", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<h1 id=\"heading-link2\">This is a heading</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>\n<p id=\"myparagraph\" attached-bool-property>This is a paragraph with an attached attributes </p>", "attributes|advanced");
         }
     }
         // The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
@@ -17276,7 +17313,7 @@ namespace Markdig.Tests
             //     </code></pre>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Generic Attributes");
-			TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes");
+			TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes|advanced");
         }
     }
         // # Extensions
@@ -17302,7 +17339,7 @@ namespace Markdig.Tests
             //     <p>The following text <del>is deleted</del></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Strikethrough");
-			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextras");
+			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextras|advanced");
         }
     }
         // ## Superscript and Subscript
@@ -17324,7 +17361,7 @@ namespace Markdig.Tests
             //     <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Superscript and Subscript");
-			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras");
+			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras|advanced");
         }
     }
         // ## Inserted
@@ -17346,7 +17383,7 @@ namespace Markdig.Tests
             //     <p><ins>Inserted text</ins></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Inserted");
-			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras");
+			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras|advanced");
         }
     }
         // ## Marked
@@ -17368,7 +17405,7 @@ namespace Markdig.Tests
             //     <p><mark>Marked text</mark></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Marked");
-			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras");
+			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced");
         }
     }
         // # Extensions
@@ -17396,7 +17433,7 @@ namespace Markdig.Tests
             //     with a break inside</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Hardline break");
-			TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak");
+			TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak|advanced+hardlinebreak");
         }
     }
         // # Extensions
@@ -17462,7 +17499,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // The following is not a valid row separator
@@ -17484,7 +17521,7 @@ namespace Markdig.Tests
             //     | This is    | not a table</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Grid Table");
-			TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables");
+			TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables|advanced");
         }
     }
         // **Rule #2**
@@ -17530,7 +17567,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td></td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td></td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // A row header is separated using `+========+` instead of `+---------+`:
@@ -17561,7 +17598,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables|advanced");
         }
     }
         // The last column separator `|` may be omitted:
@@ -17591,7 +17628,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
@@ -17632,7 +17669,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Grid Table");
-			TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\">\n<col style=\"width:50%\">\n<col style=\"width:25%\">\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\">\n<col style=\"width:50%\">\n<col style=\"width:25%\">\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // Alignment might be specified on the first row using the character `:`:
@@ -17665,7 +17702,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Grid Table");
-			TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables");
+			TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // # Extensions
@@ -17694,7 +17731,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Custom Container");
-			TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
         // The text following the opened custom container is optional:
@@ -17717,7 +17754,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Custom Container");
-			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
         // Like for fenced code block, you can use more than 3 `:` characters as long as the closing has the same number of characters:
@@ -17740,7 +17777,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Custom Container");
-			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
         // Like for fenced code block, a custom container can span over multiple empty lines in a list block:
@@ -17776,7 +17813,7 @@ namespace Markdig.Tests
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Custom Container");
-			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes");
+			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes|advanced");
         }
     }
         // Attributes extension is also supported for Custom Container, as long as the Attributes extension is activated after the CustomContainer extension (`.UseCustomContainer().UseAttributes()`)
@@ -17799,7 +17836,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Custom Container");
-			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
         // The content of a custom container can contain any blocks:
@@ -17822,7 +17859,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Custom Container");
-			TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes");
+			TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
         // ## Inline Custom Container
@@ -17844,7 +17881,7 @@ namespace Markdig.Tests
             //     <p>This is a text <span>with special emphasis</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Inline Custom Container ");
-			TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes");
+			TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes|advanced");
         }
     }
         // Any other emphasis inline can be used within this emphasis inline container:
@@ -17864,7 +17901,7 @@ namespace Markdig.Tests
             //     <p>This is a text <span>with special <em>emphasis</em></span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Inline Custom Container ");
-			TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes");
+			TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes|advanced");
         }
     }
         // Attributes can be attached to a inline custom container:
@@ -17884,7 +17921,7 @@ namespace Markdig.Tests
             //     <p>This is a text <span id="myId" class="myemphasis">with special emphasis</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Inline Custom Container ");
-			TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes");
+			TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes|advanced");
         }
     }
         // # Extensions
@@ -17950,7 +17987,7 @@ namespace Markdig.Tests
             //     </dl>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd><p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd><p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
         // A definition term can be followed at most by one blank line. Lazy continuations are supported for definitions:
@@ -17981,7 +18018,7 @@ namespace Markdig.Tests
             //     </dl>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd><p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd><p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
         // The definition must be indented to 4 characters including the `:`.
@@ -18003,7 +18040,7 @@ namespace Markdig.Tests
             //     :  Invalid with less than 3 characters</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n:  Invalid with less than 3 characters", "<p>Term 1\n:  Invalid with less than 3 characters</p>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n:  Invalid with less than 3 characters", "<p>Term 1\n:  Invalid with less than 3 characters</p>", "definitionlists+attributes|advanced");
         }
     }
         // The `:` can be indented up to 3 spaces:
@@ -18027,7 +18064,7 @@ namespace Markdig.Tests
             //     </dl>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
         // But more than 3 spaces before `:` will trigger an indented code block:
@@ -18051,7 +18088,7 @@ namespace Markdig.Tests
             //     </code></pre>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Definition lists");
-			TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes");
+			TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes|advanced");
         }
     }
         // # Extensions
@@ -18077,7 +18114,7 @@ namespace Markdig.Tests
             //     <p>This is a test with a 😃 and a 😠 smiley</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Emoji");
-			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis");
+			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis|advanced+emojis");
         }
     }
         // An emoji needs to be preceded by a space and followed by a space:
@@ -18097,7 +18134,7 @@ namespace Markdig.Tests
             //     <p>These are not:) an :)emoji with a:) x:angry:x</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Emoji");
-			TestParser.TestSpec("These are not:) an :)emoji with a:) x:angry:x", "<p>These are not:) an :)emoji with a:) x:angry:x</p>", "emojis");
+			TestParser.TestSpec("These are not:) an :)emoji with a:) x:angry:x", "<p>These are not:) an :)emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
         }
     }
         // # Extensions
@@ -18127,7 +18164,7 @@ namespace Markdig.Tests
             //     <p>Later in a text we are using <abbr title="Hypertext Markup Language">HTML</abbr> and it becomes an abbr tag <abbr title="Hypertext Markup Language">HTML</abbr></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Abbreviation");
-			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations");
+			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations|advanced");
         }
     }
         // An abbreviation definition can be indented at most 3 spaces
@@ -18149,7 +18186,7 @@ namespace Markdig.Tests
             //     </code></pre>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Abbreviation");
-			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations");
+			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations|advanced");
         }
     }
         // An abbreviation may contain spaces:
@@ -18171,7 +18208,7 @@ namespace Markdig.Tests
             //     <p>This is a <abbr title="Super Hypertext Markup Language">SUPER HTML</abbr> document</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Abbreviation");
-			TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations");
+			TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations|advanced");
         }
     }
         // Abbreviation may contain any unicode characters:
@@ -18193,7 +18230,7 @@ namespace Markdig.Tests
             //     <p>This is a <abbr title="Hypertext Markup Language">😃 HTML</abbr> document</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Abbreviation");
-			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations");
+			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations|advanced");
         }
     }
         // # Extensions
@@ -18225,7 +18262,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
         // It works also for uppercase alpha:
@@ -18251,7 +18288,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
         // Like for numbered list, a list can start with a different letter
@@ -18275,7 +18312,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
         // A different type of list will break the existing list:
@@ -18303,7 +18340,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextras");
+			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextras|advanced");
         }
     }
         // ## Ordered list with roman letter
@@ -18333,7 +18370,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
         // It works also for uppercase alpha:
@@ -18361,7 +18398,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
         // Like for numbered list, a list can start with a different letter
@@ -18385,7 +18422,7 @@ namespace Markdig.Tests
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras");
+			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
         // # Extensions
@@ -18416,7 +18453,7 @@ namespace Markdig.Tests
             //     </figure>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Figures");
-			TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures+footers+citations");
+			TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures+footers+citations|advanced");
         }
     }
         // ## Footers
@@ -18440,7 +18477,7 @@ namespace Markdig.Tests
             //     multi-line</footer>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Footers");
-			TestParser.TestSpec("^^ This is a footer\n^^ multi-line", "<footer>This is a footer\nmulti-line</footer>", "figures+footers+citations");
+			TestParser.TestSpec("^^ This is a footer\n^^ multi-line", "<footer>This is a footer\nmulti-line</footer>", "figures+footers+citations|advanced");
         }
     }
         // ## Cite
@@ -18462,7 +18499,7 @@ namespace Markdig.Tests
             //     <p>This is a <cite>citation of someone</cite></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Cite");
-			TestParser.TestSpec("This is a \"\"citation of someone\"\"", "<p>This is a <cite>citation of someone</cite></p>", "figures+footers+citations");
+			TestParser.TestSpec("This is a \"\"citation of someone\"\"", "<p>This is a <cite>citation of someone</cite></p>", "figures+footers+citations|advanced");
         }
     }
         // # Extensions
@@ -18488,7 +18525,7 @@ namespace Markdig.Tests
             //     <p>This is a <span class="math">math block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics");
+			TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
         // Or by `$$...$$` embracing it by:
@@ -18508,7 +18545,7 @@ namespace Markdig.Tests
             //     <p>This is a <span class="math">math block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics");
+			TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
         // The opening `$` and closing `$` is following the rules of the emphasis delimiter `_`:
@@ -18528,7 +18565,7 @@ namespace Markdig.Tests
             //     <p>This is not a $ math block $</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a $ math block $", "<p>This is not a $ math block $</p>", "mathematics");
+			TestParser.TestSpec("This is not a $ math block $", "<p>This is not a $ math block $</p>", "mathematics|advanced");
         }
     }
         // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
@@ -18548,7 +18585,7 @@ namespace Markdig.Tests
             //     <p>This is not a m$ath block$</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics");
+			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced");
         }
     }
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
@@ -18568,7 +18605,7 @@ namespace Markdig.Tests
             //     <p>This is not a $math bloc$k</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics");
+			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced");
         }
     }
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
@@ -18588,7 +18625,7 @@ namespace Markdig.Tests
             //     <p>This is should not match a 16$ or a $15</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Math Inline");
-			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics");
+			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced");
         }
     }
         // A `$` can be escaped between a math inline block by using the escape `\\`
@@ -18608,7 +18645,7 @@ namespace Markdig.Tests
             //     <p>This is a <span class="math">math \$ block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "mathematics");
+			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "mathematics|advanced");
         }
     }
         // At most, two `$` will be matched for the opening and closing:
@@ -18628,7 +18665,7 @@ namespace Markdig.Tests
             //     <p>This is a <span class="math">$math block$</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics");
+			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics|advanced");
         }
     }
         // A mathematic block takes precedence over standard emphasis `*` `_`:
@@ -18648,7 +18685,7 @@ namespace Markdig.Tests
             //     <p>This is *a <span class="math">math* block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Math Inline");
-			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics");
+			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics|advanced");
         }
     }
         // ## Math Block
@@ -18680,7 +18717,7 @@ namespace Markdig.Tests
             //     </div>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Block");
-			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "mathematics");
+			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "mathematics|advanced");
         }
     }
         // # Extensions
@@ -18817,7 +18854,7 @@ namespace Markdig.Tests
             //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen></iframe></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Media links");
-			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>", "medialinks");
+			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>", "medialinks|advanced+medialinks");
         }
     }
         // # Extensions
@@ -18843,7 +18880,7 @@ namespace Markdig.Tests
             //     <p>This is a &ldquo;text&rdquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18862,7 +18899,7 @@ namespace Markdig.Tests
             //     <p>This is a &lsquo;text&rsquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18881,7 +18918,7 @@ namespace Markdig.Tests
             //     <p>This is a &laquo;text&raquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // Unbalanced quotes are not changed:
@@ -18901,7 +18938,7 @@ namespace Markdig.Tests
             //     <p>This is a &quot;text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18920,7 +18957,7 @@ namespace Markdig.Tests
             //     <p>This is a 'text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18939,7 +18976,7 @@ namespace Markdig.Tests
             //     <p>This is a &lt;&lt;text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // Unbalanced quotes inside other quotes are not changed:
@@ -18959,7 +18996,7 @@ namespace Markdig.Tests
             //     <p>This is a &ldquo;text 'with&rdquo; a another text'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18978,7 +19015,7 @@ namespace Markdig.Tests
             //     <p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -18997,7 +19034,7 @@ namespace Markdig.Tests
             //     <p>This is a &laquo;text 'with&raquo; a another text'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // Quotes requires to have the same rules than emphasis `_` regarding left/right frankling rules:
@@ -19017,7 +19054,7 @@ namespace Markdig.Tests
             //     <p>It's not quotes'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "pipetables+smartypants");
+			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -19036,7 +19073,7 @@ namespace Markdig.Tests
             //     <p>They are ' not matching quotes '</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "pipetables+smartypants");
+			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -19055,7 +19092,7 @@ namespace Markdig.Tests
             //     <p>They are' not matching 'quotes</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "pipetables+smartypants");
+			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // An emphasis starting inside left/right quotes will span over the right quote:
@@ -19075,7 +19112,7 @@ namespace Markdig.Tests
             //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // ## SmartyPants Separators
@@ -19095,7 +19132,7 @@ namespace Markdig.Tests
             //     <p>This is a &ndash; text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -19114,7 +19151,7 @@ namespace Markdig.Tests
             //     <p>This is a &mdash; text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
     [TestFixture]
@@ -19133,7 +19170,7 @@ namespace Markdig.Tests
             //     <p>This is a en ellipsis&hellip;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "pipetables+smartypants");
+			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // Check that a smartypants are not breaking pipetable parsing:
@@ -19168,7 +19205,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("a  | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables+smartypants");
+			TestParser.TestSpec("a  | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables+smartypants|advanced+smartypants");
         }
     }
         // # Extensions
@@ -19194,7 +19231,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
         // Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
@@ -19216,7 +19253,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading_with.and">This - is a &amp;@! heading _ with . and ! -</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers");
+			TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers|advanced");
         }
     }
         // Formatting (emphasis) are also discarded:
@@ -19236,7 +19273,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">This is a <em>heading</em></h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers");
+			TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers|advanced");
         }
     }
         // Links are also removed:
@@ -19256,7 +19293,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">This is a <a href="/url">heading</a></h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers");
+			TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers|advanced");
         }
     }
         // If multiple heading have the same text, -1, -2...-n will be postfix to the header id.
@@ -19278,7 +19315,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading-1">This is a heading</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers");
+			TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
         // The heading Id will start on the first letter character of the heading, all previous characters will be discarded:
@@ -19298,7 +19335,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">1.0 This is a heading</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers");
+			TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
         // If the heading is all stripped by the previous rules, the id `section` will be used instead:
@@ -19320,7 +19357,7 @@ namespace Markdig.Tests
             //     <h1 id="section-1">1.0 &amp; ^ % *</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers");
+			TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers|advanced");
         }
     }
         // When the options "AutoLink" is setup, it is possible to link to an existing heading by using the
@@ -19343,7 +19380,7 @@ namespace Markdig.Tests
             //     <p><a href="#this-is-a-heading">This is a heading</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers");
+			TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers|advanced");
         }
     }
         // Links before the heading are also working:
@@ -19365,7 +19402,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+			TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
         // The text of the link can be changed:
@@ -19387,7 +19424,7 @@ namespace Markdig.Tests
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Heading Auto Identifiers");
-			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers");
+			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
         // # Extensions
@@ -19421,7 +19458,7 @@ namespace Markdig.Tests
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions TaskLists");
-			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists");
+			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists|advanced");
         }
     }
         // A task is not recognized outside a list item:
@@ -19441,7 +19478,7 @@ namespace Markdig.Tests
             //     <p>[ ] This is not a task list</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions TaskLists");
-			TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists");
+			TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists|advanced");
         }
     }
 }

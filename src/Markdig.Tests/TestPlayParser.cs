@@ -28,9 +28,36 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         }
 
         [Test]
+        public void TestPipeTables()
+        {
+            TestParser.TestSpec(@"
+| abc | def | ghi |
+|:---:|-----|----:|
+|  1  | 2   | 3   |
+", @"
+<table>
+<thead>
+<tr>
+<th style=""text-align: center;"">abc</th>
+<th>def</th>
+<th style=""text-align: right;"">ghi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style=""text-align: center;"">1</td>
+<td>2</td>
+<td style=""text-align: right;"">3</td>
+</tr>
+</tbody>
+</table>
+", "advanced");
+        }
+
+        [Test]
         public void TestSelfPipeline1()
         {
-            var text = @"<!--markdig:pipetables-->
+            var text = @" <!--markdig:pipetables-->
 
 a | b
 - | -
