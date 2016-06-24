@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "- Fix conflicts between PipeTables and SmartyPants extensions\n- Add SelfPipeline extension\n",
+    "releaseNotes": "> 0.6.1:\n- Fix issue with autoidentifier extension overriding manual HTML attributes id on headings\n> 0.6.0\n- Fix conflicts between PipeTables and SmartyPants extensions\n- Add SelfPipeline extension\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
