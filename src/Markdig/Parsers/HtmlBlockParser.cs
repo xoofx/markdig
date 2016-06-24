@@ -171,6 +171,11 @@ namespace Markdig.Parsers
             return CreateHtmlBlock(state, HtmlBlockType.InterruptingBlock, startColumn, startPosition);
         }
 
+        private const string EndOfComment = "-->";
+        private const string EndOfCDATA = "]]>";
+        private const string EndOfProcessingInstruction = "?>";
+
+
         private BlockState MatchEnd(BlockProcessor state, HtmlBlock htmlBlock)
         {
             state.GoToColumn(state.ColumnBeforeIndent);
@@ -180,41 +185,65 @@ namespace Markdig.Parsers
             var c = line.CurrentChar;
             var result = BlockState.Continue;
             int endof;
+            int index;
             switch (htmlBlock.Type)
             {
                 case HtmlBlockType.Comment:
-                    if (line.Search("-->", out endof))
+                    index = line.IndexOf(EndOfComment);
+                    if (index >= 0)
                     {
-                        htmlBlock.UpdateSpanEnd(endof - 1);
+                        htmlBlock.UpdateSpanEnd(index + EndOfComment.Length);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.CData:
-                    if (line.Search("]]>", out endof))
+                    index = line.IndexOf(EndOfCDATA);
+                    if (index >= 0)
                     {
-                        htmlBlock.UpdateSpanEnd(endof - 1);
+                        htmlBlock.UpdateSpanEnd(index + EndOfCDATA.Length);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ProcessingInstruction:
-                    if (line.Search("?>", out endof))
+                    index = line.IndexOf(EndOfProcessingInstruction);
+                    if (index >= 0)
                     {
-                        htmlBlock.UpdateSpanEnd(endof - 1);
+                        htmlBlock.UpdateSpanEnd(index + EndOfProcessingInstruction.Length);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.DocumentType:
-                    if (line.Search(">", out endof))
+                    index = line.IndexOf('>');
+                    if (index >= 0)
                     {
-                        htmlBlock.UpdateSpanEnd(endof - 1);
+                        htmlBlock.UpdateSpanEnd(index + 1);
                         result = BlockState.Break;
                     }
                     break;
                 case HtmlBlockType.ScriptPreOrStyle:
-                    if (line.SearchLowercase("</script>", out endof) || line.SearchLowercase("</pre>", out endof) || line.SearchLowercase("</style>", out endof))
+                    index = line.IndexOf("</script>", 0, true);
+                    if (index >= 0)
                     {
-                        htmlBlock.UpdateSpanEnd(endof - 1);
+                        htmlBlock.UpdateSpanEnd(index + "</script>".Length);
                         result = BlockState.Break;
+                    }
+                    else
+                    {
+                        index = line.IndexOf("</pre>", 0, true);
+                        if (index >= 0)
+                        {
+                            htmlBlock.UpdateSpanEnd(index + "</pre>".Length);
+                            result = BlockState.Break;
+                        }
+                        else
+                        {
+                            index = line.IndexOf("</style>", 0, true);
+                            if (index >= 0)
+                            {
+                                htmlBlock.UpdateSpanEnd(index + "</style>".Length);
+                                result = BlockState.Break;
+                            }
+                        }
                     }
                     break;
                 case HtmlBlockType.InterruptingBlock:

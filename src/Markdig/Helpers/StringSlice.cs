@@ -194,31 +194,33 @@ namespace Markdig.Helpers
         /// Searches the specified text within this slice.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public bool Search(string text, out int index)
-        {
-            return Search(text, 0, out index);
-        }
-
-        /// <summary>
-        /// Searches the specified text within this slice.
-        /// </summary>
-        /// <param name="text">The text.</param>
         /// <param name="offset">The offset.</param>
+        /// <param name="ignoreCase">true if ignore case</param>
         /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public bool Search(string text, int offset, out int index)
+        public int IndexOf(string text, int offset = 0, bool ignoreCase = false)
         {
             var end = End - text.Length + 1;
-            index = Start + offset;
-            for (int i = index; i <= end; i ++)
+            if (ignoreCase)
             {
-                if (Match(text, End, i - Start))
+                for (int i = Start + offset; i <= end; i++)
                 {
-                    index = i + text.Length;
-                    return true;
+                    if (MatchLowercase(text, End, i - Start))
+                    {
+                        return i; ;
+                    }
                 }
             }
-            return false;
+            else
+            {
+                for (int i = Start + offset; i <= end; i++)
+                {
+                    if (Match(text, End, i - Start))
+                    {
+                        return i; ;
+                    }
+                }
+            }
+            return -1;
         }
 
         /// <summary>
@@ -235,27 +237,6 @@ namespace Markdig.Helpers
                 }
             }
             return -1;
-        }
-
-        /// <summary>
-        /// Searches the specified text within this slice (matching lowercase).
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="offset">The offset.</param>
-        /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public bool SearchLowercase(string text, out int endOfIndex)
-        {
-            var end = End - text.Length + 1;
-            endOfIndex = 0;
-            for (int i = Start; i <= end; i++)
-            {
-                if (MatchLowercase(text, End, i - Start))
-                {
-                    endOfIndex = i + text.Length;
-                    return true;
-                }
-            }
-            return false;
         }
 
         /// <summary>
