@@ -54,7 +54,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("MathSpecs.md"), "mathematics"),
 		new KeyValuePair<string, string>(Host.ResolvePath("BootstrapSpecs.md"), "bootstrap+pipetables+figures+attributes"),
 		new KeyValuePair<string, string>(Host.ResolvePath("MediaSpecs.md"), "medialinks"),
-		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "smartypants"),
+		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "pipetables+smartypants"),   // Check with smartypants to make sure that it doesn't break pipetables
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers"),
 		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists"),
 	};

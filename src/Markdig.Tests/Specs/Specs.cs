@@ -18843,7 +18843,7 @@ namespace Markdig.Tests
             //     <p>This is a &ldquo;text&rdquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "smartypants");
+			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18862,7 +18862,7 @@ namespace Markdig.Tests
             //     <p>This is a &lsquo;text&rsquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "smartypants");
+			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18881,7 +18881,7 @@ namespace Markdig.Tests
             //     <p>This is a &laquo;text&raquo;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "smartypants");
+			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "pipetables+smartypants");
         }
     }
         // Unbalanced quotes are not changed:
@@ -18901,7 +18901,7 @@ namespace Markdig.Tests
             //     <p>This is a &quot;text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "smartypants");
+			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18920,7 +18920,7 @@ namespace Markdig.Tests
             //     <p>This is a 'text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "smartypants");
+			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18939,7 +18939,7 @@ namespace Markdig.Tests
             //     <p>This is a &lt;&lt;text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "smartypants");
+			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "pipetables+smartypants");
         }
     }
         // Unbalanced quotes inside other quotes are not changed:
@@ -18959,7 +18959,7 @@ namespace Markdig.Tests
             //     <p>This is a &ldquo;text 'with&rdquo; a another text'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "smartypants");
+			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18978,7 +18978,7 @@ namespace Markdig.Tests
             //     <p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "smartypants");
+			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -18997,7 +18997,7 @@ namespace Markdig.Tests
             //     <p>This is a &laquo;text 'with&raquo; a another text'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "smartypants");
+			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "pipetables+smartypants");
         }
     }
         // Quotes requires to have the same rules than emphasis `_` regarding left/right frankling rules:
@@ -19017,7 +19017,7 @@ namespace Markdig.Tests
             //     <p>It's not quotes'</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "smartypants");
+			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -19036,7 +19036,7 @@ namespace Markdig.Tests
             //     <p>They are ' not matching quotes '</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "smartypants");
+			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -19055,7 +19055,7 @@ namespace Markdig.Tests
             //     <p>They are' not matching 'quotes</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "smartypants");
+			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "pipetables+smartypants");
         }
     }
         // An emphasis starting inside left/right quotes will span over the right quote:
@@ -19075,7 +19075,7 @@ namespace Markdig.Tests
             //     <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions SmartyPants Quotes");
-			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "smartypants");
+			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "pipetables+smartypants");
         }
     }
         // ## SmartyPants Separators
@@ -19095,7 +19095,7 @@ namespace Markdig.Tests
             //     <p>This is a &ndash; text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "smartypants");
+			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -19114,7 +19114,7 @@ namespace Markdig.Tests
             //     <p>This is a &mdash; text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "smartypants");
+			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "pipetables+smartypants");
         }
     }
     [TestFixture]
@@ -19133,7 +19133,42 @@ namespace Markdig.Tests
             //     <p>This is a en ellipsis&hellip;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions SmartyPants Separators");
-			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "smartypants");
+			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "pipetables+smartypants");
+        }
+    }
+        // Check that a smartypants are not breaking pipetable parsing:
+    [TestFixture]
+    public partial class TestExtensionsSmartyPantsSeparators
+    {
+        [Test]
+        public void Example017()
+        {
+            // Example 17
+            // Section: Extensions SmartyPants Separators
+            //
+            // The following CommonMark:
+            //     a  | b
+            //     -- | --
+            //     0  | 1
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions SmartyPants Separators");
+			TestParser.TestSpec("a  | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables+smartypants");
         }
     }
         // # Extensions

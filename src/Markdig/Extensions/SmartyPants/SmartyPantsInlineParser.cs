@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.SmartyPants
@@ -11,7 +12,7 @@ namespace Markdig.Extensions.SmartyPants
     /// <summary>
     /// The inline parser for SmartyPants.
     /// </summary>
-    public class SmartyPantsInlineParser : InlineParser
+    public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SmartyPantsInlineParser"/> class.
@@ -30,6 +31,8 @@ namespace Markdig.Extensions.SmartyPants
             // " 	“ ” 	&ldquo; &rdquo; 	'left-double-quote', 'right-double-quote'
             // << >> 	« » 	&laquo; &raquo; 	'left-angle-quote', 'right-angle-quote'
             // ... 	… 	&hellip; 	'ellipsis'
+
+            // Special case: &ndash; and &mdash; are handle as a PostProcess step to avoid conflicts with pipetables header separator row
             // -- 	– 	&ndash; 	'ndash'
             // --- 	— 	&mdash; 	'mdash'
 
@@ -76,12 +79,8 @@ namespace Markdig.Extensions.SmartyPants
                 case '-':
                     if (slice.NextChar() == '-')
                     {
-                        type = SmartyPantType.Dash2;
-                        if (slice.PeekChar(1) == '-')
-                        {
-                            slice.NextChar();
-                            type = SmartyPantType.Dash3;
-                        }
+                        processor.ParserStates[Index] = string.Empty;
+                        return false;
                     }
                     break;
             }
@@ -281,6 +280,86 @@ namespace Markdig.Extensions.SmartyPants
             }
 
             pants.Clear();
+        }
+
+        bool IPostInlineProcessor.PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex,
+            bool isFinalProcessing)
+        {
+            // Don't try to process anything if there are no dash
+            if (state.ParserStates[Index] == null)
+            {
+                return true;
+            }
+
+            var child = root;
+            var pendingContainers = new Stack<Inline>();
+
+            while (true)
+            {
+                while (child != null)
+                {
+                    var next = child.NextSibling;
+
+                    if (child is LiteralInline)
+                    {
+                        var literal = (LiteralInline) child;
+
+                        var startIndex = 0;
+
+                        var indexOfDash = literal.Content.IndexOf("--", startIndex);
+                        if (indexOfDash >= 0)
+                        {
+                            var type = SmartyPantType.Dash2;
+                            if (literal.Content.PeekCharAbsolute(indexOfDash + 2) == '-')
+                            {
+                                type = SmartyPantType.Dash3;
+                            }
+                            var nextContent = literal.Content;
+                            var originalSpan = literal.Span;
+                            literal.Span.End -= literal.Content.End - indexOfDash + 1;
+                            literal.Content.End = indexOfDash - 1;
+                            nextContent.Start = indexOfDash + (type == SmartyPantType.Dash2 ? 2 : 3);
+
+                            var pant = new SmartyPant()
+                            {
+                                Span = new SourceSpan(literal.Content.End + 1, nextContent.Start - 1),
+                                Line = literal.Line,
+                                Column = literal.Column,
+                                OpeningCharacter = '-',
+                                Type = type
+                            };
+                            literal.InsertAfter(pant);
+
+                            var postLiteral = new LiteralInline()
+                            {
+                                Span = new SourceSpan(pant.Span.End + 1, originalSpan.End),
+                                Line = literal.Line,
+                                Column = literal.Column,
+                                Content = nextContent
+                            };
+                            pant.InsertAfter(postLiteral);
+
+                            // Use the pending literal to proceed further
+                            next = postLiteral;
+                        }
+                    }
+                    else if (child is ContainerInline)
+                    {
+                        pendingContainers.Push(((ContainerInline)child).FirstChild);
+                    }
+
+                    child = next;
+                }
+                if (pendingContainers.Count > 0)
+                {
+                    child = pendingContainers.Pop();
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return true;
         }
     }
 }

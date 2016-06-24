@@ -110,3 +110,26 @@ This is a en ellipsis...
 .
 <p>This is a en ellipsis&hellip;</p>
 ````````````````````````````````
+
+Check that a smartypants are not breaking pipetable parsing:
+
+```````````````````````````````` example
+a  | b
+-- | --
+0  | 1
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
