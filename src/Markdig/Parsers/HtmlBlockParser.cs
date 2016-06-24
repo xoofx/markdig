@@ -182,9 +182,7 @@ namespace Markdig.Parsers
 
             // Early exit if it is not starting by an HTML tag
             var line = state.Line;
-            var c = line.CurrentChar;
             var result = BlockState.Continue;
-            int endof;
             int index;
             switch (htmlBlock.Type)
             {

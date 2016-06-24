@@ -20,6 +20,7 @@ using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
 using Markdig.Extensions.PragmaLines;
+using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
@@ -57,6 +58,24 @@ namespace Markdig
                 .UseListExtras()
                 .UseTaskLists()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+
+        /// <summary>
+        /// Uses the self pipeline extension that will detect the pipeline to use from the markdown input that contains a special tag. See <see cref="SelfPipelineExtension"/>
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="defaultTag">The default tag to use to match the self pipeline configuration. By default, <see cref="SelfPipelineExtension.DefaultTag"/>, meaning that the HTML tag will be &lt;--markdig:extensions--&gt;</param>
+        /// <param name="defaultExtensions">The default extensions to configure if no pipeline setup was found from the Markdown document</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseSelfPipeline(this MarkdownPipelineBuilder pipeline, string defaultTag = SelfPipelineExtension.DefaultTag, string defaultExtensions = null)
+        {
+            if (pipeline.Extensions.Count != 0)
+            {
+                throw new InvalidOperationException("The SelfPipeline extension cannot be used with other extensions");
+            }
+
+            pipeline.Extensions.Add(new SelfPipelineExtension(defaultTag, defaultExtensions));
+            return pipeline;
         }
 
         /// <summary>
@@ -372,6 +391,8 @@ namespace Markdig
             {
                 switch (extension.ToLowerInvariant())
                 {
+                    case "common":
+                        break;
                     case "advanced":
                         pipeline.UseAdvancedExtensions();
                         break;
@@ -436,7 +457,7 @@ namespace Markdig
                         pipeline.UseTaskLists();
                         break;
                     default:
-                        throw new ArgumentException($"unknown extension {extension}");
+                        throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
             }
             return pipeline;

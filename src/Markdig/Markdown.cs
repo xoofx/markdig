@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.IO;
+using Markdig.Extensions.SelfPipeline;
 using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Syntax;
@@ -42,6 +43,7 @@ namespace Markdig
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            pipeline = CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer
             var renderer = new HtmlRenderer(writer);
@@ -67,6 +69,7 @@ namespace Markdig
             if (renderer == null) throw new ArgumentNullException(nameof(renderer));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
+            pipeline = CheckForSelfPipeline(pipeline, markdown);
             var document = Parse(markdown, pipeline);
             pipeline.Setup(renderer);
             return renderer.Render(document);
@@ -96,7 +99,18 @@ namespace Markdig
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
+            pipeline = CheckForSelfPipeline(pipeline, markdown);
             return MarkdownParser.Parse(markdown, pipeline);
+        }
+
+        private static MarkdownPipeline CheckForSelfPipeline(MarkdownPipeline pipeline, string markdown)
+        {
+            var selfPipeline = pipeline.Extensions.Find<SelfPipelineExtension>();
+            if (selfPipeline != null)
+            {
+                return selfPipeline.CreatePipelineFromInput(markdown);
+            }
+            return pipeline;
         }
     }
 }

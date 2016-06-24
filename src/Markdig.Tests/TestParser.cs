@@ -64,7 +64,8 @@ namespace Markdig.Tests
             var extensionGroups = extensionsGroupText.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var extensionsText in extensionGroups)
             {
-                var pipeline = new MarkdownPipelineBuilder().Configure(extensionsText);
+                var builder = new MarkdownPipelineBuilder();
+                var pipeline = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
                 yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, pipeline.Build());
             }
         }
