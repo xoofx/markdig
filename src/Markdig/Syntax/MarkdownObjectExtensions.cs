@@ -19,6 +19,8 @@ namespace Markdig.Syntax
         /// <returns>An iteration over the descendant elements</returns>
         public static IEnumerable<MarkdownObject> Descendants(this MarkdownObject markdownObject)
         {
+            // TODO: implement a recursiveless method
+
             var block = markdownObject as ContainerBlock;
             if (block != null)
             {
