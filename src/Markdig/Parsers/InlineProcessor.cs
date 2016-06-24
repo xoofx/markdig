@@ -268,8 +268,8 @@ namespace Markdig.Parsers
                 leafBlock.Inline.DumpTo(DebugLog);
             }
 
-            // Process all delimiters
-            ProcessDelimiters(0, Root, null, true);
+            // PostProcess all inlines
+            PostProcessInlines(0, Root, null, true);
 
             //TransformDelimitersToLiterals();
 
@@ -281,12 +281,12 @@ namespace Markdig.Parsers
             }
         }
 
-        public void ProcessDelimiters(int startingIndex, Inline root, Inline lastChild, bool isFinalProcessing)
+        public void PostProcessInlines(int startingIndex, Inline root, Inline lastChild, bool isFinalProcessing)
         {
-            for (int i = startingIndex; i < Parsers.DelimiterProcessors.Length; i++)
+            for (int i = startingIndex; i < Parsers.PostInlineProcessors.Length; i++)
             {
-                var delimiterProcessor = Parsers.DelimiterProcessors[i];
-                if (!delimiterProcessor.ProcessDelimiters(this, root, lastChild, i, isFinalProcessing))
+                var postInlineProcessor = Parsers.PostInlineProcessors[i];
+                if (!postInlineProcessor.PostProcess(this, root, lastChild, i, isFinalProcessing))
                 {
                     break;
                 }

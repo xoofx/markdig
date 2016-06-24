@@ -159,7 +159,7 @@ namespace Markdig.Parsers.Inlines
                 link.IsClosed = true;
 
                 // Process emphasis delimiters
-                state.ProcessDelimiters(0, link, null, false);
+                state.PostProcessInlines(0, link, null, false);
 
                 state.Inline = link;
                 isValidLink = true;
@@ -238,7 +238,7 @@ namespace Markdig.Parsers.Inlines
                             inlineState.Inline = link;
 
                             // Process emphasis delimiters
-                            inlineState.ProcessDelimiters(0, link, null, false);
+                            inlineState.PostProcessInlines(0, link, null, false);
 
                             // If we have a link (and not an image), 
                             // we also set all [ delimiters before the opening delimiter to inactive. 

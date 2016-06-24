@@ -15,8 +15,8 @@ namespace Markdig.Parsers.Inlines
     /// An inline parser for <see cref="EmphasisInline"/>.
     /// </summary>
     /// <seealso cref="Markdig.Parsers.InlineParser" />
-    /// <seealso cref="Markdig.Parsers.IDelimiterProcessor" />
-    public class EmphasisInlineParser : InlineParser, IDelimiterProcessor
+    /// <seealso cref="IPostInlineProcessor" />
+    public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     {
         private CharacterMap<EmphasisDescriptor> emphasisMap;
         private readonly DelimitersObjectCache inlinesCache;
@@ -85,7 +85,7 @@ namespace Markdig.Parsers.Inlines
             emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
         }
 
-        public bool ProcessDelimiters(InlineProcessor state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
+        public bool PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             if (container == null)

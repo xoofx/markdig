@@ -20,23 +20,23 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
-        /// Gets the registered delimiter processors.
+        /// Gets the registered post inline processors.
         /// </summary>
-        public IDelimiterProcessor[] DelimiterProcessors { get; private set; }
+        public IPostInlineProcessor[] PostInlineProcessors { get; private set; }
 
         public override void Initialize(InlineProcessor initState)
         {
-            // Prepare the list of delimiter processors
-            var delimiterProcessors = new List<IDelimiterProcessor>();
+            // Prepare the list of post inline processors
+            var postInlineProcessors = new List<IPostInlineProcessor>();
             foreach (var parser in this)
             {
-                var delimProcessor = parser as IDelimiterProcessor;
+                var delimProcessor = parser as IPostInlineProcessor;
                 if (delimProcessor != null)
                 {
-                    delimiterProcessors.Add(delimProcessor);
+                    postInlineProcessors.Add(delimProcessor);
                 }
             }
-            DelimiterProcessors = delimiterProcessors.ToArray();
+            PostInlineProcessors = postInlineProcessors.ToArray();
 
             base.Initialize(initState);
         }

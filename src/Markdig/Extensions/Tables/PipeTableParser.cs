@@ -15,8 +15,8 @@ namespace Markdig.Extensions.Tables
     /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="Table"/> at inline parsing time.
     /// </summary>
     /// <seealso cref="Markdig.Parsers.InlineParser" />
-    /// <seealso cref="Markdig.Parsers.IDelimiterProcessor" />
-    public class PipeTableParser : InlineParser, IDelimiterProcessor
+    /// <seealso cref="IPostInlineProcessor" />
+    public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
         private LineBreakInlineParser lineBreakParser;
 
@@ -123,7 +123,7 @@ namespace Markdig.Extensions.Tables
             return true;
         }
 
-        public bool ProcessDelimiters(InlineProcessor state, Inline root, Inline lastChild, int delimiterProcessorIndex, bool isFinalProcessing)
+        public bool PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             var tableState = state.ParserStates[Index] as TableState;
@@ -379,20 +379,12 @@ namespace Markdig.Extensions.Tables
             }
 
             // Perform delimiter processor that are coming after this processor
-            var delimiterProcessors = state.Parsers.DelimiterProcessors;
-            for (int i = 0; i < delimiterProcessors.Length; i++)
+            foreach (var cell in cells)
             {
-                if (delimiterProcessors[i] == this)
-                {
-                    foreach (var cell in cells)
-                    {
-                        var paragraph = (ParagraphBlock) cell[0];
-
-                        state.ProcessDelimiters(i + 1, paragraph.Inline, null, true);
-                    }
-                    break;
-                }
+                var paragraph = (ParagraphBlock) cell[0];
+                state.PostProcessInlines(postInlineProcessorIndex + 1, paragraph.Inline, null, true);
             }
+
             // Clear cells when we are done
             cells.Clear();
 
