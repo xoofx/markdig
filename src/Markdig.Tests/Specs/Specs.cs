@@ -9612,18 +9612,22 @@ namespace Markdig.Tests
         //
         // 9.  Emphasis begins with a delimiter that [can open emphasis] and ends
         // with a delimiter that [can close emphasis], and that uses the same
-        // character (`_` or `*`) as the opening delimiter.  There must
-        // be a nonempty sequence of inlines between the open delimiter
-        // and the closing delimiter; these form the contents of the emphasis
-        // inline.
+        // character (`_` or `*`) as the opening delimiter.  The
+        // opening and closing delimiters must belong to separate
+        // [delimiter runs].  If one of the delimiters can both
+        // open and close emphasis, then the sum of the lengths of the
+        // delimiter runs containing the opening and closing delimiters
+        // must not be a multiple of 3.
         //
         // 10. Strong emphasis begins with a delimiter that
         // [can open strong emphasis] and ends with a delimiter that
         // [can close strong emphasis], and that uses the same character
-        // (`_` or `*`) as the opening delimiter.
-        // There must be a nonempty sequence of inlines between the open
-        // delimiter and the closing delimiter; these form the contents of
-        // the strong emphasis inline.
+        // (`_` or `*`) as the opening delimiter.  The
+        // opening and closing delimiters must belong to separate
+        // [delimiter runs].  If one of the delimiters can both open
+        // and close strong emphasis, then the sum of the lengths of
+        // the delimiter runs containing the opening and closing
+        // delimiters must not be a multiple of 3.
         //
         // 11. A literal `*` character cannot occur at the beginning or end of
         // `*`-delimited emphasis or `**`-delimited strong emphasis, unless it
@@ -9647,9 +9651,7 @@ namespace Markdig.Tests
         // so that the second begins before the first ends and ends after
         // the first ends, the first takes precedence. Thus, for example,
         // `*foo _bar* baz_` is parsed as `<em>foo _bar</em> baz_` rather
-        // than `*foo <em>bar* baz</em>`.  For the same reason,
-        // `**foo*bar**` is parsed as `<em><em>foo</em>bar</em>*`
-        // rather than `<strong>foo*bar</strong>`.
+        // than `*foo <em>bar* baz</em>`.
         //
         // 16. When there are two potential emphasis or strong emphasis spans
         // with the same closing delimiter, the shorter one (the one that
@@ -10906,7 +10908,6 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
         }
     }
-        // But note:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10920,14 +10921,28 @@ namespace Markdig.Tests
             //     *foo**bar**baz*
             //
             // Should be rendered as:
-            //     <p><em>foo</em><em>bar</em><em>baz</em></p>
+            //     <p><em>foo<strong>bar</strong>baz</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 386, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo</em><em>bar</em><em>baz</em></p>", "");
+			TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "");
         }
     }
-        // The difference is that in the preceding case, the internal delimiters
-        // [can close emphasis], while in the cases with spaces, they cannot.
+        // Note that in the preceding case, the interpretation
+        //
+        // ``` markdown
+        // <p><em>foo</em><em>bar<em></em>baz</em></p>
+        // ```
+        //
+        // is precluded by the condition that a delimiter that
+        // can both open and close (like the `*` after `foo`
+        // cannot form emphasis if the sum of the lengths of
+        // the delimiter runs containing the opening and
+        // closing delimiters is a multiple of 3.
+        //
+        // The same condition ensures that the following
+        // cases are all strong emphasis nested inside
+        // emphasis, even when the interior spaces are
+        // omitted:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10966,9 +10981,6 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "");
         }
     }
-        // Note, however, that in the following case we get no strong
-        // emphasis, because the opening delimiter is closed by the first
-        // `*` before `bar`:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10982,13 +10994,12 @@ namespace Markdig.Tests
             //     *foo**bar***
             //
             // Should be rendered as:
-            //     <p><em>foo</em><em>bar</em>**</p>
+            //     <p><em>foo<strong>bar</strong></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 389, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo**bar***", "<p><em>foo</em><em>bar</em>**</p>", "");
+			TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "");
         }
     }
-        // Indefinite levels of nesting are possible:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10999,15 +11010,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo **bar *baz* bim** bop*
+            //     *foo**bar***
             //
             // Should be rendered as:
-            //     <p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
+            //     <p><em>foo<strong>bar</strong></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 390, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "");
+			TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "");
         }
     }
+        // Indefinite levels of nesting are possible:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11018,16 +11030,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo [*bar*](/url)*
+            //     *foo **bar *baz* bim** bop*
             //
             // Should be rendered as:
-            //     <p><em>foo <a href="/url"><em>bar</em></a></em></p>
+            //     <p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 391, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "");
+			TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "");
         }
     }
-        // There can be no empty emphasis or strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11038,15 +11049,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ** is not an empty emphasis
+            //     *foo [*bar*](/url)*
             //
             // Should be rendered as:
-            //     <p>** is not an empty emphasis</p>
+            //     <p><em>foo <a href="/url"><em>bar</em></a></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 392, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "");
+			TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "");
         }
     }
+        // There can be no empty emphasis or strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11057,12 +11069,31 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     ** is not an empty emphasis
+            //
+            // Should be rendered as:
+            //     <p>** is not an empty emphasis</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 393, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example394()
+        {
+            // Example 394
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     **** is not an empty strong emphasis
             //
             // Should be rendered as:
             //     <p>**** is not an empty strong emphasis</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 393, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 394, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "");
         }
     }
@@ -11074,9 +11105,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example394()
+        public void Example395()
         {
-            // Example 394
+            // Example 395
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -11085,33 +11116,10 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><strong>foo <a href="/url">bar</a></strong></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 394, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 395, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "");
         }
     }
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example395()
-        {
-            // Example 395
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     **foo
-            //     bar**
-            //
-            // Should be rendered as:
-            //     <p><strong>foo
-            //     bar</strong></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 395, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "");
-        }
-    }
-        // In particular, emphasis and strong emphasis can be nested
-        // inside strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11122,15 +11130,19 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo _bar_ baz__
+            //     **foo
+            //     bar**
             //
             // Should be rendered as:
-            //     <p><strong>foo <em>bar</em> baz</strong></p>
+            //     <p><strong>foo
+            //     bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 396, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
+			TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "");
         }
     }
+        // In particular, emphasis and strong emphasis can be nested
+        // inside strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11141,13 +11153,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo __bar__ baz__
+            //     __foo _bar_ baz__
             //
             // Should be rendered as:
-            //     <p><strong>foo <strong>bar</strong> baz</strong></p>
+            //     <p><strong>foo <em>bar</em> baz</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 397, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "");
+			TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11160,13 +11172,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ____foo__ bar__
+            //     __foo __bar__ baz__
             //
             // Should be rendered as:
-            //     <p><strong><strong>foo</strong> bar</strong></p>
+            //     <p><strong>foo <strong>bar</strong> baz</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 398, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "");
+			TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11179,13 +11191,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo **bar****
+            //     ____foo__ bar__
             //
             // Should be rendered as:
-            //     <p><strong>foo <strong>bar</strong></strong></p>
+            //     <p><strong><strong>foo</strong> bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 399, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "");
+			TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11198,16 +11210,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo *bar* baz**
+            //     **foo **bar****
             //
             // Should be rendered as:
-            //     <p><strong>foo <em>bar</em> baz</strong></p>
+            //     <p><strong>foo <strong>bar</strong></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 400, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
+			TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "");
         }
     }
-        // But note:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11218,17 +11229,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo*bar*baz**
+            //     **foo *bar* baz**
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em>bar</em>baz**</p>
+            //     <p><strong>foo <em>bar</em> baz</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 401, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo*bar*baz**", "<p><em><em>foo</em>bar</em>baz**</p>", "");
+			TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
         }
     }
-        // The difference is that in the preceding case, the internal delimiters
-        // [can close emphasis], while in the cases with spaces, they cannot.
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11239,13 +11248,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ***foo* bar**
+            //     **foo*bar*baz**
             //
             // Should be rendered as:
-            //     <p><strong><em>foo</em> bar</strong></p>
+            //     <p><strong>foo<em>bar</em>baz</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 402, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "");
+			TestParser.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11258,16 +11267,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo *bar***
+            //     ***foo* bar**
             //
             // Should be rendered as:
-            //     <p><strong>foo <em>bar</em></strong></p>
+            //     <p><strong><em>foo</em> bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 403, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "");
+			TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "");
         }
     }
-        // Indefinite levels of nesting are possible:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11278,17 +11286,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo *bar **baz**
-            //     bim* bop**
+            //     **foo *bar***
             //
             // Should be rendered as:
-            //     <p><strong>foo <em>bar <strong>baz</strong>
-            //     bim</em> bop</strong></p>
+            //     <p><strong>foo <em>bar</em></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 404, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "");
+			TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "");
         }
     }
+        // Indefinite levels of nesting are possible:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11299,16 +11306,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo [*bar*](/url)**
+            //     **foo *bar **baz**
+            //     bim* bop**
             //
             // Should be rendered as:
-            //     <p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
+            //     <p><strong>foo <em>bar <strong>baz</strong>
+            //     bim</em> bop</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 405, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "");
+			TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "");
         }
     }
-        // There can be no empty emphasis or strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11319,15 +11327,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __ is not an empty emphasis
+            //     **foo [*bar*](/url)**
             //
             // Should be rendered as:
-            //     <p>__ is not an empty emphasis</p>
+            //     <p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 406, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "");
+			TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "");
         }
     }
+        // There can be no empty emphasis or strong emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11338,16 +11347,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ____ is not an empty strong emphasis
+            //     __ is not an empty emphasis
             //
             // Should be rendered as:
-            //     <p>____ is not an empty strong emphasis</p>
+            //     <p>__ is not an empty emphasis</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 407, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "");
+			TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "");
         }
     }
-        // Rule 11:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11358,15 +11366,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo ***
+            //     ____ is not an empty strong emphasis
             //
             // Should be rendered as:
-            //     <p>foo ***</p>
+            //     <p>____ is not an empty strong emphasis</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 408, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo ***", "<p>foo ***</p>", "");
+			TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "");
         }
     }
+        // Rule 11:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11377,13 +11386,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo *\**
+            //     foo ***
             //
             // Should be rendered as:
-            //     <p>foo <em>*</em></p>
+            //     <p>foo ***</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 409, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "");
+			TestParser.TestSpec("foo ***", "<p>foo ***</p>", "");
         }
     }
     [TestFixture]
@@ -11396,13 +11405,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo *_*
+            //     foo *\**
             //
             // Should be rendered as:
-            //     <p>foo <em>_</em></p>
+            //     <p>foo <em>*</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 410, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "");
+			TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "");
         }
     }
     [TestFixture]
@@ -11415,13 +11424,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo *****
+            //     foo *_*
             //
             // Should be rendered as:
-            //     <p>foo *****</p>
+            //     <p>foo <em>_</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 411, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo *****", "<p>foo *****</p>", "");
+			TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "");
         }
     }
     [TestFixture]
@@ -11434,13 +11443,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo **\***
+            //     foo *****
             //
             // Should be rendered as:
-            //     <p>foo <strong>*</strong></p>
+            //     <p>foo *****</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 412, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "");
+			TestParser.TestSpec("foo *****", "<p>foo *****</p>", "");
         }
     }
     [TestFixture]
@@ -11453,18 +11462,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo **_**
+            //     foo **\***
             //
             // Should be rendered as:
-            //     <p>foo <strong>_</strong></p>
+            //     <p>foo <strong>*</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 413, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "");
+			TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "");
         }
     }
-        // Note that when delimiters do not match evenly, Rule 11 determines
-        // that the excess literal `*` characters will appear outside of the
-        // emphasis, rather than inside it:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11475,15 +11481,18 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo*
+            //     foo **_**
             //
             // Should be rendered as:
-            //     <p>*<em>foo</em></p>
+            //     <p>foo <strong>_</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 414, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>", "");
+			TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "");
         }
     }
+        // Note that when delimiters do not match evenly, Rule 11 determines
+        // that the excess literal `*` characters will appear outside of the
+        // emphasis, rather than inside it:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11494,13 +11503,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo**
+            //     **foo*
             //
             // Should be rendered as:
-            //     <p><em>foo</em>*</p>
+            //     <p>*<em>foo</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 415, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>", "");
+			TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>", "");
         }
     }
     [TestFixture]
@@ -11513,13 +11522,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ***foo**
+            //     *foo**
             //
             // Should be rendered as:
-            //     <p>*<strong>foo</strong></p>
+            //     <p><em>foo</em>*</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 416, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "");
+			TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>", "");
         }
     }
     [TestFixture]
@@ -11532,13 +11541,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ****foo*
+            //     ***foo**
             //
             // Should be rendered as:
-            //     <p>***<em>foo</em></p>
+            //     <p>*<strong>foo</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 417, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>", "");
+			TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11551,13 +11560,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo***
+            //     ****foo*
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong>*</p>
+            //     <p>***<em>foo</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 418, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "");
+			TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>", "");
         }
     }
     [TestFixture]
@@ -11570,16 +11579,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo****
+            //     **foo***
             //
             // Should be rendered as:
-            //     <p><em>foo</em>***</p>
+            //     <p><strong>foo</strong>*</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 419, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>", "");
+			TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "");
         }
     }
-        // Rule 12:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11590,15 +11598,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo ___
+            //     *foo****
             //
             // Should be rendered as:
-            //     <p>foo ___</p>
+            //     <p><em>foo</em>***</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 420, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo ___", "<p>foo ___</p>", "");
+			TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>", "");
         }
     }
+        // Rule 12:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11609,13 +11618,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo _\__
+            //     foo ___
             //
             // Should be rendered as:
-            //     <p>foo <em>_</em></p>
+            //     <p>foo ___</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 421, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "");
+			TestParser.TestSpec("foo ___", "<p>foo ___</p>", "");
         }
     }
     [TestFixture]
@@ -11628,13 +11637,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo _*_
+            //     foo _\__
             //
             // Should be rendered as:
-            //     <p>foo <em>*</em></p>
+            //     <p>foo <em>_</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 422, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "");
+			TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "");
         }
     }
     [TestFixture]
@@ -11647,13 +11656,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo _____
+            //     foo _*_
             //
             // Should be rendered as:
-            //     <p>foo _____</p>
+            //     <p>foo <em>*</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 423, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo _____", "<p>foo _____</p>", "");
+			TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "");
         }
     }
     [TestFixture]
@@ -11666,13 +11675,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo __\___
+            //     foo _____
             //
             // Should be rendered as:
-            //     <p>foo <strong>_</strong></p>
+            //     <p>foo _____</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 424, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "");
+			TestParser.TestSpec("foo _____", "<p>foo _____</p>", "");
         }
     }
     [TestFixture]
@@ -11685,13 +11694,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo __*__
+            //     foo __\___
             //
             // Should be rendered as:
-            //     <p>foo <strong>*</strong></p>
+            //     <p>foo <strong>_</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 425, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "");
+			TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11704,18 +11713,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo_
+            //     foo __*__
             //
             // Should be rendered as:
-            //     <p>_<em>foo</em></p>
+            //     <p>foo <strong>*</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 426, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>", "");
+			TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "");
         }
     }
-        // Note that when delimiters do not match evenly, Rule 12 determines
-        // that the excess literal `_` characters will appear outside of the
-        // emphasis, rather than inside it:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11726,15 +11732,18 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo__
+            //     __foo_
             //
             // Should be rendered as:
-            //     <p><em>foo</em>_</p>
+            //     <p>_<em>foo</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 427, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>", "");
+			TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>", "");
         }
     }
+        // Note that when delimiters do not match evenly, Rule 12 determines
+        // that the excess literal `_` characters will appear outside of the
+        // emphasis, rather than inside it:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11745,13 +11754,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ___foo__
+            //     _foo__
             //
             // Should be rendered as:
-            //     <p>_<strong>foo</strong></p>
+            //     <p><em>foo</em>_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 428, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "");
+			TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>", "");
         }
     }
     [TestFixture]
@@ -11764,13 +11773,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ____foo_
+            //     ___foo__
             //
             // Should be rendered as:
-            //     <p>___<em>foo</em></p>
+            //     <p>_<strong>foo</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 429, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>", "");
+			TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11783,13 +11792,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo___
+            //     ____foo_
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong>_</p>
+            //     <p>___<em>foo</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 430, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "");
+			TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>", "");
         }
     }
     [TestFixture]
@@ -11802,17 +11811,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo____
+            //     __foo___
             //
             // Should be rendered as:
-            //     <p><em>foo</em>___</p>
+            //     <p><strong>foo</strong>_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 431, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>", "");
+			TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "");
         }
     }
-        // Rule 13 implies that if you want emphasis nested directly inside
-        // emphasis, you must use different delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11823,15 +11830,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo**
+            //     _foo____
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong></p>
+            //     <p><em>foo</em>___</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 432, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>", "");
+			TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>", "");
         }
     }
+        // Rule 13 implies that if you want emphasis nested directly inside
+        // emphasis, you must use different delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11842,13 +11851,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *_foo_*
+            //     **foo**
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em></em></p>
+            //     <p><strong>foo</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 433, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "");
+			TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>", "");
         }
     }
     [TestFixture]
@@ -11861,13 +11870,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo__
+            //     *_foo_*
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong></p>
+            //     <p><em><em>foo</em></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 434, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>", "");
+			TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "");
         }
     }
     [TestFixture]
@@ -11880,17 +11889,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _*foo*_
+            //     __foo__
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em></em></p>
+            //     <p><strong>foo</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 435, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "");
+			TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>", "");
         }
     }
-        // However, strong emphasis within strong emphasis is possible without
-        // switching delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11901,15 +11908,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ****foo****
+            //     _*foo*_
             //
             // Should be rendered as:
-            //     <p><strong><strong>foo</strong></strong></p>
+            //     <p><em><em>foo</em></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 436, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "");
+			TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "");
         }
     }
+        // However, strong emphasis within strong emphasis is possible without
+        // switching delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11920,17 +11929,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ____foo____
+            //     ****foo****
             //
             // Should be rendered as:
             //     <p><strong><strong>foo</strong></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 437, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "");
+			TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "");
         }
     }
-        // Rule 13 can be applied to arbitrarily long sequences of
-        // delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11941,16 +11948,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ******foo******
+            //     ____foo____
             //
             // Should be rendered as:
-            //     <p><strong><strong><strong>foo</strong></strong></strong></p>
+            //     <p><strong><strong>foo</strong></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 438, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "");
+			TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "");
         }
     }
-        // Rule 14:
+        // Rule 13 can be applied to arbitrarily long sequences of
+        // delimiters:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11961,15 +11969,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ***foo***
+            //     ******foo******
             //
             // Should be rendered as:
-            //     <p><strong><em>foo</em></strong></p>
+            //     <p><strong><strong><strong>foo</strong></strong></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 439, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("***foo***", "<p><strong><em>foo</em></strong></p>", "");
+			TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "");
         }
     }
+        // Rule 14:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11980,16 +11989,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _____foo_____
+            //     ***foo***
             //
             // Should be rendered as:
-            //     <p><strong><strong><em>foo</em></strong></strong></p>
+            //     <p><strong><em>foo</em></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 440, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_____foo_____", "<p><strong><strong><em>foo</em></strong></strong></p>", "");
+			TestParser.TestSpec("***foo***", "<p><strong><em>foo</em></strong></p>", "");
         }
     }
-        // Rule 15:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12000,15 +12008,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo _bar* baz_
+            //     _____foo_____
             //
             // Should be rendered as:
-            //     <p><em>foo _bar</em> baz_</p>
+            //     <p><strong><strong><em>foo</em></strong></strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 441, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "");
+			TestParser.TestSpec("_____foo_____", "<p><strong><strong><em>foo</em></strong></strong></p>", "");
         }
     }
+        // Rule 15:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12019,13 +12028,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo*bar**
+            //     *foo _bar* baz_
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em>bar</em>*</p>
+            //     <p><em>foo _bar</em> baz_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 442, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo*bar**", "<p><em><em>foo</em>bar</em>*</p>", "");
+			TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "");
         }
     }
     [TestFixture]

@@ -88,9 +88,9 @@ literal      ( 0, 5)  5-11
             Check("01*2**3*", @"
 paragraph    ( 0, 0)  0-7
 literal      ( 0, 0)  0-1
-emphasis     ( 0, 2)  2-4
+emphasis     ( 0, 2)  2-7
 literal      ( 0, 3)  3-3
-emphasis     ( 0, 5)  5-7
+literal      ( 0, 4)  4-5
 literal      ( 0, 6)  6-6
 ");
         }

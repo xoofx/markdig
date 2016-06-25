@@ -225,9 +225,15 @@ namespace Markdig.Parsers.Inlines
                         for (int j = i - 1; j >= 0; j--)
                         {
                             var previousOpenDelimiter = delimiters[j];
+
+                            var isOddMatch = ((closeDelimiter.Type & DelimiterType.Open) != 0 ||
+                                             (previousOpenDelimiter.Type & DelimiterType.Close) != 0) &&
+                                             previousOpenDelimiter.DelimiterCount != closeDelimiter.DelimiterCount &&
+                                             (previousOpenDelimiter.DelimiterCount + closeDelimiter.DelimiterCount) % 3 == 0;
+
                             if (previousOpenDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
                                 (previousOpenDelimiter.Type & DelimiterType.Open) != 0 &&
-                                previousOpenDelimiter.DelimiterCount > 0)
+                                previousOpenDelimiter.DelimiterCount > 0 && !isOddMatch)
                             {
                                 openDelimiter = previousOpenDelimiter;
                                 openDelimiterIndex = j;
