@@ -18,6 +18,7 @@
     }
   },
   "dependencies": {
-    "NUnit": "3.2.0"
+    "NUnit": "3.2.0",
+    "NUnit3TestAdapter": "3.2.0"
   }
 }

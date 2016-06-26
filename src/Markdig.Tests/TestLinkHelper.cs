@@ -297,5 +297,102 @@ namespace Markdig.Tests
             Assert.False(LinkHelper.TryParseAutolink(new StringSlice(@"<ab"), out text, out isEmail));
             Assert.False(LinkHelper.TryParseAutolink(new StringSlice(@"<user@>"), out text, out isEmail));
         }
+
+        [TestCase("Header identifiers in HTML", "header-identifiers-in-html")]
+        [TestCase("* Dogs*?--in *my* house?", "dogs-in-my-house")] // Not Pandoc equivalent: dogs--in...
+        [TestCase("[HTML], [S5], or [RTF]?", "html-s5-or-rtf")]
+        [TestCase("3. Applications", "applications")]
+        [TestCase("33", "")]
+        public void TestUrilizeNonAscii_Pandoc(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+        }
+
+        [TestCase("abc", "abc")]
+        [TestCase("a-c", "a-c")]
+        [TestCase("a c", "a-c")]
+        [TestCase("a_c", "a_c")]
+        [TestCase("a.c", "a.c")]
+        [TestCase("a,c", "ac")]
+        [TestCase("a--", "a")] // Not Pandoc-equivalent: a--
+        [TestCase("a__", "a")] // Not Pandoc-equivalent: a__
+        [TestCase("a..", "a")] // Not Pandoc-equivalent: a..
+        [TestCase("a??", "a")]
+        [TestCase("a  ", "a")]
+        [TestCase("a--d", "a-d")]
+        [TestCase("a__d", "a_d")]
+        [TestCase("a??d", "ad")]
+        [TestCase("a  d", "a-d")]
+        [TestCase("a..d", "a.d")]
+        [TestCase("-bc", "bc")]
+        [TestCase("_bc", "bc")]
+        [TestCase(" bc", "bc")]
+        [TestCase("?bc", "bc")]
+        [TestCase(".bc", "bc")]
+        [TestCase("a-.-", "a")] // Not Pandoc equivalent: a-.-
+        public void TestUrilizeOnlyAscii_Simple(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+        }
+
+        [TestCase("bær", "br")]
+        [TestCase("bør", "br")]
+        [TestCase("bΘr", "br")]
+        [TestCase("四五", "")]
+        public void TestUrilizeOnlyAscii_NonAscii(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+        }
+
+        [TestCase("bár", "bar")]
+        [TestCase("àrrivé", "arrive")]
+        public void TestUrilizeOnlyAscii_Normalization(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+        }
+
+        [TestCase("123", "")]
+        [TestCase("1,-b", "b")]
+        [TestCase("b1,-", "b1")] // Not Pandoc equivalent: b1-
+        [TestCase("ab3", "ab3")]
+        [TestCase("ab3de", "ab3de")]
+        public void TestUrilizeOnlyAscii_Numeric(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+        }
+
+        [TestCase("一二三四五", "一二三四五")]
+        [TestCase("一,-b", "一-b")]
+        public void TestUrilizeNonAscii_NonAsciiNumeric(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+        }
+
+        [TestCase("bær", "bær")]
+        [TestCase("æ5el", "æ5el")]
+        [TestCase("-æ5el", "æ5el")]
+        [TestCase("-frø-", "frø")]
+        [TestCase("-fr-ø", "fr-ø")]
+        public void TestUrilizeNonAscii_Simple(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+        }
+
+        // Just to be sure, test for characters expressly forbidden in URI fragments:
+        [TestCase("b#r", "br")]
+        [TestCase("b%r", "br")] // Invalid except as an escape character
+        [TestCase("b^r", "br")]
+        [TestCase("b[r", "br")]
+        [TestCase("b]r", "br")]
+        [TestCase("b{r", "br")]
+        [TestCase("b}r", "br")]
+        [TestCase("b<r", "br")]
+        [TestCase("b>r", "br")]
+        [TestCase(@"b\r", "br")]
+        [TestCase(@"b""r", "br")]
+        public void TestUrilizeNonAscii_NonValidCharactersForFragments(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+        }
     }
 }
