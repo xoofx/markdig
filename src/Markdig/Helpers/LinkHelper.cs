@@ -61,6 +61,11 @@ namespace Markdig.Helpers
                         }
                         previousIsSpace = false;
                     }
+                    else if (c.IsDigit())
+                    {
+                        headingBuffer.Append(c);
+                        previousIsSpace = false;
+                    }
                     else if (!previousIsSpace && c.IsWhitespace())
                     {
                         var pc = headingBuffer[headingBuffer.Length - 1];
