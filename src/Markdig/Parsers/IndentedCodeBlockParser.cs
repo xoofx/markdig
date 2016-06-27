@@ -18,13 +18,14 @@ namespace Markdig.Parsers
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
-            var startPosition = processor.Line.Start;
+            var startColumn = processor.ColumnBeforeIndent;
+            var startPosition = processor.StartBeforeIndent;
             var result = TryContinue(processor, null);
             if (result == BlockState.Continue)
             {
                 processor.NewBlocks.Push(new CodeBlock(this)
                 {
-                    Column = processor.Column,
+                    Column = startColumn,
                     Span = new SourceSpan(startPosition, processor.Line.End)
                 });
             }

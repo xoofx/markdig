@@ -658,7 +658,7 @@ literal      ( 4, 2) 13-13
             Check("0\n\n    0\n    1\n", @"
 paragraph    ( 0, 0)  0-0
 literal      ( 0, 0)  0-0
-code         ( 2, 4)  7-13
+code         ( 2, 0)  3-13
 ");
         }
 
@@ -669,7 +669,7 @@ code         ( 2, 4)  7-13
             Check("0\n\n\t0\n\t1\n", @"
 paragraph    ( 0, 0)  0-0
 literal      ( 0, 0)  0-0
-code         ( 2, 4)  4-7
+code         ( 2, 0)  3-7
 ");
         }
 
@@ -680,7 +680,7 @@ code         ( 2, 4)  4-7
             Check("0\n\n \t0\n \t1\n", @"
 paragraph    ( 0, 0)  0-0
 literal      ( 0, 0)  0-0
-code         ( 2, 4)  5-9
+code         ( 2, 0)  3-9
 ");
         }
 
