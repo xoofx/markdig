@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Markdig.Helpers;
@@ -70,6 +71,7 @@ namespace Markdig.Renderers
     {
         private bool previousWasLine;
         private char[] buffer;
+        private readonly List<string> indents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRendererBase{T}"/> class.
@@ -80,6 +82,7 @@ namespace Markdig.Renderers
             buffer = new char[1024];
             // We assume that we are starting as if we had previously a newline
             previousWasLine = true;
+            indents = new List<string>();
         }
 
         /// <summary>
@@ -95,6 +98,31 @@ namespace Markdig.Renderers
             return (T)this;
         }
 
+        public void PushIndent(string indent)
+        {
+            if (indent == null) throw new ArgumentNullException(nameof(indent));
+            indents.Add(indent);
+        }
+
+        public void PopIndent()
+        {
+            // TODO: Check
+            indents.RemoveAt(indents.Count - 1);
+        }
+
+        private void WriteIndent()
+        {
+            if (previousWasLine)
+            {
+                previousWasLine = false;
+                for (int i = 0; i < indents.Count; i++)
+                {
+                    Writer.Write(indents[i]);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Writes the specified content.
         /// </summary>
@@ -103,6 +131,7 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T Write(string content)
         {
+            WriteIndent();
             previousWasLine = false;
             Writer.Write(content);
             return (T) this;
@@ -142,6 +171,7 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T Write(char content)
         {
+            WriteIndent();
             previousWasLine = content == '\n';
             Writer.Write(content);
             return (T) this;
@@ -161,6 +191,7 @@ namespace Markdig.Renderers
                 return (T) this;
             }
 
+            WriteIndent();
             previousWasLine = false;
             if (offset == 0 && content.Length == length)
             {
@@ -189,6 +220,7 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLine()
         {
+            WriteIndent();
             Writer.WriteLine();
             previousWasLine = true;
             return (T) this;
@@ -202,6 +234,7 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public T WriteLine(string content)
         {
+            WriteIndent();
             previousWasLine = true;
             Writer.WriteLine(content);
             return (T) this;
