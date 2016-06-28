@@ -15,6 +15,8 @@ namespace Markdig.Renderers.Normalize
         protected override void Write(NormalizeRenderer renderer, ListBlock listBlock)
         {
             renderer.EnsureLine();
+            var compact = renderer.CompactParagraph;
+            renderer.CompactParagraph = !listBlock.IsLoose;
             if (listBlock.IsOrdered)
             {
                 int index = 0;
@@ -38,11 +40,6 @@ namespace Markdig.Renderers.Normalize
                     renderer.PushIndent("  ");  // TODO: output accurate indent
                     renderer.WriteChildren(listItem);
                     renderer.PopIndent();
-                    if (!listBlock.IsLoose)
-                    {
-                        renderer.WriteLine();
-                    }
-
                     switch (listBlock.BulletType)
                     {
                         case '1':
@@ -61,12 +58,10 @@ namespace Markdig.Renderers.Normalize
                     renderer.PushIndent("  ");
                     renderer.WriteChildren(listItem);
                     renderer.PopIndent();
-                    if (!listBlock.IsLoose)
-                    {
-                        renderer.WriteLine();
-                    }
                 }
             }
+
+            renderer.CompactParagraph = compact;
             renderer.WriteLine();
         }
     }
