@@ -68,7 +68,7 @@ paragraph
         {
             AssertNormalize(@"
 > test1
->
+> 
 > test2
 ");
         }

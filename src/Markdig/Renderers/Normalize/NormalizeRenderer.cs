@@ -46,6 +46,8 @@ namespace Markdig.Renderers.Normalize
             ObjectRenderers.Add(new LiteralInlineRenderer());
         }
 
+        public bool CompactParagraph { get; set; }
+
         ///// <summary>
         ///// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
         ///// </summary>
