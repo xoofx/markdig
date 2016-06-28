@@ -9,6 +9,7 @@ using System.Text;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
+using Markdig.Renderers.Normalize.Inlines;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -26,265 +27,92 @@ namespace Markdig.Renderers.Normalize
         {
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());
-            //ObjectRenderers.Add(new ListRenderer());
+            ObjectRenderers.Add(new ListRenderer());
             ObjectRenderers.Add(new HeadingRenderer());
-            //ObjectRenderers.Add(new HtmlBlockRenderer());
-            //ObjectRenderers.Add(new ParagraphRenderer());
+            ObjectRenderers.Add(new HtmlBlockRenderer());
+            ObjectRenderers.Add(new ParagraphRenderer());
             ObjectRenderers.Add(new QuoteBlockRenderer());
-            //ObjectRenderers.Add(new ThematicBreakRenderer());
+            ObjectRenderers.Add(new ThematicBreakRenderer());
 
             // Default inline renderers
-            //ObjectRenderers.Add(new AutolinkInlineRenderer());
-            //ObjectRenderers.Add(new CodeInlineRenderer());
-            //ObjectRenderers.Add(new DelimiterInlineRenderer());
-            //ObjectRenderers.Add(new EmphasisInlineRenderer());
-            //ObjectRenderers.Add(new LineBreakInlineRenderer());
-            //ObjectRenderers.Add(new HtmlInlineRenderer());
-            //ObjectRenderers.Add(new HtmlEntityInlineRenderer());            
-            //ObjectRenderers.Add(new LinkInlineRenderer());
-            //ObjectRenderers.Add(new LiteralInlineRenderer());
-
-            EnableHtmlForInline = true;
-            EnableHtmlEscape = true;
+            ObjectRenderers.Add(new AutolinkInlineRenderer());
+            ObjectRenderers.Add(new CodeInlineRenderer());
+            ObjectRenderers.Add(new DelimiterInlineRenderer());
+            ObjectRenderers.Add(new EmphasisInlineRenderer());
+            ObjectRenderers.Add(new LineBreakInlineRenderer());
+            ObjectRenderers.Add(new NormalizeHtmlInlineRenderer());
+            ObjectRenderers.Add(new NormalizeHtmlEntityInlineRenderer());            
+            ObjectRenderers.Add(new LinkInlineRenderer());
+            ObjectRenderers.Add(new LiteralInlineRenderer());
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to ouput HTML tags when rendering. See remarks.
-        /// </summary>
-        /// <remarks>
-        /// This is used by some renderers to disable HTML tags when rendering some inlines (for image links).
-        /// </remarks>
-        public bool EnableHtmlForInline { get; set; }
+        ///// <summary>
+        ///// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
+        ///// </summary>
+        ///// <param name="obj">The object.</param>
+        ///// <returns></returns>
+        //public NormalizeRenderer WriteAttributes(MarkdownObject obj)
+        //{
+        //    if (obj == null) throw new ArgumentNullException(nameof(obj));
+        //    return WriteAttributes(obj.TryGetAttributes());
+        //}
 
-        public bool EnableHtmlEscape { get; set; }
+        ///// <summary>
+        ///// Writes the specified <see cref="HtmlAttributes"/>.
+        ///// </summary>
+        ///// <param name="attributes">The attributes to render.</param>
+        ///// <returns>This instance</returns>
+        //public NormalizeRenderer WriteAttributes(HtmlAttributes attributes)
+        //{
+        //    if (attributes == null)
+        //    {
+        //        return this;
+        //    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to use implicit paragraph (optional &lt;p&gt;)
-        /// </summary>
-        public bool ImplicitParagraph { get; set; }
+        //    if (attributes.Id != null)
+        //    {
+        //        Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
+        //    }
 
-        /// <summary>
-        /// Writes the content escaped for HTML.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public NormalizeRenderer WriteEscape(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-                return this;
+        //    if (attributes.Classes != null && attributes.Classes.Count > 0)
+        //    {
+        //        Write(" class=\"");
+        //        for (int i = 0; i < attributes.Classes.Count; i++)
+        //        {
+        //            var cssClass = attributes.Classes[i];
+        //            if (i > 0)
+        //            {
+        //                Write(" ");
+        //            }
+        //            WriteEscape(cssClass);
+        //        }
+        //        Write("\"");
+        //    }
 
-            WriteEscape(content, 0, content.Length);
-            return this;
-        }
+        //    if (attributes.Properties != null && attributes.Properties.Count > 0)
+        //    {
+        //        foreach (var property in attributes.Properties)
+        //        {
+        //            Write(" ").Write(property.Key);
+        //            if (property.Value != null)
+        //            {
+        //                Write("=").Write("\"");
+        //                WriteEscape(property.Value);
+        //                Write("\"");
+        //            }
+        //        }
+        //    }
 
-        /// <summary>
-        /// Writes the content escaped for HTML.
-        /// </summary>
-        /// <param name="slice">The slice.</param>
-        /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public NormalizeRenderer WriteEscape(ref StringSlice slice)
-        {
-            if (slice.Start > slice.End)
-            {
-                return this;
-            }
-            return WriteEscape(slice.Text, slice.Start, slice.Length);
-        }
-
-        /// <summary>
-        /// Writes the content escaped for HTML.
-        /// </summary>
-        /// <param name="slice">The slice.</param>
-        /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public NormalizeRenderer WriteEscape(StringSlice slice)
-        {
-            return WriteEscape(ref slice);
-        }
-
-        /// <summary>
-        /// Writes the content escaped for HTML.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="offset">The offset.</param>
-        /// <param name="length">The length.</param>
-        /// <returns>This instance</returns>
-        public NormalizeRenderer WriteEscape(string content, int offset, int length)
-        {
-            if (string.IsNullOrEmpty(content) || length == 0)
-                return this;
-
-            var end = offset + length;
-            int previousOffset = offset;
-            for (;offset < end;  offset++)
-            {
-                switch (content[offset])
-                {
-                    case '<':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
-                        {
-                            Write("&lt;");
-                        }
-                        previousOffset = offset + 1;
-                        break;
-                    case '>':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
-                        {
-                            Write("&gt;");
-                        }
-                        previousOffset = offset + 1;
-                        break;
-                    case '&':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
-                        {
-                            Write("&amp;");
-                        }
-                        previousOffset = offset + 1;
-                        break;
-                    case '"':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
-                        {
-                            Write("&quot;");
-                        }
-                        previousOffset = offset + 1;
-                        break;
-                }
-            }
-
-            Write(content, previousOffset, end - previousOffset);
-            return this;
-        }
-
-        /// <summary>
-        /// Writes the URL escaped for HTML.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <returns>This instance</returns>
-        public NormalizeRenderer WriteEscapeUrl(string content)
-        {
-            if (content == null)
-                return this;
-
-            int previousPosition = 0;
-            int length = content.Length;
-
-            for (var i = 0; i < length; i++)
-            {
-                var c = content[i];
-
-                if (c < 128)
-                {
-                    var escape = HtmlHelper.EscapeUrlCharacter(c);
-                    if (escape != null)
-                    {
-                        Write(content, previousPosition, i - previousPosition);
-                        previousPosition = i + 1;
-                        Write(escape);
-                    }
-                }
-                else
-                {
-                    Write(content, previousPosition, i - previousPosition);
-                    previousPosition = i + 1;
-
-                    byte[] bytes;
-                    if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
-                    {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
-                        // Skip next char as it is decoded above
-                        i++;
-                        previousPosition = i + 1;
-                    }
-                    else
-                    {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c });
-                    }
-
-                    for (var j = 0; j < bytes.Length; j++)
-                    {
-                        Write($"%{bytes[j]:X2}");
-                    }
-                }
-            }
-
-            Write(content, previousPosition, length - previousPosition);
-            return this;
-        }
-
-        /// <summary>
-        /// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns></returns>
-        public NormalizeRenderer WriteAttributes(MarkdownObject obj)
-        {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return WriteAttributes(obj.TryGetAttributes());
-        }
-
-        /// <summary>
-        /// Writes the specified <see cref="HtmlAttributes"/>.
-        /// </summary>
-        /// <param name="attributes">The attributes to render.</param>
-        /// <returns>This instance</returns>
-        public NormalizeRenderer WriteAttributes(HtmlAttributes attributes)
-        {
-            if (attributes == null)
-            {
-                return this;
-            }
-
-            if (attributes.Id != null)
-            {
-                Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
-            }
-
-            if (attributes.Classes != null && attributes.Classes.Count > 0)
-            {
-                Write(" class=\"");
-                for (int i = 0; i < attributes.Classes.Count; i++)
-                {
-                    var cssClass = attributes.Classes[i];
-                    if (i > 0)
-                    {
-                        Write(" ");
-                    }
-                    WriteEscape(cssClass);
-                }
-                Write("\"");
-            }
-
-            if (attributes.Properties != null && attributes.Properties.Count > 0)
-            {
-                foreach (var property in attributes.Properties)
-                {
-                    Write(" ").Write(property.Key);
-                    if (property.Value != null)
-                    {
-                        Write("=").Write("\"");
-                        WriteEscape(property.Value);
-                        Write("\"");
-                    }
-                }
-            }
-
-            return this;
-        }
+        //    return this;
+        //}
 
         /// <summary>
         /// Writes the lines of a <see cref="LeafBlock"/>
         /// </summary>
         /// <param name="leafBlock">The leaf block.</param>
         /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
-        /// <param name="escape">if set to <c>true</c> escape the content for HTML</param>
         /// <returns>This instance</returns>
-        public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape, bool indent = false)
+        public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool indent = false)
         {
             if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
             if (leafBlock.Lines.Lines != null)
@@ -303,14 +131,8 @@ namespace Markdig.Renderers.Normalize
                         Write("    ");
                     }
 
-                    if (escape)
-                    {
-                        WriteEscape(ref slices[i].Slice);
-                    }
-                    else
-                    {
-                        Write(ref slices[i].Slice);
-                    }
+                    Write(ref slices[i].Slice);
+
                     if (writeEndOfLines)
                     {
                         WriteLine();
