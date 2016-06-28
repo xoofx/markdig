@@ -88,7 +88,9 @@ namespace Markdig.Parsers
             processor.NewBlocks.Push(new ThematicBreakBlock(this)
             {
                 Column = processor.Column,
-                Span = new SourceSpan(startPosition, line.End)
+                Span = new SourceSpan(startPosition, line.End),
+                ThematicChar = breakChar,
+                ThematicCharCount = breakCharCount
             });
             return BlockState.BreakDiscard;
         }
