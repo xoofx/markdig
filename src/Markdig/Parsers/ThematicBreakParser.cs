@@ -54,7 +54,7 @@ namespace Markdig.Parsers
 
                     breakCharCount++;
                 }
-                else if (c.IsSpace())
+                else if (c.IsSpaceOrTab())
                 {
                     hasSpacesSinceLastMatch = true;
                 }
