@@ -79,7 +79,8 @@ namespace Markdig.Extensions.SmartyPants
                 case '-':
                     if (slice.NextChar() == '-')
                     {
-                        processor.ParserStates[Index] = string.Empty;
+                        var quotePants = GetOrCreateState(processor);
+                        quotePants.HasDash = true;
                         return false;
                     }
                     break;
@@ -170,11 +171,8 @@ namespace Markdig.Extensions.SmartyPants
             // We will check in a post-process step for balanaced open/close quotes
             if (postProcess)
             {
-                var quotePants = processor.ParserStates[Index] as List<SmartyPant>;
-                if (quotePants == null)
-                {
-                    processor.ParserStates[Index] = quotePants = new List<SmartyPant>();
-                }
+                var quotePants = GetOrCreateState(processor);
+
                 // Register only if we don't have yet any quotes
                 if (quotePants.Count == 0)
                 {
@@ -187,11 +185,21 @@ namespace Markdig.Extensions.SmartyPants
             return true;
         }
 
+        private ListSmartyPants GetOrCreateState(InlineProcessor processor)
+        {
+            var quotePants = processor.ParserStates[Index] as ListSmartyPants;
+            if (quotePants == null)
+            {
+                processor.ParserStates[Index] = quotePants = new ListSmartyPants();
+            }
+            return quotePants;
+        }
+
         private void BlockOnProcessInlinesEnd(InlineProcessor processor, Inline inline)
         {
             processor.Block.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
 
-            var pants = (List<SmartyPant>) processor.ParserStates[Index];
+            var pants = (ListSmartyPants) processor.ParserStates[Index];
 
             // We only change quote into left or right quotes if we find proper balancing
             var previousIndices = new int[3] {-1, -1, -1};
@@ -286,7 +294,8 @@ namespace Markdig.Extensions.SmartyPants
             bool isFinalProcessing)
         {
             // Don't try to process anything if there are no dash
-            if (state.ParserStates[Index] == null)
+            var quotePants = state.ParserStates[Index] as ListSmartyPants;
+            if (quotePants == null || !quotePants.HasDash)
             {
                 return true;
             }
@@ -360,6 +369,12 @@ namespace Markdig.Extensions.SmartyPants
                 }
             }
             return true;
+        }
+
+
+        private class ListSmartyPants : List<SmartyPant>
+        {
+            public bool HasDash { get; set; }
         }
     }
 }
