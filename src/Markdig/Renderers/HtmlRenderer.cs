@@ -83,26 +83,28 @@ namespace Markdig.Renderers
         /// Writes the content escaped for HTML.
         /// </summary>
         /// <param name="slice">The slice.</param>
+        /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer WriteEscape(ref StringSlice slice)
+        public HtmlRenderer WriteEscape(ref StringSlice slice, bool softEscape = false)
         {
             if (slice.Start > slice.End)
             {
                 return this;
             }
-            return WriteEscape(slice.Text, slice.Start, slice.Length);
+            return WriteEscape(slice.Text, slice.Start, slice.Length, softEscape);
         }
 
         /// <summary>
         /// Writes the content escaped for HTML.
         /// </summary>
         /// <param name="slice">The slice.</param>
+        /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public HtmlRenderer WriteEscape(StringSlice slice)
+        public HtmlRenderer WriteEscape(StringSlice slice, bool softEscape = false)
         {
-            return WriteEscape(ref slice);
+            return WriteEscape(ref slice, softEscape);
         }
 
         /// <summary>
@@ -111,8 +113,9 @@ namespace Markdig.Renderers
         /// <param name="content">The content.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="length">The length.</param>
+        /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteEscape(string content, int offset, int length)
+        public HtmlRenderer WriteEscape(string content, int offset, int length, bool softEscape = false)
         {
             if (string.IsNullOrEmpty(content) || length == 0)
                 return this;
@@ -132,12 +135,15 @@ namespace Markdig.Renderers
                         previousOffset = offset + 1;
                         break;
                     case '>':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
+                        if (!softEscape)
                         {
-                            Write("&gt;");
+                            Write(content, previousOffset, offset - previousOffset);
+                            if (EnableHtmlEscape)
+                            {
+                                Write("&gt;");
+                            }
+                            previousOffset = offset + 1;
                         }
-                        previousOffset = offset + 1;
                         break;
                     case '&':
                         Write(content, previousOffset, offset - previousOffset);
@@ -148,12 +154,15 @@ namespace Markdig.Renderers
                         previousOffset = offset + 1;
                         break;
                     case '"':
-                        Write(content, previousOffset, offset - previousOffset);
-                        if (EnableHtmlEscape)
+                        if (!softEscape)
                         {
-                            Write("&quot;");
+                            Write(content, previousOffset, offset - previousOffset);
+                            if (EnableHtmlEscape)
+                            {
+                                Write("&quot;");
+                            }
+                            previousOffset = offset + 1;
                         }
-                        previousOffset = offset + 1;
                         break;
                 }
             }
@@ -233,8 +242,9 @@ namespace Markdig.Renderers
         /// Writes the specified <see cref="HtmlAttributes"/>.
         /// </summary>
         /// <param name="attributes">The attributes to render.</param>
+        /// <param name="classFilter">A class filter used to transform a class into another class at writing time</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteAttributes(HtmlAttributes attributes)
+        public HtmlRenderer WriteAttributes(HtmlAttributes attributes, Func<string, string> classFilter = null)
         {
             if (attributes == null)
             {
@@ -256,7 +266,7 @@ namespace Markdig.Renderers
                     {
                         Write(" ");
                     }
-                    WriteEscape(cssClass);
+                    WriteEscape(classFilter != null ? classFilter(cssClass) : cssClass);
                 }
                 Write("\"");
             }
@@ -284,8 +294,9 @@ namespace Markdig.Renderers
         /// <param name="leafBlock">The leaf block.</param>
         /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
         /// <param name="escape">if set to <c>true</c> escape the content for HTML</param>
+        /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape)
+        public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape, bool softEscape = false)
         {
             if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
             if (leafBlock.Lines.Lines != null)
@@ -300,7 +311,7 @@ namespace Markdig.Renderers
                     }
                     if (escape)
                     {
-                        WriteEscape(ref slices[i].Slice);
+                        WriteEscape(ref slices[i].Slice, softEscape);
                     }
                     else
                     {

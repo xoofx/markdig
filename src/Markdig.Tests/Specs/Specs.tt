@@ -57,6 +57,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "pipetables+smartypants|advanced+smartypants"),   // Check with smartypants to make sure that it doesn't break pipetables
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("DiagramsSpecs.md"), "diagrams|advanced"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

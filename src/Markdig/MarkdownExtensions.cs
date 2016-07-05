@@ -9,6 +9,7 @@ using Markdig.Extensions.Bootstrap;
 using Markdig.Extensions.Citations;
 using Markdig.Extensions.CustomContainers;
 using Markdig.Extensions.DefinitionLists;
+using Markdig.Extensions.Diagrams;
 using Markdig.Extensions.Emoji;
 using Markdig.Extensions.EmphasisExtras;
 using Markdig.Extensions.Figures;
@@ -57,6 +58,7 @@ namespace Markdig
                 .UsePipeTables()
                 .UseListExtras()
                 .UseTaskLists()
+                .UseDiagrams()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
@@ -86,6 +88,17 @@ namespace Markdig
         public static MarkdownPipelineBuilder UsePragmaLines(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<PragmaLineExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the diagrams extension
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseDiagrams(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<DiagramExtension>();
             return pipeline;
         }
 
@@ -455,6 +468,9 @@ namespace Markdig
                         break;
                     case "tasklists":
                         pipeline.UseTaskLists();
+                        break;
+                    case "diagrams":
+                        pipeline.UseDiagrams();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
