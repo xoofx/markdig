@@ -45,14 +45,14 @@ namespace Markdig.Parsers.Inlines
             if (literal != null)
             {
                 var matched = slice;
-                matched.End = match - 1;
+                matched.End = slice.Start + match - 1;
                 int line;
                 int column;
                 processor.Inline = new HtmlEntityInline()
                 {
                     Original = matched,
                     Transcoded = new StringSlice(literal),
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(matched.End + 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(matched.End)),
                     Line = line,
                     Column = column
                 };

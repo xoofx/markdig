@@ -293,10 +293,6 @@ literal      ( 0, 9)  9-9
 ");
         }
 
-
-
-
-
         [Test]
         public void TestThematicBreak()
         {
@@ -373,12 +369,13 @@ literal      ( 0, 2)  2-3
         [Test]
         public void TestHtmlEntityInline()
         {
-            //     01234567
-            Check("0&nbsp;1", @"
-paragraph    ( 0, 0)  0-7
+            //     01 23456789
+            Check("0\n&nbsp; 1", @"
+paragraph    ( 0, 0)  0-9
 literal      ( 0, 0)  0-0
-htmlentity   ( 0, 1)  1-6
-literal      ( 0, 7)  7-7
+linebreak    ( 0, 1)  1-1
+htmlentity   ( 1, 0)  2-7
+literal      ( 1, 6)  8-9
 ");
         }
 
