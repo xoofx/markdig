@@ -2,7 +2,7 @@
 
 <img align="right" width="160px" height="160px" src="img/markdig.png">
 
-Markdig is a fast, powerfull, [CommonMark](http://commonmark.org/) compliant, extensible Markdown processor for .NET.
+Markdig is a fast, powerful, [CommonMark](http://commonmark.org/) compliant, extensible Markdown processor for .NET.
 
 > NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
 
@@ -115,7 +115,7 @@ This is an early preview of the benchmarking against various implementations:
 ### Analysis of the results:
 
 - Markdig is roughly **x100 times faster than MarkdownSharp**, **30x times faster than docfx**
-- **Among the best in CPU**, Extremelly competitive and often faster than other implementations (not feature wise equivalent) 
+- **Among the best in CPU**, Extremely competitive and often faster than other implementations (not feature wise equivalent) 
 - **15% to 30% less allocations** and GC pressure
 
 Because Marked.NET,  MarkdownSharp and DocAsCode.MarkdownLite are way too slow, they are not included in the following charts:
