@@ -7,7 +7,10 @@ using Markdig.Renderers.Html.Inlines;
 
 namespace Markdig.Extensions.NoRefLinks
 {
-    public class NoRefLinksExtension : IMarkdownExtension
+    /// <summary>
+    /// Extension to automatically render rel=nofollow to all links in an HTML output.
+    /// </summary>
+    public class NoFollowLinksExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
