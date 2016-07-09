@@ -48,11 +48,6 @@ namespace Markdig.Renderers.Html.Inlines
                 renderer.Write("\"");
             }
 
-            if (AutoRelNoFollow)
-            {
-                renderer.Write(" rel=\"nofollow\"");
-            }
-
             if (link.IsImage)
             {
                 if (renderer.EnableHtmlForInline)
@@ -62,6 +57,11 @@ namespace Markdig.Renderers.Html.Inlines
             }
             else
             {
+                if (AutoRelNoFollow)
+                {
+                    renderer.Write(" rel=\"nofollow\"");
+                }
+
                 if (renderer.EnableHtmlForInline)
                 {
                     renderer.Write(">");
