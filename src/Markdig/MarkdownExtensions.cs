@@ -60,7 +60,6 @@ namespace Markdig
                 .UseListExtras()
                 .UseTaskLists()
                 .UseDiagrams()
-                .UseNoRefLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
 
