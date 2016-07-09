@@ -11,6 +11,11 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.AutolinkInline}" />
     public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether to always add rel="nofollow" for links or not.
+        /// </summary>
+        public bool AutoRelNoFollow { get; set; }
+
         protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
         {
             if (renderer.EnableHtmlForInline)
@@ -22,6 +27,12 @@ namespace Markdig.Renderers.Html.Inlines
                 }
                 renderer.WriteEscapeUrl(obj.Url);
                 renderer.WriteAttributes(obj);
+
+                if (!obj.IsEmail && AutoRelNoFollow)
+                {
+                    renderer.Write(" rel=\"nofollow\"");
+                }
+
                 renderer.Write("\">");
             }
 

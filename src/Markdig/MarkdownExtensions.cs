@@ -20,6 +20,7 @@ using Markdig.Extensions.Hardlines;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
+using Markdig.Extensions.NoRefLinks;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
@@ -367,6 +368,17 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Add rel=nofollow to all links rendered to HTML.
+        /// </summary>
+        /// <param name="pipeline"></param>
+        /// <returns></returns>
+        public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<NoFollowLinksExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
         /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -471,6 +483,9 @@ namespace Markdig
                         break;
                     case "diagrams":
                         pipeline.UseDiagrams();
+                        break;
+                    case "nofollowlinks":
+                        pipeline.UseNoFollowLinks();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
