@@ -57,13 +57,12 @@ namespace Markdig.Renderers.Html.Inlines
             }
             else
             {
-                if (AutoRelNoFollow)
-                {
-                    renderer.Write(" rel=\"nofollow\"");
-                }
-
                 if (renderer.EnableHtmlForInline)
                 {
+                    if (AutoRelNoFollow)
+                    {
+                        renderer.Write(" rel=\"nofollow\"");
+                    }
                     renderer.Write(">");
                 }
                 renderer.WriteChildren(link);
