@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Globalization;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
@@ -38,7 +39,9 @@ namespace Markdig.Extensions.Tables
             {
                 foreach (var tableColumnDefinition in table.ColumnDefinitions)
                 {
-                    renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width*100)/100}%\">");
+                    var width = Math.Round(tableColumnDefinition.Width*100)/100;
+                    var widthValue = string.Format(CultureInfo.InvariantCulture, "{0:n2}", width);
+                    renderer.WriteLine($"<col style=\"width:{widthValue}%\">");
                 }
             }
 
