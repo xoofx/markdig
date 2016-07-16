@@ -27,7 +27,13 @@ namespace Markdig.Extensions.Tables
         public TableCell(BlockParser parser) : base(parser)
         {
             ColumnSpan = 1;
+            ColumnIndex = -1;
         }
+
+        /// <summary>
+        /// Gets or sets the index of the column to which this cell belongs.
+        /// </summary>
+        public int ColumnIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the column span this cell is covering. Default is 1.

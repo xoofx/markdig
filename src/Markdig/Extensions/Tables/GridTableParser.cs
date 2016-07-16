@@ -131,11 +131,12 @@ namespace Markdig.Extensions.Tables
                     // | ------------- | ------------ | ---------------------------------------- |
                     // Calculate the colspan for the new row
                     int columnIndex = -1;
-                    foreach (var columnSlice in columns)
+                    for (int i = 0; i < columns.Count; i++)
                     {
+                        var columnSlice = columns[i];
                         if (line.PeekCharExtra(columnSlice.Start) == '|')
                         {
-                            columnIndex++;
+                            columnIndex = i;
                         }
                         if (columnIndex >= 0)
                         {
@@ -301,8 +302,9 @@ namespace Markdig.Extensions.Tables
         {
             var columns = tableState.ColumnSlices;
             TableRow currentRow = null;
-            foreach (var columnSlice in columns)
+            for (int i = 0; i < columns.Count; i++)
             {
+                var columnSlice = columns[i];
                 if (columnSlice.CurrentCell != null)
                 {
                     if (currentRow == null)
@@ -332,7 +334,8 @@ namespace Markdig.Extensions.Tables
                     // Else we can create a new cell
                     columnSlice.CurrentCell = new TableCell(this)
                     {
-                        ColumnSpan = columnSlice.CurrentColumnSpan
+                        ColumnSpan = columnSlice.CurrentColumnSpan,
+                        ColumnIndex = i
                     };
 
                     if (columnSlice.BlockProcessor == null)
