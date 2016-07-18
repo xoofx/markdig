@@ -70,8 +70,8 @@ A regular row can continue a previous regular row when column separator `|` are 
 +---------+---------+---------+
 | Col1    | Col2    | Col3    |
 | Col1a   | Col2a   | Col3a   |
-| Col12             | Col3b   |
-| Col123                      |
+| Col1b             | Col3b   |
+| Col1c                       |
 .
 <table>
 <col style="width:33.33%">
@@ -87,11 +87,11 @@ Col2a</td>
 Col3a</td>
 </tr>
 <tr>
-<td colspan="2">Col12</td>
-<td></td>
+<td colspan="2">Col1b</td>
+<td>Col3b</td>
 </tr>
 <tr>
-<td colspan="3">Col123</td>
+<td colspan="3">Col1c</td>
 </tr>
 </tbody>
 </table>

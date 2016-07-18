@@ -17583,7 +17583,7 @@ namespace Markdig.Tests
             //     | Col1    | Col2    | Col3    |
             //     | Col1a   | Col2a   | Col3a   |
             //     | Col1b             | Col3b   |
-            //     | Col12c                      |
+            //     | Col1c                       |
             //
             // Should be rendered as:
             //     <table>
