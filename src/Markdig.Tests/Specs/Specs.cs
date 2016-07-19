@@ -17533,8 +17533,8 @@ namespace Markdig.Tests
             //     +---------+---------+---------+
             //     | Col1    | Col2    | Col3    |
             //     | Col1a   | Col2a   | Col3a   |
-            //     | Col12             | Col3b   |
-            //     | Col123                      |
+            //     | Col1b             | Col3b   |
+            //     | Col1c                       |
             //
             // Should be rendered as:
             //     <table>
@@ -17551,17 +17551,17 @@ namespace Markdig.Tests
             //     Col3a</td>
             //     </tr>
             //     <tr>
-            //     <td colspan="2">Col12</td>
-            //     <td></td>
+            //     <td colspan="2">Col1b</td>
+            //     <td>Col3b</td>
             //     </tr>
             //     <tr>
-            //     <td colspan="3">Col123</td>
+            //     <td colspan="3">Col1c</td>
             //     </tr>
             //     </tbody>
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Grid Table");
-			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col12             | Col3b   |\n| Col123                      |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col12</td>\n<td></td>\n</tr>\n<tr>\n<td colspan=\"3\">Col123</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col1b             | Col3b   |\n| Col1c                       |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col1b</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col1c</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
         // A row header is separated using `+========+` instead of `+---------+`:
