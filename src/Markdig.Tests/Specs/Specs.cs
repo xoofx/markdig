@@ -6,8 +6,8 @@ namespace Markdig.Tests
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
-        // version: 0.25
-        // date: '2016-03-24'
+        // version: 0.26
+        // date: '2016-07-15'
         // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
         // ...
         //
@@ -345,7 +345,7 @@ namespace Markdig.Tests
         // tabs behave as if they were replaced by spaces with a tab stop
         // of 4 characters.
         //
-        // Thus, for exmaple, a tab can be used instead of four spaces
+        // Thus, for example, a tab can be used instead of four spaces
         // in an indented code block.  (Note, however, that internal
         // tabs are passed through as literal tabs, not expanded to
         // spaces.)
@@ -6027,13 +6027,19 @@ namespace Markdig.Tests
         // 1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
         // blocks *Bs* starting with a [non-whitespace character] and not separated
         // from each other by more than one blank line, and *M* is a list
-        // marker of width *W* followed by 0 < *N* < 5 spaces, then the result
+        // marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
         // of prepending *M* and the following spaces to the first line of
         // *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
         // list item with *Bs* as its contents.  The type of the list item
         // (bullet or ordered) is determined by the type of its list marker.
         // If the list item is ordered, then it is also assigned a start
         // number, based on the ordered list marker.
+        //
+        // Exceptions: When the list item interrupts a paragraph---that
+        // is, when it starts on a line that would otherwise count as
+        // [paragraph continuation text]---then (a) the lines *Ls* must
+        // not begin with a blank line, and (b) if the list item is
+        // ordered, the start number must be 1.
         //
         // For example, let *Ls* be the lines
     [TestFixture]
@@ -6311,9 +6317,8 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "");
         }
     }
-        // A list item may not contain blocks that are separated by more than
-        // one blank line.  Thus, two blank lines will end a list, unless the
-        // two blanks are contained in a [fenced code block].
+        // A list item may contain blocks that are separated by more than
+        // one blank line.
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6326,28 +6331,8 @@ namespace Markdig.Tests
             // The following CommonMark:
             //     - foo
             //     
-            //       bar
-            //     
-            //     - foo
-            //     
             //     
             //       bar
-            //     
-            //     - ```
-            //       foo
-            //     
-            //     
-            //       bar
-            //       ```
-            //     
-            //     - baz
-            //     
-            //       + ```
-            //         foo
-            //     
-            //     
-            //         bar
-            //         ```
             //
             // Should be rendered as:
             //     <ul>
@@ -6355,35 +6340,10 @@ namespace Markdig.Tests
             //     <p>foo</p>
             //     <p>bar</p>
             //     </li>
-            //     <li>
-            //     <p>foo</p>
-            //     </li>
-            //     </ul>
-            //     <p>bar</p>
-            //     <ul>
-            //     <li>
-            //     <pre><code>foo
-            //     
-            //     
-            //     bar
-            //     </code></pre>
-            //     </li>
-            //     <li>
-            //     <p>baz</p>
-            //     <ul>
-            //     <li>
-            //     <pre><code>foo
-            //     
-            //     
-            //     bar
-            //     </code></pre>
-            //     </li>
-            //     </ul>
-            //     </li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 223, "Container blocks List items");
-			TestParser.TestSpec("- foo\n\n  bar\n\n- foo\n\n\n  bar\n\n- ```\n  foo\n\n\n  bar\n  ```\n\n- baz\n\n  + ```\n    foo\n\n\n    bar\n    ```", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<p>bar</p>\n<ul>\n<li>\n<pre><code>foo\n\n\nbar\n</code></pre>\n</li>\n<li>\n<p>baz</p>\n<ul>\n<li>\n<pre><code>foo\n\n\nbar\n</code></pre>\n</li>\n</ul>\n</li>\n</ul>", "");
+			TestParser.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
         // A list item may contain any kind of block:
@@ -6425,9 +6385,7 @@ namespace Markdig.Tests
         }
     }
         // A list item that contains an indented code block will preserve
-        // empty lines within the code block verbatim, unless there are two
-        // or more empty lines in a row (since as described above, two
-        // blank lines end the list):
+        // empty lines within the code block verbatim.
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6442,6 +6400,7 @@ namespace Markdig.Tests
             //     
             //           bar
             //     
+            //     
             //           baz
             //
             // Should be rendered as:
@@ -6450,15 +6409,17 @@ namespace Markdig.Tests
             //     <p>Foo</p>
             //     <pre><code>bar
             //     
+            //     
             //     baz
             //     </code></pre>
             //     </li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 225, "Container blocks List items");
-			TestParser.TestSpec("- Foo\n\n      bar\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\nbaz\n</code></pre>\n</li>\n</ul>", "");
+			TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+        // Note that ordered list start numbers must be nine digits or less:
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6469,29 +6430,17 @@ namespace Markdig.Tests
             // Section: Container blocks List items
             //
             // The following CommonMark:
-            //     - Foo
-            //     
-            //           bar
-            //     
-            //     
-            //           baz
+            //     123456789. ok
             //
             // Should be rendered as:
-            //     <ul>
-            //     <li>
-            //     <p>Foo</p>
-            //     <pre><code>bar
-            //     </code></pre>
-            //     </li>
-            //     </ul>
-            //     <pre><code>  baz
-            //     </code></pre>
+            //     <ol start="123456789">
+            //     <li>ok</li>
+            //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 226, "Container blocks List items");
-			TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n<pre><code>  baz\n</code></pre>", "");
+			TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "");
         }
     }
-        // Note that ordered list start numbers must be nine digits or less:
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6502,17 +6451,16 @@ namespace Markdig.Tests
             // Section: Container blocks List items
             //
             // The following CommonMark:
-            //     123456789. ok
+            //     1234567890. not ok
             //
             // Should be rendered as:
-            //     <ol start="123456789">
-            //     <li>ok</li>
-            //     </ol>
+            //     <p>1234567890. not ok</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 227, "Container blocks List items");
-			TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "");
+			TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "");
         }
     }
+        // A start number may begin with 0s:
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6523,16 +6471,17 @@ namespace Markdig.Tests
             // Section: Container blocks List items
             //
             // The following CommonMark:
-            //     1234567890. not ok
+            //     0. ok
             //
             // Should be rendered as:
-            //     <p>1234567890. not ok</p>
+            //     <ol start="0">
+            //     <li>ok</li>
+            //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 228, "Container blocks List items");
-			TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "");
+			TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "");
         }
     }
-        // A start number may begin with 0s:
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6543,17 +6492,18 @@ namespace Markdig.Tests
             // Section: Container blocks List items
             //
             // The following CommonMark:
-            //     0. ok
+            //     003. ok
             //
             // Should be rendered as:
-            //     <ol start="0">
+            //     <ol start="3">
             //     <li>ok</li>
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 229, "Container blocks List items");
-			TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "");
+			TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "");
         }
     }
+        // A start number may not be negative:
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6564,34 +6514,12 @@ namespace Markdig.Tests
             // Section: Container blocks List items
             //
             // The following CommonMark:
-            //     003. ok
-            //
-            // Should be rendered as:
-            //     <ol start="3">
-            //     <li>ok</li>
-            //     </ol>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 230, "Container blocks List items");
-			TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "");
-        }
-    }
-        // A start number may not be negative:
-    [TestFixture]
-    public partial class TestContainerblocksListitems
-    {
-        [Test]
-        public void Example231()
-        {
-            // Example 231
-            // Section: Container blocks List items
-            //
-            // The following CommonMark:
             //     -1. not ok
             //
             // Should be rendered as:
             //     <p>-1. not ok</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 231, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 230, "Container blocks List items");
 			TestParser.TestSpec("-1. not ok", "<p>-1. not ok</p>", "");
         }
     }
@@ -6614,9 +6542,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example232()
+        public void Example231()
         {
-            // Example 232
+            // Example 231
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6633,7 +6561,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 232, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 231, "Container blocks List items");
 			TestParser.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "");
         }
     }
@@ -6642,9 +6570,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example233()
+        public void Example232()
         {
-            // Example 233
+            // Example 232
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6661,7 +6589,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 233, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 232, "Container blocks List items");
 			TestParser.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "");
         }
     }
@@ -6672,9 +6600,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example234()
+        public void Example233()
         {
-            // Example 234
+            // Example 233
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6691,7 +6619,7 @@ namespace Markdig.Tests
             //     <pre><code>more code
             //     </code></pre>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 234, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 233, "Container blocks List items");
 			TestParser.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "");
         }
     }
@@ -6699,9 +6627,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example235()
+        public void Example234()
         {
-            // Example 235
+            // Example 234
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6722,7 +6650,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 235, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 234, "Container blocks List items");
 			TestParser.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
         }
     }
@@ -6732,9 +6660,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example236()
+        public void Example235()
         {
-            // Example 236
+            // Example 235
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6755,7 +6683,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 236, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 235, "Container blocks List items");
 			TestParser.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
         }
     }
@@ -6770,9 +6698,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example237()
+        public void Example236()
         {
-            // Example 237
+            // Example 236
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6784,7 +6712,7 @@ namespace Markdig.Tests
             //     <p>foo</p>
             //     <p>bar</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 237, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 236, "Container blocks List items");
 			TestParser.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "");
         }
     }
@@ -6792,9 +6720,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example238()
+        public void Example237()
         {
-            // Example 238
+            // Example 237
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6808,7 +6736,7 @@ namespace Markdig.Tests
             //     </ul>
             //     <p>bar</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 238, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 237, "Container blocks List items");
 			TestParser.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "");
         }
     }
@@ -6820,9 +6748,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example239()
+        public void Example238()
         {
-            // Example 239
+            // Example 238
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6838,7 +6766,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 239, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 238, "Container blocks List items");
 			TestParser.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
@@ -6859,9 +6787,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example240()
+        public void Example239()
         {
-            // Example 240
+            // Example 239
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6887,7 +6815,7 @@ namespace Markdig.Tests
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 240, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 239, "Container blocks List items");
 			TestParser.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "");
         }
     }
@@ -6897,9 +6825,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example241()
+        public void Example240()
         {
-            // Example 241
+            // Example 240
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6911,7 +6839,7 @@ namespace Markdig.Tests
             //     <li>foo</li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 241, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 240, "Container blocks List items");
 			TestParser.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "");
         }
     }
@@ -6922,9 +6850,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example242()
+        public void Example241()
         {
-            // Example 242
+            // Example 241
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6938,7 +6866,7 @@ namespace Markdig.Tests
             //     </ul>
             //     <p>foo</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 242, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 241, "Container blocks List items");
 			TestParser.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "");
         }
     }
@@ -6947,9 +6875,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example243()
+        public void Example242()
         {
-            // Example 243
+            // Example 242
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6964,7 +6892,7 @@ namespace Markdig.Tests
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 243, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 242, "Container blocks List items");
 			TestParser.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
         }
     }
@@ -6973,9 +6901,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example244()
+        public void Example243()
         {
-            // Example 244
+            // Example 243
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -6990,7 +6918,7 @@ namespace Markdig.Tests
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 244, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 243, "Container blocks List items");
 			TestParser.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
         }
     }
@@ -6999,9 +6927,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example245()
+        public void Example244()
         {
-            // Example 245
+            // Example 244
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -7016,7 +6944,7 @@ namespace Markdig.Tests
             //     <li>bar</li>
             //     </ol>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 245, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 244, "Container blocks List items");
 			TestParser.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "");
         }
     }
@@ -7025,9 +6953,9 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example246()
+        public void Example245()
         {
-            // Example 246
+            // Example 245
             // Section: Container blocks List items
             //
             // The following CommonMark:
@@ -7038,8 +6966,35 @@ namespace Markdig.Tests
             //     <li></li>
             //     </ul>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 246, "Container blocks List items");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 245, "Container blocks List items");
 			TestParser.TestSpec("*", "<ul>\n<li></li>\n</ul>", "");
+        }
+    }
+        // However, an empty list item cannot interrupt a paragraph:
+    [TestFixture]
+    public partial class TestContainerblocksListitems
+    {
+        [Test]
+        public void Example246()
+        {
+            // Example 246
+            // Section: Container blocks List items
+            //
+            // The following CommonMark:
+            //     foo
+            //     *
+            //     
+            //     foo
+            //     1.
+            //
+            // Should be rendered as:
+            //     <p>foo
+            //     *</p>
+            //     <p>foo
+            //     1.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 246, "Container blocks List items");
+			TestParser.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "");
         }
     }
         // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
@@ -7824,36 +7779,18 @@ namespace Markdig.Tests
     }
         // `Markdown.pl` does not allow this, through fear of triggering a list
         // via a numeral in a hard-wrapped line:
-    [TestFixture]
-    public partial class TestContainerblocksLists
-    {
-        [Test]
-        public void Example265()
-        {
-            // Example 265
-            // Section: Container blocks Lists
-            //
-            // The following CommonMark:
-            //     The number of windows in my house is
-            //     14.  The number of doors is 6.
-            //
-            // Should be rendered as:
-            //     <p>The number of windows in my house is</p>
-            //     <ol start="14">
-            //     <li>The number of doors is 6.</li>
-            //     </ol>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 265, "Container blocks Lists");
-			TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol start=\"14\">\n<li>The number of doors is 6.</li>\n</ol>", "");
-        }
-    }
-        // Oddly, `Markdown.pl` *does* allow a blockquote to interrupt a paragraph,
-        // even though the same considerations might apply.  We think that the two
-        // cases should be treated the same.  Here are two reasons for allowing
-        // lists to interrupt paragraphs:
         //
-        // First, it is natural and not uncommon for people to start lists without
-        // blank lines:
+        // ```````````````````````````````` markdown
+        // The number of windows in my house is
+        // 14.  The number of doors is 6.
+        // ````````````````````````````````
+        // Oddly, though, `Markdown.pl` *does* allow a blockquote to
+        // interrupt a paragraph, even though the same considerations might
+        // apply.
+        //
+        // In CommonMark, we do allow lists to interrupt paragraphs, for
+        // two reasons.  First, it is natural and not uncommon for people
+        // to start lists without blank lines:
         //
         // I need to buy
         // - new shoes
@@ -7887,20 +7824,38 @@ namespace Markdig.Tests
         //
         // by itself should be a paragraph followed by a nested sublist.
         //
-        // Our adherence to the [principle of uniformity]
-        // thus inclines us to think that there are two coherent packages:
+        // Since it is well established Markdown practice to allow lists to
+        // interrupt paragraphs inside list items, the [principle of
+        // uniformity] requires us to allow this outside list items as
+        // well.  ([reStructuredText](http://docutils.sourceforge.net/rst.html)
+        // takes a different approach, requiring blank lines before lists
+        // even inside other list items.)
         //
-        // 1.  Require blank lines before *all* lists and blockquotes,
-        // including lists that occur as sublists inside other list items.
-        //
-        // 2.  Require blank lines in none of these places.
-        //
-        // [reStructuredText](http://docutils.sourceforge.net/rst.html) takes
-        // the first approach, for which there is much to be said.  But the second
-        // seems more consistent with established practice with Markdown.
-        //
-        // There can be blank lines between items, but two blank lines end
-        // a list:
+        // In order to solve of unwanted lists in paragraphs with
+        // hard-wrapped numerals, we allow only lists starting with `1` to
+        // interrupt paragraphs.  Thus,
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
+        [Test]
+        public void Example265()
+        {
+            // Example 265
+            // Section: Container blocks Lists
+            //
+            // The following CommonMark:
+            //     The number of windows in my house is
+            //     14.  The number of doors is 6.
+            //
+            // Should be rendered as:
+            //     <p>The number of windows in my house is
+            //     14.  The number of doors is 6.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 265, "Container blocks Lists");
+			TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "");
+        }
+    }
+        // We may still get an unintended result in cases like
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7908,6 +7863,32 @@ namespace Markdig.Tests
         public void Example266()
         {
             // Example 266
+            // Section: Container blocks Lists
+            //
+            // The following CommonMark:
+            //     The number of windows in my house is
+            //     1.  The number of doors is 6.
+            //
+            // Should be rendered as:
+            //     <p>The number of windows in my house is</p>
+            //     <ol>
+            //     <li>The number of doors is 6.</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 266, "Container blocks Lists");
+			TestParser.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "");
+        }
+    }
+        // but this rule should prevent most spurious list captures.
+        //
+        // There can be any number of blank lines between items:
+    [TestFixture]
+    public partial class TestContainerblocksLists
+    {
+        [Test]
+        public void Example267()
+        {
+            // Example 267
             // Section: Container blocks Lists
             //
             // The following CommonMark:
@@ -7926,48 +7907,15 @@ namespace Markdig.Tests
             //     <li>
             //     <p>bar</p>
             //     </li>
-            //     </ul>
-            //     <ul>
-            //     <li>baz</li>
-            //     </ul>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 266, "Container blocks Lists");
-			TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "");
-        }
-    }
-        // As illustrated above in the section on [list items],
-        // two blank lines between blocks *within* a list item will also end a
-        // list:
-    [TestFixture]
-    public partial class TestContainerblocksLists
-    {
-        [Test]
-        public void Example267()
-        {
-            // Example 267
-            // Section: Container blocks Lists
-            //
-            // The following CommonMark:
-            //     - foo
-            //     
-            //     
-            //       bar
-            //     - baz
-            //
-            // Should be rendered as:
-            //     <ul>
-            //     <li>foo</li>
-            //     </ul>
-            //     <p>bar</p>
-            //     <ul>
-            //     <li>baz</li>
+            //     <li>
+            //     <p>baz</p>
+            //     </li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 267, "Container blocks Lists");
-			TestParser.TestSpec("- foo\n\n\n  bar\n- baz", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>\n<ul>\n<li>baz</li>\n</ul>", "");
+			TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "");
         }
     }
-        // Indeed, two blank lines will end *all* containing lists:
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7991,23 +7939,24 @@ namespace Markdig.Tests
             //     <ul>
             //     <li>bar
             //     <ul>
-            //     <li>baz</li>
-            //     </ul>
+            //     <li>
+            //     <p>baz</p>
+            //     <p>bim</p>
             //     </li>
             //     </ul>
             //     </li>
             //     </ul>
-            //     <pre><code>  bim
-            //     </code></pre>
+            //     </li>
+            //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 268, "Container blocks Lists");
-			TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<pre><code>  bim\n</code></pre>", "");
+			TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
-        // Thus, two blank lines can be used to separate consecutive lists of
-        // the same type, or to separate a list from an indented code block
-        // that would otherwise be parsed as a subparagraph of the final list
-        // item:
+        // To separate consecutive lists of the same type, or to separate a
+        // list from an indented code block that would otherwise be parsed
+        // as a subparagraph of the final list item, you can insert a blank HTML
+        // comment:
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8021,6 +7970,7 @@ namespace Markdig.Tests
             //     - foo
             //     - bar
             //     
+            //     <!-- -->
             //     
             //     - baz
             //     - bim
@@ -8030,13 +7980,14 @@ namespace Markdig.Tests
             //     <li>foo</li>
             //     <li>bar</li>
             //     </ul>
+            //     <!-- -->
             //     <ul>
             //     <li>baz</li>
             //     <li>bim</li>
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 269, "Container blocks Lists");
-			TestParser.TestSpec("- foo\n- bar\n\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "");
+			TestParser.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "");
         }
     }
     [TestFixture]
@@ -8055,6 +8006,7 @@ namespace Markdig.Tests
             //     
             //     -   foo
             //     
+            //     <!-- -->
             //     
             //         code
             //
@@ -8068,11 +8020,12 @@ namespace Markdig.Tests
             //     <p>foo</p>
             //     </li>
             //     </ul>
+            //     <!-- -->
             //     <pre><code>code
             //     </code></pre>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 270, "Container blocks Lists");
-			TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<pre><code>code\n</code></pre>", "");
+			TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "");
         }
     }
         // List items need not be indented to the same level.  The following
@@ -10046,13 +9999,11 @@ namespace Markdig.Tests
             //     *
             //
             // Should be rendered as:
-            //     <p>*foo bar</p>
-            //     <ul>
-            //     <li></li>
-            //     </ul>
+            //     <p>*foo bar
+            //     *</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 343, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar</p>\n<ul>\n<li></li>\n</ul>", "");
+			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "");
         }
     }
         // This is not emphasis, because the second `*` is

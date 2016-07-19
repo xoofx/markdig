@@ -138,11 +138,6 @@ namespace Markdig.Parsers
                     list.CountBlankLinesReset++;
                 }
 
-                if (list.CountBlankLinesReset > 1)
-                {
-                    return BlockState.BreakDiscard;
-                }
-
                 if (list.CountBlankLinesReset == 1 && listItem.ColumnWidth < 0)
                 {
                     state.Close(listItem);
@@ -252,6 +247,16 @@ namespace Markdig.Parsers
                 // If the list item starts with a blank line, the number of spaces
                 // following the list marker doesn't change the required indentation
                 columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
+            }
+
+            // Starts/continue the list unless:
+            // - an empty list item follows a paragraph
+            // - an ordered list is not starting by '1'
+            var isPreviousParagraph = (block ?? state.LastBlock) is ParagraphBlock;
+            if (isPreviousParagraph && (state.IsBlankLine || (listInfo.BulletType == '1' && listInfo.OrderedStart != "1")))
+            {
+                state.GoToColumn(initColumn);
+                return BlockState.None;
             }
 
             var newListItem = new ListItemBlock(this)

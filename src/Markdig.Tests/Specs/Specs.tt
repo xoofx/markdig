@@ -39,7 +39,7 @@ SOFTWARE.
 <#@ output extension=".cs" #><#
     var specFiles = new KeyValuePair<string, string>[] {
 		// new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
-		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/ddebcbae1edc53d92ba1148ebd896361d4ffeb8d/spec.txt", string.Empty),
+		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/91e045ca370258903ed138450373043a496ec64b/spec.txt", string.Empty), // 0.26 specs
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes|advanced"),
