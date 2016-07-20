@@ -40,7 +40,7 @@ namespace Markdig.Extensions.Tables
                 foreach (var tableColumnDefinition in table.ColumnDefinitions)
                 {
                     var width = Math.Round(tableColumnDefinition.Width*100)/100;
-                    var widthValue = string.Format(CultureInfo.InvariantCulture, "{0:n2}", width);
+                    var widthValue = string.Format(CultureInfo.InvariantCulture, "{0:0.##}", width);
                     renderer.WriteLine($"<col style=\"width:{widthValue}%\">");
                 }
             }
