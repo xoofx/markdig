@@ -51,14 +51,10 @@ namespace Markdig.Parsers
             document = new MarkdownDocument();
 
             // Initialize the block parsers
-            var blockParserList = new BlockParserList();
-            blockParserList.AddRange(pipeline.BlockParsers);
-            blockProcessor = new BlockProcessor(stringBuilderCache, document, blockParserList);
+            blockProcessor = new BlockProcessor(stringBuilderCache, document, pipeline.BlockParsers);
 
             // Initialize the inline parsers
-            var inlineParserList = new InlineParserList();
-            inlineParserList.AddRange(pipeline.InlineParsers);
-            inlineProcessor = new InlineProcessor(stringBuilderCache, document, inlineParserList, pipeline.PreciseSourceLocation)
+            inlineProcessor = new InlineProcessor(stringBuilderCache, document, pipeline.InlineParsers, pipeline.PreciseSourceLocation)
             {
                 DebugLog = pipeline.DebugLog
             };

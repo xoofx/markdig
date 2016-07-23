@@ -16,60 +16,10 @@ namespace Markdig.Parsers
     /// <seealso cref="Markdig.Helpers.OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
-        private CharacterMap<T[]> charMap;
-        private T[] globalParsers;
+        private readonly CharacterMap<T[]> charMap;
+        private readonly T[] globalParsers;
 
-        protected ParserList()
-        {
-        }
-
-        protected ParserList(IEnumerable<T> parsers) : base(parsers)
-        {
-        }
-
-        /// <summary>
-        /// Gets the list of global parsers (that don't have any opening characters defined)
-        /// </summary>
-        public T[] GlobalParsers => globalParsers;
-
-        /// <summary>
-        /// Gets all the opening characters defined.
-        /// </summary>
-        public char[] OpeningCharacters => charMap.OpeningCharacters;
-
-        /// <summary>
-        /// Gets the list of parsers valid for the specified opening character.
-        /// </summary>
-        /// <param name="openingChar">The opening character.</param>
-        /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public T[] GetParsersForOpeningCharacter(char openingChar)
-        {
-            return charMap[openingChar];
-        }
-
-        /// <summary>
-        /// Searches for an opening character from a registered parser in the specified string.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public int IndexOfOpeningCharacter(string text, int start, int end)
-        {
-            return charMap.IndexOfOpeningCharacter(text, start, end);
-        }
-
-        /// <summary>
-        /// Initializes this instance with specified parser state.
-        /// </summary>
-        /// <param name="initState">State of the initialize.</param>
-        /// <exception cref="System.InvalidOperationException">
-        /// Unexpected null parser found
-        /// or
-        /// </exception>
-        public virtual void Initialize(TState initState)
+        protected ParserList(IEnumerable<T> parsersArg) : base(parsersArg)
         {
             var charCounter = new Dictionary<char, int>();
             int globalCounter = 0;
@@ -82,7 +32,7 @@ namespace Markdig.Parsers
                     throw new InvalidOperationException("Unexpected null parser found");
                 }
 
-                parser.Initialize(initState);
+                parser.Initialize();
                 parser.Index = i;
                 if (parser.OpeningCharacters != null && parser.OpeningCharacters.Length != 0)
                 {
@@ -133,6 +83,51 @@ namespace Markdig.Parsers
             }
 
             charMap = new CharacterMap<T[]>(tempCharMap);
+        }
+
+        /// <summary>
+        /// Gets the list of global parsers (that don't have any opening characters defined)
+        /// </summary>
+        public T[] GlobalParsers => globalParsers;
+
+        /// <summary>
+        /// Gets all the opening characters defined.
+        /// </summary>
+        public char[] OpeningCharacters => charMap.OpeningCharacters;
+
+        /// <summary>
+        /// Gets the list of parsers valid for the specified opening character.
+        /// </summary>
+        /// <param name="openingChar">The opening character.</param>
+        /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public T[] GetParsersForOpeningCharacter(char openingChar)
+        {
+            return charMap[openingChar];
+        }
+
+        /// <summary>
+        /// Searches for an opening character from a registered parser in the specified string.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public int IndexOfOpeningCharacter(string text, int start, int end)
+        {
+            return charMap.IndexOfOpeningCharacter(text, start, end);
+        }
+
+        /// <summary>
+        /// Initializes this instance with specified parser state.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">
+        /// Unexpected null parser found
+        /// or
+        /// </exception>
+        private void Initialize()
+        {
         }
     }
 }

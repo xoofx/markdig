@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -18,14 +20,17 @@ namespace Markdig.Extensions.Tables
     /// <seealso cref="IPostInlineProcessor" />
     public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
-        private LineBreakInlineParser lineBreakParser;
+        private readonly LineBreakInlineParser lineBreakParser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PipeTableParser" /> class.
         /// </summary>
+        /// <param name="lineBreakParser">The linebreak parser to use</param>
         /// <param name="options">The options.</param>
-        public PipeTableParser(PipeTableOptions options = null)
+        public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions options = null)
         {
+            if (lineBreakParser == null) throw new ArgumentNullException(nameof(lineBreakParser));
+            this.lineBreakParser = lineBreakParser;
             OpeningCharacters = new[] { '|', '\n' };
             Options = options ?? new PipeTableOptions();
         }
@@ -34,12 +39,6 @@ namespace Markdig.Extensions.Tables
         /// Gets the options.
         /// </summary>
         public PipeTableOptions Options { get; }
-
-        public override void Initialize(InlineProcessor processor)
-        {
-            // We are using the linebreak parser
-            lineBreakParser = processor.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
-        }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {

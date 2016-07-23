@@ -19,8 +19,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes this parser with the specified parser processor.
         /// </summary>
-        /// <param name="processor">The parser processor.</param>
-        public virtual void Initialize(TProcessor processor)
+        public virtual void Initialize()
         {
         }
 

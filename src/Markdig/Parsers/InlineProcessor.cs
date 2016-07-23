@@ -46,7 +46,6 @@ namespace Markdig.Parsers
             Parsers = parsers;
             PreciseSourceLocation = preciseSourcelocation;
             lineOffsets = new List<StringLineGroup.LineOffset>();
-            Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
             LiteralInlineParser = new LiteralInlineParser();
         }

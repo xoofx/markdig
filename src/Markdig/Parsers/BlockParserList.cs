@@ -15,13 +15,6 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockParserList"/> class.
         /// </summary>
-        public BlockParserList()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BlockParserList"/> class.
-        /// </summary>
         /// <param name="parsers">The parsers.</param>
         public BlockParserList(IEnumerable<BlockParser> parsers) : base(parsers)
         {

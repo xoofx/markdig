@@ -51,7 +51,6 @@ namespace Markdig.Parsers
             Document = document;
             document.IsOpen = true;
             Parsers = parsers;
-            parsers.Initialize(this);
             OpenedBlocks = new List<Block>();
             NewBlocks = new Stack<Block>();
             root = this;

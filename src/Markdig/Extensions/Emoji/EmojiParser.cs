@@ -41,7 +41,7 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public Dictionary<string, string>  SmileyToEmoji { get; }
 
-        public override void Initialize(InlineProcessor processor)
+        public override void Initialize()
         {
             var firstChars = new HashSet<char>();
             var textToMatch = new HashSet<string>();

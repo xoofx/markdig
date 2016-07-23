@@ -33,7 +33,7 @@ namespace Markdig.Parsers
         /// </summary>
         public OrderedList<ListItemParser> ItemParsers { get; }
 
-        public override void Initialize(BlockProcessor processor)
+        public override void Initialize()
         {
             var tempMap = new Dictionary<char, ListItemParser>();
 

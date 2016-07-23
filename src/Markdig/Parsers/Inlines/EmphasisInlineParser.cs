@@ -63,7 +63,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }
 
-        public override void Initialize(InlineProcessor processor)
+        public override void Initialize()
         {
             OpeningCharacters = new char[EmphasisDescriptors.Count];
 
