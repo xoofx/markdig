@@ -17699,6 +17699,131 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+        // A grid table may have cells spanning both columns and rows:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---+---+---+
+            //     | AAAAA | B |
+            //     +---+---+ B +
+            //     | D | E | B |
+            //     + D +---+---+
+            //     | D | CCCCC |
+            //     +---+---+---+
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <tbody>
+            //     <tr>
+            //     <td colspan="2">AAAAA</td>
+            //     <td rowspan="2">B
+            //     B
+            //     B</td>
+            //     </tr>
+            //     <tr>
+            //     <td rowspan="2">D
+            //     D
+            //     D</td>
+            //     <td>E</td>
+            //     </tr>
+            //     <tr>
+            //     <td colspan="2">CCCCC</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Grid Table");
+			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+---+---+ B +\n| D | E | B |\n+ D +---+---+\n| D | CCCCC |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td colspan=\"2\">AAAAA</td>\n<td rowspan=\"2\">B\nB\nB</td>\n</tr>\n<tr>\n<td rowspan=\"2\">D\nD\nD</td>\n<td>E</td>\n</tr>\n<tr>\n<td colspan=\"2\">CCCCC</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+        }
+    }
+        // A grid table may have cells with both colspan and rowspan:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---+---+---+
+            //     | AAAAA | B |
+            //     + AAAAA +---+
+            //     | AAAAA | C |
+            //     +---+---+---+
+            //     | D | E | F |
+            //     +---+---+---+
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <col style="width:33.33%">
+            //     <tbody>
+            //     <tr>
+            //     <td colspan="2" rowspan="2">AAAAA
+            //     AAAAA
+            //     AAAAA</td>
+            //     <td>B</td>
+            //     </tr>
+            //     <tr>
+            //     <td>C</td>
+            //     </tr>
+            //     <tr>
+            //     <td>D</td>
+            //     <td>E</td>
+            //     <td>F</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Grid Table");
+			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ AAAAA +---+\n| AAAAA | C |\n+---+---+---+\n| D | E | F |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td colspan=\"2\" rowspan=\"2\">AAAAA\nAAAAA\nAAAAA</td>\n<td>B</td>\n</tr>\n<tr>\n<td>C</td>\n</tr>\n<tr>\n<td>D</td>\n<td>E</td>\n<td>F</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+        }
+    }
+        // A grid table may not have irregularly shaped cells:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +---+---+---+
+            //     | AAAAA | B |
+            //     + A +---+ B +
+            //     | A | C | B |
+            //     +---+---+---+
+            //     | DDDDD | E |
+            //     +---+---+---+
+            //
+            // Should be rendered as:
+            //     <p>+---+---+---+
+            //     | AAAAA | B |
+            //     + A +---+ B +
+            //     | A | C | B |
+            //     +---+---+---+
+            //     | DDDDD | E |
+            //     +---+---+---+</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Grid Table");
+			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+", "<p>+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+</p>", "gridtables|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:

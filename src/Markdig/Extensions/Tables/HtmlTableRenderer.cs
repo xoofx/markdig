@@ -81,6 +81,10 @@ namespace Markdig.Extensions.Tables
                     {
                         renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
+                    if (cell.RowSpan != 1)
+                    {
+                        renderer.Write($" rowspan=\"{cell.RowSpan}\"");
+                    }
                     var columnIndex = cell.ColumnIndex == -1 ? i : cell.ColumnIndex;
                     if (table.ColumnDefinitions != null && columnIndex < table.ColumnDefinitions.Count)
                     {
@@ -104,7 +108,7 @@ namespace Markdig.Extensions.Tables
                     }
                     renderer.Write(cell);
                     renderer.ImplicitParagraph = previousImplicitParagraph;
-                    
+
                     renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
                 renderer.WriteLine("</tr>");

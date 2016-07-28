@@ -34,5 +34,40 @@ namespace Markdig.Extensions.Tables
         /// Gets or sets the column alignments. May be null.
         /// </summary>
         public List<TableColumnDefinition> ColumnDefinitions { get; private set; }
+
+        /// <summary>
+        /// Checks if the table structure is valid.
+        /// </summary>
+        /// <returns><c>True</c> if the table has rows and the number of cells per row is correct, other wise <c>false</c>.</returns>
+        public bool IsValid()
+        {
+            // A table with no rows is not valid.
+            if (Count == 0)
+            {
+                return false;
+            }
+            var columnCount = ColumnDefinitions.Count;
+            var rows = new int[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                var row = (TableRow)this[i];
+                for (int j = 0; j < row.Count; j++)
+                {
+                    var cell = (TableCell)row[j];
+                    rows[i] += cell.ColumnSpan;
+                    var rowSpan = cell.RowSpan - 1;
+                    while (rowSpan > 0)
+                    {
+                        rows[i + rowSpan] += cell.ColumnSpan;
+                        rowSpan--;
+                    }
+                }
+                if (rows[i] > columnCount)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

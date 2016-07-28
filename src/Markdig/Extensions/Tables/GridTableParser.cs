@@ -1,6 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using System.Collections.Generic;
+using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
 
@@ -10,7 +13,7 @@ namespace Markdig.Extensions.Tables
     {
         public GridTableParser()
         {
-            OpeningCharacters = new[] {'+'};
+            OpeningCharacters = new[] { '+' };
         }
 
         public override BlockState TryOpen(BlockProcessor processor)
@@ -22,65 +25,47 @@ namespace Markdig.Extensions.Tables
             }
 
             var line = processor.Line;
-
-            // A grid table must start with a line like this:
-            // + ------------- + ------------ + ---------------------------------------- +
-            // Spaces are optional
-
             GridTableState tableState = null;
+
             var c = line.CurrentChar;
-            var startPosition = processor.Start;
-            while (true)
+            var lineStart = line.Start;
+            int startPosition = -1;
+            bool hasLeft = false,
+                 hasRight = false;
+
+            while (line.Length > 0)
             {
                 if (c == '+')
                 {
-                    var startCharacter = line.Start;
-                    line.NextChar();
-                    if (line.IsEmptyOrWhitespace())
+                    tableState = tableState ?? new GridTableState { Start = processor.Start, ExpectRow = true };
+                    if (startPosition != -1)
                     {
-                        if (tableState == null)
-                        {
-                            return BlockState.None;
-                        }
-                        break;
+                        hasRight = line.PeekCharAbsolute(line.Start - 1) == ':';
+                        tableState.AddColumn(startPosition - lineStart, line.Start - lineStart, GetAlignment(hasLeft, hasRight));
                     }
-
-                    TableColumnAlign align;
-                    if (TableHelper.ParseColumnHeader(ref line, '-', out align))
-                    {
-                        if (tableState == null)
-                        {
-                            tableState = new GridTableState()
-                            {
-                                Start = processor.Start,
-                                ExpectRow = true,
-                            };
-                        }
-                        tableState.AddColumn(startCharacter - startPosition, line.Start - 1 - startPosition, align);
-
-                        c = line.CurrentChar;
-                        continue;
-                    }
+                    hasLeft = line.PeekChar(1) == ':';
+                    startPosition = line.Start;
                 }
-
-                // If we have any other characters, this is an invalid line
+                else if (c != ':' && c != '-')
+                {
+                    return BlockState.None;
+                }
+                c = line.NextChar();
+            }
+            if (tableState == null || tableState.ColumnSlices.Count == (processor.Line.Length - 1))
+            {
                 return BlockState.None;
             }
-
             // Store the line (if we need later to build a ParagraphBlock because the GridTable was in fact invalid)
             tableState.AddLine(ref processor.Line);
-
-            // Create the grid table
             var table = new Table(this);
-
             table.SetData(typeof(GridTableState), tableState);
-
 
             // Calculate the total width of all columns
             int totalWidth = 0;
             foreach (var columnSlice in tableState.ColumnSlices)
             {
-                totalWidth += columnSlice.End - columnSlice.Start;
+                totalWidth += columnSlice.End - columnSlice.Start - 1;
             }
 
             // Store the column width and alignment
@@ -89,8 +74,8 @@ namespace Markdig.Extensions.Tables
                 var columnDefinition = new TableColumnDefinition
                 {
                     // Column width proportional to the total width
-                    Width = (float)(columnSlice.End - columnSlice.Start) * 100.0f / totalWidth,
-                    Alignment = columnSlice.Align,
+                    Width = (float)(columnSlice.End - columnSlice.Start - 1) * 100.0f / totalWidth,
+                    Alignment = columnSlice.Align
                 };
                 table.ColumnDefinitions.Add(columnDefinition);
             }
@@ -100,205 +85,99 @@ namespace Markdig.Extensions.Tables
             return BlockState.ContinueDiscard;
         }
 
+        private static TableColumnAlign GetAlignment(bool hasLeft, bool hasRight)
+        {
+            return hasLeft && hasRight
+                ? TableColumnAlign.Center
+                : hasRight ? TableColumnAlign.Right : TableColumnAlign.Left;
+        }
+
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            var gridTable = (Table) block;
+            var gridTable = (Table)block;
             var tableState = (GridTableState)block.GetData(typeof(GridTableState));
-
-            // We expect to start at the same 
-            //if (processor.Start == tableState.Start)
+            tableState.AddLine(ref processor.Line);
+            if (processor.CurrentChar == '+')
             {
-                var columns = tableState.ColumnSlices;
-
-                foreach (var columnSlice in columns)
-                {
-                    columnSlice.PreviousColumnSpan = columnSlice.CurrentColumnSpan;
-                    columnSlice.CurrentColumnSpan = 0;
-                }
-
-                if (processor.CurrentChar == '+')
-                {
-                    var result = ParseRowSeparator(processor, tableState, gridTable);
-                    if (result != BlockState.None)
-                    {
-                        return result;
-                    }
-                }
-                else if (processor.CurrentChar == '|')
-                {
-                    var line = processor.Line;
-
-                    // | ------------- | ------------ | ---------------------------------------- |
-                    // Calculate the colspan for the new row
-                    int columnIndex = -1;
-                    for (int i = 0; i < columns.Count; i++)
-                    {
-                        var columnSlice = columns[i];
-                        if (line.PeekCharExtra(columnSlice.Start) == '|')
-                        {
-                            columnIndex = i;
-                        }
-                        if (columnIndex >= 0)
-                        {
-                            columns[columnIndex].CurrentColumnSpan++;
-                        }
-                    }
-
-                    // Check if the colspan of the current row is the same than the previous row
-                    bool continueRow = true;
-                    foreach (var columnSlice in columns)
-                    {
-                        if (columnSlice.PreviousColumnSpan != columnSlice.CurrentColumnSpan)
-                        {
-                            continueRow = false;
-                            break;
-                        }
-                    }
-
-                    // If the current row doesn't continue the previous row (col span are different)
-                    // Close the previous row
-                    if (!continueRow)
-                    {
-                        TerminateLastRow(processor, tableState, gridTable, false);
-                    }
-
-                    for (int i = 0; i < columns.Count;)
-                    {
-                        var column = columns[i];
-                        var nextColumnIndex = i + column.CurrentColumnSpan;
-                        // If the span is 0, we exit
-                        if (nextColumnIndex == i)
-                        {
-                            break;
-                        }
-                        var nextColumn = nextColumnIndex < columns.Count ? columns[nextColumnIndex] : null;
-
-                        var sliceForCell = line;
-                        sliceForCell.Start = line.Start + column.Start + 1;
-                        if (nextColumn != null)
-                        {
-                            sliceForCell.End = line.Start + nextColumn.Start - 1;
-                        }
-                        else
-                        {
-                            var columnEnd = columns[columns.Count - 1].End;
-                            // If there is a `|` exactly at the expected end of the table row, we cut the line
-                            // otherwise we allow to have the last cell of a row to be open for longer cell content
-                            if (line.PeekCharExtra(columnEnd + 1) == '|')
-                            {
-                                sliceForCell.End = line.Start + columnEnd;
-                            }
-                        }
-                        sliceForCell.TrimEnd();
-
-                        // Process the content of the cell
-                        column.BlockProcessor.LineIndex = processor.LineIndex;
-                        column.BlockProcessor.ProcessLine(sliceForCell);
-
-                        // Go to next column
-                        i = nextColumnIndex;
-                    }
-
-                    return BlockState.ContinueDiscard;
-                }
+                return HandleNewRow(processor, tableState, gridTable);
             }
-
-            TerminateLastRow(processor, tableState, gridTable, true);
-
-            // If we don't have a row, it means that only the header was valid
-            // So we need to remove the grid table, and create a ParagraphBlock
-            // with the 2 slices 
-            if (gridTable.Count == 0)
+            if (processor.CurrentChar == '|')
             {
-                var parser = processor.Parsers.FindExact<ParagraphBlockParser>();
-                // Discard the grid table
-                var parent = gridTable.Parent;
-                processor.Discard(gridTable);
-                var paragraphBlock = new ParagraphBlock(parser)
-                {
-                    Lines = tableState.Lines,
-                };
-                parent.Add(paragraphBlock);
-                processor.Open(paragraphBlock);
+                return HandleContents(processor, tableState, gridTable);
             }
-
+            TerminateCurrentRow(processor, tableState, gridTable, true);
+            // If the table is not valid we need to remove the grid table, 
+            // and create a ParagraphBlock with the slices 
+            if (!gridTable.IsValid())
+            {
+                Undo(processor, tableState, gridTable);
+            }
             return BlockState.Break;
         }
 
-        public override bool Close(BlockProcessor processor, Block block)
+        private BlockState HandleNewRow(BlockProcessor processor, GridTableState tableState, Table gridTable)
         {
-            // Work only on Table, not on TableCell
-            var gridTable = block as Table;
-            if (gridTable != null)
+            bool isHeaderRow, hasRowSpan;
+            var columns = tableState.ColumnSlices;
+            SetRowSpanState(columns, processor.Line, out isHeaderRow, out hasRowSpan);
+            SetColumnSpanState(columns, processor.Line);
+            TerminateCurrentRow(processor, tableState, gridTable, false);
+            if (isHeaderRow)
             {
-                var tableState = (GridTableState) block.GetData(typeof (GridTableState));
-                TerminateLastRow(processor, tableState, gridTable, true);
+                for (int i = 0; i < gridTable.Count; i++)
+                {
+                    var row = (TableRow)gridTable[i];
+                    row.IsHeader = true;
+                }
+            }
+            tableState.StartRowGroup = gridTable.Count;
+            if (hasRowSpan)
+            {
+                HandleContents(processor, tableState, gridTable);
+            }
+            return BlockState.ContinueDiscard;
+        }
+
+        private static void SetRowSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line, out bool isHeaderRow, out bool hasRowSpan)
+        {
+            var lineStart = line.Start;
+            isHeaderRow = line.PeekChar(1) == '=' || line.PeekChar(2) == '=';
+            hasRowSpan = false;
+            foreach (var columnSlice in columns)
+            {
+                if (columnSlice.CurrentCell != null)
+                {
+                    line.Start = lineStart + columnSlice.Start + 1;
+                    line.End = lineStart + columnSlice.End - 1;
+                    line.Trim();
+                    if (line.IsEmptyOrWhitespace() || !IsRowSeperator(line))
+                    {
+                        hasRowSpan = true;
+                        columnSlice.CurrentCell.RowSpan++;
+                        columnSlice.CurrentCell.AllowClose = false;
+                    }
+                    else
+                    {
+                        columnSlice.CurrentCell.AllowClose = true;
+                    }
+                }
+            }
+        }
+
+        private static bool IsRowSeperator(StringSlice slice)
+        {
+            while (slice.Length > 0)
+            {
+                if (slice.CurrentChar != '-' && slice.CurrentChar != '=' && slice.CurrentChar != ':')
+                {
+                    return false;
+                }
+                slice.NextChar();
             }
             return true;
         }
 
-        private BlockState ParseRowSeparator(BlockProcessor state, GridTableState tableState, Table gridTable)
-        {
-            // A grid table must start with a line like this:
-            // + ------------- + ------------ + ---------------------------------------- +
-            // Spaces are optional
-
-            var line = state.Line;
-            var c = line.CurrentChar;
-            bool isFirst = true;
-            var delimiterChar = '\0';
-            while (true)
-            {
-                if (c == '+')
-                {
-                    line.NextChar();
-                    if (line.IsEmptyOrWhitespace())
-                    {
-                        if (isFirst)
-                        {
-                            return BlockState.None;
-                        }
-                        break;
-                    }
-
-                    TableColumnAlign align;
-                    if (TableHelper.ParseColumnHeaderDetect(ref line, ref delimiterChar, out align))
-                    {
-                        isFirst = false;
-                        c = line.CurrentChar;
-                        continue;
-                    }
-                }
-
-                // If we have any other characters, this is an invalid line
-                return BlockState.None;
-            }
-
-            // If we have an header row
-            var isHeader = delimiterChar == '=';
-
-            // Terminate the current row
-            TerminateLastRow(state, tableState, gridTable, false);
-
-            // If we had a header row separator, we can mark all rows since last row separator 
-            // to be header rows
-            if (isHeader)
-            {
-                for (int i = tableState.StartRowGroup; i < gridTable.Count; i++)
-                {
-                    var row = (TableRow) gridTable[i];
-                    row.IsHeader = true;
-                }
-            }
-
-            // Makr the next start row group continue on the next row
-            tableState.StartRowGroup = gridTable.Count;
-
-            // We don't keep the line
-            return BlockState.ContinueDiscard;
-        }
-
-        private void TerminateLastRow(BlockProcessor state, GridTableState tableState, Table gridTable, bool isLastRow)
+        private static void TerminateCurrentRow(BlockProcessor processor, GridTableState tableState, Table gridTable, bool isLastRow)
         {
             var columns = tableState.ColumnSlices;
             TableRow currentRow = null;
@@ -311,47 +190,180 @@ namespace Markdig.Extensions.Tables
                     {
                         currentRow = new TableRow();
                     }
-                    currentRow.Add(columnSlice.CurrentCell);
-                    columnSlice.BlockProcessor.Close(columnSlice.CurrentCell);
+                    // If this cell does not already belong to a row
+                    if (columnSlice.CurrentCell.Parent == null)
+                    {
+                        currentRow.Add(columnSlice.CurrentCell);
+                    }
+                    // If the cell is not going to span through to the next row
+                    if (columnSlice.CurrentCell.AllowClose)
+                    {
+                        columnSlice.BlockProcessor.Close(columnSlice.CurrentCell);
+                    }
                 }
 
                 // Renew the block parser processor (or reset it for the last row)
-                if (columnSlice.BlockProcessor != null)
+                if (columnSlice.BlockProcessor != null && (columnSlice.CurrentCell == null || columnSlice.CurrentCell.AllowClose))
                 {
                     columnSlice.BlockProcessor.ReleaseChild();
-                    columnSlice.BlockProcessor = isLastRow ? null : state.CreateChild();
+                    columnSlice.BlockProcessor = isLastRow ? null : processor.CreateChild();
                 }
 
                 // Create or erase the cell
-                if (isLastRow || columnSlice.CurrentColumnSpan == 0)
+                if (isLastRow || columnSlice.CurrentColumnSpan == 0 || (columnSlice.CurrentCell != null && columnSlice.CurrentCell.AllowClose))
                 {
                     // We don't need the cell anymore if we have a last row
                     // Or the cell has a columnspan == 0
+                    // And the cell does not have to be kept open to span rows
                     columnSlice.CurrentCell = null;
-                }
-                else
-                {
-                    // Else we can create a new cell
-                    columnSlice.CurrentCell = new TableCell(this)
-                    {
-                        ColumnSpan = columnSlice.CurrentColumnSpan,
-                        ColumnIndex = i
-                    };
-
-                    if (columnSlice.BlockProcessor == null)
-                    {
-                        columnSlice.BlockProcessor = state.CreateChild();
-                    }
-
-                    // Ensure that the BlockParser is aware that the TableCell is the top-level container
-                    columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);
                 }
             }
 
-            if (currentRow != null)
+            if (currentRow != null && currentRow.Count > 0)
             {
                 gridTable.Add(currentRow);
             }
+        }
+
+        private BlockState HandleContents(BlockProcessor processor, GridTableState tableState, Table gridTable)
+        {
+            var isRowLine = processor.CurrentChar == '+';
+            var columns = tableState.ColumnSlices;
+            var line = processor.Line;
+            SetColumnSpanState(columns, line);
+            if (!isRowLine && !CanContinueRow(columns))
+            {
+                TerminateCurrentRow(processor, tableState, gridTable, false);
+            }
+            for (int i = 0; i < columns.Count;)
+            {
+                var columnSlice = columns[i];
+                var nextColumnIndex = i + columnSlice.CurrentColumnSpan;
+                // If the span is 0, we exit
+                if (nextColumnIndex == i)
+                {
+                    break;
+                }
+                var nextColumn = nextColumnIndex < columns.Count ? columns[nextColumnIndex] : null;
+
+                var sliceForCell = line;
+                sliceForCell.Start = line.Start + columnSlice.Start + 1;
+                if (nextColumn != null)
+                {
+                    sliceForCell.End = line.Start + nextColumn.Start - 1;
+                }
+                else
+                {
+                    var columnEnd = columns[columns.Count - 1].End;
+                    var columnEndChar = line.PeekCharExtra(columnEnd);
+                    // If there is a `|` (or a `+` in the case that we are dealing with a row line 
+                    // with spanned contents) exactly at the expected end of the table row, we cut the line
+                    // otherwise we allow to have the last cell of a row to be open for longer cell content
+                    if (columnEndChar == '|' || (isRowLine && columnEndChar == '+'))
+                    {
+                        sliceForCell.End = line.Start + columnEnd - 1;
+                    }
+                    else if (line.PeekCharExtra(line.End) == '|')
+                    {
+                        sliceForCell.End = line.End - 1;
+                    }
+                }
+                sliceForCell.TrimEnd();
+
+                if (!isRowLine || !IsRowSeperator(sliceForCell))
+                {
+                    if (columnSlice.CurrentCell == null)
+                    {
+                        columnSlice.CurrentCell = new TableCell(this)
+                        {
+                            ColumnSpan = columnSlice.CurrentColumnSpan,
+                            ColumnIndex = i
+                        };
+
+                        if (columnSlice.BlockProcessor == null)
+                        {
+                            columnSlice.BlockProcessor = processor.CreateChild();
+                        }
+
+                        // Ensure that the BlockParser is aware that the TableCell is the top-level container
+                        columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);
+                    }
+                    // Process the content of the cell
+                    columnSlice.BlockProcessor.LineIndex = processor.LineIndex;
+                    columnSlice.BlockProcessor.ProcessLine(sliceForCell);
+                }
+
+                // Go to next column
+                i = nextColumnIndex;
+            }
+            return BlockState.ContinueDiscard;
+        }
+
+        private static void SetColumnSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line)
+        {
+            foreach (var columnSlice in columns)
+            {
+                columnSlice.PreviousColumnSpan = columnSlice.CurrentColumnSpan;
+                columnSlice.CurrentColumnSpan = 0;
+            }
+            // | ------------- | ------------ | ---------------------------------------- |
+            // Calculate the colspan for the new row
+            int columnIndex = -1;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var columnSlice = columns[i];
+                var peek = line.PeekChar(columnSlice.Start);
+                if (peek == '|' || peek == '+')
+                {
+                    columnIndex = i;
+                }
+                if (columnIndex >= 0)
+                {
+                    columns[columnIndex].CurrentColumnSpan++;
+                }
+            }
+        }
+
+        private static bool CanContinueRow(List<GridTableState.ColumnSlice> columns)
+        {
+            foreach (var columnSlice in columns)
+            {
+                if (columnSlice.PreviousColumnSpan != columnSlice.CurrentColumnSpan)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static void Undo(BlockProcessor processor, GridTableState tableState, Table gridTable)
+        {
+            var parser = processor.Parsers.FindExact<ParagraphBlockParser>();
+            // Discard the grid table
+            var parent = gridTable.Parent;
+            processor.Discard(gridTable);
+            var paragraphBlock = new ParagraphBlock(parser)
+            {
+                Lines = tableState.Lines,
+            };
+            parent.Add(paragraphBlock);
+            processor.Open(paragraphBlock);
+        }
+
+        public override bool Close(BlockProcessor processor, Block block)
+        {
+            // Work only on Table, not on TableCell
+            var gridTable = block as Table;
+            if (gridTable != null)
+            {
+                var tableState = (GridTableState)block.GetData(typeof(GridTableState));
+                TerminateCurrentRow(processor, tableState, gridTable, true);
+                if (!gridTable.IsValid())
+                {
+                    Undo(processor, tableState, gridTable);
+                }
+            }
+            return true;
         }
     }
 }
