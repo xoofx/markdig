@@ -319,7 +319,8 @@ namespace Markdig.Parsers.Inlines
 
                             if (closeDelimiter.DelimiterCount == 0)
                             {
-                                closeDelimiter.MoveChildrenAfter(emphasis);
+                                var newParent = openDelimiter.DelimiterCount > 0 ? emphasis : emphasis.Parent;
+                                closeDelimiter.MoveChildrenAfter(newParent);
                                 closeDelimiter.Remove();
                                 delimiters.RemoveAt(i);
                                 i--;
