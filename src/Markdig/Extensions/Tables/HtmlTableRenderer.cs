@@ -85,9 +85,9 @@ namespace Markdig.Extensions.Tables
                     {
                         renderer.Write($" rowspan=\"{cell.RowSpan}\"");
                     }
-                    var columnIndex = cell.ColumnIndex == -1 ? i : cell.ColumnIndex;
-                    if (table.ColumnDefinitions != null && columnIndex < table.ColumnDefinitions.Count)
+                    if (table.ColumnDefinitions != null)
                     {
+                        var columnIndex = cell.ColumnIndex == -1 || cell.ColumnIndex > table.ColumnDefinitions.Count ? i : cell.ColumnIndex;
                         switch (table.ColumnDefinitions[columnIndex].Alignment)
                         {
                             case TableColumnAlign.Center:
