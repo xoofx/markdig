@@ -63,6 +63,7 @@ namespace Markdig.Extensions.Mathematics
             int closeDollars = 0;
 
             var start = slice.Start;
+            var end = 0;
             pc = match;
             while (c != '\0')
             {
@@ -101,7 +102,7 @@ namespace Markdig.Extensions.Mathematics
                 {
                     return false;
                 }
-
+                end = slice.Start - 1;
                 // Create a new MathInline
                 int line;
                 int column;
@@ -116,7 +117,7 @@ namespace Markdig.Extensions.Mathematics
                 };
                 inline.Content.Start = start;
                 // We substract the end to the number of opening $ to keep inside the block the additionals $
-                inline.Content.End = inline.Content.End - openDollars;
+                inline.Content.End = end - openDollars;
 
                 // Add the default class if necessary
                 if (DefaultClass != null)
