@@ -110,6 +110,7 @@ namespace Markdig.Extensions.DefinitionLists
             if (lastBlock is BlankLineBlock)
             {
                 lastBlock = previousParent[index - 1];
+                previousParent.RemoveAt(index);
             }
             return lastBlock as DefinitionList;
         }
