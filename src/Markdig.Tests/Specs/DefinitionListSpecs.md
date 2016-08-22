@@ -105,3 +105,28 @@ Term 1
 <pre><code>: Not valid
 </code></pre>
 ````````````````````````````````
+
+Definition lists can be nested inside list items
+
+```````````````````````````````` example
+1.  First
+    
+2.  Second
+    
+    Term 1
+    :   Definition
+    
+    Term 2
+    :   Second Definition
+.
+<ol>
+<li><p>First</p></li>
+<li><p>Second</p>
+<dl>
+<dt>Term 1</dt>
+<dd>Definition</dd>
+<dt>Term 2</dt>
+<dd>Second Definition</dd>
+</dl></li>
+</ol>
+````````````````````````````````

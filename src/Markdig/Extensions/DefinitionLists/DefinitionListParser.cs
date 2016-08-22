@@ -51,8 +51,7 @@ namespace Markdig.Extensions.DefinitionLists
             }
 
             var previousParent = paragraphBlock.Parent;
-            var indexOfParagraph = previousParent.IndexOf(paragraphBlock);
-            var currentDefinitionList = indexOfParagraph - 1 >= 0 ? previousParent[indexOfParagraph - 1] as DefinitionList : null;
+            var currentDefinitionList = GetCurrentDefinitionList(paragraphBlock, previousParent);
 
             processor.Discard(paragraphBlock);
 
@@ -101,6 +100,18 @@ namespace Markdig.Extensions.DefinitionLists
             currentDefinitionList.UpdateSpanEnd(processor.Line.End);
 
             return BlockState.Continue;
+        }
+
+        private static DefinitionList GetCurrentDefinitionList(ParagraphBlock paragraphBlock, ContainerBlock previousParent)
+        {
+            var index = previousParent.IndexOf(paragraphBlock) - 1;
+            if (index < 0) return null;
+            var lastBlock = previousParent[index];
+            if (lastBlock is BlankLineBlock)
+            {
+                lastBlock = previousParent[index - 1];
+            }
+            return lastBlock as DefinitionList;
         }
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)

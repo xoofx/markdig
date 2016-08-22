@@ -18085,6 +18085,43 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes|advanced");
         }
     }
+        // Definition lists can be nested inside list items
+    [TestFixture]
+    public partial class TestExtensionsDefinitionlists
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Definition lists
+            //
+            // The following CommonMark:
+            //     1.  First
+            //         
+            //     2.  Second
+            //         
+            //         Term 1
+            //         :   Definition
+            //         
+            //         Term 2
+            //         :   Second Definition
+            //
+            // Should be rendered as:
+            //     <ol>
+            //     <li><p>First</p></li>
+            //     <li><p>Second</p>
+            //     <dl>
+            //     <dt>Term 1</dt>
+            //     <dd>Definition</dd>
+            //     <dt>Term 2</dt>
+            //     <dd>Second Definition</dd>
+            //     </dl></li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Definition lists");
+			TestParser.TestSpec("1.  First\n    \n2.  Second\n    \n    Term 1\n    :   Definition\n    \n    Term 2\n    :   Second Definition", "<ol>\n<li><p>First</p></li>\n<li><p>Second</p>\n<dl>\n<dt>Term 1</dt>\n<dd>Definition</dd>\n<dt>Term 2</dt>\n<dd>Second Definition</dd>\n</dl></li>\n</ol>", "definitionlists+attributes|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
