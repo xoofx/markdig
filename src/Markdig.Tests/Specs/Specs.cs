@@ -18662,7 +18662,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics|advanced");
         }
     }
-        // A mathematic block takes precedence over standard emphasis `*` `_`:
+        // Regular text can come both before and after the math inline
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -18673,12 +18673,32 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
+            //     This is a $math block$ with text on both sides.
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math block</span> with text on both sides.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">math block</span> with text on both sides.</p>", "mathematics|advanced");
+        }
+    }
+        // A mathematic block takes precedence over standard emphasis `*` `_`:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
             //     This is *a $math* block$
             //
             // Should be rendered as:
             //     <p>This is *a <span class="math">math* block</span></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Math Inline");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Inline");
 			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics|advanced");
         }
     }
@@ -18690,9 +18710,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathBlock
     {
         [Test]
-        public void Example010()
+        public void Example011()
         {
-            // Example 10
+            // Example 11
             // Section: Extensions Math Block
             //
             // The following CommonMark:
@@ -18710,7 +18730,7 @@ namespace Markdig.Tests
             //     \end{equation}
             //     </div>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Block");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Math Block");
 			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "mathematics|advanced");
         }
     }

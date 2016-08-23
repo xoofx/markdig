@@ -68,6 +68,13 @@ This is a $$$math block$$$
 <p>This is a <span class="math">$math block$</span></p>
 ````````````````````````````````
 
+Regular text can come both before and after the math inline
+
+```````````````````````````````` example
+This is a $math block$ with text on both sides.
+.
+<p>This is a <span class="math">math block</span> with text on both sides.</p>
+````````````````````````````````
 A mathematic block takes precedence over standard emphasis `*` `_`:
 
 ```````````````````````````````` example
