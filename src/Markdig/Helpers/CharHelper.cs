@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Helper class for handling characters.
     /// </summary>
@@ -17,6 +19,9 @@ namespace Markdig.Helpers
         public const char ZeroSafeChar = '\uFFFD';
 
         public const string ZeroSafeString = "\uFFFD";
+
+        // We don't support LCDM
+        private static IDictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
 
         public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
         {
@@ -78,6 +83,26 @@ namespace Markdig.Helpers
         {
             // We don't support LCDM
             return c == 'I' || c == 'V' || c == 'X';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static int RomanToArabic(string text)
+        {
+            int result = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                var character = Char.ToUpper(text[i]);
+                var candidate = romanMap[character];
+                if (i + 1 < text.Length && candidate < romanMap[Char.ToUpper(text[i + 1])])
+                {
+                    result -= candidate;
+                }
+                else
+                {
+                    result += candidate;
+                }
+            }
+            return result;
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
