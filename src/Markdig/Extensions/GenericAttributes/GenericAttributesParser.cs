@@ -64,7 +64,7 @@ namespace Markdig.Extensions.GenericAttributes
                 }
 
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
-                attributes.CopyTo(currentHtmlAttributes, false, false);
+                attributes.CopyTo(currentHtmlAttributes, true, false);
 
                 // Update the position of the attributes
                 int line;
