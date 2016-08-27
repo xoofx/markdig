@@ -38,7 +38,7 @@ Like for numbered list, a list can start with a different letter
 b. First item
 c. Second item
 .
-<ol type="a" start="b">
+<ol type="a" start="2">
 <li>First item</li>
 <li>Second item</li>
 </ol>
@@ -100,7 +100,7 @@ Like for numbered list, a list can start with a different letter
 ii. First item
 iii. Second item
 .
-<ol type="i" start="ii">
+<ol type="i" start="2">
 <li>First item</li>
 <li>Second item</li>
 </ol>

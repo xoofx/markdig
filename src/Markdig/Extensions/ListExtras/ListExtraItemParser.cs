@@ -7,6 +7,8 @@ using Markdig.Parsers;
 
 namespace Markdig.Extensions.ListExtras
 {
+    using System;
+
     /// <summary>
     /// Parser that adds supports for parsing alpha/roman list items (e.g: `a)` or `a.` or `ii.` or `II.`)
     /// </summary>
@@ -52,7 +54,7 @@ namespace Markdig.Extensions.ListExtras
                     c = state.NextChar();
                 }
 
-                result.OrderedStart = state.Line.Text.Substring(startChar, endChar - startChar + 1);
+                result.OrderedStart = CharHelper.RomanToArabic(state.Line.Text.Substring(startChar, endChar - startChar + 1)).ToString();
                 result.BulletType = isRomanLow ? 'i' : 'I';
                 result.DefaultOrderedStart = isRomanLow ? "i" : "I";
             }
@@ -60,7 +62,7 @@ namespace Markdig.Extensions.ListExtras
             {
                 // otherwise we expect a regular alpha lettered list with a single character.
                 var isUpper = c.IsAlphaUpper();
-                result.OrderedStart = c.ToString();
+                result.OrderedStart = (Char.ToUpper(c) - 64).ToString();
                 result.BulletType = isUpper ? 'A' : 'a';
                 result.DefaultOrderedStart = isUpper ? "A" : "a";
                 state.NextChar();

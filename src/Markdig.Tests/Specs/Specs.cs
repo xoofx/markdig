@@ -18300,13 +18300,13 @@ namespace Markdig.Tests
             //     c. Second item
             //
             // Should be rendered as:
-            //     <ol type="a" start="b">
+            //     <ol type="a" start="2">
             //     <li>First item</li>
             //     <li>Second item</li>
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Ordered list with alpha letter");
-			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"b\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
+			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
         // A different type of list will break the existing list:
@@ -18410,13 +18410,13 @@ namespace Markdig.Tests
             //     iii. Second item
             //
             // Should be rendered as:
-            //     <ol type="i" start="ii">
+            //     <ol type="i" start="2">
             //     <li>First item</li>
             //     <li>Second item</li>
             //     </ol>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Ordered list with roman letter");
-			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"ii\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
+			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
         // # Extensions
