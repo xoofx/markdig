@@ -105,3 +105,21 @@ iii. Second item
 <li>Second item</li>
 </ol>
 ````````````````````````````````
+
+Lists can be restarted, specifying the start point.
+
+```````````````````````````````` example
+1.   First item
+
+Some text
+
+2.   Second item
+.
+<ol>
+<li>First item</li>
+</ol>
+<p>Some text</p>
+<ol start="2">
+<li>Second item</li>
+</ol>
+````````````````````````````````

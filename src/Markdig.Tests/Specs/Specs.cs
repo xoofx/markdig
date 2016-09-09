@@ -18419,6 +18419,36 @@ namespace Markdig.Tests
 			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
+        // Lists can be restarted, specifying the start point.
+    [TestFixture]
+    public partial class TestExtensionsOrderedlistwithromanletter
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Ordered list with roman letter
+            //
+            // The following CommonMark:
+            //     1.   First item
+            //     
+            //     Some text
+            //     
+            //     2.   Second item
+            //
+            // Should be rendered as:
+            //     <ol>
+            //     <li>First item</li>
+            //     </ol>
+            //     <p>Some text</p>
+            //     <ol start="2">
+            //     <li>Second item</li>
+            //     </ol>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Ordered list with roman letter");
+			TestParser.TestSpec("1.   First item\n\nSome text\n\n2.   Second item", "<ol>\n<li>First item</li>\n</ol>\n<p>Some text</p>\n<ol start=\"2\">\n<li>Second item</li>\n</ol>", "listextras|advanced");
+        }
+    }
         // # Extensions
         //
         // The following the figure extension:

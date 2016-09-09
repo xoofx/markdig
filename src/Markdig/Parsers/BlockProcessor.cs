@@ -401,6 +401,11 @@ namespace Markdig.Parsers
             parserStateCache.Release(this);
         }
 
+        internal bool IsOpen(Block block)
+        {
+            return OpenedBlocks.Contains(block);
+        }
+
         /// <summary>
         /// Closes a block at the specified index.
         /// </summary>
