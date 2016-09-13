@@ -18227,6 +18227,30 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations|advanced");
         }
     }
+        // Abbreviations may be similar:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[1A]: First
+            //     *[1A1]: Second
+            //     *[1A2]: Third
+            //     
+            //     We can abbreviate 1A, 1A1 and 1A2!
+            //
+            // Should be rendered as:
+            //     <p>We can abbreviate <abbr title="First">1A</abbr>, <abbr title="Second">1A1</abbr> and <abbr title="Third">1A2</abbr>!</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Abbreviation");
+			TestParser.TestSpec("*[1A]: First\n*[1A1]: Second\n*[1A2]: Third\n\nWe can abbreviate 1A, 1A1 and 1A2!", "<p>We can abbreviate <abbr title=\"First\">1A</abbr>, <abbr title=\"Second\">1A1</abbr> and <abbr title=\"Third\">1A2</abbr>!</p>", "abbreviations|advanced");
+        }
+    }
         // # Extensions
         //
         // The following additional list items are supported:
