@@ -45,3 +45,15 @@ This is a 😃 HTML document
 .
 <p>This is a <abbr title="Hypertext Markup Language">😃 HTML</abbr> document</p>
 ````````````````````````````````
+
+Abbreviations may be similar:
+
+```````````````````````````````` example
+*[1A]: First
+*[1A1]: Second
+*[1A2]: Third
+
+We can abbreviate 1A, 1A1 and 1A2!
+.
+<p>We can abbreviate <abbr title="First">1A</abbr>, <abbr title="Second">1A1</abbr> and <abbr title="Third">1A2</abbr>!</p>
+````````````````````````````````

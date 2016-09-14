@@ -53,16 +53,16 @@ namespace Markdig.Helpers
                 CharNode nextNode;
                 if (!node.TryGetValue(c, out nextNode))
                 {
-                    return false;
+                    break;
                 }
                 node = nextNode;
-                if (node.Content != null)
-                {
-                    match = node.Content;
-                    return true;
-                }
                 offset++;
                 length--;
+            }
+            if (node.Content != null)
+            {
+                match = node.Content;
+                return true;
             }
             return false;
         }
