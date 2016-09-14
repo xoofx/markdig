@@ -253,10 +253,14 @@ namespace Markdig.Parsers
             // - an empty list item follows a paragraph
             // - an ordered list is not starting by '1'
             var isPreviousParagraph = (block ?? state.LastBlock) is ParagraphBlock;
-            if (isPreviousParagraph && (state.IsBlankLine || (listInfo.BulletType == '1' && listInfo.OrderedStart != "1")))
+            if (isPreviousParagraph)
             {
-                state.GoToColumn(initColumn);
-                return BlockState.None;
+                var isOpen = state.IsOpen(block ?? state.LastBlock);
+                if (state.IsBlankLine || (isOpen && listInfo.BulletType == '1' && listInfo.OrderedStart != "1"))
+                {
+                    state.GoToColumn(initColumn);
+                    return BlockState.None;
+                }
             }
 
             var newListItem = new ListItemBlock(this)
