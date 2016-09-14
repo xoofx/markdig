@@ -17358,6 +17358,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras|advanced");
         }
     }
+        // Certain punctuation characters are exempted from the rule forbidding them within inline delimiters
+    [TestFixture]
+    public partial class TestExtensionsSuperscriptandSubscript
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Superscript and Subscript
+            //
+            // The following CommonMark:
+            //     One quintillionth can be expressed as 10^-18^
+            //     
+            //     Daggers^†^ and double-daggers^‡^ can be used to denote notes.
+            //
+            // Should be rendered as:
+            //     <p>One quintillionth can be expressed as 10<sup>-18</sup></p>
+            //     <p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Superscript and Subscript");
+			TestParser.TestSpec("One quintillionth can be expressed as 10^-18^\n\nDaggers^†^ and double-daggers^‡^ can be used to denote notes.", "<p>One quintillionth can be expressed as 10<sup>-18</sup></p>\n<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>", "emphasisextras|advanced");
+        }
+    }
         // ## Inserted
         //
         // Inserted text can be used to specify that a text has been added to a document.  The semantic used for the generated HTML is the tag `<ins>`.
@@ -17365,9 +17388,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsInserted
     {
         [Test]
-        public void Example003()
+        public void Example004()
         {
-            // Example 3
+            // Example 4
             // Section: Extensions Inserted
             //
             // The following CommonMark:
@@ -17376,7 +17399,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><ins>Inserted text</ins></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Inserted");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Inserted");
 			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras|advanced");
         }
     }
@@ -17387,9 +17410,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsMarked
     {
         [Test]
-        public void Example004()
+        public void Example005()
         {
-            // Example 4
+            // Example 5
             // Section: Extensions Marked
             //
             // The following CommonMark:
@@ -17398,7 +17421,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><mark>Marked text</mark></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Marked");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Marked");
 			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced");
         }
     }
