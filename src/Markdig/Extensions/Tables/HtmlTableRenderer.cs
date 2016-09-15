@@ -81,9 +81,13 @@ namespace Markdig.Extensions.Tables
                     {
                         renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
-                    var columnIndex = cell.ColumnIndex == -1 ? i : cell.ColumnIndex;
-                    if (table.ColumnDefinitions != null && columnIndex < table.ColumnDefinitions.Count)
+                    if (cell.RowSpan != 1)
                     {
+                        renderer.Write($" rowspan=\"{cell.RowSpan}\"");
+                    }
+                    if (table.ColumnDefinitions != null)
+                    {
+                        var columnIndex = cell.ColumnIndex == -1 || cell.ColumnIndex > table.ColumnDefinitions.Count ? i : cell.ColumnIndex;
                         switch (table.ColumnDefinitions[columnIndex].Alignment)
                         {
                             case TableColumnAlign.Center:
@@ -104,7 +108,7 @@ namespace Markdig.Extensions.Tables
                     }
                     renderer.Write(cell);
                     renderer.ImplicitParagraph = previousImplicitParagraph;
-                    
+
                     renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
                 renderer.WriteLine("</tr>");

@@ -184,3 +184,92 @@ Alignment might be specified on the first row using the character `:`:
 </tbody>
 </table>
 ````````````````````````````````
+
+ A grid table may have cells spanning both columns and rows:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++---+---+ B +
+| D | E | B |
++ D +---+---+
+| D | CCCCC |
++---+---+---+
+.
+<table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
+<tbody>
+<tr>
+<td colspan="2">AAAAA</td>
+<td rowspan="2">B
+B
+B</td>
+</tr>
+<tr>
+<td rowspan="2">D
+D
+D</td>
+<td>E</td>
+</tr>
+<tr>
+<td colspan="2">CCCCC</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+A grid table may have cells with both colspan and rowspan:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++ AAAAA +---+
+| AAAAA | C |
++---+---+---+
+| D | E | F |
++---+---+---+
+.
+<table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
+<tbody>
+<tr>
+<td colspan="2" rowspan="2">AAAAA
+AAAAA
+AAAAA</td>
+<td>B</td>
+</tr>
+<tr>
+<td>C</td>
+</tr>
+<tr>
+<td>D</td>
+<td>E</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+A grid table may not have irregularly shaped cells:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++ A +---+ B +
+| A | C | B |
++---+---+---+
+| DDDDD | E |
++---+---+---+
+.
+<p>+---+---+---+
+| AAAAA | B |
++ A +---+ B +
+| A | C | B |
++---+---+---+
+| DDDDD | E |
++---+---+---+</p>
+````````````````````````````````
