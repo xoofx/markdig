@@ -126,12 +126,13 @@ namespace Markdig.Extensions.Abbreviations
                         // If we don't have a container, create a new one
                         if (container == null)
                         {
-                            container = new ContainerInline()
-                            {
-                                Span = originalLiteral.Span,
-                                Line = originalLiteral.Line,
-                                Column = originalLiteral.Column,
-                            };
+                            container = literal.Parent ??
+                                new ContainerInline
+                                {
+                                    Span = originalLiteral.Span,
+                                    Line = originalLiteral.Line,
+                                    Column = originalLiteral.Column,
+                                };
                         }
 
                         int line;
@@ -150,7 +151,10 @@ namespace Markdig.Extensions.Abbreviations
                         // Append the previous literal
                         if (i > content.Start)
                         {
-                            container.AppendChild(literal);
+                            if (literal.Parent == null)
+                            {
+                                container.AppendChild(literal);
+                            }
 
                             literal.Span.End = abbrInline.Span.Start - 1;
                             // Truncate it before the abbreviation
