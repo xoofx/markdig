@@ -23,6 +23,8 @@ namespace Markdig.Helpers
         // We don't support LCDM
         private static IDictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
 
+        private static readonly char[] punctuationExceptions = { '−', '-', '†', '‡' };
+
         public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
         {
             // A left-flanking delimiter run is a delimiter run that is 
@@ -37,8 +39,11 @@ namespace Markdig.Helpers
             pc.CheckUnicodeCategory(out prevIsWhiteSpace, out prevIsPunctuation);
             c.CheckUnicodeCategory(out nextIsWhiteSpace, out nextIsPunctuation);
 
+            var prevIsExcepted = prevIsPunctuation && punctuationExceptions.Contains(pc);
+            var nextIsExcepted = nextIsPunctuation && punctuationExceptions.Contains(c);
+
             canOpen = !nextIsWhiteSpace &&
-                           (!nextIsPunctuation || prevIsWhiteSpace || prevIsPunctuation);
+                           ((!nextIsPunctuation || nextIsExcepted) || prevIsWhiteSpace || prevIsPunctuation);
 
 
             // A right-flanking delimiter run is a delimiter run that is 
@@ -47,7 +52,7 @@ namespace Markdig.Helpers
             // or a punctuation character. 
             // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             canClose = !prevIsWhiteSpace &&
-                            (!prevIsPunctuation || nextIsWhiteSpace || nextIsPunctuation);
+                            ((!prevIsPunctuation || prevIsExcepted) || nextIsWhiteSpace || nextIsPunctuation);
 
             if (!enableWithinWord)
             {

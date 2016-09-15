@@ -21,6 +21,17 @@ H~2~O is a liquid. 2^10^ is 1024
 .
 <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 ````````````````````````````````
+ 
+Certain punctuation characters are exempted from the rule forbidding them within inline delimiters
+
+```````````````````````````````` example
+One quintillionth can be expressed as 10^-18^
+
+Daggers^†^ and double-daggers^‡^ can be used to denote notes.
+.
+<p>One quintillionth can be expressed as 10<sup>-18</sup></p>
+<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>
+````````````````````````````````
 
 ## Inserted
 
