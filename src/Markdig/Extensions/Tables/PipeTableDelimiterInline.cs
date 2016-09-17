@@ -10,9 +10,9 @@ namespace Markdig.Extensions.Tables
     /// The delimiter used to separate the columns of a pipe table.
     /// </summary>
     /// <seealso cref="Markdig.Syntax.Inlines.DelimiterInline" />
-    public class PiprTableDelimiterInline : DelimiterInline
+    public class PipeTableDelimiterInline : DelimiterInline
     {
-        public PiprTableDelimiterInline(InlineParser parser) : base(parser)
+        public PipeTableDelimiterInline(InlineParser parser) : base(parser)
         {
         }
 

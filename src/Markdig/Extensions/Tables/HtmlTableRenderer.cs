@@ -87,7 +87,10 @@ namespace Markdig.Extensions.Tables
                     }
                     if (table.ColumnDefinitions != null)
                     {
-                        var columnIndex = cell.ColumnIndex == -1 || cell.ColumnIndex > table.ColumnDefinitions.Count ? i : cell.ColumnIndex;
+                        var columnIndex = cell.ColumnIndex < 0 || cell.ColumnIndex >= table.ColumnDefinitions.Count
+                            ? i
+                            : cell.ColumnIndex;
+                        columnIndex = columnIndex >= table.ColumnDefinitions.Count ? table.ColumnDefinitions.Count - 1 : columnIndex;
                         switch (table.ColumnDefinitions[columnIndex].Alignment)
                         {
                             case TableColumnAlign.Center:

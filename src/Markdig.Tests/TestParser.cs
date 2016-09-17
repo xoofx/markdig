@@ -65,6 +65,7 @@ namespace Markdig.Tests
             foreach (var extensionsText in extensionGroups)
             {
                 var builder = new MarkdownPipelineBuilder();
+                builder.DebugLog = Console.Out;
                 var pipeline = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
                 yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, pipeline.Build());
             }

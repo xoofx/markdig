@@ -16515,7 +16515,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "pipetables|advanced");
         }
     }
-        // The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
+        // If a row contains more column than the header row, it will still be added as a column:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16543,7 +16543,8 @@ namespace Markdig.Tests
             //     <tbody>
             //     <tr>
             //     <td>0</td>
-            //     <td>1 | 2</td>
+            //     <td>1</td>
+            //     <td>2</td>
             //     </tr>
             //     <tr>
             //     <td>3</td>
@@ -16556,7 +16557,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
-			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1 | 2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #2**
@@ -17077,6 +17078,58 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 21, "Extensions Pipe Table");
 			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+        }
+    }
+        // ** Tests **
+        //
+        // Tests trailing spaces after pipes
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example022()
+        {
+            // Example 22
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     | abc | def | 
+            //     |---|:---|
+            //     | cde| ddd| 
+            //     | eee| fff|
+            //     | fff | fffff   | 
+            //     |gggg  | ffff | 
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>abc</th>
+            //     <th>def</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>cde</td>
+            //     <td>ddd</td>
+            //     </tr>
+            //     <tr>
+            //     <td>eee</td>
+            //     <td>fff</td>
+            //     </tr>
+            //     <tr>
+            //     <td>fff</td>
+            //     <td>fffff</td>
+            //     </tr>
+            //     <tr>
+            //     <td>gggg</td>
+            //     <td>ffff</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Extensions Pipe Table");
+			TestParser.TestSpec("| abc | def | \n|---|:---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // # Extensions

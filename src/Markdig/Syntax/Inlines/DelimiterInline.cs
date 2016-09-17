@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.Diagnostics;
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax.Inlines
@@ -41,5 +42,18 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         /// <returns>The string representation of this delimiter</returns>
         public abstract string ToLiteral();
+
+        public void ReplaceByLiteral()
+        {
+            var literalInline = new LiteralInline()
+            {
+                Content = new StringSlice(ToLiteral()),
+                Span = Span,
+                Line = Line,
+                Column = Column,
+                IsClosed = true
+            };
+            ReplaceBy(literalInline);
+        }
     }
 }

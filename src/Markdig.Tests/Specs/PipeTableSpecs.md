@@ -122,7 +122,7 @@ c no d
 c no d</p>
 ````````````````````````````````
 
-The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
+If a row contains more column than the header row, it will still be added as a column:
 
 ```````````````````````````````` example
 a  | b 
@@ -141,7 +141,8 @@ a  | b
 <tbody>
 <tr>
 <td>0</td>
-<td>1 | 2</td>
+<td>1</td>
+<td>2</td>
 </tr>
 <tr>
 <td>3</td>
@@ -507,3 +508,42 @@ a  | b
 </table>
 ````````````````````````````````
 
+** Tests **
+
+Tests trailing spaces after pipes
+
+```````````````````````````````` example
+| abc | def | 
+|---|:---|
+| cde| ddd| 
+| eee| fff|
+| fff | fffff   | 
+|gggg  | ffff | 
+.
+<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cde</td>
+<td>ddd</td>
+</tr>
+<tr>
+<td>eee</td>
+<td>fff</td>
+</tr>
+<tr>
+<td>fff</td>
+<td>fffff</td>
+</tr>
+<tr>
+<td>gggg</td>
+<td>ffff</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
