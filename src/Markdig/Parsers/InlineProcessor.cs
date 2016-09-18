@@ -239,7 +239,10 @@ namespace Markdig.Parsers
                     {
                         // Get deepest container
                         var container = FindLastContainer();
-                        container.AppendChild(nextInline);
+                        if (!ReferenceEquals(container, nextInline))
+                        {
+                            container.AppendChild(nextInline);
+                        }
 
                         if (container == Root)
                         {
