@@ -118,6 +118,7 @@ namespace Markdig.Parsers.Inlines
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         Label = label,
                         LabelSpan = labelSpan,
+                        UrlSpan = linkRef.UrlSpan,
                         IsImage = parent.IsImage,
                         Reference = linkRef,
                         Span = new SourceSpan(parent.Span.Start, endPosition),

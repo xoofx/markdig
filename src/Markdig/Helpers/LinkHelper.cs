@@ -649,7 +649,7 @@ namespace Markdig.Helpers
             }
             text.NextChar(); // Skip ':'
 
-            // Skip any whitespaces before the url
+            // Skip any whitespace before the url
             text.TrimStart();
 
             urlSpan.Start = text.Start;
