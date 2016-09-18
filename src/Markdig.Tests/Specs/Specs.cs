@@ -3277,7 +3277,7 @@ namespace Markdig.Tests
         // meets a [start condition](@) (after up to three spaces
         // optional indentation).  It ends with the first subsequent line that
         // meets a matching [end condition](@), or the last line of
-        // the document or other [container block](@), if no line is encountered that meets the
+        // the document or other [container block]), if no line is encountered that meets the
         // [end condition].  If the first line meets both the [start condition]
         // and the [end condition], the block will contain just that line.
         //
@@ -3307,7 +3307,8 @@ namespace Markdig.Tests
         // `article`, `aside`, `base`, `basefont`, `blockquote`, `body`,
         // `caption`, `center`, `col`, `colgroup`, `dd`, `details`, `dialog`,
         // `dir`, `div`, `dl`, `dt`, `fieldset`, `figcaption`, `figure`,
-        // `footer`, `form`, `frame`, `frameset`, `h1`, `head`, `header`, `hr`,
+        // `footer`, `form`, `frame`, `frameset`,
+        // `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `head`, `header`, `hr`,
         // `html`, `iframe`, `legend`, `li`, `link`, `main`, `menu`, `menuitem`,
         // `meta`, `nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
         // `section`, `source`, `summary`, `table`, `tbody`, `td`,
@@ -7666,8 +7667,7 @@ namespace Markdig.Tests
         //
         // A [list](@) is a sequence of one or more
         // list items [of the same type].  The list items
-        // may be separated by single [blank lines], but two
-        // blank lines end all containing lists.
+        // may be separated by any number of blank lines.
         //
         // Two list items are [of the same type](@)
         // if they begin with a [list marker] of the same type.
@@ -7780,10 +7780,11 @@ namespace Markdig.Tests
         // `Markdown.pl` does not allow this, through fear of triggering a list
         // via a numeral in a hard-wrapped line:
         //
-        // ```````````````````````````````` markdown
+        // ``` markdown
         // The number of windows in my house is
         // 14.  The number of doors is 6.
-        // ````````````````````````````````
+        // ```
+        //
         // Oddly, though, `Markdown.pl` *does* allow a blockquote to
         // interrupt a paragraph, even though the same considerations might
         // apply.
@@ -7792,10 +7793,12 @@ namespace Markdig.Tests
         // two reasons.  First, it is natural and not uncommon for people
         // to start lists without blank lines:
         //
+        // ``` markdown
         // I need to buy
         // - new shoes
         // - a coat
         // - a plane ticket
+        // ```
         //
         // Second, we are attracted to a
         //
@@ -7807,20 +7810,24 @@ namespace Markdig.Tests
         // (Indeed, the spec for [list items] and [block quotes] presupposes
         // this principle.) This principle implies that if
         //
+        // ``` markdown
         // * I need to buy
         // - new shoes
         // - a coat
         // - a plane ticket
+        // ```
         //
         // is a list item containing a paragraph followed by a nested sublist,
         // as all Markdown implementations agree it is (though the paragraph
         // may be rendered without `<p>` tags, since the list is "tight"),
         // then
         //
+        // ``` markdown
         // I need to buy
         // - new shoes
         // - a coat
         // - a plane ticket
+        // ```
         //
         // by itself should be a paragraph followed by a nested sublist.
         //
@@ -9232,6 +9239,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo   bar\n  baz`", "<p><code>foo bar baz</code></p>", "");
         }
     }
+        // Not all [Unicode whitespace] (for instance, non-breaking space) is
+        // collapsed, however:
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
+        [Test]
+        public void Example317()
+        {
+            // Example 317
+            // Section: Inlines Code spans
+            //
+            // The following CommonMark:
+            //     `a  b`
+            //
+            // Should be rendered as:
+            //     <p><code>a  b</code></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 317, "Inlines Code spans");
+			TestParser.TestSpec("`a  b`", "<p><code>a  b</code></p>", "");
+        }
+    }
         // Q: Why not just leave the spaces, since browsers will collapse them
         // anyway?  A:  Because we might be targeting a non-HTML format, and we
         // shouldn't rely on HTML-specific rendering assumptions.
@@ -9248,9 +9276,9 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example317()
+        public void Example318()
         {
-            // Example 317
+            // Example 318
             // Section: Inlines Code spans
             //
             // The following CommonMark:
@@ -9259,7 +9287,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><code>foo `` bar</code></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 317, "Inlines Code spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 318, "Inlines Code spans");
 			TestParser.TestSpec("`foo `` bar`", "<p><code>foo `` bar</code></p>", "");
         }
     }
@@ -9269,9 +9297,9 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example318()
+        public void Example319()
         {
-            // Example 318
+            // Example 319
             // Section: Inlines Code spans
             //
             // The following CommonMark:
@@ -9280,7 +9308,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><code>foo\</code>bar`</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 318, "Inlines Code spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 319, "Inlines Code spans");
 			TestParser.TestSpec("`foo\\`bar`", "<p><code>foo\\</code>bar`</p>", "");
         }
     }
@@ -9296,9 +9324,9 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example319()
+        public void Example320()
         {
-            // Example 319
+            // Example 320
             // Section: Inlines Code spans
             //
             // The following CommonMark:
@@ -9307,32 +9335,11 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>*foo<code>*</code></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 319, "Inlines Code spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 320, "Inlines Code spans");
 			TestParser.TestSpec("*foo`*`", "<p>*foo<code>*</code></p>", "");
         }
     }
         // And this is not parsed as a link:
-    [TestFixture]
-    public partial class TestInlinesCodespans
-    {
-        [Test]
-        public void Example320()
-        {
-            // Example 320
-            // Section: Inlines Code spans
-            //
-            // The following CommonMark:
-            //     [not a `link](/foo`)
-            //
-            // Should be rendered as:
-            //     <p>[not a <code>link](/foo</code>)</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 320, "Inlines Code spans");
-			TestParser.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>", "");
-        }
-    }
-        // Code spans, HTML tags, and autolinks have the same precedence.
-        // Thus, this is code:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9343,16 +9350,17 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
-            //     `<a href="`">`
+            //     [not a `link](/foo`)
             //
             // Should be rendered as:
-            //     <p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
+            //     <p>[not a <code>link](/foo</code>)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 321, "Inlines Code spans");
-			TestParser.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>", "");
+			TestParser.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>", "");
         }
     }
-        // But this is an HTML tag:
+        // Code spans, HTML tags, and autolinks have the same precedence.
+        // Thus, this is code:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9363,16 +9371,16 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
-            //     <a href="`">`
+            //     `<a href="`">`
             //
             // Should be rendered as:
-            //     <p><a href="`">`</p>
+            //     <p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 322, "Inlines Code spans");
-			TestParser.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>", "");
+			TestParser.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>", "");
         }
     }
-        // And this is code:
+        // But this is an HTML tag:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9383,16 +9391,16 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
-            //     `<http://foo.bar.`baz>`
+            //     <a href="`">`
             //
             // Should be rendered as:
-            //     <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
+            //     <p><a href="`">`</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 323, "Inlines Code spans");
-			TestParser.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "");
+			TestParser.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>", "");
         }
     }
-        // But this is an autolink:
+        // And this is code:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9403,17 +9411,16 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
-            //     <http://foo.bar.`baz>`
+            //     `<http://foo.bar.`baz>`
             //
             // Should be rendered as:
-            //     <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
+            //     <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 324, "Inlines Code spans");
-			TestParser.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "");
+			TestParser.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "");
         }
     }
-        // When a backtick string is not closed by a matching backtick string,
-        // we just have literal backticks:
+        // But this is an autolink:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9424,15 +9431,17 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
-            //     ```foo``
+            //     <http://foo.bar.`baz>`
             //
             // Should be rendered as:
-            //     <p>```foo``</p>
+            //     <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 325, "Inlines Code spans");
-			TestParser.TestSpec("```foo``", "<p>```foo``</p>", "");
+			TestParser.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "");
         }
     }
+        // When a backtick string is not closed by a matching backtick string,
+        // we just have literal backticks:
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9443,12 +9452,31 @@ namespace Markdig.Tests
             // Section: Inlines Code spans
             //
             // The following CommonMark:
+            //     ```foo``
+            //
+            // Should be rendered as:
+            //     <p>```foo``</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 326, "Inlines Code spans");
+			TestParser.TestSpec("```foo``", "<p>```foo``</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesCodespans
+    {
+        [Test]
+        public void Example327()
+        {
+            // Example 327
+            // Section: Inlines Code spans
+            //
+            // The following CommonMark:
             //     `foo
             //
             // Should be rendered as:
             //     <p>`foo</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 326, "Inlines Code spans");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 327, "Inlines Code spans");
 			TestParser.TestSpec("`foo", "<p>`foo</p>", "");
         }
     }
@@ -9660,9 +9688,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example327()
+        public void Example328()
         {
-            // Example 327
+            // Example 328
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -9671,34 +9699,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><em>foo bar</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 327, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 328, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo bar*", "<p><em>foo bar</em></p>", "");
         }
     }
         // This is not emphasis, because the opening `*` is followed by
         // whitespace, and hence not part of a [left-flanking delimiter run]:
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example328()
-        {
-            // Example 328
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     a * foo bar*
-            //
-            // Should be rendered as:
-            //     <p>a * foo bar*</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 328, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("a * foo bar*", "<p>a * foo bar*</p>", "");
-        }
-    }
-        // This is not emphasis, because the opening `*` is preceded
-        // by an alphanumeric and followed by punctuation, and hence
-        // not part of a [left-flanking delimiter run]:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9709,16 +9715,18 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     a*"foo"*
+            //     a * foo bar*
             //
             // Should be rendered as:
-            //     <p>a*&quot;foo&quot;*</p>
+            //     <p>a * foo bar*</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 329, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>", "");
+			TestParser.TestSpec("a * foo bar*", "<p>a * foo bar*</p>", "");
         }
     }
-        // Unicode nonbreaking spaces count as whitespace, too:
+        // This is not emphasis, because the opening `*` is preceded
+        // by an alphanumeric and followed by punctuation, and hence
+        // not part of a [left-flanking delimiter run]:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9729,16 +9737,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     * a *
+            //     a*"foo"*
             //
             // Should be rendered as:
-            //     <p>* a *</p>
+            //     <p>a*&quot;foo&quot;*</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 330, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("* a *", "<p>* a *</p>", "");
+			TestParser.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>", "");
         }
     }
-        // Intraword emphasis with `*` is permitted:
+        // Unicode nonbreaking spaces count as whitespace, too:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9749,15 +9757,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo*bar*
+            //     * a *
             //
             // Should be rendered as:
-            //     <p>foo<em>bar</em></p>
+            //     <p>* a *</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 331, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "");
+			TestParser.TestSpec("* a *", "<p>* a *</p>", "");
         }
     }
+        // Intraword emphasis with `*` is permitted:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9768,16 +9777,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     5*6*78
+            //     foo*bar*
             //
             // Should be rendered as:
-            //     <p>5<em>6</em>78</p>
+            //     <p>foo<em>bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 332, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "");
+			TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "");
         }
     }
-        // Rule 2:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9788,17 +9796,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo bar_
+            //     5*6*78
             //
             // Should be rendered as:
-            //     <p><em>foo bar</em></p>
+            //     <p>5<em>6</em>78</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 333, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "");
+			TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "");
         }
     }
-        // This is not emphasis, because the opening `_` is followed by
-        // whitespace:
+        // Rule 2:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9809,17 +9816,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _ foo bar_
+            //     _foo bar_
             //
             // Should be rendered as:
-            //     <p>_ foo bar_</p>
+            //     <p><em>foo bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 334, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "");
+			TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "");
         }
     }
-        // This is not emphasis, because the opening `_` is preceded
-        // by an alphanumeric and followed by punctuation:
+        // This is not emphasis, because the opening `_` is followed by
+        // whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9830,16 +9837,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     a_"foo"_
+            //     _ foo bar_
             //
             // Should be rendered as:
-            //     <p>a_&quot;foo&quot;_</p>
+            //     <p>_ foo bar_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 335, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "");
+			TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "");
         }
     }
-        // Emphasis with `_` is not allowed inside words:
+        // This is not emphasis, because the opening `_` is preceded
+        // by an alphanumeric and followed by punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9850,15 +9858,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo_bar_
+            //     a_"foo"_
             //
             // Should be rendered as:
-            //     <p>foo_bar_</p>
+            //     <p>a_&quot;foo&quot;_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 336, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>", "");
+			TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "");
         }
     }
+        // Emphasis with `_` is not allowed inside words:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9869,13 +9878,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     5_6_78
+            //     foo_bar_
             //
             // Should be rendered as:
-            //     <p>5_6_78</p>
+            //     <p>foo_bar_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 337, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("5_6_78", "<p>5_6_78</p>", "");
+			TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>", "");
         }
     }
     [TestFixture]
@@ -9888,17 +9897,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     пристаням_стремятся_
+            //     5_6_78
             //
             // Should be rendered as:
-            //     <p>пристаням_стремятся_</p>
+            //     <p>5_6_78</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 338, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "");
+			TestParser.TestSpec("5_6_78", "<p>5_6_78</p>", "");
         }
     }
-        // Here `_` does not generate emphasis, because the first delimiter run
-        // is right-flanking and the second left-flanking:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9909,18 +9916,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     aa_"bb"_cc
+            //     пристаням_стремятся_
             //
             // Should be rendered as:
-            //     <p>aa_&quot;bb&quot;_cc</p>
+            //     <p>пристаням_стремятся_</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 339, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "");
+			TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "");
         }
     }
-        // This is emphasis, even though the opening delimiter is
-        // both left- and right-flanking, because it is preceded by
-        // punctuation:
+        // Here `_` does not generate emphasis, because the first delimiter run
+        // is right-flanking and the second left-flanking:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9931,12 +9937,34 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     aa_"bb"_cc
+            //
+            // Should be rendered as:
+            //     <p>aa_&quot;bb&quot;_cc</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 340, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "");
+        }
+    }
+        // This is emphasis, even though the opening delimiter is
+        // both left- and right-flanking, because it is preceded by
+        // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example341()
+        {
+            // Example 341
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     foo-_(bar)_
             //
             // Should be rendered as:
             //     <p>foo-<em>(bar)</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 340, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 341, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "");
         }
     }
@@ -9948,9 +9976,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example341()
+        public void Example342()
         {
-            // Example 341
+            // Example 342
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -9959,32 +9987,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>_foo*</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 341, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 342, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo*", "<p>_foo*</p>", "");
         }
     }
         // This is not emphasis, because the closing `*` is preceded by
         // whitespace:
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example342()
-        {
-            // Example 342
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     *foo bar *
-            //
-            // Should be rendered as:
-            //     <p>*foo bar *</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 342, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "");
-        }
-    }
-        // A newline also counts as whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9995,20 +10003,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo bar
-            //     *
+            //     *foo bar *
             //
             // Should be rendered as:
-            //     <p>*foo bar
-            //     *</p>
+            //     <p>*foo bar *</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 343, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "");
+			TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "");
         }
     }
-        // This is not emphasis, because the second `*` is
-        // preceded by punctuation and followed by an alphanumeric
-        // (hence it is not part of a [right-flanking delimiter run]:
+        // A newline also counts as whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10019,17 +10023,20 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *(*foo)
+            //     *foo bar
+            //     *
             //
             // Should be rendered as:
-            //     <p>*(*foo)</p>
+            //     <p>*foo bar
+            //     *</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 344, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>", "");
+			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "");
         }
     }
-        // The point of this restriction is more easily appreciated
-        // with this example:
+        // This is not emphasis, because the second `*` is
+        // preceded by punctuation and followed by an alphanumeric
+        // (hence it is not part of a [right-flanking delimiter run]:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10040,16 +10047,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *(*foo*)*
+            //     *(*foo)
             //
             // Should be rendered as:
-            //     <p><em>(<em>foo</em>)</em></p>
+            //     <p>*(*foo)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 345, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "");
+			TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>", "");
         }
     }
-        // Intraword emphasis with `*` is allowed:
+        // The point of this restriction is more easily appreciated
+        // with this example:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10060,12 +10068,32 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     *(*foo*)*
+            //
+            // Should be rendered as:
+            //     <p><em>(<em>foo</em>)</em></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 346, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "");
+        }
+    }
+        // Intraword emphasis with `*` is allowed:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example347()
+        {
+            // Example 347
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     *foo*bar
             //
             // Should be rendered as:
             //     <p><em>foo</em>bar</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 346, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 347, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "");
         }
     }
@@ -10077,9 +10105,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example347()
+        public void Example348()
         {
-            // Example 347
+            // Example 348
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10088,32 +10116,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>_foo bar _</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 347, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 348, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("_foo bar _", "<p>_foo bar _</p>", "");
         }
     }
         // This is not emphasis, because the second `_` is
         // preceded by punctuation and followed by an alphanumeric:
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example348()
-        {
-            // Example 348
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     _(_foo)
-            //
-            // Should be rendered as:
-            //     <p>_(_foo)</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 348, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>", "");
-        }
-    }
-        // This is emphasis within emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10124,16 +10132,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _(_foo_)_
+            //     _(_foo)
             //
             // Should be rendered as:
-            //     <p><em>(<em>foo</em>)</em></p>
+            //     <p>_(_foo)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 349, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "");
+			TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>", "");
         }
     }
-        // Intraword emphasis is disallowed for `_`:
+        // This is emphasis within emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10144,15 +10152,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo_bar
+            //     _(_foo_)_
             //
             // Should be rendered as:
-            //     <p>_foo_bar</p>
+            //     <p><em>(<em>foo</em>)</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 350, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>", "");
+			TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "");
         }
     }
+        // Intraword emphasis is disallowed for `_`:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10163,13 +10172,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _пристаням_стремятся
+            //     _foo_bar
             //
             // Should be rendered as:
-            //     <p>_пристаням_стремятся</p>
+            //     <p>_foo_bar</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 351, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "");
+			TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>", "");
         }
     }
     [TestFixture]
@@ -10182,18 +10191,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo_bar_baz_
+            //     _пристаням_стремятся
             //
             // Should be rendered as:
-            //     <p><em>foo_bar_baz</em></p>
+            //     <p>_пристаням_стремятся</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 352, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "");
+			TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "");
         }
     }
-        // This is emphasis, even though the closing delimiter is
-        // both left- and right-flanking, because it is followed by
-        // punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10204,16 +10210,18 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _(bar)_.
+            //     _foo_bar_baz_
             //
             // Should be rendered as:
-            //     <p><em>(bar)</em>.</p>
+            //     <p><em>foo_bar_baz</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 353, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "");
+			TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "");
         }
     }
-        // Rule 5:
+        // This is emphasis, even though the closing delimiter is
+        // both left- and right-flanking, because it is followed by
+        // punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10224,17 +10232,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo bar**
+            //     _(bar)_.
             //
             // Should be rendered as:
-            //     <p><strong>foo bar</strong></p>
+            //     <p><em>(bar)</em>.</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 354, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "");
+			TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "");
         }
     }
-        // This is not strong emphasis, because the opening delimiter is
-        // followed by whitespace:
+        // Rule 5:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10245,18 +10252,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     ** foo bar**
+            //     **foo bar**
             //
             // Should be rendered as:
-            //     <p>** foo bar**</p>
+            //     <p><strong>foo bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 355, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>", "");
+			TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "");
         }
     }
-        // This is not strong emphasis, because the opening `**` is preceded
-        // by an alphanumeric and followed by punctuation, and hence
-        // not part of a [left-flanking delimiter run]:
+        // This is not strong emphasis, because the opening delimiter is
+        // followed by whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10267,16 +10273,18 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     a**"foo"**
+            //     ** foo bar**
             //
             // Should be rendered as:
-            //     <p>a**&quot;foo&quot;**</p>
+            //     <p>** foo bar**</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 356, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "");
+			TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>", "");
         }
     }
-        // Intraword strong emphasis with `**` is permitted:
+        // This is not strong emphasis, because the opening `**` is preceded
+        // by an alphanumeric and followed by punctuation, and hence
+        // not part of a [left-flanking delimiter run]:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10287,16 +10295,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo**bar**
+            //     a**"foo"**
             //
             // Should be rendered as:
-            //     <p>foo<strong>bar</strong></p>
+            //     <p>a**&quot;foo&quot;**</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 357, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "");
+			TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "");
         }
     }
-        // Rule 6:
+        // Intraword strong emphasis with `**` is permitted:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10307,17 +10315,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo bar__
+            //     foo**bar**
             //
             // Should be rendered as:
-            //     <p><strong>foo bar</strong></p>
+            //     <p>foo<strong>bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 358, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "");
+			TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "");
         }
     }
-        // This is not strong emphasis, because the opening delimiter is
-        // followed by whitespace:
+        // Rule 6:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10328,16 +10335,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __ foo bar__
+            //     __foo bar__
             //
             // Should be rendered as:
-            //     <p>__ foo bar__</p>
+            //     <p><strong>foo bar</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 359, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "");
+			TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "");
         }
     }
-        // A newline counts as whitespace:
+        // This is not strong emphasis, because the opening delimiter is
+        // followed by whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10348,19 +10356,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __
-            //     foo bar__
+            //     __ foo bar__
             //
             // Should be rendered as:
-            //     <p>__
-            //     foo bar__</p>
+            //     <p>__ foo bar__</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 360, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "");
+			TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "");
         }
     }
-        // This is not strong emphasis, because the opening `__` is preceded
-        // by an alphanumeric and followed by punctuation:
+        // A newline counts as whitespace:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10371,16 +10376,19 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     a__"foo"__
+            //     __
+            //     foo bar__
             //
             // Should be rendered as:
-            //     <p>a__&quot;foo&quot;__</p>
+            //     <p>__
+            //     foo bar__</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 361, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "");
+			TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "");
         }
     }
-        // Intraword strong emphasis is forbidden with `__`:
+        // This is not strong emphasis, because the opening `__` is preceded
+        // by an alphanumeric and followed by punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10391,15 +10399,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     foo__bar__
+            //     a__"foo"__
             //
             // Should be rendered as:
-            //     <p>foo__bar__</p>
+            //     <p>a__&quot;foo&quot;__</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 362, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>", "");
+			TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "");
         }
     }
+        // Intraword strong emphasis is forbidden with `__`:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10410,13 +10419,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     5__6__78
+            //     foo__bar__
             //
             // Should be rendered as:
-            //     <p>5__6__78</p>
+            //     <p>foo__bar__</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 363, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("5__6__78", "<p>5__6__78</p>", "");
+			TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>", "");
         }
     }
     [TestFixture]
@@ -10429,13 +10438,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     пристаням__стремятся__
+            //     5__6__78
             //
             // Should be rendered as:
-            //     <p>пристаням__стремятся__</p>
+            //     <p>5__6__78</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 364, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "");
+			TestParser.TestSpec("5__6__78", "<p>5__6__78</p>", "");
         }
     }
     [TestFixture]
@@ -10448,18 +10457,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo, __bar__, baz__
+            //     пристаням__стремятся__
             //
             // Should be rendered as:
-            //     <p><strong>foo, <strong>bar</strong>, baz</strong></p>
+            //     <p>пристаням__стремятся__</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 365, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "");
+			TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "");
         }
     }
-        // This is strong emphasis, even though the opening delimiter is
-        // both left- and right-flanking, because it is preceded by
-        // punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10470,12 +10476,34 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     __foo, __bar__, baz__
+            //
+            // Should be rendered as:
+            //     <p><strong>foo, <strong>bar</strong>, baz</strong></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 366, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "");
+        }
+    }
+        // This is strong emphasis, even though the opening delimiter is
+        // both left- and right-flanking, because it is preceded by
+        // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example367()
+        {
+            // Example 367
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     foo-__(bar)__
             //
             // Should be rendered as:
             //     <p>foo-<strong>(bar)</strong></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 366, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 367, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "");
         }
     }
@@ -10487,9 +10515,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example367()
+        public void Example368()
         {
-            // Example 367
+            // Example 368
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10498,7 +10526,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>**foo bar **</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 367, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 368, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo bar **", "<p>**foo bar **</p>", "");
         }
     }
@@ -10511,9 +10539,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example368()
+        public void Example369()
         {
-            // Example 368
+            // Example 369
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10522,31 +10550,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>**(**foo)</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 368, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 369, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**(**foo)", "<p>**(**foo)</p>", "");
         }
     }
         // The point of this restriction is more easily appreciated
         // with these examples:
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example369()
-        {
-            // Example 369
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     *(**foo**)*
-            //
-            // Should be rendered as:
-            //     <p><em>(<strong>foo</strong>)</em></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 369, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "");
-        }
-    }
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10557,15 +10566,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **Gomphocarpus (*Gomphocarpus physocarpus*, syn.
-            //     *Asclepias physocarpa*)**
+            //     *(**foo**)*
             //
             // Should be rendered as:
-            //     <p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
-            //     <em>Asclepias physocarpa</em>)</strong></p>
+            //     <p><em>(<strong>foo</strong>)</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 370, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "");
+			TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "");
         }
     }
     [TestFixture]
@@ -10578,16 +10585,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     **foo "*bar*" foo**
+            //     **Gomphocarpus (*Gomphocarpus physocarpus*, syn.
+            //     *Asclepias physocarpa*)**
             //
             // Should be rendered as:
-            //     <p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
+            //     <p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
+            //     <em>Asclepias physocarpa</em>)</strong></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 371, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "");
+			TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "");
         }
     }
-        // Intraword emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10598,12 +10606,32 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     **foo "*bar*" foo**
+            //
+            // Should be rendered as:
+            //     <p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 372, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "");
+        }
+    }
+        // Intraword emphasis:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example373()
+        {
+            // Example 373
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     **foo**bar
             //
             // Should be rendered as:
             //     <p><strong>foo</strong>bar</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 372, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 373, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "");
         }
     }
@@ -10615,9 +10643,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example373()
+        public void Example374()
         {
-            // Example 373
+            // Example 374
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10626,33 +10654,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>__foo bar __</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 373, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 374, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__foo bar __", "<p>__foo bar __</p>", "");
         }
     }
         // This is not strong emphasis, because the second `__` is
         // preceded by punctuation and followed by an alphanumeric:
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example374()
-        {
-            // Example 374
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     __(__foo)
-            //
-            // Should be rendered as:
-            //     <p>__(__foo)</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 374, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>", "");
-        }
-    }
-        // The point of this restriction is more easily appreciated
-        // with this example:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10663,16 +10670,17 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _(__foo__)_
+            //     __(__foo)
             //
             // Should be rendered as:
-            //     <p><em>(<strong>foo</strong>)</em></p>
+            //     <p>__(__foo)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 375, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "");
+			TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>", "");
         }
     }
-        // Intraword strong emphasis is forbidden with `__`:
+        // The point of this restriction is more easily appreciated
+        // with this example:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10683,15 +10691,16 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo__bar
+            //     _(__foo__)_
             //
             // Should be rendered as:
-            //     <p>__foo__bar</p>
+            //     <p><em>(<strong>foo</strong>)</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 376, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>", "");
+			TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "");
         }
     }
+        // Intraword strong emphasis is forbidden with `__`:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10702,13 +10711,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __пристаням__стремятся
+            //     __foo__bar
             //
             // Should be rendered as:
-            //     <p>__пристаням__стремятся</p>
+            //     <p>__foo__bar</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 377, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "");
+			TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>", "");
         }
     }
     [TestFixture]
@@ -10721,18 +10730,15 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo__bar__baz__
+            //     __пристаням__стремятся
             //
             // Should be rendered as:
-            //     <p><strong>foo__bar__baz</strong></p>
+            //     <p>__пристаням__стремятся</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 378, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "");
+			TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "");
         }
     }
-        // This is strong emphasis, even though the closing delimiter is
-        // both left- and right-flanking, because it is followed by
-        // punctuation:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10743,12 +10749,34 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     __foo__bar__baz__
+            //
+            // Should be rendered as:
+            //     <p><strong>foo__bar__baz</strong></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 379, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "");
+        }
+    }
+        // This is strong emphasis, even though the closing delimiter is
+        // both left- and right-flanking, because it is followed by
+        // punctuation:
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example380()
+        {
+            // Example 380
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     __(bar)__.
             //
             // Should be rendered as:
             //     <p><strong>(bar)</strong>.</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 379, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 380, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "");
         }
     }
@@ -10760,9 +10788,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example380()
+        public void Example381()
         {
-            // Example 380
+            // Example 381
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10771,33 +10799,10 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><em>foo <a href="/url">bar</a></em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 380, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 381, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "");
         }
     }
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example381()
-        {
-            // Example 381
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     *foo
-            //     bar*
-            //
-            // Should be rendered as:
-            //     <p><em>foo
-            //     bar</em></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 381, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "");
-        }
-    }
-        // In particular, emphasis and strong emphasis can be nested
-        // inside emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10808,15 +10813,19 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo __bar__ baz_
+            //     *foo
+            //     bar*
             //
             // Should be rendered as:
-            //     <p><em>foo <strong>bar</strong> baz</em></p>
+            //     <p><em>foo
+            //     bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 382, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
+			TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "");
         }
     }
+        // In particular, emphasis and strong emphasis can be nested
+        // inside emphasis:
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10827,13 +10836,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     _foo _bar_ baz_
+            //     _foo __bar__ baz_
             //
             // Should be rendered as:
-            //     <p><em>foo <em>bar</em> baz</em></p>
+            //     <p><em>foo <strong>bar</strong> baz</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 383, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "");
+			TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
         }
     }
     [TestFixture]
@@ -10846,13 +10855,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     __foo_ bar_
+            //     _foo _bar_ baz_
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em> bar</em></p>
+            //     <p><em>foo <em>bar</em> baz</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 384, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "");
+			TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "");
         }
     }
     [TestFixture]
@@ -10865,13 +10874,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo *bar**
+            //     __foo_ bar_
             //
             // Should be rendered as:
-            //     <p><em>foo <em>bar</em></em></p>
+            //     <p><em><em>foo</em> bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 385, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "");
+			TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "");
         }
     }
     [TestFixture]
@@ -10884,13 +10893,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo **bar** baz*
+            //     *foo *bar**
             //
             // Should be rendered as:
-            //     <p><em>foo <strong>bar</strong> baz</em></p>
+            //     <p><em>foo <em>bar</em></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 386, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
+			TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "");
         }
     }
     [TestFixture]
@@ -10903,12 +10912,31 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
+            //     *foo **bar** baz*
+            //
+            // Should be rendered as:
+            //     <p><em>foo <strong>bar</strong> baz</em></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 387, "Inlines Emphasis and strong emphasis");
+			TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesEmphasisandstrongemphasis
+    {
+        [Test]
+        public void Example388()
+        {
+            // Example 388
+            // Section: Inlines Emphasis and strong emphasis
+            //
+            // The following CommonMark:
             //     *foo**bar**baz*
             //
             // Should be rendered as:
             //     <p><em>foo<strong>bar</strong>baz</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 387, "Inlines Emphasis and strong emphasis");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 388, "Inlines Emphasis and strong emphasis");
 			TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "");
         }
     }
@@ -10919,7 +10947,7 @@ namespace Markdig.Tests
         // ```
         //
         // is precluded by the condition that a delimiter that
-        // can both open and close (like the `*` after `foo`
+        // can both open and close (like the `*` after `foo`)
         // cannot form emphasis if the sum of the lengths of
         // the delimiter runs containing the opening and
         // closing delimiters is a multiple of 3.
@@ -10932,9 +10960,9 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example388()
+        public void Example389()
         {
-            // Example 388
+            // Example 389
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
@@ -10943,27 +10971,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><em><strong>foo</strong> bar</em></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 388, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesEmphasisandstrongemphasis
-    {
-        [Test]
-        public void Example389()
-        {
-            // Example 389
-            // Section: Inlines Emphasis and strong emphasis
-            //
-            // The following CommonMark:
-            //     *foo **bar***
-            //
-            // Should be rendered as:
-            //     <p><em>foo <strong>bar</strong></em></p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 389, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "");
+			TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "");
         }
     }
     [TestFixture]
@@ -10976,13 +10985,13 @@ namespace Markdig.Tests
             // Section: Inlines Emphasis and strong emphasis
             //
             // The following CommonMark:
-            //     *foo**bar***
+            //     *foo **bar***
             //
             // Should be rendered as:
-            //     <p><em>foo<strong>bar</strong></em></p>
+            //     <p><em>foo <strong>bar</strong></em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 390, "Inlines Emphasis and strong emphasis");
-			TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "");
+			TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "");
         }
     }
     [TestFixture]
@@ -12744,7 +12753,8 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "");
         }
     }
-        // Nested balanced quotes are not allowed without escaping:
+        // Titles must be separated from the link using a [whitespace].
+        // Other [Unicode whitespace] like non-breaking space doesn't work.
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12755,16 +12765,16 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link](/url "title "and" title")
+            //     [link](/url "title")
             //
             // Should be rendered as:
-            //     <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
+            //     <p><a href="/url%C2%A0%22title%22">link</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 476, "Inlines Links");
-			TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "");
+			TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "");
         }
     }
-        // But it is easy to work around this by using a different quote type:
+        // Nested balanced quotes are not allowed without escaping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12775,12 +12785,32 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [link](/url "title "and" title")
+            //
+            // Should be rendered as:
+            //     <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 477, "Inlines Links");
+			TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "");
+        }
+    }
+        // But it is easy to work around this by using a different quote type:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example478()
+        {
+            // Example 478
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [link](/url 'title "and" title')
             //
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 477, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 478, "Inlines Links");
 			TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "");
         }
     }
@@ -12804,9 +12834,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example478()
+        public void Example479()
         {
-            // Example 478
+            // Example 479
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -12816,33 +12846,12 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 478, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 479, "Inlines Links");
 			TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "");
         }
     }
         // But it is not allowed between the link text and the
         // following parenthesis:
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example479()
-        {
-            // Example 479
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [link] (/uri)
-            //
-            // Should be rendered as:
-            //     <p>[link] (/uri)</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 479, "Inlines Links");
-			TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "");
-        }
-    }
-        // The link text may contain balanced brackets, but not unbalanced ones,
-        // unless they are escaped:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12853,15 +12862,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link [foo [bar]]](/uri)
+            //     [link] (/uri)
             //
             // Should be rendered as:
-            //     <p><a href="/uri">link [foo [bar]]</a></p>
+            //     <p>[link] (/uri)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 480, "Inlines Links");
-			TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
+			TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "");
         }
     }
+        // The link text may contain balanced brackets, but not unbalanced ones,
+        // unless they are escaped:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12872,13 +12883,13 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link] bar](/uri)
+            //     [link [foo [bar]]](/uri)
             //
             // Should be rendered as:
-            //     <p>[link] bar](/uri)</p>
+            //     <p><a href="/uri">link [foo [bar]]</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 481, "Inlines Links");
-			TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "");
+			TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
         }
     }
     [TestFixture]
@@ -12891,13 +12902,13 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link [bar](/uri)
+            //     [link] bar](/uri)
             //
             // Should be rendered as:
-            //     <p>[link <a href="/uri">bar</a></p>
+            //     <p>[link] bar](/uri)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 482, "Inlines Links");
-			TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "");
+			TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "");
         }
     }
     [TestFixture]
@@ -12910,16 +12921,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link \[bar](/uri)
+            //     [link [bar](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="/uri">link [bar</a></p>
+            //     <p>[link <a href="/uri">bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 483, "Inlines Links");
-			TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "");
+			TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "");
         }
     }
-        // The link text may contain inline content:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12930,15 +12940,16 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link *foo **bar** `#`*](/uri)
+            //     [link \[bar](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
+            //     <p><a href="/uri">link [bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 484, "Inlines Links");
-			TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
+			TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "");
         }
     }
+        // The link text may contain inline content:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12949,16 +12960,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [![moon](moon.jpg)](/uri)
+            //     [link *foo **bar** `#`*](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
+            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 485, "Inlines Links");
-			TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
+			TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
         }
     }
-        // However, links may not contain other links, at any level of nesting.
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12969,15 +12979,16 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo [bar](/uri)](/uri)
+            //     [![moon](moon.jpg)](/uri)
             //
             // Should be rendered as:
-            //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
+            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 486, "Inlines Links");
-			TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "");
+			TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
         }
     }
+        // However, links may not contain other links, at any level of nesting.
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12988,13 +12999,13 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
+            //     [foo [bar](/uri)](/uri)
             //
             // Should be rendered as:
-            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
+            //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 487, "Inlines Links");
-			TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "");
+			TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "");
         }
     }
     [TestFixture]
@@ -13007,17 +13018,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     ![[[foo](uri1)](uri2)](uri3)
+            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
             //
             // Should be rendered as:
-            //     <p><img src="uri3" alt="[foo](uri2)" /></p>
+            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 488, "Inlines Links");
-			TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "");
+			TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "");
         }
     }
-        // These cases illustrate the precedence of link text grouping over
-        // emphasis grouping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13028,15 +13037,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     *[foo*](/uri)
+            //     ![[[foo](uri1)](uri2)](uri3)
             //
             // Should be rendered as:
-            //     <p>*<a href="/uri">foo*</a></p>
+            //     <p><img src="uri3" alt="[foo](uri2)" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 489, "Inlines Links");
-			TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "");
+			TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "");
         }
     }
+        // These cases illustrate the precedence of link text grouping over
+        // emphasis grouping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13047,17 +13058,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo *bar](baz*)
+            //     *[foo*](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="baz*">foo *bar</a></p>
+            //     <p>*<a href="/uri">foo*</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 490, "Inlines Links");
-			TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "");
+			TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "");
         }
     }
-        // Note that brackets that *aren't* part of links do not take
-        // precedence:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13068,17 +13077,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     *foo [bar* baz]
+            //     [foo *bar](baz*)
             //
             // Should be rendered as:
-            //     <p><em>foo [bar</em> baz]</p>
+            //     <p><a href="baz*">foo *bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 491, "Inlines Links");
-			TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "");
+			TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "");
         }
     }
-        // These cases illustrate the precedence of HTML tags, code spans,
-        // and autolinks over link grouping:
+        // Note that brackets that *aren't* part of links do not take
+        // precedence:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13089,15 +13098,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo <bar attr="](baz)">
+            //     *foo [bar* baz]
             //
             // Should be rendered as:
-            //     <p>[foo <bar attr="](baz)"></p>
+            //     <p><em>foo [bar</em> baz]</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 492, "Inlines Links");
-			TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "");
+			TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "");
         }
     }
+        // These cases illustrate the precedence of HTML tags, code spans,
+        // and autolinks over link grouping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13108,13 +13119,13 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo`](/uri)`
+            //     [foo <bar attr="](baz)">
             //
             // Should be rendered as:
-            //     <p>[foo<code>](/uri)</code></p>
+            //     <p>[foo <bar attr="](baz)"></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 493, "Inlines Links");
-			TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "");
+			TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "");
         }
     }
     [TestFixture]
@@ -13127,12 +13138,31 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [foo`](/uri)`
+            //
+            // Should be rendered as:
+            //     <p>[foo<code>](/uri)</code></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 494, "Inlines Links");
+			TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example495()
+        {
+            // Example 495
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [foo<http://example.com/?search=](uri)>
             //
             // Should be rendered as:
             //     <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 494, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 495, "Inlines Links");
 			TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "");
         }
     }
@@ -13167,9 +13197,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example495()
+        public void Example496()
         {
-            // Example 495
+            // Example 496
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13180,7 +13210,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 495, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 496, "Inlines Links");
 			TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
@@ -13193,9 +13223,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example496()
+        public void Example497()
         {
-            // Example 496
+            // Example 497
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13206,32 +13236,10 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 496, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 497, "Inlines Links");
 			TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
         }
     }
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example497()
-        {
-            // Example 497
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [link \[bar][ref]
-            //     
-            //     [ref]: /uri
-            //
-            // Should be rendered as:
-            //     <p><a href="/uri">link [bar</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 497, "Inlines Links");
-			TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "");
-        }
-    }
-        // The link text may contain inline content:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13242,17 +13250,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [link *foo **bar** `#`*][ref]
+            //     [link \[bar][ref]
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
+            //     <p><a href="/uri">link [bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 498, "Inlines Links");
-			TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
+			TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "");
         }
     }
+        // The link text may contain inline content:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13263,18 +13272,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [![moon](moon.jpg)][ref]
+            //     [link *foo **bar** `#`*][ref]
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
+            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 499, "Inlines Links");
-			TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
+			TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
         }
     }
-        // However, links may not contain other links, at any level of nesting.
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13285,17 +13293,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo [bar](/uri)][ref]
+            //     [![moon](moon.jpg)][ref]
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
+            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 500, "Inlines Links");
-			TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "");
+			TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
         }
     }
+        // However, links may not contain other links, at any level of nesting.
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13306,6 +13315,27 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [foo [bar](/uri)][ref]
+            //     
+            //     [ref]: /uri
+            //
+            // Should be rendered as:
+            //     <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 501, "Inlines Links");
+			TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example502()
+        {
+            // Example 502
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [foo *bar [baz][ref]*][ref]
             //     
             //     [ref]: /uri
@@ -13313,7 +13343,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 501, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 502, "Inlines Links");
 			TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "");
         }
     }
@@ -13326,9 +13356,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example502()
+        public void Example503()
         {
-            // Example 502
+            // Example 503
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13339,33 +13369,10 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 502, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 503, "Inlines Links");
 			TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "");
         }
     }
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example503()
-        {
-            // Example 503
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [foo *bar][ref]
-            //     
-            //     [ref]: /uri
-            //
-            // Should be rendered as:
-            //     <p><a href="/uri">foo *bar</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 503, "Inlines Links");
-			TestParser.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "");
-        }
-    }
-        // These cases illustrate the precedence of HTML tags, code spans,
-        // and autolinks over link grouping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13376,17 +13383,19 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo <bar attr="][ref]">
+            //     [foo *bar][ref]
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p>[foo <bar attr="][ref]"></p>
+            //     <p><a href="/uri">foo *bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 504, "Inlines Links");
-			TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "");
+			TestParser.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "");
         }
     }
+        // These cases illustrate the precedence of HTML tags, code spans,
+        // and autolinks over link grouping:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13397,15 +13406,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo`][ref]`
+            //     [foo <bar attr="][ref]">
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p>[foo<code>][ref]</code></p>
+            //     <p>[foo <bar attr="][ref]"></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 505, "Inlines Links");
-			TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "");
+			TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "");
         }
     }
     [TestFixture]
@@ -13418,18 +13427,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo<http://example.com/?search=][ref]>
+            //     [foo`][ref]`
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
+            //     <p>[foo<code>][ref]</code></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 506, "Inlines Links");
-			TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "");
+			TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "");
         }
     }
-        // Matching is case-insensitive:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13440,18 +13448,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo][BaR]
+            //     [foo<http://example.com/?search=][ref]>
             //     
-            //     [bar]: /url "title"
+            //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p><a href="/url" title="title">foo</a></p>
+            //     <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 507, "Inlines Links");
-			TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+			TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "");
         }
     }
-        // Unicode case fold is used:
+        // Matching is case-insensitive:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13462,6 +13470,28 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [foo][BaR]
+            //     
+            //     [bar]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><a href="/url" title="title">foo</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 508, "Inlines Links");
+			TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+        }
+    }
+        // Unicode case fold is used:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example509()
+        {
+            // Example 509
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [Толпой][Толпой] is a Russian word.
             //     
             //     [ТОЛПОЙ]: /url
@@ -13469,7 +13499,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url">Толпой</a> is a Russian word.</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 508, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 509, "Inlines Links");
 			TestParser.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>", "");
         }
     }
@@ -13479,9 +13509,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example509()
+        public void Example510()
         {
-            // Example 509
+            // Example 510
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13493,7 +13523,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url">Baz</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 509, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 510, "Inlines Links");
 			TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "");
         }
     }
@@ -13503,9 +13533,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example510()
+        public void Example511()
         {
-            // Example 510
+            // Example 511
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13516,7 +13546,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>[foo] <a href="/url" title="title">bar</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 510, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 511, "Inlines Links");
 			TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "");
         }
     }
@@ -13524,9 +13554,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example511()
+        public void Example512()
         {
-            // Example 511
+            // Example 512
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13539,7 +13569,7 @@ namespace Markdig.Tests
             //     <p>[foo]
             //     <a href="/url" title="title">bar</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 511, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 512, "Inlines Links");
 			TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "");
         }
     }
@@ -13576,9 +13606,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example512()
+        public void Example513()
         {
-            // Example 512
+            // Example 513
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13591,7 +13621,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url1">bar</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 512, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 513, "Inlines Links");
 			TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "");
         }
     }
@@ -13602,9 +13632,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example513()
+        public void Example514()
         {
-            // Example 513
+            // Example 514
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13615,7 +13645,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>[bar][foo!]</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 513, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 514, "Inlines Links");
 			TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "");
         }
     }
@@ -13625,9 +13655,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example514()
+        public void Example515()
         {
-            // Example 514
+            // Example 515
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13639,30 +13669,8 @@ namespace Markdig.Tests
             //     <p>[foo][ref[]</p>
             //     <p>[ref[]: /uri</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 514, "Inlines Links");
-			TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example515()
-        {
-            // Example 515
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [foo][ref[bar]]
-            //     
-            //     [ref[bar]]: /uri
-            //
-            // Should be rendered as:
-            //     <p>[foo][ref[bar]]</p>
-            //     <p>[ref[bar]]: /uri</p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 515, "Inlines Links");
-			TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "");
+			TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "");
         }
     }
     [TestFixture]
@@ -13675,16 +13683,16 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [[[foo]]]
+            //     [foo][ref[bar]]
             //     
-            //     [[[foo]]]: /url
+            //     [ref[bar]]: /uri
             //
             // Should be rendered as:
-            //     <p>[[[foo]]]</p>
-            //     <p>[[[foo]]]: /url</p>
+            //     <p>[foo][ref[bar]]</p>
+            //     <p>[ref[bar]]: /uri</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 516, "Inlines Links");
-			TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "");
+			TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "");
         }
     }
     [TestFixture]
@@ -13697,18 +13705,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo][ref\[]
+            //     [[[foo]]]
             //     
-            //     [ref\[]: /uri
+            //     [[[foo]]]: /url
             //
             // Should be rendered as:
-            //     <p><a href="/uri">foo</a></p>
+            //     <p>[[[foo]]]</p>
+            //     <p>[[[foo]]]: /url</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 517, "Inlines Links");
-			TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "");
+			TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "");
         }
     }
-        // Note that in this example `]` is not backslash-escaped:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13719,6 +13727,28 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [foo][ref\[]
+            //     
+            //     [ref\[]: /uri
+            //
+            // Should be rendered as:
+            //     <p><a href="/uri">foo</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 518, "Inlines Links");
+			TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "");
+        }
+    }
+        // Note that in this example `]` is not backslash-escaped:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example519()
+        {
+            // Example 519
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [bar\\]: /uri
             //     
             //     [bar\\]
@@ -13726,7 +13756,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/uri">bar\</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 518, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 519, "Inlines Links");
 			TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "");
         }
     }
@@ -13735,9 +13765,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example519()
+        public void Example520()
         {
-            // Example 519
+            // Example 520
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13749,7 +13779,7 @@ namespace Markdig.Tests
             //     <p>[]</p>
             //     <p>[]: /uri</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 519, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 520, "Inlines Links");
 			TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "");
         }
     }
@@ -13757,9 +13787,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example520()
+        public void Example521()
         {
-            // Example 520
+            // Example 521
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13775,7 +13805,7 @@ namespace Markdig.Tests
             //     <p>[
             //     ]: /uri</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 520, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 521, "Inlines Links");
 			TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "");
         }
     }
@@ -13791,9 +13821,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example521()
+        public void Example522()
         {
-            // Example 521
+            // Example 522
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13804,32 +13834,10 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 521, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 522, "Inlines Links");
 			TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example522()
-        {
-            // Example 522
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [*foo* bar][]
-            //     
-            //     [*foo* bar]: /url "title"
-            //
-            // Should be rendered as:
-            //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 522, "Inlines Links");
-			TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
-        }
-    }
-        // The link labels are case-insensitive:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13840,6 +13848,28 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
+            //     [*foo* bar][]
+            //     
+            //     [*foo* bar]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 523, "Inlines Links");
+			TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
+        }
+    }
+        // The link labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example524()
+        {
+            // Example 524
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
             //     [Foo][]
             //     
             //     [foo]: /url "title"
@@ -13847,7 +13877,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 523, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 524, "Inlines Links");
 			TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
         }
     }
@@ -13857,9 +13887,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example524()
+        public void Example525()
         {
-            // Example 524
+            // Example 525
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13872,7 +13902,7 @@ namespace Markdig.Tests
             //     <p><a href="/url" title="title">foo</a>
             //     []</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 524, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 525, "Inlines Links");
 			TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "");
         }
     }
@@ -13888,9 +13918,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example525()
+        public void Example526()
         {
-            // Example 525
+            // Example 526
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -13901,29 +13931,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 525, "Inlines Links");
-			TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesLinks
-    {
-        [Test]
-        public void Example526()
-        {
-            // Example 526
-            // Section: Inlines Links
-            //
-            // The following CommonMark:
-            //     [*foo* bar]
-            //     
-            //     [*foo* bar]: /url "title"
-            //
-            // Should be rendered as:
-            //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 526, "Inlines Links");
-			TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
+			TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
     [TestFixture]
@@ -13936,15 +13945,15 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [[*foo* bar]]
+            //     [*foo* bar]
             //     
             //     [*foo* bar]: /url "title"
             //
             // Should be rendered as:
-            //     <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
+            //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 527, "Inlines Links");
-			TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "");
+			TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
         }
     }
     [TestFixture]
@@ -13957,18 +13966,17 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [[bar [foo]
+            //     [[*foo* bar]]
             //     
-            //     [foo]: /url
+            //     [*foo* bar]: /url "title"
             //
             // Should be rendered as:
-            //     <p>[[bar <a href="/url">foo</a></p>
+            //     <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 528, "Inlines Links");
-			TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "");
+			TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "");
         }
     }
-        // The link labels are case-insensitive:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13979,18 +13987,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [Foo]
+            //     [[bar [foo]
             //     
-            //     [foo]: /url "title"
+            //     [foo]: /url
             //
             // Should be rendered as:
-            //     <p><a href="/url" title="title">Foo</a></p>
+            //     <p>[[bar <a href="/url">foo</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 529, "Inlines Links");
-			TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
+			TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "");
         }
     }
-        // A space after the link text should be preserved:
+        // The link labels are case-insensitive:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14001,19 +14009,18 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo] bar
+            //     [Foo]
             //     
-            //     [foo]: /url
+            //     [foo]: /url "title"
             //
             // Should be rendered as:
-            //     <p><a href="/url">foo</a> bar</p>
+            //     <p><a href="/url" title="title">Foo</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 530, "Inlines Links");
-			TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "");
+			TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
         }
     }
-        // If you just want bracketed text, you can backslash-escape the
-        // opening bracket to avoid links:
+        // A space after the link text should be preserved:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14024,19 +14031,19 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     \[foo]
+            //     [foo] bar
             //     
-            //     [foo]: /url "title"
+            //     [foo]: /url
             //
             // Should be rendered as:
-            //     <p>[foo]</p>
+            //     <p><a href="/url">foo</a> bar</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 531, "Inlines Links");
-			TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "");
+			TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "");
         }
     }
-        // Note that this is a link, because a link label ends with the first
-        // following closing bracket:
+        // If you just want bracketed text, you can backslash-escape the
+        // opening bracket to avoid links:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14047,18 +14054,19 @@ namespace Markdig.Tests
             // Section: Inlines Links
             //
             // The following CommonMark:
-            //     [foo*]: /url
+            //     \[foo]
             //     
-            //     *[foo*]
+            //     [foo]: /url "title"
             //
             // Should be rendered as:
-            //     <p>*<a href="/url">foo*</a></p>
+            //     <p>[foo]</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 532, "Inlines Links");
-			TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "");
+			TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "");
         }
     }
-        // Full references take precedence over shortcut references:
+        // Note that this is a link, because a link label ends with the first
+        // following closing bracket:
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14066,6 +14074,29 @@ namespace Markdig.Tests
         public void Example533()
         {
             // Example 533
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
+            //     [foo*]: /url
+            //     
+            //     *[foo*]
+            //
+            // Should be rendered as:
+            //     <p>*<a href="/url">foo*</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 533, "Inlines Links");
+			TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "");
+        }
+    }
+        // Full and compact references take precedence over shortcut
+        // references:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example534()
+        {
+            // Example 534
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -14077,8 +14108,72 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url2">foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 533, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 534, "Inlines Links");
 			TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example535()
+        {
+            // Example 535
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
+            //     [foo][]
+            //     
+            //     [foo]: /url1
+            //
+            // Should be rendered as:
+            //     <p><a href="/url1">foo</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 535, "Inlines Links");
+			TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "");
+        }
+    }
+        // Inline links also take precedence:
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example536()
+        {
+            // Example 536
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
+            //     [foo]()
+            //     
+            //     [foo]: /url1
+            //
+            // Should be rendered as:
+            //     <p><a href="">foo</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 536, "Inlines Links");
+			TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesLinks
+    {
+        [Test]
+        public void Example537()
+        {
+            // Example 537
+            // Section: Inlines Links
+            //
+            // The following CommonMark:
+            //     [foo](not a link)
+            //     
+            //     [foo]: /url1
+            //
+            // Should be rendered as:
+            //     <p><a href="/url1">foo</a>(not a link)</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 537, "Inlines Links");
+			TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "");
         }
     }
         // In the following case `[bar][baz]` is parsed as a reference,
@@ -14087,9 +14182,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example534()
+        public void Example538()
         {
-            // Example 534
+            // Example 538
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -14100,7 +14195,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>[foo]<a href="/url">bar</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 534, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 538, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "");
         }
     }
@@ -14110,9 +14205,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example535()
+        public void Example539()
         {
-            // Example 535
+            // Example 539
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -14124,7 +14219,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 535, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 539, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "");
         }
     }
@@ -14134,9 +14229,9 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example536()
+        public void Example540()
         {
-            // Example 536
+            // Example 540
             // Section: Inlines Links
             //
             // The following CommonMark:
@@ -14148,7 +14243,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>[foo]<a href="/url1">bar</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 536, "Inlines Links");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 540, "Inlines Links");
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "");
         }
     }
@@ -14167,9 +14262,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example537()
+        public void Example541()
         {
-            // Example 537
+            // Example 541
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14178,7 +14273,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 537, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 541, "Inlines Images");
 			TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
         }
     }
@@ -14186,9 +14281,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example538()
+        public void Example542()
         {
-            // Example 538
+            // Example 542
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14199,7 +14294,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 538, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 542, "Inlines Images");
 			TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
@@ -14207,9 +14302,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example539()
+        public void Example543()
         {
-            // Example 539
+            // Example 543
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14218,7 +14313,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 539, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 543, "Inlines Images");
 			TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
         }
     }
@@ -14226,9 +14321,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example540()
+        public void Example544()
         {
-            // Example 540
+            // Example 544
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14237,7 +14332,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 540, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 544, "Inlines Images");
 			TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
         }
     }
@@ -14251,9 +14346,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example541()
+        public void Example545()
         {
-            // Example 541
+            // Example 545
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14264,86 +14359,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 541, "Inlines Images");
-			TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesImages
-    {
-        [Test]
-        public void Example542()
-        {
-            // Example 542
-            // Section: Inlines Images
-            //
-            // The following CommonMark:
-            //     ![foo *bar*][foobar]
-            //     
-            //     [FOOBAR]: train.jpg "train & tracks"
-            //
-            // Should be rendered as:
-            //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 542, "Inlines Images");
-			TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesImages
-    {
-        [Test]
-        public void Example543()
-        {
-            // Example 543
-            // Section: Inlines Images
-            //
-            // The following CommonMark:
-            //     ![foo](train.jpg)
-            //
-            // Should be rendered as:
-            //     <p><img src="train.jpg" alt="foo" /></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 543, "Inlines Images");
-			TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesImages
-    {
-        [Test]
-        public void Example544()
-        {
-            // Example 544
-            // Section: Inlines Images
-            //
-            // The following CommonMark:
-            //     My ![foo bar](/path/to/train.jpg  "title"   )
-            //
-            // Should be rendered as:
-            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 544, "Inlines Images");
-			TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesImages
-    {
-        [Test]
-        public void Example545()
-        {
-            // Example 545
-            // Section: Inlines Images
-            //
-            // The following CommonMark:
-            //     ![foo](<url>)
-            //
-            // Should be rendered as:
-            //     <p><img src="url" alt="foo" /></p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 545, "Inlines Images");
-			TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "");
+			TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
     [TestFixture]
@@ -14356,16 +14373,17 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![](/url)
+            //     ![foo *bar*][foobar]
+            //     
+            //     [FOOBAR]: train.jpg "train & tracks"
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="" /></p>
+            //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 546, "Inlines Images");
-			TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "");
+			TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
-        // Reference-style:
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14376,15 +14394,13 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![foo][bar]
-            //     
-            //     [bar]: /url
+            //     ![foo](train.jpg)
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="foo" /></p>
+            //     <p><img src="train.jpg" alt="foo" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 547, "Inlines Images");
-			TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
+			TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "");
         }
     }
     [TestFixture]
@@ -14397,18 +14413,15 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![foo][bar]
-            //     
-            //     [BAR]: /url
+            //     My ![foo bar](/path/to/train.jpg  "title"   )
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="foo" /></p>
+            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 548, "Inlines Images");
-			TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
+			TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "");
         }
     }
-        // Collapsed:
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14419,15 +14432,13 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![foo][]
-            //     
-            //     [foo]: /url "title"
+            //     ![foo](<url>)
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="foo" title="title" /></p>
+            //     <p><img src="url" alt="foo" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 549, "Inlines Images");
-			TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+			TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "");
         }
     }
     [TestFixture]
@@ -14440,18 +14451,16 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![*foo* bar][]
-            //     
-            //     [*foo* bar]: /url "title"
+            //     ![](/url)
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="foo bar" title="title" /></p>
+            //     <p><img src="/url" alt="" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 550, "Inlines Images");
-			TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
+			TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "");
         }
     }
-        // The labels are case-insensitive:
+        // Reference-style:
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14462,19 +14471,17 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![Foo][]
+            //     ![foo][bar]
             //     
-            //     [foo]: /url "title"
+            //     [bar]: /url
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="Foo" title="title" /></p>
+            //     <p><img src="/url" alt="foo" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 551, "Inlines Images");
-			TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
+			TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
         }
     }
-        // As with reference links, [whitespace] is not allowed
-        // between the two sets of brackets:
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14485,20 +14492,18 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![foo] 
-            //     []
+            //     ![foo][bar]
             //     
-            //     [foo]: /url "title"
+            //     [BAR]: /url
             //
             // Should be rendered as:
-            //     <p><img src="/url" alt="foo" title="title" />
-            //     []</p>
+            //     <p><img src="/url" alt="foo" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 552, "Inlines Images");
-			TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "");
+			TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
         }
     }
-        // Shortcut:
+        // Collapsed:
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14509,7 +14514,7 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![foo]
+            //     ![foo][]
             //     
             //     [foo]: /url "title"
             //
@@ -14517,7 +14522,7 @@ namespace Markdig.Tests
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 553, "Inlines Images");
-			TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+			TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
         }
     }
     [TestFixture]
@@ -14530,7 +14535,7 @@ namespace Markdig.Tests
             // Section: Inlines Images
             //
             // The following CommonMark:
-            //     ![*foo* bar]
+            //     ![*foo* bar][]
             //     
             //     [*foo* bar]: /url "title"
             //
@@ -14538,6 +14543,96 @@ namespace Markdig.Tests
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 554, "Inlines Images");
+			TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
+        }
+    }
+        // The labels are case-insensitive:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
+        [Test]
+        public void Example555()
+        {
+            // Example 555
+            // Section: Inlines Images
+            //
+            // The following CommonMark:
+            //     ![Foo][]
+            //     
+            //     [foo]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><img src="/url" alt="Foo" title="title" /></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 555, "Inlines Images");
+			TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
+        }
+    }
+        // As with reference links, [whitespace] is not allowed
+        // between the two sets of brackets:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
+        [Test]
+        public void Example556()
+        {
+            // Example 556
+            // Section: Inlines Images
+            //
+            // The following CommonMark:
+            //     ![foo] 
+            //     []
+            //     
+            //     [foo]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><img src="/url" alt="foo" title="title" />
+            //     []</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 556, "Inlines Images");
+			TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "");
+        }
+    }
+        // Shortcut:
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
+        [Test]
+        public void Example557()
+        {
+            // Example 557
+            // Section: Inlines Images
+            //
+            // The following CommonMark:
+            //     ![foo]
+            //     
+            //     [foo]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><img src="/url" alt="foo" title="title" /></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 557, "Inlines Images");
+			TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesImages
+    {
+        [Test]
+        public void Example558()
+        {
+            // Example 558
+            // Section: Inlines Images
+            //
+            // The following CommonMark:
+            //     ![*foo* bar]
+            //     
+            //     [*foo* bar]: /url "title"
+            //
+            // Should be rendered as:
+            //     <p><img src="/url" alt="foo bar" title="title" /></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 558, "Inlines Images");
 			TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
         }
     }
@@ -14546,9 +14641,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example555()
+        public void Example559()
         {
-            // Example 555
+            // Example 559
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14560,7 +14655,7 @@ namespace Markdig.Tests
             //     <p>![[foo]]</p>
             //     <p>[[foo]]: /url &quot;title&quot;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 555, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 559, "Inlines Images");
 			TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "");
         }
     }
@@ -14569,9 +14664,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example556()
+        public void Example560()
         {
-            // Example 556
+            // Example 560
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14582,7 +14677,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 556, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 560, "Inlines Images");
 			TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
         }
     }
@@ -14592,9 +14687,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example557()
+        public void Example561()
         {
-            // Example 557
+            // Example 561
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14605,7 +14700,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>![foo]</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 557, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 561, "Inlines Images");
 			TestParser.TestSpec("\\!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "");
         }
     }
@@ -14615,9 +14710,9 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example558()
+        public void Example562()
         {
-            // Example 558
+            // Example 562
             // Section: Inlines Images
             //
             // The following CommonMark:
@@ -14628,7 +14723,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>!<a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 558, "Inlines Images");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 562, "Inlines Images");
 			TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
@@ -14659,9 +14754,9 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example559()
+        public void Example563()
         {
-            // Example 559
+            // Example 563
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
@@ -14670,89 +14765,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 559, "Inlines Autolinks");
-			TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example560()
-        {
-            // Example 560
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <http://foo.bar.baz/test?q=hello&id=22&boolean>
-            //
-            // Should be rendered as:
-            //     <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 560, "Inlines Autolinks");
-			TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example561()
-        {
-            // Example 561
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <irc://foo.bar:2233/baz>
-            //
-            // Should be rendered as:
-            //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 561, "Inlines Autolinks");
-			TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "");
-        }
-    }
-        // Uppercase is also fine:
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example562()
-        {
-            // Example 562
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <MAILTO:FOO@BAR.BAZ>
-            //
-            // Should be rendered as:
-            //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 562, "Inlines Autolinks");
-			TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "");
-        }
-    }
-        // Note that many strings that count as [absolute URIs] for
-        // purposes of this spec are not valid URIs, because their
-        // schemes are not registered or because of other problems
-        // with their syntax:
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example563()
-        {
-            // Example 563
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <a+b+c:d>
-            //
-            // Should be rendered as:
-            //     <p><a href="a+b+c:d">a+b+c:d</a></p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 563, "Inlines Autolinks");
-			TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "");
+			TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "");
         }
     }
     [TestFixture]
@@ -14765,13 +14779,13 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <made-up-scheme://foo,bar>
+            //     <http://foo.bar.baz/test?q=hello&id=22&boolean>
             //
             // Should be rendered as:
-            //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
+            //     <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 564, "Inlines Autolinks");
-			TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "");
+			TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "");
         }
     }
     [TestFixture]
@@ -14784,15 +14798,16 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <http://../>
+            //     <irc://foo.bar:2233/baz>
             //
             // Should be rendered as:
-            //     <p><a href="http://../">http://../</a></p>
+            //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 565, "Inlines Autolinks");
-			TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "");
+			TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "");
         }
     }
+        // Uppercase is also fine:
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14803,16 +14818,19 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <localhost:5001/foo>
+            //     <MAILTO:FOO@BAR.BAZ>
             //
             // Should be rendered as:
-            //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
+            //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 566, "Inlines Autolinks");
-			TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "");
+			TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "");
         }
     }
-        // Spaces are not allowed in autolinks:
+        // Note that many strings that count as [absolute URIs] for
+        // purposes of this spec are not valid URIs, because their
+        // schemes are not registered or because of other problems
+        // with their syntax:
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14823,16 +14841,15 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <http://foo.bar/baz bim>
+            //     <a+b+c:d>
             //
             // Should be rendered as:
-            //     <p>&lt;http://foo.bar/baz bim&gt;</p>
+            //     <p><a href="a+b+c:d">a+b+c:d</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 567, "Inlines Autolinks");
-			TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "");
+			TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "");
         }
     }
-        // Backslash-escapes do not work inside autolinks:
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14843,12 +14860,90 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
+            //     <made-up-scheme://foo,bar>
+            //
+            // Should be rendered as:
+            //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 568, "Inlines Autolinks");
+			TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example569()
+        {
+            // Example 569
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     <http://../>
+            //
+            // Should be rendered as:
+            //     <p><a href="http://../">http://../</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 569, "Inlines Autolinks");
+			TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example570()
+        {
+            // Example 570
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     <localhost:5001/foo>
+            //
+            // Should be rendered as:
+            //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 570, "Inlines Autolinks");
+			TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "");
+        }
+    }
+        // Spaces are not allowed in autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example571()
+        {
+            // Example 571
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     <http://foo.bar/baz bim>
+            //
+            // Should be rendered as:
+            //     <p>&lt;http://foo.bar/baz bim&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 571, "Inlines Autolinks");
+			TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "");
+        }
+    }
+        // Backslash-escapes do not work inside autolinks:
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example572()
+        {
+            // Example 572
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
             //     <http://example.com/\[\>
             //
             // Should be rendered as:
             //     <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 568, "Inlines Autolinks");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 572, "Inlines Autolinks");
 			TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "");
         }
     }
@@ -14870,9 +14965,9 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example569()
+        public void Example573()
         {
-            // Example 569
+            // Example 573
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
@@ -14881,86 +14976,8 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 569, "Inlines Autolinks");
-			TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example570()
-        {
-            // Example 570
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <foo+special@Bar.baz-bar0.com>
-            //
-            // Should be rendered as:
-            //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 570, "Inlines Autolinks");
-			TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "");
-        }
-    }
-        // Backslash-escapes do not work inside email autolinks:
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example571()
-        {
-            // Example 571
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <foo\+@bar.example.com>
-            //
-            // Should be rendered as:
-            //     <p>&lt;foo+@bar.example.com&gt;</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 571, "Inlines Autolinks");
-			TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "");
-        }
-    }
-        // These are not autolinks:
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example572()
-        {
-            // Example 572
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     <>
-            //
-            // Should be rendered as:
-            //     <p>&lt;&gt;</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 572, "Inlines Autolinks");
-			TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesAutolinks
-    {
-        [Test]
-        public void Example573()
-        {
-            // Example 573
-            // Section: Inlines Autolinks
-            //
-            // The following CommonMark:
-            //     < http://foo.bar >
-            //
-            // Should be rendered as:
-            //     <p>&lt; http://foo.bar &gt;</p>
-
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 573, "Inlines Autolinks");
-			TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "");
+			TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "");
         }
     }
     [TestFixture]
@@ -14973,15 +14990,16 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <m:abc>
+            //     <foo+special@Bar.baz-bar0.com>
             //
             // Should be rendered as:
-            //     <p>&lt;m:abc&gt;</p>
+            //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 574, "Inlines Autolinks");
-			TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "");
+			TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "");
         }
     }
+        // Backslash-escapes do not work inside email autolinks:
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14992,15 +15010,16 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     <foo.bar.baz>
+            //     <foo\+@bar.example.com>
             //
             // Should be rendered as:
-            //     <p>&lt;foo.bar.baz&gt;</p>
+            //     <p>&lt;foo+@bar.example.com&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 575, "Inlines Autolinks");
-			TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "");
+			TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "");
         }
     }
+        // These are not autolinks:
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15011,13 +15030,13 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
-            //     http://example.com
+            //     <>
             //
             // Should be rendered as:
-            //     <p>http://example.com</p>
+            //     <p>&lt;&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 576, "Inlines Autolinks");
-			TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "");
+			TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "");
         }
     }
     [TestFixture]
@@ -15030,12 +15049,88 @@ namespace Markdig.Tests
             // Section: Inlines Autolinks
             //
             // The following CommonMark:
+            //     < http://foo.bar >
+            //
+            // Should be rendered as:
+            //     <p>&lt; http://foo.bar &gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 577, "Inlines Autolinks");
+			TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example578()
+        {
+            // Example 578
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     <m:abc>
+            //
+            // Should be rendered as:
+            //     <p>&lt;m:abc&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 578, "Inlines Autolinks");
+			TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example579()
+        {
+            // Example 579
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     <foo.bar.baz>
+            //
+            // Should be rendered as:
+            //     <p>&lt;foo.bar.baz&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 579, "Inlines Autolinks");
+			TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example580()
+        {
+            // Example 580
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
+            //     http://example.com
+            //
+            // Should be rendered as:
+            //     <p>http://example.com</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 580, "Inlines Autolinks");
+			TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesAutolinks
+    {
+        [Test]
+        public void Example581()
+        {
+            // Example 581
+            // Section: Inlines Autolinks
+            //
+            // The following CommonMark:
             //     foo@bar.example.com
             //
             // Should be rendered as:
             //     <p>foo@bar.example.com</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 577, "Inlines Autolinks");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 581, "Inlines Autolinks");
 			TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "");
         }
     }
@@ -15117,9 +15212,9 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example578()
+        public void Example582()
         {
-            // Example 578
+            // Example 582
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
@@ -15128,95 +15223,11 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p><a><bab><c2c></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 578, "Inlines Raw HTML");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 582, "Inlines Raw HTML");
 			TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "");
         }
     }
         // Empty elements:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example579()
-        {
-            // Example 579
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     <a/><b2/>
-            //
-            // Should be rendered as:
-            //     <p><a/><b2/></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 579, "Inlines Raw HTML");
-			TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "");
-        }
-    }
-        // [Whitespace] is allowed:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example580()
-        {
-            // Example 580
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     <a  /><b2
-            //     data="foo" >
-            //
-            // Should be rendered as:
-            //     <p><a  /><b2
-            //     data="foo" ></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 580, "Inlines Raw HTML");
-			TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "");
-        }
-    }
-        // With attributes:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example581()
-        {
-            // Example 581
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     <a foo="bar" bam = 'baz <em>"</em>'
-            //     _boolean zoop:33=zoop:33 />
-            //
-            // Should be rendered as:
-            //     <p><a foo="bar" bam = 'baz <em>"</em>'
-            //     _boolean zoop:33=zoop:33 /></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 581, "Inlines Raw HTML");
-			TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "");
-        }
-    }
-        // Custom tag names can be used:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example582()
-        {
-            // Example 582
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     Foo <responsive-image src="foo.jpg" />
-            //
-            // Should be rendered as:
-            //     <p>Foo <responsive-image src="foo.jpg" /></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 582, "Inlines Raw HTML");
-			TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "");
-        }
-    }
-        // Illegal tag names, not parsed as HTML:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15227,16 +15238,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     <33> <__>
+            //     <a/><b2/>
             //
             // Should be rendered as:
-            //     <p>&lt;33&gt; &lt;__&gt;</p>
+            //     <p><a/><b2/></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 583, "Inlines Raw HTML");
-			TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "");
+			TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "");
         }
     }
-        // Illegal attribute names:
+        // [Whitespace] is allowed:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15247,16 +15258,18 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     <a h*#ref="hi">
+            //     <a  /><b2
+            //     data="foo" >
             //
             // Should be rendered as:
-            //     <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
+            //     <p><a  /><b2
+            //     data="foo" ></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 584, "Inlines Raw HTML");
-			TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "");
+			TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "");
         }
     }
-        // Illegal attribute values:
+        // With attributes:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15267,16 +15280,18 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     <a href="hi'> <a href=hi'>
+            //     <a foo="bar" bam = 'baz <em>"</em>'
+            //     _boolean zoop:33=zoop:33 />
             //
             // Should be rendered as:
-            //     <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
+            //     <p><a foo="bar" bam = 'baz <em>"</em>'
+            //     _boolean zoop:33=zoop:33 /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 585, "Inlines Raw HTML");
-			TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "");
+			TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "");
         }
     }
-        // Illegal [whitespace]:
+        // Custom tag names can be used:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15287,18 +15302,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     < a><
-            //     foo><bar/ >
+            //     Foo <responsive-image src="foo.jpg" />
             //
             // Should be rendered as:
-            //     <p>&lt; a&gt;&lt;
-            //     foo&gt;&lt;bar/ &gt;</p>
+            //     <p>Foo <responsive-image src="foo.jpg" /></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 586, "Inlines Raw HTML");
-			TestParser.TestSpec("< a><\nfoo><bar/ >", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;</p>", "");
+			TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "");
         }
     }
-        // Missing [whitespace]:
+        // Illegal tag names, not parsed as HTML:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15309,16 +15322,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     <a href='bar'title=title>
+            //     <33> <__>
             //
             // Should be rendered as:
-            //     <p>&lt;a href='bar'title=title&gt;</p>
+            //     <p>&lt;33&gt; &lt;__&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 587, "Inlines Raw HTML");
-			TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "");
+			TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "");
         }
     }
-        // Closing tags:
+        // Illegal attribute names:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15329,16 +15342,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     </a></foo >
+            //     <a h*#ref="hi">
             //
             // Should be rendered as:
-            //     <p></a></foo ></p>
+            //     <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 588, "Inlines Raw HTML");
-			TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "");
+			TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "");
         }
     }
-        // Illegal attributes in closing tag:
+        // Illegal attribute values:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15349,16 +15362,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     </a href="foo">
+            //     <a href="hi'> <a href=hi'>
             //
             // Should be rendered as:
-            //     <p>&lt;/a href=&quot;foo&quot;&gt;</p>
+            //     <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 589, "Inlines Raw HTML");
-			TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "");
+			TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "");
         }
     }
-        // Comments:
+        // Illegal [whitespace]:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15369,17 +15382,18 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     foo <!-- this is a
-            //     comment - with hyphen -->
+            //     < a><
+            //     foo><bar/ >
             //
             // Should be rendered as:
-            //     <p>foo <!-- this is a
-            //     comment - with hyphen --></p>
+            //     <p>&lt; a&gt;&lt;
+            //     foo&gt;&lt;bar/ &gt;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 590, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "");
+			TestParser.TestSpec("< a><\nfoo><bar/ >", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;</p>", "");
         }
     }
+        // Missing [whitespace]:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15390,12 +15404,93 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
+            //     <a href='bar'title=title>
+            //
+            // Should be rendered as:
+            //     <p>&lt;a href='bar'title=title&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 591, "Inlines Raw HTML");
+			TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "");
+        }
+    }
+        // Closing tags:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example592()
+        {
+            // Example 592
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     </a></foo >
+            //
+            // Should be rendered as:
+            //     <p></a></foo ></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 592, "Inlines Raw HTML");
+			TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "");
+        }
+    }
+        // Illegal attributes in closing tag:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example593()
+        {
+            // Example 593
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     </a href="foo">
+            //
+            // Should be rendered as:
+            //     <p>&lt;/a href=&quot;foo&quot;&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 593, "Inlines Raw HTML");
+			TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "");
+        }
+    }
+        // Comments:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example594()
+        {
+            // Example 594
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     foo <!-- this is a
+            //     comment - with hyphen -->
+            //
+            // Should be rendered as:
+            //     <p>foo <!-- this is a
+            //     comment - with hyphen --></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 594, "Inlines Raw HTML");
+			TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example595()
+        {
+            // Example 595
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
             //     foo <!-- not a comment -- two hyphens -->
             //
             // Should be rendered as:
             //     <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 591, "Inlines Raw HTML");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 595, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "");
         }
     }
@@ -15404,9 +15499,9 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example592()
+        public void Example596()
         {
-            // Example 592
+            // Example 596
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
@@ -15418,92 +15513,11 @@ namespace Markdig.Tests
             //     <p>foo &lt;!--&gt; foo --&gt;</p>
             //     <p>foo &lt;!-- foo---&gt;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 592, "Inlines Raw HTML");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 596, "Inlines Raw HTML");
 			TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "");
         }
     }
         // Processing instructions:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example593()
-        {
-            // Example 593
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     foo <?php echo $a; ?>
-            //
-            // Should be rendered as:
-            //     <p>foo <?php echo $a; ?></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 593, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "");
-        }
-    }
-        // Declarations:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example594()
-        {
-            // Example 594
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     foo <!ELEMENT br EMPTY>
-            //
-            // Should be rendered as:
-            //     <p>foo <!ELEMENT br EMPTY></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 594, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "");
-        }
-    }
-        // CDATA sections:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example595()
-        {
-            // Example 595
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     foo <![CDATA[>&<]]>
-            //
-            // Should be rendered as:
-            //     <p>foo <![CDATA[>&<]]></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 595, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "");
-        }
-    }
-        // Entity and numeric character references are preserved in HTML
-        // attributes:
-    [TestFixture]
-    public partial class TestInlinesRawHTML
-    {
-        [Test]
-        public void Example596()
-        {
-            // Example 596
-            // Section: Inlines Raw HTML
-            //
-            // The following CommonMark:
-            //     foo <a href="&ouml;">
-            //
-            // Should be rendered as:
-            //     <p>foo <a href="&ouml;"></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 596, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "");
-        }
-    }
-        // Backslash escapes do not work in HTML attributes:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15514,15 +15528,16 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
-            //     foo <a href="\*">
+            //     foo <?php echo $a; ?>
             //
             // Should be rendered as:
-            //     <p>foo <a href="\*"></p>
+            //     <p>foo <?php echo $a; ?></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 597, "Inlines Raw HTML");
-			TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "");
+			TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "");
         }
     }
+        // Declarations:
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15533,12 +15548,92 @@ namespace Markdig.Tests
             // Section: Inlines Raw HTML
             //
             // The following CommonMark:
+            //     foo <!ELEMENT br EMPTY>
+            //
+            // Should be rendered as:
+            //     <p>foo <!ELEMENT br EMPTY></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 598, "Inlines Raw HTML");
+			TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "");
+        }
+    }
+        // CDATA sections:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example599()
+        {
+            // Example 599
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     foo <![CDATA[>&<]]>
+            //
+            // Should be rendered as:
+            //     <p>foo <![CDATA[>&<]]></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 599, "Inlines Raw HTML");
+			TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "");
+        }
+    }
+        // Entity and numeric character references are preserved in HTML
+        // attributes:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example600()
+        {
+            // Example 600
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     foo <a href="&ouml;">
+            //
+            // Should be rendered as:
+            //     <p>foo <a href="&ouml;"></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 600, "Inlines Raw HTML");
+			TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "");
+        }
+    }
+        // Backslash escapes do not work in HTML attributes:
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example601()
+        {
+            // Example 601
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
+            //     foo <a href="\*">
+            //
+            // Should be rendered as:
+            //     <p>foo <a href="\*"></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 601, "Inlines Raw HTML");
+			TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesRawHTML
+    {
+        [Test]
+        public void Example602()
+        {
+            // Example 602
+            // Section: Inlines Raw HTML
+            //
+            // The following CommonMark:
             //     <a href="\"">
             //
             // Should be rendered as:
             //     <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 598, "Inlines Raw HTML");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 602, "Inlines Raw HTML");
 			TestParser.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "");
         }
     }
@@ -15552,113 +15647,25 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example599()
-        {
-            // Example 599
-            // Section: Inlines Hard line breaks
-            //
-            // The following CommonMark:
-            //     foo  
-            //     baz
-            //
-            // Should be rendered as:
-            //     <p>foo<br />
-            //     baz</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 599, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "");
-        }
-    }
-        // For a more visible alternative, a backslash before the
-        // [line ending] may be used instead of two spaces:
-    [TestFixture]
-    public partial class TestInlinesHardlinebreaks
-    {
-        [Test]
-        public void Example600()
-        {
-            // Example 600
-            // Section: Inlines Hard line breaks
-            //
-            // The following CommonMark:
-            //     foo\
-            //     baz
-            //
-            // Should be rendered as:
-            //     <p>foo<br />
-            //     baz</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 600, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "");
-        }
-    }
-        // More than two spaces can be used:
-    [TestFixture]
-    public partial class TestInlinesHardlinebreaks
-    {
-        [Test]
-        public void Example601()
-        {
-            // Example 601
-            // Section: Inlines Hard line breaks
-            //
-            // The following CommonMark:
-            //     foo       
-            //     baz
-            //
-            // Should be rendered as:
-            //     <p>foo<br />
-            //     baz</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 601, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "");
-        }
-    }
-        // Leading spaces at the beginning of the next line are ignored:
-    [TestFixture]
-    public partial class TestInlinesHardlinebreaks
-    {
-        [Test]
-        public void Example602()
-        {
-            // Example 602
-            // Section: Inlines Hard line breaks
-            //
-            // The following CommonMark:
-            //     foo  
-            //          bar
-            //
-            // Should be rendered as:
-            //     <p>foo<br />
-            //     bar</p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 602, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "");
-        }
-    }
-    [TestFixture]
-    public partial class TestInlinesHardlinebreaks
-    {
-        [Test]
         public void Example603()
         {
             // Example 603
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     foo\
-            //          bar
+            //     foo  
+            //     baz
             //
             // Should be rendered as:
             //     <p>foo<br />
-            //     bar</p>
+            //     baz</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 603, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "");
+			TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
-        // Line breaks can occur inside emphasis, links, and other constructs
-        // that allow inline content:
+        // For a more visible alternative, a backslash before the
+        // [line ending] may be used instead of two spaces:
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15669,17 +15676,18 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     *foo  
-            //     bar*
+            //     foo\
+            //     baz
             //
             // Should be rendered as:
-            //     <p><em>foo<br />
-            //     bar</em></p>
+            //     <p>foo<br />
+            //     baz</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 604, "Inlines Hard line breaks");
-			TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "");
+			TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
+        // More than two spaces can be used:
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15690,18 +15698,18 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     *foo\
-            //     bar*
+            //     foo       
+            //     baz
             //
             // Should be rendered as:
-            //     <p><em>foo<br />
-            //     bar</em></p>
+            //     <p>foo<br />
+            //     baz</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 605, "Inlines Hard line breaks");
-			TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "");
+			TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
-        // Line breaks do not occur inside code spans
+        // Leading spaces at the beginning of the next line are ignored:
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15712,14 +15720,15 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     `code  
-            //     span`
+            //     foo  
+            //          bar
             //
             // Should be rendered as:
-            //     <p><code>code span</code></p>
+            //     <p>foo<br />
+            //     bar</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 606, "Inlines Hard line breaks");
-			TestParser.TestSpec("`code  \nspan`", "<p><code>code span</code></p>", "");
+			TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "");
         }
     }
     [TestFixture]
@@ -15732,17 +15741,19 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     `code\
-            //     span`
+            //     foo\
+            //          bar
             //
             // Should be rendered as:
-            //     <p><code>code\ span</code></p>
+            //     <p>foo<br />
+            //     bar</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 607, "Inlines Hard line breaks");
-			TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "");
+			TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "");
         }
     }
-        // or HTML tags:
+        // Line breaks can occur inside emphasis, links, and other constructs
+        // that allow inline content:
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15753,15 +15764,15 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     <a href="foo  
-            //     bar">
+            //     *foo  
+            //     bar*
             //
             // Should be rendered as:
-            //     <p><a href="foo  
-            //     bar"></p>
+            //     <p><em>foo<br />
+            //     bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 608, "Inlines Hard line breaks");
-			TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "");
+			TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "");
         }
     }
     [TestFixture]
@@ -15774,20 +15785,18 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     <a href="foo\
-            //     bar">
+            //     *foo\
+            //     bar*
             //
             // Should be rendered as:
-            //     <p><a href="foo\
-            //     bar"></p>
+            //     <p><em>foo<br />
+            //     bar</em></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 609, "Inlines Hard line breaks");
-			TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "");
+			TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "");
         }
     }
-        // Hard line breaks are for separating inline content within a block.
-        // Neither syntax for hard line breaks works at the end of a paragraph or
-        // other block element:
+        // Line breaks do not occur inside code spans
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15798,13 +15807,14 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     foo\
+            //     `code  
+            //     span`
             //
             // Should be rendered as:
-            //     <p>foo\</p>
+            //     <p><code>code span</code></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 610, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo\\", "<p>foo\\</p>", "");
+			TestParser.TestSpec("`code  \nspan`", "<p><code>code span</code></p>", "");
         }
     }
     [TestFixture]
@@ -15817,15 +15827,17 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     foo  
+            //     `code\
+            //     span`
             //
             // Should be rendered as:
-            //     <p>foo</p>
+            //     <p><code>code\ span</code></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 611, "Inlines Hard line breaks");
-			TestParser.TestSpec("foo  ", "<p>foo</p>", "");
+			TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "");
         }
     }
+        // or HTML tags:
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15836,13 +15848,15 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
-            //     ### foo\
+            //     <a href="foo  
+            //     bar">
             //
             // Should be rendered as:
-            //     <h3>foo\</h3>
+            //     <p><a href="foo  
+            //     bar"></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 612, "Inlines Hard line breaks");
-			TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>", "");
+			TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "");
         }
     }
     [TestFixture]
@@ -15855,12 +15869,93 @@ namespace Markdig.Tests
             // Section: Inlines Hard line breaks
             //
             // The following CommonMark:
+            //     <a href="foo\
+            //     bar">
+            //
+            // Should be rendered as:
+            //     <p><a href="foo\
+            //     bar"></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 613, "Inlines Hard line breaks");
+			TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "");
+        }
+    }
+        // Hard line breaks are for separating inline content within a block.
+        // Neither syntax for hard line breaks works at the end of a paragraph or
+        // other block element:
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
+        [Test]
+        public void Example614()
+        {
+            // Example 614
+            // Section: Inlines Hard line breaks
+            //
+            // The following CommonMark:
+            //     foo\
+            //
+            // Should be rendered as:
+            //     <p>foo\</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 614, "Inlines Hard line breaks");
+			TestParser.TestSpec("foo\\", "<p>foo\\</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
+        [Test]
+        public void Example615()
+        {
+            // Example 615
+            // Section: Inlines Hard line breaks
+            //
+            // The following CommonMark:
+            //     foo  
+            //
+            // Should be rendered as:
+            //     <p>foo</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 615, "Inlines Hard line breaks");
+			TestParser.TestSpec("foo  ", "<p>foo</p>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
+        [Test]
+        public void Example616()
+        {
+            // Example 616
+            // Section: Inlines Hard line breaks
+            //
+            // The following CommonMark:
+            //     ### foo\
+            //
+            // Should be rendered as:
+            //     <h3>foo\</h3>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 616, "Inlines Hard line breaks");
+			TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>", "");
+        }
+    }
+    [TestFixture]
+    public partial class TestInlinesHardlinebreaks
+    {
+        [Test]
+        public void Example617()
+        {
+            // Example 617
+            // Section: Inlines Hard line breaks
+            //
+            // The following CommonMark:
             //     ### foo  
             //
             // Should be rendered as:
             //     <h3>foo</h3>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 613, "Inlines Hard line breaks");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 617, "Inlines Hard line breaks");
 			TestParser.TestSpec("### foo  ", "<h3>foo</h3>", "");
         }
     }
@@ -15875,9 +15970,9 @@ namespace Markdig.Tests
     public partial class TestInlinesSoftlinebreaks
     {
         [Test]
-        public void Example614()
+        public void Example618()
         {
-            // Example 614
+            // Example 618
             // Section: Inlines Soft line breaks
             //
             // The following CommonMark:
@@ -15888,7 +15983,7 @@ namespace Markdig.Tests
             //     <p>foo
             //     baz</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 614, "Inlines Soft line breaks");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 618, "Inlines Soft line breaks");
 			TestParser.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "");
         }
     }
@@ -15898,9 +15993,9 @@ namespace Markdig.Tests
     public partial class TestInlinesSoftlinebreaks
     {
         [Test]
-        public void Example615()
+        public void Example619()
         {
-            // Example 615
+            // Example 619
             // Section: Inlines Soft line breaks
             //
             // The following CommonMark:
@@ -15911,7 +16006,7 @@ namespace Markdig.Tests
             //     <p>foo
             //     baz</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 615, "Inlines Soft line breaks");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 619, "Inlines Soft line breaks");
 			TestParser.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "");
         }
     }
@@ -15929,9 +16024,9 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example616()
+        public void Example620()
         {
-            // Example 616
+            // Example 620
             // Section: Inlines Textual content
             //
             // The following CommonMark:
@@ -15940,7 +16035,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>hello $.;'there</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 616, "Inlines Textual content");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 620, "Inlines Textual content");
 			TestParser.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "");
         }
     }
@@ -15948,9 +16043,9 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example617()
+        public void Example621()
         {
-            // Example 617
+            // Example 621
             // Section: Inlines Textual content
             //
             // The following CommonMark:
@@ -15959,7 +16054,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>Foo χρῆν</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 617, "Inlines Textual content");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 621, "Inlines Textual content");
 			TestParser.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "");
         }
     }
@@ -15968,9 +16063,9 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example618()
+        public void Example622()
         {
-            // Example 618
+            // Example 622
             // Section: Inlines Textual content
             //
             // The following CommonMark:
@@ -15979,7 +16074,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>Multiple     spaces</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 618, "Inlines Textual content");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 622, "Inlines Textual content");
 			TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "");
         }
     }
@@ -16053,7 +16148,7 @@ namespace Markdig.Tests
         // [lazy continuation line].
         //
         // 2.  Next, after consuming the continuation markers for existing
-        // blocks, we look for new block starts (e.g. `>` for a block quote.
+        // blocks, we look for new block starts (e.g. `>` for a block quote).
         // If we encounter a new block start, we close any blocks unmatched
         // in step 1 before creating the new block as a child of the last
         // matched block.

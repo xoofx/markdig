@@ -211,6 +211,7 @@ namespace Markdig.Parsers.Inlines
                 // compact reference link/image, 
                 // or shortcut reference link/image
                 var parentDelimiter = openParent.Parent;
+                var savedText = text;
                 switch (text.CurrentChar)
                 {
                     case '(':
@@ -253,9 +254,10 @@ namespace Markdig.Parsers.Inlines
 
                             return true;
                         }
-                        break;
-                    default:
 
+                        text = savedText;
+                        goto default;
+                    default:
                         var labelSpan = SourceSpan.Empty;
                         string label = null;
                         bool isLabelSpanLocal = true;
