@@ -19845,4 +19845,54 @@ namespace Markdig.Tests
         }
     }
         // TODO: Add other text diagram languages
+        // # Extensions
+        //
+        // ## NoHTML
+        //
+        // The extension DisableHtml allows to disable the parsing of HTML:
+        //
+        // For inline HTML:
+    [TestFixture]
+    public partial class TestExtensionsNoHTML
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions NoHTML
+            //
+            // The following CommonMark:
+            //     this is some text</td></tr>
+            //
+            // Should be rendered as:
+            //     <p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions NoHTML");
+			TestParser.TestSpec("this is some text</td></tr>", "<p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>", "nohtml");
+        }
+    }
+        // For Block HTML:
+    [TestFixture]
+    public partial class TestExtensionsNoHTML
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions NoHTML
+            //
+            // The following CommonMark:
+            //     <div>
+            //     this is some text
+            //     </div>
+            //
+            // Should be rendered as:
+            //     <p>&lt;div&gt;
+            //     this is some text
+            //     &lt;/div&gt;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions NoHTML");
+			TestParser.TestSpec("<div>\nthis is some text\n</div>", "<p>&lt;div&gt;\nthis is some text\n&lt;/div&gt;</p>", "nohtml");
+        }
+    }
 }

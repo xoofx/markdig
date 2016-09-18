@@ -59,6 +59,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("DiagramsSpecs.md"), "diagrams|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("NoHtmlSpecs.md"), "nohtml"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

@@ -487,6 +487,9 @@ namespace Markdig
                     case "nofollowlinks":
                         pipeline.UseNoFollowLinks();
                         break;
+                    case "nohtml":
+                        pipeline.DisableHtml();
+                        break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
