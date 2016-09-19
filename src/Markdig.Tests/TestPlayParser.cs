@@ -2,6 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Linq;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -25,6 +28,17 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
             var result = Markdown.ToHtml(text, new MarkdownPipelineBuilder().UseAbbreviations().Build());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
             Console.WriteLine(result);
+        }
+
+        [Test]
+        public void TestEmptyLiteral()
+        {
+            var text = @"> *some text* 
+> some other text";
+            var doc = Markdown.Parse(text);
+
+            Assert.True(doc.Descendants().OfType<LiteralInline>().All(x => !x.Content.IsEmpty),
+                "There should not have any empty literals");
         }
 
         [Test]
