@@ -26,6 +26,7 @@ using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
+using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 
@@ -61,6 +62,17 @@ namespace Markdig
                 .UseTaskLists()
                 .UseDiagrams()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+
+        /// <summary>
+        /// Uses YAML frontmatter extension that will parse a YAML frontmatter into the MarkdownDocument. Note that they are not rendered by any default HTML renderer.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseYamlFrontMatter(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<YamlFrontMatterExtension>();
+            return pipeline;
         }
 
         /// <summary>
@@ -412,6 +424,8 @@ namespace Markdig
                 return pipeline;
             }
 
+            // TODO: the extension string should come from the extension itself instead of this hardcoded switch case.
+
             foreach (var extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 switch (extension.ToLowerInvariant())
@@ -489,6 +503,9 @@ namespace Markdig
                         break;
                     case "nohtml":
                         pipeline.DisableHtml();
+                        break;
+                    case "yaml":
+                        pipeline.UseYamlFrontMatter();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
