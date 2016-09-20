@@ -57,3 +57,13 @@ We can abbreviate 1A, 1A1 and 1A2!
 .
 <p>We can abbreviate <abbr title="First">1A</abbr>, <abbr title="Second">1A1</abbr> and <abbr title="Third">1A2</abbr>!</p>
 ````````````````````````````````
+
+Abbreviations should match whole word only:
+
+```````````````````````````````` example
+*[1A]: First
+
+We should not abbreviate 1.1A or 11A!
+.
+<p>We should not abbreviate 1.1A or 11A!</p>
+````````````````````````````````
