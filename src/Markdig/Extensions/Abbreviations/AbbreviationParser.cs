@@ -101,20 +101,9 @@ namespace Markdig.Extensions.Abbreviations
                 for (int i = content.Start; i < content.End; i++)
                 {
                     string match;
-                    if (matcher.TryMatch(text, i, content.End - i + 1, out match))
+                    if (matcher.TryMatch(text, i, content.End - i + 1, out match) && IsValidAbbreviation(match, content, i))
                     {
-                        // The word matched must be embraced by punctuation or whitespace or \0.
-                        var c = content.PeekCharAbsolute(i - 1);
-                        if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
-                        {
-                            continue;
-                        }
                         var indexAfterMatch = i + match.Length;
-                        c = content.PeekCharAbsolute(indexAfterMatch);
-                        if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
-                        {
-                            continue;
-                        }
 
                         // We should have a match, but in case...
                         Abbreviation abbr;
@@ -195,6 +184,40 @@ namespace Markdig.Extensions.Abbreviations
                     processor.Inline = container;
                 }
             };
+        }
+
+        private static bool IsValidAbbreviation(string match, StringSlice content, int matchIndex)
+        {
+            // The word matched must be embraced by punctuation or whitespace or \0.
+            var index = matchIndex - 1;
+            while (index > content.Start)
+            {
+                var c = content.PeekCharAbsolute(index);
+                if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
+                {
+                    return false;
+                }
+                if (!c.IsAsciiPunctuation())
+                {
+                    break;
+                }
+                index--;
+            }
+            index = matchIndex + match.Length;
+            while (index < content.End)
+            {
+                var c = content.PeekCharAbsolute(index);
+                if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
+                {
+                    return false;
+                }
+                if (!c.IsAsciiPunctuation())
+                {
+                    break;
+                }
+                index++;
+            }
+            return true;
         }
     }
 }
