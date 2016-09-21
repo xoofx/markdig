@@ -49,7 +49,7 @@ namespace Markdig.Extensions.DefinitionLists
                     {
                         if (!hasOpendd)
                         {
-                            renderer.Write("<dd>");
+                            renderer.Write("<dd").WriteAttributes(definitionItem).Write(">");
                             countdd = 0;
                             hasOpendd = true;
                         }
