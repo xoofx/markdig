@@ -24,6 +24,7 @@ using Markdig.Extensions.NoRefLinks;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
+using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
 using Markdig.Extensions.Yaml;
@@ -62,6 +63,17 @@ namespace Markdig
                 .UseTaskLists()
                 .UseDiagrams()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+
+        /// <summary>
+        /// Uses this extension to disable URI escape with % characters for non-US-ASCII characters in order to workaround a bug under IE/Edge with local file links containing non US-ASCII chars. DO NOT USE OTHERWISE.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseNonAsciiNoEscape(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<NonAsciiNoEscapeExtension>();
+            return pipeline;
         }
 
         /// <summary>
@@ -506,6 +518,9 @@ namespace Markdig
                         break;
                     case "yaml":
                         pipeline.UseYamlFrontMatter();
+                        break;
+                    case "nonascii-noescape":
+                        pipeline.UseNonAsciiNoEscape();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));

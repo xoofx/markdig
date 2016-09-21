@@ -110,6 +110,12 @@ blabla
         }
 
 
+        [Test]
+        public void TestStandardUriEscape()
+        {
+            TestParser.TestSpec(@"![你好](你好.png)", "<p><img src=\"你好.png\" alt=\"你好\" /></p>", "nonascii-noescape");
+        }
+
 
         [Test]
         public void TestBugAdvancaed()

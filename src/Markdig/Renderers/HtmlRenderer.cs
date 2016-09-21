@@ -64,6 +64,8 @@ namespace Markdig.Renderers
         /// </summary>
         public bool ImplicitParagraph { get; set; }
 
+        public bool UseNonAsciiNoEscape { get; set; }
+
         /// <summary>
         /// Writes the content escaped for HTML.
         /// </summary>
@@ -203,22 +205,29 @@ namespace Markdig.Renderers
                     Write(content, previousPosition, i - previousPosition);
                     previousPosition = i + 1;
 
-                    byte[] bytes;
-                    if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
+                    // Special case for Edge/IE workaround for MarkdownEditor, don't escape non-ASCII chars to make image links working
+                    if (UseNonAsciiNoEscape)
                     {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
-                        // Skip next char as it is decoded above
-                        i++;
-                        previousPosition = i + 1;
+                        Write(c);
                     }
                     else
                     {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c });
-                    }
-
-                    for (var j = 0; j < bytes.Length; j++)
-                    {
-                        Write($"%{bytes[j]:X2}");
+                        byte[] bytes;
+                        if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
+                        {
+                            bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
+                            // Skip next char as it is decoded above
+                            i++;
+                            previousPosition = i + 1;
+                        }
+                        else
+                        {
+                            bytes = Encoding.UTF8.GetBytes(new[] { c });
+                        }
+                        for (var j = 0; j < bytes.Length; j++)
+                        {
+                            Write($"%{bytes[j]:X2}");
+                        }
                     }
                 }
             }
