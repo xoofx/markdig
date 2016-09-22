@@ -92,9 +92,9 @@ namespace Markdig.Parsers.Inlines
             slice.Start = nextStart;
 
             // Call only PostMatch if necessary
-            if (PostMatch != null)
+            if (processor.Inline is LiteralInline)
             {
-                PostMatch(processor, ref slice);
+                PostMatch?.Invoke(processor, ref slice);
             }
 
             return true;
