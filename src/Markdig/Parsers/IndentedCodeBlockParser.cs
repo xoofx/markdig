@@ -18,16 +18,23 @@ namespace Markdig.Parsers
 
         public override BlockState TryOpen(BlockProcessor processor)
         {
-            var startColumn = processor.ColumnBeforeIndent;
-            var startPosition = processor.StartBeforeIndent;
             var result = TryContinue(processor, null);
             if (result == BlockState.Continue)
             {
+                // Save the column where we need to go back
+                var column = processor.Column;
+
+                // Unwind all indents all spaces before in order to calculate correct span
+                processor.UnwindAllIndents();
+
                 processor.NewBlocks.Push(new CodeBlock(this)
                 {
-                    Column = startColumn,
-                    Span = new SourceSpan(startPosition, processor.Line.End)
+                    Column = processor.Column,
+                    Span = new SourceSpan(processor.Start, processor.Line.End)
                 });
+
+                // Go back to the correct column
+                processor.GoToColumn(column);
             }
             return result;
         }

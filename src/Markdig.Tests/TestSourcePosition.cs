@@ -660,6 +660,20 @@ code         ( 2, 0)  3-13
         }
 
         [Test]
+        public void TestIndentedCodeAfterList()
+        {
+            //     0         1           2         3          4         5
+            //     012345678901234567 8 901234567890123456 789012345678901234 56789
+            Check("1) Some list item\n\n        some code\n        more code\n", @"
+list         ( 0, 0)  0-53
+listitem     ( 0, 0)  0-53
+paragraph    ( 0, 3)  3-16
+literal      ( 0, 3)  3-16
+code         ( 2, 0) 19-53
+");
+        }
+
+        [Test]
         public void TestIndentedCodeWithTabs()
         {
             //     01 2 3 45 6 78
