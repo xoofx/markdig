@@ -46,6 +46,8 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - **Emoji** support (inspired from [Markdown-it](https://markdown-it.github.io/))
   - **SmartyPants** (inspired from [Daring Fireball - SmartyPants](https://daringfireball.net/projects/smartypants/))
   - **Bootstrap** class (to output bootstrap class)
+  - **Diagrams** extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports only for [`mermaid` diagrams](https://knsv.github.io/mermaid/))
+  - **YAML frontmatter** to parse without evaluating the frontmatter and to discard it from the HTML output (typically used for previewing without the frontmatter in MarkdownEditor)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
 ## Documentation
