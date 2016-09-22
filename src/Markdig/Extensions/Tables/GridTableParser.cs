@@ -27,32 +27,36 @@ namespace Markdig.Extensions.Tables
             var line = processor.Line;
             GridTableState tableState = null;
 
+            // Match the first row that should be of the minimal form: +---------------
             var c = line.CurrentChar;
             var lineStart = line.Start;
-            int startPosition = -1;
-            bool hasLeft = false,
-                 hasRight = false;
-
-            while (line.Length > 0)
+            while (c == '+')
             {
-                if (c == '+')
+                var columnStart = line.Start;
+                line.NextChar();
+                line.TrimStart();
+
+                // if we have reached the end of the line, exit
+                c = line.CurrentChar;
+                if (c == 0)
                 {
-                    tableState = tableState ?? new GridTableState { Start = processor.Start, ExpectRow = true };
-                    if (startPosition != -1)
-                    {
-                        hasRight = line.PeekCharAbsolute(line.Start - 1) == ':';
-                        tableState.AddColumn(startPosition - lineStart, line.Start - lineStart, GetAlignment(hasLeft, hasRight));
-                    }
-                    hasLeft = line.PeekChar(1) == ':';
-                    startPosition = line.Start;
+                    break;
                 }
-                else if (c != ':' && c != '-')
+
+                // Parse a column alignment
+                TableColumnAlign columnAlign;
+                if (!TableHelper.ParseColumnHeader(ref line, '-', out columnAlign))
                 {
                     return BlockState.None;
                 }
-                c = line.NextChar();
+
+                tableState = tableState ?? new GridTableState { Start = processor.Start, ExpectRow = true };
+                tableState.AddColumn(columnStart - lineStart, line.Start - lineStart, columnAlign);
+
+                c = line.CurrentChar;
             }
-            if (tableState == null || tableState.ColumnSlices.Count == (processor.Line.Length - 1))
+
+            if (c != 0 || tableState == null)
             {
                 return BlockState.None;
             }

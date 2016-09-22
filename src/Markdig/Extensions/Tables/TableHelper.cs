@@ -53,7 +53,6 @@ namespace Markdig.Extensions.Tables
         {
             align = TableColumnAlign.Left;
 
-            // Work on a copy of the slice
             slice.TrimStart();
             var c = slice.CurrentChar;
             bool hasLeft = false;
@@ -87,6 +86,7 @@ namespace Markdig.Extensions.Tables
                 count++;
             }
 
+            // We expect at least one `-` delimiter char
             if (count == 0)
             {
                 return false;

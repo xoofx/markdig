@@ -17995,6 +17995,28 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+", "<p>+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+</p>", "gridtables|advanced");
         }
     }
+        // An empty `+` on a line should result in a simple empty list output:
+    [TestFixture]
+    public partial class TestExtensionsGridTable
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions Grid Table
+            //
+            // The following CommonMark:
+            //     +
+            //
+            // Should be rendered as:
+            //     <ul>
+            //     <li></li>
+            //     </ul>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Grid Table");
+			TestParser.TestSpec("+", "<ul>\n<li></li>\n</ul>", "gridtables|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:

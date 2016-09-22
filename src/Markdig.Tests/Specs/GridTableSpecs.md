@@ -273,3 +273,14 @@ A grid table may not have irregularly shaped cells:
 | DDDDD | E |
 +---+---+---+</p>
 ````````````````````````````````
+
+An empty `+` on a line should result in a simple empty list output:
+
+
+```````````````````````````````` example
++
+.
+<ul>
+<li></li>
+</ul>
+````````````````````````````````
