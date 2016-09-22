@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "> 0.8.1\n- new extension to disable URI escaping for non-US-ASCII characters to workaround a bug in Edge/IE\n- Fix an issue with abbreviations with left/right multiple non-punctuation/space characters\n> 0.8.0\n- Update to latest CommonMark specs\n- Fix empty literal\n- Add YAML frontmatter extension\n",
+    "releaseNotes": "> 0.8.2\n- fix potential cast exception with Abreviation extension and empty literals\n> 0.8.1\n- new extension to disable URI escaping for non-US-ASCII characters to workaround a bug in Edge/IE\n- Fix an issue with abbreviations with left/right multiple non-punctuation/space characters\n> 0.8.0\n- Update to latest CommonMark specs\n- Fix empty literal\n- Add YAML frontmatter extension\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
