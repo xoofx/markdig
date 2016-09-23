@@ -26,7 +26,8 @@
         "define": [ "RELEASE", "TRACE" ],
         "optimize": true,
         "allowUnsafe": true,
-        "xmlDoc":  true 
+        "xmlDoc":  true,
+        "nowarn": [ "CS1591" ]
       }
     }
   },
