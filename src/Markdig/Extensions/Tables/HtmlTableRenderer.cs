@@ -91,14 +91,21 @@ namespace Markdig.Extensions.Tables
                             ? i
                             : cell.ColumnIndex;
                         columnIndex = columnIndex >= table.ColumnDefinitions.Count ? table.ColumnDefinitions.Count - 1 : columnIndex;
-                        switch (table.ColumnDefinitions[columnIndex].Alignment)
+                        var alignment = table.ColumnDefinitions[columnIndex].Alignment;
+                        if (alignment.HasValue)
                         {
-                            case TableColumnAlign.Center:
-                                renderer.Write(" style=\"text-align: center;\"");
-                                break;
-                            case TableColumnAlign.Right:
-                                renderer.Write(" style=\"text-align: right;\"");
-                                break;
+                            switch (alignment)
+                            {
+                                case TableColumnAlign.Center:
+                                    renderer.Write(" style=\"text-align: center;\"");
+                                    break;
+                                case TableColumnAlign.Right:
+                                    renderer.Write(" style=\"text-align: right;\"");
+                                    break;
+                                case TableColumnAlign.Left:
+                                    renderer.Write(" style=\"text-align: left;\"");
+                                    break;
+                            }
                         }
                     }
                     renderer.WriteAttributes(cell);

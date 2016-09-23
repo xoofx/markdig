@@ -16929,7 +16929,8 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
-        // The text alignment is defined by default to be left.
+        // The text alignment is defined by default to be center for header and left for cells. If the left alignment is applied, it will force the column heading to be left aligned.
+        // There is no way to define a different alignment for heading and cells (apart from the default).
         // The text alignment can be changed by using the character `:` with the header column separator:
     [TestFixture]
     public partial class TestExtensionsPipeTable
@@ -16950,19 +16951,19 @@ namespace Markdig.Tests
             //     <table>
             //     <thead>
             //     <tr>
-            //     <th>a</th>
+            //     <th style="text-align: left;">a</th>
             //     <th style="text-align: center;">b</th>
             //     <th style="text-align: right;">c</th>
             //     </tr>
             //     </thead>
             //     <tbody>
             //     <tr>
-            //     <td>0</td>
+            //     <td style="text-align: left;">0</td>
             //     <td style="text-align: center;">1</td>
             //     <td style="text-align: right;">2</td>
             //     </tr>
             //     <tr>
-            //     <td>3</td>
+            //     <td style="text-align: left;">3</td>
             //     <td style="text-align: center;">4</td>
             //     <td style="text-align: right;">5</td>
             //     </tr>
@@ -16970,7 +16971,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Pipe Table");
-			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td>3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\">0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\">3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // Test alignment with starting and ending pipes:
@@ -17189,7 +17190,7 @@ namespace Markdig.Tests
             //
             // The following CommonMark:
             //     | abc | def | 
-            //     |---|:---|
+            //     |---|---|
             //     | cde| ddd| 
             //     | eee| fff|
             //     | fff | fffff   | 
@@ -17224,7 +17225,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Extensions Pipe Table");
-			TestParser.TestSpec("| abc | def | \n|---|:---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+			TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // # Extensions

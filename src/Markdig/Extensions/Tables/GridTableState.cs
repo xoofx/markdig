@@ -31,7 +31,7 @@ namespace Markdig.Extensions.Tables
             Lines.Add(line);
         }
 
-        public void AddColumn(int start, int end, TableColumnAlign align)
+        public void AddColumn(int start, int end, TableColumnAlign? align)
         {
             if (ColumnSlices == null)
             {
@@ -60,7 +60,7 @@ namespace Markdig.Extensions.Tables
 
             public int End { get; set; }
 
-            public TableColumnAlign Align { get; set; }
+            public TableColumnAlign? Align { get; set; }
 
             public int CurrentColumnSpan { get; set; }
 

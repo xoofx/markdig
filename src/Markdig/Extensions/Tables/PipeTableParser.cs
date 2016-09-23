@@ -453,7 +453,7 @@ namespace Markdig.Extensions.Tables
             return false;
         }
 
-        private static bool ParseHeaderString(Inline inline, out TableColumnAlign align)
+        private static bool ParseHeaderString(Inline inline, out TableColumnAlign? align)
         {
             align = 0;
             var literal = inline as LiteralInline;
@@ -500,7 +500,7 @@ namespace Markdig.Extensions.Tables
                     }
 
                     // Check the left side of a `|` delimiter
-                    TableColumnAlign align = TableColumnAlign.Left;
+                    TableColumnAlign? align = null;
                     if (delimiter.PreviousSibling != null && !ParseHeaderString(delimiter.PreviousSibling, out align))
                     {
                         break;

@@ -44,7 +44,7 @@ namespace Markdig.Extensions.Tables
                 }
 
                 // Parse a column alignment
-                TableColumnAlign columnAlign;
+                TableColumnAlign? columnAlign;
                 if (!TableHelper.ParseColumnHeader(ref line, '-', out columnAlign))
                 {
                     return BlockState.None;
@@ -87,13 +87,6 @@ namespace Markdig.Extensions.Tables
             processor.NewBlocks.Push(table);
 
             return BlockState.ContinueDiscard;
-        }
-
-        private static TableColumnAlign GetAlignment(bool hasLeft, bool hasRight)
-        {
-            return hasLeft && hasRight
-                ? TableColumnAlign.Center
-                : hasRight ? TableColumnAlign.Right : TableColumnAlign.Left;
         }
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)

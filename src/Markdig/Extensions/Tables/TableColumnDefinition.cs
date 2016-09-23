@@ -17,6 +17,6 @@ namespace Markdig.Extensions.Tables
         /// <summary>
         /// Gets or sets the column alignment.
         /// </summary>
-        public TableColumnAlign Alignment { get; set; }
+        public TableColumnAlign? Alignment { get; set; }
     }
 }

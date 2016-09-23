@@ -346,7 +346,8 @@ The first row is considered as a **header row** if it is separated from the regu
 </table>
 ````````````````````````````````
 
-The text alignment is defined by default to be left.
+The text alignment is defined by default to be center for header and left for cells. If the left alignment is applied, it will force the column heading to be left aligned.
+There is no way to define a different alignment for heading and cells (apart from the default).
 The text alignment can be changed by using the character `:` with the header column separator:
  
 ```````````````````````````````` example
@@ -358,19 +359,19 @@ The text alignment can be changed by using the character `:` with the header col
 <table>
 <thead>
 <tr>
-<th>a</th>
+<th style="text-align: left;">a</th>
 <th style="text-align: center;">b</th>
 <th style="text-align: right;">c</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>0</td>
+<td style="text-align: left;">0</td>
 <td style="text-align: center;">1</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr>
-<td>3</td>
+<td style="text-align: left;">3</td>
 <td style="text-align: center;">4</td>
 <td style="text-align: right;">5</td>
 </tr>
@@ -514,7 +515,7 @@ Tests trailing spaces after pipes
 
 ```````````````````````````````` example
 | abc | def | 
-|---|:---|
+|---|---|
 | cde| ddd| 
 | eee| fff|
 | fff | fffff   | 
