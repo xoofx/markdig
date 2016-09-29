@@ -1,4 +1,4 @@
-# Markdig [![Build status](https://ci.appveyor.com/api/projects/status/hk391x8jcskxt1u8?svg=true)](https://ci.appveyor.com/project/xoofx/markdig) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
+# Markdig [![Build status](https://ci.appveyor.com/api/projects/status/hk391x8jcskxt1u8?svg=true)](https://ci.appveyor.com/project/xoofx/markdig) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/) [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
 
 <img align="right" width="160px" height="160px" src="img/markdig.png">
 
@@ -179,7 +179,7 @@ WarmupCount=2  TargetCount=10
 
 If you are using this library and find it useful for your project, please consider a donation for it!
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
 
 ## Credits
 
