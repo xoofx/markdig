@@ -33,6 +33,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - **Definition lists** (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
   - **Footnotes** (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
   - **Auto-identifiers** for headings (similar to [Pandoc - Auto Identifiers](http://pandoc.org/README.html#extension-auto_identifiers))
+  - **Auto-links** generates links if a text starts with `http://` or `https://` or `ftp://` or `mailto:` or `www.xxx.yyy`
   - **Task Lists** inspired from [Github Task lists](https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments).
   - **Extra bullet lists**, supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
   - **Media support** for media url (youtube, vimeo, mp4...etc.) (inspired from this [CommonMark discussion](https://talk.commonmark.org/t/embedded-audio-and-video/441))
