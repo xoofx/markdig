@@ -25,6 +25,6 @@ namespace Markdig
 {
     public static partial class Markdown
     {
-        public const string Version = "0.8.5";
+        public const string Version = "0.9.0";
     }
 }
