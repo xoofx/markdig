@@ -75,6 +75,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="project.json" />
+    <None Include="Specs\AutoLinks.md" />
     <None Include="Specs\AutoIdentifierSpecs.md" />
     <None Include="Specs\AbbreviationSpecs.md" />
     <None Include="Specs\FigureFooterAndCiteSpecs.md" />

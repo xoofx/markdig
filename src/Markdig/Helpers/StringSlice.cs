@@ -172,6 +172,17 @@ namespace Markdig.Helpers
         /// Matches the specified text using lowercase comparison.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
+        public bool MatchLowercase(string text, int offset = 0)
+        {
+            return MatchLowercase(text, End, offset);
+        }
+
+        /// <summary>
+        /// Matches the specified text using lowercase comparison.
+        /// </summary>
+        /// <param name="text">The text.</param>
         /// <param name="end">The end.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>

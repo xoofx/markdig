@@ -5,6 +5,7 @@
 using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
+using Markdig.Extensions.AutoLinks;
 using Markdig.Extensions.Bootstrap;
 using Markdig.Extensions.Citations;
 using Markdig.Extensions.CustomContainers;
@@ -62,7 +63,20 @@ namespace Markdig
                 .UseListExtras()
                 .UseTaskLists()
                 .UseDiagrams()
+                .UseAutoLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+
+
+        /// <summary>
+        /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<AutoLinkExtension>();
+            return pipeline;
         }
 
         /// <summary>
@@ -521,6 +535,9 @@ namespace Markdig
                         break;
                     case "nonascii-noescape":
                         pipeline.UseNonAsciiNoEscape();
+                        break;
+                    case "autolinks":
+                        pipeline.UseAutoLinks();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));

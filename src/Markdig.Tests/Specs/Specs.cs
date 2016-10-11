@@ -20115,4 +20115,87 @@ namespace Markdig.Tests
 			TestParser.TestSpec("----\nthis: is a frontmatter\n----\nThis is a text", "<hr />\n<h2>this: is a frontmatter</h2>\n<p>This is a text</p>", "yaml");
         }
     }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## AutoLinks
+        //
+        // Autolinks will format as a HTML link any string that starts by:
+        //
+        // - `http://` or `https://`
+        // - `ftp://`
+        // - `mailto:`
+        // - `www.`
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is a http://www.google.com URL and https://www.google.com
+            //     This is a ftp://test.com
+            //     And a mailto:email@toto.com
+            //     And a plain www.google.com
+            //
+            // Should be rendered as:
+            //     <p>This is a <a href="http://www.google.com">http://www.google.com</a> URL and <a href="https://www.google.com">https://www.google.com</a>
+            //     This is a <a href="ftp://test.com">ftp://test.com</a>
+            //     And a <a href="mailto:email@toto.com">mailto:email@toto.com</a>
+            //     And a plain <a href="http://www.google.com">www.google.com</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions AutoLinks");
+			TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">mailto:email@toto.com</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
+        }
+    }
+        // But incomplete links will not be matched:
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is not a http:/www.google.com URL and https:/www.google.com
+            //     This is not a ftp:/test.com
+            //     And not a mailto:emailtoto.com
+            //     And not a plain www. or a www.x 
+            //
+            // Should be rendered as:
+            //     <p>This is not a http:/www.google.com URL and https:/www.google.com
+            //     This is not a ftp:/test.com
+            //     And not a mailto:emailtoto.com
+            //     And not a plain www. or a www.x</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions AutoLinks");
+			TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x ", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x</p>", "autolinks|advanced");
+        }
+    }
+        // Previous character must be a punctuation or a valid space (tab, space, new line):
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is not a nhttp://www.google.com URL but this is (https://www.google.com)
+            //
+            // Should be rendered as:
+            //     <p>This is not a nhttp://www.google.com URL but this is (<a href="https://www.google.com">https://www.google.com</a>)</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions AutoLinks");
+			TestParser.TestSpec("This is not a nhttp://www.google.com URL but this is (https://www.google.com)", "<p>This is not a nhttp://www.google.com URL but this is (<a href=\"https://www.google.com\">https://www.google.com</a>)</p>", "autolinks|advanced");
+        }
+    }
 }
