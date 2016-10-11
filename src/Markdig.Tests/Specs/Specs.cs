@@ -20198,4 +20198,64 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a nhttp://www.google.com URL but this is (https://www.google.com)", "<p>This is not a nhttp://www.google.com URL but this is (<a href=\"https://www.google.com\">https://www.google.com</a>)</p>", "autolinks|advanced");
         }
     }
+        // An autolink should not interfere with an `<a>` HTML inline:
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is an HTML <a href="http://www.google.com">http://www.google.com</a> link
+            //
+            // Should be rendered as:
+            //     <p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions AutoLinks");
+			TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
+        }
+    }
+        // or even within emphasis:
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is an HTML <a href="http://www.google.com"> **http://www.google.com** </a> link
+            //
+            // Should be rendered as:
+            //     <p>This is an HTML <a href="http://www.google.com"> <strong>http://www.google.com</strong> </a> link</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions AutoLinks");
+			TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\"> **http://www.google.com** </a> link", "<p>This is an HTML <a href=\"http://www.google.com\"> <strong>http://www.google.com</strong> </a> link</p>", "autolinks|advanced");
+        }
+    }
+        // An autolink should not interfere with a markdown link:
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     This is an HTML [http://www.google.com](http://www.google.com) link
+            //
+            // Should be rendered as:
+            //     <p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions AutoLinks");
+			TestParser.TestSpec("This is an HTML [http://www.google.com](http://www.google.com) link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
+        }
+    }
 }

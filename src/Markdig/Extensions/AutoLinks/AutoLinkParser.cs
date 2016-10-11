@@ -31,11 +31,15 @@ namespace Markdig.Extensions.AutoLinks
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            string match;
-
             // Previous char must be a whitespace or a punctuation
             var previousChar = slice.PeekCharExtra(-1);
             if (!previousChar.IsAsciiPunctuation() && !previousChar.IsWhiteSpaceOrZero())
+            {
+                return false;
+            }
+
+            // Check that an autolink is possible in the current context
+            if (!IsAutoLinkValidInCurrentContext(processor))
             {
                 return false;
             }
@@ -138,6 +142,56 @@ namespace Markdig.Extensions.AutoLinks
             processor.Inline = inline;
 
             return true;
+        }
+
+        private bool IsAutoLinkValidInCurrentContext(InlineProcessor processor)
+        {
+            // Case where there is a pending HtmlInline <a>
+            var currentInline = processor.Inline;
+            while (currentInline != null)
+            {
+                var htmlInline = currentInline as HtmlInline;
+                if (htmlInline != null)
+                {
+                    // If we have a </a> we don't expect nested <a>
+                    if (htmlInline.Tag.StartsWith("</a", StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+
+                    // If there is a pending <a>, we can't allow a link
+                    if (htmlInline.Tag.StartsWith("<a", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                }
+
+                // Check previous sibling and parents in the tree 
+                currentInline = currentInline.PreviousSibling ?? currentInline.Parent;
+            }
+
+            // Check that we don't have any pending brackets opened (where we could have a possible markdown link)
+            // NOTE: This assume that [ and ] are used for links, otherwise autolink will not work properly
+            currentInline = processor.Inline;
+            int countBrackets = 0;
+            while (currentInline != null)
+            {
+                var linkDelimiterInline = currentInline as LinkDelimiterInline;
+                if (linkDelimiterInline != null && linkDelimiterInline.IsActive)
+                {
+                    if (linkDelimiterInline.Type == DelimiterType.Open)
+                    {
+                        countBrackets++;
+                    }
+                    else if (linkDelimiterInline.Type == DelimiterType.Close)
+                    {
+                        countBrackets--;
+                    }
+                }
+                currentInline = currentInline.Parent;
+            }
+
+            return countBrackets <= 0;
         }
     }
 }

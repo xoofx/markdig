@@ -44,3 +44,27 @@ This is not a nhttp://www.google.com URL but this is (https://www.google.com)
 .
 <p>This is not a nhttp://www.google.com URL but this is (<a href="https://www.google.com">https://www.google.com</a>)</p>
 ````````````````````````````````
+
+An autolink should not interfere with an `<a>` HTML inline:
+ 
+```````````````````````````````` example
+This is an HTML <a href="http://www.google.com">http://www.google.com</a> link
+.
+<p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
+````````````````````````````````
+or even within emphasis:
+ 
+```````````````````````````````` example
+This is an HTML <a href="http://www.google.com"> **http://www.google.com** </a> link
+.
+<p>This is an HTML <a href="http://www.google.com"> <strong>http://www.google.com</strong> </a> link</p>
+````````````````````````````````
+
+
+An autolink should not interfere with a markdown link:
+ 
+```````````````````````````````` example
+This is an HTML [http://www.google.com](http://www.google.com) link
+.
+<p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
+````````````````````````````````
