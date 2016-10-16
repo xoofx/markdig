@@ -22,7 +22,7 @@ namespace Markdig.Extensions.Yaml
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
             if (!renderer.ObjectRenderers.Contains<YamlFrontMatterRenderer>())
             {

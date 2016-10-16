@@ -20,7 +20,8 @@ namespace Markdig
         /// <summary>
         /// Setups this extension for the specified renderer.
         /// </summary>
+        /// <param name="pipeline">The pipeline used to parse the document.</param>
         /// <param name="renderer">The renderer.</param>
-        void Setup(IMarkdownRenderer renderer);
+        void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer);
     }
 }

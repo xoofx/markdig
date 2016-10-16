@@ -23,7 +23,7 @@ namespace Markdig.Extensions.PragmaLines
             pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
 

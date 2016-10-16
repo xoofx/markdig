@@ -59,7 +59,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
 

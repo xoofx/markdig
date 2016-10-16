@@ -22,7 +22,7 @@ namespace Markdig.Extensions.AutoLinks
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
     }

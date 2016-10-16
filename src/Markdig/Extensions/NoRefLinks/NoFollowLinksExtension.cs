@@ -16,7 +16,7 @@ namespace Markdig.Extensions.NoRefLinks
         {
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
             var linkRenderer = renderer.ObjectRenderers.Find<LinkInlineRenderer>();
             if (linkRenderer != null)

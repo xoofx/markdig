@@ -17,7 +17,7 @@ namespace Markdig.Extensions.Diagrams
         {
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
             var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null)

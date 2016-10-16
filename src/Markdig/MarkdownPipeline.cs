@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -34,7 +35,10 @@ namespace Markdig
 
         internal bool PreciseSourceLocation { get; set; }
 
-        internal OrderedList<IMarkdownExtension> Extensions { get; }
+        /// <summary>
+        /// The read-only list of extensions used to build this pipeline.
+        /// </summary>
+        public OrderedList<IMarkdownExtension> Extensions { get; }
 
         internal BlockParserList BlockParsers { get; }
 
@@ -56,7 +60,7 @@ namespace Markdig
             if (renderer == null) throw new ArgumentNullException(nameof(renderer));
             foreach (var extension in Extensions)
             {
-                extension.Setup(renderer);
+                extension.Setup(this, renderer);
             }
         }
     }
