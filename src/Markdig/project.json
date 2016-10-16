@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "> 0.9.1\n- Fix regression bug with conflicts between autolink extension and html inline/regular links\n > 0.9.0\n- Add new Autolink extension\n",
+    "releaseNotes": "> 0.10.0\n- Breaking change of the IMarkdownExtension to allow to receive the MarkdownPipeline for the renderers setup\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
