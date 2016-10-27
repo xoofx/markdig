@@ -99,6 +99,8 @@ namespace Markdig.Syntax
             SourceSpan urlSpan;
             SourceSpan titleSpan;
 
+            var startSpan = text.Start;
+
             if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out labelSpan, out urlSpan, out titleSpan))
             {
                 return false;
@@ -108,7 +110,8 @@ namespace Markdig.Syntax
             {
                 LabelSpan = labelSpan,
                 UrlSpan = urlSpan,
-                TitleSpan = titleSpan
+                TitleSpan = titleSpan,
+                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End: urlSpan.End)
             };
             return true;
         }
