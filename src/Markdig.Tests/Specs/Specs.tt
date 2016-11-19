@@ -38,8 +38,7 @@ SOFTWARE.
 <#@ import namespace="System.CodeDom.Compiler" #>
 <#@ output extension=".cs" #><#
     var specFiles = new KeyValuePair<string, string>[] {
-		// new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
-		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/cfc84164475d3bec8be9482c21a705adc93a54f5/spec.txt", string.Empty), // 0.26 specs
+		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/791b1c121f16d3d7e80837c6f52917e57bbb2f61/spec.txt", string.Empty), // 0.27
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes|advanced"),

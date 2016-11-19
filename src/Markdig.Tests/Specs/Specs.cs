@@ -6,8 +6,8 @@ namespace Markdig.Tests
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
-        // version: 0.26
-        // date: '2016-07-15'
+        // version: 0.27
+        // date: '2016-11-18'
         // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
         // ...
         //
@@ -6036,11 +6036,11 @@ namespace Markdig.Tests
         // If the list item is ordered, then it is also assigned a start
         // number, based on the ordered list marker.
         //
-        // Exceptions: When the list item interrupts a paragraph---that
-        // is, when it starts on a line that would otherwise count as
-        // [paragraph continuation text]---then (a) the lines *Ls* must
-        // not begin with a blank line, and (b) if the list item is
-        // ordered, the start number must be 1.
+        // Exceptions: When the first list item in a [list] interrupts
+        // a paragraph---that is, when it starts on a line that would
+        // otherwise count as [paragraph continuation text]---then (a)
+        // the lines *Ls* must not begin with a blank line, and (b) if
+        // the list item is ordered, the start number must be 1.
         //
         // For example, let *Ls* be the lines
     [TestFixture]
