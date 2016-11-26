@@ -20,60 +20,59 @@ namespace Markdig.Helpers
 
         public static string Urilize(string headingText, bool allowOnlyAscii)
         {
-#if SUPPORT_NORMALIZE
-            // Normalzie the string if we don't allow UTF8
-            if (allowOnlyAscii)
-            {
-                headingText = headingText.Normalize(NormalizationForm.FormD);
-            }
-#endif
-
             var headingBuffer = StringBuilderCache.Local();
             bool hasLetter = false;
             bool previousIsSpace = false;
             for (int i = 0; i < headingText.Length; i++)
             {
                 var c = headingText[i];
-                if (char.IsLetter(c))
+                var normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
+                for (int j = 0; j < (normalized?.Length ?? 1); j++)
                 {
-#if SUPPORT_NORMALIZE
-                    if (allowOnlyAscii && (c < ' ' || c >= 127))
+                    if (normalized != null)
                     {
-                        continue;
+                        c = normalized[j];
                     }
-#endif
-                    c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
-                    headingBuffer.Append(c);
-                    hasLetter = true;
-                    previousIsSpace = false;
-                }
-                else if (hasLetter)
-                {
-                    if (IsReservedPunctuation(c))
+
+                    if (char.IsLetter(c))
                     {
-                        if (previousIsSpace)
+                        if (allowOnlyAscii && (c < ' ' || c >= 127))
                         {
-                            headingBuffer.Length--;
+                            continue;
                         }
-                        if (headingBuffer[headingBuffer.Length - 1] != c)
+                        c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
+                        headingBuffer.Append(c);
+                        hasLetter = true;
+                        previousIsSpace = false;
+                    }
+                    else if (hasLetter)
+                    {
+                        if (IsReservedPunctuation(c))
+                        {
+                            if (previousIsSpace)
+                            {
+                                headingBuffer.Length--;
+                            }
+                            if (headingBuffer[headingBuffer.Length - 1] != c)
+                            {
+                                headingBuffer.Append(c);
+                            }
+                            previousIsSpace = false;
+                        }
+                        else if (c.IsDigit())
                         {
                             headingBuffer.Append(c);
+                            previousIsSpace = false;
                         }
-                        previousIsSpace = false;
-                    }
-                    else if (c.IsDigit())
-                    {
-                        headingBuffer.Append(c);
-                        previousIsSpace = false;
-                    }
-                    else if (!previousIsSpace && c.IsWhitespace())
-                    {
-                        var pc = headingBuffer[headingBuffer.Length - 1];
-                        if (!IsReservedPunctuation(pc))
+                        else if (!previousIsSpace && c.IsWhitespace())
                         {
-                            headingBuffer.Append('-');
+                            var pc = headingBuffer[headingBuffer.Length - 1];
+                            if (!IsReservedPunctuation(pc))
+                            {
+                                headingBuffer.Append('-');
+                            }
+                            previousIsSpace = true;
                         }
-                        previousIsSpace = true;
                     }
                 }
             }

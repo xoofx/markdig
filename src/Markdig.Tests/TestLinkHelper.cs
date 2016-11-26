@@ -390,6 +390,7 @@ namespace Markdig.Tests
         [TestCase("b>r", "br")]
         [TestCase(@"b\r", "br")]
         [TestCase(@"b""r", "br")]
+        [TestCase(@"Requirement 😀", "requirement")]
         public void TestUrilizeNonAscii_NonValidCharactersForFragments(string input, string expectedResult)
         {
             Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));

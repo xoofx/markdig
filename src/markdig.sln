@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Markdig", "Markdig\Markdig.xproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
 EndProject
@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markd
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Markdig.WebApp", "Markdig.WebApp\Markdig.WebApp.xproj", "{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeNormDApp\UnicodeNormDApp.csproj", "{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -34,7 +34,7 @@
   "frameworks": {
     "net35": {
       "buildOptions": {
-        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
+        "define": [ "SUPPORT_FIXED_STRING" ]
       },
       "frameworkAssemblies": {
         "mscorlib": "",
@@ -44,7 +44,7 @@
     },
     "net40": {
       "buildOptions": {
-        "define": [ "SUPPORT_NORMALIZE", "SUPPORT_FIXED_STRING" ]
+        "define": [ "SUPPORT_FIXED_STRING" ]
       },
       "frameworkAssemblies": {
         "mscorlib": "",
