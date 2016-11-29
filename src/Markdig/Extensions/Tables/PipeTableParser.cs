@@ -274,7 +274,16 @@ namespace Markdig.Extensions.Tables
                 }
 
                 var endOfTable = new LineBreakInline();
-                lastElement.InsertAfter(endOfTable);
+                // If the last element is a container, we have to add the EOL to its child
+                // otherwise only next sibling
+                if (lastElement is ContainerInline)
+                {
+                    ((ContainerInline)lastElement).AppendChild(endOfTable);
+                }
+                else
+                {
+                    lastElement.InsertAfter(endOfTable);
+                }
                 delimiters.Add(endOfTable);
                 tableState.EndOfLines.Add(endOfTable);
             }

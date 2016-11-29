@@ -118,13 +118,37 @@ blabla
 
 
         [Test]
-        public void TestBugAdvancaed()
+        public void TestBugAdvanced()
         {
             TestParser.TestSpec(@"`https://{domain}/callbacks`
 #### HEADING
 Paragraph
 ", "<p><code>https://{domain}/callbacks</code></p>\n<h4 id=\"heading\">HEADING</h4>\n<p>Paragraph</p>", "advanced");
         }
+
+        [Test]
+        public void TestBugPipeTables()
+        {
+            // https://github.com/lunet-io/markdig/issues/73
+            TestParser.TestSpec(@"| abc | def |
+| --- | --- |
+| 1 | ~3 |
+", @"<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>~3</td>
+</tr>
+</tbody>
+</table>", "advanced");
+        }
+
 
         [Test]
         public void TestSamePipelineAllExtensions()
