@@ -136,6 +136,7 @@ a  | b
 <tr>
 <th>a</th>
 <th>b</th>
+<th></th>
 </tr>
 </thead>
 <tbody>
@@ -147,9 +148,12 @@ a  | b
 <tr>
 <td>3</td>
 <td>4</td>
+<td></td>
 </tr>
 <tr>
 <td>5</td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -544,6 +548,34 @@ Tests trailing spaces after pipes
 <tr>
 <td>gggg</td>
 <td>ffff</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+** Normalized columns count **
+
+The tables are normalized to the maximum number of columns found in a table
+
+
+```````````````````````````````` example
+a | b
+-- | - 
+0 | 1 | 2
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
 </tr>
 </tbody>
 </table>

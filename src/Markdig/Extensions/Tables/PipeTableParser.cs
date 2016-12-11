@@ -458,6 +458,9 @@ namespace Markdig.Extensions.Tables
             // Clear cells when we are done
             cells.Clear();
 
+            // Normalize the table
+            table.Normalize();
+
             // We don't want to continue procesing delimiters, as we are already processing them here
             return false;
         }

@@ -69,5 +69,33 @@ namespace Markdig.Extensions.Tables
             }
             return true;
         }
+
+        /// <summary>
+        /// Normalizes the number of columns of this table by taking the maximum columns and appending empty cells.
+        /// </summary>
+        public void Normalize()
+        {
+            var maxColumn = 0;
+            for (int i = 0; i < this.Count; i++)
+            {
+                var row = this[i] as TableRow;
+                if (row != null && row.Count > maxColumn)
+                {
+                    maxColumn = row.Count;
+                }
+            }
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                var row = this[i] as TableRow;
+                if (row != null)
+                {
+                    for (int j = row.Count; j < maxColumn; j++)
+                    {
+                        row.Add(new TableCell());
+                    }
+                }
+            }
+        }
     }
 }

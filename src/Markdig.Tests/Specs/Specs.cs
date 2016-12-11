@@ -16633,6 +16633,7 @@ namespace Markdig.Tests
             //     <tr>
             //     <th>a</th>
             //     <th>b</th>
+            //     <th></th>
             //     </tr>
             //     </thead>
             //     <tbody>
@@ -16644,15 +16645,18 @@ namespace Markdig.Tests
             //     <tr>
             //     <td>3</td>
             //     <td>4</td>
+            //     <td></td>
             //     </tr>
             //     <tr>
             //     <td>5</td>
+            //     <td></td>
+            //     <td></td>
             //     </tr>
             //     </tbody>
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Pipe Table");
-			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n<td></td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // **Rule #2**
@@ -17226,6 +17230,45 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Extensions Pipe Table");
 			TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+        }
+    }
+        // ** Normalized columns count **
+        //
+        // The tables are normalized to the maximum number of columns found in a table
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example023()
+        {
+            // Example 23
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a | b
+            //     -- | - 
+            //     0 | 1 | 2
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     <th></th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>0</td>
+            //     <td>1</td>
+            //     <td>2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 23, "Extensions Pipe Table");
+			TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
         // # Extensions
