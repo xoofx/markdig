@@ -20258,4 +20258,24 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is an HTML [http://www.google.com](http://www.google.com) link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
         }
     }
+        // A link embraced by pending emphasis should let the emphasis takes precedence if characters are placed at the end of the matched link:
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     Check **http://www.a.com** or __http://www.b.com__
+            //
+            // Should be rendered as:
+            //     <p>Check <strong><a href="http://www.a.com">http://www.a.com</a></strong> or <strong><a href="http://www.b.com">http://www.b.com</a></strong></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions AutoLinks");
+			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
+        }
+    }
 }

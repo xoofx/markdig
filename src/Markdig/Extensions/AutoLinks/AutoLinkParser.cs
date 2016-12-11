@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax.Inlines;
@@ -38,8 +39,9 @@ namespace Markdig.Extensions.AutoLinks
                 return false;
             }
 
+            List<char> pendingEmphasis;
             // Check that an autolink is possible in the current context
-            if (!IsAutoLinkValidInCurrentContext(processor))
+            if (!IsAutoLinkValidInCurrentContext(processor, out pendingEmphasis))
             {
                 return false;
             }
@@ -82,6 +84,27 @@ namespace Markdig.Extensions.AutoLinks
             if (!LinkHelper.TryParseUrl(ref slice, out link))
             {
                 return false;
+            }
+
+
+            // If we have any pending emphasis, remove any pending emphasis characters from the end of the link
+            if (pendingEmphasis != null)
+            {
+                for (int i = link.Length - 1; i >= 0; i--)
+                {
+                    if (pendingEmphasis.Contains(link[i]))
+                    {
+                        slice.Start--;
+                    }
+                    else
+                    {
+                        if (i < link.Length - 1)
+                        {
+                            link = link.Substring(0, i + 1);
+                        }
+                        break;
+                    }
+                }
             }
 
             // Post-check URL
@@ -144,8 +167,10 @@ namespace Markdig.Extensions.AutoLinks
             return true;
         }
 
-        private bool IsAutoLinkValidInCurrentContext(InlineProcessor processor)
+        private bool IsAutoLinkValidInCurrentContext(InlineProcessor processor, out List<char> pendingEmphasis)
         {
+            pendingEmphasis = null;
+
             // Case where there is a pending HtmlInline <a>
             var currentInline = processor.Inline;
             while (currentInline != null)
@@ -186,6 +211,23 @@ namespace Markdig.Extensions.AutoLinks
                     else if (linkDelimiterInline.Type == DelimiterType.Close)
                     {
                         countBrackets--;
+                    }
+                }
+                else
+                {
+                    // Record all pending characters for emphasis
+                    var emphasisDelimiter = currentInline as EmphasisDelimiterInline;
+                    if (emphasisDelimiter != null)
+                    {
+                        if (pendingEmphasis == null)
+                        {
+                            // Not optimized for GC, but we don't expect this case much
+                            pendingEmphasis = new List<char>();
+                        }
+                        if (!pendingEmphasis.Contains(emphasisDelimiter.DelimiterChar))
+                        {
+                            pendingEmphasis.Add(emphasisDelimiter.DelimiterChar);
+                        }
                     }
                 }
                 currentInline = currentInline.Parent;

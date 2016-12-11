@@ -68,3 +68,11 @@ This is an HTML [http://www.google.com](http://www.google.com) link
 .
 <p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
 ````````````````````````````````
+
+A link embraced by pending emphasis should let the emphasis takes precedence if characters are placed at the end of the matched link:
+ 
+```````````````````````````````` example
+Check **http://www.a.com** or __http://www.b.com__
+.
+<p>Check <strong><a href="http://www.a.com">http://www.a.com</a></strong> or <strong><a href="http://www.b.com">http://www.b.com</a></strong></p>
+````````````````````````````````
