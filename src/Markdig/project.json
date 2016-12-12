@@ -1,6 +1,6 @@
 ﻿{
   "title": "Markdig",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "authors": [ "Alexandre Mutel" ],
   "description": "A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)",
   "copyright": "Alexandre Mutel",
@@ -11,7 +11,7 @@
     "projectUrl": "https://github.com/lunet-io/markdig",
     "iconUrl": "https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png",
     "requireLicenseAcceptance": false,
-    "releaseNotes": "> 0.10.3\n - Fix issue with pipetables shifting a cell to a new column (issue #73)\n> 0.10.2\n - Fix exception when trying to urlize an url with an unicode character outside the supported range by NormD (issue #75)\n > 0.10.1\n- Update to latest CommonMark specs\n- Fix source span for LinkReferenceDefinition\n> 0.10.0\n- Breaking change of the IMarkdownExtension to allow to receive the MarkdownPipeline for the renderers setup\n",
+    "releaseNotes": "> 0.10.4\n - Fix issue with autolinks\n - Normalize number of columns for tables\n> 0.10.3\n - Fix issue with pipetables shifting a cell to a new column (issue #73)\n> 0.10.2\n - Fix exception when trying to urlize an url with an unicode character outside the supported range by NormD (issue #75)\n > 0.10.1\n- Update to latest CommonMark specs\n- Fix source span for LinkReferenceDefinition\n> 0.10.0\n- Breaking change of the IMarkdownExtension to allow to receive the MarkdownPipeline for the renderers setup\n",
     "tags": [ "Markdown CommonMark md html md2html" ]
   },
   "configurations": {
