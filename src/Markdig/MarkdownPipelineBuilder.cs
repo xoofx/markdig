@@ -91,6 +91,17 @@ namespace Markdig
         internal ProcessDocumentDelegate GetDocumentProcessed => DocumentProcessed;
 
         /// <summary>
+        /// Adds the specified extension to the extensions collection.
+        /// </summary>
+        /// <typeparam name="TExtension">The type of the extension.</typeparam>
+        /// <returns>The current instance of <see cref="MarkdownPipeline" /></returns>
+        public MarkdownPipelineBuilder Use<TExtension>() where TExtension : class, IMarkdownExtension, new()
+        {
+            Extensions.AddIfNotAlready<TExtension>();
+            return this;
+        }
+
+        /// <summary>
         /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
