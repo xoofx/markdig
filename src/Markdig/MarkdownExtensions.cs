@@ -40,6 +40,17 @@ namespace Markdig
     public static class MarkdownExtensions
     {
         /// <summary>
+        /// Adds the specified extension to the extensions collection.
+        /// </summary>
+        /// <typeparam name="TExtension">The type of the extension.</typeparam>
+        /// <returns>The instance of <see cref="MarkdownPipelineBuilder" /></returns>
+        public static MarkdownPipelineBuilder Use<TExtension>(this MarkdownPipelineBuilder pipeline) where TExtension : class, IMarkdownExtension, new()
+        {
+            pipeline.Extensions.AddIfNotAlready<TExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
         /// Uses all extensions except the BootStrap, Emoji, SmartyPants and soft line as hard line breaks extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -66,8 +77,7 @@ namespace Markdig
                 .UseAutoLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
-
-
+        
         /// <summary>
         /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
         /// </summary>
