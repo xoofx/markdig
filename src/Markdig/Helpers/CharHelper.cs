@@ -96,9 +96,9 @@ namespace Markdig.Helpers
             int result = 0;
             for (int i = 0; i < text.Length; i++)
             {
-                var character = Char.ToUpper(text[i]);
+                var character = Char.ToUpperInvariant(text[i]);
                 var candidate = romanMap[character];
-                if (i + 1 < text.Length && candidate < romanMap[Char.ToUpper(text[i + 1])])
+                if (i + 1 < text.Length && candidate < romanMap[Char.ToUpperInvariant(text[i + 1])])
                 {
                     result -= candidate;
                 }
