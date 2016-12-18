@@ -62,7 +62,7 @@ namespace Markdig.Extensions.ListExtras
             {
                 // otherwise we expect a regular alpha lettered list with a single character.
                 var isUpper = c.IsAlphaUpper();
-                result.OrderedStart = (Char.ToUpper(c) - 64).ToString();
+                result.OrderedStart = (Char.ToUpperInvariant(c) - 64).ToString();
                 result.BulletType = isUpper ? 'A' : 'a';
                 result.DefaultOrderedStart = isUpper ? "A" : "a";
                 state.NextChar();
