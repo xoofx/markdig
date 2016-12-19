@@ -190,7 +190,7 @@ namespace Markdig.Extensions.Abbreviations
         {
             // The word matched must be embraced by punctuation or whitespace or \0.
             var index = matchIndex - 1;
-            while (index > content.Start)
+            while (index >= content.Start)
             {
                 var c = content.PeekCharAbsolute(index);
                 if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
@@ -204,7 +204,7 @@ namespace Markdig.Extensions.Abbreviations
                 index--;
             }
             index = matchIndex + match.Length;
-            while (index < content.End)
+            while (index <= content.End)
             {
                 var c = content.PeekCharAbsolute(index);
                 if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))

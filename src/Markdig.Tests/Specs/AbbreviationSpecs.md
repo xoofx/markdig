@@ -67,3 +67,13 @@ We should not abbreviate 1.1A or 11A!
 .
 <p>We should not abbreviate 1.1A or 11A!</p>
 ````````````````````````````````
+
+Abbreviations should match whole word only, even if the word is the entire content:
+
+```````````````````````````````` example
+*[1A]: First
+
+1.1A
+.
+<p>1.1A</p>
+````````````````````````````````
