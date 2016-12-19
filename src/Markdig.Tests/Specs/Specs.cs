@@ -18672,6 +18672,28 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[1A]: First\n\nWe should not abbreviate 1.1A or 11A!", "<p>We should not abbreviate 1.1A or 11A!</p>", "abbreviations|advanced");
         }
     }
+        // Abbreviations should match whole word only, even if the word is the entire content:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[1A]: First
+            //     
+            //     1.1A
+            //
+            // Should be rendered as:
+            //     <p>1.1A</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Abbreviation");
+			TestParser.TestSpec("*[1A]: First\n\n1.1A", "<p>1.1A</p>", "abbreviations|advanced");
+        }
+    }
         // # Extensions
         //
         // The following additional list items are supported:
