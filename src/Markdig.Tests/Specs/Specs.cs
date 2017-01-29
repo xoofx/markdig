@@ -1,354 +1,713 @@
-﻿using System;
+﻿
+
+
+
+
+
+
+
+
+
+
+
+using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
 {
+
         // ---
+
         // title: CommonMark Spec
+
         // author: John MacFarlane
+
         // version: 0.27
+
         // date: '2016-11-18'
+
         // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
+
         // ...
+
         //
+
         // # Introduction
+
         //
+
         // ## What is Markdown?
+
         //
+
         // Markdown is a plain text format for writing structured documents,
+
         // based on conventions used for indicating formatting in email and
+
         // usenet posts.  It was developed in 2004 by John Gruber, who wrote
+
         // the first Markdown-to-HTML converter in Perl, and it soon became
+
         // ubiquitous.  In the next decade, dozens of implementations were
+
         // developed in many languages.  Some extended the original
+
         // Markdown syntax with conventions for footnotes, tables, and
+
         // other document elements.  Some allowed Markdown documents to be
+
         // rendered in formats other than HTML.  Websites like Reddit,
+
         // StackOverflow, and GitHub had millions of people using Markdown.
+
         // And Markdown started to be used beyond the web, to author books,
+
         // articles, slide shows, letters, and lecture notes.
+
         //
+
         // What distinguishes Markdown from many other lightweight markup
+
         // syntaxes, which are often easier to write, is its readability.
+
         // As Gruber writes:
+
         //
+
         // > The overriding design goal for Markdown's formatting syntax is
+
         // > to make it as readable as possible. The idea is that a
+
         // > Markdown-formatted document should be publishable as-is, as
+
         // > plain text, without looking like it's been marked up with tags
+
         // > or formatting instructions.
+
         // > (<http://daringfireball.net/projects/markdown/>)
+
         //
+
         // The point can be illustrated by comparing a sample of
+
         // [AsciiDoc](http://www.methods.co.nz/asciidoc/) with
+
         // an equivalent sample of Markdown.  Here is a sample of
+
         // AsciiDoc from the AsciiDoc manual:
+
         //
+
         // ```
+
         // 1. List item one.
+
         // +
+
         // List item one continued with a second paragraph followed by an
+
         // Indented block.
+
         // +
+
         // .................
+
         // $ ls *.sh
+
         // $ mv *.sh ~/tmp
+
         // .................
+
         // +
+
         // List item continued with a third paragraph.
+
         //
+
         // 2. List item two continued with an open block.
+
         // +
+
         // --
+
         // This paragraph is part of the preceding list item.
+
         //
+
         // a. This list is nested and does not require explicit item
+
         // continuation.
+
         // +
+
         // This paragraph is part of the preceding list item.
+
         //
+
         // b. List item b.
+
         //
+
         // This paragraph belongs to item two of the outer list.
+
         // --
+
         // ```
+
         //
+
         // And here is the equivalent in Markdown:
+
         // ```
+
         // 1.  List item one.
+
         //
+
         // List item one continued with a second paragraph followed by an
+
         // Indented block.
+
         //
+
         // $ ls *.sh
+
         // $ mv *.sh ~/tmp
+
         //
+
         // List item continued with a third paragraph.
+
         //
+
         // 2.  List item two continued with an open block.
+
         //
+
         // This paragraph is part of the preceding list item.
+
         //
+
         // 1. This list is nested and does not require explicit item continuation.
+
         //
+
         // This paragraph is part of the preceding list item.
+
         //
+
         // 2. List item b.
+
         //
+
         // This paragraph belongs to item two of the outer list.
+
         // ```
+
         //
+
         // The AsciiDoc version is, arguably, easier to write. You don't need
+
         // to worry about indentation.  But the Markdown version is much easier
+
         // to read.  The nesting of list items is apparent to the eye in the
+
         // source, not just in the processed document.
+
         //
+
         // ## Why is a spec needed?
+
         //
+
         // John Gruber's [canonical description of Markdown's
+
         // syntax](http://daringfireball.net/projects/markdown/syntax)
+
         // does not specify the syntax unambiguously.  Here are some examples of
+
         // questions it does not answer:
+
         //
+
         // 1.  How much indentation is needed for a sublist?  The spec says that
+
         // continuation paragraphs need to be indented four spaces, but is
+
         // not fully explicit about sublists.  It is natural to think that
+
         // they, too, must be indented four spaces, but `Markdown.pl` does
+
         // not require that.  This is hardly a "corner case," and divergences
+
         // between implementations on this issue often lead to surprises for
+
         // users in real documents. (See [this comment by John
+
         // Gruber](http://article.gmane.org/gmane.text.markdown.general/1997).)
+
         //
+
         // 2.  Is a blank line needed before a block quote or heading?
+
         // Most implementations do not require the blank line.  However,
+
         // this can lead to unexpected results in hard-wrapped text, and
+
         // also to ambiguities in parsing (note that some implementations
+
         // put the heading inside the blockquote, while others do not).
+
         // (John Gruber has also spoken [in favor of requiring the blank
+
         // lines](http://article.gmane.org/gmane.text.markdown.general/2146).)
+
         //
+
         // 3.  Is a blank line needed before an indented code block?
+
         // (`Markdown.pl` requires it, but this is not mentioned in the
+
         // documentation, and some implementations do not require it.)
+
         //
+
         // ``` markdown
+
         // paragraph
+
         // code?
+
         // ```
+
         //
+
         // 4.  What is the exact rule for determining when list items get
+
         // wrapped in `<p>` tags?  Can a list be partially "loose" and partially
+
         // "tight"?  What should we do with a list like this?
+
         //
+
         // ``` markdown
+
         // 1. one
+
         //
+
         // 2. two
+
         // 3. three
+
         // ```
+
         //
+
         // Or this?
+
         //
+
         // ``` markdown
+
         // 1.  one
+
         // - a
+
         //
+
         // - b
+
         // 2.  two
+
         // ```
+
         //
+
         // (There are some relevant comments by John Gruber
+
         // [here](http://article.gmane.org/gmane.text.markdown.general/2554).)
+
         //
+
         // 5.  Can list markers be indented?  Can ordered list markers be right-aligned?
+
         //
+
         // ``` markdown
+
         // 8. item 1
+
         // 9. item 2
+
         // 10. item 2a
+
         // ```
+
         //
+
         // 6.  Is this one list with a thematic break in its second item,
+
         // or two lists separated by a thematic break?
+
         //
+
         // ``` markdown
+
         // * a
+
         // * * * * *
+
         // * b
+
         // ```
+
         //
+
         // 7.  When list markers change from numbers to bullets, do we have
+
         // two lists or one?  (The Markdown syntax description suggests two,
+
         // but the perl scripts and many other implementations produce one.)
+
         //
+
         // ``` markdown
+
         // 1. fee
+
         // 2. fie
+
         // -  foe
+
         // -  fum
+
         // ```
+
         //
+
         // 8.  What are the precedence rules for the markers of inline structure?
+
         // For example, is the following a valid link, or does the code span
+
         // take precedence ?
+
         //
+
         // ``` markdown
+
         // [a backtick (`)](/url) and [another backtick (`)](/url).
+
         // ```
+
         //
+
         // 9.  What are the precedence rules for markers of emphasis and strong
+
         // emphasis?  For example, how should the following be parsed?
+
         //
+
         // ``` markdown
+
         // *foo *bar* baz*
+
         // ```
+
         //
+
         // 10. What are the precedence rules between block-level and inline-level
+
         // structure?  For example, how should the following be parsed?
+
         //
+
         // ``` markdown
+
         // - `a long code span can contain a hyphen like this
+
         // - and it can screw things up`
+
         // ```
+
         //
+
         // 11. Can list items include section headings?  (`Markdown.pl` does not
+
         // allow this, but does allow blockquotes to include headings.)
+
         //
+
         // ``` markdown
+
         // - # Heading
+
         // ```
+
         //
+
         // 12. Can list items be empty?
+
         //
+
         // ``` markdown
+
         // * a
+
         // *
+
         // * b
+
         // ```
+
         //
+
         // 13. Can link references be defined inside block quotes or list items?
+
         //
+
         // ``` markdown
+
         // > Blockquote [foo].
+
         // >
+
         // > [foo]: /url
+
         // ```
+
         //
+
         // 14. If there are multiple definitions for the same reference, which takes
+
         // precedence?
+
         //
+
         // ``` markdown
+
         // [foo]: /url1
+
         // [foo]: /url2
+
         //
+
         // [foo][]
+
         // ```
+
         //
+
         // In the absence of a spec, early implementers consulted `Markdown.pl`
+
         // to resolve these ambiguities.  But `Markdown.pl` was quite buggy, and
+
         // gave manifestly bad results in many cases, so it was not a
+
         // satisfactory replacement for a spec.
+
         //
+
         // Because there is no unambiguous spec, implementations have diverged
+
         // considerably.  As a result, users are often surprised to find that
+
         // a document that renders one way on one system (say, a github wiki)
+
         // renders differently on another (say, converting to docbook using
+
         // pandoc).  To make matters worse, because nothing in Markdown counts
+
         // as a "syntax error," the divergence often isn't discovered right away.
+
         //
+
         // ## About this document
+
         //
+
         // This document attempts to specify Markdown syntax unambiguously.
+
         // It contains many examples with side-by-side Markdown and
+
         // HTML.  These are intended to double as conformance tests.  An
+
         // accompanying script `spec_tests.py` can be used to run the tests
+
         // against any Markdown program:
+
         //
+
         // python test/spec_tests.py --spec spec.txt --program PROGRAM
+
         //
+
         // Since this document describes how Markdown is to be parsed into
+
         // an abstract syntax tree, it would have made sense to use an abstract
+
         // representation of the syntax tree instead of HTML.  But HTML is capable
+
         // of representing the structural distinctions we need to make, and the
+
         // choice of HTML for the tests makes it possible to run the tests against
+
         // an implementation without writing an abstract syntax tree renderer.
+
         //
+
         // This document is generated from a text file, `spec.txt`, written
+
         // in Markdown with a small extension for the side-by-side tests.
+
         // The script `tools/makespec.py` can be used to convert `spec.txt` into
+
         // HTML or CommonMark (which can then be converted into other formats).
+
         //
+
         // In the examples, the `→` character is used to represent tabs.
+
         //
+
         // # Preliminaries
+
         //
+
         // ## Characters and lines
+
         //
+
         // Any sequence of [characters] is a valid CommonMark
+
         // document.
+
         //
+
         // A [character](@) is a Unicode code point.  Although some
+
         // code points (for example, combining accents) do not correspond to
+
         // characters in an intuitive sense, all code points count as characters
+
         // for purposes of this spec.
+
         //
+
         // This spec does not specify an encoding; it thinks of lines as composed
+
         // of [characters] rather than bytes.  A conforming parser may be limited
+
         // to a certain encoding.
+
         //
+
         // A [line](@) is a sequence of zero or more [characters]
+
         // other than newline (`U+000A`) or carriage return (`U+000D`),
+
         // followed by a [line ending] or by the end of file.
+
         //
+
         // A [line ending](@) is a newline (`U+000A`), a carriage return
+
         // (`U+000D`) not followed by a newline, or a carriage return and a
+
         // following newline.
+
         //
+
         // A line containing no characters, or a line containing only spaces
+
         // (`U+0020`) or tabs (`U+0009`), is called a [blank line](@).
+
         //
+
         // The following definitions of character classes will be used in this spec:
+
         //
+
         // A [whitespace character](@) is a space
+
         // (`U+0020`), tab (`U+0009`), newline (`U+000A`), line tabulation (`U+000B`),
+
         // form feed (`U+000C`), or carriage return (`U+000D`).
+
         //
+
         // [Whitespace](@) is a sequence of one or more [whitespace
+
         // characters].
+
         //
+
         // A [Unicode whitespace character](@) is
+
         // any code point in the Unicode `Zs` class, or a tab (`U+0009`),
+
         // carriage return (`U+000D`), newline (`U+000A`), or form feed
+
         // (`U+000C`).
+
         //
+
         // [Unicode whitespace](@) is a sequence of one
+
         // or more [Unicode whitespace characters].
+
         //
+
         // A [space](@) is `U+0020`.
+
         //
+
         // A [non-whitespace character](@) is any character
+
         // that is not a [whitespace character].
+
         //
+
         // An [ASCII punctuation character](@)
+
         // is `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`,
+
         // `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`, `@`,
+
         // `[`, `\`, `]`, `^`, `_`, `` ` ``, `{`, `|`, `}`, or `~`.
+
         //
+
         // A [punctuation character](@) is an [ASCII
+
         // punctuation character] or anything in
+
         // the Unicode classes `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or `Ps`.
+
         //
+
         // ## Tabs
+
         //
+
         // Tabs in lines are not expanded to [spaces].  However,
+
         // in contexts where whitespace helps to define block structure,
+
         // tabs behave as if they were replaced by spaces with a tab stop
+
         // of 4 characters.
+
         //
+
         // Thus, for example, a tab can be used instead of four spaces
+
         // in an indented code block.  (Note, however, that internal
+
         // tabs are passed through as literal tabs, not expanded to
+
         // spaces.)
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -369,6 +728,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -389,6 +749,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  \tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -411,9 +772,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    a\ta\n    ὐ\ta", "<pre><code>a\ta\nὐ\ta\n</code></pre>", "");
         }
     }
+
         // In the following example, a continuation paragraph of a list
+
         // item is indented with a tab; this has exactly the same effect
+
         // as indentation with four spaces would:
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -440,6 +805,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  - foo\n\n\tbar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -467,14 +833,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n\n\t\tbar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+
         // Normally the `>` that begins a block quote may be followed
+
         // optionally by a space, which is not considered part of the
+
         // content.  In the following case `>` is followed by a tab,
+
         // which is treated as if it were expanded into spaces.
+
         // Since one of theses spaces is considered part of the
+
         // delimiter, `foo` is considered to be indented six spaces
+
         // inside the block quote context, so we get an indented
+
         // code block starting with two spaces.
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -497,6 +872,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">\t\tfoo", "<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -521,6 +897,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-\t\tfoo", "<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -543,6 +920,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    foo\n\tbar", "<pre><code>foo\nbar\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -574,6 +952,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" - foo\n   - bar\n\t - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -593,6 +972,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("#\tFoo", "<h1>Foo</h1>", "");
         }
     }
+
     [TestFixture]
     public partial class TestPreliminariesTabs
     {
@@ -612,25 +992,45 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*\t*\t*\t", "<hr />", "");
         }
     }
+
         // ## Insecure characters
+
         //
+
         // For security reasons, the Unicode character `U+0000` must be replaced
+
         // with the REPLACEMENT CHARACTER (`U+FFFD`).
+
         //
+
         // # Blocks and inlines
+
         //
+
         // We can think of a document as a sequence of
+
         // [blocks](@)---structural elements like paragraphs, block
+
         // quotations, lists, headings, rules, and code blocks.  Some blocks (like
+
         // block quotes and list items) contain other blocks; others (like
+
         // headings and paragraphs) contain [inline](@) content---text,
+
         // links, emphasized text, images, code, and so on.
+
         //
+
         // ## Precedence
+
         //
+
         // Indicators of block structure always take precedence over indicators
+
         // of inline structure.  So, for example, the following is a list with
+
         // two items, not a list with one item containing a code span:
+
     [TestFixture]
     public partial class TestBlocksandinlinesPrecedence
     {
@@ -654,33 +1054,61 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>", "");
         }
     }
+
         // This means that parsing can proceed in two steps:  first, the block
+
         // structure of the document can be discerned; second, text lines inside
+
         // paragraphs, headings, and other block constructs can be parsed for inline
+
         // structure.  The second step requires information about link reference
+
         // definitions that will be available only at the end of the first
+
         // step.  Note that the first step requires processing lines in sequence,
+
         // but the second can be parallelized, since the inline parsing of
+
         // one block element does not affect the inline parsing of any other.
+
         //
+
         // ## Container blocks and leaf blocks
+
         //
+
         // We can divide blocks into two types:
+
         // [container block](@)s,
+
         // which can contain other blocks, and [leaf block](@)s,
+
         // which cannot.
+
         //
+
         // # Leaf blocks
+
         //
+
         // This section describes the different kinds of leaf block that make up a
+
         // Markdown document.
+
         //
+
         // ## Thematic breaks
+
         //
+
         // A line consisting of 0-3 spaces of indentation, followed by a sequence
+
         // of three or more matching `-`, `_`, or `*` characters, each followed
+
         // optionally by any number of spaces, forms a
+
         // [thematic break](@).
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -704,7 +1132,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />", "");
         }
     }
+
         // Wrong characters:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -724,6 +1154,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+++", "<p>+++</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -743,7 +1174,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("===", "<p>===</p>", "");
         }
     }
+
         // Not enough characters:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -767,7 +1200,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("--\n**\n__", "<p>--\n**\n__</p>", "");
         }
     }
+
         // One to three spaces indent are allowed:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -791,7 +1226,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />", "");
         }
     }
+
         // Four spaces is too many:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -812,6 +1249,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    ***", "<pre><code>***\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -833,7 +1271,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n    ***", "<p>Foo\n***</p>", "");
         }
     }
+
         // More than three characters may be used:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -853,7 +1293,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_____________________________________", "<hr />", "");
         }
     }
+
         // Spaces are allowed between the characters:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -873,6 +1315,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" - - -", "<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -892,6 +1335,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" **  * ** * ** * **", "<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -911,7 +1355,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-     -      -      -", "<hr />", "");
         }
     }
+
         // Spaces are allowed at the end:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -931,7 +1377,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- - - -    ", "<hr />", "");
         }
     }
+
         // However, no other characters may occur in the line:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -957,8 +1405,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>", "");
         }
     }
+
         // It is required that all of the [non-whitespace characters] be the same.
+
         // So, this is not a thematic break:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -978,7 +1429,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" *-*", "<p><em>-</em></p>", "");
         }
     }
+
         // Thematic breaks do not need blank lines before or after:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -1006,7 +1459,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>", "");
         }
     }
+
         // Thematic breaks can interrupt a paragraph:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -1030,11 +1485,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>", "");
         }
     }
+
         // If a line of dashes that meets the above conditions for being a
+
         // thematic break could also be interpreted as the underline of a [setext
+
         // heading], the interpretation as a
+
         // [setext heading] takes precedence. Thus, for example,
+
         // this is a setext heading, not a paragraph followed by a thematic break:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -1057,8 +1518,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>", "");
         }
     }
+
         // When both a thematic break and a list item are possible
+
         // interpretations of a line, the thematic break takes precedence:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -1086,7 +1550,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>", "");
         }
     }
+
         // If you want a thematic break in a list item, use a different bullet:
+
     [TestFixture]
     public partial class TestLeafblocksThematicbreaks
     {
@@ -1112,21 +1578,37 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>", "");
         }
     }
+
         // ## ATX headings
+
         //
+
         // An [ATX heading](@)
+
         // consists of a string of characters, parsed as inline content, between an
+
         // opening sequence of 1--6 unescaped `#` characters and an optional
+
         // closing sequence of any number of unescaped `#` characters.
+
         // The opening sequence of `#` characters must be followed by a
+
         // [space] or by the end of line. The optional closing sequence of `#`s must be
+
         // preceded by a [space] and may be followed by spaces only.  The opening
+
         // `#` character may be indented 0-3 spaces.  The raw contents of the
+
         // heading are stripped of leading and trailing spaces before being parsed
+
         // as inline content.  The heading level is equal to the number of `#`
+
         // characters in the opening sequence.
+
         //
+
         // Simple headings:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1156,7 +1638,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>", "");
         }
     }
+
         // More than six `#` characters is not a heading:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1176,13 +1660,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("####### foo", "<p>####### foo</p>", "");
         }
     }
+
         // At least one space is required between the `#` characters and the
+
         // heading's contents, unless the heading is empty.  Note that many
+
         // implementations currently do not require the space.  However, the
+
         // space was required by the
+
         // [original ATX implementation](http://www.aaronsw.com/2002/atx/atx.py),
+
         // and it helps prevent things like the following from being parsed as
+
         // headings:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1205,7 +1697,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>", "");
         }
     }
+
         // This is not a heading, because the first `#` is escaped:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1225,7 +1719,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\## foo", "<p>## foo</p>", "");
         }
     }
+
         // Contents are parsed as inlines:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1245,7 +1741,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>", "");
         }
     }
+
         // Leading and trailing blanks are ignored in parsing inline content:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1265,7 +1763,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("#                  foo                     ", "<h1>foo</h1>", "");
         }
     }
+
         // One to three spaces indentation are allowed:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1289,7 +1789,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>", "");
         }
     }
+
         // Four spaces are too much:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1310,6 +1812,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    # foo", "<pre><code># foo\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1331,7 +1834,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>", "");
         }
     }
+
         // A closing sequence of `#` characters is optional:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1353,7 +1858,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>", "");
         }
     }
+
         // It need not be the same length as the opening sequence:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1375,7 +1882,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>", "");
         }
     }
+
         // Spaces are allowed after the closing sequence:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1395,9 +1904,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("### foo ###     ", "<h3>foo</h3>", "");
         }
     }
+
         // A sequence of `#` characters with anything but [spaces] following it
+
         // is not a closing sequence, but counts as part of the contents of the
+
         // heading:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1417,7 +1930,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("### foo ### b", "<h3>foo ### b</h3>", "");
         }
     }
+
         // The closing sequence must be preceded by a space:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1437,8 +1952,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# foo#", "<h1>foo#</h1>", "");
         }
     }
+
         // Backslash-escaped `#` characters do not count as part
+
         // of the closing sequence:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1462,8 +1980,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>", "");
         }
     }
+
         // ATX headings need not be separated from surrounding content by blank
+
         // lines, and they can interrupt paragraphs:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1487,6 +2008,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1510,7 +2032,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>", "");
         }
     }
+
         // ATX headings can be empty:
+
     [TestFixture]
     public partial class TestLeafblocksATXheadings
     {
@@ -1534,37 +2058,69 @@ namespace Markdig.Tests
 			TestParser.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>", "");
         }
     }
+
         // ## Setext headings
+
         //
+
         // A [setext heading](@) consists of one or more
+
         // lines of text, each containing at least one [non-whitespace
+
         // character], with no more than 3 spaces indentation, followed by
+
         // a [setext heading underline].  The lines of text must be such
+
         // that, were they not followed by the setext heading underline,
+
         // they would be interpreted as a paragraph:  they cannot be
+
         // interpretable as a [code fence], [ATX heading][ATX headings],
+
         // [block quote][block quotes], [thematic break][thematic breaks],
+
         // [list item][list items], or [HTML block][HTML blocks].
+
         //
+
         // A [setext heading underline](@) is a sequence of
+
         // `=` characters or a sequence of `-` characters, with no more than 3
+
         // spaces indentation and any number of trailing spaces.  If a line
+
         // containing a single `-` can be interpreted as an
+
         // empty [list items], it should be interpreted this way
+
         // and not as a [setext heading underline].
+
         //
+
         // The heading is a level 1 heading if `=` characters are used in
+
         // the [setext heading underline], and a level 2 heading if `-`
+
         // characters are used.  The contents of the heading are the result
+
         // of parsing the preceding lines of text as CommonMark inline
+
         // content.
+
         //
+
         // In general, a setext heading need not be preceded or followed by a
+
         // blank line.  However, it cannot interrupt a paragraph, so when a
+
         // setext heading comes after a paragraph, a blank line is needed between
+
         // them.
+
         //
+
         // Simple examples:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1589,7 +2145,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>", "");
         }
     }
+
         // The content of the header may span more than one line:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1612,7 +2170,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "");
         }
     }
+
         // The underlining can be any length:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1637,8 +2197,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>", "");
         }
     }
+
         // The heading content can be indented up to three spaces, and need
+
         // not line up with the underlining:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1667,7 +2230,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>", "");
         }
     }
+
         // Four spaces indent is too much:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1696,8 +2261,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />", "");
         }
     }
+
         // The setext heading underline can be indented up to three spaces, and
+
         // may have trailing spaces:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1718,7 +2286,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>", "");
         }
     }
+
         // Four spaces is too much:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1740,7 +2310,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n    ---", "<p>Foo\n---</p>", "");
         }
     }
+
         // The setext heading underline cannot contain internal spaces:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1767,7 +2339,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />", "");
         }
     }
+
         // Trailing spaces in the content line do not cause a line break:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1788,7 +2362,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo  \n-----", "<h2>Foo</h2>", "");
         }
     }
+
         // Nor does a backslash at the end:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1809,8 +2385,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>", "");
         }
     }
+
         // Since indicators of block structure take precedence over
+
         // indicators of inline structure, the following are setext headings:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1839,8 +2418,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>", "");
         }
     }
+
         // The setext heading underline cannot be a [lazy continuation
+
         // line] in a list item or block quote:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1864,6 +2446,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1889,6 +2472,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1912,9 +2496,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />", "");
         }
     }
+
         // A blank line is needed between a paragraph and a following
+
         // setext heading, since otherwise the paragraph becomes part
+
         // of the heading's content:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1937,8 +2525,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>", "");
         }
     }
+
         // But in general a blank line is not required before or after
+
         // setext headings:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1966,7 +2557,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>", "");
         }
     }
+
         // Setext headings cannot be empty:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -1986,9 +2579,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("====", "<p>====</p>", "");
         }
     }
+
         // Setext heading text lines must not be interpretable as block
+
         // constructs other than paragraphs.  So, the line of dashes
+
         // in these examples gets interpreted as a thematic break:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2010,6 +2607,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("---\n---", "<hr />\n<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2033,6 +2631,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2055,6 +2654,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2078,8 +2678,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "");
         }
     }
+
         // If you want a heading with `> foo` as its literal text, you can
+
         // use backslash escapes:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2100,28 +2703,51 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>", "");
         }
     }
+
         // **Compatibility note:**  Most existing Markdown implementations
+
         // do not allow the text of setext headings to span multiple lines.
+
         // But there is no consensus about how to interpret
+
         //
+
         // ``` markdown
+
         // Foo
+
         // bar
+
         // ---
+
         // baz
+
         // ```
+
         //
+
         // One can find four different interpretations:
+
         //
+
         // 1. paragraph "Foo", heading "bar", paragraph "baz"
+
         // 2. paragraph "Foo bar", thematic break, paragraph "baz"
+
         // 3. paragraph "Foo bar --- baz"
+
         // 4. heading "Foo bar", paragraph "baz"
+
         //
+
         // We find interpretation 4 most natural, and interpretation 4
+
         // increases the expressive power of CommonMark, by allowing
+
         // multiline headings.  Authors who want interpretation 1 can
+
         // put a blank line after the first paragraph:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2147,8 +2773,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>", "");
         }
     }
+
         // Authors who want interpretation 2 can put blank lines around
+
         // the thematic break,
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2176,8 +2805,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "");
         }
     }
+
         // or use a thematic break that cannot count as a [setext heading
+
         // underline], such as
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2203,7 +2835,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "");
         }
     }
+
         // Authors who want interpretation 3 can use backslash escapes:
+
     [TestFixture]
     public partial class TestLeafblocksSetextheadings
     {
@@ -2229,20 +2863,35 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>", "");
         }
     }
+
         // ## Indented code blocks
+
         //
+
         // An [indented code block](@) is composed of one or more
+
         // [indented chunks] separated by blank lines.
+
         // An [indented chunk](@) is a sequence of non-blank lines,
+
         // each indented four or more spaces. The contents of the code block are
+
         // the literal contents of the lines, including trailing
+
         // [line endings], minus four spaces of indentation.
+
         // An indented code block has no [info string].
+
         //
+
         // An indented code block cannot interrupt a paragraph, so there must be
+
         // a blank line between a paragraph and a following indented code block.
+
         // (A blank line is not needed, however, between a code block and a following
+
         // paragraph.)
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2265,9 +2914,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>", "");
         }
     }
+
         // If there is any ambiguity between an interpretation of indentation
+
         // as a code block and as indicating that material belongs to a [list
+
         // item][list items], the list item interpretation takes precedence:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2294,6 +2947,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2322,8 +2976,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "");
         }
     }
+
         // The contents of a code block are literal text, and do not get parsed
+
         // as Markdown:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2350,7 +3007,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>", "");
         }
     }
+
         // Here we have three chunks separated by blank lines:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2383,8 +3042,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>", "");
         }
     }
+
         // Any initial spaces beyond four will be included in the content, even
+
         // in interior blank lines:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2409,8 +3071,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>", "");
         }
     }
+
         // An indented code block cannot interrupt a paragraph.  (This
+
         // allows hanging indents and the like.)
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2433,9 +3098,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>", "");
         }
     }
+
         // However, any non-blank line with fewer than four leading spaces ends
+
         // the code block immediately.  So a paragraph may occur immediately
+
         // after indented code:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2458,8 +3127,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>", "");
         }
     }
+
         // And indented code can occur immediately before and after other kinds of
+
         // blocks:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2490,7 +3162,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />", "");
         }
     }
+
         // The first line can be indented more than four spaces:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2513,8 +3187,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>", "");
         }
     }
+
         // Blank lines preceding or following an indented code block
+
         // are not included in it:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2538,7 +3215,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    \n    foo\n    \n", "<pre><code>foo\n</code></pre>", "");
         }
     }
+
         // Trailing spaces are included in the code block's content:
+
     [TestFixture]
     public partial class TestLeafblocksIndentedcodeblocks
     {
@@ -2559,51 +3238,97 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>", "");
         }
     }
+
         // ## Fenced code blocks
+
         //
+
         // A [code fence](@) is a sequence
+
         // of at least three consecutive backtick characters (`` ` ``) or
+
         // tildes (`~`).  (Tildes and backticks cannot be mixed.)
+
         // A [fenced code block](@)
+
         // begins with a code fence, indented no more than three spaces.
+
         //
+
         // The line with the opening code fence may optionally contain some text
+
         // following the code fence; this is trimmed of leading and trailing
+
         // spaces and called the [info string](@).
+
         // The [info string] may not contain any backtick
+
         // characters.  (The reason for this restriction is that otherwise
+
         // some inline code would be incorrectly interpreted as the
+
         // beginning of a fenced code block.)
+
         //
+
         // The content of the code block consists of all subsequent lines, until
+
         // a closing [code fence] of the same type as the code block
+
         // began with (backticks or tildes), and with at least as many backticks
+
         // or tildes as the opening code fence.  If the leading code fence is
+
         // indented N spaces, then up to N spaces of indentation are removed from
+
         // each line of the content (if present).  (If a content line is not
+
         // indented, it is preserved unchanged.  If it is indented less than N
+
         // spaces, all of the indentation is removed.)
+
         //
+
         // The closing code fence may be indented up to three spaces, and may be
+
         // followed only by spaces, which are ignored.  If the end of the
+
         // containing block (or document) is reached and no closing code fence
+
         // has been found, the code block contains all of the lines after the
+
         // opening code fence until the end of the containing block (or
+
         // document).  (An alternative spec would require backtracking in the
+
         // event that a closing code fence is not found.  But this makes parsing
+
         // much less efficient, and there seems to be no real down side to the
+
         // behavior described here.)
+
         //
+
         // A fenced code block may interrupt a paragraph, and does not require
+
         // a blank line either before or after.
+
         //
+
         // The content of a code fence is treated as literal text, not parsed
+
         // as inlines.  The first word of the [info string] is typically used to
+
         // specify the language of the code sample, and rendered in the `class`
+
         // attribute of the `code` tag.  However, this spec does not mandate any
+
         // particular treatment of the [info string].
+
         //
+
         // Here is a simple example with backticks:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2628,7 +3353,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>", "");
         }
     }
+
         // With tildes:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2653,8 +3380,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>", "");
         }
     }
+
         // The closing code fence must use the same character as the opening
+
         // fence:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2679,6 +3409,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2703,7 +3434,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>", "");
         }
     }
+
         // The closing code fence must be at least as long as the opening fence:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2728,6 +3461,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2752,8 +3486,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>", "");
         }
     }
+
         // Unclosed code blocks are closed by the end of the document
+
         // (or the enclosing [block quote][block quotes] or [list item][list items]):
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2773,6 +3510,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```", "<pre><code></code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2798,6 +3536,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2824,7 +3563,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>", "");
         }
     }
+
         // A code block can have all empty lines as its content:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2849,7 +3590,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>", "");
         }
     }
+
         // A code block can be empty:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2870,9 +3613,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\n```", "<pre><code></code></pre>", "");
         }
     }
+
         // Fences can be indented.  If the opening fence is indented,
+
         // content lines will have equivalent opening indentation removed,
+
         // if present:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2897,6 +3644,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2923,6 +3671,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2949,7 +3698,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>", "");
         }
     }
+
         // Four spaces indentation produces an indented code block:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2974,8 +3725,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>", "");
         }
     }
+
         // Closing fences may be indented by 0-3 spaces, and their indentation
+
         // need not match that of the opening fence:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -2998,6 +3752,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3020,7 +3775,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "");
         }
     }
+
         // This is not a closing fence, because it is indented 4 spaces:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3044,7 +3801,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>", "");
         }
     }
+
         // Code fences (opening and closing) cannot contain internal spaces:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3066,6 +3825,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("``` ```\naaa", "<p><code></code>\naaa</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3089,8 +3849,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>", "");
         }
     }
+
         // Fenced code blocks can interrupt paragraphs, and can be followed
+
         // directly by paragraphs, without a blank line between:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3117,8 +3880,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>", "");
         }
     }
+
         // Other blocks can also occur before and after fenced code blocks
+
         // without an intervening blank line:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3146,10 +3912,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>", "");
         }
     }
+
         // An [info string] can be provided after the opening code fence.
+
         // Opening and closing spaces will be stripped, and the first word, prefixed
+
         // with `language-`, is used as the value for the `class` attribute of the
+
         // `code` element within the enclosing `pre` element.
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3176,6 +3947,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3202,6 +3974,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3222,7 +3995,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>", "");
         }
     }
+
         // [Info strings] for backtick code blocks cannot contain backticks:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3244,7 +4019,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>", "");
         }
     }
+
         // Closing code fences cannot have [info strings]:
+
     [TestFixture]
     public partial class TestLeafblocksFencedcodeblocks
     {
@@ -3267,69 +4044,133 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>", "");
         }
     }
+
         // ## HTML blocks
+
         //
+
         // An [HTML block](@) is a group of lines that is treated
+
         // as raw HTML (and will not be escaped in HTML output).
+
         //
+
         // There are seven kinds of [HTML block], which can be defined
+
         // by their start and end conditions.  The block begins with a line that
+
         // meets a [start condition](@) (after up to three spaces
+
         // optional indentation).  It ends with the first subsequent line that
+
         // meets a matching [end condition](@), or the last line of
+
         // the document or other [container block]), if no line is encountered that meets the
+
         // [end condition].  If the first line meets both the [start condition]
+
         // and the [end condition], the block will contain just that line.
+
         //
+
         // 1.  **Start condition:**  line begins with the string `<script`,
+
         // `<pre`, or `<style` (case-insensitive), followed by whitespace,
+
         // the string `>`, or the end of the line.\
+
         // **End condition:**  line contains an end tag
+
         // `</script>`, `</pre>`, or `</style>` (case-insensitive; it
+
         // need not match the start tag).
+
         //
+
         // 2.  **Start condition:** line begins with the string `<!--`.\
+
         // **End condition:**  line contains the string `-->`.
+
         //
+
         // 3.  **Start condition:** line begins with the string `<?`.\
+
         // **End condition:** line contains the string `?>`.
+
         //
+
         // 4.  **Start condition:** line begins with the string `<!`
+
         // followed by an uppercase ASCII letter.\
+
         // **End condition:** line contains the character `>`.
+
         //
+
         // 5.  **Start condition:**  line begins with the string
+
         // `<![CDATA[`.\
+
         // **End condition:** line contains the string `]]>`.
+
         //
+
         // 6.  **Start condition:** line begins the string `<` or `</`
+
         // followed by one of the strings (case-insensitive) `address`,
+
         // `article`, `aside`, `base`, `basefont`, `blockquote`, `body`,
+
         // `caption`, `center`, `col`, `colgroup`, `dd`, `details`, `dialog`,
+
         // `dir`, `div`, `dl`, `dt`, `fieldset`, `figcaption`, `figure`,
+
         // `footer`, `form`, `frame`, `frameset`,
+
         // `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `head`, `header`, `hr`,
+
         // `html`, `iframe`, `legend`, `li`, `link`, `main`, `menu`, `menuitem`,
+
         // `meta`, `nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
+
         // `section`, `source`, `summary`, `table`, `tbody`, `td`,
+
         // `tfoot`, `th`, `thead`, `title`, `tr`, `track`, `ul`, followed
+
         // by [whitespace], the end of the line, the string `>`, or
+
         // the string `/>`.\
+
         // **End condition:** line is followed by a [blank line].
+
         //
+
         // 7.  **Start condition:**  line begins with a complete [open tag]
+
         // or [closing tag] (with any [tag name] other than `script`,
+
         // `style`, or `pre`) followed only by [whitespace]
+
         // or the end of the line.\
+
         // **End condition:** line is followed by a [blank line].
+
         //
+
         // All types of [HTML blocks] except type 7 may interrupt
+
         // a paragraph.  Blocks of type 7 may not interrupt a paragraph.
+
         // (This restriction is intended to prevent unwanted interpretation
+
         // of long tags inside a wrapped paragraph as starting HTML blocks.)
+
         //
+
         // Some simple examples follow.  Here are some basic HTML blocks
+
         // of type 6:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3364,6 +4205,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3387,7 +4229,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>", "");
         }
     }
+
         // A block can also start with a closing tag:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3409,7 +4253,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("</div>\n*foo*", "</div>\n*foo*", "");
         }
     }
+
         // Here we have two HTML blocks with a Markdown paragraph between them:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3435,8 +4281,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>", "");
         }
     }
+
         // The tag on the first line can be partial, as long
+
         // as it is split where there would be whitespace:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3460,6 +4309,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3483,7 +4333,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "");
         }
     }
+
         // An open tag need not be closed:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3508,8 +4360,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>", "");
         }
     }
+
         // A partial tag need not even be completed (garbage
+
         // in, garbage out):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3531,6 +4386,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3552,8 +4408,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div class\nfoo", "<div class\nfoo", "");
         }
     }
+
         // The initial tag doesn't even need to be a valid
+
         // tag, as long as it starts like one:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3575,8 +4434,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*", "");
         }
     }
+
         // In type 6 blocks, the initial tag need not be on a line by
+
         // itself:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3596,6 +4458,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3619,11 +4482,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>", "");
         }
     }
+
         // Everything until the next blank line or end of document
+
         // gets included in the HTML block.  So, in the following
+
         // example, what looks like a Markdown code block
+
         // is actually part of the HTML block, which continues until a blank
+
         // line or the end of the document is reached:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3649,9 +4518,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```", "");
         }
     }
+
         // To start an [HTML block] with a tag that is *not* in the
+
         // list of block-level tags in (6), you must put the tag by
+
         // itself on the first line (and it must be complete):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3675,7 +4548,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>", "");
         }
     }
+
         // In type 7 blocks, the [tag name] can be anything:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3699,6 +4574,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3722,6 +4598,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3743,11 +4620,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("</ins>\n*bar*", "</ins>\n*bar*", "");
         }
     }
+
         // These rules are designed to allow us to work with tags that
+
         // can function as either block-level or inline-level tags.
+
         // The `<del>` tag is a nice example.  We can surround content with
+
         // `<del>` tags in three different ways.  In this case, we get a raw
+
         // HTML block, because the `<del>` tag is on a line by itself:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3771,9 +4654,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>", "");
         }
     }
+
         // In this case, we get a raw HTML block that just includes
+
         // the `<del>` tag (because it ends with the following blank
+
         // line).  So the contents get interpreted as CommonMark:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3799,10 +4686,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>", "");
         }
     }
+
         // Finally, in this case, the `<del>` tags are interpreted
+
         // as [raw HTML] *inside* the CommonMark paragraph.  (Because
+
         // the tag is not on a line by itself, we get inline HTML
+
         // rather than an [HTML block].)
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3822,14 +4714,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>", "");
         }
     }
+
         // HTML tags designed to contain literal content
+
         // (`script`, `style`, `pre`), comments, processing instructions,
+
         // and declarations are treated somewhat differently.
+
         // Instead of ending at the first blank line, these blocks
+
         // end at the first line containing a corresponding end tag.
+
         // As a result, these blocks can contain blank lines:
+
         //
+
         // A pre tag (type 1):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3861,7 +4762,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "");
         }
     }
+
         // A script tag (type 1):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3891,7 +4794,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "");
         }
     }
+
         // A style tag (type 1):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3923,9 +4828,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "");
         }
     }
+
         // If there is no matching end tag, the block will end at the
+
         // end of the document (or the enclosing [block quote][block quotes]
+
         // or [list item][list items]):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3951,6 +4860,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -3977,6 +4887,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4002,7 +4913,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>", "");
         }
     }
+
         // The end tag can occur on the same line as the start tag:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4024,6 +4937,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4045,8 +4959,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>", "");
         }
     }
+
         // Note that anything on the last line after the
+
         // end tag will be included in the [HTML block]:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4070,7 +4987,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*", "");
         }
     }
+
         // A comment (type 2):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4098,7 +5017,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "");
         }
     }
+
         // A processing instruction (type 3):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4128,7 +5049,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "");
         }
     }
+
         // A declaration (type 4):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4148,7 +5071,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>", "");
         }
     }
+
         // CDATA (type 5):
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4192,7 +5117,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "");
         }
     }
+
         // The opening tag can be indented 1-3 spaces, but not 4:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4216,6 +5143,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4239,8 +5167,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>", "");
         }
     }
+
         // An HTML block of types 1--6 can interrupt a paragraph, and need not be
+
         // preceded by a blank line.
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4266,8 +5197,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>", "");
         }
     }
+
         // However, a following blank line is needed, except at the end of
+
         // a document, and except for blocks of types 1--5, above:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4293,7 +5227,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*", "");
         }
     }
+
         // HTML blocks of type 7 cannot interrupt a paragraph:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4317,35 +5253,65 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>", "");
         }
     }
+
         // This rule differs from John Gruber's original Markdown syntax
+
         // specification, which says:
+
         //
+
         // > The only restrictions are that block-level HTML elements —
+
         // > e.g. `<div>`, `<table>`, `<pre>`, `<p>`, etc. — must be separated from
+
         // > surrounding content by blank lines, and the start and end tags of the
+
         // > block should not be indented with tabs or spaces.
+
         //
+
         // In some ways Gruber's rule is more restrictive than the one given
+
         // here:
+
         //
+
         // - It requires that an HTML block be preceded by a blank line.
+
         // - It does not allow the start tag to be indented.
+
         // - It requires a matching end tag, which it also does not allow to
+
         // be indented.
+
         //
+
         // Most Markdown implementations (including some of Gruber's own) do not
+
         // respect all of these restrictions.
+
         //
+
         // There is one respect, however, in which Gruber's rule is more liberal
+
         // than the one given here, since it allows blank lines to occur inside
+
         // an HTML block.  There are two reasons for disallowing them here.
+
         // First, it removes the need to parse balanced tags, which is
+
         // expensive and can require backtracking from the end of the document
+
         // if no matching end tag is found. Second, it provides a very simple
+
         // and flexible way of including Markdown content inside HTML tags:
+
         // simply separate the Markdown from the HTML using blank lines:
+
         //
+
         // Compare:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4371,6 +5337,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4394,16 +5361,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>", "");
         }
     }
+
         // Some Markdown implementations have adopted a convention of
+
         // interpreting content inside tags as text if the open tag has
+
         // the attribute `markdown=1`.  The rule given above seems a simpler and
+
         // more elegant way of achieving the same expressive power, which is also
+
         // much simpler to parse.
+
         //
+
         // The main potential drawback is that one can no longer paste HTML
+
         // blocks into Markdown documents with 100% reliability.  However,
+
         // *in most cases* this will work fine, because the blank lines in
+
         // HTML are usually followed by HTML block tags.  For example:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4439,9 +5417,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>", "");
         }
     }
+
         // There are problems, however, if the inner tags are indented
+
         // *and* separated by spaces, as then they will be interpreted as
+
         // an indented code block:
+
     [TestFixture]
     public partial class TestLeafblocksHTMLblocks
     {
@@ -4478,29 +5460,53 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>", "");
         }
     }
+
         // Fortunately, blank lines are usually not necessary and can be
+
         // deleted.  The exception is inside `<pre>` tags, but as described
+
         // above, raw HTML blocks starting with `<pre>` *can* contain blank
+
         // lines.
+
         //
+
         // ## Link reference definitions
+
         //
+
         // A [link reference definition](@)
+
         // consists of a [link label], indented up to three spaces, followed
+
         // by a colon (`:`), optional [whitespace] (including up to one
+
         // [line ending]), a [link destination],
+
         // optional [whitespace] (including up to one
+
         // [line ending]), and an optional [link
+
         // title], which if it is present must be separated
+
         // from the [link destination] by [whitespace].
+
         // No further [non-whitespace characters] may occur on the line.
+
         //
+
         // A [link reference definition]
+
         // does not correspond to a structural element of a document.  Instead, it
+
         // defines a label which can be used in [reference links]
+
         // and reference-style [images] elsewhere in the document.  [Link
+
         // reference definitions] can come either before or after the links that use
+
         // them.
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4522,6 +5528,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4545,6 +5552,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4566,6 +5574,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4589,7 +5598,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Foo bar]:\n<my%20url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>", "");
         }
     }
+
         // The title may extend over multiple lines:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4619,7 +5630,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>", "");
         }
     }
+
         // However, it may not contain a [blank line]:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4645,7 +5658,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>", "");
         }
     }
+
         // The title may be omitted:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4668,7 +5683,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>", "");
         }
     }
+
         // The link destination may not be omitted:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4691,8 +5708,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>", "");
         }
     }
+
         // Both title and destination can contain backslash escapes
+
         // and literal backslashes:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4714,7 +5734,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>", "");
         }
     }
+
         // A link can come before its corresponding definition:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4736,8 +5758,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>", "");
         }
     }
+
         // If there are several matching definitions, the first one takes
+
         // precedence:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4760,8 +5785,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>", "");
         }
     }
+
         // As noted in the section on [Links], matching of labels is
+
         // case-insensitive (see [matches]).
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4783,6 +5811,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4804,8 +5833,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>", "");
         }
     }
+
         // Here is a link reference definition with no corresponding link.
+
         // It contributes nothing to the document.
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4825,7 +5857,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url", "", "");
         }
     }
+
         // Here is another one:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4848,8 +5882,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>", "");
         }
     }
+
         // This is not a link reference definition, because there are
+
         // [non-whitespace characters] after the title:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4869,7 +5906,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>", "");
         }
     }
+
         // This is a link reference definition, but it has no title:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4890,8 +5929,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>", "");
         }
     }
+
         // This is not a link reference definition, because it is indented
+
         // four spaces:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4915,8 +5957,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>", "");
         }
     }
+
         // This is not a link reference definition, because it occurs inside
+
         // a code block:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4942,7 +5987,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>", "");
         }
     }
+
         // A [link reference definition] cannot interrupt a paragraph.
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4967,8 +6014,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>", "");
         }
     }
+
         // However, it can directly follow other block elements, such as headings
+
         // and thematic breaks, and it need not be followed by a blank line.
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -4993,8 +6043,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
         }
     }
+
         // Several [link reference definitions]
+
         // can occur one after another, without intervening blank lines.
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -5023,10 +6076,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>", "");
         }
     }
+
         // [Link reference definitions] can occur
+
         // inside block containers, like lists and block quotations.  They
+
         // affect the entire document, not just the container in which they
+
         // are defined:
+
     [TestFixture]
     public partial class TestLeafblocksLinkreferencedefinitions
     {
@@ -5050,16 +6108,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>", "");
         }
     }
+
         // ## Paragraphs
+
         //
+
         // A sequence of non-blank lines that cannot be interpreted as other
+
         // kinds of blocks forms a [paragraph](@).
+
         // The contents of the paragraph are the result of parsing the
+
         // paragraph's raw content as inlines.  The paragraph's raw content
+
         // is formed by concatenating the lines and removing initial and final
+
         // [whitespace].
+
         //
+
         // A simple example with two paragraphs:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5082,7 +6151,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "");
         }
     }
+
         // Paragraphs can contain multiple lines, but no blank lines:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5109,7 +6180,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>", "");
         }
     }
+
         // Multiple blank lines between paragraph have no effect:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5133,7 +6206,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "");
         }
     }
+
         // Leading spaces are skipped:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5155,8 +6230,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>", "");
         }
     }
+
         // Lines after the first may be indented any amount, since indented
+
         // code blocks cannot interrupt paragraphs.
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5180,8 +6258,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>", "");
         }
     }
+
         // However, the first line may be indented at most three spaces,
+
         // or an indented code block will be triggered:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5203,6 +6284,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5225,9 +6307,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>", "");
         }
     }
+
         // Final spaces are stripped before inline parsing, so a paragraph
+
         // that ends with two or more spaces will not end with a [hard line
+
         // break]:
+
     [TestFixture]
     public partial class TestLeafblocksParagraphs
     {
@@ -5249,13 +6335,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>", "");
         }
     }
+
         // ## Blank lines
+
         //
+
         // [Blank lines] between block-level elements are ignored,
+
         // except for the role they play in determining whether a [list]
+
         // is [tight] or [loose].
+
         //
+
         // Blank lines at the beginning and end of the document are also ignored.
+
     [TestFixture]
     public partial class TestLeafblocksBlanklines
     {
@@ -5283,55 +6377,105 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>", "");
         }
     }
+
         // # Container blocks
+
         //
+
         // A [container block] is a block that has other
+
         // blocks as its contents.  There are two basic kinds of container blocks:
+
         // [block quotes] and [list items].
+
         // [Lists] are meta-containers for [list items].
+
         //
+
         // We define the syntax for container blocks recursively.  The general
+
         // form of the definition is:
+
         //
+
         // > If X is a sequence of blocks, then the result of
+
         // > transforming X in such-and-such a way is a container of type Y
+
         // > with these blocks as its content.
+
         //
+
         // So, we explain what counts as a block quote or list item by explaining
+
         // how these can be *generated* from their contents. This should suffice
+
         // to define the syntax, although it does not give a recipe for *parsing*
+
         // these constructions.  (A recipe is provided below in the section entitled
+
         // [A parsing strategy](#appendix-a-parsing-strategy).)
+
         //
+
         // ## Block quotes
+
         //
+
         // A [block quote marker](@)
+
         // consists of 0-3 spaces of initial indent, plus (a) the character `>` together
+
         // with a following space, or (b) a single character `>` not followed by a space.
+
         //
+
         // The following rules define [block quotes]:
+
         //
+
         // 1.  **Basic case.**  If a string of lines *Ls* constitute a sequence
+
         // of blocks *Bs*, then the result of prepending a [block quote
+
         // marker] to the beginning of each line in *Ls*
+
         // is a [block quote](#block-quotes) containing *Bs*.
+
         //
+
         // 2.  **Laziness.**  If a string of lines *Ls* constitute a [block
+
         // quote](#block-quotes) with contents *Bs*, then the result of deleting
+
         // the initial [block quote marker] from one or
+
         // more lines in which the next [non-whitespace character] after the [block
+
         // quote marker] is [paragraph continuation
+
         // text] is a block quote with *Bs* as its content.
+
         // [Paragraph continuation text](@) is text
+
         // that will be parsed as part of the content of a paragraph, but does
+
         // not occur at the beginning of the paragraph.
+
         //
+
         // 3.  **Consecutiveness.**  A document cannot contain two [block
+
         // quotes] in a row unless there is a [blank line] between them.
+
         //
+
         // Nothing else counts as a [block quote](#block-quotes).
+
         //
+
         // Here is a simple example:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5357,7 +6501,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
         }
     }
+
         // The spaces after the `>` characters can be omitted:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5383,7 +6529,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
         }
     }
+
         // The `>` characters can be indented 1-3 spaces:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5409,7 +6557,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
         }
     }
+
         // Four spaces gives us a code block:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5434,8 +6584,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "");
         }
     }
+
         // The Laziness clause allows us to omit the `>` before
+
         // [paragraph continuation text]:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5461,8 +6614,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
         }
     }
+
         // A block quote can contain some lazy and some non-lazy
+
         // continuation lines:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5488,16 +6644,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>", "");
         }
     }
+
         // Laziness only applies to lines that would have been continuations of
+
         // paragraphs had they been prepended with [block quote markers].
+
         // For example, the `> ` cannot be omitted in the second line of
+
         //
+
         // ``` markdown
+
         // > foo
+
         // > ---
+
         // ```
+
         //
+
         // without changing the meaning:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5521,14 +6688,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "");
         }
     }
+
         // Similarly, if we omit the `> ` in the second line of
+
         //
+
         // ``` markdown
+
         // > - foo
+
         // > - bar
+
         // ```
+
         //
+
         // then the block quote ends after the first line:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5556,8 +6732,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>", "");
         }
     }
+
         // For the same reason, we can't omit the `> ` in front of
+
         // subsequent lines of an indented or fenced code block:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5583,6 +6762,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5608,8 +6788,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "");
         }
     }
+
         // Note that in the following case, we have a [lazy
+
         // continuation line]:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5633,18 +6816,31 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>", "");
         }
     }
+
         // To see why, note that in
+
         //
+
         // ```markdown
+
         // > foo
+
         // >     - bar
+
         // ```
+
         //
+
         // the `- bar` is indented too far to start a list, and can't
+
         // be an indented code block because indented code blocks cannot
+
         // interrupt paragraphs, so it is [paragraph continuation text].
+
         //
+
         // A block quote can be empty:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5665,6 +6861,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">", "<blockquote>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5687,7 +6884,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>", "");
         }
     }
+
         // A block quote can have initial or final blank lines:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5711,7 +6910,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>", "");
         }
     }
+
         // A blank line always separates block quotes:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5738,13 +6939,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
         }
     }
+
         // (Most current Markdown implementations, including John Gruber's
+
         // original `Markdown.pl`, will parse this example as a single block quote
+
         // with two paragraphs.  But it seems better to allow the author to decide
+
         // whether two block quotes or one are wanted.)
+
         //
+
         // Consecutiveness means that if we put these block quotes together,
+
         // we get a single block quote:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5768,7 +6977,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>", "");
         }
     }
+
         // To get a block quote with two paragraphs, use:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5793,7 +7004,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>", "");
         }
     }
+
         // Block quotes can interrupt paragraphs:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5817,8 +7030,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
         }
     }
+
         // In general, blank lines are not needed before or after block
+
         // quotes:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5846,8 +7062,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>", "");
         }
     }
+
         // However, because of laziness, a blank line is needed between
+
         // a block quote and a following paragraph:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5871,6 +7090,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5895,6 +7115,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5919,9 +7140,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "");
         }
     }
+
         // It is a consequence of the Laziness rule that any number
+
         // of initial `>`s may be omitted on a continuation line of a
+
         // nested block quote:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5949,6 +7174,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -5978,10 +7204,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>", "");
         }
     }
+
         // When including an indented code block in a block quote,
+
         // remember that the [block quote marker] includes
+
         // both the `>` and a following space.  So *five spaces* are needed after
+
         // the `>`:
+
     [TestFixture]
     public partial class TestContainerblocksBlockquotes
     {
@@ -6009,40 +7240,75 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>", "");
         }
     }
+
         // ## List items
+
         //
+
         // A [list marker](@) is a
+
         // [bullet list marker] or an [ordered list marker].
+
         //
+
         // A [bullet list marker](@)
+
         // is a `-`, `+`, or `*` character.
+
         //
+
         // An [ordered list marker](@)
+
         // is a sequence of 1--9 arabic digits (`0-9`), followed by either a
+
         // `.` character or a `)` character.  (The reason for the length
+
         // limit is that with 10 digits we start seeing integer overflows
+
         // in some browsers.)
+
         //
+
         // The following rules define [list items]:
+
         //
+
         // 1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
+
         // blocks *Bs* starting with a [non-whitespace character] and not separated
+
         // from each other by more than one blank line, and *M* is a list
+
         // marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
+
         // of prepending *M* and the following spaces to the first line of
+
         // *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
+
         // list item with *Bs* as its contents.  The type of the list item
+
         // (bullet or ordered) is determined by the type of its list marker.
+
         // If the list item is ordered, then it is also assigned a start
+
         // number, based on the ordered list marker.
+
         //
+
         // Exceptions: When the first list item in a [list] interrupts
+
         // a paragraph---that is, when it starts on a line that would
+
         // otherwise count as [paragraph continuation text]---then (a)
+
         // the lines *Ls* must not begin with a blank line, and (b) if
+
         // the list item is ordered, the start number must be 1.
+
         //
+
         // For example, let *Ls* be the lines
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6073,9 +7339,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>", "");
         }
     }
+
         // And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
+
         // that the following is an ordered list item with start number 1,
+
         // and the same contents as *Ls*:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6110,16 +7380,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // The most important thing to notice is that the position of
+
         // the text after the list marker determines how much indentation
+
         // is needed in subsequent blocks in the list item.  If the list
+
         // marker takes up two spaces, and there are three spaces between
+
         // the list marker and the next [non-whitespace character], then blocks
+
         // must be indented five spaces in order to fall under the list
+
         // item.
+
         //
+
         // Here are some examples showing how far content must be indented to be
+
         // put under the list item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6144,6 +7425,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6170,6 +7452,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6195,6 +7478,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6221,13 +7505,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "");
         }
     }
+
         // It is tempting to think of this in terms of columns:  the continuation
+
         // blocks must be indented at least to the column of the first
+
         // [non-whitespace character] after the list marker. However, that is not quite right.
+
         // The spaces after the list marker determine how much relative indentation
+
         // is needed.  Which column this indentation reaches will depend on
+
         // how the list item is embedded in other constructions, as shown by
+
         // this example:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6258,14 +7550,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>", "");
         }
     }
+
         // Here `two` occurs in the same column as the list marker `1.`,
+
         // but is actually contained in the list item, because there is
+
         // sufficient indentation after the last containing blockquote marker.
+
         //
+
         // The converse is also possible.  In the following example, the word `two`
+
         // occurs far to the right of the initial text of the list item, `one`, but
+
         // it is not considered part of the list item, because it is not indented
+
         // far enough past the blockquote marker:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6294,8 +7595,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>", "");
         }
     }
+
         // Note that at least one space is needed between the list marker and
+
         // any following content, so these are not list items:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6318,8 +7622,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "");
         }
     }
+
         // A list item may contain blocks that are separated by more than
+
         // one blank line.
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6347,7 +7654,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
+
         // A list item may contain any kind of block:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6385,8 +7694,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // A list item that contains an indented code block will preserve
+
         // empty lines within the code block verbatim.
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6420,7 +7732,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+
         // Note that ordered list start numbers must be nine digits or less:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6442,6 +7756,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6461,7 +7776,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "");
         }
     }
+
         // A start number may begin with 0s:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6483,6 +7800,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6504,7 +7822,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "");
         }
     }
+
         // A start number may not be negative:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6524,21 +7844,37 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-1. not ok", "<p>-1. not ok</p>", "");
         }
     }
+
         // 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
+
         // constitute a sequence of blocks *Bs* starting with an indented code
+
         // block and not separated from each other by more than one blank line,
+
         // and *M* is a list marker of width *W* followed by
+
         // one space, then the result of prepending *M* and the following
+
         // space to the first line of *Ls*, and indenting subsequent lines of
+
         // *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
+
         // If a line is empty, then it need not be indented.  The type of the
+
         // list item (bullet or ordered) is determined by the type of its list
+
         // marker.  If the list item is ordered, then it is also assigned a
+
         // start number, based on the ordered list marker.
+
         //
+
         // An indented code block will have to be indented four spaces beyond
+
         // the edge of the region where text will be included in the list item.
+
         // In the following case that is 6 spaces:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6566,7 +7902,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+
         // And in this case it is 11 spaces:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6594,9 +7932,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "");
         }
     }
+
         // If the *first* block in the list item is an indented code block,
+
         // then by rule #2, the contents must be indented *one* space after the
+
         // list marker:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6624,6 +7966,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6655,8 +7998,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
         }
     }
+
         // Note that an additional space indent is interpreted as space
+
         // inside the code block:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6688,13 +8034,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
         }
     }
+
         // Note that rules #1 and #2 only apply to two cases:  (a) cases
+
         // in which the lines to be included in a list item begin with a
+
         // [non-whitespace character], and (b) cases in which
+
         // they begin with an indented code
+
         // block.  In a case like the following, where the first block begins with
+
         // a three-space indent, the rules do not allow us to form a list item by
+
         // indenting the whole thing and prepending a list marker:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6717,6 +8071,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6741,10 +8096,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "");
         }
     }
+
         // This is not a significant restriction, because when a block begins
+
         // with 1-3 spaces indent, the indentation can always be removed without
+
         // a change in interpretation, allowing rule #1 to be applied.  So, in
+
         // the above case:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6771,19 +8131,33 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
         }
     }
+
         // 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
+
         // starting with a single [blank line] constitute a (possibly empty)
+
         // sequence of blocks *Bs*, not separated from each other by more than
+
         // one blank line, and *M* is a list marker of width *W*,
+
         // then the result of prepending *M* to the first line of *Ls*, and
+
         // indenting subsequent lines of *Ls* by *W + 1* spaces, is a list
+
         // item with *Bs* as its contents.
+
         // If a line is empty, then it need not be indented.  The type of the
+
         // list item (bullet or ordered) is determined by the type of its list
+
         // marker.  If the list item is ordered, then it is also assigned a
+
         // start number, based on the ordered list marker.
+
         //
+
         // Here are some list items that start with a blank line but are not empty:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6820,8 +8194,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "");
         }
     }
+
         // When the list item starts with a blank line, the number of spaces
+
         // following the list marker doesn't change the required indentation:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6844,9 +8221,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "");
         }
     }
+
         // A list item can begin with at most one blank line.
+
         // In the following example, `foo` is not part of the list
+
         // item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6871,7 +8252,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "");
         }
     }
+
         // Here is an empty bullet list item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6897,7 +8280,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
         }
     }
+
         // It does not matter whether there are spaces following the [list marker]:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6923,7 +8308,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
         }
     }
+
         // Here is an empty ordered list item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6949,7 +8336,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "");
         }
     }
+
         // A list may start or end with an empty list item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6971,7 +8360,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*", "<ul>\n<li></li>\n</ul>", "");
         }
     }
+
         // However, an empty list item cannot interrupt a paragraph:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -6998,13 +8389,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "");
         }
     }
+
         // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
+
         // according to rule #1, #2, or #3, then the result of indenting each line
+
         // of *Ls* by 1-3 spaces (the same for each line) also constitutes a
+
         // list item with the same contents and attributes.  If a line is
+
         // empty, then it need not be indented.
+
         //
+
         // Indented one space:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7039,7 +8438,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // Indented two spaces:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7074,7 +8475,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // Indented three spaces:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7109,7 +8512,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // Four spaces indent gives a code block:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7140,16 +8545,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>", "");
         }
     }
+
         // 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
+
         // item](#list-items) with contents *Bs*, then the result of deleting
+
         // some or all of the indentation from one or more lines in which the
+
         // next [non-whitespace character] after the indentation is
+
         // [paragraph continuation text] is a
+
         // list item with the same contents and attributes.  The unindented
+
         // lines are called
+
         // [lazy continuation line](@)s.
+
         //
+
         // Here is an example with [lazy continuation lines]:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7184,7 +8600,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
         }
     }
+
         // Indentation can be partially deleted:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7208,7 +8626,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>", "");
         }
     }
+
         // These examples show how laziness can work in nested structures:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7238,6 +8658,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7267,14 +8688,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "");
         }
     }
+
         // 6.  **That's all.** Nothing that is not counted as a list item by rules
+
         // #1--5 counts as a [list item](#list-items).
+
         //
+
         // The rules for sublists follow from the general rules above.  A sublist
+
         // must be indented the same number of spaces a paragraph would need to be
+
         // in order to be included in the list item.
+
         //
+
         // So, in this case we need two spaces indent:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7311,7 +8741,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
         // One is not enough:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7339,7 +8771,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "");
         }
     }
+
         // Here we need four, because the list marker is wider:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7366,7 +8800,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "");
         }
     }
+
         // Three is not enough:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7392,7 +8828,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>", "");
         }
     }
+
         // A list may be the first block in a list item:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7418,6 +8856,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7447,7 +8886,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>", "");
         }
     }
+
         // A list item can contain a heading:
+
     [TestFixture]
     public partial class TestContainerblocksListitems
     {
@@ -7477,224 +8918,443 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>", "");
         }
     }
+
         // ### Motivation
+
         //
+
         // John Gruber's Markdown spec says the following about list items:
+
         //
+
         // 1. "List markers typically start at the left margin, but may be indented
+
         // by up to three spaces. List markers must be followed by one or more
+
         // spaces or a tab."
+
         //
+
         // 2. "To make lists look nice, you can wrap items with hanging indents....
+
         // But if you don't want to, you don't have to."
+
         //
+
         // 3. "List items may consist of multiple paragraphs. Each subsequent
+
         // paragraph in a list item must be indented by either 4 spaces or one
+
         // tab."
+
         //
+
         // 4. "It looks nice if you indent every line of the subsequent paragraphs,
+
         // but here again, Markdown will allow you to be lazy."
+
         //
+
         // 5. "To put a blockquote within a list item, the blockquote's `>`
+
         // delimiters need to be indented."
+
         //
+
         // 6. "To put a code block within a list item, the code block needs to be
+
         // indented twice — 8 spaces or two tabs."
+
         //
+
         // These rules specify that a paragraph under a list item must be indented
+
         // four spaces (presumably, from the left margin, rather than the start of
+
         // the list marker, but this is not said), and that code under a list item
+
         // must be indented eight spaces instead of the usual four.  They also say
+
         // that a block quote must be indented, but not by how much; however, the
+
         // example given has four spaces indentation.  Although nothing is said
+
         // about other kinds of block-level content, it is certainly reasonable to
+
         // infer that *all* block elements under a list item, including other
+
         // lists, must be indented four spaces.  This principle has been called the
+
         // *four-space rule*.
+
         //
+
         // The four-space rule is clear and principled, and if the reference
+
         // implementation `Markdown.pl` had followed it, it probably would have
+
         // become the standard.  However, `Markdown.pl` allowed paragraphs and
+
         // sublists to start with only two spaces indentation, at least on the
+
         // outer level.  Worse, its behavior was inconsistent: a sublist of an
+
         // outer-level list needed two spaces indentation, but a sublist of this
+
         // sublist needed three spaces.  It is not surprising, then, that different
+
         // implementations of Markdown have developed very different rules for
+
         // determining what comes under a list item.  (Pandoc and python-Markdown,
+
         // for example, stuck with Gruber's syntax description and the four-space
+
         // rule, while discount, redcarpet, marked, PHP Markdown, and others
+
         // followed `Markdown.pl`'s behavior more closely.)
+
         //
+
         // Unfortunately, given the divergences between implementations, there
+
         // is no way to give a spec for list items that will be guaranteed not
+
         // to break any existing documents.  However, the spec given here should
+
         // correctly handle lists formatted with either the four-space rule or
+
         // the more forgiving `Markdown.pl` behavior, provided they are laid out
+
         // in a way that is natural for a human to read.
+
         //
+
         // The strategy here is to let the width and indentation of the list marker
+
         // determine the indentation necessary for blocks to fall under the list
+
         // item, rather than having a fixed and arbitrary number.  The writer can
+
         // think of the body of the list item as a unit which gets indented to the
+
         // right enough to fit the list marker (and any indentation on the list
+
         // marker).  (The laziness rule, #5, then allows continuation lines to be
+
         // unindented if needed.)
+
         //
+
         // This rule is superior, we claim, to any rule requiring a fixed level of
+
         // indentation from the margin.  The four-space rule is clear but
+
         // unnatural. It is quite unintuitive that
+
         //
+
         // ``` markdown
+
         // - foo
+
         //
+
         // bar
+
         //
+
         // - baz
+
         // ```
+
         //
+
         // should be parsed as two lists with an intervening paragraph,
+
         //
+
         // ``` html
+
         // <ul>
+
         // <li>foo</li>
+
         // </ul>
+
         // <p>bar</p>
+
         // <ul>
+
         // <li>baz</li>
+
         // </ul>
+
         // ```
+
         //
+
         // as the four-space rule demands, rather than a single list,
+
         //
+
         // ``` html
+
         // <ul>
+
         // <li>
+
         // <p>foo</p>
+
         // <p>bar</p>
+
         // <ul>
+
         // <li>baz</li>
+
         // </ul>
+
         // </li>
+
         // </ul>
+
         // ```
+
         //
+
         // The choice of four spaces is arbitrary.  It can be learned, but it is
+
         // not likely to be guessed, and it trips up beginners regularly.
+
         //
+
         // Would it help to adopt a two-space rule?  The problem is that such
+
         // a rule, together with the rule allowing 1--3 spaces indentation of the
+
         // initial list marker, allows text that is indented *less than* the
+
         // original list marker to be included in the list item. For example,
+
         // `Markdown.pl` parses
+
         //
+
         // ``` markdown
+
         // - one
+
         //
+
         // two
+
         // ```
+
         //
+
         // as a single list item, with `two` a continuation paragraph:
+
         //
+
         // ``` html
+
         // <ul>
+
         // <li>
+
         // <p>one</p>
+
         // <p>two</p>
+
         // </li>
+
         // </ul>
+
         // ```
+
         //
+
         // and similarly
+
         //
+
         // ``` markdown
+
         // >   - one
+
         // >
+
         // >  two
+
         // ```
+
         //
+
         // as
+
         //
+
         // ``` html
+
         // <blockquote>
+
         // <ul>
+
         // <li>
+
         // <p>one</p>
+
         // <p>two</p>
+
         // </li>
+
         // </ul>
+
         // </blockquote>
+
         // ```
+
         //
+
         // This is extremely unintuitive.
+
         //
+
         // Rather than requiring a fixed indent from the margin, we could require
+
         // a fixed indent (say, two spaces, or even one space) from the list marker (which
+
         // may itself be indented).  This proposal would remove the last anomaly
+
         // discussed.  Unlike the spec presented above, it would count the following
+
         // as a list item with a subparagraph, even though the paragraph `bar`
+
         // is not indented as far as the first paragraph `foo`:
+
         //
+
         // ``` markdown
+
         // 10. foo
+
         //
+
         // bar
+
         // ```
+
         //
+
         // Arguably this text does read like a list item with `bar` as a subparagraph,
+
         // which may count in favor of the proposal.  However, on this proposal indented
+
         // code would have to be indented six spaces after the list marker.  And this
+
         // would break a lot of existing Markdown, which has the pattern:
+
         //
+
         // ``` markdown
+
         // 1.  foo
+
         //
+
         // indented code
+
         // ```
+
         //
+
         // where the code is indented eight spaces.  The spec above, by contrast, will
+
         // parse this text as expected, since the code block's indentation is measured
+
         // from the beginning of `foo`.
+
         //
+
         // The one case that needs special treatment is a list item that *starts*
+
         // with indented code.  How much indentation is required in that case, since
+
         // we don't have a "first paragraph" to measure from?  Rule #2 simply stipulates
+
         // that in such cases, we require one space indentation from the list marker
+
         // (and then the normal four spaces for the indented code).  This will match the
+
         // four-space rule in cases where the list marker plus its initial indentation
+
         // takes four spaces (a common case), but diverge in other cases.
+
         //
+
         // ## Lists
+
         //
+
         // A [list](@) is a sequence of one or more
+
         // list items [of the same type].  The list items
+
         // may be separated by any number of blank lines.
+
         //
+
         // Two list items are [of the same type](@)
+
         // if they begin with a [list marker] of the same type.
+
         // Two list markers are of the
+
         // same type if (a) they are bullet list markers using the same character
+
         // (`-`, `+`, or `*`) or (b) they are ordered list numbers with the same
+
         // delimiter (either `.` or `)`).
+
         //
+
         // A list is an [ordered list](@)
+
         // if its constituent list items begin with
+
         // [ordered list markers], and a
+
         // [bullet list](@) if its constituent list
+
         // items begin with [bullet list markers].
+
         //
+
         // The [start number](@)
+
         // of an [ordered list] is determined by the list number of
+
         // its initial list item.  The numbers of subsequent list items are
+
         // disregarded.
+
         //
+
         // A list is [loose](@) if any of its constituent
+
         // list items are separated by blank lines, or if any of its constituent
+
         // list items directly contain two block-level elements with a blank line
+
         // between them.  Otherwise a list is [tight](@).
+
         // (The difference in HTML output is that paragraphs in a loose list are
+
         // wrapped in `<p>` tags, while paragraphs in a tight list are not.)
+
         //
+
         // Changing the bullet or ordered list delimiter starts a new list:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7722,6 +9382,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7749,9 +9410,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>", "");
         }
     }
+
         // In CommonMark, a list can interrupt a paragraph. That is,
+
         // no blank line is needed to separate a paragraph from a following
+
         // list:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7777,70 +9442,135 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>", "");
         }
     }
+
         // `Markdown.pl` does not allow this, through fear of triggering a list
+
         // via a numeral in a hard-wrapped line:
+
         //
+
         // ``` markdown
+
         // The number of windows in my house is
+
         // 14.  The number of doors is 6.
+
         // ```
+
         //
+
         // Oddly, though, `Markdown.pl` *does* allow a blockquote to
+
         // interrupt a paragraph, even though the same considerations might
+
         // apply.
+
         //
+
         // In CommonMark, we do allow lists to interrupt paragraphs, for
+
         // two reasons.  First, it is natural and not uncommon for people
+
         // to start lists without blank lines:
+
         //
+
         // ``` markdown
+
         // I need to buy
+
         // - new shoes
+
         // - a coat
+
         // - a plane ticket
+
         // ```
+
         //
+
         // Second, we are attracted to a
+
         //
+
         // > [principle of uniformity](@):
+
         // > if a chunk of text has a certain
+
         // > meaning, it will continue to have the same meaning when put into a
+
         // > container block (such as a list item or blockquote).
+
         //
+
         // (Indeed, the spec for [list items] and [block quotes] presupposes
+
         // this principle.) This principle implies that if
+
         //
+
         // ``` markdown
+
         // * I need to buy
+
         // - new shoes
+
         // - a coat
+
         // - a plane ticket
+
         // ```
+
         //
+
         // is a list item containing a paragraph followed by a nested sublist,
+
         // as all Markdown implementations agree it is (though the paragraph
+
         // may be rendered without `<p>` tags, since the list is "tight"),
+
         // then
+
         //
+
         // ``` markdown
+
         // I need to buy
+
         // - new shoes
+
         // - a coat
+
         // - a plane ticket
+
         // ```
+
         //
+
         // by itself should be a paragraph followed by a nested sublist.
+
         //
+
         // Since it is well established Markdown practice to allow lists to
+
         // interrupt paragraphs inside list items, the [principle of
+
         // uniformity] requires us to allow this outside list items as
+
         // well.  ([reStructuredText](http://docutils.sourceforge.net/rst.html)
+
         // takes a different approach, requiring blank lines before lists
+
         // even inside other list items.)
+
         //
+
         // In order to solve of unwanted lists in paragraphs with
+
         // hard-wrapped numerals, we allow only lists starting with `1` to
+
         // interrupt paragraphs.  Thus,
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7862,7 +9592,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "");
         }
     }
+
         // We may still get an unintended result in cases like
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7886,9 +9618,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "");
         }
     }
+
         // but this rule should prevent most spurious list captures.
+
         //
+
         // There can be any number of blank lines between items:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7923,6 +9659,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7960,10 +9697,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
         // To separate consecutive lists of the same type, or to separate a
+
         // list from an indented code block that would otherwise be parsed
+
         // as a subparagraph of the final list item, you can insert a blank HTML
+
         // comment:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -7997,6 +9739,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8035,10 +9778,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "");
         }
     }
+
         // List items need not be indented to the same level.  The following
+
         // list items will be treated as items at the same list level,
+
         // since none is indented enough to belong to the previous list
+
         // item:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8076,6 +9824,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n - b\n  - c\n   - d\n    - e\n   - f\n  - g\n - h\n- i", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n<li>h</li>\n<li>i</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8109,8 +9858,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>", "");
         }
     }
+
         // This is a loose list, because there is a blank line between
+
         // two of the list items:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8143,7 +9895,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>", "");
         }
     }
+
         // So is this, with a empty second item:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8174,9 +9928,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>", "");
         }
     }
+
         // These are loose lists, even though there is no space between the items,
+
         // because one of the items directly contains two block-level elements
+
         // with a blank line between them:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8211,6 +9969,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8244,7 +10003,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "");
         }
     }
+
         // This is a tight list, because the blank lines are in a code block:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8279,9 +10040,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>", "");
         }
     }
+
         // This is a tight list, because the blank line is between two
+
         // paragraphs of a sublist.  So the sublist is loose while
+
         // the outer list is tight:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8315,8 +10080,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>", "");
         }
     }
+
         // This is a tight list, because the blank line is inside the
+
         // block quote:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8346,8 +10114,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>", "");
         }
     }
+
         // This list is tight, because the consecutive block elements
+
         // are not separated by blank lines:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8381,7 +10152,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>", "");
         }
     }
+
         // A single-paragraph list is tight:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8403,6 +10176,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8429,8 +10203,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
         // This list is loose, because of the blank line between the
+
         // two block elements in the list item:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8460,7 +10237,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>", "");
         }
     }
+
         // Here the outer list is loose, the inner list tight:
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8491,6 +10270,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>", "");
         }
     }
+
     [TestFixture]
     public partial class TestContainerblocksLists
     {
@@ -8531,11 +10311,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>", "");
         }
     }
+
         // # Inlines
+
         //
+
         // Inlines are parsed sequentially from the beginning of the character
+
         // stream to the end (left to right, in left-to-right languages).
+
         // Thus, for example, in
+
     [TestFixture]
     public partial class TestInlines
     {
@@ -8555,12 +10341,19 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>", "");
         }
     }
+
         // `hi` is parsed as code, leaving the backtick at the end as a literal
+
         // backtick.
+
         //
+
         // ## Backslash escapes
+
         //
+
         // Any ASCII punctuation character may be backslash-escaped:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8580,8 +10373,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>", "");
         }
     }
+
         // Backslashes before other characters are treated as literal
+
         // backslashes:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8601,8 +10397,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>", "");
         }
     }
+
         // Escaped characters are treated as regular characters and do
+
         // not have their usual Markdown meanings:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8636,7 +10435,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;</p>", "");
         }
     }
+
         // If a backslash is itself escaped, the following character is not:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8656,7 +10457,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>", "");
         }
     }
+
         // A backslash at the end of the line is a [hard line break]:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8678,8 +10481,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>", "");
         }
     }
+
         // Backslash escapes do not work in code blocks, code spans, autolinks, or
+
         // raw HTML:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8699,6 +10505,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8719,6 +10526,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8741,6 +10549,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8760,6 +10569,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8779,8 +10589,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">", "");
         }
     }
+
         // But they work in all other contexts, including URLs and link titles,
+
         // link references, and [info strings] in [fenced code blocks]:
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8800,6 +10613,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8821,6 +10635,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesBackslashescapes
     {
@@ -8843,21 +10658,37 @@ namespace Markdig.Tests
 			TestParser.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>", "");
         }
     }
+
         // ## Entity and numeric character references
+
         //
+
         // All valid HTML entity references and numeric character
+
         // references, except those occuring in code blocks and code spans,
+
         // are recognized as such and treated as equivalent to the
+
         // corresponding Unicode characters.  Conforming CommonMark parsers
+
         // need not store information about whether a particular character
+
         // was represented in the source using a Unicode character or
+
         // an entity reference.
+
         //
+
         // [Entity references](@) consist of `&` + any of the valid
+
         // HTML5 entity names + `;`. The
+
         // document <https://html.spec.whatwg.org/multipage/entities.json>
+
         // is used as an authoritative source for the valid entity
+
         // references and their corresponding code points.
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8881,13 +10712,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>", "");
         }
     }
+
         // [Decimal numeric character
+
         // references](@)
+
         // consist of `&#` + a string of 1--8 arabic digits + `;`. A
+
         // numeric character reference is parsed as the corresponding
+
         // Unicode character. Invalid Unicode code points will be replaced by
+
         // the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
+
         // the code point `U+0000` will also be replaced by `U+FFFD`.
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8907,11 +10746,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&#35; &#1234; &#992; &#98765432; &#0;", "<p># Ӓ Ϡ � �</p>", "");
         }
     }
+
         // [Hexadecimal numeric character
+
         // references](@) consist of `&#` +
+
         // either `X` or `x` + a string of 1-8 hexadecimal digits + `;`.
+
         // They too are parsed as the corresponding Unicode character (this
+
         // time specified with a hexadecimal numeral instead of decimal).
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8931,7 +10776,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>", "");
         }
     }
+
         // Here are some nonentities:
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8953,9 +10800,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&nbsp &x; &#; &#x;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "");
         }
     }
+
         // Although HTML5 does accept some entity references
+
         // without a trailing semicolon (such as `&copy`), these are not
+
         // recognized here, because it makes the grammar too ambiguous:
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8975,8 +10826,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&copy", "<p>&amp;copy</p>", "");
         }
     }
+
         // Strings that are not on the list of HTML5 named entities are not
+
         // recognized as entity references either:
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -8996,9 +10850,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>", "");
         }
     }
+
         // Entity and numeric character references are recognized in any
+
         // context besides code spans or code blocks, including
+
         // URLs, [link titles], and [fenced code block][] [info strings]:
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9018,6 +10876,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9037,6 +10896,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9058,6 +10918,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9080,8 +10941,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>", "");
         }
     }
+
         // Entity and numeric character references are treated as literal
+
         // text in code spans and code blocks:
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9101,6 +10965,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
@@ -9121,19 +10986,33 @@ namespace Markdig.Tests
 			TestParser.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>", "");
         }
     }
+
         // ## Code spans
+
         //
+
         // A [backtick string](@)
+
         // is a string of one or more backtick characters (`` ` ``) that is neither
+
         // preceded nor followed by a backtick.
+
         //
+
         // A [code span](@) begins with a backtick string and ends with
+
         // a backtick string of equal length.  The contents of the code span are
+
         // the characters between the two backtick strings, with leading and
+
         // trailing spaces and [line endings] removed, and
+
         // [whitespace] collapsed to single spaces.
+
         //
+
         // This is a simple code span:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9153,8 +11032,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo`", "<p><code>foo</code></p>", "");
         }
     }
+
         // Here two backticks are used, because the code contains a backtick.
+
         // This example also illustrates stripping of leading and trailing spaces:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9174,8 +11056,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`` foo ` bar  ``", "<p><code>foo ` bar</code></p>", "");
         }
     }
+
         // This example shows the motivation for stripping leading and trailing
+
         // spaces:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9195,7 +11080,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("` `` `", "<p><code>``</code></p>", "");
         }
     }
+
         // [Line endings] are treated like spaces:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9217,8 +11104,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>", "");
         }
     }
+
         // Interior spaces and [line endings] are collapsed into
+
         // single spaces, just as they would be by a browser:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9239,8 +11129,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo   bar\n  baz`", "<p><code>foo bar baz</code></p>", "");
         }
     }
+
         // Not all [Unicode whitespace] (for instance, non-breaking space) is
+
         // collapsed, however:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9260,18 +11153,31 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`a  b`", "<p><code>a  b</code></p>", "");
         }
     }
+
         // Q: Why not just leave the spaces, since browsers will collapse them
+
         // anyway?  A:  Because we might be targeting a non-HTML format, and we
+
         // shouldn't rely on HTML-specific rendering assumptions.
+
         //
+
         // (Existing implementations differ in their treatment of internal
+
         // spaces and [line endings].  Some, including `Markdown.pl` and
+
         // `showdown`, convert an internal [line ending] into a
+
         // `<br />` tag.  But this makes things difficult for those who like to
+
         // hard-wrap their paragraphs, since a line break in the midst of a code
+
         // span will cause an unintended line break in the output.  Others just
+
         // leave internal spaces as they are, which is fine if only HTML is being
+
         // targeted.)
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9291,8 +11197,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo `` bar`", "<p><code>foo `` bar</code></p>", "");
         }
     }
+
         // Note that backslash escapes do not work in code spans. All backslashes
+
         // are treated literally:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9312,14 +11221,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo\\`bar`", "<p><code>foo\\</code>bar`</p>", "");
         }
     }
+
         // Backslash escapes are never needed, because one can always choose a
+
         // string of *n* backtick characters as delimiters, where the code does
+
         // not contain any strings of exactly *n* backtick characters.
+
         //
+
         // Code span backticks have higher precedence than any other inline
+
         // constructs except HTML tags and autolinks.  Thus, for example, this is
+
         // not parsed as emphasized text, since the second `*` is part of a code
+
         // span:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9339,7 +11257,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo`*`", "<p>*foo<code>*</code></p>", "");
         }
     }
+
         // And this is not parsed as a link:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9359,8 +11279,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>", "");
         }
     }
+
         // Code spans, HTML tags, and autolinks have the same precedence.
+
         // Thus, this is code:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9380,7 +11303,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>", "");
         }
     }
+
         // But this is an HTML tag:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9400,7 +11325,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>", "");
         }
     }
+
         // And this is code:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9420,7 +11347,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "");
         }
     }
+
         // But this is an autolink:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9440,8 +11369,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "");
         }
     }
+
         // When a backtick string is not closed by a matching backtick string,
+
         // we just have literal backticks:
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9461,6 +11393,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```foo``", "<p>```foo``</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesCodespans
     {
@@ -9480,210 +11413,415 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`foo", "<p>`foo</p>", "");
         }
     }
+
         // ## Emphasis and strong emphasis
+
         //
+
         // John Gruber's original [Markdown syntax
+
         // description](http://daringfireball.net/projects/markdown/syntax#em) says:
+
         //
+
         // > Markdown treats asterisks (`*`) and underscores (`_`) as indicators of
+
         // > emphasis. Text wrapped with one `*` or `_` will be wrapped with an HTML
+
         // > `<em>` tag; double `*`'s or `_`'s will be wrapped with an HTML `<strong>`
+
         // > tag.
+
         //
+
         // This is enough for most users, but these rules leave much undecided,
+
         // especially when it comes to nested emphasis.  The original
+
         // `Markdown.pl` test suite makes it clear that triple `***` and
+
         // `___` delimiters can be used for strong emphasis, and most
+
         // implementations have also allowed the following patterns:
+
         //
+
         // ``` markdown
+
         // ***strong emph***
+
         // ***strong** in emph*
+
         // ***emph* in strong**
+
         // **in strong *emph***
+
         // *in emph **strong***
+
         // ```
+
         //
+
         // The following patterns are less widely supported, but the intent
+
         // is clear and they are useful (especially in contexts like bibliography
+
         // entries):
+
         //
+
         // ``` markdown
+
         // *emph *with emph* in it*
+
         // **strong **with strong** in it**
+
         // ```
+
         //
+
         // Many implementations have also restricted intraword emphasis to
+
         // the `*` forms, to avoid unwanted emphasis in words containing
+
         // internal underscores.  (It is best practice to put these in code
+
         // spans, but users often do not.)
+
         //
+
         // ``` markdown
+
         // internal emphasis: foo*bar*baz
+
         // no emphasis: foo_bar_baz
+
         // ```
+
         //
+
         // The rules given below capture all of these patterns, while allowing
+
         // for efficient parsing strategies that do not backtrack.
+
         //
+
         // First, some definitions.  A [delimiter run](@) is either
+
         // a sequence of one or more `*` characters that is not preceded or
+
         // followed by a `*` character, or a sequence of one or more `_`
+
         // characters that is not preceded or followed by a `_` character.
+
         //
+
         // A [left-flanking delimiter run](@) is
+
         // a [delimiter run] that is (a) not followed by [Unicode whitespace],
+
         // and (b) either not followed by a [punctuation character], or
+
         // preceded by [Unicode whitespace] or a [punctuation character].
+
         // For purposes of this definition, the beginning and the end of
+
         // the line count as Unicode whitespace.
+
         //
+
         // A [right-flanking delimiter run](@) is
+
         // a [delimiter run] that is (a) not preceded by [Unicode whitespace],
+
         // and (b) either not preceded by a [punctuation character], or
+
         // followed by [Unicode whitespace] or a [punctuation character].
+
         // For purposes of this definition, the beginning and the end of
+
         // the line count as Unicode whitespace.
+
         //
+
         // Here are some examples of delimiter runs.
+
         //
+
         // - left-flanking but not right-flanking:
+
         //
+
         // ```
+
         // ***abc
+
         // _abc
+
         // **"abc"
+
         // _"abc"
+
         // ```
+
         //
+
         // - right-flanking but not left-flanking:
+
         //
+
         // ```
+
         // abc***
+
         // abc_
+
         // "abc"**
+
         // "abc"_
+
         // ```
+
         //
+
         // - Both left and right-flanking:
+
         //
+
         // ```
+
         // abc***def
+
         // "abc"_"def"
+
         // ```
+
         //
+
         // - Neither left nor right-flanking:
+
         //
+
         // ```
+
         // abc *** def
+
         // a _ b
+
         // ```
+
         //
+
         // (The idea of distinguishing left-flanking and right-flanking
+
         // delimiter runs based on the character before and the character
+
         // after comes from Roopesh Chander's
+
         // [vfmd](http://www.vfmd.org/vfmd-spec/specification/#procedure-for-identifying-emphasis-tags).
+
         // vfmd uses the terminology "emphasis indicator string" instead of "delimiter
+
         // run," and its rules for distinguishing left- and right-flanking runs
+
         // are a bit more complex than the ones given here.)
+
         //
+
         // The following rules define emphasis and strong emphasis:
+
         //
+
         // 1.  A single `*` character [can open emphasis](@)
+
         // iff (if and only if) it is part of a [left-flanking delimiter run].
+
         //
+
         // 2.  A single `_` character [can open emphasis] iff
+
         // it is part of a [left-flanking delimiter run]
+
         // and either (a) not part of a [right-flanking delimiter run]
+
         // or (b) part of a [right-flanking delimiter run]
+
         // preceded by punctuation.
+
         //
+
         // 3.  A single `*` character [can close emphasis](@)
+
         // iff it is part of a [right-flanking delimiter run].
+
         //
+
         // 4.  A single `_` character [can close emphasis] iff
+
         // it is part of a [right-flanking delimiter run]
+
         // and either (a) not part of a [left-flanking delimiter run]
+
         // or (b) part of a [left-flanking delimiter run]
+
         // followed by punctuation.
+
         //
+
         // 5.  A double `**` [can open strong emphasis](@)
+
         // iff it is part of a [left-flanking delimiter run].
+
         //
+
         // 6.  A double `__` [can open strong emphasis] iff
+
         // it is part of a [left-flanking delimiter run]
+
         // and either (a) not part of a [right-flanking delimiter run]
+
         // or (b) part of a [right-flanking delimiter run]
+
         // preceded by punctuation.
+
         //
+
         // 7.  A double `**` [can close strong emphasis](@)
+
         // iff it is part of a [right-flanking delimiter run].
+
         //
+
         // 8.  A double `__` [can close strong emphasis]
+
         // it is part of a [right-flanking delimiter run]
+
         // and either (a) not part of a [left-flanking delimiter run]
+
         // or (b) part of a [left-flanking delimiter run]
+
         // followed by punctuation.
+
         //
+
         // 9.  Emphasis begins with a delimiter that [can open emphasis] and ends
+
         // with a delimiter that [can close emphasis], and that uses the same
+
         // character (`_` or `*`) as the opening delimiter.  The
+
         // opening and closing delimiters must belong to separate
+
         // [delimiter runs].  If one of the delimiters can both
+
         // open and close emphasis, then the sum of the lengths of the
+
         // delimiter runs containing the opening and closing delimiters
+
         // must not be a multiple of 3.
+
         //
+
         // 10. Strong emphasis begins with a delimiter that
+
         // [can open strong emphasis] and ends with a delimiter that
+
         // [can close strong emphasis], and that uses the same character
+
         // (`_` or `*`) as the opening delimiter.  The
+
         // opening and closing delimiters must belong to separate
+
         // [delimiter runs].  If one of the delimiters can both open
+
         // and close strong emphasis, then the sum of the lengths of
+
         // the delimiter runs containing the opening and closing
+
         // delimiters must not be a multiple of 3.
+
         //
+
         // 11. A literal `*` character cannot occur at the beginning or end of
+
         // `*`-delimited emphasis or `**`-delimited strong emphasis, unless it
+
         // is backslash-escaped.
+
         //
+
         // 12. A literal `_` character cannot occur at the beginning or end of
+
         // `_`-delimited emphasis or `__`-delimited strong emphasis, unless it
+
         // is backslash-escaped.
+
         //
+
         // Where rules 1--12 above are compatible with multiple parsings,
+
         // the following principles resolve ambiguity:
+
         //
+
         // 13. The number of nestings should be minimized. Thus, for example,
+
         // an interpretation `<strong>...</strong>` is always preferred to
+
         // `<em><em>...</em></em>`.
+
         //
+
         // 14. An interpretation `<strong><em>...</em></strong>` is always
+
         // preferred to `<em><strong>..</strong></em>`.
+
         //
+
         // 15. When two potential emphasis or strong emphasis spans overlap,
+
         // so that the second begins before the first ends and ends after
+
         // the first ends, the first takes precedence. Thus, for example,
+
         // `*foo _bar* baz_` is parsed as `<em>foo _bar</em> baz_` rather
+
         // than `*foo <em>bar* baz</em>`.
+
         //
+
         // 16. When there are two potential emphasis or strong emphasis spans
+
         // with the same closing delimiter, the shorter one (the one that
+
         // opens later) takes precedence. Thus, for example,
+
         // `**foo **bar baz**` is parsed as `**foo <strong>bar baz</strong>`
+
         // rather than `<strong>foo **bar baz</strong>`.
+
         //
+
         // 17. Inline code spans, links, images, and HTML tags group more tightly
+
         // than emphasis.  So, when there is a choice between an interpretation
+
         // that contains one of these elements and one that does not, the
+
         // former always wins.  Thus, for example, `*[foo*](bar)` is
+
         // parsed as `*<a href="bar">foo*</a>` rather than as
+
         // `<em>[foo</em>](bar)`.
+
         //
+
         // These rules can be illustrated through a series of examples.
+
         //
+
         // Rule 1:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9703,8 +11841,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo bar*", "<p><em>foo bar</em></p>", "");
         }
     }
+
         // This is not emphasis, because the opening `*` is followed by
+
         // whitespace, and hence not part of a [left-flanking delimiter run]:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9724,9 +11865,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a * foo bar*", "<p>a * foo bar*</p>", "");
         }
     }
+
         // This is not emphasis, because the opening `*` is preceded
+
         // by an alphanumeric and followed by punctuation, and hence
+
         // not part of a [left-flanking delimiter run]:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9746,7 +11891,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>", "");
         }
     }
+
         // Unicode nonbreaking spaces count as whitespace, too:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9766,7 +11913,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("* a *", "<p>* a *</p>", "");
         }
     }
+
         // Intraword emphasis with `*` is permitted:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9786,6 +11935,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9805,7 +11955,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "");
         }
     }
+
         // Rule 2:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9825,8 +11977,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "");
         }
     }
+
         // This is not emphasis, because the opening `_` is followed by
+
         // whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9846,8 +12001,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "");
         }
     }
+
         // This is not emphasis, because the opening `_` is preceded
+
         // by an alphanumeric and followed by punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9867,7 +12025,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "");
         }
     }
+
         // Emphasis with `_` is not allowed inside words:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9887,6 +12047,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9906,6 +12067,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("5_6_78", "<p>5_6_78</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9925,8 +12087,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "");
         }
     }
+
         // Here `_` does not generate emphasis, because the first delimiter run
+
         // is right-flanking and the second left-flanking:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9946,9 +12111,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "");
         }
     }
+
         // This is emphasis, even though the opening delimiter is
+
         // both left- and right-flanking, because it is preceded by
+
         // punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9968,10 +12137,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "");
         }
     }
+
         // Rule 3:
+
         //
+
         // This is not emphasis, because the closing delimiter does
+
         // not match the opening delimiter:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -9991,8 +12165,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo*", "<p>_foo*</p>", "");
         }
     }
+
         // This is not emphasis, because the closing `*` is preceded by
+
         // whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10012,7 +12189,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "");
         }
     }
+
         // A newline also counts as whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10034,9 +12213,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "");
         }
     }
+
         // This is not emphasis, because the second `*` is
+
         // preceded by punctuation and followed by an alphanumeric
+
         // (hence it is not part of a [right-flanking delimiter run]:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10056,8 +12239,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>", "");
         }
     }
+
         // The point of this restriction is more easily appreciated
+
         // with this example:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10077,7 +12263,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "");
         }
     }
+
         // Intraword emphasis with `*` is allowed:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10097,10 +12285,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "");
         }
     }
+
         // Rule 4:
+
         //
+
         // This is not emphasis, because the closing `_` is preceded by
+
         // whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10120,8 +12313,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo bar _", "<p>_foo bar _</p>", "");
         }
     }
+
         // This is not emphasis, because the second `_` is
+
         // preceded by punctuation and followed by an alphanumeric:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10141,7 +12337,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>", "");
         }
     }
+
         // This is emphasis within emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10161,7 +12359,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "");
         }
     }
+
         // Intraword emphasis is disallowed for `_`:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10181,6 +12381,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10200,6 +12401,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10219,9 +12421,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "");
         }
     }
+
         // This is emphasis, even though the closing delimiter is
+
         // both left- and right-flanking, because it is followed by
+
         // punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10241,7 +12447,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "");
         }
     }
+
         // Rule 5:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10261,8 +12469,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "");
         }
     }
+
         // This is not strong emphasis, because the opening delimiter is
+
         // followed by whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10282,9 +12493,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>", "");
         }
     }
+
         // This is not strong emphasis, because the opening `**` is preceded
+
         // by an alphanumeric and followed by punctuation, and hence
+
         // not part of a [left-flanking delimiter run]:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10304,7 +12519,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "");
         }
     }
+
         // Intraword strong emphasis with `**` is permitted:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10324,7 +12541,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "");
         }
     }
+
         // Rule 6:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10344,8 +12563,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "");
         }
     }
+
         // This is not strong emphasis, because the opening delimiter is
+
         // followed by whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10365,7 +12587,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "");
         }
     }
+
         // A newline counts as whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10387,8 +12611,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "");
         }
     }
+
         // This is not strong emphasis, because the opening `__` is preceded
+
         // by an alphanumeric and followed by punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10408,7 +12635,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "");
         }
     }
+
         // Intraword strong emphasis is forbidden with `__`:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10428,6 +12657,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10447,6 +12677,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("5__6__78", "<p>5__6__78</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10466,6 +12697,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10485,9 +12717,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "");
         }
     }
+
         // This is strong emphasis, even though the opening delimiter is
+
         // both left- and right-flanking, because it is preceded by
+
         // punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10507,10 +12743,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "");
         }
     }
+
         // Rule 7:
+
         //
+
         // This is not strong emphasis, because the closing delimiter is preceded
+
         // by whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10530,11 +12771,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo bar **", "<p>**foo bar **</p>", "");
         }
     }
+
         // (Nor can it be interpreted as an emphasized `*foo bar *`, because of
+
         // Rule 11.)
+
         //
+
         // This is not strong emphasis, because the second `**` is
+
         // preceded by punctuation and followed by an alphanumeric:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10554,8 +12801,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**(**foo)", "<p>**(**foo)</p>", "");
         }
     }
+
         // The point of this restriction is more easily appreciated
+
         // with these examples:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10575,6 +12825,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10596,6 +12847,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10615,7 +12867,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "");
         }
     }
+
         // Intraword emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10635,10 +12889,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "");
         }
     }
+
         // Rule 8:
+
         //
+
         // This is not strong emphasis, because the closing delimiter is
+
         // preceded by whitespace:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10658,8 +12917,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo bar __", "<p>__foo bar __</p>", "");
         }
     }
+
         // This is not strong emphasis, because the second `__` is
+
         // preceded by punctuation and followed by an alphanumeric:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10679,8 +12941,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>", "");
         }
     }
+
         // The point of this restriction is more easily appreciated
+
         // with this example:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10700,7 +12965,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "");
         }
     }
+
         // Intraword strong emphasis is forbidden with `__`:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10720,6 +12987,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10739,6 +13007,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10758,9 +13027,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "");
         }
     }
+
         // This is strong emphasis, even though the closing delimiter is
+
         // both left- and right-flanking, because it is followed by
+
         // punctuation:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10780,10 +13053,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "");
         }
     }
+
         // Rule 9:
+
         //
+
         // Any nonempty sequence of inline elements can be the contents of an
+
         // emphasized span.
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10803,6 +13081,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10824,8 +13103,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "");
         }
     }
+
         // In particular, emphasis and strong emphasis can be nested
+
         // inside emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10845,6 +13127,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10864,6 +13147,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10883,6 +13167,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10902,6 +13187,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10921,6 +13207,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10940,22 +13227,39 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "");
         }
     }
+
         // Note that in the preceding case, the interpretation
+
         //
+
         // ``` markdown
+
         // <p><em>foo</em><em>bar<em></em>baz</em></p>
+
         // ```
+
         //
+
         // is precluded by the condition that a delimiter that
+
         // can both open and close (like the `*` after `foo`)
+
         // cannot form emphasis if the sum of the lengths of
+
         // the delimiter runs containing the opening and
+
         // closing delimiters is a multiple of 3.
+
         //
+
         // The same condition ensures that the following
+
         // cases are all strong emphasis nested inside
+
         // emphasis, even when the interior spaces are
+
         // omitted:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10975,6 +13279,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -10994,6 +13299,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11013,7 +13319,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "");
         }
     }
+
         // Indefinite levels of nesting are possible:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11033,6 +13341,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11052,7 +13361,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "");
         }
     }
+
         // There can be no empty emphasis or strong emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11072,6 +13383,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11091,10 +13403,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "");
         }
     }
+
         // Rule 10:
+
         //
+
         // Any nonempty sequence of inline elements can be the contents of an
+
         // strongly emphasized span.
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11114,6 +13431,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11135,8 +13453,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "");
         }
     }
+
         // In particular, emphasis and strong emphasis can be nested
+
         // inside strong emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11156,6 +13477,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11175,6 +13497,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11194,6 +13517,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11213,6 +13537,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11232,6 +13557,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11251,6 +13577,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11270,6 +13597,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11289,7 +13617,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "");
         }
     }
+
         // Indefinite levels of nesting are possible:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11311,6 +13641,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11330,7 +13661,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "");
         }
     }
+
         // There can be no empty emphasis or strong emphasis:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11350,6 +13683,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11369,7 +13703,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "");
         }
     }
+
         // Rule 11:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11389,6 +13725,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo ***", "<p>foo ***</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11408,6 +13745,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11427,6 +13765,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11446,6 +13785,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo *****", "<p>foo *****</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11465,6 +13805,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11484,9 +13825,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "");
         }
     }
+
         // Note that when delimiters do not match evenly, Rule 11 determines
+
         // that the excess literal `*` characters will appear outside of the
+
         // emphasis, rather than inside it:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11506,6 +13851,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11525,6 +13871,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11544,6 +13891,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11563,6 +13911,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11582,6 +13931,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11601,7 +13951,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>", "");
         }
     }
+
         // Rule 12:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11621,6 +13973,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo ___", "<p>foo ___</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11640,6 +13993,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11659,6 +14013,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11678,6 +14033,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo _____", "<p>foo _____</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11697,6 +14053,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11716,6 +14073,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11735,9 +14093,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>", "");
         }
     }
+
         // Note that when delimiters do not match evenly, Rule 12 determines
+
         // that the excess literal `_` characters will appear outside of the
+
         // emphasis, rather than inside it:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11757,6 +14119,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11776,6 +14139,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11795,6 +14159,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11814,6 +14179,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11833,8 +14199,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>", "");
         }
     }
+
         // Rule 13 implies that if you want emphasis nested directly inside
+
         // emphasis, you must use different delimiters:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11854,6 +14223,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11873,6 +14243,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11892,6 +14263,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11911,8 +14283,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "");
         }
     }
+
         // However, strong emphasis within strong emphasis is possible without
+
         // switching delimiters:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11932,6 +14307,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11951,8 +14327,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "");
         }
     }
+
         // Rule 13 can be applied to arbitrarily long sequences of
+
         // delimiters:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11972,7 +14351,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "");
         }
     }
+
         // Rule 14:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -11992,6 +14373,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("***foo***", "<p><strong><em>foo</em></strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12011,7 +14393,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_____foo_____", "<p><strong><strong><em>foo</em></strong></strong></p>", "");
         }
     }
+
         // Rule 15:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12031,6 +14415,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12050,7 +14435,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>", "");
         }
     }
+
         // Rule 16:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12070,6 +14457,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12089,7 +14477,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>", "");
         }
     }
+
         // Rule 17:
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12109,6 +14499,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12128,6 +14519,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12147,6 +14539,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12166,6 +14559,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12185,6 +14579,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12204,6 +14599,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12223,6 +14619,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12242,6 +14639,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("**a<http://foo.bar/?q=**>", "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesEmphasisandstrongemphasis
     {
@@ -12261,77 +14659,149 @@ namespace Markdig.Tests
 			TestParser.TestSpec("__a<http://foo.bar/?q=__>", "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>", "");
         }
     }
+
         // ## Links
+
         //
+
         // A link contains [link text] (the visible text), a [link destination]
+
         // (the URI that is the link destination), and optionally a [link title].
+
         // There are two basic kinds of links in Markdown.  In [inline links] the
+
         // destination and title are given immediately after the link text.  In
+
         // [reference links] the destination and title are defined elsewhere in
+
         // the document.
+
         //
+
         // A [link text](@) consists of a sequence of zero or more
+
         // inline elements enclosed by square brackets (`[` and `]`).  The
+
         // following rules apply:
+
         //
+
         // - Links may not contain other links, at any level of nesting. If
+
         // multiple otherwise valid link definitions appear nested inside each
+
         // other, the inner-most definition is used.
+
         //
+
         // - Brackets are allowed in the [link text] only if (a) they
+
         // are backslash-escaped or (b) they appear as a matched pair of brackets,
+
         // with an open bracket `[`, a sequence of zero or more inlines, and
+
         // a close bracket `]`.
+
         //
+
         // - Backtick [code spans], [autolinks], and raw [HTML tags] bind more tightly
+
         // than the brackets in link text.  Thus, for example,
+
         // `` [foo`]` `` could not be a link text, since the second `]`
+
         // is part of a code span.
+
         //
+
         // - The brackets in link text bind more tightly than markers for
+
         // [emphasis and strong emphasis]. Thus, for example, `*[foo*](url)` is a link.
+
         //
+
         // A [link destination](@) consists of either
+
         //
+
         // - a sequence of zero or more characters between an opening `<` and a
+
         // closing `>` that contains no spaces, line breaks, or unescaped
+
         // `<` or `>` characters, or
+
         //
+
         // - a nonempty sequence of characters that does not include
+
         // ASCII space or control characters, and includes parentheses
+
         // only if (a) they are backslash-escaped or (b) they are part of
+
         // a balanced pair of unescaped parentheses that is not itself
+
         // inside a balanced pair of unescaped parentheses.
+
         //
+
         // A [link title](@)  consists of either
+
         //
+
         // - a sequence of zero or more characters between straight double-quote
+
         // characters (`"`), including a `"` character only if it is
+
         // backslash-escaped, or
+
         //
+
         // - a sequence of zero or more characters between straight single-quote
+
         // characters (`'`), including a `'` character only if it is
+
         // backslash-escaped, or
+
         //
+
         // - a sequence of zero or more characters between matching parentheses
+
         // (`(...)`), including a `)` character only if it is backslash-escaped.
+
         //
+
         // Although [link titles] may span multiple lines, they may not contain
+
         // a [blank line].
+
         //
+
         // An [inline link](@) consists of a [link text] followed immediately
+
         // by a left parenthesis `(`, optional [whitespace], an optional
+
         // [link destination], an optional [link title] separated from the link
+
         // destination by [whitespace], optional [whitespace], and a right
+
         // parenthesis `)`. The link's text consists of the inlines contained
+
         // in the [link text] (excluding the enclosing square brackets).
+
         // The link's URI consists of the link destination, excluding enclosing
+
         // `<...>` if present, with backslash-escapes in effect as described
+
         // above.  The link's title consists of the link title, excluding its
+
         // enclosing delimiters, with backslash-escapes in effect as described
+
         // above.
+
         //
+
         // Here is a simple inline link:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12351,7 +14821,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "");
         }
     }
+
         // The title may be omitted:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12371,7 +14843,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "");
         }
     }
+
         // Both the title and the destination may be omitted:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12391,6 +14865,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12410,8 +14885,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "");
         }
     }
+
         // The destination cannot contain spaces or line breaks,
+
         // even if enclosed in pointy brackets:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12431,6 +14909,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12450,6 +14929,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](</my uri>)", "<p>[link](&lt;/my uri&gt;)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12471,6 +14951,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12492,7 +14973,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "");
         }
     }
+
         // Parentheses inside the link destination may be escaped:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12512,7 +14995,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "");
         }
     }
+
         // One level of balanced parentheses is allowed without escaping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12532,8 +15017,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link]((foo)and(bar))", "<p><a href=\"(foo)and(bar)\">link</a></p>", "");
         }
     }
+
         // However, if you have parentheses within parentheses, you need to escape
+
         // or use the `<...>` form:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12553,6 +15041,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo(and(bar)))", "<p>[link](foo(and(bar)))</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12572,6 +15061,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo(and\\(bar\\)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12591,8 +15081,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](<foo(and(bar))>)", "<p><a href=\"foo(and(bar))\">link</a></p>", "");
         }
     }
+
         // Parentheses and other symbols can also be escaped, as usual
+
         // in Markdown:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12612,7 +15105,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "");
         }
     }
+
         // A link can contain fragment identifiers and queries:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12638,8 +15133,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "");
         }
     }
+
         // Note that a backslash before a non-escapable character is
+
         // just a backslash:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12659,14 +15157,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "");
         }
     }
+
         // URL-escaping should be left alone inside the destination, as all
+
         // URL-escaped characters are also valid URL characters. Entity and
+
         // numerical character references in the destination will be parsed
+
         // into the corresponding Unicode code points, as usual.  These may
+
         // be optionally URL-escaped when written as HTML, but this spec
+
         // does not enforce any particular policy for rendering URLs in
+
         // HTML or other formats.  Renderers may make different decisions
+
         // about how to escape or normalize URLs in the output.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12686,9 +15193,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "");
         }
     }
+
         // Note that, because titles can often be parsed as destinations,
+
         // if you try to omit the destination and keep the title, you'll
+
         // get unexpected results:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12708,7 +15219,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "");
         }
     }
+
         // Titles may be in single quotes, double quotes, or parentheses:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12732,8 +15245,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "");
         }
     }
+
         // Backslash escapes and entity and numeric character references
+
         // may be used in titles:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12753,8 +15269,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "");
         }
     }
+
         // Titles must be separated from the link using a [whitespace].
+
         // Other [Unicode whitespace] like non-breaking space doesn't work.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12774,7 +15293,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "");
         }
     }
+
         // Nested balanced quotes are not allowed without escaping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12794,7 +15315,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "");
         }
     }
+
         // But it is easy to work around this by using a different quote type:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12814,22 +15337,39 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "");
         }
     }
+
         // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
+
         // title, and its test suite included a test demonstrating this.
+
         // But it is hard to see a good rationale for the extra complexity this
+
         // brings, since there are already many ways---backslash escaping,
+
         // entity and numeric character references, or using a different
+
         // quote type for the enclosing title---to write titles containing
+
         // double quotes.  `Markdown.pl`'s handling of titles has a number
+
         // of other strange features.  For example, it allows single-quoted
+
         // titles in inline links, but not reference links.  And, in
+
         // reference links but not inline links, it allows a title to begin
+
         // with `"` and end with `)`.  `Markdown.pl` 1.0.1 even allows
+
         // titles with no closing quotation mark, though 1.0.2b8 does not.
+
         // It seems preferable to adopt a simple, rational rule that works
+
         // the same way in inline links and link reference definitions.)
+
         //
+
         // [Whitespace] is allowed around the destination and title:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12850,8 +15390,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "");
         }
     }
+
         // But it is not allowed between the link text and the
+
         // following parenthesis:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12871,8 +15414,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "");
         }
     }
+
         // The link text may contain balanced brackets, but not unbalanced ones,
+
         // unless they are escaped:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12892,6 +15438,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12911,6 +15458,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12930,6 +15478,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12949,7 +15498,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "");
         }
     }
+
         // The link text may contain inline content:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12969,6 +15520,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -12988,7 +15540,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
         }
     }
+
         // However, links may not contain other links, at any level of nesting.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13008,6 +15562,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13027,6 +15582,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13046,8 +15602,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "");
         }
     }
+
         // These cases illustrate the precedence of link text grouping over
+
         // emphasis grouping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13067,6 +15626,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13086,8 +15646,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "");
         }
     }
+
         // Note that brackets that *aren't* part of links do not take
+
         // precedence:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13107,8 +15670,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "");
         }
     }
+
         // These cases illustrate the precedence of HTML tags, code spans,
+
         // and autolinks over link grouping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13128,6 +15694,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13147,6 +15714,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13166,33 +15734,61 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "");
         }
     }
+
         // There are three kinds of [reference link](@)s:
+
         // [full](#full-reference-link), [collapsed](#collapsed-reference-link),
+
         // and [shortcut](#shortcut-reference-link).
+
         //
+
         // A [full reference link](@)
+
         // consists of a [link text] immediately followed by a [link label]
+
         // that [matches] a [link reference definition] elsewhere in the document.
+
         //
+
         // A [link label](@)  begins with a left bracket (`[`) and ends
+
         // with the first right bracket (`]`) that is not backslash-escaped.
+
         // Between these brackets there must be at least one [non-whitespace character].
+
         // Unescaped square bracket characters are not allowed in
+
         // [link labels].  A link label can have at most 999
+
         // characters inside the square brackets.
+
         //
+
         // One label [matches](@)
+
         // another just in case their normalized forms are equal.  To normalize a
+
         // label, perform the *Unicode case fold* and collapse consecutive internal
+
         // [whitespace] to a single space.  If there are multiple
+
         // matching reference link definitions, the one that comes first in the
+
         // document is used.  (It is desirable in such cases to emit a warning.)
+
         //
+
         // The contents of the first link label are parsed as inlines, which are
+
         // used as the link's text.  The link's URI and title are provided by the
+
         // matching [link reference definition].
+
         //
+
         // Here is a simple example:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13214,11 +15810,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
         // The rules for the [link text] are the same as with
+
         // [inline links].  Thus:
+
         //
+
         // The link text may contain balanced brackets, but not unbalanced ones,
+
         // unless they are escaped:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13240,6 +15842,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13261,7 +15864,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "");
         }
     }
+
         // The link text may contain inline content:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13283,6 +15888,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13304,7 +15910,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
         }
     }
+
         // However, links may not contain other links, at any level of nesting.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13326,6 +15934,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13347,11 +15956,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "");
         }
     }
+
         // (In the examples above, we have two [shortcut reference links]
+
         // instead of one [full reference link].)
+
         //
+
         // The following cases illustrate the precedence of link text grouping over
+
         // emphasis grouping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13373,6 +15988,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13394,8 +16010,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "");
         }
     }
+
         // These cases illustrate the precedence of HTML tags, code spans,
+
         // and autolinks over link grouping:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13417,6 +16036,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13438,6 +16058,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13459,7 +16080,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "");
         }
     }
+
         // Matching is case-insensitive:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13481,7 +16104,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
         // Unicode case fold is used:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13503,8 +16128,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>", "");
         }
     }
+
         // Consecutive internal [whitespace] is treated as one space for
+
         // purposes of determining matching:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13527,8 +16155,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "");
         }
     }
+
         // No [whitespace] is allowed between the [link text] and the
+
         // [link label]:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13550,6 +16181,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13573,35 +16205,65 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "");
         }
     }
+
         // This is a departure from John Gruber's original Markdown syntax
+
         // description, which explicitly allows whitespace between the link
+
         // text and the link label.  It brings reference links in line with
+
         // [inline links], which (according to both original Markdown and
+
         // this spec) cannot have whitespace after the link text.  More
+
         // importantly, it prevents inadvertent capture of consecutive
+
         // [shortcut reference links]. If whitespace is allowed between the
+
         // link text and the link label, then in the following we will have
+
         // a single reference link, not two shortcut reference links, as
+
         // intended:
+
         //
+
         // ``` markdown
+
         // [foo]
+
         // [bar]
+
         //
+
         // [foo]: /url1
+
         // [bar]: /url2
+
         // ```
+
         //
+
         // (Note that [shortcut reference links] were introduced by Gruber
+
         // himself in a beta version of `Markdown.pl`, but never included
+
         // in the official syntax description.  Without shortcut reference
+
         // links, it is harmless to allow space between the link text and
+
         // link label; but once shortcut references are introduced, it is
+
         // too dangerous to allow this, as it frequently leads to
+
         // unintended results.)
+
         //
+
         // When there are multiple matching [link reference definitions],
+
         // the first is used:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13625,9 +16287,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "");
         }
     }
+
         // Note that matching is performed on normalized strings, not parsed
+
         // inline content.  So the following does not match, even though the
+
         // labels define equivalent inline content:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13649,8 +16315,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "");
         }
     }
+
         // [Link labels] cannot contain brackets, unless they are
+
         // backslash-escaped:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13673,6 +16342,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13695,6 +16365,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13717,6 +16388,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13738,7 +16410,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "");
         }
     }
+
         // Note that in this example `]` is not backslash-escaped:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13760,7 +16434,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "");
         }
     }
+
         // A [link label] must contain at least one [non-whitespace character]:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13783,6 +16459,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13809,14 +16486,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "");
         }
     }
+
         // A [collapsed reference link](@)
+
         // consists of a [link label] that [matches] a
+
         // [link reference definition] elsewhere in the
+
         // document, followed by the string `[]`.
+
         // The contents of the first link label are parsed as inlines,
+
         // which are used as the link's text.  The link's URI and title are
+
         // provided by the matching reference link definition.  Thus,
+
         // `[foo][]` is equivalent to `[foo][foo]`.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13838,6 +16524,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13859,7 +16546,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
         }
     }
+
         // The link labels are case-insensitive:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13881,8 +16570,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
         }
     }
+
         // As with full reference links, [whitespace] is not
+
         // allowed between the two sets of brackets:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13906,14 +16598,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "");
         }
     }
+
         // A [shortcut reference link](@)
+
         // consists of a [link label] that [matches] a
+
         // [link reference definition] elsewhere in the
+
         // document and is not followed by `[]` or a link label.
+
         // The contents of the first link label are parsed as inlines,
+
         // which are used as the link's text.  The link's URI and title
+
         // are provided by the matching link reference definition.
+
         // Thus, `[foo]` is equivalent to `[foo][]`.
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13935,6 +16636,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13956,6 +16658,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13977,6 +16680,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -13998,7 +16702,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "");
         }
     }
+
         // The link labels are case-insensitive:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14020,7 +16726,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
         }
     }
+
         // A space after the link text should be preserved:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14042,8 +16750,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "");
         }
     }
+
         // If you just want bracketed text, you can backslash-escape the
+
         // opening bracket to avoid links:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14065,8 +16776,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "");
         }
     }
+
         // Note that this is a link, because a link label ends with the first
+
         // following closing bracket:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14088,8 +16802,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "");
         }
     }
+
         // Full and compact references take precedence over shortcut
+
         // references:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14112,6 +16829,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14133,7 +16851,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "");
         }
     }
+
         // Inline links also take precedence:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14155,6 +16875,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14176,8 +16897,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "");
         }
     }
+
         // In the following case `[bar][baz]` is parsed as a reference,
+
         // `[foo]` as normal text:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14199,8 +16923,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "");
         }
     }
+
         // Here, though, `[foo][bar]` is parsed as a reference, since
+
         // `[bar]` is defined:
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14223,8 +16950,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "");
         }
     }
+
         // Here `[foo]` is not parsed as a shortcut reference, because it
+
         // is followed by a link label (even though `[bar]` is not defined):
+
     [TestFixture]
     public partial class TestInlinesLinks
     {
@@ -14247,17 +16977,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "");
         }
     }
+
         // ## Images
+
         //
+
         // Syntax for images is like the syntax for links, with one
+
         // difference. Instead of [link text], we have an
+
         // [image description](@).  The rules for this are the
+
         // same as for [link text], except that (a) an
+
         // image description starts with `![` rather than `[`, and
+
         // (b) an image description may contain links.
+
         // An image description has inline elements
+
         // as its contents.  When an image is rendered to HTML,
+
         // this is standardly used as the image's `alt` attribute.
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14277,6 +17019,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14298,6 +17041,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14317,6 +17061,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14336,12 +17081,19 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
         }
     }
+
         // Though this spec is concerned with parsing, not rendering, it is
+
         // recommended that in rendering to HTML, only the plain string content
+
         // of the [image description] be used.  Note that in
+
         // the above example, the alt attribute's value is `foo bar`, not `foo
+
         // [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string
+
         // content is rendered, without formatting.
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14363,6 +17115,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14384,6 +17137,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14403,6 +17157,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14422,6 +17177,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14441,6 +17197,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14460,7 +17217,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "");
         }
     }
+
         // Reference-style:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14482,6 +17241,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14503,7 +17263,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
         }
     }
+
         // Collapsed:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14525,6 +17287,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14546,7 +17309,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
         }
     }
+
         // The labels are case-insensitive:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14568,8 +17333,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
         }
     }
+
         // As with reference links, [whitespace] is not allowed
+
         // between the two sets of brackets:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14593,7 +17361,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "");
         }
     }
+
         // Shortcut:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14615,6 +17385,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14636,7 +17407,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
         }
     }
+
         // Note that link labels cannot contain unescaped brackets:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14659,7 +17432,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "");
         }
     }
+
         // The link labels are case-insensitive:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14681,8 +17456,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
         }
     }
+
         // If you just want bracketed text, you can backslash-escape the
+
         // opening `!` and `[`:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14704,8 +17482,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "");
         }
     }
+
         // If you want a link after a literal `!`, backslash-escape the
+
         // `!`:
+
     [TestFixture]
     public partial class TestInlinesImages
     {
@@ -14727,29 +17508,53 @@ namespace Markdig.Tests
 			TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "");
         }
     }
+
         // ## Autolinks
+
         //
+
         // [Autolink](@)s are absolute URIs and email addresses inside
+
         // `<` and `>`. They are parsed as links, with the URL or email address
+
         // as the link label.
+
         //
+
         // A [URI autolink](@) consists of `<`, followed by an
+
         // [absolute URI] not containing `<`, followed by `>`.  It is parsed as
+
         // a link to the URI, with the URI as the link's label.
+
         //
+
         // An [absolute URI](@),
+
         // for these purposes, consists of a [scheme] followed by a colon (`:`)
+
         // followed by zero or more characters other than ASCII
+
         // [whitespace] and control characters, `<`, and `>`.  If
+
         // the URI includes these characters, they must be percent-encoded
+
         // (e.g. `%20` for a space).
+
         //
+
         // For purposes of this spec, a [scheme](@) is any sequence
+
         // of 2--32 characters beginning with an ASCII letter and followed
+
         // by any combination of ASCII letters, digits, or the symbols plus
+
         // ("+"), period ("."), or hyphen ("-").
+
         //
+
         // Here are some valid autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14769,6 +17574,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14788,6 +17594,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14807,7 +17614,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "");
         }
     }
+
         // Uppercase is also fine:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14827,10 +17636,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "");
         }
     }
+
         // Note that many strings that count as [absolute URIs] for
+
         // purposes of this spec are not valid URIs, because their
+
         // schemes are not registered or because of other problems
+
         // with their syntax:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14850,6 +17664,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14869,6 +17684,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14888,6 +17704,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14907,7 +17724,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "");
         }
     }
+
         // Spaces are not allowed in autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14927,7 +17746,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "");
         }
     }
+
         // Backslash-escapes do not work inside autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14947,20 +17768,35 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "");
         }
     }
+
         // An [email autolink](@)
+
         // consists of `<`, followed by an [email address],
+
         // followed by `>`.  The link's label is the email address,
+
         // and the URL is `mailto:` followed by the email address.
+
         //
+
         // An [email address](@),
+
         // for these purposes, is anything that matches
+
         // the [non-normative regex from the HTML5
+
         // spec](https://html.spec.whatwg.org/multipage/forms.html#e-mail-state-(type=email)):
+
         //
+
         // /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
+
         // (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
         //
+
         // Examples of email autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14980,6 +17816,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -14999,7 +17836,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "");
         }
     }
+
         // Backslash-escapes do not work inside email autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15019,7 +17858,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "");
         }
     }
+
         // These are not autolinks:
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15039,6 +17880,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15058,6 +17900,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15077,6 +17920,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15096,6 +17940,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15115,6 +17960,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesAutolinks
     {
@@ -15134,80 +17980,155 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "");
         }
     }
+
         // ## Raw HTML
+
         //
+
         // Text between `<` and `>` that looks like an HTML tag is parsed as a
+
         // raw HTML tag and will be rendered in HTML without escaping.
+
         // Tag and attribute names are not limited to current HTML tags,
+
         // so custom tags (and even, say, DocBook tags) may be used.
+
         //
+
         // Here is the grammar for tags:
+
         //
+
         // A [tag name](@) consists of an ASCII letter
+
         // followed by zero or more ASCII letters, digits, or
+
         // hyphens (`-`).
+
         //
+
         // An [attribute](@) consists of [whitespace],
+
         // an [attribute name], and an optional
+
         // [attribute value specification].
+
         //
+
         // An [attribute name](@)
+
         // consists of an ASCII letter, `_`, or `:`, followed by zero or more ASCII
+
         // letters, digits, `_`, `.`, `:`, or `-`.  (Note:  This is the XML
+
         // specification restricted to ASCII.  HTML5 is laxer.)
+
         //
+
         // An [attribute value specification](@)
+
         // consists of optional [whitespace],
+
         // a `=` character, optional [whitespace], and an [attribute
+
         // value].
+
         //
+
         // An [attribute value](@)
+
         // consists of an [unquoted attribute value],
+
         // a [single-quoted attribute value], or a [double-quoted attribute value].
+
         //
+
         // An [unquoted attribute value](@)
+
         // is a nonempty string of characters not
+
         // including spaces, `"`, `'`, `=`, `<`, `>`, or `` ` ``.
+
         //
+
         // A [single-quoted attribute value](@)
+
         // consists of `'`, zero or more
+
         // characters not including `'`, and a final `'`.
+
         //
+
         // A [double-quoted attribute value](@)
+
         // consists of `"`, zero or more
+
         // characters not including `"`, and a final `"`.
+
         //
+
         // An [open tag](@) consists of a `<` character, a [tag name],
+
         // zero or more [attributes], optional [whitespace], an optional `/`
+
         // character, and a `>` character.
+
         //
+
         // A [closing tag](@) consists of the string `</`, a
+
         // [tag name], optional [whitespace], and the character `>`.
+
         //
+
         // An [HTML comment](@) consists of `<!--` + *text* + `-->`,
+
         // where *text* does not start with `>` or `->`, does not end with `-`,
+
         // and does not contain `--`.  (See the
+
         // [HTML5 spec](http://www.w3.org/TR/html5/syntax.html#comments).)
+
         //
+
         // A [processing instruction](@)
+
         // consists of the string `<?`, a string
+
         // of characters not including the string `?>`, and the string
+
         // `?>`.
+
         //
+
         // A [declaration](@) consists of the
+
         // string `<!`, a name consisting of one or more uppercase ASCII letters,
+
         // [whitespace], a string of characters not including the
+
         // character `>`, and the character `>`.
+
         //
+
         // A [CDATA section](@) consists of
+
         // the string `<![CDATA[`, a string of characters not including the string
+
         // `]]>`, and the string `]]>`.
+
         //
+
         // An [HTML tag](@) consists of an [open tag], a [closing tag],
+
         // an [HTML comment], a [processing instruction], a [declaration],
+
         // or a [CDATA section].
+
         //
+
         // Here are some simple open tags:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15227,7 +18148,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "");
         }
     }
+
         // Empty elements:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15247,7 +18170,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "");
         }
     }
+
         // [Whitespace] is allowed:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15269,7 +18194,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "");
         }
     }
+
         // With attributes:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15291,7 +18218,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "");
         }
     }
+
         // Custom tag names can be used:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15311,7 +18240,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "");
         }
     }
+
         // Illegal tag names, not parsed as HTML:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15331,7 +18262,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "");
         }
     }
+
         // Illegal attribute names:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15351,7 +18284,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "");
         }
     }
+
         // Illegal attribute values:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15371,7 +18306,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "");
         }
     }
+
         // Illegal [whitespace]:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15393,7 +18330,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("< a><\nfoo><bar/ >", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;</p>", "");
         }
     }
+
         // Missing [whitespace]:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15413,7 +18352,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "");
         }
     }
+
         // Closing tags:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15433,7 +18374,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "");
         }
     }
+
         // Illegal attributes in closing tag:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15453,7 +18396,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "");
         }
     }
+
         // Comments:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15475,6 +18420,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15494,7 +18440,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "");
         }
     }
+
         // Not comments:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15517,7 +18465,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "");
         }
     }
+
         // Processing instructions:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15537,7 +18487,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "");
         }
     }
+
         // Declarations:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15557,7 +18509,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "");
         }
     }
+
         // CDATA sections:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15577,8 +18531,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "");
         }
     }
+
         // Entity and numeric character references are preserved in HTML
+
         // attributes:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15598,7 +18555,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "");
         }
     }
+
         // Backslash escapes do not work in HTML attributes:
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15618,6 +18577,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesRawHTML
     {
@@ -15637,12 +18597,19 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "");
         }
     }
+
         // ## Hard line breaks
+
         //
+
         // A line break (not in a code span or HTML tag) that is preceded
+
         // by two or more spaces and does not occur at the end of a block
+
         // is parsed as a [hard line break](@) (rendered
+
         // in HTML as a `<br />` tag):
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15664,8 +18631,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
+
         // For a more visible alternative, a backslash before the
+
         // [line ending] may be used instead of two spaces:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15687,7 +18657,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
+
         // More than two spaces can be used:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15709,7 +18681,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "");
         }
     }
+
         // Leading spaces at the beginning of the next line are ignored:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15731,6 +18705,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15752,8 +18727,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "");
         }
     }
+
         // Line breaks can occur inside emphasis, links, and other constructs
+
         // that allow inline content:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15775,6 +18753,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15796,7 +18775,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "");
         }
     }
+
         // Line breaks do not occur inside code spans
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15817,6 +18798,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`code  \nspan`", "<p><code>code span</code></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15837,7 +18819,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "");
         }
     }
+
         // or HTML tags:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15859,6 +18843,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15880,9 +18865,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "");
         }
     }
+
         // Hard line breaks are for separating inline content within a block.
+
         // Neither syntax for hard line breaks works at the end of a paragraph or
+
         // other block element:
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15902,6 +18891,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\\", "<p>foo\\</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15921,6 +18911,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo  ", "<p>foo</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15940,6 +18931,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesHardlinebreaks
     {
@@ -15959,13 +18951,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("### foo  ", "<h3>foo</h3>", "");
         }
     }
+
         // ## Soft line breaks
+
         //
+
         // A regular line break (not in a code span or HTML tag) that is not
+
         // preceded by two or more spaces or a backslash is parsed as a
+
         // [softbreak](@).  (A softbreak may be rendered in HTML either as a
+
         // [line ending] or as a space. The result will be the same in
+
         // browsers. In the examples here, a [line ending] will be used.)
+
     [TestFixture]
     public partial class TestInlinesSoftlinebreaks
     {
@@ -15987,8 +18987,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "");
         }
     }
+
         // Spaces at the end of the line and beginning of the next line are
+
         // removed:
+
     [TestFixture]
     public partial class TestInlinesSoftlinebreaks
     {
@@ -16010,16 +19013,27 @@ namespace Markdig.Tests
 			TestParser.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "");
         }
     }
+
         // A conforming parser may render a soft line break in HTML either as a
+
         // line break or as a space.
+
         //
+
         // A renderer may also provide an option to render soft line breaks
+
         // as hard line breaks.
+
         //
+
         // ## Textual content
+
         //
+
         // Any characters not given an interpretation by the above rules will
+
         // be parsed as plain textual content.
+
     [TestFixture]
     public partial class TestInlinesTextualcontent
     {
@@ -16039,6 +19053,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "");
         }
     }
+
     [TestFixture]
     public partial class TestInlinesTextualcontent
     {
@@ -16058,7 +19073,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "");
         }
     }
+
         // Internal spaces are preserved verbatim:
+
     [TestFixture]
     public partial class TestInlinesTextualcontent
     {
@@ -16078,360 +19095,715 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "");
         }
     }
+
         // # Appendix: A parsing strategy
+
         //
+
         // In this appendix we describe some features of the parsing strategy
+
         // used in the CommonMark reference implementations.
+
         //
+
         // ## Overview
+
         //
+
         // Parsing has two phases:
+
         //
+
         // 1. In the first phase, lines of input are consumed and the block
+
         // structure of the document---its division into paragraphs, block quotes,
+
         // list items, and so on---is constructed.  Text is assigned to these
+
         // blocks but not parsed. Link reference definitions are parsed and a
+
         // map of links is constructed.
+
         //
+
         // 2. In the second phase, the raw text contents of paragraphs and headings
+
         // are parsed into sequences of Markdown inline elements (strings,
+
         // code spans, links, emphasis, and so on), using the map of link
+
         // references constructed in phase 1.
+
         //
+
         // At each point in processing, the document is represented as a tree of
+
         // **blocks**.  The root of the tree is a `document` block.  The `document`
+
         // may have any number of other blocks as **children**.  These children
+
         // may, in turn, have other blocks as children.  The last child of a block
+
         // is normally considered **open**, meaning that subsequent lines of input
+
         // can alter its contents.  (Blocks that are not open are **closed**.)
+
         // Here, for example, is a possible document tree, with the open blocks
+
         // marked by arrows:
+
         //
+
         // ``` tree
+
         // -> document
+
         // -> block_quote
+
         // paragraph
+
         // "Lorem ipsum dolor\nsit amet."
+
         // -> list (type=bullet tight=true bullet_char=-)
+
         // list_item
+
         // paragraph
+
         // "Qui *quodsi iracundia*"
+
         // -> list_item
+
         // -> paragraph
+
         // "aliquando id"
+
         // ```
+
         //
+
         // ## Phase 1: block structure
+
         //
+
         // Each line that is processed has an effect on this tree.  The line is
+
         // analyzed and, depending on its contents, the document may be altered
+
         // in one or more of the following ways:
+
         //
+
         // 1. One or more open blocks may be closed.
+
         // 2. One or more new blocks may be created as children of the
+
         // last open block.
+
         // 3. Text may be added to the last (deepest) open block remaining
+
         // on the tree.
+
         //
+
         // Once a line has been incorporated into the tree in this way,
+
         // it can be discarded, so input can be read in a stream.
+
         //
+
         // For each line, we follow this procedure:
+
         //
+
         // 1. First we iterate through the open blocks, starting with the
+
         // root document, and descending through last children down to the last
+
         // open block.  Each block imposes a condition that the line must satisfy
+
         // if the block is to remain open.  For example, a block quote requires a
+
         // `>` character.  A paragraph requires a non-blank line.
+
         // In this phase we may match all or just some of the open
+
         // blocks.  But we cannot close unmatched blocks yet, because we may have a
+
         // [lazy continuation line].
+
         //
+
         // 2.  Next, after consuming the continuation markers for existing
+
         // blocks, we look for new block starts (e.g. `>` for a block quote).
+
         // If we encounter a new block start, we close any blocks unmatched
+
         // in step 1 before creating the new block as a child of the last
+
         // matched block.
+
         //
+
         // 3.  Finally, we look at the remainder of the line (after block
+
         // markers like `>`, list markers, and indentation have been consumed).
+
         // This is text that can be incorporated into the last open
+
         // block (a paragraph, code block, heading, or raw HTML).
+
         //
+
         // Setext headings are formed when we see a line of a paragraph
+
         // that is a [setext heading underline].
+
         //
+
         // Reference link definitions are detected when a paragraph is closed;
+
         // the accumulated text lines are parsed to see if they begin with
+
         // one or more reference link definitions.  Any remainder becomes a
+
         // normal paragraph.
+
         //
+
         // We can see how this works by considering how the tree above is
+
         // generated by four lines of Markdown:
+
         //
+
         // ``` markdown
+
         // > Lorem ipsum dolor
+
         // sit amet.
+
         // > - Qui *quodsi iracundia*
+
         // > - aliquando id
+
         // ```
+
         //
+
         // At the outset, our document model is just
+
         //
+
         // ``` tree
+
         // -> document
+
         // ```
+
         //
+
         // The first line of our text,
+
         //
+
         // ``` markdown
+
         // > Lorem ipsum dolor
+
         // ```
+
         //
+
         // causes a `block_quote` block to be created as a child of our
+
         // open `document` block, and a `paragraph` block as a child of
+
         // the `block_quote`.  Then the text is added to the last open
+
         // block, the `paragraph`:
+
         //
+
         // ``` tree
+
         // -> document
+
         // -> block_quote
+
         // -> paragraph
+
         // "Lorem ipsum dolor"
+
         // ```
+
         //
+
         // The next line,
+
         //
+
         // ``` markdown
+
         // sit amet.
+
         // ```
+
         //
+
         // is a "lazy continuation" of the open `paragraph`, so it gets added
+
         // to the paragraph's text:
+
         //
+
         // ``` tree
+
         // -> document
+
         // -> block_quote
+
         // -> paragraph
+
         // "Lorem ipsum dolor\nsit amet."
+
         // ```
+
         //
+
         // The third line,
+
         //
+
         // ``` markdown
+
         // > - Qui *quodsi iracundia*
+
         // ```
+
         //
+
         // causes the `paragraph` block to be closed, and a new `list` block
+
         // opened as a child of the `block_quote`.  A `list_item` is also
+
         // added as a child of the `list`, and a `paragraph` as a child of
+
         // the `list_item`.  The text is then added to the new `paragraph`:
+
         //
+
         // ``` tree
+
         // -> document
+
         // -> block_quote
+
         // paragraph
+
         // "Lorem ipsum dolor\nsit amet."
+
         // -> list (type=bullet tight=true bullet_char=-)
+
         // -> list_item
+
         // -> paragraph
+
         // "Qui *quodsi iracundia*"
+
         // ```
+
         //
+
         // The fourth line,
+
         //
+
         // ``` markdown
+
         // > - aliquando id
+
         // ```
+
         //
+
         // causes the `list_item` (and its child the `paragraph`) to be closed,
+
         // and a new `list_item` opened up as child of the `list`.  A `paragraph`
+
         // is added as a child of the new `list_item`, to contain the text.
+
         // We thus obtain the final tree:
+
         //
+
         // ``` tree
+
         // -> document
+
         // -> block_quote
+
         // paragraph
+
         // "Lorem ipsum dolor\nsit amet."
+
         // -> list (type=bullet tight=true bullet_char=-)
+
         // list_item
+
         // paragraph
+
         // "Qui *quodsi iracundia*"
+
         // -> list_item
+
         // -> paragraph
+
         // "aliquando id"
+
         // ```
+
         //
+
         // ## Phase 2: inline structure
+
         //
+
         // Once all of the input has been parsed, all open blocks are closed.
+
         //
+
         // We then "walk the tree," visiting every node, and parse raw
+
         // string contents of paragraphs and headings as inlines.  At this
+
         // point we have seen all the link reference definitions, so we can
+
         // resolve reference links as we go.
+
         //
+
         // ``` tree
+
         // document
+
         // block_quote
+
         // paragraph
+
         // str "Lorem ipsum dolor"
+
         // softbreak
+
         // str "sit amet."
+
         // list (type=bullet tight=true bullet_char=-)
+
         // list_item
+
         // paragraph
+
         // str "Qui "
+
         // emph
+
         // str "quodsi iracundia"
+
         // list_item
+
         // paragraph
+
         // str "aliquando id"
+
         // ```
+
         //
+
         // Notice how the [line ending] in the first paragraph has
+
         // been parsed as a `softbreak`, and the asterisks in the first list item
+
         // have become an `emph`.
+
         //
+
         // ### An algorithm for parsing nested emphasis and links
+
         //
+
         // By far the trickiest part of inline parsing is handling emphasis,
+
         // strong emphasis, links, and images.  This is done using the following
+
         // algorithm.
+
         //
+
         // When we're parsing inlines and we hit either
+
         //
+
         // - a run of `*` or `_` characters, or
+
         // - a `[` or `![`
+
         //
+
         // we insert a text node with these symbols as its literal content, and we
+
         // add a pointer to this text node to the [delimiter stack](@).
+
         //
+
         // The [delimiter stack] is a doubly linked list.  Each
+
         // element contains a pointer to a text node, plus information about
+
         //
+
         // - the type of delimiter (`[`, `![`, `*`, `_`)
+
         // - the number of delimiters,
+
         // - whether the delimiter is "active" (all are active to start), and
+
         // - whether the delimiter is a potential opener, a potential closer,
+
         // or both (which depends on what sort of characters precede
+
         // and follow the delimiters).
+
         //
+
         // When we hit a `]` character, we call the *look for link or image*
+
         // procedure (see below).
+
         //
+
         // When we hit the end of the input, we call the *process emphasis*
+
         // procedure (see below), with `stack_bottom` = NULL.
+
         //
+
         // #### *look for link or image*
+
         //
+
         // Starting at the top of the delimiter stack, we look backwards
+
         // through the stack for an opening `[` or `![` delimiter.
+
         //
+
         // - If we don't find one, we return a literal text node `]`.
+
         //
+
         // - If we do find one, but it's not *active*, we remove the inactive
+
         // delimiter from the stack, and return a literal text node `]`.
+
         //
+
         // - If we find one and it's active, then we parse ahead to see if
+
         // we have an inline link/image, reference link/image, compact reference
+
         // link/image, or shortcut reference link/image.
+
         //
+
         // + If we don't, then we remove the opening delimiter from the
+
         // delimiter stack and return a literal text node `]`.
+
         //
+
         // + If we do, then
+
         //
+
         // * We return a link or image node whose children are the inlines
+
         // after the text node pointed to by the opening delimiter.
+
         //
+
         // * We run *process emphasis* on these inlines, with the `[` opener
+
         // as `stack_bottom`.
+
         //
+
         // * We remove the opening delimiter.
+
         //
+
         // * If we have a link (and not an image), we also set all
+
         // `[` delimiters before the opening delimiter to *inactive*.  (This
+
         // will prevent us from getting links within links.)
+
         //
+
         // #### *process emphasis*
+
         //
+
         // Parameter `stack_bottom` sets a lower bound to how far we
+
         // descend in the [delimiter stack].  If it is NULL, we can
+
         // go all the way to the bottom.  Otherwise, we stop before
+
         // visiting `stack_bottom`.
+
         //
+
         // Let `current_position` point to the element on the [delimiter stack]
+
         // just above `stack_bottom` (or the first element if `stack_bottom`
+
         // is NULL).
+
         //
+
         // We keep track of the `openers_bottom` for each delimiter
+
         // type (`*`, `_`).  Initialize this to `stack_bottom`.
+
         //
+
         // Then we repeat the following until we run out of potential
+
         // closers:
+
         //
+
         // - Move `current_position` forward in the delimiter stack (if needed)
+
         // until we find the first potential closer with delimiter `*` or `_`.
+
         // (This will be the potential closer closest
+
         // to the beginning of the input -- the first one in parse order.)
+
         //
+
         // - Now, look back in the stack (staying above `stack_bottom` and
+
         // the `openers_bottom` for this delimiter type) for the
+
         // first matching potential opener ("matching" means same delimiter).
+
         //
+
         // - If one is found:
+
         //
+
         // + Figure out whether we have emphasis or strong emphasis:
+
         // if both closer and opener spans have length >= 2, we have
+
         // strong, otherwise regular.
+
         //
+
         // + Insert an emph or strong emph node accordingly, after
+
         // the text node corresponding to the opener.
+
         //
+
         // + Remove any delimiters between the opener and closer from
+
         // the delimiter stack.
+
         //
+
         // + Remove 1 (for regular emph) or 2 (for strong emph) delimiters
+
         // from the opening and closing text nodes.  If they become empty
+
         // as a result, remove them and remove the corresponding element
+
         // of the delimiter stack.  If the closing node is removed, reset
+
         // `current_position` to the next element in the stack.
+
         //
+
         // - If none in found:
+
         //
+
         // + Set `openers_bottom` to the element before `current_position`.
+
         // (We know that there are no openers for this kind of closer up to and
+
         // including this point, so this puts a lower bound on future searches.)
+
         //
+
         // + If the closer at `current_position` is not a potential opener,
+
         // remove it from the delimiter stack (since we know it can't
+
         // be a closer either).
+
         //
+
         // + Advance `current_position` to the next element in the stack.
+
         //
+
         // After we're done, we remove all delimiters above `stack_bottom` from the
+
         // delimiter stack.
+
         //
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Pipe Table
+
         //
+
         // A pipe table is detected when:
+
         //
+
         // **Rule #1**
+
         // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+
         // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
+
         // - starting by optional spaces
+
         // - followed by an optional `:` to specify left align
+
         // - followed by a sequence of at least one `-` character
+
         // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+
         // - ending by optional spaces
+
         //
+
         // Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16466,7 +19838,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // The following is also considered as a table, even if the second line starts like a list:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16501,7 +19875,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // A pipe table with only one header row is allowed:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16529,7 +19905,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced");
         }
     }
+
         // After a row separator header, they will be interpreted as plain column:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16564,7 +19942,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16588,7 +19968,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "pipetables|advanced");
         }
     }
+
         // If a line doesn't have a column delimiter `|` the table is not detected
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16610,7 +19992,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "pipetables|advanced");
         }
     }
+
         // If a row contains more column than the header row, it will still be added as a column:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16659,11 +20043,17 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n<td></td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // **Rule #2**
+
         // A pipe table ends after a blank line or the end of the file.
+
         //
+
         // **Rule #3**
+
         // A cell content is trimmed (start and end) from white-spaces.
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16698,8 +20088,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // **Rule #4**
+
         // Column delimiters `|` at the very beginning of a line or just before a line ending with only spaces and/or terminated by a newline can be omitted
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16744,7 +20137,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // A pipe may be present at both the beginning/ending of each line:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16779,7 +20174,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // Or may be ommitted on one side:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16814,6 +20211,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16848,7 +20246,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // Single column table can be declared with lines starting only by a column delimiter:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16885,15 +20285,25 @@ namespace Markdig.Tests
 			TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // **Rule #5**
+
         //
+
         // The first row is considered as a **header row** if it is separated from the regular rows by a row containing a **header column separator** for each column. A header column separator is:
+
         //
+
         // - starting by optional spaces
+
         // - followed by an optional `:` to specify left align
+
         // - followed by a sequence of at least one `-` character
+
         // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+
         // - ending by optional spaces
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16933,9 +20343,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // The text alignment is defined by default to be center for header and left for cells. If the left alignment is applied, it will force the column heading to be left aligned.
+
         // There is no way to define a different alignment for heading and cells (apart from the default).
+
         // The text alignment can be changed by using the character `:` with the header column separator:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -16978,7 +20392,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\">0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\">3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // Test alignment with starting and ending pipes:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17015,7 +20431,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("| abc | def | ghi |\n|:---:|-----|----:|\n|  1  | 2   | 3   |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: center;\">abc</th>\n<th>def</th>\n<th style=\"text-align: right;\">ghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\">1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // The following example shows a non matching header column separator:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17041,9 +20459,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "pipetables|advanced");
         }
     }
+
         // **Rule #6**
+
         //
+
         // A column delimiter has a higher priority than emphasis delimiter
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17083,9 +20505,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // **Rule #7**
+
         //
+
         // A backstick/code delimiter has a higher precedence than a column delimiter `|`:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17106,9 +20532,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "pipetables|advanced");
         }
     }
+
         // **Rule #7**
+
         //
+
         // A HTML inline has a higher precedence than a column delimiter `|`:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17143,9 +20573,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // **Rule #8**
+
         //
+
         // Links have a higher precedence than the column delimiter character `|`:
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17180,9 +20614,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // ** Tests **
+
         //
+
         // Tests trailing spaces after pipes
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17232,9 +20670,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // ** Normalized columns count **
+
         //
+
         // The tables are normalized to the maximum number of columns found in a table
+
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17271,13 +20713,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Footontes
+
         //
+
         // Allows footnotes using the following syntax (taken from pandoc example):
+
     [TestFixture]
     public partial class TestExtensionsFootontes
     {
@@ -17346,7 +20796,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
+
         // Check with mulitple consecutive footnotes:
+
     [TestFixture]
     public partial class TestExtensionsFootontes
     {
@@ -17390,7 +20842,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n\n[^2]: Footnote 2 text\n\na\n\n[^3]: Footnote 3 text\n\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<p>a</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
+
         // Another test with consecutive footnotes without a blank line separator:
+
     [TestFixture]
     public partial class TestExtensionsFootontes
     {
@@ -17428,24 +20882,43 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n[^2]: Footnote 2 text\n[^3]: Footnote 3 text\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Generic Attributes
+
         //
+
         // Attributes can be attached to:
+
         // - The previous inline element if the previous element is not a literal
+
         // - The next block if the current block is a paragraph and the attributes is the only inline present in the paragraph
+
         // - Or the current block
+
         //
+
         // Attributes can be of 3 kinds:
+
         //
+
         // - An id element, starting by `#` that will be used to set the `id` property of the HTML element
+
         // - A class element, starting by `.` that will be appended to the CSS class property of the HTML element
+
         // - a `name=value` or `name="value"` that will be appended as an attribute of the HTML element
+
         //
+
         // The following shows that attributes is attached to the current block or the previous inline:
+
     [TestFixture]
     public partial class TestExtensionsGenericAttributes
     {
@@ -17478,7 +20951,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n# This is a heading # {#heading-link2}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------\n\nThis is a paragraph with an attached attributes {#myparagraph attached-bool-property}", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<h1 id=\"heading-link2\">This is a heading</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>\n<p id=\"myparagraph\" attached-bool-property>This is a paragraph with an attached attributes </p>", "attributes|advanced");
         }
     }
+
         // The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
+
     [TestFixture]
     public partial class TestExtensionsGenericAttributes
     {
@@ -17502,13 +20977,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // The following additional emphasis are supported:
+
         //
+
         // ## Strikethrough
+
         //
+
         // Allows to strikethrough a span of text by surrounding it by `~~`. The semantic used for the generated HTML is the tag `<del>`.
+
     [TestFixture]
     public partial class TestExtensionsStrikethrough
     {
@@ -17528,9 +21011,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextras|advanced");
         }
     }
+
         // ## Superscript and Subscript
+
         //
+
         // Superscripts can be written by surrounding a text by ^ characters; subscripts can be written by surrounding the subscripted text by ~ characters
+
     [TestFixture]
     public partial class TestExtensionsSuperscriptandSubscript
     {
@@ -17550,7 +21037,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras|advanced");
         }
     }
+
         // Certain punctuation characters are exempted from the rule forbidding them within inline delimiters
+
     [TestFixture]
     public partial class TestExtensionsSuperscriptandSubscript
     {
@@ -17573,9 +21062,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("One quintillionth can be expressed as 10^-18^\n\nDaggers^†^ and double-daggers^‡^ can be used to denote notes.", "<p>One quintillionth can be expressed as 10<sup>-18</sup></p>\n<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>", "emphasisextras|advanced");
         }
     }
+
         // ## Inserted
+
         //
+
         // Inserted text can be used to specify that a text has been added to a document.  The semantic used for the generated HTML is the tag `<ins>`.
+
     [TestFixture]
     public partial class TestExtensionsInserted
     {
@@ -17595,9 +21088,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras|advanced");
         }
     }
+
         // ## Marked
+
         //
+
         // Marked text can be used to specify that a text has been marked in a document.  The semantic used for the generated HTML is the tag `<mark>`.
+
     [TestFixture]
     public partial class TestExtensionsMarked
     {
@@ -17617,13 +21114,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Hardline break
+
         //
+
         // When this extension is used, a new line in a paragraph block will result in a hardline break `<br>`:
+
     [TestFixture]
     public partial class TestExtensionsHardlinebreak
     {
@@ -17645,43 +21150,81 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak|advanced+hardlinebreak");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Grid Table
+
         //
+
         // A grid table allows to have multiple lines per cells and allows to span cells over multiple columns. The following shows a simple grid table
+
         //
+
         // ```
+
         // +---------+---------+
+
         // | Header  | Header  |
+
         // | Column1 | Column2 |
+
         // +=========+=========+
+
         // | 1. ab   | > This is a quote
+
         // | 2. cde  | > For the second column
+
         // | 3. f    |
+
         // +---------+---------+
+
         // | Second row spanning
+
         // | on two columns
+
         // +---------+---------+
+
         // | Back    |         |
+
         // | to      |         |
+
         // | one     |         |
+
         // | column  |         |
+
         // ```
+
         //
+
         // **Rule #1**
+
         // The first line of a grid table must a **row separator**. It must start with the column separator character `+` used to separate columns in a row separator. Each column separator is:
+
         // - starting by optional spaces
+
         // - followed by an optional `:` to specify left align, followed by optional spaces
+
         // - followed by a sequence of at least one `-` character, followed by optional spaces
+
         // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+
         // - ending by optional spaces
+
         //
+
         // The first row separator must be followed by a *regular row*. A regular row must start with the character `|` that is starting at the same position than the column separator `+` of the first row separator.
+
         //
+
         // The following is a valid row separator
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17711,7 +21254,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // The following is not a valid row separator
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17733,8 +21278,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables|advanced");
         }
     }
+
         // **Rule #2**
+
         // A regular row can continue a previous regular row when column separator `|` are positioned at the same  position than the previous line. If they are positioned at the same location, the column may span over multiple columns:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17779,7 +21327,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col1b             | Col3b   |\n| Col1c                       |", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col1b</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col1c</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // A row header is separated using `+========+` instead of `+---------+`:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17810,7 +21360,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables|advanced");
         }
     }
+
         // The last column separator `|` may be omitted:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17840,15 +21392,25 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\">\n<col style=\"width:50%\">\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
+
         //
+
         // Total size is : 16
+
         //
+
         // - `----` -> 4
+
         // - `--------` -> 8
+
         // - `----` -> 4
+
         //
+
         // So the width would be 4/16 = 25%, 8/16 = 50%, 4/16 = 25%
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17881,7 +21443,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\">\n<col style=\"width:50%\">\n<col style=\"width:25%\">\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // Alignment might be specified on the first row using the character `:`:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17914,7 +21478,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // A grid table may have cells spanning both columns and rows:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -17961,7 +21527,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+---+---+ B +\n| D | E | B |\n+ D +---+---+\n| D | CCCCC |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td colspan=\"2\">AAAAA</td>\n<td rowspan=\"2\">B\nB\nB</td>\n</tr>\n<tr>\n<td rowspan=\"2\">D\nD\nD</td>\n<td>E</td>\n</tr>\n<tr>\n<td colspan=\"2\">CCCCC</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // A grid table may have cells with both colspan and rowspan:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -18007,7 +21575,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ AAAAA +---+\n| AAAAA | C |\n+---+---+---+\n| D | E | F |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<col style=\"width:33.33%\">\n<tbody>\n<tr>\n<td colspan=\"2\" rowspan=\"2\">AAAAA\nAAAAA\nAAAAA</td>\n<td>B</td>\n</tr>\n<tr>\n<td>C</td>\n</tr>\n<tr>\n<td>D</td>\n<td>E</td>\n<td>F</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
         }
     }
+
         // A grid table may not have irregularly shaped cells:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -18039,7 +21609,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+", "<p>+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+</p>", "gridtables|advanced");
         }
     }
+
         // An empty `+` on a line should result in a simple empty list output:
+
     [TestFixture]
     public partial class TestExtensionsGridTable
     {
@@ -18061,13 +21633,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("+", "<ul>\n<li></li>\n</ul>", "gridtables|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Custom Container
+
         //
+
         // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18090,7 +21670,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
+
         // The text following the opened custom container is optional:
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18113,7 +21695,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
+
         // Like for fenced code block, you can use more than 3 `:` characters as long as the closing has the same number of characters:
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18136,7 +21720,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
+
         // Like for fenced code block, a custom container can span over multiple empty lines in a list block:
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18172,7 +21758,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes|advanced");
         }
     }
+
         // Attributes extension is also supported for Custom Container, as long as the Attributes extension is activated after the CustomContainer extension (`.UseCustomContainer().UseAttributes()`)
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18195,7 +21783,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
+
         // The content of a custom container can contain any blocks:
+
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -18218,9 +21808,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes|advanced");
         }
     }
+
         // ## Inline Custom Container
+
         //
+
         // A custom container can also be used within an inline container (e.g: paragraph, heading...) by enclosing a text by a new emphasis `::`
+
     [TestFixture]
     public partial class TestExtensionsInlineCustomContainer
     {
@@ -18240,7 +21834,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes|advanced");
         }
     }
+
         // Any other emphasis inline can be used within this emphasis inline container:
+
     [TestFixture]
     public partial class TestExtensionsInlineCustomContainer
     {
@@ -18260,7 +21856,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes|advanced");
         }
     }
+
         // Attributes can be attached to a inline custom container:
+
     [TestFixture]
     public partial class TestExtensionsInlineCustomContainer
     {
@@ -18280,13 +21878,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Definition lists
+
         //
+
         // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18346,7 +21952,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n:   This is a definition item\n    With a paragraph\n    > This is a block quote\n\n    - This is a list\n    - with an item2\n\n    ```java\n    Test\n\n\n    ```\n\n    And a last line\n:   This ia another definition item\n\nTerm2\nTerm3 *with some inline*\n:   This is another definition for term2", "<dl>\n<dt>Term 1</dt>\n<dd><p>This is a definition item\nWith a paragraph</p>\n<blockquote>\n<p>This is a block quote</p>\n</blockquote>\n<ul>\n<li>This is a list</li>\n<li>with an item2</li>\n</ul>\n<pre><code class=\"language-java\">Test\n\n\n</code></pre>\n<p>And a last line</p>\n</dd>\n<dd>This ia another definition item</dd>\n<dt>Term2</dt>\n<dt>Term3 <em>with some inline</em></dt>\n<dd>This is another definition for term2</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
+
         // A definition term can be followed at most by one blank line. Lazy continuations are supported for definitions:
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18377,7 +21985,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd><p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
+
         // The definition must be indented to 4 characters including the `:`.
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18399,7 +22009,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n:  Invalid with less than 3 characters", "<p>Term 1\n:  Invalid with less than 3 characters</p>", "definitionlists+attributes|advanced");
         }
     }
+
         // The `:` can be indented up to 3 spaces:
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18423,7 +22035,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes|advanced");
         }
     }
+
         // But more than 3 spaces before `:` will trigger an indented code block:
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18447,7 +22061,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes|advanced");
         }
     }
+
         // Definition lists can be nested inside list items
+
     [TestFixture]
     public partial class TestExtensionsDefinitionlists
     {
@@ -18484,13 +22100,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.  First\n    \n2.  Second\n    \n    Term 1\n    :   Definition\n    \n    Term 2\n    :   Second Definition", "<ol>\n<li><p>First</p></li>\n<li><p>Second</p>\n<dl>\n<dt>Term 1</dt>\n<dd>Definition</dd>\n<dt>Term 2</dt>\n<dd>Second Definition</dd>\n</dl></li>\n</ol>", "definitionlists+attributes|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Emoji
+
         //
+
         // Emoji and smiley can be converted to their respective unicode characters:
+
     [TestFixture]
     public partial class TestExtensionsEmoji
     {
@@ -18510,7 +22134,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis|advanced+emojis");
         }
     }
-        // An emoji needs to be preceded by a space and followed by a space:
+
+        // An emoji needs to be preceded by a space:
+
     [TestFixture]
     public partial class TestExtensionsEmoji
     {
@@ -18521,24 +22147,80 @@ namespace Markdig.Tests
             // Section: Extensions Emoji
             //
             // The following CommonMark:
-            //     These are not:) an :)emoji with a:) x:angry:x
+            //     These are not:) an emoji with a:) x:angry:x
             //
             // Should be rendered as:
-            //     <p>These are not:) an :)emoji with a:) x:angry:x</p>
+            //     <p>These are not:) an emoji with a:) x:angry:x</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Emoji");
-			TestParser.TestSpec("These are not:) an :)emoji with a:) x:angry:x", "<p>These are not:) an :)emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
+			TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
         }
     }
+
+        // Emoji can be followed by close ponctuation (or any other characters):
+
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     We all need :), it makes us :muscle:. (and :ok_hand:).
+            //
+            // Should be rendered as:
+            //     <p>We all need 😃, it makes us 💪. (and 👌).</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Emoji");
+			TestParser.TestSpec("We all need :), it makes us :muscle:. (and :ok_hand:).", "<p>We all need 😃, it makes us 💪. (and 👌).</p>", "emojis|advanced+emojis");
+        }
+    }
+
+        // Sentences can end with Emoji:
+
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     This is a sentance :ok_hand:
+            //     and keeps going to the next line :)
+            //
+            // Should be rendered as:
+            //     <p>This is a sentance 👌
+            //     and keeps going to the next line 😃</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Emoji");
+			TestParser.TestSpec("This is a sentance :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentance 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis");
+        }
+    }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## Abbreviation
+
         //
+
         // Abbreviation can be declared by using the `*[Abbreviation Label]: Abbreviation description`
+
         //
+
         // Abbreviation definition will be removed from the original document. Any Abbreviation label found in literals will be replaced by the abbreviation description:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18560,7 +22242,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations|advanced");
         }
     }
+
         // An abbreviation definition can be indented at most 3 spaces
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18582,7 +22266,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations|advanced");
         }
     }
+
         // An abbreviation may contain spaces:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18604,7 +22290,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations|advanced");
         }
     }
+
         // Abbreviation may contain any unicode characters:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18626,7 +22314,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations|advanced");
         }
     }
+
         // Abbreviations may be similar:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18650,7 +22340,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[1A]: First\n*[1A1]: Second\n*[1A2]: Third\n\nWe can abbreviate 1A, 1A1 and 1A2!", "<p>We can abbreviate <abbr title=\"First\">1A</abbr>, <abbr title=\"Second\">1A1</abbr> and <abbr title=\"Third\">1A2</abbr>!</p>", "abbreviations|advanced");
         }
     }
+
         // Abbreviations should match whole word only:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18672,7 +22364,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[1A]: First\n\nWe should not abbreviate 1.1A or 11A!", "<p>We should not abbreviate 1.1A or 11A!</p>", "abbreviations|advanced");
         }
     }
+
         // Abbreviations should match whole word only, even if the word is the entire content:
+
     [TestFixture]
     public partial class TestExtensionsAbbreviation
     {
@@ -18694,13 +22388,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[1A]: First\n\n1.1A", "<p>1.1A</p>", "abbreviations|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // The following additional list items are supported:
+
         //
+
         // ## Ordered list with alpha letter
+
         //
+
         // Allows to use a list using an alpha letter instead of a number
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
@@ -18726,7 +22428,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // It works also for uppercase alpha:
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
@@ -18752,7 +22456,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // Like for numbered list, a list can start with a different letter
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
@@ -18776,7 +22482,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // A different type of list will break the existing list:
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
@@ -18804,9 +22512,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // ## Ordered list with roman letter
+
         //
+
         // Allows to use a list using a roman number instead of a number.
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithromanletter
     {
@@ -18834,7 +22546,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // It works also for uppercase alpha:
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithromanletter
     {
@@ -18862,7 +22576,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // Like for numbered list, a list can start with a different letter
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithromanletter
     {
@@ -18886,7 +22602,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // Lists can be restarted, specifying the start point.
+
     [TestFixture]
     public partial class TestExtensionsOrderedlistwithromanletter
     {
@@ -18916,13 +22634,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("1.   First item\n\nSome text\n\n2.   Second item", "<ol>\n<li>First item</li>\n</ol>\n<p>Some text</p>\n<ol start=\"2\">\n<li>Second item</li>\n</ol>", "listextras|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // The following the figure extension:
+
         //
+
         // ## Figures
+
         //
+
         // A figure can be defined by using a pattern equivalent to a fenced code block but with the character `^`
+
     [TestFixture]
     public partial class TestExtensionsFigures
     {
@@ -18947,9 +22673,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures+footers+citations|advanced");
         }
     }
+
         // ## Footers
+
         //
+
         // A footer equivalent to a block quote parsing but starts with double character ^^
+
     [TestFixture]
     public partial class TestExtensionsFooters
     {
@@ -18971,9 +22701,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("^^ This is a footer\n^^ multi-line", "<footer>This is a footer\nmulti-line</footer>", "figures+footers+citations|advanced");
         }
     }
+
         // ## Cite
+
         //
+
         // A cite is working like an emphasis but using the double character ""
+
     [TestFixture]
     public partial class TestExtensionsCite
     {
@@ -18993,13 +22727,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a \"\"citation of someone\"\"", "<p>This is a <cite>citation of someone</cite></p>", "figures+footers+citations|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for mathematics spans:
+
         //
+
         // ## Math Inline
+
         //
+
         // Allows to define a mathematic block embraced by `$...$`
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19019,7 +22761,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
+
         // Or by `$$...$$` embracing it by:
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19039,7 +22783,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
+
         // The opening `$` and closing `$` is following the rules of the emphasis delimiter `_`:
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19059,7 +22805,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a $ math block $", "<p>This is not a $ math block $</p>", "mathematics|advanced");
         }
     }
+
         // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19079,7 +22827,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced");
         }
     }
+
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19099,7 +22849,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced");
         }
     }
+
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19119,7 +22871,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced");
         }
     }
+
         // A `$` can be escaped between a math inline block by using the escape `\\`
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19139,7 +22893,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "mathematics|advanced");
         }
     }
+
         // At most, two `$` will be matched for the opening and closing:
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19159,7 +22915,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics|advanced");
         }
     }
+
         // Regular text can come both before and after the math inline
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19179,7 +22937,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">math block</span> with text on both sides.</p>", "mathematics|advanced");
         }
     }
+
         // A mathematic block takes precedence over standard emphasis `*` `_`:
+
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19199,10 +22959,15 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics|advanced");
         }
     }
+
         // ## Math Block
+
         //
+
         // The match block can spawn on multiple lines by having a $$ starting on a line.
+
         // It is working as a fenced code block.
+
     [TestFixture]
     public partial class TestExtensionsMathBlock
     {
@@ -19231,13 +22996,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "mathematics|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for outputing bootstrap ready tags:
+
         //
+
         // ## Bootstrap
+
         //
+
         // Adds bootstrap `.table` class to `<table>`:
+
     [TestFixture]
     public partial class TestExtensionsBootstrap
     {
@@ -19272,7 +23045,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Name | Value\n-----| -----\nAbc  | 16", "<table class=\"table\">\n<thead>\n<tr>\n<th>Name</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Abc</td>\n<td>16</td>\n</tr>\n</tbody>\n</table>", "bootstrap+pipetables+figures+attributes");
         }
     }
+
         // Adds bootstrap `.blockquote` class to `<blockquote>`:
+
     [TestFixture]
     public partial class TestExtensionsBootstrap
     {
@@ -19294,7 +23069,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("> This is a blockquote", "<blockquote class=\"blockquote\">\n<p>This is a blockquote</p>\n</blockquote>", "bootstrap+pipetables+figures+attributes");
         }
     }
+
         // Adds bootstrap `.figure` class to `<figure>` and `.figure-caption` to `<figcaption>`
+
     [TestFixture]
     public partial class TestExtensionsBootstrap
     {
@@ -19319,7 +23096,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("^^^\nThis is a text in a caption\n^^^ This is the caption", "<figure class=\"figure\">\n<p>This is a text in a caption</p>\n<figcaption class=\"figure-caption\">This is the caption</figcaption>\n</figure>", "bootstrap+pipetables+figures+attributes");
         }
     }
+
         // Adds the `.img-fluid` class to all image links `<img>`
+
     [TestFixture]
     public partial class TestExtensionsBootstrap
     {
@@ -19339,13 +23118,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![Image Link](/url)", "<p><img src=\"/url\" class=\"img-fluid\" alt=\"Image Link\" /></p>", "bootstrap+pipetables+figures+attributes");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for media links:
+
         //
+
         // ## Media links
+
         //
+
         // Allows to embed audio/video links to popular website:
+
     [TestFixture]
     public partial class TestExtensionsMedialinks
     {
@@ -19368,13 +23155,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>", "medialinks|advanced+medialinks");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for smarty pants:
+
         //
+
         // ## SmartyPants Quotes
+
         //
+
         // Converts the following character to smarty pants:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19394,6 +23189,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a \"text\"", "<p>This is a &ldquo;text&rdquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19413,6 +23209,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a 'text'", "<p>This is a &lsquo;text&rsquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19432,7 +23229,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a <<text>>", "<p>This is a &laquo;text&raquo;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // Unbalanced quotes are not changed:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19452,6 +23251,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a \"text", "<p>This is a &quot;text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19471,6 +23271,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a 'text", "<p>This is a 'text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19490,7 +23291,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a <<text", "<p>This is a &lt;&lt;text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // Unbalanced quotes inside other quotes are not changed:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19510,6 +23313,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a \"text 'with\" a another text'", "<p>This is a &ldquo;text 'with&rdquo; a another text'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19529,6 +23333,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a 'text <<with' a another text>>", "<p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19548,7 +23353,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a <<text 'with>> a another text'", "<p>This is a &laquo;text 'with&raquo; a another text'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // Quotes requires to have the same rules than emphasis `_` regarding left/right frankling rules:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19568,6 +23375,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("It's not quotes'", "<p>It's not quotes'</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19587,6 +23395,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("They are ' not matching quotes '", "<p>They are ' not matching quotes '</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19606,7 +23415,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("They are' not matching 'quotes", "<p>They are' not matching 'quotes</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // An emphasis starting inside left/right quotes will span over the right quote:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsQuotes
     {
@@ -19626,7 +23437,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is \"a *text\" with an emphasis*", "<p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // ## SmartyPants Separators
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -19646,6 +23459,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a -- text", "<p>This is a &ndash; text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -19665,6 +23479,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a --- text", "<p>This is a &mdash; text</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -19684,7 +23499,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a en ellipsis...", "<p>This is a en ellipsis&hellip;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // Check that a smartypants are not breaking pipetable parsing:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -19719,7 +23536,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a  | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // Check quotes and dash:
+
     [TestFixture]
     public partial class TestExtensionsSmartyPantsSeparators
     {
@@ -19739,13 +23558,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("A \"quote\" with a ---", "<p>A &ldquo;quote&rdquo; with a &mdash;</p>", "pipetables+smartypants|advanced+smartypants");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the auto identifier extension
+
         //
+
         // ## Heading Auto Identifiers
+
         //
+
         // Allows to automatically creates an identifier for a heading:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19765,9 +23592,13 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+
         // Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
+
         // Consecutive same character `-`, `_` or `.` are rendered into a single one
+
         // Characters `-`, `_` and `.` at the end of the string are also discarded.
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19787,7 +23618,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers|advanced");
         }
     }
+
         // Formatting (emphasis) are also discarded:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19807,7 +23640,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers|advanced");
         }
     }
+
         // Links are also removed:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19827,7 +23662,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers|advanced");
         }
     }
+
         // If multiple heading have the same text, -1, -2...-n will be postfix to the header id.
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19849,7 +23686,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+
         // The heading Id will start on the first letter character of the heading, all previous characters will be discarded:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19869,7 +23708,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+
         // If the heading is all stripped by the previous rules, the id `section` will be used instead:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19891,8 +23732,11 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers|advanced");
         }
     }
+
         // When the options "AutoLink" is setup, it is possible to link to an existing heading by using the
+
         // exact same Label text as the heading:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19914,7 +23758,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers|advanced");
         }
     }
+
         // Links before the heading are also working:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19936,7 +23782,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+
         // The text of the link can be changed:
+
     [TestFixture]
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
@@ -19958,13 +23806,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for task lists:
+
         //
+
         // ## TaskLists
+
         //
+
         // A task list item consist of `[ ]` or `[x]` or `[X]` inside a list item (ordered or unordered)
+
     [TestFixture]
     public partial class TestExtensionsTaskLists
     {
@@ -19992,7 +23848,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists|advanced");
         }
     }
+
         // A task is not recognized outside a list item:
+
     [TestFixture]
     public partial class TestExtensionsTaskLists
     {
@@ -20012,13 +23870,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists|advanced");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for diagrams extension:
+
         //
+
         // ## Mermaid diagrams
+
         //
+
         // Using a fenced code block with the `mermaid` language info will output a `<div class='mermaid'>` instead of a `pre/code` block:
+
     [TestFixture]
     public partial class TestExtensionsMermaiddiagrams
     {
@@ -20049,14 +23915,23 @@ namespace Markdig.Tests
 			TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<div class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</div>", "diagrams|advanced");
         }
     }
+
         // TODO: Add other text diagram languages
+
         // # Extensions
+
         //
+
         // ## NoHTML
+
         //
+
         // The extension DisableHtml allows to disable the parsing of HTML:
+
         //
+
         // For inline HTML:
+
     [TestFixture]
     public partial class TestExtensionsNoHTML
     {
@@ -20076,7 +23951,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("this is some text</td></tr>", "<p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>", "nohtml");
         }
     }
+
         // For Block HTML:
+
     [TestFixture]
     public partial class TestExtensionsNoHTML
     {
@@ -20100,13 +23977,21 @@ namespace Markdig.Tests
 			TestParser.TestSpec("<div>\nthis is some text\n</div>", "<p>&lt;div&gt;\nthis is some text\n&lt;/div&gt;</p>", "nohtml");
         }
     }
+
         // # Extensions
+
         //
+
         // Adds support for YAML frontmatter parsing:
+
         //
+
         // ## YAML frontmatter discard
+
         //
+
         // If a frontmatter is present, it will not be rendered:
+
     [TestFixture]
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
@@ -20129,7 +24014,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("---\nthis: is a frontmatter\n---\nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
+
         // But if a frontmatter doesn't happen on the first line, it will be parse as regular Markdown content
+
     [TestFixture]
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
@@ -20155,7 +24042,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a text1\n---\nthis: is a frontmatter\n---\nThis is a text2", "<h2>This is a text1</h2>\n<h2>this: is a frontmatter</h2>\n<p>This is a text2</p>", "yaml");
         }
     }
+
         // It expects an exact 3 dashes `---`:
+
     [TestFixture]
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
@@ -20180,18 +24069,31 @@ namespace Markdig.Tests
 			TestParser.TestSpec("----\nthis: is a frontmatter\n----\nThis is a text", "<hr />\n<h2>this: is a frontmatter</h2>\n<p>This is a text</p>", "yaml");
         }
     }
+
         // # Extensions
+
         //
+
         // This section describes the different extensions supported:
+
         //
+
         // ## AutoLinks
+
         //
+
         // Autolinks will format as a HTML link any string that starts by:
+
         //
+
         // - `http://` or `https://`
+
         // - `ftp://`
+
         // - `mailto:`
+
         // - `www.`
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20217,7 +24119,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">mailto:email@toto.com</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
         }
     }
+
         // But incomplete links will not be matched:
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20243,7 +24147,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x ", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x</p>", "autolinks|advanced");
         }
     }
+
         // Previous character must be a punctuation or a valid space (tab, space, new line):
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20263,7 +24169,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is not a nhttp://www.google.com URL but this is (https://www.google.com)", "<p>This is not a nhttp://www.google.com URL but this is (<a href=\"https://www.google.com\">https://www.google.com</a>)</p>", "autolinks|advanced");
         }
     }
+
         // An autolink should not interfere with an `<a>` HTML inline:
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20283,7 +24191,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
         }
     }
+
         // or even within emphasis:
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20303,7 +24213,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\"> **http://www.google.com** </a> link", "<p>This is an HTML <a href=\"http://www.google.com\"> <strong>http://www.google.com</strong> </a> link</p>", "autolinks|advanced");
         }
     }
+
         // An autolink should not interfere with a markdown link:
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20323,7 +24235,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is an HTML [http://www.google.com](http://www.google.com) link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
         }
     }
+
         // A link embraced by pending emphasis should let the emphasis takes precedence if characters are placed at the end of the matched link:
+
     [TestFixture]
     public partial class TestExtensionsAutoLinks
     {
@@ -20343,4 +24257,5 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
         }
     }
+
 }
