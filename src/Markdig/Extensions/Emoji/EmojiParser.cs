@@ -81,12 +81,6 @@ namespace Markdig.Extensions.Emoji
                 return false;
             }
 
-            // Following char must be a space
-            if (!slice.PeekCharExtra(match.Length).IsWhiteSpaceOrZero())
-            {
-                return false;
-            }
-
             // If we have a smiley, we decode it to emoji
             string emoji;
             if (!SmileyToEmoji.TryGetValue(match, out emoji))
