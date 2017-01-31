@@ -18510,7 +18510,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis|advanced+emojis");
         }
     }
-        // An emoji needs to be preceded by a space and followed by a space:
+        // An emoji needs to be preceded by a space:
     [TestFixture]
     public partial class TestExtensionsEmoji
     {
@@ -18521,13 +18521,55 @@ namespace Markdig.Tests
             // Section: Extensions Emoji
             //
             // The following CommonMark:
-            //     These are not:) an :)emoji with a:) x:angry:x
+            //     These are not:) an emoji with a:) x:angry:x
             //
             // Should be rendered as:
-            //     <p>These are not:) an :)emoji with a:) x:angry:x</p>
+            //     <p>These are not:) an emoji with a:) x:angry:x</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Emoji");
-			TestParser.TestSpec("These are not:) an :)emoji with a:) x:angry:x", "<p>These are not:) an :)emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
+			TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
+        }
+    }
+        // Emoji can be followed by close ponctuation (or any other characters):
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     We all need :), it makes us :muscle:. (and :ok_hand:).
+            //
+            // Should be rendered as:
+            //     <p>We all need 😃, it makes us 💪. (and 👌).</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Emoji");
+			TestParser.TestSpec("We all need :), it makes us :muscle:. (and :ok_hand:).", "<p>We all need 😃, it makes us 💪. (and 👌).</p>", "emojis|advanced+emojis");
+        }
+    }
+        // Sentences can end with Emoji:
+    [TestFixture]
+    public partial class TestExtensionsEmoji
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions Emoji
+            //
+            // The following CommonMark:
+            //     This is a sentance :ok_hand:
+            //     and keeps going to the next line :)
+            //
+            // Should be rendered as:
+            //     <p>This is a sentance 👌
+            //     and keeps going to the next line 😃</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Emoji");
+			TestParser.TestSpec("This is a sentance :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentance 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis");
         }
     }
         // # Extensions
