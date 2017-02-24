@@ -52,3 +52,16 @@ Marked text can be used to specify that a text has been marked in a document.  T
 .
 <p><mark>Marked text</mark></p>
 ````````````````````````````````
+## Emphasis on Html Entities
+
+
+```````````````````````````````` example
+This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^
+This is text MyBrand^&reg;^ and MyTrademark^&trade;^
+This is text MyBrand~&reg;~ and MyCopyright^&copy;^
+.
+<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>
+This is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>
+This is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>
+````````````````````````````````
+

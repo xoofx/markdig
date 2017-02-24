@@ -17617,6 +17617,30 @@ namespace Markdig.Tests
 			TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced");
         }
     }
+        // ## Emphasis on Html Entities
+    [TestFixture]
+    public partial class TestExtensionsEmphasisonHtmlEntities
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions Emphasis on Html Entities
+            //
+            // The following CommonMark:
+            //     This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^
+            //     This is text MyBrand^&reg;^ and MyTrademark^&trade;^
+            //     This is text MyBrand~&reg;~ and MyCopyright^&copy;^
+            //
+            // Should be rendered as:
+            //     <p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>
+            //     This is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>
+            //     This is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Emphasis on Html Entities");
+			TestParser.TestSpec("This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^\nThis is text MyBrand^&reg;^ and MyTrademark^&trade;^\nThis is text MyBrand~&reg;~ and MyCopyright^&copy;^", "<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>\nThis is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>\nThis is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>", "emphasisextras|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
