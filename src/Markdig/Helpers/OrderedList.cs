@@ -101,5 +101,25 @@ namespace Markdig.Helpers
             }
             return false;
         }
+
+        /// <summary>
+        /// Replaces <typeparamref name="TElement"/> with <paramref name="replacement"/>.
+        /// </summary>
+        /// <typeparam name="TElement">Element type to find in the list</typeparam>
+        /// <param name="replacement">Object to replace this element with</param>
+        /// <returns><c>true</c> if a replacement was made; otherwise <c>false</c>.</returns>
+        public bool Replace<TElement>(T replacement) where TElement : T
+        {
+            for (var i = 0; i < Count; i++)
+            {
+                if (this[i] is TElement)
+                {
+                    RemoveAt(i);
+                    Insert(i, replacement);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
