@@ -253,6 +253,22 @@ namespace Markdig.Helpers
                 return CurrentChar;
             }
 
+            public char PeekChar()
+            {
+                if (Start + 1 > End)
+                {
+                    return '\0';
+                }
+
+                var slice = (StringSlice)lines.Lines[SliceIndex];
+                if (offset + 1 >= slice.Length)
+                {
+                    return '\n';
+                }
+
+                return slice[slice.Start + offset + 1];
+            }
+
             public bool TrimStart()
             {
                 var c = CurrentChar;

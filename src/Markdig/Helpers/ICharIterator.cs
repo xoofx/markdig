@@ -32,6 +32,12 @@ namespace Markdig.Helpers
         char NextChar();
 
         /// <summary>
+        /// Peeks at the next character, without incrementing the <see cref="Start"/> position.
+        /// </summary>
+        /// <returns>The next character. `\0` is end of the iteration.</returns>
+        char PeekChar();
+
+        /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
         bool IsEmpty { get; }

@@ -31,6 +31,16 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestUrlTrailingFullStop()
+        {
+            var text = new StringSlice("http://google.com.");
+            string link;
+            Assert.True(LinkHelper.TryParseUrl(ref text, out link));
+            Assert.AreEqual("http://google.com", link);
+            Assert.AreEqual('.', text.CurrentChar);
+        }
+
+        [Test]
         public void TestUrlNestedParenthesis()
         {
             var text = new StringSlice("(toto)tutu(tata) nooo");
