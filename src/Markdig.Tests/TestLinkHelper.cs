@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System.Security;
 using NUnit.Framework;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -31,9 +33,11 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestUrlTrailingFullStop()
+        [TestCase("http://google.com.")]
+        [TestCase("http://google.com. ")]
+        public void TestUrlTrailingFullStop(string uri)
         {
-            var text = new StringSlice("http://google.com.");
+            var text = new StringSlice(uri);
             string link;
             Assert.True(LinkHelper.TryParseUrl(ref text, out link));
             Assert.AreEqual("http://google.com", link);
