@@ -116,6 +116,7 @@ namespace Markdig.Helpers
             // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
             // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
             // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
+            // A URI that would end with a full stop (.) is treated instead as ending immediately before the full stop.
 
             // a scheme is any sequence of 2–32 characters 
             // beginning with an ASCII letter 
@@ -595,7 +596,13 @@ namespace Markdig.Helpers
 
                     hasEscape = false;
 
-                    if (c == '\0' || c.IsSpaceOrTab() || c.IsControl()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (IsEndOfUri(c))
+                    {
+                        isValid = true;
+                        break;
+                    }
+
+                    if (c == '.' && IsEndOfUri(text.PeekChar()))
                     {
                         isValid = true;
                         break;
@@ -610,6 +617,11 @@ namespace Markdig.Helpers
             link = isValid ? buffer.ToString() : null;
             buffer.Length = 0;
             return isValid;
+        }
+
+        private static bool IsEndOfUri(char c)
+        {
+            return c == '\0' || c.IsSpaceOrTab() || c.IsControl(); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
         }
 
         public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,

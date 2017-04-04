@@ -113,6 +113,17 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
+        /// Peeks the character immediately after the current <see cref="Start"/> position
+        /// or returns `\0` if after the <see cref="End"/> position.
+        /// </summary>
+        /// <returns>The next character, returns `\0` if none.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public char PeekChar()
+        {
+            return PeekChar(1);
+        }
+
+        /// <summary>
         /// Peeks a character at the specified offset from the current beginning of the string, without taking into account <see cref="Start"/> and <see cref="End"/>
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
