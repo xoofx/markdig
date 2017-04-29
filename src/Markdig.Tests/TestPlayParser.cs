@@ -126,6 +126,14 @@ Paragraph
 ", "<p><code>https://{domain}/callbacks</code></p>\n<h4 id=\"heading\">HEADING</h4>\n<p>Paragraph</p>", "advanced");
         }
 
+
+        [Test]
+        public void TestBugEmphAttribute()
+        {
+            // https://github.com/lunet-io/markdig/issues/108
+            TestParser.TestSpec(@"*test*{name=value}", "<p><em name=\"value\">test</em></p>", "advanced");
+        }
+
         [Test]
         public void TestBugPipeTables()
         {
