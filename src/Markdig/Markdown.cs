@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.IO;
+using System.Reflection;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Parsers;
 using Markdig.Renderers;
@@ -15,6 +16,12 @@ namespace Markdig
     /// </summary>
     public static partial class Markdown
     {
+#if NETSTANDARD_11
+        public static readonly string Version = typeof(Markdown).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+#else
+        public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
+#endif
+
         /// <summary>
         /// Converts a Markdown string to HTML.
         /// </summary>

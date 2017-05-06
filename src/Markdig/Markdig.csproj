@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
+    <Copyright>Alexandre Mutel</Copyright>
+    <AssemblyTitle>Markdig</AssemblyTitle>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <VersionPrefix>0.10.7</VersionPrefix>
+    <Authors>Alexandre Mutel</Authors>
+    <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1</TargetFrameworks>
+    <AssemblyName>Markdig</AssemblyName>
+    <PackageId>Markdig</PackageId>
+    <PackageTags>Markdown CommonMark md html md2html</PackageTags>
+    <PackageReleaseNotes>&gt; 0.10.7
+ - Fix issue when an url ends by a dot `.`
+&gt; 0.10.6
+ - Fix emphasis with HTML entities
+&gt; 0.10.5
+ - Several minor fixes
+&gt; 0.10.4
+ - Fix issue with autolinks
+ - Normalize number of columns for tables
+&gt; 0.10.3
+ - Fix issue with pipetables shifting a cell to a new column (issue #73)
+&gt; 0.10.2
+ - Fix exception when trying to urlize an url with an unicode character outside the supported range by NormD (issue #75)
+ &gt; 0.10.1
+- Update to latest CommonMark specs
+- Fix source span for LinkReferenceDefinition
+&gt; 0.10.0
+- Breaking change of the IMarkdownExtension to allow to receive the MarkdownPipeline for the renderers setup
+</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/lunet-io/markdig/blob/master/license.txt</PackageLicenseUrl>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.1' ">1.6.0</NetStandardImplicitPackageVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>  
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'portable40-net40+sl5+win8+wp8+wpa81' ">
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <DefineConstants>$(DefineConstants);SUPPORT_FIXED_STRING</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD_11</DefineConstants>
+  </PropertyGroup>
+    
+  <PropertyGroup Condition="'$(TargetFramework)' == 'portable40-net40+sl5+win8+wp8+wpa81'">
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
+  </PropertyGroup>  
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>
