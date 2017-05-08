@@ -5,30 +5,17 @@
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.10.7</VersionPrefix>
+    <VersionPrefix>0.11.0</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
     <PackageId>Markdig</PackageId>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
-    <PackageReleaseNotes>&gt; 0.10.7
- - Fix issue when an url ends by a dot `.`
-&gt; 0.10.6
- - Fix emphasis with HTML entities
-&gt; 0.10.5
- - Several minor fixes
-&gt; 0.10.4
- - Fix issue with autolinks
- - Normalize number of columns for tables
-&gt; 0.10.3
- - Fix issue with pipetables shifting a cell to a new column (issue #73)
-&gt; 0.10.2
- - Fix exception when trying to urlize an url with an unicode character outside the supported range by NormD (issue #75)
- &gt; 0.10.1
-- Update to latest CommonMark specs
-- Fix source span for LinkReferenceDefinition
-&gt; 0.10.0
-- Breaking change of the IMarkdownExtension to allow to receive the MarkdownPipeline for the renderers setup
+    <PackageReleaseNotes>
+&gt; 0.11.0
+ - Fix issue with math extension and $$ block parsing not handling correctly beginning of a $$ as a inline math instead (issue #107)
+ - Fix issue with custom attributes for emphasis
+ - Add support for new special custom arrows emoji (-&gt; &lt;- &lt;-&gt; &lt;= =&gt; and &lt;==&gt;)
 </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
