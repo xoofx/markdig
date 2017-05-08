@@ -19105,7 +19105,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
-        // The opening `$` and closing `$` is following the rules of the emphasis delimiter `_`:
+        // Newlines inside an inline math are not allowed:
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19116,16 +19116,17 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is not a $ math block $
+            //     This is not a $$math 
+            //     block$$ and? this is a $$math block$$
             //
             // Should be rendered as:
-            //     <p>This is not a $ math block $</p>
+            //     <p>This is not a $$math
+            //     block$$ and? this is a <span class="math">math block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a $ math block $", "<p>This is not a $ math block $</p>", "mathematics|advanced");
+			TestParser.TestSpec("This is not a $$math \nblock$$ and? this is a $$math block$$", "<p>This is not a $$math\nblock$$ and? this is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
-        // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19136,16 +19137,18 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is not a m$ath block$
+            //     This is not a $math 
+            //     block$ and? this is a $math block$
             //
             // Should be rendered as:
-            //     <p>This is not a m$ath block$</p>
+            //     <p>This is not a $math
+            //     block$ and? this is a <span class="math">math block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced");
+			TestParser.TestSpec("This is not a $math \nblock$ and? this is a $math block$", "<p>This is not a $math\nblock$ and? this is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
-        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+        // An opening `$` can be followed by a space if the closing is also preceded by a space `$`:
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19156,16 +19159,15 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is not a $math bloc$k
+            //     This is a $ math block $
             //
             // Should be rendered as:
-            //     <p>This is not a $math bloc$k</p>
+            //     <p>This is a <span class="math">math block</span></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions Math Inline");
-			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced");
+			TestParser.TestSpec("This is a $ math block $", "<p>This is a <span class=\"math\">math block</span></p>", "mathematics|advanced");
         }
     }
-        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19176,16 +19178,15 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is should not match a 16$ or a $15
+            //     This is a $    math block     $ after
             //
             // Should be rendered as:
-            //     <p>This is should not match a 16$ or a $15</p>
+            //     <p>This is a <span class="math">math block</span> after</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions Math Inline");
-			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced");
+			TestParser.TestSpec("This is a $    math block     $ after", "<p>This is a <span class=\"math\">math block</span> after</p>", "mathematics|advanced");
         }
     }
-        // A `$` can be escaped between a math inline block by using the escape `\\`
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19196,16 +19197,15 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is a $math \$ block$
+            //     This is a $$    math block     $$ after
             //
             // Should be rendered as:
-            //     <p>This is a <span class="math">math \$ block</span></p>
+            //     <p>This is a <span class="math">math block</span> after</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "mathematics|advanced");
+			TestParser.TestSpec("This is a $$    math block     $$ after", "<p>This is a <span class=\"math\">math block</span> after</p>", "mathematics|advanced");
         }
     }
-        // At most, two `$` will be matched for the opening and closing:
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19216,16 +19216,16 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is a $$$math block$$$
+            //     This is a not $ math block$ because there is not a whitespace before the closing
             //
             // Should be rendered as:
-            //     <p>This is a <span class="math">$math block$</span></p>
+            //     <p>This is a not $ math block$ because there is not a whitespace before the closing</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics|advanced");
+			TestParser.TestSpec("This is a not $ math block$ because there is not a whitespace before the closing", "<p>This is a not $ math block$ because there is not a whitespace before the closing</p>", "mathematics|advanced");
         }
     }
-        // Regular text can come both before and after the math inline
+        // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19236,16 +19236,16 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
-            //     This is a $math block$ with text on both sides.
+            //     This is not a m$ath block$
             //
             // Should be rendered as:
-            //     <p>This is a <span class="math">math block</span> with text on both sides.</p>
+            //     <p>This is not a m$ath block$</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Math Inline");
-			TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">math block</span> with text on both sides.</p>", "mathematics|advanced");
+			TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced");
         }
     }
-        // A mathematic block takes precedence over standard emphasis `*` `_`:
+        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
     [TestFixture]
     public partial class TestExtensionsMathInline
     {
@@ -19256,12 +19256,112 @@ namespace Markdig.Tests
             // Section: Extensions Math Inline
             //
             // The following CommonMark:
+            //     This is not a $math bloc$k
+            //
+            // Should be rendered as:
+            //     <p>This is not a $math bloc$k</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Inline");
+			TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced");
+        }
+    }
+        // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is should not match a 16$ or a $15
+            //
+            // Should be rendered as:
+            //     <p>This is should not match a 16$ or a $15</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Math Inline");
+			TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced");
+        }
+    }
+        // A `$` can be escaped between a math inline block by using the escape `\\`
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $math \$ block$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math \$ block</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">math \\$ block</span></p>", "mathematics|advanced");
+        }
+    }
+        // At most, two `$` will be matched for the opening and closing:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $$$math block$$$
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">$math block$</span></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">$math block$</span></p>", "mathematics|advanced");
+        }
+    }
+        // Regular text can come both before and after the math inline
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example014()
+        {
+            // Example 14
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     This is a $math block$ with text on both sides.
+            //
+            // Should be rendered as:
+            //     <p>This is a <span class="math">math block</span> with text on both sides.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions Math Inline");
+			TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">math block</span> with text on both sides.</p>", "mathematics|advanced");
+        }
+    }
+        // A mathematic block takes precedence over standard emphasis `*` `_`:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example015()
+        {
+            // Example 15
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
             //     This is *a $math* block$
             //
             // Should be rendered as:
             //     <p>This is *a <span class="math">math* block</span></p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions Math Inline");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions Math Inline");
 			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics|advanced");
         }
     }
@@ -19293,9 +19393,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathBlock
     {
         [Test]
-        public void Example011()
+        public void Example017()
         {
-            // Example 11
+            // Example 17
             // Section: Extensions Math Block
             //
             // The following CommonMark:
@@ -19313,7 +19413,7 @@ namespace Markdig.Tests
             //     \end{equation}
             //     </div>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Math Block");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions Math Block");
 			TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n</div>", "mathematics|advanced");
         }
     }
