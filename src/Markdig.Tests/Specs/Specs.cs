@@ -19265,6 +19265,26 @@ namespace Markdig.Tests
 			TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">math* block</span></p>", "mathematics|advanced");
         }
     }
+        // An opening $$ at the beginning of a line should not be interpreted as a Math block:
+    [TestFixture]
+    public partial class TestExtensionsMathInline
+    {
+        [Test]
+        public void Example016()
+        {
+            // Example 16
+            // Section: Extensions Math Inline
+            //
+            // The following CommonMark:
+            //     $$ math $$ starting at a line
+            //
+            // Should be rendered as:
+            //     <p><span class="math">math</span> starting at a line</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions Math Inline");
+			TestParser.TestSpec("$$ math $$ starting at a line", "<p><span class=\"math\">math</span> starting at a line</p>", "mathematics|advanced");
+        }
+    }
         // ## Math Block
         //
         // The match block can spawn on multiple lines by having a $$ starting on a line.

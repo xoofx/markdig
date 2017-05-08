@@ -82,6 +82,13 @@ This is *a $math* block$
 .
 <p>This is *a <span class="math">math* block</span></p>
 ````````````````````````````````
+An opening $$ at the beginning of a line should not be interpreted as a Math block:
+
+```````````````````````````````` example
+$$ math $$ starting at a line
+.
+<p><span class="math">math</span> starting at a line</p>
+````````````````````````````````
 
 ## Math Block
 
