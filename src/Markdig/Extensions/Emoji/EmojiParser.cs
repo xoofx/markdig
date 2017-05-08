@@ -991,7 +991,16 @@ namespace Markdig.Extensions.Emoji
                 {":large_orange_diamond:", "🔶"},
                 {":large_blue_diamond:", "🔷"},
                 {":small_orange_diamond:", "🔸"},
-                {":small_blue_diamond:", "🔹"}
+                {":small_blue_diamond:", "🔹"},
+
+                // Custom additions
+                { ":custom_arrow_left:", "←"},
+                { ":custom_arrow_right:", "→"},
+                { ":custom_arrow_left_right:", "↔"},
+
+                { ":custom_arrow_left_strong:", "⇐"},
+                { ":custom_arrow_right_strong:", "⇒"},
+                { ":custom_arrow_left_right_strong:", "⇔"},
             };
 
             SmileyToEmojiDefault = new Dictionary<string, string>()
@@ -1061,6 +1070,15 @@ namespace Markdig.Extensions.Emoji
                 {":-$", ":unamused:"},
                 {";)", ":wink:"},
                 {";-)", ":wink:"},
+
+                // Custom arrows
+                {"<-", ":custom_arrow_left:" },
+                {"->", ":custom_arrow_rigth:" },
+                {"<->", ":custom_arrow_left_rigth:" },
+
+                {"<=", ":custom_arrow_left_strong:" },
+                {"=>", ":custom_arrow_rigth_strong:" },
+                {"<=>", ":custom_arrow_left_rigth_strong:" },
             };
         }
         #endregion
