@@ -9,13 +9,13 @@ namespace Markdig.Extensions.JiraLinks
     /// <summary>
     /// Model for a JIRA link item
     /// </summary>
-    [DebuggerDisplay("{Key}-{Issue}")]
+    [DebuggerDisplay("{ProjectKey}-{Issue}")]
     public class JiraLink : LeafInline
     {
         /// <summary>
-        /// JIRA Project Key
+        /// JIRA Project ProjectKey
         /// </summary>
-        public string Key { get; set; }
+        public string ProjectKey { get; set; }
 
         /// <summary>
         /// JIRA Issue Number

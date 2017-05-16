@@ -69,7 +69,7 @@ namespace Markdig.Extensions.JiraLinks
                 Line = line,
                 Column = column,
                 Issue = issue,
-                Key = key
+                ProjectKey = key
             };
 
             processor.Inline.Span.End = processor.Inline.Span.Start + issue.Length + key.Length + 1; //+1 for the '-'
