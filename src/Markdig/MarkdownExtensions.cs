@@ -18,6 +18,7 @@ using Markdig.Extensions.Footers;
 using Markdig.Extensions.Footnotes;
 using Markdig.Extensions.GenericAttributes;
 using Markdig.Extensions.Hardlines;
+using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
@@ -423,6 +424,21 @@ namespace Markdig
         public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<NoFollowLinksExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Automatically link references to JIRA issues
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <param name="options">Set of required options</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseJiraLinks(this MarkdownPipelineBuilder pipeline, JiraLinkOptions options)
+        {
+            if (!pipeline.Extensions.Contains<JiraLinkExtension>())
+            {
+                pipeline.Extensions.Add(new JiraLinkExtension(options));
+            }
             return pipeline;
         }
 
