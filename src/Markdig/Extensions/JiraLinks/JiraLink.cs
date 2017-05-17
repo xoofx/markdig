@@ -13,7 +13,7 @@ namespace Markdig.Extensions.JiraLinks
     public class JiraLink : LeafInline
     {
         /// <summary>
-        /// JIRA Project ProjectKey
+        /// JIRA Project Key
         /// </summary>
         public string ProjectKey { get; set; }
 
