@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
@@ -20,7 +20,7 @@ namespace Markdig.Extensions.JiraLinks
             if (renderer.EnableHtmlForInline)
             {
                 renderer
-                    .Write("<a href=\"").Write(Options.Url).Write("/browse/") // <a href="http:/xxx/browse/"
+                    .Write("<a href=\"").Write(Options.GetUrl()).Write("/") // <a href="http:/xxx/browse/"
                     .Write(obj.ProjectKey).Write('-').Write(obj.Issue) // XX-1234 (link url)
                     .Write("\"");
 
@@ -30,6 +30,7 @@ namespace Markdig.Extensions.JiraLinks
                 }
 
                 renderer
+                    .WriteAttributes(obj)
                     .Write(">") // >
                     .Write(obj.ProjectKey).Write('-').Write(obj.Issue) // XX-1234 (link text)
                     .Write("</a>"); //</a>

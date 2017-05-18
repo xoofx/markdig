@@ -61,6 +61,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("NoHtmlSpecs.md"), "nohtml"),
 		new KeyValuePair<string, string>(Host.ResolvePath("YamlSpecs.md"), "yaml"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoLinks.md"), "autolinks|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("JiraLinks.md"), "jiralinks"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

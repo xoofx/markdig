@@ -20529,4 +20529,196 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
         }
     }
+        // ## Jira Links
+        //
+        // The JiraLinks extension will automatically add links to JIRA issue items within your markdown, e.g. XX-1234. For this to happen, you must configure the extension when adding to the pipeline, e.g.
+        //
+        // ```
+        // var pipeline = new MarkdownPipelineBuilder()
+        // .UseJiraLinks(new JiraLinkOptions("http://your.company.abc"))
+        // .Build();
+        // ```
+        //
+        // The rules for detecting a link are:
+        //
+        // - The project key must be composed of onre or more capitalised ASCII letter `[A-Z]+`
+        // - A single hypen `-` must separate the project key and issue number.
+        // - The issue number is composed of 1 or more digits `[0, 9]+`
+        // - The reference must be preceeded by either `(` or whitespace or EOF.
+        // - The reference must be followed by either `)` or whitespace or EOF.
+        //
+        // The following are valid examples:
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example001()
+        {
+            // Example 1
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a ABCD-123 issue
+            //
+            // Should be rendered as:
+            //     <p>This is a <a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a> issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, " Jira Links");
+			TestParser.TestSpec("This is a ABCD-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABCD-123\" target=\"blank\">ABCD-123</a> issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a KIRA-1 issue
+            //
+            // Should be rendered as:
+            //     <p>This is a <a href="http://your.company.abc/browse/KIRA-1" target="blank">KIRA-1</a> issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, " Jira Links");
+			TestParser.TestSpec("This is a KIRA-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/KIRA-1\" target=\"blank\">KIRA-1</a> issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example003()
+        {
+            // Example 3
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a Z-1 issue
+            //
+            // Should be rendered as:
+            //     <p>This is a <a href="http://your.company.abc/browse/Z-1" target="blank">Z-1</a> issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, " Jira Links");
+			TestParser.TestSpec("This is a Z-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/Z-1\" target=\"blank\">Z-1</a> issue</p>", "jiralinks");
+        }
+    }
+        // These are also valid links with `(` and `)`:
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a (ABCD-123) issue
+            //
+            // Should be rendered as:
+            //     <p>This is a (<a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a>) issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, " Jira Links");
+			TestParser.TestSpec("This is a (ABCD-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABCD-123\" target=\"blank\">ABCD-123</a>) issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a (KIRA-1) issue
+            //
+            // Should be rendered as:
+            //     <p>This is a (<a href="http://your.company.abc/browse/KIRA-1" target="blank">KIRA-1</a>) issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, " Jira Links");
+			TestParser.TestSpec("This is a (KIRA-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/KIRA-1\" target=\"blank\">KIRA-1</a>) issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is a (Z-1) issue
+            //
+            // Should be rendered as:
+            //     <p>This is a (<a href="http://your.company.abc/browse/Z-1" target="blank">Z-1</a>) issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, " Jira Links");
+			TestParser.TestSpec("This is a (Z-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/Z-1\" target=\"blank\">Z-1</a>) issue</p>", "jiralinks");
+        }
+    }
+        // These are not valid links:
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is not aJIRA-123 issue
+            //
+            // Should be rendered as:
+            //     <p>This is not aJIRA-123 issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, " Jira Links");
+			TestParser.TestSpec("This is not aJIRA-123 issue", "<p>This is not aJIRA-123 issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is not JIRA-123a issue
+            //
+            // Should be rendered as:
+            //     <p>This is not JIRA-123a issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, " Jira Links");
+			TestParser.TestSpec("This is not JIRA-123a issue", "<p>This is not JIRA-123a issue</p>", "jiralinks");
+        }
+    }
+    [TestFixture]
+    public partial class TestJiraLinks
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section:  Jira Links
+            //
+            // The following CommonMark:
+            //     This is not JIRA- issue
+            //
+            // Should be rendered as:
+            //     <p>This is not JIRA- issue</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, " Jira Links");
+			TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks");
+        }
+    }
 }

@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
 using System.Diagnostics;
-using System.Text;
+using Markdig.Helpers;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.JiraLinks
@@ -15,11 +16,11 @@ namespace Markdig.Extensions.JiraLinks
         /// <summary>
         /// JIRA Project Key
         /// </summary>
-        public string ProjectKey { get; set; }
+        public StringSlice ProjectKey { get; set; }
 
         /// <summary>
         /// JIRA Issue Number
         /// </summary>
-        public string Issue { get; set; }
+        public StringSlice Issue { get; set; }
     }
 }

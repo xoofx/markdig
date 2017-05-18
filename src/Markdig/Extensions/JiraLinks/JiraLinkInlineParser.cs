@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Markdig.Extensions.TaskLists;
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+using System;
 using Markdig.Helpers;
 using Markdig.Parsers;
-using Markdig.Renderers.Html;
-using Markdig.Syntax;
 
 namespace Markdig.Extensions.JiraLinks
 {
@@ -22,19 +20,22 @@ namespace Markdig.Extensions.JiraLinks
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            if (!slice.PeekCharExtra(-1).IsWhiteSpaceOrZero())
+            // Allow preceding whitespace or `(`
+            var pc = slice.PeekCharExtra(-1);
+            if (!pc.IsWhiteSpaceOrZero() && pc != '(')
             {
-                return false; //require whitespace/nothing before
+                return false; 
             }
 
-            var key = String.Empty;
-            var issue = String.Empty;
             var current = slice.CurrentChar;
+
+            var startKey = slice.Start;
+            var endKey = slice.Start;
 
             //read as many uppercase characters as required - project key
             while (current.IsAlphaUpper())
             {
-                key += current;
+                endKey = slice.Start;
                 current = slice.NextChar();
             }
 
@@ -44,16 +45,24 @@ namespace Markdig.Extensions.JiraLinks
                 return false;
             }
 
-            current = slice.NextChar();
+            current = slice.NextChar(); // skip -
 
             //read as many numbers as required - issue number
+            if (!current.IsDigit())
+            {
+                return false;
+            }
+
+            var startIssue = slice.Start;
+            var endIssue = slice.Start;
+
             while (current.IsDigit()) 
             {
-                issue += current;
+                endIssue = slice.Start;
                 current = slice.NextChar();
             }
 
-            if (!current.IsWhiteSpaceOrZero()) //must be followed by whitespace
+            if (!current.IsWhiteSpaceOrZero() && current != ')') //can be followed only by a whitespace or `)`
             {
                 return false;
             }
@@ -68,11 +77,11 @@ namespace Markdig.Extensions.JiraLinks
                 },
                 Line = line,
                 Column = column,
-                Issue = issue,
-                ProjectKey = key
+                Issue = new StringSlice(slice.Text, startIssue, endIssue),
+                ProjectKey = new StringSlice(slice.Text, startKey, endKey)
             };
 
-            processor.Inline.Span.End = processor.Inline.Span.Start + issue.Length + key.Length + 1; //+1 for the '-'
+            processor.Inline.Span.End = processor.Inline.Span.Start + (endIssue - startKey);
 
             return true;
         }

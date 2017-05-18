@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Markdig.Extensions.JiraLinks;
 
 namespace Markdig.Tests
 {
@@ -71,8 +72,15 @@ namespace Markdig.Tests
             {
                 var builder = new MarkdownPipelineBuilder();
                 builder.DebugLog = Console.Out;
-                var pipeline = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
-                yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, pipeline.Build());
+                if (extensionsText == "jiralinks")
+                {
+                    builder.UseJiraLinks(new JiraLinkOptions("http://your.company.abc"));
+                }
+                else
+                {
+                    builder = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
+                }
+                yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, builder.Build());
             }
         }
 
