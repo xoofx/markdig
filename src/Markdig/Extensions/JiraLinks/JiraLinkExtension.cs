@@ -24,17 +24,13 @@ namespace Markdig.Extensions.JiraLinks
             if (!pipeline.InlineParsers.Contains<JiraLinkInlineParser>())
             {
                 // Insert the parser before the link inline parser
-                pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new JiraLinkInlineParser());
+                pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new JiraLinkInlineParser(_options));
             }
         }
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<JiraLinkRenderer>())
-            {
-                htmlRenderer.ObjectRenderers.Add(new JiraLinkRenderer(_options));
-            }
+            // Nothing to setup, JiraLinks used a normal LinkInlineRenderer
         }
     }
     

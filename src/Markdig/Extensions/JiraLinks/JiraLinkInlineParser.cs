@@ -2,8 +2,11 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Text;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.JiraLinks
 {
@@ -12,8 +15,13 @@ namespace Markdig.Extensions.JiraLinks
     /// </summary>
     public class JiraLinkInlineParser : InlineParser
     {
-        public JiraLinkInlineParser()
+        private readonly JiraLinkOptions _options;
+        private readonly string _baseUrl;
+
+        public JiraLinkInlineParser(JiraLinkOptions options)
         {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _baseUrl = _options.GetUrl();
             //look for uppercase chars at the start (for the project key)
             OpeningCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
         }
@@ -69,7 +77,8 @@ namespace Markdig.Extensions.JiraLinks
 
             int line;
             int column;
-            processor.Inline = new JiraLink() //create the link at the relevant position
+
+            var jiraLink = new JiraLink() //create the link at the relevant position
             {
                 Span =
                 {
@@ -78,10 +87,26 @@ namespace Markdig.Extensions.JiraLinks
                 Line = line,
                 Column = column,
                 Issue = new StringSlice(slice.Text, startIssue, endIssue),
-                ProjectKey = new StringSlice(slice.Text, startKey, endKey)
+                ProjectKey = new StringSlice(slice.Text, startKey, endKey),
             };
+            jiraLink.Span.End = jiraLink.Span.Start + (endIssue - startKey);
 
-            processor.Inline.Span.End = processor.Inline.Span.Start + (endIssue - startKey);
+            // Builds the Url
+            var builder = new StringBuilder();
+            builder.Append(_baseUrl).Append('/').Append(jiraLink.ProjectKey).Append('-').Append(jiraLink.Issue);
+            jiraLink.Url = builder.ToString();
+
+            // Builds the Label
+            builder.Length = 0;
+            builder.Append(jiraLink.ProjectKey).Append('-').Append(jiraLink.Issue);
+            jiraLink.AppendChild(new LiteralInline(builder.ToString()));
+
+            if (_options.OpenInNewWindow)
+            {
+                jiraLink.GetAttributes().AddProperty("target", "blank");
+            }
+
+            processor.Inline = jiraLink;
 
             return true;
         }

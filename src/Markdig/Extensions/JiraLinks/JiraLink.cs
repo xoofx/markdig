@@ -11,8 +11,13 @@ namespace Markdig.Extensions.JiraLinks
     /// Model for a JIRA link item
     /// </summary>
     [DebuggerDisplay("{ProjectKey}-{Issue}")]
-    public class JiraLink : LeafInline
+    public class JiraLink : LinkInline
     {
+        public JiraLink()
+        {
+            IsClosed = true;
+        }
+
         /// <summary>
         /// JIRA Project Key
         /// </summary>
