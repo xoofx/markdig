@@ -49,6 +49,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - **Bootstrap** class (to output bootstrap class)
   - **Diagrams** extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports only for [`mermaid` diagrams](https://knsv.github.io/mermaid/))
   - **YAML frontmatter** to parse without evaluating the frontmatter and to discard it from the HTML output (typically used for previewing without the frontmatter in MarkdownEditor)
+  - **JIRA links** to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
 ## Documentation
@@ -73,7 +74,7 @@ var result = Markdown.ToHtml("This is a text with some *emphasis*");
 Console.WriteLine(result);   // prints: <p>This is a text with some <em>emphasis</em></p>
 ```
 
-In order to activate most of all advanced extensions (except Emoji, SoftLine as HarLine and SmartyPants)
+In order to activate most of all advanced extensions (except Emoji, SoftLine as HardLine, JiraLinks and SmartyPants)
 
 ```csharp
 // Configure the pipeline with all advanced extensions active
@@ -192,6 +193,7 @@ Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/Bench
 
 Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET](https://github.com/Knagis/CommonMark.NET)
 
+Thanks to the work done by @clarkd on the JIRA Link extension (https://github.com/clarkd/MarkdigJiraLinker), now included with this project!
 ## Author
 
 Alexandre MUTEL aka [xoofx](http://xoofx.com)
