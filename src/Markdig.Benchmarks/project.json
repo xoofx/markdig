@@ -4,7 +4,7 @@
     "win-x64": {}
   },
   "frameworks": {
-    "net451": {
+    "net46": {
       "compilationOptions": {
         "define": [
           "CLASSIC"
@@ -19,9 +19,9 @@
     }
   },
   "dependencies": {
-    "BenchmarkDotNet": "0.9.6",
-    "BenchmarkDotNet.Diagnostics.Windows": "0.9.6",
-    "CommonMark.NET": "0.11.0",
+    "BenchmarkDotNet": "0.10.6",
+    "BenchmarkDotNet.Diagnostics.Windows": "0.10.6",
+    "CommonMark.NET": "0.15.1",
     "MarkdownSharp": "1.13.0.0",
     "Microsoft.Diagnostics.Runtime": "0.8.31-beta",
     "Microsoft.Diagnostics.Tracing.TraceEvent": "1.0.41.0"

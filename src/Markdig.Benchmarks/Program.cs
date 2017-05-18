@@ -131,7 +131,7 @@ namespace Testamina.Markdig.Benchmarks
                 var config = ManualConfig.Create(DefaultConfig.Instance);
                 //var gcDiagnoser = new MemoryDiagnoser();
                 //config.Add(new Job { Mode = Mode.SingleRun, LaunchCount = 2, WarmupCount = 2, IterationTime = 1024, TargetCount = 10 });
-                config.Add(new Job { Mode = Mode.Throughput, LaunchCount = 2, WarmupCount = 2, TargetCount = 10 });
+                //config.Add(new Job { Mode = Mode.Throughput, LaunchCount = 2, WarmupCount = 2, TargetCount = 10 });
                 //config.Add(gcDiagnoser);
 
                 //var  config = DefaultConfig.Instance;
