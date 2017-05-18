@@ -88,6 +88,7 @@
     <None Include="Specs\BootstrapSpecs.md" />
     <None Include="Specs\DiagramsSpecs.md" />
     <None Include="Specs\NoHtmlSpecs.md" />
+    <None Include="Specs\readme.md" />
     <None Include="Specs\YamlSpecs.md" />
     <None Include="Specs\TaskListSpecs.md" />
     <None Include="Specs\SmartyPantsSpecs.md" />
