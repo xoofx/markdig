@@ -617,12 +617,6 @@ namespace Markdig.Parsers
                     {
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
-
-                    if (NewBlocks.Count > 0)
-                    {
-                        throw new InvalidOperationException(
-                            "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
-                    }
                 }
 
                 // A block is open only if it has a Continue state.

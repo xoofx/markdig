@@ -220,7 +220,6 @@ namespace Markdig.Helpers
                 // (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
                 bool hasMinus = false;
                 int domainCharCount = 0;
-                char pc = '\0';
                 while (true)
                 {
                     c = text.NextChar();
@@ -247,10 +246,6 @@ namespace Markdig.Helpers
                     }
                     else if (c == '.')
                     {
-                        if (pc == '.' || pc == '-')
-                        {
-                            break;
-                        }
                         domainCharCount = 0;
                         hasMinus = false;
                     }

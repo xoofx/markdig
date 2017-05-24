@@ -24,7 +24,7 @@ namespace Markdig.Helpers
                 {
                     EscapeUrlsForAscii[i] = $"%{i:X2}";
                 }
-                else if ((char) i == '&')
+                else if ((char)i == '&')
                 {
                     EscapeUrlsForAscii[i] = "&amp;";
                 }
@@ -284,7 +284,7 @@ namespace Markdig.Helpers
                 text.NextChar() == 'D' &&
                 text.NextChar() == 'A' &&
                 text.NextChar() == 'T' &&
-                text.NextChar() == 'A' && 
+                text.NextChar() == 'A' &&
                 (c = text.NextChar()) == '[')
             {
                 builder.Append("CDATA[");
@@ -571,19 +571,19 @@ namespace Markdig.Helpers
                         if (c >= '0' && c <= '9')
                         {
                             if (++counter == 9) return 0;
-                            numericEntity = numericEntity*16 + (c - '0');
+                            numericEntity = numericEntity * 16 + (c - '0');
                             continue;
                         }
                         else if (c >= 'A' && c <= 'F')
                         {
                             if (++counter == 9) return 0;
-                            numericEntity = numericEntity*16 + (c - 'A' + 10);
+                            numericEntity = numericEntity * 16 + (c - 'A' + 10);
                             continue;
                         }
                         else if (c >= 'a' && c <= 'f')
                         {
                             if (++counter == 9) return 0;
-                            numericEntity = numericEntity*16 + (c - 'a' + 10);
+                            numericEntity = numericEntity * 16 + (c - 'a' + 10);
                             continue;
                         }
 
@@ -602,7 +602,7 @@ namespace Markdig.Helpers
                         if (c >= '0' && c <= '9')
                         {
                             if (++counter == 9) return 0;
-                            numericEntity = numericEntity*10 + (c - '0');
+                            numericEntity = numericEntity * 10 + (c - '0');
                             continue;
                         }
 
@@ -617,7 +617,7 @@ namespace Markdig.Helpers
             {
                 // expect a letter and 1-31 letters or digits
                 c = s[pos + 1];
-                if ((c < 'A' || c > 'Z') && (c < 'a' && c > 'z'))
+                if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
                     return 0;
 
                 for (i = pos + 2; i < lastPos; i++)

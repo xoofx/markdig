@@ -18,7 +18,7 @@ namespace Markdig.Parsers
         /// </summary>
         public HeadingBlockParser()
         {
-            OpeningCharacters = new[] {'#'};
+            OpeningCharacters = new[] { '#' };
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Markdig.Parsers
                     HeaderChar = matchingChar,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start =  sourcePosition }
+                    Span = { Start = sourcePosition }
                 };
                 processor.NewBlocks.Push(headingBlock);
                 processor.GoToColumn(column + leadingCount + 1);
@@ -95,26 +95,23 @@ namespace Markdig.Parsers
                         }
                         endState = 1;
                     }
-                    if (endState == 1)
+                    if (c == matchingChar)
                     {
-                        if (c == matchingChar)
-                        {
-                            countClosingTags++;
-                            continue;
-                        }
+                        countClosingTags++;
+                        continue;
+                    }
 
-                        if (countClosingTags > 0)
+                    if (countClosingTags > 0)
+                    {
+                        if (c.IsSpaceOrTab())
                         {
-                            if (c.IsSpaceOrTab())
-                            {
-                                processor.Line.End = i - 1;
-                            }
-                            break;
+                            processor.Line.End = i - 1;
                         }
-                        else
-                        {
-                            break;
-                        }
+                        break;
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
 
