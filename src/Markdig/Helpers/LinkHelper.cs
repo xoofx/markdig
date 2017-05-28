@@ -259,6 +259,7 @@ namespace Markdig.Helpers
                         break;
                     }
                     builder.Append(c);
+                    pc = c;
                 }
             }
             else
