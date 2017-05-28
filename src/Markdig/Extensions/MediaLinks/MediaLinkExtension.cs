@@ -115,7 +115,6 @@ namespace Markdig.Extensions.MediaLinks
                             renderer.WriteAttributes(htmlAttributes);
 
                             renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
-                            renderer.Write("</iframe>");
 
                             return true;
                         }
