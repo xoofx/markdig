@@ -171,9 +171,10 @@ namespace Markdig.Extensions.GenericAttributes
 
                     // Skip any whitespaces
                     line.TrimStart();
+                    c = line.CurrentChar;
 
                     // Handle boolean properties that are not followed by = 
-                    if ((hasSpace && (line.CurrentChar == '.' || line.CurrentChar == '#' || IsStartAttributeName(line.CurrentChar))) || line.CurrentChar == '}')
+                    if ((hasSpace && (c == '.' || c == '#' || IsStartAttributeName(c))) || c == '}')
                     {
                         if (properties == null)
                         {
