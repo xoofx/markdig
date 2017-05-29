@@ -5,13 +5,15 @@
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.12.0</VersionPrefix>
+    <VersionPrefix>0.12.1</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
     <PackageId>Markdig</PackageId>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>
+&gt; 0.12.1
+ - Fix issue with media links extension when a URL to video is used, an unexpected closing `&lt;/iframe&gt;` was inserted (issue #119)
 &gt; 0.12.0
  - Add new extension JiraLink support (thanks to @clarkd)
  - Fix issue in html attributes not parsing correctly properties (thanks to @meziantou)
