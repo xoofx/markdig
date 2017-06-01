@@ -19,7 +19,7 @@ namespace Markdig.Syntax
     [DebuggerDisplay("{GetType().Name} Count = {Count}")]
     public abstract class ContainerBlock : Block, IList<Block>
     {
-        private Block[] children;
+        public Block[] Children;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerBlock"/> class.
@@ -27,13 +27,13 @@ namespace Markdig.Syntax
         /// <param name="parser">The parser used to create this block.</param>
         protected ContainerBlock(BlockParser parser) : base(parser)
         {
-            children = ArrayHelper<Block>.Empty;
+            Children = ArrayHelper<Block>.Empty;
         }
 
         /// <summary>
         /// Gets the last child.
         /// </summary>
-        public Block LastChild => Count > 0 ? children[Count - 1] : null;
+        public Block LastChild => Count > 0 ? Children[Count - 1] : null;
 
         /// <summary>
         /// Specialize enumerator.
@@ -62,11 +62,11 @@ namespace Markdig.Syntax
                 throw new ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
             }
 
-            if (Count == children.Length)
+            if (Count == Children.Length)
             {
                 EnsureCapacity(Count + 1);
             }
-            children[Count++] = item;
+            Children[Count++] = item;
             item.Parent = this;
 
             UpdateSpanEnd(item.Span.End);
@@ -74,9 +74,9 @@ namespace Markdig.Syntax
 
         private void EnsureCapacity(int min)
         {
-            if (children.Length < min)
+            if (Children.Length < min)
             {
-                int num = (children.Length == 0) ? 4 : (children.Length * 2);
+                int num = (Children.Length == 0) ? 4 : (Children.Length * 2);
                 if (num < min)
                 {
                     num = min;
@@ -85,9 +85,9 @@ namespace Markdig.Syntax
                 var destinationArray = new Block[num];
                 if (Count > 0)
                 {
-                    Array.Copy(children, 0, destinationArray, 0, Count);
+                    Array.Copy(Children, 0, destinationArray, 0, Count);
                 }
-                children = destinationArray;
+                Children = destinationArray;
             }
         }
 
@@ -95,8 +95,8 @@ namespace Markdig.Syntax
         {
             for (int i = 0; i < Count; i++)
             {
-                children[i].Parent = null;
-                children[i] = null;
+                Children[i].Parent = null;
+                Children[i] = null;
             }
         }
 
@@ -105,7 +105,7 @@ namespace Markdig.Syntax
             if (item == null) throw new ArgumentNullException(nameof(item));
             for (int i = 0; i < Count; i++)
             {
-                if (children[i] == item)
+                if (Children[i] == item)
                 {
                     return true;
                 }
@@ -115,7 +115,7 @@ namespace Markdig.Syntax
 
         public void CopyTo(Block[] array, int arrayIndex)
         {
-            Array.Copy(children, 0, array, arrayIndex, Count);
+            Array.Copy(Children, 0, array, arrayIndex, Count);
         }
 
         public bool Remove(Block item)
@@ -123,7 +123,7 @@ namespace Markdig.Syntax
             if (item == null) throw new ArgumentNullException(nameof(item));
             for (int i = Count - 1; i >= 0; i--)
             {
-                if (children[i] == item)
+                if (Children[i] == item)
                 {
                     RemoveAt(i);
                     return true;
@@ -141,7 +141,7 @@ namespace Markdig.Syntax
             if (item == null) throw new ArgumentNullException(nameof(item));
             for (int i = 0; i < Count; i++)
             {
-                if (children[i] == item)
+                if (Children[i] == item)
                 {
                     return i;
                 }
@@ -156,15 +156,15 @@ namespace Markdig.Syntax
             {
                 throw new ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
             }
-            if (Count == children.Length)
+            if (Count == Children.Length)
             {
                 EnsureCapacity(Count + 1);
             }
             if (index < Count)
             {
-                Array.Copy(children, index, children, index + 1, Count - index);
+                Array.Copy(Children, index, Children, index + 1, Count - index);
             }
-            children[index] = item;
+            Children[index] = item;
             Count++;
             item.Parent = this;
         }
@@ -174,13 +174,13 @@ namespace Markdig.Syntax
             if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
             Count--;
             // previous children
-            var item = children[index];
+            var item = Children[index];
             item.Parent = null;
             if (index < Count)
             {
-                Array.Copy(children, index + 1, children, index, Count - index);
+                Array.Copy(Children, index + 1, Children, index, Count - index);
             }
-            children[Count] = null;
+            Children[Count] = null;
         }
 
         public Block this[int index]
@@ -188,25 +188,25 @@ namespace Markdig.Syntax
             get
             {
                 if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
-                return children[index];
+                return Children[index];
             }
             set
             {
                 if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
-                children[index] = value;
+                Children[index] = value;
             }
         }
 
         public void Sort(IComparer<Block> comparer)
         {
             if (comparer == null) throw new ArgumentNullException(nameof(comparer));
-            Array.Sort(children, 0, Count, comparer);
+            Array.Sort(Children, 0, Count, comparer);
         }
 
         public void Sort(Comparison<Block> comparison)
         {
             if (comparison == null) throw new ArgumentNullException(nameof(comparison));
-            Array.Sort(children, 0, Count, new BlockComparer(comparison));
+            Array.Sort(Children, 0, Count, new BlockComparer(comparison));
         }
 
         #region Nested type: Enumerator
