@@ -59,7 +59,7 @@ namespace Markdig.Extensions.GenericAttributes
                     {
                         objectToAttach = parent[indexOfParagraph + 1];
                         // We can remove the paragraph as it is empty
-                        parent.RemoveAt(indexOfParagraph);
+                        paragraph.RemoveAfterProcessInlines = true;
                     }
                 }
 
