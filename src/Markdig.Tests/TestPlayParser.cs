@@ -157,6 +157,40 @@ Paragraph
 </table>", "advanced");
         }
 
+        [Test]
+        public void TestGridTableWithCustomAttributes() {
+
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
+            var input = @"
+{.table}
++---+---+
+| a | b |
++===+===+
+| 1 | 2 |
++---+---+
+";
+
+            var expected = @"<table class=""table"">
+<col style=""width:50%"">
+<col style=""width:50%"">
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+";
+            var result = Markdown.ToHtml(input, pipeline);
+            Assert.AreEqual(result, expected);
+        }
 
         [Test]
         public void TestSamePipelineAllExtensions()
