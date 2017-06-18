@@ -160,8 +160,6 @@ Paragraph
         [Test]
         public void TestGridTableWithCustomAttributes() {
 
-            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-
             var input = @"
 {.table}
 +---+---+
@@ -188,8 +186,7 @@ Paragraph
 </tbody>
 </table>
 ";
-            var result = Markdown.ToHtml(input, pipeline);
-            Assert.AreEqual(result, expected);
+            TestParser.TestSpec(input, expected, "advanced");
         }
 
         [Test]
