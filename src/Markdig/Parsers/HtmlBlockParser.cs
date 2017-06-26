@@ -159,7 +159,7 @@ namespace Markdig.Parsers
             }
 
             // Cannot start with </script </pre or </style
-            if ((tagIndex == 45 || tagIndex == 46 || tagIndex == 49))
+            if ((tagIndex == 50 || tagIndex == 51 || tagIndex == 54))
             {
                 if (c == '/' || hasLeadingClose)
                 {
@@ -281,67 +281,72 @@ namespace Markdig.Parsers
 
         private static readonly string[] HtmlTags =
         {
-            "address",     // 0
-            "article",     // 1
-            "aside",       // 2
-            "base",        // 3
-            "basefont",    // 4
-            "blockquote",  // 5
-            "body",        // 6
-            "caption",     // 7
-            "center",      // 8
-            "col",         // 9
-            "colgroup",    // 10
-            "dd",          // 11
-            "details",     // 12
-            "dialog",      // 13
-            "dir",         // 14
-            "div",         // 15
-            "dl",          // 16
-            "dt",          // 17
-            "fieldset",    // 18
-            "figcaption",  // 19
-            "figure",      // 20
-            "footer",      // 21
-            "form",        // 22
-            "frame",       // 23
-            "frameset",    // 24
-            "h1",          // 25
-            "head",        // 26
-            "header",      // 27
-            "hr",          // 28
-            "html",        // 29
-            "iframe",      // 30
-            "legend",      // 31
-            "li",          // 32
-            "link",        // 33
-            "main",        // 34
-            "menu",        // 35
-            "menuitem",    // 36
-            "meta",        // 37
-            "nav",         // 38
-            "noframes",    // 39
-            "ol",          // 40
-            "optgroup",    // 41
-            "option",      // 42
-            "p",           // 43
-            "param",       // 44
-            "pre",         // 45   <- special group 1
-            "script",      // 46   <- special group 1
-            "section",     // 47
-            "source",      // 48
-            "style",       // 49   <- special group 1
-            "summary",     // 50
-            "table",       // 51
-            "tbody",       // 52
-            "td",          // 53
-            "tfoot",       // 54
-            "th",          // 55
-            "thead",       // 56
-            "title",       // 57
-            "tr",          // 58
-            "track",       // 59
-            "ul",          // 60
+            "address", // 0
+            "article", // 1
+            "aside", // 2
+            "base", // 3
+            "basefont", // 4
+            "blockquote", // 5
+            "body", // 6
+            "caption", // 7
+            "center", // 8
+            "col", // 9
+            "colgroup", // 10
+            "dd", // 11
+            "details", // 12
+            "dialog", // 13
+            "dir", // 14
+            "div", // 15
+            "dl", // 16
+            "dt", // 17
+            "fieldset", // 18
+            "figcaption", // 19
+            "figure", // 20
+            "footer", // 21
+            "form", // 22
+            "frame", // 23
+            "frameset", // 24
+            "h1", // 25
+            "h2", // 26
+            "h3", // 27
+            "h4", // 28
+            "h5", // 29
+            "h6", // 30
+            "head", // 31
+            "header", // 32
+            "hr", // 33
+            "html", // 34
+            "iframe", // 35
+            "legend", // 36
+            "li", // 37
+            "link", // 38
+            "main", // 39
+            "menu", // 40
+            "menuitem", // 41
+            "meta", // 42
+            "nav", // 43
+            "noframes", // 44
+            "ol", // 45
+            "optgroup", // 46
+            "option", // 47
+            "p", // 48
+            "param", // 49
+            "pre", // 50       <=== special group 1
+            "script", // 51    <=== special group 1
+            "section", // 52
+            "source", // 53
+            "style", // 54     <=== special group 1
+            "summary", // 55
+            "table", // 56
+            "tbody", // 57
+            "td", // 58
+            "tfoot", // 59
+            "th", // 60
+            "thead", // 61
+            "title", // 62
+            "tr", // 63
+            "track", // 64
+            "ul", // 65
         };
     }
 }

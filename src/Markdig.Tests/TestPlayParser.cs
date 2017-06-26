@@ -109,6 +109,11 @@ blabla
 <h1>header2</h1>");
         }
 
+        [Test]
+        public void TestHtmlh4Bug()
+        {
+            TestParser.TestSpec(@"<h4>foobar</h4>", @"<h4>foobar</h4>");
+        }
 
         [Test]
         public void TestStandardUriEscape()
