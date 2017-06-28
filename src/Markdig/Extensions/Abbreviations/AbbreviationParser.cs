@@ -145,10 +145,12 @@ namespace Markdig.Extensions.Abbreviations
                                 container.AppendChild(literal);
                             }
 
-                            literal.Span.End = abbrInline.Span.Start - 1;
-                            // Truncate it before the abbreviation
-                            literal.Content.End = i - 1;
+                            
                         }
+                        literal.Span.End = abbrInline.Span.Start - 1;
+                        // Truncate it before the abbreviation
+                        literal.Content.End = i - 1;
+
 
                         // Appned the abbreviation
                         container.AppendChild(abbrInline);
