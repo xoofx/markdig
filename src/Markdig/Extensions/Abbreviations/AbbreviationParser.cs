@@ -20,7 +20,7 @@ namespace Markdig.Extensions.Abbreviations
         /// </summary>
         public AbbreviationParser()
         {
-            OpeningCharacters = new[] {'*'};
+            OpeningCharacters = new[] { '*' };
         }
 
         public override BlockState TryOpen(BlockProcessor processor)
@@ -90,7 +90,7 @@ namespace Markdig.Extensions.Abbreviations
 
             inlineProcessor.LiteralInlineParser.PostMatch += (InlineProcessor processor, ref StringSlice slice) =>
             {
-                var literal = (LiteralInline) processor.Inline;
+                var literal = (LiteralInline)processor.Inline;
                 var originalLiteral = literal;
 
                 ContainerInline container = null;
@@ -145,8 +145,8 @@ namespace Markdig.Extensions.Abbreviations
                                 container.AppendChild(literal);
                             }
 
-                            
                         }
+
                         literal.Span.End = abbrInline.Span.Start - 1;
                         // Truncate it before the abbreviation
                         literal.Content.End = i - 1;
@@ -192,33 +192,23 @@ namespace Markdig.Extensions.Abbreviations
         {
             // The word matched must be embraced by punctuation or whitespace or \0.
             var index = matchIndex - 1;
-            while (index >= content.Start)
+            var c = content.PeekCharAbsolute(index);
+
+            //if the character before the match is not punctuation or whitespace
+            if (!(c == '\n' || c.IsAsciiPunctuation() || c.IsWhitespace() || c == '\0'))
             {
-                var c = content.PeekCharAbsolute(index);
-                if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
-                {
-                    return false;
-                }
-                if (!c.IsAsciiPunctuation())
-                {
-                    break;
-                }
-                index--;
+                return false;
             }
+            
             index = matchIndex + match.Length;
-            while (index <= content.End)
+            var ch = content.PeekCharAbsolute(index);
+
+            //if the character after the match is not punctuation or whitespace
+            if (!(ch == '\n' || ch.IsAsciiPunctuation() || ch.IsWhitespace() || ch == '\0'))
             {
-                var c = content.PeekCharAbsolute(index);
-                if (!(c == '\0' || c.IsAsciiPunctuation() || c.IsWhitespace()))
-                {
-                    return false;
-                }
-                if (!c.IsAsciiPunctuation())
-                {
-                    break;
-                }
-                index++;
+                return false;
             }
+
             return true;
         }
     }
