@@ -211,6 +211,8 @@ namespace Markdig.Extensions.Abbreviations
                 }
                 index--;
             }
+
+            // This will check if the next char at the end of the StringSlice is whitespace, punctuation or \0.
             var contentNew = content;
             contentNew.End = content.End + 1;
             index = matchIndex + match.Length;
