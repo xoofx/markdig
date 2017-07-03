@@ -18760,6 +18760,51 @@ namespace Markdig.Tests
 			TestParser.TestSpec("*[1A]: First\n\n1.1A", "<p>1.1A</p>", "abbreviations|advanced");
         }
     }
+        // Abbreviations should match whole word only, even if there is another glossary term:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[SCO]: First
+            //     *[SCOM]: Second
+            //     
+            //     SCOM
+            //
+            // Should be rendered as:
+            //     <p><abbr title="Second">SCOM</abbr></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions Abbreviation");
+			TestParser.TestSpec("*[SCO]: First\n*[SCOM]: Second\n\nSCOM", "<p><abbr title=\"Second\">SCOM</abbr></p>", "abbreviations|advanced");
+        }
+    }
+        // Abbreviations should only match when surrounded by whitespace:
+    [TestFixture]
+    public partial class TestExtensionsAbbreviation
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions Abbreviation
+            //
+            // The following CommonMark:
+            //     *[PR]: Pull Request
+            //     
+            //     PRAA
+            //
+            // Should be rendered as:
+            //     <p>PRAA</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions Abbreviation");
+			TestParser.TestSpec("*[PR]: Pull Request\n\nPRAA", "<p>PRAA</p>", "abbreviations|advanced");
+        }
+    }
         // # Extensions
         //
         // The following additional list items are supported:

@@ -77,3 +77,24 @@ Abbreviations should match whole word only, even if the word is the entire conte
 .
 <p>1.1A</p>
 ````````````````````````````````
+
+Abbreviations should match whole word only, even if there is another glossary term:
+
+```````````````````````````````` example
+*[SCO]: First
+*[SCOM]: Second
+
+SCOM
+.
+<p><abbr title="Second">SCOM</abbr></p>
+````````````````````````````````
+
+Abbreviations should only match when surrounded by whitespace:
+
+```````````````````````````````` example
+*[PR]: Pull Request
+
+PRAA
+.
+<p>PRAA</p>
+````````````````````````````````
