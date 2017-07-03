@@ -192,23 +192,47 @@ namespace Markdig.Extensions.Abbreviations
         {
             // The word matched must be embraced by punctuation or whitespace or \0.
             var index = matchIndex - 1;
-            var c = content.PeekCharAbsolute(index);
-
-            //if the character before the match is not punctuation or whitespace
-            if (!(c == '\n' || c.IsAsciiPunctuation() || c.IsWhitespace() || c == '\0'))
+            while (index >= content.Start)
             {
-                return false;
+                var c = content.PeekCharAbsolute(index);
+                if (!(c == '\0' || c.IsWhitespace() || c.IsAsciiPunctuation()))
+                {
+                    return false;
+                }
+
+                if (c.IsAlphaNumeric())
+                {
+                    return false;
+                }
+
+                if (!c.IsAsciiPunctuation() || c.IsWhitespace())
+                {
+                    break;
+                }
+                index--;
             }
-            
+            var contentNew = content;
+            contentNew.End = content.End + 1;
             index = matchIndex + match.Length;
-            var ch = content.PeekCharAbsolute(index);
-
-            //if the character after the match is not punctuation or whitespace
-            if (!(ch == '\n' || ch.IsAsciiPunctuation() || ch.IsWhitespace() || ch == '\0'))
+            while (index <= contentNew.End)
             {
-                return false;
-            }
+                var c = contentNew.PeekCharAbsolute(index);
+                if (!(c == '\0' || c.IsWhitespace() || c.IsAsciiPunctuation()))
+                {
+                    return false;
+                }
 
+                if (c.IsAlphaNumeric())
+                {
+                    return false;
+                }
+
+                if (c.IsWhitespace())
+                {
+                    break;
+                }
+                index++;
+            }
             return true;
         }
     }
