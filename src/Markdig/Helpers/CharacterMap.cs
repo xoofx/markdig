@@ -115,35 +115,44 @@ namespace Markdig.Helpers
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
-        public unsafe int IndexOfOpeningCharacter(string text, int start, int end)
+        public int IndexOfOpeningCharacter(string text, int start, int end)
         {
             var maxChar = isOpeningCharacter.Length;
+#if SUPPORT_UNSAFE
+            unsafe
+#endif
+            {
 #if SUPPORT_FIXED_STRING
             fixed (char* pText = text)
 #else
-            var pText = text;
+                var pText = text;
 #endif
-            fixed (bool* openingChars = isOpeningCharacter)
-            {
-                if (nonAsciiMap == null)
+#if SUPPORT_UNSAFE
+                fixed (bool* openingChars = isOpeningCharacter)
+#else
+                var openingChars = isOpeningCharacter;
+#endif
                 {
-                    for (int i = start; i <= end; i++)
+                    if (nonAsciiMap == null)
                     {
-                        var c = pText[i];
-                        if (c < maxChar && openingChars[c])
+                        for (int i = start; i <= end; i++)
                         {
-                            return i;
+                            var c = pText[i];
+                            if (c < maxChar && openingChars[c])
+                            {
+                                return i;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    for (int i = start; i <= end; i++)
+                    else
                     {
-                        var c = pText[i];
-                        if ((c < maxChar && openingChars[c]) || nonAsciiMap.ContainsKey(c))
+                        for (int i = start; i <= end; i++)
                         {
-                            return i;
+                            var c = pText[i];
+                            if ((c < maxChar && openingChars[c]) || nonAsciiMap.ContainsKey(c))
+                            {
+                                return i;
+                            }
                         }
                     }
                 }
