@@ -5,28 +5,17 @@
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.12.3</VersionPrefix>
+    <VersionPrefix>0.12.4</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
     <PackageId>Markdig</PackageId>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>
-&gt; 0.12.3
- - Fix issue with HTML blocks for heading h2,h3,h4,h5,h6 that were not correctly identified as HTML blocks as per CommonMark spec
-&gt; 0.12.2
- - Fix issue with generic attributes used just before a pipe table (issue #121)
-&gt; 0.12.1
- - Fix issue with media links extension when a URL to video is used, an unexpected closing `&lt;/iframe&gt;` was inserted (issue #119)
-&gt; 0.12.0
- - Add new extension JiraLink support (thanks to @clarkd)
- - Fix issue in html attributes not parsing correctly properties (thanks to @meziantou)
- - Fix issues detected by an automatic static code analysis tool
-&gt; 0.11.0
- - Fix issue with math extension and $$ block parsing not handling correctly beginning of a $$ as a inline math instead (issue #107)
- - Fix issue with custom attributes for emphasis
- - Add support for new special custom arrows emoji (-&gt; &lt;- &lt;-&gt; &lt;= =&gt; and &lt;==&gt;)
-</PackageReleaseNotes>
+      &gt; 0.12.4
+      - Fix Abbreviation extension not behaving properly in some cases
+      - Make Profile328 (for sl50 compat) not using unsafe code to pass verifier (issue #131)
+    </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/lunet-io/markdig/blob/master/license.txt</PackageLicenseUrl>
