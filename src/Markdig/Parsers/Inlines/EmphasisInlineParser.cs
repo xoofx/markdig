@@ -274,20 +274,6 @@ namespace Markdig.Parsers.Inlines
 
                             var embracer = (ContainerInline)openDelimiter;
 
-                            // Go down to the first emphasis with a lower level
-                            while (true)
-                            {
-                                var previousEmphasis = embracer.FirstChild as EmphasisInline;
-                                if (previousEmphasis != null && previousEmphasis.IsDouble && !isStrong && embracer.FirstChild == embracer.LastChild)
-                                {
-                                    embracer = previousEmphasis;
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-
                             // Copy attributes attached to delimiter to the emphasis
                             var attributes = closeDelimiter.TryGetAttributes();
                             if (attributes != null)
