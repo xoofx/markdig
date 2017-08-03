@@ -64,6 +64,8 @@ In the meantime, you can have a "behind the scene" article about Markdig in my b
 
 Markdig is available as a NuGet package: [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
 
+Also [Markdig.Signed](https://www.nuget.org/packages/Markdig.Signed/) NuGet package provides signed assemblies.
+
 ## Usage
 
 The main entry point for the API is the `Markdig.Markdown` class:
