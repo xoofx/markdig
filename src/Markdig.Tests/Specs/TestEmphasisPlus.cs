@@ -13,13 +13,13 @@ namespace Markdig.Tests
         [Test]
         public void StrongNormal()
         {
-            TestParser.TestSpec("***Strong emphasis*** normal", "<p><strong><em>Strong emphasis</em></strong> normal</p>", "");
+            TestParser.TestSpec("***Strong emphasis*** normal", "<p><em><strong>Strong emphasis</strong></em> normal</p>", "");
         }
 
         [Test]
         public void NormalStrongNormal()
         {
-            TestParser.TestSpec("normal ***Strong emphasis*** normal", "<p>normal <strong><em>Strong emphasis</em></strong> normal</p>", "");
+            TestParser.TestSpec("normal ***Strong emphasis*** normal", "<p>normal <em><strong>Strong emphasis</strong></em> normal</p>", "");
         }
     }
 }
