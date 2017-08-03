@@ -561,10 +561,6 @@ namespace Markdig.Helpers
                     {
                         if (!hasEscape)
                         {
-                            if (openedParent > 0)
-                            {
-                                break;
-                            }
                             openedParent++;
                         }
                     }
@@ -612,6 +608,11 @@ namespace Markdig.Helpers
                     buffer.Append(c);
 
                     c = text.NextChar();
+                }
+
+                if (openedParent > 0)
+                {
+                    isValid = false;
                 }
             }
 
