@@ -13,6 +13,18 @@ namespace Markdig.Tests
     public class TestPlayParser
     {
         [Test]
+        public void TestListBug2()
+        {
+            TestParser.TestSpec("10.\t*test* – test\n\n11.\t__test__ test\n\n", @"<ol start=""10"">
+<li><p><em>test</em> – test</p>
+</li>
+<li><p><strong>test</strong> test</p>
+</li>
+</ol>
+");
+        }
+
+        [Test]
         public void TestSimple()
         {
             var text = @" *[HTML]: Hypertext Markup Language

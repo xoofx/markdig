@@ -230,17 +230,16 @@ namespace Markdig.Parsers
                     return BlockState.None;
                 }
 
-                // We require at least one char
-                state.NextColumn();
-
                 // Parse the following indent
                 state.RestartIndent();
                 var columnBeforeIndent = state.Column;
                 state.ParseIndent();
 
-                if (state.IsCodeIndent)
+                // We expect at most 4 columns after
+                // If we have more, we reset the position
+                if (state.Indent > 4)
                 {
-                    state.GoToColumn(columnBeforeIndent);
+                    state.GoToColumn(columnBeforeIndent + 1);
                 }
 
                 // Number of spaces required for the following content to be part of this list item
