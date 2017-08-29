@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Yaml
     /// A YAML frontmatter block.
     /// </summary>
     /// <seealso cref="Markdig.Syntax.CodeBlock" />
-    public class YamlFrontMatterBlock : CodeBlock, IFencedBlock
+    public class YamlFrontMatterBlock : CodeBlock
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlFrontMatterBlock"/> class.
@@ -19,13 +19,5 @@ namespace Markdig.Extensions.Yaml
         public YamlFrontMatterBlock(BlockParser parser) : base(parser)
         {
         }
-
-        public string Info { get; set; }
-
-        public string Arguments { get; set; }
-
-        public int FencedCharCount { get; set; }
-
-        public char FencedChar { get; set; }
     }
 }

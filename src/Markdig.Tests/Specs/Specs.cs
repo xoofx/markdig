@@ -20493,6 +20493,124 @@ namespace Markdig.Tests
 			TestParser.TestSpec("----\nthis: is a frontmatter\n----\nThis is a text", "<hr />\n<h2>this: is a frontmatter</h2>\n<p>This is a text</p>", "yaml");
         }
     }
+        // It can end with three dots `...`:
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example004()
+        {
+            // Example 4
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---
+            //     this: is a frontmatter
+            //     ...
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     <p>This is a text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+        }
+    }
+        // It expects exactly three dots `...`:
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example005()
+        {
+            // Example 5
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---
+            //     this: is a frontmatter
+            //     ....
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n....\nThis is a text", "", "yaml");
+        }
+    }
+        // Front matter ends with the first line containing three dots `...` or three dashes `...`:
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example006()
+        {
+            // Example 6
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---
+            //     this: is a frontmatter
+            //     ....
+            //     
+            //     Hello
+            //     ---
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     <p>This is a text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n....\n\nHello\n---\nThis is a text", "<p>This is a text</p>", "yaml");
+        }
+    }
+        // It expects whitespace can exist after the leading characters
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---   
+            //     this: is a frontmatter
+            //     ...
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     <p>This is a text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---   \nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+        }
+    }
+        // It expects whitespace can exist after the trailing characters
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---
+            //     this: is a frontmatter
+            //     ...     
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     <p>This is a text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n...     \nThis is a text", "<p>This is a text</p>", "yaml");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
