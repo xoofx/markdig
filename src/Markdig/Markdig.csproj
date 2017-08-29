@@ -59,6 +59,9 @@
   </PropertyGroup>
     
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion Condition="'$(TargetPlatformMinVersion)' == ''">10.0.10240.0</TargetPlatformMinVersion> 
     <DefineConstants>$(DefineConstants);NETSTANDARD_11;SUPPORT_UNSAFE</DefineConstants>
   </PropertyGroup>
   
@@ -81,7 +84,7 @@
 
   <!-- Special packages and imports for UWP support -->
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.9" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.2" />
