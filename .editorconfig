@@ -1,0 +1,38 @@
+# EditorConfig is awesome:http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# All Files
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+# Solution Files
+[*.sln]
+indent_style = tab
+
+# XML Project Files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size = 2
+
+# Configuration Files
+[*.{json,xml,yml,config,props,targets,nuspec,resx,ruleset}]
+indent_size = 2
+
+# Markdown Files
+[*.md]
+trim_trailing_whitespace = false
+
+# Web Files
+[*.{htm,html,js,ts,css,scss,less}]
+indent_size = 2
+insert_final_newline = true
+
+# Bash Files
+[*.sh]
+end_of_line = lf
