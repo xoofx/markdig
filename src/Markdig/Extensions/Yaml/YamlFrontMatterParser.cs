@@ -13,116 +13,116 @@ namespace Markdig.Extensions.Yaml
     /// <seealso cref="YamlFrontMatterBlock" />
     public class YamlFrontMatterParser : BlockParser
     {
-		// We reuse a FencedCodeBlock parser to grab a frontmatter, only active if it happens on the first line of the document.
+        // We reuse a FencedCodeBlock parser to grab a frontmatter, only active if it happens on the first line of the document.
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="YamlFrontMatterParser"/> class.
-		/// </summary>
-		public YamlFrontMatterParser()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YamlFrontMatterParser"/> class.
+        /// </summary>
+        public YamlFrontMatterParser()
         {
-			this.OpeningCharacters = new[] { '-' };
+            this.OpeningCharacters = new[] { '-' };
         }
 
-		/// <summary>
-		/// Creates the front matter block.
-		/// </summary>
-		/// <param name="processor">The block processor</param>
-		/// <returns>The front matter block</returns>
-		protected virtual YamlFrontMatterBlock CreateFrontMatterBlock(BlockProcessor processor)
-		{
-			return new YamlFrontMatterBlock(this);
-		}
-
-		/// <summary>
-		/// Tries to match a block opening.
-		/// </summary>
-		/// <param name="processor">The parser processor.</param>
-		/// <returns>The result of the match</returns>
-		public override BlockState TryOpen(BlockProcessor processor)
+        /// <summary>
+        /// Creates the front matter block.
+        /// </summary>
+        /// <param name="processor">The block processor</param>
+        /// <returns>The front matter block</returns>
+        protected virtual YamlFrontMatterBlock CreateFrontMatterBlock(BlockProcessor processor)
         {
-			// We expect no indentation for a fenced code block.
-			if (processor.IsCodeIndent)
-			{
-				return BlockState.None;
-			}
+            return new YamlFrontMatterBlock(this);
+        }
 
-			// Only accept a frontmatter at the beginning of the file
-			if (processor.Start != 0)
+        /// <summary>
+        /// Tries to match a block opening.
+        /// </summary>
+        /// <param name="processor">The parser processor.</param>
+        /// <returns>The result of the match</returns>
+        public override BlockState TryOpen(BlockProcessor processor)
+        {
+            // We expect no indentation for a fenced code block.
+            if (processor.IsCodeIndent)
             {
                 return BlockState.None;
             }
-			
-			int count = 0;
-			var line = processor.Line;
-			char c = line.CurrentChar;
 
-			// Must consist of exactly three dashes
-			while (c == '-' && count < 4)
-			{
-				count++;
-				c = line.NextChar();
-			}
+            // Only accept a frontmatter at the beginning of the file
+            if (processor.Start != 0)
+            {
+                return BlockState.None;
+            }
+            
+            int count = 0;
+            var line = processor.Line;
+            char c = line.CurrentChar;
 
-			// If three dashes (optionally followed by whitespace)
-			// this is a YAML front matter blcok
-			if (count == 3 && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
-			{
-				// Create a front matter block
-				var block = this.CreateFrontMatterBlock(processor);
-				block.Column = processor.Column;
-				block.Span.Start = 0;
-				block.Span.End = line.Start;
+            // Must consist of exactly three dashes
+            while (c == '-' && count < 4)
+            {
+                count++;
+                c = line.NextChar();
+            }
 
-				// Store the number of matched string into the context
-				processor.NewBlocks.Push(block);
+            // If three dashes (optionally followed by whitespace)
+            // this is a YAML front matter blcok
+            if (count == 3 && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+            {
+                // Create a front matter block
+                var block = this.CreateFrontMatterBlock(processor);
+                block.Column = processor.Column;
+                block.Span.Start = 0;
+                block.Span.End = line.Start;
 
-				// Discard the current line as it is already parsed
-				return BlockState.ContinueDiscard;
-			}
+                // Store the number of matched string into the context
+                processor.NewBlocks.Push(block);
 
-			return BlockState.None;
-		}
+                // Discard the current line as it is already parsed
+                return BlockState.ContinueDiscard;
+            }
 
-		/// <summary>
-		/// Tries to continue matching a block already opened.
-		/// </summary>
-		/// <param name="processor">The parser processor.</param>
-		/// <param name="block">The block already opened.</param>
-		/// <returns>The result of the match. By default, don't expect any newline</returns>
-		public override BlockState TryContinue(BlockProcessor processor, Block block)
-		{
-			char matchChar;
-			int count = 0;
-			var c = processor.CurrentChar;
+            return BlockState.None;
+        }
 
-			// Determine if we have a closing fence.
-			// It can start or end with either <c>---</c> or <c>...</c>
-			var line = processor.Line;
-			if (processor.Column == 0 && (c == '-' || c == '.'))
-			{
-				matchChar = c;
+        /// <summary>
+        /// Tries to continue matching a block already opened.
+        /// </summary>
+        /// <param name="processor">The parser processor.</param>
+        /// <param name="block">The block already opened.</param>
+        /// <returns>The result of the match. By default, don't expect any newline</returns>
+        public override BlockState TryContinue(BlockProcessor processor, Block block)
+        {
+            char matchChar;
+            int count = 0;
+            var c = processor.CurrentChar;
 
-				while (c == matchChar)
-				{
-					c = line.NextChar();
-					count++;
-				}
+            // Determine if we have a closing fence.
+            // It can start or end with either <c>---</c> or <c>...</c>
+            var line = processor.Line;
+            if (processor.Column == 0 && (c == '-' || c == '.'))
+            {
+                matchChar = c;
 
-				// If we have a closing fence, close it and discard the current line
-				// The line must contain only fence characters and optional following whitespace.
-				if (count == 3 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
-				{
-					block.UpdateSpanEnd(line.Start - 1);
+                while (c == matchChar)
+                {
+                    c = line.NextChar();
+                    count++;
+                }
 
-					// Don't keep the last line
-					return BlockState.BreakDiscard;
-				}
-			}
+                // If we have a closing fence, close it and discard the current line
+                // The line must contain only fence characters and optional following whitespace.
+                if (count == 3 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+                {
+                    block.UpdateSpanEnd(line.Start - 1);
 
-			// Reset the indentation to the column before the indent
-			processor.GoToColumn(processor.ColumnBeforeIndent);
+                    // Don't keep the last line
+                    return BlockState.BreakDiscard;
+                }
+            }
 
-			return BlockState.Continue;
-		}
-	}
+            // Reset the indentation to the column before the indent
+            processor.GoToColumn(processor.ColumnBeforeIndent);
+
+            return BlockState.Continue;
+        }
+    }
 }
