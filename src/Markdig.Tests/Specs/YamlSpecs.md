@@ -42,3 +42,62 @@ This is a text
 <p>This is a text</p>
 ````````````````````````````````
 
+It can end with three dots `...`:
+
+```````````````````````````````` example
+---
+this: is a frontmatter
+...
+This is a text
+.
+<p>This is a text</p>
+````````````````````````````````
+
+It expects exactly three dots `...`:
+
+```````````````````````````````` example
+---
+this: is a frontmatter
+....
+This is a text
+.
+````````````````````````````````
+
+Front matter ends with the first line containing three dots `...` or three dashes `...`:
+
+```````````````````````````````` example
+---
+this: is a frontmatter
+....
+
+Hello
+---
+This is a text
+.
+<p>This is a text</p>
+````````````````````````````````
+
+It expects whitespace can exist after the leading characters
+
+```````````````````````````````` example
+---   
+this: is a frontmatter
+...
+This is a text
+.
+<p>This is a text</p>
+````````````````````````````````
+
+It expects whitespace can exist after the trailing characters
+
+```````````````````````````````` example
+---
+this: is a frontmatter
+...     
+This is a text
+.
+<p>This is a text</p>
+````````````````````````````````
+
+
+
