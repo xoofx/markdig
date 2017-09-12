@@ -14,12 +14,18 @@ namespace Markdig.Renderers.Html
         protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
         {
             renderer.EnsureLine();
-            renderer.Write("<blockquote").WriteAttributes(obj).WriteLine(">");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("<blockquote").WriteAttributes(obj).WriteLine(">");
+            }
             var savedImplicitParagraph = renderer.ImplicitParagraph;
             renderer.ImplicitParagraph = false;
             renderer.WriteChildren(obj);
             renderer.ImplicitParagraph = savedImplicitParagraph;
-            renderer.WriteLine("</blockquote>");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.WriteLine("</blockquote>");
+            }
         }
     }
 }

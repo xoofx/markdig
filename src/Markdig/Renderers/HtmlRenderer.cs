@@ -45,17 +45,26 @@ namespace Markdig.Renderers
             ObjectRenderers.Add(new LinkInlineRenderer());
             ObjectRenderers.Add(new LiteralInlineRenderer());
 
+            EnableHtmlForBlock = true;
             EnableHtmlForInline = true;
             EnableHtmlEscape = true;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to ouput HTML tags when rendering. See remarks.
+        /// Gets or sets a value indicating whether to output HTML tags when rendering. See remarks.
         /// </summary>
         /// <remarks>
-        /// This is used by some renderers to disable HTML tags when rendering some inlines (for image links).
+        /// This is used by some renderers to disable HTML tags when rendering some inline elements (for image links).
         /// </remarks>
         public bool EnableHtmlForInline { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to output HTML tags when rendering. See remarks.
+        /// </summary>
+        /// <remarks>
+        /// This is used by some renderers to disable HTML tags when rendering some block elements (for image links).
+        /// </remarks>
+        public bool EnableHtmlForBlock { get; set; }
 
         public bool EnableHtmlEscape { get; set; }
 

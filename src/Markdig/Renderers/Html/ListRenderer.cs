@@ -15,27 +15,31 @@ namespace Markdig.Renderers.Html
         protected override void Write(HtmlRenderer renderer, ListBlock listBlock)
         {
             renderer.EnsureLine();
-            if (listBlock.IsOrdered)
+            if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<ol");
-                if (listBlock.BulletType != '1')
+                if (listBlock.IsOrdered)
                 {
-                    renderer.Write(" type=\"").Write(listBlock.BulletType).Write("\"");
-                }
+                    renderer.Write("<ol");
+                    if (listBlock.BulletType != '1')
+                    {
+                        renderer.Write(" type=\"").Write(listBlock.BulletType).Write("\"");
+                    }
 
-                if (listBlock.OrderedStart != null && (listBlock.OrderedStart != "1"))
-                {
-                    renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write("\"");
+                    if (listBlock.OrderedStart != null && (listBlock.OrderedStart != "1"))
+                    {
+                        renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write("\"");
+                    }
+                    renderer.WriteAttributes(listBlock);
+                    renderer.WriteLine(">");
                 }
-                renderer.WriteAttributes(listBlock);
-                renderer.WriteLine(">");
+                else
+                {
+                    renderer.Write("<ul");
+                    renderer.WriteAttributes(listBlock);
+                    renderer.WriteLine(">");
+                }
             }
-            else
-            {
-                renderer.Write("<ul");
-                renderer.WriteAttributes(listBlock);
-                renderer.WriteLine(">");
-            }
+
             foreach (var item in listBlock)
             {
                 var listItem = (ListItemBlock)item;
@@ -43,13 +47,25 @@ namespace Markdig.Renderers.Html
                 renderer.ImplicitParagraph = !listBlock.IsLoose;
 
                 renderer.EnsureLine();
-                renderer.Write("<li").WriteAttributes(listItem).Write(">");
+                if (renderer.EnableHtmlForBlock)
+                {
+                    renderer.Write("<li").WriteAttributes(listItem).Write(">");
+                }
+
                 renderer.WriteChildren(listItem);
-                renderer.WriteLine("</li>");
+
+                if (renderer.EnableHtmlForBlock)
+                {
+                    renderer.WriteLine("</li>");
+                }
 
                 renderer.ImplicitParagraph = previousImplicit;
             }
-            renderer.WriteLine(listBlock.IsOrdered ? "</ol>" : "</ul>");
+
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.WriteLine(listBlock.IsOrdered ? "</ol>" : "</ul>");
+            }
         }
     }
 }
