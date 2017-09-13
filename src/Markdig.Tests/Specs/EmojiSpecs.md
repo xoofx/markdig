@@ -31,9 +31,9 @@ We all need :), it makes us :muscle:. (and :ok_hand:).
 Sentences can end with Emoji:
 
 ```````````````````````````````` example
-This is a sentance :ok_hand:
+This is a sentence :ok_hand:
 and keeps going to the next line :)
 .
-<p>This is a sentance 👌
+<p>This is a sentence 👌
 and keeps going to the next line 😃</p>
 ````````````````````````````````
