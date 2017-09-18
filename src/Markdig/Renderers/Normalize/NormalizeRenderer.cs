@@ -48,6 +48,15 @@ namespace Markdig.Renderers.Normalize
 
         public bool CompactParagraph { get; set; }
 
+        public void FinishBlock()
+        {
+            if (!IsLastInContainer && !CompactParagraph)
+            {
+                WriteLine();
+                WriteLine();
+            }
+        }
+
         ///// <summary>
         ///// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
         ///// </summary>

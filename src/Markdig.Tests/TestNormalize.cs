@@ -4,6 +4,7 @@
 
 using System;
 using NUnit.Framework;
+using Markdig.Syntax;
 
 namespace Markdig.Tests
 {
@@ -11,29 +12,31 @@ namespace Markdig.Tests
     public class TestNormalize
     {
         [Test]
-        public void TestNormalizeCodeBlock()
+        public void TestNormalizeRoundtripCodeBlock()
         {
-            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\n");
-            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n");
-            AssertNormalizeNoTrim("````csharp\npublic void HelloWorld();\n{\n}\n````\n"); 
-            AssertNormalizeNoTrim("````csharp hideNewKeyword=true\npublic void HelloWorld();\n{\n}\n````\n");
+            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }");
+            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\ntext after two newlines");
+            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n\ntext after two newlines");
+            AssertNormalizeNoTrim("````csharp\npublic void HelloWorld();\n{\n}\n````"); 
+            AssertNormalizeNoTrim("````csharp hideNewKeyword=true\npublic void HelloWorld();\n{\n}\n````");
         }
 
         [Test]
-        public void TestNormalizeHeading()
+        public void TestNormalizeRoundtripHeading()
         {
-            AssertNormalizeNoTrim("# Heading\n\n");
-            AssertNormalizeNoTrim("## Heading\n\n");
-            AssertNormalizeNoTrim("### Heading\n\n");
-            AssertNormalizeNoTrim("#### Heading\n\n");
-            AssertNormalizeNoTrim("##### Heading\n\n");
-            AssertNormalizeNoTrim("###### Heading\n\n");
+            AssertNormalizeNoTrim("# Heading");
+            AssertNormalizeNoTrim("## Heading");
+            AssertNormalizeNoTrim("### Heading");
+            AssertNormalizeNoTrim("#### Heading");
+            AssertNormalizeNoTrim("##### Heading");
+            AssertNormalizeNoTrim("###### Heading");
+            AssertNormalizeNoTrim("###### Heading\n\ntext after two newlines");
 
-            AssertNormalizeNoTrim("Heading\n=======\n\n", "# Heading\n\n");
+            AssertNormalizeNoTrim("Heading\n=======\n\ntext after two newlines", "# Heading\n\ntext after two newlines");
         }
 
         [Test]
-        public void TestNormalizeHtml()
+        public void TestNormalizeRoundtripHtml()
         {
             /*AssertNormalizeNoTrim(@"<div id=""foo"" class=""bar
   baz"">
@@ -41,7 +44,7 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestNormalizeParagraph()
+        public void TestNormalizeRoundtripParagraph()
         {
             AssertNormalizeNoTrim("This is a plain paragraph");
             AssertNormalizeNoTrim(@"This
@@ -52,7 +55,7 @@ paragraph");
         }
 
         [Test]
-        public void TestNormalizeParagraphMulti()
+        public void TestNormalizeRoundtripParagraphMulti()
         {
             AssertNormalizeNoTrim(@"line1
 
@@ -62,7 +65,7 @@ line3");
         }
 
         [Test]
-        public void TestNormalizeListUnordered()
+        public void TestNormalizeRoundtripListUnordered()
         {
             AssertNormalizeNoTrim(@"- a
 - b
@@ -70,7 +73,7 @@ line3");
         }
 
         [Test]
-        public void TestNormalizeListOrdered()
+        public void TestNormalizeRoundtripListOrdered()
         {
             AssertNormalizeNoTrim(@"1. a
 2. b
@@ -79,7 +82,7 @@ line3");
 
 
         [Test]
-        public void TestNormalizeListOrderedAndIntended()
+        public void TestNormalizeRoundtripListOrderedAndIntended()
         {
             AssertNormalizeNoTrim(@"1. a
 2. b
@@ -102,7 +105,7 @@ line3");
         }
 
         [Test]
-        public void TestNormalizeHeaderAndParagraph()
+        public void TestNormalizeRoundtripHeaderAndParagraph()
         {
             AssertNormalizeNoTrim(@"# heading
 
@@ -113,7 +116,7 @@ paragraph2 without newlines");
 
 
         [Test]
-        public void TestNormalizeQuoteBlock()
+        public void TestNormalizeRoundtripQuoteBlock()
         {
             AssertNormalizeNoTrim(@"> test1
 > 
@@ -129,7 +132,7 @@ asdf
         }
 
         [Test]
-        public void TestNormalizeThematicBreak()
+        public void TestNormalizeRoundtripThematicBreak()
         {
             AssertNormalizeNoTrim("***\n");
 
@@ -137,20 +140,20 @@ asdf
         }
 
         [Test]
-        public void TestNormalizeAutolinkInline()
+        public void TestNormalizeRoundtripAutolinkInline()
         {
             AssertNormalizeNoTrim("This has a <auto.link.com>");
         }
 
         [Test]
-        public void TestNormalizeCodeInline()
+        public void TestNormalizeRoundtripCodeInline()
         {
             AssertNormalizeNoTrim("This has a `HelloWorld()` in it");
             AssertNormalizeNoTrim(@"This has a ``Hello`World()`` in it");
         }
 
         [Test]
-        public void TestNormalizeEmphasisInline()
+        public void TestNormalizeRoundtripEmphasisInline()
         {
             AssertNormalizeNoTrim("This is a plain **paragraph**");
             AssertNormalizeNoTrim("This is a plain *paragraph*");
@@ -160,14 +163,14 @@ asdf
         }
 
         [Test]
-        public void TestNormalizeLineBreakInline()
+        public void TestNormalizeRoundtripLineBreakInline()
         {
             AssertNormalizeNoTrim("normal\nline break");
             AssertNormalizeNoTrim("hard  \nline break");
         }
 
         [Test]
-        public void TestNormalizeLinkInline()
+        public void TestNormalizeRoundtripLinkInline()
         {
             AssertNormalizeNoTrim("This is a [link](http://company.com)");
             AssertNormalizeNoTrim("This is an ![image](http://company.com)");
@@ -177,13 +180,13 @@ asdf
         }
 
         [Test]
-        public void TestNormalizeHtmlEntityInline()
+        public void TestNormalizeRoundtripHtmlEntityInline()
         {
             AssertNormalizeNoTrim("This is a &auml; blank");
         }
 
         [Test]
-        public void TestNormalizeHtmlInline()
+        public void TestNormalizeRoundtripHtmlInline()
         {
             AssertNormalizeNoTrim("foo <hr/> bar");
             AssertNormalizeNoTrim(@"foo <hr foo=""bar""/> bar");

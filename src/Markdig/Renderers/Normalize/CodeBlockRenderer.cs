@@ -42,12 +42,15 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLine();
 
                 renderer.WriteLeafRawLines(obj, true);
-                renderer.WriteLine(opening);
+                renderer.Write(opening);
+
+                renderer.FinishBlock();
             }
             else
             {
-                renderer.WriteLeafRawLines(obj, true, true);
-                renderer.WriteLine();
+                renderer.WriteLeafRawLines(obj, false, true);
+
+                renderer.FinishBlock();
             }
         }
     }

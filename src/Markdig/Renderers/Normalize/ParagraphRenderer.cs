@@ -18,11 +18,8 @@ namespace Markdig.Renderers.Normalize
                 renderer.EnsureLine();
             }
             renderer.WriteLeafInline(obj);
-            if (!renderer.IsLastInContainer && !renderer.CompactParagraph)
-            {
-                renderer.WriteLine();
-                renderer.WriteLine();
-            }
+
+            renderer.FinishBlock();
         }
     }
 }
