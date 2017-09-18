@@ -16,6 +16,12 @@ namespace Markdig.Renderers.Normalize
             renderer.PushIndent(obj.QuoteChar + " ");
             renderer.WriteChildren(obj);
             renderer.PopIndent();
+
+            if (!renderer.IsLastInContainer && !renderer.CompactParagraph)
+            {
+                renderer.WriteLine();
+                renderer.WriteLine();
+            }
         }
     }
 }

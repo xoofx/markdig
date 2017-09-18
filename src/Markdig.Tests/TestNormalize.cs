@@ -10,9 +10,8 @@ namespace Markdig.Tests
     [TestFixture]
     public class TestNormalize
     {
-
         [Test]
-        public void TestCodeBlock()
+        public void TestNormalizeCodeBlock()
         {
             AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\n");
             AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n");
@@ -21,7 +20,7 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestHeading()
+        public void TestNormalizeHeading()
         {
             AssertNormalizeNoTrim("# Heading\n\n");
             AssertNormalizeNoTrim("## Heading\n\n");
@@ -34,7 +33,7 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestHtml()
+        public void TestNormalizeHtml()
         {
             /*AssertNormalizeNoTrim(@"<div id=""foo"" class=""bar
   baz"">
@@ -42,10 +41,10 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestParagraph()
+        public void TestNormalizeParagraph()
         {
-            AssertNormalize("This is a plain paragraph");
-            AssertNormalize(@"This
+            AssertNormalizeNoTrim("This is a plain paragraph");
+            AssertNormalizeNoTrim(@"This
 is
 a
 plain
@@ -53,9 +52,9 @@ paragraph");
         }
 
         [Test]
-        public void TestParagraphMulti()
+        public void TestNormalizeParagraphMulti()
         {
-            AssertNormalize(@"line1
+            AssertNormalizeNoTrim(@"line1
 
 line2
 
@@ -63,31 +62,26 @@ line3");
         }
 
         [Test]
-        public void TestListUnordered()
+        public void TestNormalizeListUnordered()
         {
-            AssertNormalize(@"
-- a
+            AssertNormalizeNoTrim(@"- a
 - b
-- c
-");
+- c");
         }
 
         [Test]
-        public void TestListOrdered()
+        public void TestNormalizeListOrdered()
         {
-            AssertNormalize(@"
-1. a
+            AssertNormalizeNoTrim(@"1. a
 2. b
-3. c
-");
+3. c");
         }
 
 
         [Test]
-        public void TestListOrderedAndIntended()
+        public void TestNormalizeListOrderedAndIntended()
         {
-            AssertNormalize(@"
-1. a
+            AssertNormalizeNoTrim(@"1. a
 2. b
    - foo
    - bar
@@ -104,33 +98,38 @@ line3");
     - Foo
     - Bar
 11. c
-12. c
-");
+12. c");
         }
 
         [Test]
-        public void TestHeaderAndParagraph()
+        public void TestNormalizeHeaderAndParagraph()
         {
-            AssertNormalize(@"
-# heading
+            AssertNormalizeNoTrim(@"# heading
 
 paragraph
-");
+
+paragraph2 without newlines");
         }
 
 
         [Test]
-        public void TestQuote()
+        public void TestNormalizeQuoteBlock()
         {
-            AssertNormalize(@"
-> test1
+            AssertNormalizeNoTrim(@"> test1
 > 
+> test2");
+
+            AssertNormalizeNoTrim(@"> test1
+> -foobar
+
+asdf
+
 > test2
-");
+> -foobar sen.");
         }
 
         [Test]
-        public void TestThematicBreak()
+        public void TestNormalizeThematicBreak()
         {
             AssertNormalizeNoTrim("***\n");
 
@@ -138,53 +137,53 @@ paragraph
         }
 
         [Test]
-        public void TestAutolinkInline()
+        public void TestNormalizeAutolinkInline()
         {
             AssertNormalizeNoTrim("This has a <auto.link.com>");
         }
 
         [Test]
-        public void TestCodeInline()
+        public void TestNormalizeCodeInline()
         {
             AssertNormalizeNoTrim("This has a `HelloWorld()` in it");
             AssertNormalizeNoTrim(@"This has a ``Hello`World()`` in it");
         }
 
         [Test]
-        public void TestEmphasis()
+        public void TestNormalizeEmphasisInline()
         {
-            AssertNormalize("This is a plain **paragraph**");
-            AssertNormalize("This is a plain *paragraph*");
-            AssertNormalize("This is a plain _paragraph_");
-            AssertNormalize("This is a plain __paragraph__");
-            AssertNormalize("This is a pl*ai*n **paragraph**");
+            AssertNormalizeNoTrim("This is a plain **paragraph**");
+            AssertNormalizeNoTrim("This is a plain *paragraph*");
+            AssertNormalizeNoTrim("This is a plain _paragraph_");
+            AssertNormalizeNoTrim("This is a plain __paragraph__");
+            AssertNormalizeNoTrim("This is a pl*ai*n **paragraph**");
         }
 
         [Test]
-        public void TestLineBreak()
+        public void TestNormalizeLineBreakInline()
         {
             AssertNormalizeNoTrim("normal\nline break");
             AssertNormalizeNoTrim("hard  \nline break");
         }
 
         [Test]
-        public void TestLinks()
+        public void TestNormalizeLinkInline()
         {
-            AssertNormalize("This is a [link](http://company.com)");
-            AssertNormalize("This is an ![image](http://company.com)");
+            AssertNormalizeNoTrim("This is a [link](http://company.com)");
+            AssertNormalizeNoTrim("This is an ![image](http://company.com)");
 
-            AssertNormalize(@"This is a [link](http://company.com ""Crazy Company"")");
-            AssertNormalize(@"This is a [link](http://company.com ""Crazy \"" Company"")");
+            AssertNormalizeNoTrim(@"This is a [link](http://company.com ""Crazy Company"")");
+            AssertNormalizeNoTrim(@"This is a [link](http://company.com ""Crazy \"" Company"")");
         }
 
         [Test]
-        public void TestHtmlEntity()
+        public void TestNormalizeHtmlEntityInline()
         {
             AssertNormalizeNoTrim("This is a &auml; blank");
         }
 
         [Test]
-        public void TestHtmlInline()
+        public void TestNormalizeHtmlInline()
         {
             AssertNormalizeNoTrim("foo <hr/> bar");
             AssertNormalizeNoTrim(@"foo <hr foo=""bar""/> bar");
