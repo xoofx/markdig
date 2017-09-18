@@ -15,9 +15,9 @@ namespace Markdig.Tests
         public void TestCodeBlock()
         {
             AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\n");
-            AssertNormalizeNoTrim("```` \npublic void HelloWorld();\n{\n}\n````\n"); //TODO: Bug? Space after the fence
-            AssertNormalizeNoTrim("````csharp  \npublic void HelloWorld();\n{\n}\n````\n"); //TODO: Bug? two spaces after the language
-            AssertNormalizeNoTrim("````csharp hideNewKeyword=true \npublic void HelloWorld();\n{\n}\n````\n"); //TODO: Bug? space after the attributes
+            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n");
+            AssertNormalizeNoTrim("````csharp\npublic void HelloWorld();\n{\n}\n````\n"); 
+            AssertNormalizeNoTrim("````csharp hideNewKeyword=true\npublic void HelloWorld();\n{\n}\n````\n");
         }
 
         [Test]
@@ -91,14 +91,21 @@ line3");
 2. b
    - foo
    - bar
+     a) 1234
+     b) 1324
 3. c
-", @"
-1. a
-2. b
-  - foo
-  - bar
-3. c
-"); // TODO: Bug: intend is always stripped a space.
+4. c
+5. c
+6. c
+7. c
+8. c
+9. c
+10. c
+    - Foo
+    - Bar
+11. c
+12. c
+");
         }
 
         [Test]
@@ -140,6 +147,7 @@ paragraph
         public void TestCodeInline()
         {
             AssertNormalizeNoTrim("This has a `HelloWorld()` in it");
+            AssertNormalizeNoTrim(@"This has a ``Hello`World()`` in it");
         }
 
         [Test]
@@ -153,22 +161,33 @@ paragraph
         }
 
         [Test]
+        public void TestLineBreak()
+        {
+            AssertNormalizeNoTrim("normal\nline break");
+            AssertNormalizeNoTrim("hard  \nline break");
+        }
+
+        [Test]
         public void TestLinks()
         {
             AssertNormalize("This is a [link](http://company.com)");
             AssertNormalize("This is an ![image](http://company.com)");
+
+            AssertNormalize(@"This is a [link](http://company.com ""Crazy Company"")");
+            AssertNormalize(@"This is a [link](http://company.com ""Crazy \"" Company"")");
         }
 
         [Test]
         public void TestHtmlEntity()
         {
-            AssertNormalizeNoTrim("This is a &auml; blank", "This is a ä blank"); //TODO: bug?
+            AssertNormalizeNoTrim("This is a &auml; blank");
         }
 
         [Test]
         public void TestHtmlInline()
         {
             AssertNormalizeNoTrim("foo <hr/> bar");
+            AssertNormalizeNoTrim(@"foo <hr foo=""bar""/> bar");
         }
 
         public void AssertNormalizeNoTrim(string input, string expected = null)

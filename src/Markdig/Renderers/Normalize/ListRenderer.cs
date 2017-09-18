@@ -37,7 +37,7 @@ namespace Markdig.Renderers.Normalize
                     renderer.Write(index + "");
                     renderer.Write(listBlock.OrderedDelimiter);
                     renderer.Write(' ');
-                    renderer.PushIndent("  ");  // TODO: output accurate indent
+                    renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
                     renderer.WriteChildren(listItem);
                     renderer.PopIndent();
                     switch (listBlock.BulletType)
@@ -64,5 +64,17 @@ namespace Markdig.Renderers.Normalize
             renderer.CompactParagraph = compact;
             renderer.WriteLine();
         }
+
+
+        public int IntLog10Fast(int input) =>
+            (input < 10) ? 0 :
+            (input < 100) ? 1 :
+            (input < 1000) ? 2 :
+            (input < 10000) ? 3 :
+            (input < 100000) ? 4 :
+            (input < 1000000) ? 5 :
+            (input < 10000000) ? 6 :
+            (input < 100000000) ? 7 :
+            (input < 1000000000) ? 8 : 9;
     }
 }

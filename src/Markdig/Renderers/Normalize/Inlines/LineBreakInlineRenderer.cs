@@ -18,7 +18,11 @@ namespace Markdig.Renderers.Normalize.Inlines
 
         protected override void Write(NormalizeRenderer renderer, LineBreakInline obj)
         {
-            // TODO: handle hard
+            if (obj.IsHard)
+            {
+                renderer.Write("  ");
+            }
+
             renderer.WriteLine();
         }
     }

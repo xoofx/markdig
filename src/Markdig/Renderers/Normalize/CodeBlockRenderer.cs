@@ -26,17 +26,19 @@ namespace Markdig.Renderers.Normalize
                 {
                     renderer.Write(fencedCodeBlock.Info);
                 }
-                if (fencedCodeBlock.Arguments != null)
+                if (string.IsNullOrEmpty(fencedCodeBlock.Arguments) == false)
                 {
                     renderer.Write(" ").Write(fencedCodeBlock.Arguments);
                 }
 
+                /* TODO do we need this causes a empty space and would render html attributes to markdown.
                 var attributes = obj.TryGetAttributes();
                 if (attributes != null)
                 {
                     renderer.Write(" ");
                     renderer.Write(attributes);
                 }
+                */
                 renderer.WriteLine();
 
                 renderer.WriteLeafRawLines(obj, true);

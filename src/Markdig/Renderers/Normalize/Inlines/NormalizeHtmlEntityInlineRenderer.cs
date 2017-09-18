@@ -12,7 +12,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, HtmlEntityInline obj)
         {
-            renderer.Write(obj.Transcoded);
+            renderer.Write(obj.Original);
         }
     }
 }
