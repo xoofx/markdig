@@ -14,13 +14,6 @@ namespace Markdig.Renderers.Html
     public class HtmlAttributes : MarkdownObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlAttributes"/> class.
-        /// </summary>
-        public HtmlAttributes()
-        {
-        }
-
-        /// <summary>
         /// Gets or sets the HTML id/identifier. May be null.
         /// </summary>
         public string Id { get; set; }
