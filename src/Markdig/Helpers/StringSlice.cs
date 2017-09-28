@@ -227,7 +227,7 @@ namespace Markdig.Helpers
                 {
                     if (MatchLowercase(text, End, i - Start))
                     {
-                        return i; ;
+                        return i;
                     }
                 }
             }
@@ -237,7 +237,7 @@ namespace Markdig.Helpers
                 {
                     if (Match(text, End, i - Start))
                     {
-                        return i; ;
+                        return i;
                     }
                 }
             }

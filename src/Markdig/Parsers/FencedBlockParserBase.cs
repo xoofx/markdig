@@ -161,7 +161,7 @@ namespace Markdig.Parsers
                 fenced.FencedCharCount = count;
                 fenced.Span.Start = startPosition;
                 fenced.Span.End = line.Start;
-            };
+            }
 
             // Try to parse any attached attributes
             TryParseAttributes?.Invoke(processor, ref line, fenced);
