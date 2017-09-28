@@ -98,30 +98,27 @@ namespace Markdig.Extensions.MediaLinks
                         }
                         return true;
                     }
-                    else
+                    // Otherwise try to detect if we have an audio/video from the file extension
+                    string mimeType;
+                    var lastDot = path.LastIndexOf('.');
+                    if (lastDot >= 0 &&
+                        Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out mimeType))
                     {
-                        // Otherwise try to detect if we have an audio/video from the file extension
-                        string mimeType;
-                        var lastDot = path.LastIndexOf('.');
-                        if (lastDot >= 0 &&
-                            Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out mimeType))
+                        var isAudio = mimeType.StartsWith("audio");
+                        var tagType = isAudio ? "audio" : "video";
+
+                        renderer.Write($"<{tagType}");
+                        htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
+                        if (!isAudio)
                         {
-                            var isAudio = mimeType.StartsWith("audio");
-                            var tagType = isAudio ? "audio" : "video";
-
-                            renderer.Write($"<{tagType}");
-                            htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
-                            if (!isAudio)
-                            {
-                                htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
-                            }
-                            htmlAttributes.AddPropertyIfNotExist("controls", null);
-                            renderer.WriteAttributes(htmlAttributes);
-
-                            renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
-
-                            return true;
+                            htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
                         }
+                        htmlAttributes.AddPropertyIfNotExist("controls", null);
+                        renderer.WriteAttributes(htmlAttributes);
+
+                        renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
+
+                        return true;
                     }
                 }
             }

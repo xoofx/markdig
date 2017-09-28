@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -25,8 +25,7 @@ namespace Markdig.Renderers
         /// <exception cref="System.ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
-            this.Writer = writer;
+            Writer = writer ?? throw new ArgumentNullException(nameof(writer));
             // By default we output a newline with '\n' only even on Windows platforms
             Writer.NewLine = "\n";
         }
@@ -40,12 +39,7 @@ namespace Markdig.Renderers
             get { return writer; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                writer = value;
+                writer = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 

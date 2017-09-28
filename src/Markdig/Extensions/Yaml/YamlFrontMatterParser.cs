@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
@@ -20,7 +20,7 @@ namespace Markdig.Extensions.Yaml
         /// </summary>
         public YamlFrontMatterParser()
         {
-            this.OpeningCharacters = new[] { '-' };
+            OpeningCharacters = new[] { '-' };
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Markdig.Extensions.Yaml
             if (count == 3 && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 // Create a front matter block
-                var block = this.CreateFrontMatterBlock(processor);
+                var block = CreateFrontMatterBlock(processor);
                 block.Column = processor.Column;
                 block.Span.Start = 0;
                 block.Span.End = line.Start;

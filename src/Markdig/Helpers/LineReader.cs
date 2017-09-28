@@ -22,8 +22,7 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentOutOfRangeException">bufferSize cannot be &lt;= 0</exception>
         public LineReader(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            this.text = text;
+            this.text = text ?? throw new ArgumentNullException(nameof(text));
             SourcePosition = 0;
         }
 

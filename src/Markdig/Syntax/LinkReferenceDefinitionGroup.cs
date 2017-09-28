@@ -28,8 +28,7 @@ namespace Markdig.Syntax
 
         public void Set(string label, LinkReferenceDefinition link)
         {
-            if (link == null) throw new ArgumentNullException(nameof(link));
-            Links[label] = link;
+            Links[label] = link ?? throw new ArgumentNullException(nameof(link));
             if (!Contains(link))
             {
                 Add(link);

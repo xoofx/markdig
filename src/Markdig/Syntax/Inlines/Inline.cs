@@ -281,7 +281,7 @@ namespace Markdig.Syntax.Inlines
                 writer.Write(' ');
             }
 
-            writer.WriteLine("-> " + this.GetType().Name + " = " + this);
+            writer.WriteLine("-> " + GetType().Name + " = " + this);
 
             DumpChildTo(writer, level + 1);
 
