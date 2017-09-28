@@ -9,8 +9,8 @@ namespace Markdig.Parsers
     /// Base interface for a <see cref="BlockParser"/>.
     /// </summary>
     /// <typeparam name="TProcessor"></typeparam>
-    /// <seealso cref="Markdig.Parsers.IMarkdownParser{T}" />
-    public interface IBlockParser<in TProcessor> : IMarkdownParser<TProcessor>
+    /// <seealso cref="IMarkdownParser" />
+    public interface IBlockParser<in TProcessor> : IMarkdownParser
     {
         /// <summary>
         /// Determines whether this instance can interrupt the specified block being processed.
