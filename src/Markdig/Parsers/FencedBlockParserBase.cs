@@ -164,10 +164,7 @@ namespace Markdig.Parsers
             };
 
             // Try to parse any attached attributes
-            if (TryParseAttributes != null)
-            {
-                TryParseAttributes(processor, ref line, fenced);
-            }
+            TryParseAttributes?.Invoke(processor, ref line, fenced);
 
             // If the info parser was not successfull, early exit
             if (InfoParser != null && !InfoParser(processor, ref line, fenced))
