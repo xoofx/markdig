@@ -124,7 +124,7 @@ namespace Markdig.Parsers.Inlines
 
             if (delimiters != null)
             {
-                ProcessEmphasis(state, delimiters);
+                ProcessEmphasis(delimiters);
                 inlinesCache.Release(delimiters);
             }
             return true;
@@ -198,7 +198,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private void ProcessEmphasis(InlineProcessor processor, List<EmphasisDelimiterInline> delimiters)
+        private void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
         {
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
