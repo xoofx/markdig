@@ -36,11 +36,8 @@ namespace Markdig.Renderers
         /// <exception cref="System.ArgumentNullException">if the value is null</exception>
         public TextWriter Writer
         {
-            get { return writer; }
-            set
-            {
-                writer = value ?? throw new ArgumentNullException(nameof(value));
-            }
+            get => writer;
+            set => writer = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
