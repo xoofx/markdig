@@ -14,7 +14,7 @@ namespace Markdig.Parsers
     /// </summary>
     public class BlockProcessor
     {
-        private BlockProcessor root;
+        private readonly BlockProcessor root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;

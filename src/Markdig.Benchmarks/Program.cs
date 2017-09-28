@@ -21,7 +21,7 @@ namespace Testamina.Markdig.Benchmarks
     //[BenchmarkTask(platform: BenchmarkPlatform.X64, jitVersion: BenchmarkJitVersion.RyuJit, processCount: 1, warmupIterationCount: 2)]
     public class Program
     {
-        private string text;
+        private readonly string text;
 
         public Program()
         {
