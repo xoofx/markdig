@@ -219,7 +219,7 @@ namespace Markdig.Helpers
 
             public char CurrentChar { get; private set; }
 
-            public int End { get; private set; }
+            public int End { get; }
 
             public bool IsEmpty => Start > End;
 

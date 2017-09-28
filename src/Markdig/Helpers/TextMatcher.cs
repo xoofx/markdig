@@ -71,13 +71,11 @@ namespace Markdig.Helpers
         {
             // TODO(lazy): This code for building the nodes is not very efficient in terms of memory usage and could be optimized (using structs and indices)
             // At least, we are using a cache for the temporary objects build (List<string>)
-            for (int i = 0; i < list.Count; i++)
+            foreach (var str in list)
             {
-                var str = list[i];
                 var c = str[index];
 
-                CharNode nextNode;
-                if (!node.TryGetValue(c, out nextNode))
+                if (!node.TryGetValue(c, out CharNode nextNode))
                 {
                     nextNode = new CharNode();
                     node.Add(c, nextNode);
