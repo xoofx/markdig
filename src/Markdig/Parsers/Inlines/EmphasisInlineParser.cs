@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+ï»¿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -101,7 +101,7 @@ namespace Markdig.Parsers.Inlines
             }
 
             // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input â€“ the first one in parse order.)
             var child = container.LastChild;
             while (child != null)
             {
@@ -204,7 +204,7 @@ namespace Markdig.Parsers.Inlines
             // at the end of the CommonMark specs.
 
             // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input â€“ the first one in parse order.)
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var closeDelimiter = delimiters[i];
@@ -219,7 +219,7 @@ namespace Markdig.Parsers.Inlines
                     while (true)
                     {
                         // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
-                        // for the first matching potential opener (“matching” means same delimiter).
+                        // for the first matching potential opener (â€œmatchingâ€ means same delimiter).
                         EmphasisDelimiterInline openDelimiter = null;
                         int openDelimiterIndex = -1;
                         for (int j = i - 1; j >= 0; j--)
@@ -255,7 +255,6 @@ namespace Markdig.Parsers.Inlines
                                 };
 
                             // Update position for emphasis
-                            var openDelimitercount = openDelimiter.DelimiterCount;
                             var closeDelimitercount = closeDelimiter.DelimiterCount;
                             var delimiterDelta = isStrong ? 2 : 1;
 
