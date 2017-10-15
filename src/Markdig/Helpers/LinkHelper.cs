@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -18,10 +18,10 @@ namespace Markdig.Helpers
             return TryParseAutolink(ref text, out link, out isEmail);
         }
 
-        public static string Urilize(string headingText, bool allowOnlyAscii)
+        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false, bool discardDots = false)
         {
             var headingBuffer = StringBuilderCache.Local();
-            bool hasLetter = false;
+            bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
             bool previousIsSpace = false;
             for (int i = 0; i < headingText.Length; i++)
             {
@@ -47,7 +47,7 @@ namespace Markdig.Helpers
                     }
                     else if (hasLetter)
                     {
-                        if (IsReservedPunctuation(c))
+                        if (IsReservedPunctuation(c, discardDots))
                         {
                             if (previousIsSpace)
                             {
@@ -67,7 +67,7 @@ namespace Markdig.Helpers
                         else if (!previousIsSpace && c.IsWhitespace())
                         {
                             var pc = headingBuffer[headingBuffer.Length - 1];
-                            if (!IsReservedPunctuation(pc))
+                            if (!IsReservedPunctuation(pc, discardDots))
                             {
                                 headingBuffer.Append('-');
                             }
@@ -81,7 +81,7 @@ namespace Markdig.Helpers
             while (headingBuffer.Length > 0)
             {
                 var c = headingBuffer[headingBuffer.Length - 1];
-                if (IsReservedPunctuation(c))
+                if (IsReservedPunctuation(c, false))
                 {
                     headingBuffer.Length--;
                 }
@@ -97,9 +97,9 @@ namespace Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        private static bool IsReservedPunctuation(char c)
+        private static bool IsReservedPunctuation(char c, bool discardDots)
         {
-            return c == '_' || c == '-' || c == '.';
+            return c == '_' || c == '-' || (!discardDots && c == '.');
         }
 
         public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)

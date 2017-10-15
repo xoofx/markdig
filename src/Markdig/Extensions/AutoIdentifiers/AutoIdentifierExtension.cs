@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -143,7 +143,12 @@ namespace Markdig.Extensions.AutoIdentifiers
             stripRenderer.Render(headingBlock.Inline);
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
-            headingText = LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
+
+            // TODO: Should we have a struct with more configure optionss for LinkHelper.Urilize?
+            headingText = LinkHelper.Urilize(headingText,
+                (options & AutoIdentifierOptions.AllowOnlyAscii) != 0,
+                (options & AutoIdentifierOptions.KeepOpeningDigits) != 0,
+                (options & AutoIdentifierOptions.DiscardDots) != 0);
 
             var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
             int index = 0;
