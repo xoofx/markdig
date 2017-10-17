@@ -25,6 +25,7 @@ namespace Markdig.Extensions.Diagrams
                 var codeRenderer = htmlRenderer.ObjectRenderers.FindExact<CodeBlockRenderer>();
                 // TODO: Add other well known diagram languages
                 codeRenderer.BlocksAsDiv.Add("mermaid");
+                codeRenderer.BlocksAsDiv.Add("nomnoml");
             }
         }
     }
