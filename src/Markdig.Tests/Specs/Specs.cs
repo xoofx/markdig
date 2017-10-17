@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -17259,9 +17259,9 @@ namespace Markdig.Tests
 			TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
-        // ** Tests **
+        // ** Rule #9**
         //
-        // Tests trailing spaces after pipes
+        // It is possible to have a single row header only:
     [TestFixture]
     public partial class TestExtensionsPipeTable
     {
@@ -17269,6 +17269,64 @@ namespace Markdig.Tests
         public void Example022()
         {
             // Example 22
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     a  | b
+            //     -- | --
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     </tr>
+            //     </thead>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Extensions Pipe Table");
+			TestParser.TestSpec("a  | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example023()
+        {
+            // Example 23
+            // Section: Extensions Pipe Table
+            //
+            // The following CommonMark:
+            //     |a|b|c
+            //     |---|---|---|
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>a</th>
+            //     <th>b</th>
+            //     <th>c</th>
+            //     </tr>
+            //     </thead>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 23, "Extensions Pipe Table");
+			TestParser.TestSpec("|a|b|c\n|---|---|---|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th>c</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced");
+        }
+    }
+        // ** Tests **
+        //
+        // Tests trailing spaces after pipes
+    [TestFixture]
+    public partial class TestExtensionsPipeTable
+    {
+        [Test]
+        public void Example024()
+        {
+            // Example 24
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -17307,7 +17365,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 22, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 24, "Extensions Pipe Table");
 			TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
@@ -17318,9 +17376,9 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example023()
+        public void Example025()
         {
-            // Example 23
+            // Example 25
             // Section: Extensions Pipe Table
             //
             // The following CommonMark:
@@ -17346,7 +17404,7 @@ namespace Markdig.Tests
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 23, "Extensions Pipe Table");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 25, "Extensions Pipe Table");
 			TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
@@ -18664,15 +18722,15 @@ namespace Markdig.Tests
             // Section: Extensions Emoji
             //
             // The following CommonMark:
-            //     This is a sentance :ok_hand:
+            //     This is a sentence :ok_hand:
             //     and keeps going to the next line :)
             //
             // Should be rendered as:
-            //     <p>This is a sentance 👌
+            //     <p>This is a sentence 👌
             //     and keeps going to the next line 😃</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Emoji");
-			TestParser.TestSpec("This is a sentance :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentance 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis");
+			TestParser.TestSpec("This is a sentence :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentence 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis");
         }
     }
         // # Extensions
@@ -20360,6 +20418,49 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Mermaid diagrams");
 			TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<div class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</div>", "diagrams|advanced");
+        }
+    }
+        // ## nomnoml diagrams
+        //
+        // Using a fenced code block with the `nomnoml` language info will output a `<div class='nomnoml'>` instead of a `pre/code` block:
+    [TestFixture]
+    public partial class TestExtensionsnomnomldiagrams
+    {
+        [Test]
+        public void Example002()
+        {
+            // Example 2
+            // Section: Extensions nomnoml diagrams
+            //
+            // The following CommonMark:
+            //     ```nomnoml
+            //     [example|
+            //       propertyA: Int
+            //       propertyB: string
+            //     |
+            //       methodA()
+            //       methodB()
+            //     |
+            //       [subA]--[subB]
+            //       [subA]-:>[sub C]
+            //     ]
+            //     ```
+            //
+            // Should be rendered as:
+            //     <div class="nomnoml">[example|
+            //       propertyA: Int
+            //       propertyB: string
+            //     |
+            //       methodA()
+            //       methodB()
+            //     |
+            //       [subA]--[subB]
+            //       [subA]-:>[sub C]
+            //     ]
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions nomnoml diagrams");
+			TestParser.TestSpec("```nomnoml\n[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n```", "<div class=\"nomnoml\">[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n</div>", "diagrams|advanced");
         }
     }
         // TODO: Add other text diagram languages

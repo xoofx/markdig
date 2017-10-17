@@ -1,4 +1,4 @@
-﻿<#/*
+<#/*
 Copyright (c) Alexandre Mutel. All rights reserved.
 This file is licensed under the BSD-Clause 2 license. 
 See the license.txt file in the project root for more information.The MIT License (MIT)
@@ -36,7 +36,8 @@ SOFTWARE.
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.CodeDom" #>
 <#@ import namespace="System.CodeDom.Compiler" #>
-<#@ output extension=".cs" #><#
+<#@ output extension=".cs" encoding="utf-8"#>
+<#
     var specFiles = new KeyValuePair<string, string>[] {
 		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/4ec06917c3a3632be4a935ffa0973092bd2621be/spec.txt", string.Empty), // 0.28
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),

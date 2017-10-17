@@ -33,7 +33,7 @@ namespace Markdig.Extensions.Tables
         /// <summary>
         /// Gets or sets the column alignments. May be null.
         /// </summary>
-        public List<TableColumnDefinition> ColumnDefinitions { get; private set; }
+        public List<TableColumnDefinition> ColumnDefinitions { get; }
 
         /// <summary>
         /// Checks if the table structure is valid.
