@@ -47,7 +47,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**Emoji**](src/Markdig.Tests/Specs/EmojiSpecs.md) support (inspired from [Markdown-it](https://markdown-it.github.io/))
   - [**SmartyPants**](src/Markdig.Tests/Specs/SmartyPantsSpecs.md) (inspired from [Daring Fireball - SmartyPants](https://daringfireball.net/projects/smartypants/))
   - [**Bootstrap**](src/Markdig.Tests/Specs/BootstrapSpecs.md) class (to output bootstrap class)
-  - [**Diagrams**](src/Markdig.Tests/Specs/DiagramsSpecs.md) extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports only for [`mermaid` diagrams](https://knsv.github.io/mermaid/))
+  - [**Diagrams**](src/Markdig.Tests/Specs/DiagramsSpecs.md) extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports [`mermaid`](https://knsv.github.io/mermaid/) and [`nomnoml`](https://github.com/skanaar/nomnoml) diagrams)
   - [**YAML frontmatter**](src/Markdig.Tests/Specs/YamlSpecs.md) to parse without evaluating the frontmatter and to discard it from the HTML output (typically used for previewing without the frontmatter in MarkdownEditor)
   - [**JIRA links**](src/Markdig.Tests/Specs/JiraLinks.md) to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
