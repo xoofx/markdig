@@ -5,12 +5,86 @@
 using System;
 using NUnit.Framework;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
+using System.IO;
+using Markdig.Renderers.Normalize;
+using Markdig.Helpers;
 
 namespace Markdig.Tests
 {
     [TestFixture]
     public class TestNormalize
     {
+        [Test]
+        public void TestNormalizeSyntaxCodeBlock()
+        {
+            AssertSyntax("````csharp\npublic void HelloWorld()\n{\n}\n````", new FencedCodeBlock(null)
+            {
+                FencedChar = '`',
+                FencedCharCount = 4,
+                Info = "csharp",
+                Lines = new StringLineGroup(4)
+                {
+                    new StringSlice("public void HelloWorld()"),
+                    new StringSlice("{"),
+                    new StringSlice("}"),
+                }
+            });
+
+            AssertSyntax("    public void HelloWorld()\n    {\n    }", new CodeBlock(null)
+            {
+                Lines = new StringLineGroup(4)
+                {
+                    new StringSlice("public void HelloWorld()"),
+                    new StringSlice("{"),
+                    new StringSlice("}"),
+                }
+            });
+        }
+
+        [Test]
+        public void TestNormalizeSyntaxHeadline()
+        {
+            AssertSyntax("## Headline", new HeadingBlock(null)
+            {
+                HeaderChar = '#',
+                Level = 2,
+                Inline = new ContainerInline().AppendChild(new LiteralInline("Headline")),
+            });
+        }
+
+        [Test]
+        public void TestNormalizeSyntaxParagraph()
+        {
+            AssertSyntax("This is a normal paragraph", new ParagraphBlock()
+            {
+                Inline = new ContainerInline()
+                    .AppendChild(new LiteralInline("This is a normal paragraph")),
+            });
+
+            AssertSyntax("This is a\nnormal\nparagraph", new ParagraphBlock()
+            {
+                Inline = new ContainerInline()
+                    .AppendChild(new LiteralInline("This is a"))
+                    .AppendChild(new LineBreakInline())
+                    .AppendChild(new LiteralInline("normal"))
+                    .AppendChild(new LineBreakInline())
+                    .AppendChild(new LiteralInline("paragraph")),
+            });
+        }
+
+        [Test]
+        public void TestNormalizeSyntaxUnorderedList()
+        {
+            AssertSyntax("- Foo\n- Bar\n- Foobar", new ListBlock(null)
+            {
+                IsOrdered = false,
+                BulletType = '-',
+
+                new ContainerInline().AppendChild(new LiteralInline("Foo")),
+            });
+        }
+
         [Test]
         public void TestNormalizeRoundtripCodeBlock()
         {
@@ -190,6 +264,28 @@ asdf
         {
             AssertNormalizeNoTrim("foo <hr/> bar");
             AssertNormalizeNoTrim(@"foo <hr foo=""bar""/> bar");
+        }
+
+
+
+        private static void AssertSyntax(string expected, MarkdownObject syntax)
+        {
+            var writer = new StringWriter();
+            var normalizer = new NormalizeRenderer(writer);
+            var document = new MarkdownDocument();
+            if (syntax is Block)
+            {
+                document.Add(syntax as Block);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+            normalizer.Render(document);
+
+            var actual = writer.ToString();
+
+            Assert.AreEqual(expected, actual);
         }
 
         public void AssertNormalizeNoTrim(string input, string expected = null)
