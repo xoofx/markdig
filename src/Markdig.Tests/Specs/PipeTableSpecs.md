@@ -513,6 +513,39 @@ a  | b
 </table>
 ````````````````````````````````
 
+** Rule #9**
+
+It is possible to have a single row header only:
+
+```````````````````````````````` example
+a  | b
+-- | --
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
+```````````````````````````````` example
+|a|b|c
+|---|---|---|
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>c</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
 ** Tests **
 
 Tests trailing spaces after pipes

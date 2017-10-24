@@ -440,12 +440,13 @@ namespace Markdig.Extensions.Tables
 
             // If we have a header row, we can remove it
             // TODO: we could optimize this by merging FindHeaderRow and the previous loop
+            var tableRow = (TableRow)table[0];
+            tableRow.IsHeader = Options.RequireHeaderSeparator;
             if (aligns != null)
             {
-                table.RemoveAt(1);
-                var tableRow = (TableRow) table[0];
-                table.ColumnDefinitions.AddRange(aligns);
                 tableRow.IsHeader = true;
+                table.RemoveAt(1);
+                table.ColumnDefinitions.AddRange(aligns);
             }
 
             // Perform delimiter processor that are coming after this processor
@@ -532,6 +533,13 @@ namespace Markdig.Extensions.Tables
                             ? columnDelimiter.FirstChild
                             : delimiter.NextSibling;
 
+                        // If there is no content after
+                        if (IsNullOrSpace(nextSibling))
+                        {
+                            isValidRow = true;
+                            break;
+                        }
+
                         if (!ParseHeaderString(nextSibling, out align))
                         {
                             break;
@@ -604,6 +612,20 @@ namespace Markdig.Extensions.Tables
             {
                 literal.Content.TrimEnd();
             }
+        }
+
+        private static bool IsNullOrSpace(Inline inline)
+        {
+            if (inline == null)
+            {
+                return true;
+            }
+            var literal = inline as LiteralInline;
+            if (literal != null)
+            {
+                return literal.Content.IsEmptyOrWhitespace();
+            }
+            return false;
         }
 
         private class TableState

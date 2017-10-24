@@ -5,7 +5,7 @@
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.13.3</VersionPrefix>
+    <VersionPrefix>0.13.4</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1;uap10.0</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
@@ -13,14 +13,17 @@
     <PackageId Condition="'$(SignAssembly)' == 'true'">Markdig.Signed</PackageId>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>
-      &gt; 0.13.3
-      - Add support for Pandoc YAML frontmatter (#138)
-      &gt; 0.13.2
-      - Add support for UAP10.0 (#137)
-      &gt; 0.13.1
-      - Fix indenting issue after a double digit list block using a tab (#134)
-      &gt; 0.13.0
-      - Update to latest CommonMark specs 0.28
+&gt; 0.13.4
+- Add support for single table header row without a table body rows (#141)
+- ADd support for `nomnoml` diagrams
+&gt; 0.13.3
+- Add support for Pandoc YAML frontmatter (#138)
+&gt; 0.13.2
+- Add support for UAP10.0 (#137)
+&gt; 0.13.1
+- Fix indenting issue after a double digit list block using a tab (#134)
+&gt; 0.13.0
+- Update to latest CommonMark specs 0.28
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>

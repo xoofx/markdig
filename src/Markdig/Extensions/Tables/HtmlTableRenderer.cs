@@ -85,7 +85,7 @@ namespace Markdig.Extensions.Tables
                     {
                         renderer.Write($" rowspan=\"{cell.RowSpan}\"");
                     }
-                    if (table.ColumnDefinitions != null)
+                    if (table.ColumnDefinitions.Count > 0)
                     {
                         var columnIndex = cell.ColumnIndex < 0 || cell.ColumnIndex >= table.ColumnDefinitions.Count
                             ? i
