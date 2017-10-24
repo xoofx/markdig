@@ -1,4 +1,4 @@
-﻿<#/*
+<#/*
 Copyright (c) Alexandre Mutel. All rights reserved.
 This file is licensed under the BSD-Clause 2 license. 
 See the license.txt file in the project root for more information.The MIT License (MIT)
@@ -36,9 +36,10 @@ SOFTWARE.
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.CodeDom" #>
 <#@ import namespace="System.CodeDom.Compiler" #>
-<#@ output extension=".cs" #><#
+<#@ output extension=".cs" encoding="utf-8"#>
+<#
     var specFiles = new KeyValuePair<string, string>[] {
-		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/master/spec.txt", string.Empty),
+		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/4ec06917c3a3632be4a935ffa0973092bd2621be/spec.txt", string.Empty), // 0.28
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes|advanced"),
@@ -57,6 +58,11 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("SmartyPantsSpecs.md"), "pipetables+smartypants|advanced+smartypants"),   // Check with smartypants to make sure that it doesn't break pipetables
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoIdentifierSpecs.md"), "autoidentifiers|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("TaskListSpecs.md"), "tasklists|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("DiagramsSpecs.md"), "diagrams|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("NoHtmlSpecs.md"), "nohtml"),
+		new KeyValuePair<string, string>(Host.ResolvePath("YamlSpecs.md"), "yaml"),
+		new KeyValuePair<string, string>(Host.ResolvePath("AutoLinks.md"), "autolinks|advanced"),
+		new KeyValuePair<string, string>(Host.ResolvePath("JiraLinks.md"), "jiralinks"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

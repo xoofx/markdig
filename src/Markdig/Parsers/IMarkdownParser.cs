@@ -17,8 +17,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes this parser with the specified parser processor.
         /// </summary>
-        /// <param name="processor">The parser processor.</param>
-        void Initialize(TProcessor processor);
+        void Initialize();
 
         /// <summary>
         /// Gets the index of this parser in <see cref="BlockParserList"/> or <see cref="InlineParserList"/>.

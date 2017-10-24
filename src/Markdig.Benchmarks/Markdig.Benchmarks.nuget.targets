@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(NuGetPackageRoot)' == ''">
-    <NuGetPackageRoot>$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
-  </PropertyGroup>
-  <ImportGroup>
-    <Import Project="$(NuGetPackageRoot)\Microsoft.Diagnostics.Tracing.TraceEvent\1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('$(NuGetPackageRoot)\Microsoft.Diagnostics.Tracing.TraceEvent\1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
-  </ImportGroup>
-</Project>

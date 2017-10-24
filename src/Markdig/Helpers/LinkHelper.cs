@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -18,62 +18,61 @@ namespace Markdig.Helpers
             return TryParseAutolink(ref text, out link, out isEmail);
         }
 
-        public static string Urilize(string headingText, bool allowOnlyAscii)
+        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false, bool discardDots = false)
         {
-#if SUPPORT_NORMALIZE
-            // Normalzie the string if we don't allow UTF8
-            if (allowOnlyAscii)
-            {
-                headingText = headingText.Normalize(NormalizationForm.FormD);
-            }
-#endif
-
             var headingBuffer = StringBuilderCache.Local();
-            bool hasLetter = false;
+            bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
             bool previousIsSpace = false;
             for (int i = 0; i < headingText.Length; i++)
             {
                 var c = headingText[i];
-                if (char.IsLetter(c))
+                var normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
+                for (int j = 0; j < (normalized?.Length ?? 1); j++)
                 {
-#if SUPPORT_NORMALIZE
-                    if (allowOnlyAscii && (c < ' ' || c >= 127))
+                    if (normalized != null)
                     {
-                        continue;
+                        c = normalized[j];
                     }
-#endif
-                    c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
-                    headingBuffer.Append(c);
-                    hasLetter = true;
-                    previousIsSpace = false;
-                }
-                else if (hasLetter)
-                {
-                    if (IsReservedPunctuation(c))
+
+                    if (char.IsLetter(c))
                     {
-                        if (previousIsSpace)
+                        if (allowOnlyAscii && (c < ' ' || c >= 127))
                         {
-                            headingBuffer.Length--;
+                            continue;
                         }
-                        if (headingBuffer[headingBuffer.Length - 1] != c)
+                        c = char.IsUpper(c) ? char.ToLowerInvariant(c) : c;
+                        headingBuffer.Append(c);
+                        hasLetter = true;
+                        previousIsSpace = false;
+                    }
+                    else if (hasLetter)
+                    {
+                        if (IsReservedPunctuation(c, discardDots))
+                        {
+                            if (previousIsSpace)
+                            {
+                                headingBuffer.Length--;
+                            }
+                            if (headingBuffer[headingBuffer.Length - 1] != c)
+                            {
+                                headingBuffer.Append(c);
+                            }
+                            previousIsSpace = false;
+                        }
+                        else if (c.IsDigit())
                         {
                             headingBuffer.Append(c);
+                            previousIsSpace = false;
                         }
-                        previousIsSpace = false;
-                    }
-                    else if (c.IsDigit())
-                    {
-                        headingBuffer.Append(c);
-                        previousIsSpace = false;
-                    }
-                    else if (!previousIsSpace && c.IsWhitespace())
-                    {
-                        var pc = headingBuffer[headingBuffer.Length - 1];
-                        if (!IsReservedPunctuation(pc))
+                        else if (!previousIsSpace && c.IsWhitespace())
                         {
-                            headingBuffer.Append('-');
+                            var pc = headingBuffer[headingBuffer.Length - 1];
+                            if (!IsReservedPunctuation(pc, discardDots))
+                            {
+                                headingBuffer.Append('-');
+                            }
+                            previousIsSpace = true;
                         }
-                        previousIsSpace = true;
                     }
                 }
             }
@@ -82,7 +81,7 @@ namespace Markdig.Helpers
             while (headingBuffer.Length > 0)
             {
                 var c = headingBuffer[headingBuffer.Length - 1];
-                if (IsReservedPunctuation(c))
+                if (IsReservedPunctuation(c, false))
                 {
                     headingBuffer.Length--;
                 }
@@ -98,9 +97,9 @@ namespace Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        private static bool IsReservedPunctuation(char c)
+        private static bool IsReservedPunctuation(char c, bool discardDots)
         {
-            return c == '_' || c == '-' || c == '.';
+            return c == '_' || c == '-' || (!discardDots && c == '.');
         }
 
         public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)
@@ -117,6 +116,7 @@ namespace Markdig.Helpers
             // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
             // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
             // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
+            // A URI that would end with a full stop (.) is treated instead as ending immediately before the full stop.
 
             // a scheme is any sequence of 2–32 characters 
             // beginning with an ASCII letter 
@@ -259,6 +259,7 @@ namespace Markdig.Helpers
                         break;
                     }
                     builder.Append(c);
+                    pc = c;
                 }
             }
             else
@@ -560,10 +561,6 @@ namespace Markdig.Helpers
                     {
                         if (!hasEscape)
                         {
-                            if (openedParent > 0)
-                            {
-                                break;
-                            }
                             openedParent++;
                         }
                     }
@@ -596,7 +593,13 @@ namespace Markdig.Helpers
 
                     hasEscape = false;
 
-                    if (c == '\0' || c.IsSpaceOrTab() || c.IsControl()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (IsEndOfUri(c))
+                    {
+                        isValid = true;
+                        break;
+                    }
+
+                    if (c == '.' && IsEndOfUri(text.PeekChar()))
                     {
                         isValid = true;
                         break;
@@ -606,11 +609,21 @@ namespace Markdig.Helpers
 
                     c = text.NextChar();
                 }
+
+                if (openedParent > 0)
+                {
+                    isValid = false;
+                }
             }
 
             link = isValid ? buffer.ToString() : null;
             buffer.Length = 0;
             return isValid;
+        }
+
+        private static bool IsEndOfUri(char c)
+        {
+            return c == '\0' || c.IsSpaceOrTab() || c.IsControl(); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
         }
 
         public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
@@ -649,7 +662,7 @@ namespace Markdig.Helpers
             }
             text.NextChar(); // Skip ':'
 
-            // Skip any whitespaces before the url
+            // Skip any whitespace before the url
             text.TrimStart();
 
             urlSpan.Start = text.Start;

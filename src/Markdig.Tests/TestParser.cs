@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Markdig.Extensions.JiraLinks;
 
 namespace Markdig.Tests
 {
@@ -15,23 +16,28 @@ namespace Markdig.Tests
             foreach (var pipeline in GetPipeline(extensions))
             {
                 Console.WriteLine($"Pipeline configured with extensions: {pipeline.Key}");
-                // Uncomment this line to get more debug information for process inlines.
-                //pipeline.DebugLog = Console.Out;
-                var result = Markdown.ToHtml(inputText, pipeline.Value);
-
-                result = Compact(result);
-                expectedOutputText = Compact(expectedOutputText);
-
-                Console.WriteLine("```````````````````Source");
-                Console.WriteLine(DisplaySpaceAndTabs(inputText));
-                Console.WriteLine("```````````````````Result");
-                Console.WriteLine(DisplaySpaceAndTabs(result));
-                Console.WriteLine("```````````````````Expected");
-                Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
-                Console.WriteLine("```````````````````");
-                Console.WriteLine();
-                TextAssert.AreEqual(expectedOutputText, result);
+                TestSpec(inputText, expectedOutputText, pipeline.Value);
             }
+        }
+
+        public static void TestSpec(string inputText, string expectedOutputText, MarkdownPipeline pipeline)
+        {
+            // Uncomment this line to get more debug information for process inlines.
+            //pipeline.DebugLog = Console.Out;
+            var result = Markdown.ToHtml(inputText, pipeline);
+
+            result = Compact(result);
+            expectedOutputText = Compact(expectedOutputText);
+
+            Console.WriteLine("```````````````````Source");
+            Console.WriteLine(DisplaySpaceAndTabs(inputText));
+            Console.WriteLine("```````````````````Result");
+            Console.WriteLine(DisplaySpaceAndTabs(result));
+            Console.WriteLine("```````````````````Expected");
+            Console.WriteLine(DisplaySpaceAndTabs(expectedOutputText));
+            Console.WriteLine("```````````````````");
+            Console.WriteLine();
+            TextAssert.AreEqual(expectedOutputText, result);
         }
 
         private static IEnumerable<KeyValuePair<string, MarkdownPipeline>> GetPipeline(string extensionsGroupText)
@@ -65,8 +71,16 @@ namespace Markdig.Tests
             foreach (var extensionsText in extensionGroups)
             {
                 var builder = new MarkdownPipelineBuilder();
-                var pipeline = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
-                yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, pipeline.Build());
+                builder.DebugLog = Console.Out;
+                if (extensionsText == "jiralinks")
+                {
+                    builder.UseJiraLinks(new JiraLinkOptions("http://your.company.abc"));
+                }
+                else
+                {
+                    builder = extensionsText == "self" ? builder.UseSelfPipeline() : builder.Configure(extensionsText);
+                }
+                yield return new KeyValuePair<string, MarkdownPipeline>(extensionsText, builder.Build());
             }
         }
 

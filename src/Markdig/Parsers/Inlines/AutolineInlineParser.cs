@@ -62,6 +62,10 @@ namespace Markdig.Parsers.Inlines
                     Column = column
                 };
             }
+            else
+            {
+                return false;
+            }
 
             return true;
         }

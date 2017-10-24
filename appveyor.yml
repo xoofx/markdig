@@ -1,0 +1,46 @@
+version: 10.0.{build}
+image: Visual Studio 2017
+configuration: Release
+install:
+- ps: >-
+    cd src
+
+    nuget restore Markdig.sln
+
+    $env:MARKDIG_BUILD_NUMBER = ([int]$env:APPVEYOR_BUILD_NUMBER).ToString("000")
+   
+    $env:MARKDIG_VERSION_SUFFIX = ""
+
+    $env:appveyor_nuget_push = 'false'
+
+    if(-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
+      if($env:appveyor_repo_tag -eq 'True') {
+    	  if($env:appveyor_repo_tag_name -match '^v[0-9]') {
+           $env:appveyor_nuget_push = 'true'
+           $env:MARKDIG_VERSION_SUFFIX = ""
+        }
+    	  if($env:appveyor_repo_tag_name -eq 'latest') {
+           $env:appveyor_nuget_push = 'true'
+           $env:MARKDIG_VERSION_SUFFIX = "pre$env:MARKDIG_BUILD_NUMBER"
+        }
+      }
+    }
+build:
+  project: src/Markdig.sln
+  verbosity: minimal
+before_package:
+- cmd: >-
+     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
+
+     msbuild /t:Clean Markdig/Markdig.csproj
+     
+     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release;SignAssembly=true Markdig/Markdig.csproj
+artifacts:
+- path: src\Markdig\Bin\Release\*.nupkg
+  name: Markdig Nugets
+deploy:
+- provider: NuGet
+  api_key:
+    secure: 7cthHh+wYWZjhqxaxR6QObRaRnstvFkQOY7MkxIsC5kpQEBlKZXuinf0IybbYxJt
+  on:
+    appveyor_nuget_push: true

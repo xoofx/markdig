@@ -20,7 +20,7 @@ namespace Markdig.Extensions.Tables
         /// <returns>
         ///   <c>true</c> if parsing was successfull
         /// </returns>
-        public static bool ParseColumnHeader(ref StringSlice slice, char delimiterChar, out TableColumnAlign align)
+        public static bool ParseColumnHeader(ref StringSlice slice, char delimiterChar, out TableColumnAlign? align)
         {
             return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
         }
@@ -34,7 +34,7 @@ namespace Markdig.Extensions.Tables
         /// <returns>
         ///   <c>true</c> if parsing was successfull
         /// </returns>
-        public static bool ParseColumnHeaderAuto(ref StringSlice slice, out char delimiterChar, out TableColumnAlign align)
+        public static bool ParseColumnHeaderAuto(ref StringSlice slice, out char delimiterChar, out TableColumnAlign? align)
         {
             delimiterChar = '\0';
             return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
@@ -49,11 +49,10 @@ namespace Markdig.Extensions.Tables
         /// <returns>
         ///   <c>true</c> if parsing was successfull
         /// </returns>
-        public static bool ParseColumnHeaderDetect(ref StringSlice slice, ref char delimiterChar, out TableColumnAlign align)
+        public static bool ParseColumnHeaderDetect(ref StringSlice slice, ref char delimiterChar, out TableColumnAlign? align)
         {
-            align = TableColumnAlign.Left;
+            align = null;
 
-            // Work on a copy of the slice
             slice.TrimStart();
             var c = slice.CurrentChar;
             bool hasLeft = false;
@@ -87,6 +86,7 @@ namespace Markdig.Extensions.Tables
                 count++;
             }
 
+            // We expect at least one `-` delimiter char
             if (count == 0)
             {
                 return false;
@@ -104,7 +104,7 @@ namespace Markdig.Extensions.Tables
 
             align = hasLeft && hasRight
                 ? TableColumnAlign.Center
-                : hasRight ? TableColumnAlign.Right : TableColumnAlign.Left;
+                : hasRight ? TableColumnAlign.Right : hasLeft ? TableColumnAlign.Left : (TableColumnAlign?) null;
 
             return true;
         }

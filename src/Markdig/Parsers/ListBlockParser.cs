@@ -33,7 +33,7 @@ namespace Markdig.Parsers
         /// </summary>
         public OrderedList<ListItemParser> ItemParsers { get; }
 
-        public override void Initialize(BlockProcessor processor)
+        public override void Initialize()
         {
             var tempMap = new Dictionary<char, ListItemParser>();
 
@@ -138,11 +138,6 @@ namespace Markdig.Parsers
                     list.CountBlankLinesReset++;
                 }
 
-                if (list.CountBlankLinesReset > 1)
-                {
-                    return BlockState.BreakDiscard;
-                }
-
                 if (list.CountBlankLinesReset == 1 && listItem.ColumnWidth < 0)
                 {
                     state.Close(listItem);
@@ -235,23 +230,36 @@ namespace Markdig.Parsers
                     return BlockState.None;
                 }
 
-                // We require at least one char
-                state.NextColumn();
-
                 // Parse the following indent
                 state.RestartIndent();
                 var columnBeforeIndent = state.Column;
                 state.ParseIndent();
 
-                if (state.IsCodeIndent)
+                // We expect at most 4 columns after
+                // If we have more, we reset the position
+                if (state.Indent > 4)
                 {
-                    state.GoToColumn(columnBeforeIndent);
+                    state.GoToColumn(columnBeforeIndent + 1);
                 }
 
                 // Number of spaces required for the following content to be part of this list item
                 // If the list item starts with a blank line, the number of spaces
                 // following the list marker doesn't change the required indentation
                 columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
+            }
+
+            // Starts/continue the list unless:
+            // - an empty list item follows a paragraph
+            // - an ordered list is not starting by '1'
+            var isPreviousParagraph = (block ?? state.LastBlock) is ParagraphBlock;
+            if (isPreviousParagraph)
+            {
+                var isOpen = state.IsOpen(block ?? state.LastBlock);
+                if (state.IsBlankLine || (isOpen && listInfo.BulletType == '1' && listInfo.OrderedStart != "1"))
+                {
+                    state.GoToColumn(initColumn);
+                    return BlockState.None;
+                }
             }
 
             var newListItem = new ListItemBlock(this)

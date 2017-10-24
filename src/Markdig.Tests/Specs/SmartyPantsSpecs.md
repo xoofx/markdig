@@ -133,3 +133,13 @@ a  | b
 </tbody>
 </table>
 ````````````````````````````````
+
+Check quotes and dash:
+
+```````````````````````````````` example
+A "quote" with a ---
+.
+<p>A &ldquo;quote&rdquo; with a &mdash;</p>
+````````````````````````````````
+
+

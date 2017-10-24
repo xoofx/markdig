@@ -23,7 +23,7 @@ namespace Markdig.Renderers.Html
                     renderer.Write(" type=\"").Write(listBlock.BulletType).Write("\"");
                 }
 
-                if (listBlock.OrderedStart != null && (listBlock.DefaultOrderedStart != listBlock.OrderedStart))
+                if (listBlock.OrderedStart != null && (listBlock.OrderedStart != "1"))
                 {
                     renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write("\"");
                 }

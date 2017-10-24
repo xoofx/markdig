@@ -293,10 +293,6 @@ literal      ( 0, 9)  9-9
 ");
         }
 
-
-
-
-
         [Test]
         public void TestThematicBreak()
         {
@@ -373,12 +369,13 @@ literal      ( 0, 2)  2-3
         [Test]
         public void TestHtmlEntityInline()
         {
-            //     01234567
-            Check("0&nbsp;1", @"
-paragraph    ( 0, 0)  0-7
+            //     01 23456789
+            Check("0\n&nbsp; 1", @"
+paragraph    ( 0, 0)  0-9
 literal      ( 0, 0)  0-0
-htmlentity   ( 0, 1)  1-6
-literal      ( 0, 7)  7-7
+linebreak    ( 0, 1)  1-1
+htmlentity   ( 1, 0)  2-7
+literal      ( 1, 6)  8-9
 ");
         }
 
@@ -659,6 +656,20 @@ literal      ( 4, 2) 13-13
 paragraph    ( 0, 0)  0-0
 literal      ( 0, 0)  0-0
 code         ( 2, 0)  3-13
+");
+        }
+
+        [Test]
+        public void TestIndentedCodeAfterList()
+        {
+            //     0         1           2         3          4         5
+            //     012345678901234567 8 901234567890123456 789012345678901234 56789
+            Check("1) Some list item\n\n        some code\n        more code\n", @"
+list         ( 0, 0)  0-53
+listitem     ( 0, 0)  0-53
+paragraph    ( 0, 3)  3-16
+literal      ( 0, 3)  3-16
+code         ( 2, 0) 19-53
 ");
         }
 

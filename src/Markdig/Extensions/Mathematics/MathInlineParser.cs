@@ -50,11 +50,18 @@ namespace Markdig.Extensions.Mathematics
                 c = slice.NextChar();
             }
 
-            bool canOpen;
-            bool canClose;
-            // Check that opening $/$$ is correct, using the same heuristics than for emphasis delimiters
-            CharHelper.CheckOpenCloseDelimiter(pc, c, false, out canOpen, out canClose);
-            if (!canOpen)
+            bool openPrevIsPunctuation;
+            bool openPrevIsWhiteSpace;
+            bool openNextIsPunctuation;
+            bool openNextIsWhiteSpace;
+            bool openNextIsDigit = c.IsDigit();
+            pc.CheckUnicodeCategory(out openPrevIsWhiteSpace, out openPrevIsPunctuation);
+            c.CheckUnicodeCategory(out openNextIsWhiteSpace, out openNextIsPunctuation);
+            
+            // Check that opening $/$$ is correct, using the different heuristics than for emphasis delimiters
+            // If a $/$$ is not preceded by a whitespace or punctuation, or followed by a digit
+            // this is a not a math block
+            if ((!openPrevIsWhiteSpace && !openPrevIsPunctuation) || openNextIsDigit)
             {
                 return false;
             }
@@ -62,24 +69,60 @@ namespace Markdig.Extensions.Mathematics
             bool isMatching = false;
             int closeDollars = 0;
 
+            // Eat any leading spaces
+            while (c.IsSpaceOrTab())
+            {
+                c = slice.NextChar();
+            }
+
             var start = slice.Start;
+            var end = 0;
+
             pc = match;
+            var lastWhiteSpace = -1;
             while (c != '\0')
             {
+                // Don't allow newline in an inline math expression
+                if (c == '\r' || c == '\n')
+                {
+                    return false;
+                }
+
                 // Don't process sticks if we have a '\' as a previous char
                 if (pc != '\\' )
                 {
-                    while (c == match)
+                    // Record continous whitespaces at the end
+                    if (c.IsSpaceOrTab())
                     {
-                        closeDollars++;
-                        c = slice.NextChar();
+                        if (lastWhiteSpace < 0)
+                        {
+                            lastWhiteSpace = slice.Start;
+                        }
                     }
+                    else
+                    {
+                        bool hasClosingDollars = c == match;
+                        if (hasClosingDollars)
+                        {
+                            while (c == match)
+                            {
+                                closeDollars++;
+                                c = slice.NextChar();
+                            }
+                        }
 
-                    if (closeDollars >= openDollars)
-                    {
-                        break;
+                        if (closeDollars >= openDollars)
+                        {
+                            break;
+                        }
+
+                        lastWhiteSpace = -1;
+                        if (hasClosingDollars)
+                        {
+                            pc = match;
+                            continue;
+                        }
                     }
-                    pc = match;
                 }
 
                 if (closeDollars > 0)
@@ -95,11 +138,28 @@ namespace Markdig.Extensions.Mathematics
 
             if (closeDollars >= openDollars)
             {
-                // Check that closing $/$$ is correct
-                CharHelper.CheckOpenCloseDelimiter(pc, c, false, out canOpen, out canClose);
-                if (!canClose || c.IsDigit())
+                bool closePrevIsPunctuation;
+                bool closePrevIsWhiteSpace;
+                bool closeNextIsPunctuation;
+                bool closeNextIsWhiteSpace;
+                pc.CheckUnicodeCategory(out closePrevIsWhiteSpace, out closePrevIsPunctuation);
+                c.CheckUnicodeCategory(out closeNextIsWhiteSpace, out closeNextIsPunctuation);
+
+                // A closing $/$$ should be followed by at least a punctuation or a whitespace
+                // and if the character after an openning $/$$ was a whitespace, it should be 
+                // a whitespace as well for the character preceding the closing of $/$$
+                if ((!closeNextIsPunctuation && !closeNextIsWhiteSpace) || (openNextIsWhiteSpace != closePrevIsWhiteSpace))
                 {
                     return false;
+                }
+
+                if (closePrevIsWhiteSpace && lastWhiteSpace > 0)
+                {
+                    end = lastWhiteSpace + openDollars - 1;
+                }
+                else
+                {
+                    end = slice.Start - 1;
                 }
 
                 // Create a new MathInline
@@ -116,7 +176,7 @@ namespace Markdig.Extensions.Mathematics
                 };
                 inline.Content.Start = start;
                 // We substract the end to the number of opening $ to keep inside the block the additionals $
-                inline.Content.End = inline.Content.End - openDollars;
+                inline.Content.End = end - openDollars;
 
                 // Add the default class if necessary
                 if (DefaultClass != null)

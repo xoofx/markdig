@@ -1,19 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Markdig", "Markdig\Markdig.xproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
+	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+		..\license.txt = ..\license.txt
+		..\readme.md = ..\readme.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig", "Markdig\Markdig.csproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Tests", "Markdig.Tests\Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
-	ProjectSection(SolutionItems) = preProject
-		..\license.txt = ..\license.txt
-		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markdig.Benchmarks\Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"
@@ -21,7 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markd
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Markdig.WebApp", "Markdig.WebApp\Markdig.WebApp.xproj", "{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.WebApp", "Markdig.WebApp\Markdig.WebApp.csproj", "{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeNormDApp\UnicodeNormDApp.csproj", "{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,8 +50,19 @@ Global
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D068F7B6-6ACC-456C-A2E1-10EA746D956D}
 	EndGlobalSection
 EndGlobal

@@ -45,3 +45,56 @@ This is a 😃 HTML document
 .
 <p>This is a <abbr title="Hypertext Markup Language">😃 HTML</abbr> document</p>
 ````````````````````````````````
+
+Abbreviations may be similar:
+
+```````````````````````````````` example
+*[1A]: First
+*[1A1]: Second
+*[1A2]: Third
+
+We can abbreviate 1A, 1A1 and 1A2!
+.
+<p>We can abbreviate <abbr title="First">1A</abbr>, <abbr title="Second">1A1</abbr> and <abbr title="Third">1A2</abbr>!</p>
+````````````````````````````````
+
+Abbreviations should match whole word only:
+
+```````````````````````````````` example
+*[1A]: First
+
+We should not abbreviate 1.1A or 11A!
+.
+<p>We should not abbreviate 1.1A or 11A!</p>
+````````````````````````````````
+
+Abbreviations should match whole word only, even if the word is the entire content:
+
+```````````````````````````````` example
+*[1A]: First
+
+1.1A
+.
+<p>1.1A</p>
+````````````````````````````````
+
+Abbreviations should match whole word only, even if there is another glossary term:
+
+```````````````````````````````` example
+*[SCO]: First
+*[SCOM]: Second
+
+SCOM
+.
+<p><abbr title="Second">SCOM</abbr></p>
+````````````````````````````````
+
+Abbreviations should only match when surrounded by whitespace:
+
+```````````````````````````````` example
+*[PR]: Pull Request
+
+PRAA
+.
+<p>PRAA</p>
+````````````````````````````````

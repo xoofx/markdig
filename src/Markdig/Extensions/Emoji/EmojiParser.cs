@@ -41,7 +41,7 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public Dictionary<string, string>  SmileyToEmoji { get; }
 
-        public override void Initialize(InlineProcessor processor)
+        public override void Initialize()
         {
             var firstChars = new HashSet<char>();
             var textToMatch = new HashSet<string>();
@@ -77,12 +77,6 @@ namespace Markdig.Extensions.Emoji
             // Try to match an existing emoji
             var startPosition = slice.Start;
             if (!textMatchHelper.TryMatch(slice.Text, slice.Start, slice.Length, out match))
-            {
-                return false;
-            }
-
-            // Following char must be a space
-            if (!slice.PeekCharExtra(match.Length).IsWhiteSpaceOrZero())
             {
                 return false;
             }
@@ -997,7 +991,16 @@ namespace Markdig.Extensions.Emoji
                 {":large_orange_diamond:", "🔶"},
                 {":large_blue_diamond:", "🔷"},
                 {":small_orange_diamond:", "🔸"},
-                {":small_blue_diamond:", "🔹"}
+                {":small_blue_diamond:", "🔹"},
+
+                // Custom additions
+                { ":custom_arrow_left:", "←"},
+                { ":custom_arrow_right:", "→"},
+                { ":custom_arrow_left_right:", "↔"},
+
+                { ":custom_arrow_left_strong:", "⇐"},
+                { ":custom_arrow_right_strong:", "⇒"},
+                { ":custom_arrow_left_right_strong:", "⇔"},
             };
 
             SmileyToEmojiDefault = new Dictionary<string, string>()
@@ -1067,6 +1070,15 @@ namespace Markdig.Extensions.Emoji
                 {":-$", ":unamused:"},
                 {";)", ":wink:"},
                 {";-)", ":wink:"},
+
+                // Custom arrows
+                {"<-", ":custom_arrow_left:" },
+                {"->", ":custom_arrow_rigth:" },
+                {"<->", ":custom_arrow_left_rigth:" },
+
+                {"<=", ":custom_arrow_left_strong:" },
+                {"=>", ":custom_arrow_rigth_strong:" },
+                {"<=>", ":custom_arrow_left_rigth_strong:" },
             };
         }
         #endregion

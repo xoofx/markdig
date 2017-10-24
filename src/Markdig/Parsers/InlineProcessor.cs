@@ -46,7 +46,6 @@ namespace Markdig.Parsers
             Parsers = parsers;
             PreciseSourceLocation = preciseSourcelocation;
             lineOffsets = new List<StringLineGroup.LineOffset>();
-            Parsers.Initialize(this);
             ParserStates = new object[Parsers.Count];
             LiteralInlineParser = new LiteralInlineParser();
         }
@@ -239,7 +238,21 @@ namespace Markdig.Parsers
                     if (nextInline.Parent == null)
                     {
                         // Get deepest container
-                        FindLastContainer().AppendChild(nextInline);
+                        var container = FindLastContainer();
+                        if (!ReferenceEquals(container, nextInline))
+                        {
+                            container.AppendChild(nextInline);
+                        }
+
+                        if (container == Root)
+                        {
+                            if (container.Span.IsEmpty)
+                            {
+                                container.Span = nextInline.Span;
+                            }
+                            container.Span.End = nextInline.Span.End;
+                        }
+
                     }
                 }
                 else
@@ -254,31 +267,31 @@ namespace Markdig.Parsers
                     }
                 }
 
-                if (DebugLog != null)
-                {
-                    DebugLog.WriteLine($"** Dump: char '{c}");
-                    leafBlock.Inline.DumpTo(DebugLog);
-                }
+                //if (DebugLog != null)
+                //{
+                //    DebugLog.WriteLine($"** Dump: char '{c}");
+                //    leafBlock.Inline.DumpTo(DebugLog);
+                //}
             }
 
             Inline = null;
-            if (DebugLog != null)
-            {
-                DebugLog.WriteLine("** Dump before Emphasis:");
-                leafBlock.Inline.DumpTo(DebugLog);
-            }
+            //if (DebugLog != null)
+            //{
+            //    DebugLog.WriteLine("** Dump before Emphasis:");
+            //    leafBlock.Inline.DumpTo(DebugLog);
+            //}
 
             // PostProcess all inlines
             PostProcessInlines(0, Root, null, true);
 
             //TransformDelimitersToLiterals();
 
-            if (DebugLog != null)
-            {
-                DebugLog.WriteLine();
-                DebugLog.WriteLine("** Dump after Emphasis:");
-                leafBlock.Inline.DumpTo(DebugLog);
-            }
+            //if (DebugLog != null)
+            //{
+            //    DebugLog.WriteLine();
+            //    DebugLog.WriteLine("** Dump after Emphasis:");
+            //    leafBlock.Inline.DumpTo(DebugLog);
+            //}
         }
 
         public void PostProcessInlines(int startingIndex, Inline root, Inline lastChild, bool isFinalProcessing)

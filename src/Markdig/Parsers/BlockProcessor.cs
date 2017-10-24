@@ -51,7 +51,6 @@ namespace Markdig.Parsers
             Document = document;
             document.IsOpen = true;
             Parsers = parsers;
-            parsers.Initialize(this);
             OpenedBlocks = new List<Block>();
             NewBlocks = new Stack<Block>();
             root = this;
@@ -306,6 +305,64 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
+        /// Unwind any previous indent from the current character back to the first space.
+        /// </summary>
+        public void UnwindAllIndents()
+        {
+            // Find the previous first space on the current line
+            var previousStart = Line.Start;
+            for (; Line.Start > originalLineStart; Line.Start--)
+            {
+                var c = Line.PeekCharAbsolute(Line.Start - 1);
+                if (c == 0)
+                {
+                    break;
+                }
+                if (!c.IsSpaceOrTab())
+                {
+                    break;
+                }
+            }
+            var targetStart = Line.Start;
+            // Nothing changed? Early exit
+            if (previousStart == targetStart)
+            {
+                return;
+            }
+
+            // TODO: factorize the following code with what is done with GoToColumn
+
+            // If we have found the first space, we need to recalculate the correct column
+            Line.Start = originalLineStart;
+            Column = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = originalLineStart;
+
+            for (; Line.Start < targetStart; Line.Start++)
+            {
+                var c = Line.Text[Line.Start];
+                if (c == '\t')
+                {
+                    Column = CharHelper.AddTab(Column);
+                }
+                else
+                {
+                    if (!c.IsSpaceOrTab())
+                    {
+                        ColumnBeforeIndent = Column + 1;
+                        StartBeforeIndent = Line.Start + 1;
+                    }
+
+                    Column++;
+                }
+            }
+
+            // Reset the indent
+            ColumnBeforeIndent = Column;
+            StartBeforeIndent = Start;
+        }
+
+        /// <summary>
         /// Moves to the position to the code indent (<see cref="ColumnBeforeIndent"/> + 4 spaces).
         /// </summary>
         /// <param name="columnOffset">The column offset to apply to this indent.</param>
@@ -400,6 +457,11 @@ namespace Markdig.Parsers
                 throw new InvalidOperationException("Cannot release the root parser state");
             }
             parserStateCache.Release(this);
+        }
+
+        internal bool IsOpen(Block block)
+        {
+            return OpenedBlocks.Contains(block);
         }
 
         /// <summary>
@@ -554,12 +616,6 @@ namespace Markdig.Parsers
                     if (!result.IsDiscard())
                     {
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
-                    }
-
-                    if (NewBlocks.Count > 0)
-                    {
-                        throw new InvalidOperationException(
-                            "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                     }
                 }
 

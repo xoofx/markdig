@@ -59,12 +59,12 @@ namespace Markdig.Extensions.GenericAttributes
                     {
                         objectToAttach = parent[indexOfParagraph + 1];
                         // We can remove the paragraph as it is empty
-                        parent.RemoveAt(indexOfParagraph);
+                        paragraph.RemoveAfterProcessInlines = true;
                     }
                 }
 
                 var currentHtmlAttributes = objectToAttach.GetAttributes();
-                attributes.CopyTo(currentHtmlAttributes, false, false);
+                attributes.CopyTo(currentHtmlAttributes, true, false);
 
                 // Update the position of the attributes
                 int line;
@@ -171,9 +171,10 @@ namespace Markdig.Extensions.GenericAttributes
 
                     // Skip any whitespaces
                     line.TrimStart();
+                    c = line.CurrentChar;
 
                     // Handle boolean properties that are not followed by = 
-                    if ((hasSpace && (line.CurrentChar == '.' || line.CurrentChar == '#' || IsStartAttributeName(line.CurrentChar))) || line.CurrentChar == '}')
+                    if ((hasSpace && (c == '.' || c == '#' || IsStartAttributeName(c))) || c == '}')
                     {
                         if (properties == null)
                         {

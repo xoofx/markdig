@@ -12,13 +12,15 @@ namespace Markdig.Parsers
     /// <seealso cref="Markdig.Parsers.BlockParser" />
     public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
     {
+        public const string DefaultInfoPrefix = "language-";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
         /// </summary>
         public FencedCodeBlockParser()
         {
             OpeningCharacters = new[] {'`', '~'};
-            InfoPrefix = "language-";
+            InfoPrefix = DefaultInfoPrefix;
         }
 
         protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)

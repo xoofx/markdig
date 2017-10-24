@@ -24,7 +24,7 @@ namespace Markdig
         public MarkdownPipelineBuilder()
         {
             // Add all default parsers
-            BlockParsers = new BlockParserList()
+            BlockParsers = new OrderedList<BlockParser>()
             {
                 new ThematicBreakParser(),
                 new HeadingBlockParser(),
@@ -37,7 +37,7 @@ namespace Markdig
                 new ParagraphBlockParser(),
             };
 
-            InlineParsers = new InlineParserList()
+            InlineParsers = new OrderedList<InlineParser>()
             {
                 new HtmlEntityParser(),
                 new LinkInlineParser(),
@@ -56,12 +56,12 @@ namespace Markdig
         /// <summary>
         /// Gets the block parsers.
         /// </summary>
-        public BlockParserList BlockParsers { get; private set; }
+        public OrderedList<BlockParser> BlockParsers { get; private set; }
 
         /// <summary>
         /// Gets the inline parsers.
         /// </summary>
-        public InlineParserList InlineParsers { get; private set; }
+        public OrderedList<InlineParser> InlineParsers { get; private set; }
 
         /// <summary>
         /// Gets the register extensions.

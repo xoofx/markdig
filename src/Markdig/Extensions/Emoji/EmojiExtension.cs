@@ -21,7 +21,7 @@ namespace Markdig.Extensions.Emoji
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
     }

@@ -2,6 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Linq;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -9,6 +12,18 @@ namespace Markdig.Tests
     [TestFixture]
     public class TestPlayParser
     {
+        [Test]
+        public void TestListBug2()
+        {
+            TestParser.TestSpec("10.\t*test* – test\n\n11.\t__test__ test\n\n", @"<ol start=""10"">
+<li><p><em>test</em> – test</p>
+</li>
+<li><p><strong>test</strong> test</p>
+</li>
+</ol>
+");
+        }
+
         [Test]
         public void TestSimple()
         {
@@ -28,30 +43,14 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         }
 
         [Test]
-        public void TestPipeTables()
+        public void TestEmptyLiteral()
         {
-            TestParser.TestSpec(@"
-| abc | def | ghi |
-|:---:|-----|----:|
-|  1  | 2   | 3   |
-", @"
-<table>
-<thead>
-<tr>
-<th style=""text-align: center;"">abc</th>
-<th>def</th>
-<th style=""text-align: right;"">ghi</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style=""text-align: center;"">1</td>
-<td>2</td>
-<td style=""text-align: right;"">3</td>
-</tr>
-</tbody>
-</table>
-", "advanced");
+            var text = @"> *some text* 
+> some other text";
+            var doc = Markdown.Parse(text);
+
+            Assert.True(doc.Descendants().OfType<LiteralInline>().All(x => !x.Content.IsEmpty),
+                "There should not have any empty literals");
         }
 
         [Test]
@@ -122,15 +121,89 @@ blabla
 <h1>header2</h1>");
         }
 
+        [Test]
+        public void TestHtmlh4Bug()
+        {
+            TestParser.TestSpec(@"<h4>foobar</h4>", @"<h4>foobar</h4>");
+        }
+
+        [Test]
+        public void TestStandardUriEscape()
+        {
+            TestParser.TestSpec(@"![你好](你好.png)", "<p><img src=\"你好.png\" alt=\"你好\" /></p>", "nonascii-noescape");
+        }
 
 
         [Test]
-        public void TestBugAdvancaed()
+        public void TestBugAdvanced()
         {
             TestParser.TestSpec(@"`https://{domain}/callbacks`
 #### HEADING
 Paragraph
 ", "<p><code>https://{domain}/callbacks</code></p>\n<h4 id=\"heading\">HEADING</h4>\n<p>Paragraph</p>", "advanced");
+        }
+
+
+        [Test]
+        public void TestBugEmphAttribute()
+        {
+            // https://github.com/lunet-io/markdig/issues/108
+            TestParser.TestSpec(@"*test*{name=value}", "<p><em name=\"value\">test</em></p>", "advanced");
+        }
+
+        [Test]
+        public void TestBugPipeTables()
+        {
+            // https://github.com/lunet-io/markdig/issues/73
+            TestParser.TestSpec(@"| abc | def |
+| --- | --- |
+| 1 | ~3 |
+", @"<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>~3</td>
+</tr>
+</tbody>
+</table>", "advanced");
+        }
+
+        [Test]
+        public void TestGridTableWithCustomAttributes() {
+
+            var input = @"
+{.table}
++---+---+
+| a | b |
++===+===+
+| 1 | 2 |
++---+---+
+";
+
+            var expected = @"<table class=""table"">
+<col style=""width:50%"">
+<col style=""width:50%"">
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+";
+            TestParser.TestSpec(input, expected, "advanced");
         }
 
         [Test]

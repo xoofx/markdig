@@ -47,5 +47,10 @@ namespace Markdig.Syntax.Inlines
         /// The content as a <see cref="StringSlice"/>.
         /// </summary>
         public StringSlice Content;
+
+        public override string ToString()
+        {
+            return Content.ToString();
+        }
     }
 }

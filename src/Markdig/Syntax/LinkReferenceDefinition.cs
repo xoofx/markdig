@@ -59,7 +59,23 @@ namespace Markdig.Syntax
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the create link inline calback for this instance.
+        /// The label span
+        /// </summary>
+        public SourceSpan LabelSpan;
+
+        /// <summary>
+        /// The URL span
+        /// </summary>
+        public SourceSpan UrlSpan;
+
+        /// <summary>
+        /// The title span
+        /// </summary>
+        public SourceSpan TitleSpan;
+
+
+        /// <summary>
+        /// Gets or sets the create link inline callback for this instance.
         /// </summary>
         /// <remarks>
         /// This callback is called when an inline link is matching this reference definition.
@@ -72,20 +88,31 @@ namespace Markdig.Syntax
         /// <typeparam name="T">Type of the text</typeparam>
         /// <param name="text">The text.</param>
         /// <param name="block">The block.</param>
-        /// <returns><c>true</c> if parsing is successfull; <c>false</c> otherwise</returns>
+        /// <returns><c>true</c> if parsing is successful; <c>false</c> otherwise</returns>
         public static bool TryParse<T>(ref T text, out LinkReferenceDefinition block) where T : ICharIterator
         {
             block = null;
             string label;
             string url;
             string title;
+            SourceSpan labelSpan;
+            SourceSpan urlSpan;
+            SourceSpan titleSpan;
 
-            if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out label, out url, out title))
+            var startSpan = text.Start;
+
+            if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out labelSpan, out urlSpan, out titleSpan))
             {
                 return false;
             }
 
-            block = new LinkReferenceDefinition(label, url, title);
+            block = new LinkReferenceDefinition(label, url, title)
+            {
+                LabelSpan = labelSpan,
+                UrlSpan = urlSpan,
+                TitleSpan = titleSpan,
+                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End: urlSpan.End)
+            };
             return true;
         }
     }

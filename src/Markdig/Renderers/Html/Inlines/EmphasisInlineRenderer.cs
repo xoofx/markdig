@@ -37,7 +37,7 @@ namespace Markdig.Renderers.Html.Inlines
             if (renderer.EnableHtmlForInline)
             {
                 tag = GetTag(obj);
-                renderer.Write("<").Write(tag).Write(">");
+                renderer.Write("<").Write(tag).WriteAttributes(obj).Write(">");
             }
             renderer.WriteChildren(obj);
             if (renderer.EnableHtmlForInline)

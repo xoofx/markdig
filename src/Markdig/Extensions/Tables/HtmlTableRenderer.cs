@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Globalization;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
@@ -38,7 +39,9 @@ namespace Markdig.Extensions.Tables
             {
                 foreach (var tableColumnDefinition in table.ColumnDefinitions)
                 {
-                    renderer.WriteLine($"<col style=\"width:{Math.Round(tableColumnDefinition.Width*100)/100}%\">");
+                    var width = Math.Round(tableColumnDefinition.Width*100)/100;
+                    var widthValue = string.Format(CultureInfo.InvariantCulture, "{0:0.##}", width);
+                    renderer.WriteLine($"<col style=\"width:{widthValue}%\">");
                 }
             }
 
@@ -78,17 +81,31 @@ namespace Markdig.Extensions.Tables
                     {
                         renderer.Write($" colspan=\"{cell.ColumnSpan}\"");
                     }
-
-                    if (table.ColumnDefinitions != null && i < table.ColumnDefinitions.Count)
+                    if (cell.RowSpan != 1)
                     {
-                        switch (table.ColumnDefinitions[i].Alignment)
+                        renderer.Write($" rowspan=\"{cell.RowSpan}\"");
+                    }
+                    if (table.ColumnDefinitions.Count > 0)
+                    {
+                        var columnIndex = cell.ColumnIndex < 0 || cell.ColumnIndex >= table.ColumnDefinitions.Count
+                            ? i
+                            : cell.ColumnIndex;
+                        columnIndex = columnIndex >= table.ColumnDefinitions.Count ? table.ColumnDefinitions.Count - 1 : columnIndex;
+                        var alignment = table.ColumnDefinitions[columnIndex].Alignment;
+                        if (alignment.HasValue)
                         {
-                            case TableColumnAlign.Center:
-                                renderer.Write(" style=\"text-align: center;\"");
-                                break;
-                            case TableColumnAlign.Right:
-                                renderer.Write(" style=\"text-align: right;\"");
-                                break;
+                            switch (alignment)
+                            {
+                                case TableColumnAlign.Center:
+                                    renderer.Write(" style=\"text-align: center;\"");
+                                    break;
+                                case TableColumnAlign.Right:
+                                    renderer.Write(" style=\"text-align: right;\"");
+                                    break;
+                                case TableColumnAlign.Left:
+                                    renderer.Write(" style=\"text-align: left;\"");
+                                    break;
+                            }
                         }
                     }
                     renderer.WriteAttributes(cell);
@@ -101,7 +118,7 @@ namespace Markdig.Extensions.Tables
                     }
                     renderer.Write(cell);
                     renderer.ImplicitParagraph = previousImplicitParagraph;
-                    
+
                     renderer.WriteLine(row.IsHeader ? "</th>" : "</td>");
                 }
                 renderer.WriteLine("</tr>");

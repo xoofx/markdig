@@ -21,6 +21,17 @@ H~2~O is a liquid. 2^10^ is 1024
 .
 <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 ````````````````````````````````
+ 
+Certain punctuation characters are exempted from the rule forbidding them within inline delimiters
+
+```````````````````````````````` example
+One quintillionth can be expressed as 10^-18^
+
+Daggers^†^ and double-daggers^‡^ can be used to denote notes.
+.
+<p>One quintillionth can be expressed as 10<sup>-18</sup></p>
+<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>
+````````````````````````````````
 
 ## Inserted
 
@@ -41,3 +52,16 @@ Marked text can be used to specify that a text has been marked in a document.  T
 .
 <p><mark>Marked text</mark></p>
 ````````````````````````````````
+## Emphasis on Html Entities
+
+
+```````````````````````````````` example
+This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^
+This is text MyBrand^&reg;^ and MyTrademark^&trade;^
+This is text MyBrand~&reg;~ and MyCopyright^&copy;^
+.
+<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>
+This is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>
+This is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>
+````````````````````````````````
+

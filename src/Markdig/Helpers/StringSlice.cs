@@ -113,6 +113,17 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
+        /// Peeks the character immediately after the current <see cref="Start"/> position
+        /// or returns `\0` if after the <see cref="End"/> position.
+        /// </summary>
+        /// <returns>The next character, returns `\0` if none.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public char PeekChar()
+        {
+            return PeekChar(1);
+        }
+
+        /// <summary>
         /// Peeks a character at the specified offset from the current beginning of the string, without taking into account <see cref="Start"/> and <see cref="End"/>
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
@@ -166,6 +177,17 @@ namespace Markdig.Helpers
             }
 
             return i == text.Length;
+        }
+
+        /// <summary>
+        /// Matches the specified text using lowercase comparison.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
+        public bool MatchLowercase(string text, int offset = 0)
+        {
+            return MatchLowercase(text, End, offset);
         }
 
         /// <summary>

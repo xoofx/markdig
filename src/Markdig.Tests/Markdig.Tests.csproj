@@ -39,10 +39,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Markdig">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Markdig\Bin\$(Configuration)\net40\Markdig.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,11 +56,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Specs.tt</DependentUpon>
     </Compile>
+    <Compile Include="Specs\TestEmphasisPlus.cs" />
     <Compile Include="TestHtmlAttributes.cs" />
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
     <Compile Include="TestLinkHelper.cs" />
     <Compile Include="TestNormalize.cs" />
+    <Compile Include="TestOrderedList.cs" />
     <Compile Include="TestPragmaLines.cs" />
     <Compile Include="TestSourcePosition.cs" />
     <Compile Include="TestStringSliceList.cs" />
@@ -75,6 +73,8 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="project.json" />
+    <None Include="Specs\JiraLinks.md" />
+    <None Include="Specs\AutoLinks.md" />
     <None Include="Specs\AutoIdentifierSpecs.md" />
     <None Include="Specs\AbbreviationSpecs.md" />
     <None Include="Specs\FigureFooterAndCiteSpecs.md" />
@@ -87,6 +87,10 @@
     <None Include="Specs\GridTableSpecs.md" />
     <None Include="Specs\HardlineBreakSpecs.md" />
     <None Include="Specs\BootstrapSpecs.md" />
+    <None Include="Specs\DiagramsSpecs.md" />
+    <None Include="Specs\NoHtmlSpecs.md" />
+    <None Include="Specs\readme.md" />
+    <None Include="Specs\YamlSpecs.md" />
     <None Include="Specs\TaskListSpecs.md" />
     <None Include="Specs\SmartyPantsSpecs.md" />
     <None Include="Specs\MediaSpecs.md" />
@@ -103,6 +107,12 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Markdig\Markdig.csproj">
+      <Project>{8a58a7e2-627c-4f41-933f-5ac92adfab48}</Project>
+      <Name>Markdig</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

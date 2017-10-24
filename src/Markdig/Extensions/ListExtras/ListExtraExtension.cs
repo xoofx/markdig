@@ -22,7 +22,7 @@ namespace Markdig.Extensions.ListExtras
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
     }

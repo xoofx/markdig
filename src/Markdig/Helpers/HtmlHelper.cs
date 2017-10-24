@@ -617,7 +617,7 @@ namespace Markdig.Helpers
             {
                 // expect a letter and 1-31 letters or digits
                 c = s[pos + 1];
-                if ((c < 'A' || c > 'Z') && (c < 'a' && c > 'z'))
+                if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
                     return 0;
 
                 for (i = pos + 2; i < lastPos; i++)

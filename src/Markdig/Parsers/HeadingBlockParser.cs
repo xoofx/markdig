@@ -62,7 +62,7 @@ namespace Markdig.Parsers
             }
 
             // A space is required after leading #
-            if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpace() || c == '\0'))
+            if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpaceOrTab() || c == '\0'))
             {
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
@@ -89,7 +89,7 @@ namespace Markdig.Parsers
                     c = processor.Line.Text[i];
                     if (endState == 0)
                     {
-                        if (c.IsSpace()) // TODO: Not clear if it is a space or space+tab in the specs
+                        if (c.IsSpaceOrTab())
                         {
                             continue;
                         }
@@ -105,7 +105,7 @@ namespace Markdig.Parsers
 
                         if (countClosingTags > 0)
                         {
-                            if (c.IsSpace())
+                            if (c.IsSpaceOrTab())
                             {
                                 processor.Line.End = i - 1;
                             }

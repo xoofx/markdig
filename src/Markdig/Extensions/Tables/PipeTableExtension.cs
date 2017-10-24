@@ -34,13 +34,14 @@ namespace Markdig.Extensions.Tables
             {
                 pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());
             }
+            var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
             if (!pipeline.InlineParsers.Contains<PipeTableParser>())
             {
-                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(Options));
+                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser, Options));
             }
         }
 
-        public void Setup(IMarkdownRenderer renderer)
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
             var htmlRenderer = renderer as HtmlRenderer;
             if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())

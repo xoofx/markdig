@@ -11,20 +11,7 @@ namespace Markdig.Parsers
     /// <seealso cref="Markdig.Parsers.ParserList{Markdig.Parsers.InlineParser, Markdig.Parsers.InlineParserState}" />
     public class InlineParserList : ParserList<InlineParser, InlineProcessor>
     {
-        public InlineParserList()
-        {
-        }
-
         public InlineParserList(IEnumerable<InlineParser> parsers) : base(parsers)
-        {
-        }
-
-        /// <summary>
-        /// Gets the registered post inline processors.
-        /// </summary>
-        public IPostInlineProcessor[] PostInlineProcessors { get; private set; }
-
-        public override void Initialize(InlineProcessor initState)
         {
             // Prepare the list of post inline processors
             var postInlineProcessors = new List<IPostInlineProcessor>();
@@ -37,8 +24,11 @@ namespace Markdig.Parsers
                 }
             }
             PostInlineProcessors = postInlineProcessors.ToArray();
-
-            base.Initialize(initState);
         }
+
+        /// <summary>
+        /// Gets the registered post inline processors.
+        /// </summary>
+        public IPostInlineProcessor[] PostInlineProcessors { get; private set; }
     }
 }

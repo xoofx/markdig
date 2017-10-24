@@ -70,8 +70,8 @@ A regular row can continue a previous regular row when column separator `|` are 
 +---------+---------+---------+
 | Col1    | Col2    | Col3    |
 | Col1a   | Col2a   | Col3a   |
-| Col12             | Col3b   |
-| Col123                      |
+| Col1b             | Col3b   |
+| Col1c                       |
 .
 <table>
 <col style="width:33.33%">
@@ -87,11 +87,11 @@ Col2a</td>
 Col3a</td>
 </tr>
 <tr>
-<td colspan="2">Col12</td>
-<td></td>
+<td colspan="2">Col1b</td>
+<td>Col3b</td>
 </tr>
 <tr>
-<td colspan="3">Col123</td>
+<td colspan="3">Col1c</td>
 </tr>
 </tbody>
 </table>
@@ -183,4 +183,104 @@ Alignment might be specified on the first row using the character `:`:
 </tr>
 </tbody>
 </table>
+````````````````````````````````
+
+ A grid table may have cells spanning both columns and rows:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++---+---+ B +
+| D | E | B |
++ D +---+---+
+| D | CCCCC |
++---+---+---+
+.
+<table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
+<tbody>
+<tr>
+<td colspan="2">AAAAA</td>
+<td rowspan="2">B
+B
+B</td>
+</tr>
+<tr>
+<td rowspan="2">D
+D
+D</td>
+<td>E</td>
+</tr>
+<tr>
+<td colspan="2">CCCCC</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+A grid table may have cells with both colspan and rowspan:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++ AAAAA +---+
+| AAAAA | C |
++---+---+---+
+| D | E | F |
++---+---+---+
+.
+<table>
+<col style="width:33.33%">
+<col style="width:33.33%">
+<col style="width:33.33%">
+<tbody>
+<tr>
+<td colspan="2" rowspan="2">AAAAA
+AAAAA
+AAAAA</td>
+<td>B</td>
+</tr>
+<tr>
+<td>C</td>
+</tr>
+<tr>
+<td>D</td>
+<td>E</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+A grid table may not have irregularly shaped cells:
+
+```````````````````````````````` example
++---+---+---+
+| AAAAA | B |
++ A +---+ B +
+| A | C | B |
++---+---+---+
+| DDDDD | E |
++---+---+---+
+.
+<p>+---+---+---+
+| AAAAA | B |
++ A +---+ B +
+| A | C | B |
++---+---+---+
+| DDDDD | E |
++---+---+---+</p>
+````````````````````````````````
+
+An empty `+` on a line should result in a simple empty list output:
+
+
+```````````````````````````````` example
++
+.
+<ul>
+<li></li>
+</ul>
 ````````````````````````````````

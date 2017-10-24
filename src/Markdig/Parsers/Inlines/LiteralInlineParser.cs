@@ -75,21 +75,26 @@ namespace Markdig.Parsers.Inlines
             }
             else
             {
-                processor.Inline = new LiteralInline()
+                // Create a new LiteralInline only if it is not empty
+                var newSlice = length > 0 ? new StringSlice(slice.Text, slice.Start, endPosition) : StringSlice.Empty;
+                if (!newSlice.IsEmpty)
                 {
-                    Content = length > 0 ? new StringSlice(slice.Text, slice.Start, endPosition) : StringSlice.Empty,
-                    Span = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),
-                    Line = line,
-                    Column = column,
-                };
+                    processor.Inline = new LiteralInline()
+                    {
+                        Content = length > 0 ? newSlice : StringSlice.Empty,
+                        Span = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),
+                        Line = line,
+                        Column = column,
+                    };
+                }
             }
 
             slice.Start = nextStart;
 
             // Call only PostMatch if necessary
-            if (PostMatch != null)
+            if (processor.Inline is LiteralInline)
             {
-                PostMatch(processor, ref slice);
+                PostMatch?.Invoke(processor, ref slice);
             }
 
             return true;

@@ -20,12 +20,47 @@ This is a $$math block$$
 <p>This is a <span class="math">math block</span></p>
 ````````````````````````````````
 
-The opening `$` and closing `$` is following the rules of the emphasis delimiter `_`:
+Newlines inside an inline math are not allowed:
 
 ```````````````````````````````` example
-This is not a $ math block $
+This is not a $$math 
+block$$ and? this is a $$math block$$
 .
-<p>This is not a $ math block $</p>
+<p>This is not a $$math
+block$$ and? this is a <span class="math">math block</span></p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is not a $math 
+block$ and? this is a $math block$
+.
+<p>This is not a $math
+block$ and? this is a <span class="math">math block</span></p>
+````````````````````````````````
+An opening `$` can be followed by a space if the closing is also preceded by a space `$`:
+
+```````````````````````````````` example
+This is a $ math block $
+.
+<p>This is a <span class="math">math block</span></p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a $    math block     $ after
+.
+<p>This is a <span class="math">math block</span> after</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a $$    math block     $$ after
+.
+<p>This is a <span class="math">math block</span> after</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a not $ math block$ because there is not a whitespace before the closing
+.
+<p>This is a not $ math block$ because there is not a whitespace before the closing</p>
 ````````````````````````````````
 
 For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
@@ -68,12 +103,26 @@ This is a $$$math block$$$
 <p>This is a <span class="math">$math block$</span></p>
 ````````````````````````````````
 
+Regular text can come both before and after the math inline
+
+```````````````````````````````` example
+This is a $math block$ with text on both sides.
+.
+<p>This is a <span class="math">math block</span> with text on both sides.</p>
+````````````````````````````````
 A mathematic block takes precedence over standard emphasis `*` `_`:
 
 ```````````````````````````````` example
 This is *a $math* block$
 .
 <p>This is *a <span class="math">math* block</span></p>
+````````````````````````````````
+An opening $$ at the beginning of a line should not be interpreted as a Math block:
+
+```````````````````````````````` example
+$$ math $$ starting at a line
+.
+<p><span class="math">math</span> starting at a line</p>
 ````````````````````````````````
 
 ## Math Block

@@ -118,6 +118,7 @@ namespace Markdig.Parsers.Inlines
                         Title = HtmlHelper.Unescape(linkRef.Title),
                         Label = label,
                         LabelSpan = labelSpan,
+                        UrlSpan = linkRef.UrlSpan,
                         IsImage = parent.IsImage,
                         Reference = linkRef,
                         Span = new SourceSpan(parent.Span.Start, endPosition),
@@ -210,6 +211,7 @@ namespace Markdig.Parsers.Inlines
                 // compact reference link/image, 
                 // or shortcut reference link/image
                 var parentDelimiter = openParent.Parent;
+                var savedText = text;
                 switch (text.CurrentChar)
                 {
                     case '(':
@@ -252,9 +254,10 @@ namespace Markdig.Parsers.Inlines
 
                             return true;
                         }
-                        break;
-                    default:
 
+                        text = savedText;
+                        goto default;
+                    default:
                         var labelSpan = SourceSpan.Empty;
                         string label = null;
                         bool isLabelSpanLocal = true;

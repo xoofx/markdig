@@ -229,6 +229,24 @@ namespace Markdig.Syntax.Inlines
             }
         }
 
+        public Inline FindBestParent()
+        {
+            var current = this;
+
+            while (current.Parent != null || current.PreviousSibling != null)
+            {
+                if (current.Parent != null)
+                {
+                    current = current.Parent;
+                    continue;
+                }
+
+                current = current.PreviousSibling;
+            }
+
+            return current;
+        }
+
         protected virtual void OnChildRemove(Inline child)
         {
 

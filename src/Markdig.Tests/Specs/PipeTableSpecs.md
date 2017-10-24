@@ -122,7 +122,7 @@ c no d
 c no d</p>
 ````````````````````````````````
 
-The number of columns in the first row determine the number of columns for the whole table. Any extra columns delimiter `|` for sub-sequent lines are converted to literal strings instead:
+If a row contains more column than the header row, it will still be added as a column:
 
 ```````````````````````````````` example
 a  | b 
@@ -136,19 +136,24 @@ a  | b
 <tr>
 <th>a</th>
 <th>b</th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
-<td>1 | 2</td>
+<td>1</td>
+<td>2</td>
 </tr>
 <tr>
 <td>3</td>
 <td>4</td>
+<td></td>
 </tr>
 <tr>
 <td>5</td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -345,7 +350,8 @@ The first row is considered as a **header row** if it is separated from the regu
 </table>
 ````````````````````````````````
 
-The text alignment is defined by default to be left.
+The text alignment is defined by default to be center for header and left for cells. If the left alignment is applied, it will force the column heading to be left aligned.
+There is no way to define a different alignment for heading and cells (apart from the default).
 The text alignment can be changed by using the character `:` with the header column separator:
  
 ```````````````````````````````` example
@@ -357,19 +363,19 @@ The text alignment can be changed by using the character `:` with the header col
 <table>
 <thead>
 <tr>
-<th>a</th>
+<th style="text-align: left;">a</th>
 <th style="text-align: center;">b</th>
 <th style="text-align: right;">c</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>0</td>
+<td style="text-align: left;">0</td>
 <td style="text-align: center;">1</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr>
-<td>3</td>
+<td style="text-align: left;">3</td>
 <td style="text-align: center;">4</td>
 <td style="text-align: right;">5</td>
 </tr>
@@ -507,3 +513,103 @@ a  | b
 </table>
 ````````````````````````````````
 
+** Rule #9**
+
+It is possible to have a single row header only:
+
+```````````````````````````````` example
+a  | b
+-- | --
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
+```````````````````````````````` example
+|a|b|c
+|---|---|---|
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>c</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
+** Tests **
+
+Tests trailing spaces after pipes
+
+```````````````````````````````` example
+| abc | def | 
+|---|---|
+| cde| ddd| 
+| eee| fff|
+| fff | fffff   | 
+|gggg  | ffff | 
+.
+<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cde</td>
+<td>ddd</td>
+</tr>
+<tr>
+<td>eee</td>
+<td>fff</td>
+</tr>
+<tr>
+<td>fff</td>
+<td>fffff</td>
+</tr>
+<tr>
+<td>gggg</td>
+<td>ffff</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+** Normalized columns count **
+
+The tables are normalized to the maximum number of columns found in a table
+
+
+```````````````````````````````` example
+a | b
+-- | - 
+0 | 1 | 2
+.
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````

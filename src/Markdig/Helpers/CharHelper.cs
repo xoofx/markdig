@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Helper class for handling characters.
     /// </summary>
@@ -17,6 +19,11 @@ namespace Markdig.Helpers
         public const char ZeroSafeChar = '\uFFFD';
 
         public const string ZeroSafeString = "\uFFFD";
+
+        // We don't support LCDM
+        private static IDictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
+
+        private static readonly char[] punctuationExceptions = { '−', '-', '†', '‡' };
 
         public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
         {
@@ -32,8 +39,11 @@ namespace Markdig.Helpers
             pc.CheckUnicodeCategory(out prevIsWhiteSpace, out prevIsPunctuation);
             c.CheckUnicodeCategory(out nextIsWhiteSpace, out nextIsPunctuation);
 
+            var prevIsExcepted = prevIsPunctuation && punctuationExceptions.Contains(pc);
+            var nextIsExcepted = nextIsPunctuation && punctuationExceptions.Contains(c);
+
             canOpen = !nextIsWhiteSpace &&
-                           (!nextIsPunctuation || prevIsWhiteSpace || prevIsPunctuation);
+                           ((!nextIsPunctuation || nextIsExcepted) || prevIsWhiteSpace || prevIsPunctuation);
 
 
             // A right-flanking delimiter run is a delimiter run that is 
@@ -42,7 +52,7 @@ namespace Markdig.Helpers
             // or a punctuation character. 
             // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             canClose = !prevIsWhiteSpace &&
-                            (!prevIsPunctuation || nextIsWhiteSpace || nextIsPunctuation);
+                            ((!prevIsPunctuation || prevIsExcepted) || nextIsWhiteSpace || nextIsPunctuation);
 
             if (!enableWithinWord)
             {
@@ -78,6 +88,26 @@ namespace Markdig.Helpers
         {
             // We don't support LCDM
             return c == 'I' || c == 'V' || c == 'X';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static int RomanToArabic(string text)
+        {
+            int result = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                var character = Char.ToUpperInvariant(text[i]);
+                var candidate = romanMap[character];
+                if (i + 1 < text.Length && candidate < romanMap[Char.ToUpperInvariant(text[i + 1])])
+                {
+                    result -= candidate;
+                }
+                else
+                {
+                    result += candidate;
+                }
+            }
+            return result;
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -132,6 +162,9 @@ namespace Markdig.Helpers
             return IsWhitespace(c) || IsZero(c);
         }
 
+        // Note that we are not considering the character & as a punctuation in HTML
+        // as it is used for HTML entities, print unicode, so we assume that when we have a `&` 
+        // it is more likely followed by a valid HTML Entity that represents a non punctuation
         public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
         {
             // Credits: code from CommonMark.NET
@@ -140,7 +173,7 @@ namespace Markdig.Helpers
             if (c <= 'ÿ')
             {
                 space = c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085';
-                punctuation = c == '\0' || (c >= 33 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+                punctuation = c == '\0' || (c >= 33 && c <= 47 && c != 38) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
             }
             else
             {

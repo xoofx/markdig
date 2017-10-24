@@ -1,7 +1,10 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
@@ -18,14 +21,17 @@ namespace Markdig.Extensions.Tables
     /// <seealso cref="IPostInlineProcessor" />
     public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
-        private LineBreakInlineParser lineBreakParser;
+        private readonly LineBreakInlineParser lineBreakParser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PipeTableParser" /> class.
         /// </summary>
+        /// <param name="lineBreakParser">The linebreak parser to use</param>
         /// <param name="options">The options.</param>
-        public PipeTableParser(PipeTableOptions options = null)
+        public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions options = null)
         {
+            if (lineBreakParser == null) throw new ArgumentNullException(nameof(lineBreakParser));
+            this.lineBreakParser = lineBreakParser;
             OpeningCharacters = new[] { '|', '\n' };
             Options = options ?? new PipeTableOptions();
         }
@@ -34,12 +40,6 @@ namespace Markdig.Extensions.Tables
         /// Gets the options.
         /// </summary>
         public PipeTableOptions Options { get; }
-
-        public override void Initialize(InlineProcessor processor)
-        {
-            // We are using the linebreak parser
-            lineBreakParser = processor.Parsers.Find<LineBreakInlineParser>() ?? new LineBreakInlineParser();
-        }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
@@ -96,11 +96,12 @@ namespace Markdig.Extensions.Tables
                 if (!isFirstLineEmpty)
                 {
                     tableState.ColumnAndLineDelimiters.Add(processor.Inline);
+                    tableState.EndOfLines.Add(processor.Inline);
                 }
             }
             else
             {
-                processor.Inline = new PiprTableDelimiterInline(this)
+                processor.Inline = new PipeTableDelimiterInline(this)
                 {
                     Span = new SourceSpan(position, position),
                     Line = globalLineIndex,
@@ -137,16 +138,16 @@ namespace Markdig.Extensions.Tables
                 }
 
                 var child = container.LastChild;
-                List<PiprTableDelimiterInline> delimitersToRemove = null;
+                List<PipeTableDelimiterInline> delimitersToRemove = null;
 
                 while (child != null)
                 {
-                    var pipeDelimiter = child as PiprTableDelimiterInline;
+                    var pipeDelimiter = child as PipeTableDelimiterInline;
                     if (pipeDelimiter != null)
                     {
                         if (delimitersToRemove == null)
                         {
-                            delimitersToRemove = new List<PiprTableDelimiterInline>();
+                            delimitersToRemove = new List<PipeTableDelimiterInline>();
                         }
                         delimitersToRemove.Add(pipeDelimiter);
                     }
@@ -168,8 +169,7 @@ namespace Markdig.Extensions.Tables
                     for (int i = 0; i < delimitersToRemove.Count; i++)
                     {
                         var pipeDelimiter = delimitersToRemove[i];
-                        var literalInline = new LiteralInline() {Content = new StringSlice("|"), IsClosed = true};
-                        pipeDelimiter.ReplaceBy(literalInline);
+                        pipeDelimiter.ReplaceByLiteral();
 
                         // Check that the pipe that is being removed is not going to make a line without pipe delimiters
                         var tableDelimiters = tableState.ColumnAndLineDelimiters;
@@ -177,12 +177,12 @@ namespace Markdig.Extensions.Tables
 
                         if (i == 0)
                         {
-                            leftIsDelimiter = delimiterIndex > 0 && tableDelimiters[delimiterIndex - 1] is PiprTableDelimiterInline;
+                            leftIsDelimiter = delimiterIndex > 0 && tableDelimiters[delimiterIndex - 1] is PipeTableDelimiterInline;
                         }
                         else if (i + 1 == delimitersToRemove.Count)
                         {
                             rightIsDelimiter = delimiterIndex + 1 < tableDelimiters.Count &&
-                                               tableDelimiters[delimiterIndex + 1] is PiprTableDelimiterInline;
+                                               tableDelimiters[delimiterIndex + 1] is PipeTableDelimiterInline;
                         }
                         // Remove this delimiter from the table processor
                         tableState.ColumnAndLineDelimiters.Remove(pipeDelimiter);
@@ -198,14 +198,18 @@ namespace Markdig.Extensions.Tables
                 return true;
             }
 
+            // Remove previous state
+            state.ParserStates[Index] = null;
+
             // Continue
             if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
             }
 
+            // Detect the header row
             var delimiters = tableState.ColumnAndLineDelimiters;
-            delimiters.Add(null);
+            // TODO: we could optimize this by merging FindHeaderRow and the cell loop
             var aligns = FindHeaderRow(delimiters);
 
             if (Options.RequireHeaderSeparator && aligns == null)
@@ -223,159 +227,226 @@ namespace Markdig.Extensions.Tables
             }
 
             state.BlockNew = table;
-            TableRow firstRow = null;
-            int maxColumn = 0;
             var cells = tableState.Cells;
             cells.Clear();
 
-            Inline column = container.FirstChild;
-            if (column is PiprTableDelimiterInline)
+            //delimiters[0].DumpTo(state.DebugLog);
+
+            // delimiters contain a list of `|` and `\n` delimiters
+            // The `|` delimiters are created as child containers.
+            // So the following:
+            // | a | b \n
+            // | d | e \n
+            // 
+            // Will generate a tree of the following node:
+            // |
+            //   a
+            //   |
+            //     b
+            //     \n
+            //     |
+            //       d
+            //       |
+            //         e
+            //         \n
+            // When parsing delimiters, we need to recover whether a row is of the following form:
+            // 0)  | a | b | \n
+            // 1)  | a | b \n
+            // 2)    a | b \n
+            // 3)    a | b | \n
+
+            // If the last element is not a line break, add a line break to homogenize parsing in the next loop
+            var lastElement = delimiters[delimiters.Count - 1];
+            if (!(lastElement is LineBreakInline))
             {
-                column = ((PiprTableDelimiterInline)column).FirstChild;
+                while (true)
+                {
+                    if (lastElement is ContainerInline)
+                    {
+                        var nextElement = ((ContainerInline) lastElement).LastChild;
+                        if (nextElement != null)
+                        {
+                            lastElement = nextElement;
+                            continue;
+                        }
+                    }
+                    break;
+                }
+
+                var endOfTable = new LineBreakInline();
+                // If the last element is a container, we have to add the EOL to its child
+                // otherwise only next sibling
+                if (lastElement is ContainerInline)
+                {
+                    ((ContainerInline)lastElement).AppendChild(endOfTable);
+                }
+                else
+                {
+                    lastElement.InsertAfter(endOfTable);
+                }
+                delimiters.Add(endOfTable);
+                tableState.EndOfLines.Add(endOfTable);
             }
 
-            // TODO: This is not accurate for the table
-            table.Span.Start = column.Span.Start;
-            table.Span.End = column.Span.End;
-            table.Line = column.Line;
-            table.Column = column.Column;
-            
-            int lastIndex = 0;
+            // Cell loop
+            // Reconstruct the table from the delimiters
+            TableRow row = null;
+            TableRow firstRow = null;
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var delimiter = delimiters[i];
-                if (delimiter == null || IsLine(delimiter))
+                var pipeSeparator = delimiter as PipeTableDelimiterInline;
+                var isLine = delimiter is LineBreakInline;
+
+                if (row == null)
                 {
-                    var beforeDelimiter = delimiter?.PreviousSibling;
-                    var nextLineColumn = delimiter?.NextSibling;
-
-                    TableRow row = null;
-
-                    for (int j = lastIndex; j <= i; j++)
-                    {
-                        var columnSeparator = delimiters[j];
-                        var pipeSeparator = columnSeparator as PiprTableDelimiterInline;
-
-                        var endOfColumn = columnSeparator?.PreviousSibling;
-
-                        // This is the first column empty
-                        if (j == lastIndex && pipeSeparator != null && endOfColumn == null)
-                        {
-                            columnSeparator.Remove();
-                            column = pipeSeparator.FirstChild;
-                            continue;
-                        }
-
-                        if (pipeSeparator != null && IsTrailingColumnDelimiter(pipeSeparator))
-                        {
-                            TrimEnd(endOfColumn);
-                            columnSeparator.Remove();
-                            continue;
-                        }
-
-                        var cellContainer = new ContainerInline();
-                        var item = column;
-                        var isFirstItem = true;
-                        TrimStart(item);
-                        while (item != null && !IsLine(item) && !(item is PiprTableDelimiterInline))
-                        {
-                            var nextSibling = item.NextSibling;
-                            item.Remove();
-                            cellContainer.AppendChild(item);
-                            if (isFirstItem)
-                            {
-                                cellContainer.Line = item.Line;
-                                cellContainer.Column = item.Column;
-                                cellContainer.Span.Start = item.Span.Start;
-                                isFirstItem = false;
-                            }
-                            cellContainer.Span.End = item.Span.End;
-                            item = nextSibling;
-                        }
-
-                        var tableParagraph = new ParagraphBlock()
-                        {
-                            Span = cellContainer.Span,
-                            Line = cellContainer.Line,
-                            Column = cellContainer.Column,
-                            Inline = cellContainer
-                        };
-
-                        var tableCell = new TableCell()
-                        {
-                            Span = cellContainer.Span,
-                            Line = cellContainer.Line,
-                            Column = cellContainer.Column,
-                        };
-
-                        tableCell.Add(tableParagraph);
-
-                        if (row == null)
-                        {
-                            row = new TableRow()
-                            {
-                                Span = cellContainer.Span,
-                                Line = cellContainer.Line,
-                                Column = cellContainer.Column,
-                            };
-                        }
-                        row.Add(tableCell);
-                        cells.Add(tableCell);
-
-                        // If we have reached the end, we can add remaining delimiters as pure child of the current cell
-                        if (row.Count == maxColumn && columnSeparator is PiprTableDelimiterInline)
-                        {
-                            columnSeparator.Remove();
-                            tableParagraph.Inline.AppendChild(columnSeparator);
-                            break;
-                        }
-                        TrimEnd(endOfColumn);
-
-                        //TrimEnd(previousSibling);
-                        if (columnSeparator != null)
-                        {
-                            if (pipeSeparator != null)
-                            {
-                                column = pipeSeparator.FirstChild;
-                            }
-                            columnSeparator.Remove();
-                        }
-                    }
-
-                    if (row != null)
-                    {
-                        table.Add(row);
-                    }
-
-                    TrimEnd(beforeDelimiter);
-
-                    if (delimiter != null)
-                    {
-                        delimiter.Remove();
-                    }
-
-                    if (nextLineColumn != null)
-                    {
-                        column = nextLineColumn;
-                    }
-
+                    row = new TableRow();
                     if (firstRow == null)
                     {
                         firstRow = row;
-                        maxColumn = firstRow.Count;
                     }
 
-                    lastIndex = i + 1;
+                    // If the first delimiter is a pipe and doesn't have any parent or previous sibling, for cases like:
+                    // 0)  | a | b | \n
+                    // 1)  | a | b \n
+                    if (pipeSeparator != null && (delimiter.PreviousSibling == null || delimiter.PreviousSibling is LineBreakInline))
+                    {
+                        delimiter.Remove();
+                        continue;
+                    }
+                }
+
+                // We need to find the beginning/ending of a cell from a right delimiter. From the delimiter 'x', we need to find a (without the delimiter start `|`)
+                // So we iterate back to the first pipe or line break
+                //         x
+                // 1)  | a | b \n
+                // 2)    a | b \n
+                Inline endOfCell = null;
+                Inline beginOfCell = null;
+                var cellContentIt = delimiter;
+                while (true)
+                {
+                    cellContentIt = cellContentIt.PreviousSibling ?? cellContentIt.Parent;
+
+                    if (cellContentIt == null || cellContentIt is LineBreakInline)
+                    {
+                        break;
+                    }
+
+                    // The cell begins at the first effective child after a | or the top ContainerInline (which is not necessary to bring into the tree + it contains an invalid span calculation)
+                    if (cellContentIt is PipeTableDelimiterInline || (cellContentIt.GetType() == typeof(ContainerInline) && cellContentIt.Parent == null ))
+                    {
+                        beginOfCell = ((ContainerInline)cellContentIt).FirstChild;
+                        if (endOfCell == null)
+                        {
+                            endOfCell = beginOfCell;
+                        }
+                        break;
+                    }
+                    
+                    beginOfCell = cellContentIt;
+                    if (endOfCell == null)
+                    {
+                        endOfCell = beginOfCell;
+                    }
+                }
+
+
+                // If the current deilimiter is a pipe `|` OR
+                // the beginOfCell/endOfCell are not null and 
+                // either they are :
+                // - different
+                // - they contain a single element, but it is not a line break (\n) or an empty/whitespace Literal.
+                // Then we can add a cell to the current row
+                if (!isLine || (beginOfCell != null && endOfCell != null && ( beginOfCell != endOfCell || !(beginOfCell is LineBreakInline || (beginOfCell is LiteralInline && ((LiteralInline)beginOfCell).Content.IsEmptyOrWhitespace())))))
+                {
+                    if (!isLine)
+                    {
+                        // If the delimiter is a pipe, we need to remove it from the tree
+                        // so that previous loop looking for a parent will not go further on subsequent cells
+                        delimiter.Remove();
+                    }
+
+                    // We trim whitespace at the beginning and ending of the cell
+                    TrimStart(beginOfCell);
+                    TrimEnd(endOfCell);
+
+                    var cellContainer = new ContainerInline();
+
+                    // Copy elements from beginOfCell on the first level
+                    var cellIt = beginOfCell;
+                    while (cellIt != null && !IsLine(cellIt) && !(cellIt is PipeTableDelimiterInline))
+                    {
+                        var nextSibling = cellIt.NextSibling;
+                        cellIt.Remove();
+                        if (cellContainer.Span.IsEmpty)
+                        {
+                            cellContainer.Line = cellIt.Line;
+                            cellContainer.Column = cellIt.Column;
+                            cellContainer.Span = cellIt.Span;
+                        }
+                        cellContainer.AppendChild(cellIt);
+                        cellContainer.Span.End = cellIt.Span.End;
+                        cellIt = nextSibling;
+                    }
+
+                    // Create the cell and add it to the pending row
+                    var tableParagraph = new ParagraphBlock()
+                    {
+                        Span = cellContainer.Span,
+                        Line = cellContainer.Line,
+                        Column = cellContainer.Column,
+                        Inline = cellContainer
+                    };
+
+                    var tableCell = new TableCell()
+                    {
+                        Span = cellContainer.Span,
+                        Line = cellContainer.Line,
+                        Column = cellContainer.Column,
+                    };
+
+                    tableCell.Add(tableParagraph);
+                    if (row.Span.IsEmpty)
+                    {
+                        row.Span = cellContainer.Span;
+                        row.Line = cellContainer.Line;
+                        row.Column = cellContainer.Column;
+                    }
+                    row.Add(tableCell);
+                    cells.Add(tableCell);
+                }
+
+                // If we have a new line, we can add the row
+                if (isLine)
+                {
+                    Debug.Assert(row != null);
+                    if (table.Span.IsEmpty)
+                    {
+                        table.Span = row.Span;
+                        table.Line = row.Line;
+                        table.Column = row.Column;
+                    }
+                    table.Add(row);
+                    row = null;
                 }
             }
 
+            // Once we are done with the cells, we can remove all end of lines in the table tree
+            foreach (var endOfLine in tableState.EndOfLines)
+            {
+                endOfLine.Remove();
+            }
+
             // If we have a header row, we can remove it
+            // TODO: we could optimize this by merging FindHeaderRow and the previous loop
+            var tableRow = (TableRow)table[0];
+            tableRow.IsHeader = Options.RequireHeaderSeparator;
             if (aligns != null)
             {
-                table.RemoveAt(1);
-                var tableRow = (TableRow) table[0];
-                table.ColumnDefinitions.AddRange(aligns);
                 tableRow.IsHeader = true;
+                table.RemoveAt(1);
+                table.ColumnDefinitions.AddRange(aligns);
             }
 
             // Perform delimiter processor that are coming after this processor
@@ -388,11 +459,14 @@ namespace Markdig.Extensions.Tables
             // Clear cells when we are done
             cells.Clear();
 
+            // Normalize the table
+            table.Normalize();
+
             // We don't want to continue procesing delimiters, as we are already processing them here
             return false;
         }
 
-        private static bool ParseHeaderString(Inline inline, out TableColumnAlign align)
+        private static bool ParseHeaderString(Inline inline, out TableColumnAlign? align)
         {
             align = 0;
             var literal = inline as LiteralInline;
@@ -421,60 +495,69 @@ namespace Markdig.Extensions.Tables
             List<TableColumnDefinition> aligns = null;
             for (int i = 0; i < delimiters.Count; i++)
             {
-                if (delimiters[i] != null && IsLine(delimiters[i]))
+                if (!IsLine(delimiters[i]))
                 {
-                    // The last delimiter is always null,
-                    for (int j = i + 1; j < delimiters.Count - 1; j++)
-                    {
-                        var delimiter = delimiters[j];
-                        var nextDelimiter = delimiters[j + 1];
-
-                        var columnDelimiter = delimiter as PiprTableDelimiterInline;
-                        if (j == i + 1 && IsStartOfLineColumnDelimiter(columnDelimiter))
-                        {
-                            continue;
-                        }
-
-                        // Check the left side of a `|` delimiter
-                        TableColumnAlign align = TableColumnAlign.Left;
-                        if (delimiter.PreviousSibling != null && !ParseHeaderString(delimiter.PreviousSibling, out align))
-                        {
-                            break;
-                        }
-
-                        // Create aligns until we may have a header row
-                        if (aligns == null)
-                        {
-                            aligns = new List<TableColumnDefinition>();
-                        }
-                        aligns.Add(new TableColumnDefinition() { Alignment =  align });
-
-                        // If this is the last delimiter, we need to check the right side of the `|` delimiter
-                        if (nextDelimiter == null)
-                        {
-                            var nextSibling = columnDelimiter != null
-                                ? columnDelimiter.FirstChild
-                                : delimiter.NextSibling;
-
-                            if (!ParseHeaderString(nextSibling, out align))
-                            {
-                                break;
-                            }
-
-                            isValidRow = true;
-                            aligns.Add(new TableColumnDefinition() { Alignment = align });
-                            break;
-                        }
-
-                        // If we are on a Line delimiter, exit
-                        if (IsLine(delimiter))
-                        {
-                            isValidRow = true;
-                            break;
-                        }
-                    }
-                    break;
+                    continue;
                 }
+
+                // The last delimiter is always null,
+                for (int j = i + 1; j < delimiters.Count; j++)
+                {
+                    var delimiter = delimiters[j];
+                    var nextDelimiter = j + 1 < delimiters.Count ? delimiters[j + 1] : null;
+
+                    var columnDelimiter = delimiter as PipeTableDelimiterInline;
+                    if (j == i + 1 && IsStartOfLineColumnDelimiter(columnDelimiter))
+                    {
+                        continue;
+                    }
+
+                    // Check the left side of a `|` delimiter
+                    TableColumnAlign? align = null;
+                    if (delimiter.PreviousSibling != null && !ParseHeaderString(delimiter.PreviousSibling, out align))
+                    {
+                        break;
+                    }
+
+                    // Create aligns until we may have a header row
+                    if (aligns == null)
+                    {
+                        aligns = new List<TableColumnDefinition>();
+                    }
+                    aligns.Add(new TableColumnDefinition() { Alignment =  align });
+
+                    // If this is the last delimiter, we need to check the right side of the `|` delimiter
+                    if (nextDelimiter == null)
+                    {
+                        var nextSibling = columnDelimiter != null
+                            ? columnDelimiter.FirstChild
+                            : delimiter.NextSibling;
+
+                        // If there is no content after
+                        if (IsNullOrSpace(nextSibling))
+                        {
+                            isValidRow = true;
+                            break;
+                        }
+
+                        if (!ParseHeaderString(nextSibling, out align))
+                        {
+                            break;
+                        }
+
+                        isValidRow = true;
+                        aligns.Add(new TableColumnDefinition() { Alignment = align });
+                        break;
+                    }
+
+                    // If we are on a Line delimiter, exit
+                    if (IsLine(delimiter))
+                    {
+                        isValidRow = true;
+                        break;
+                    }
+                }
+                break;
             }
 
             return isValidRow ? aligns : null;
@@ -509,21 +592,6 @@ namespace Markdig.Extensions.Tables
             return previous == null || IsLine(previous);
         }
 
-        private static bool IsTrailingColumnDelimiter(PiprTableDelimiterInline inline)
-        {
-            var child = inline.FirstChild;
-            var literal = child as LiteralInline;
-            if (literal != null)
-            {
-                if (!literal.Content.IsEmptyOrWhitespace())
-                {
-                    return false;
-                }
-                child = child.NextSibling;
-            }
-            return child == null || IsLine(child);
-        }
-
         private static void TrimStart(Inline inline)
         {
             while (inline is ContainerInline && !(inline is DelimiterInline))
@@ -546,12 +614,27 @@ namespace Markdig.Extensions.Tables
             }
         }
 
+        private static bool IsNullOrSpace(Inline inline)
+        {
+            if (inline == null)
+            {
+                return true;
+            }
+            var literal = inline as LiteralInline;
+            if (literal != null)
+            {
+                return literal.Content.IsEmptyOrWhitespace();
+            }
+            return false;
+        }
+
         private class TableState
         {
             public TableState()
             {
                 ColumnAndLineDelimiters = new List<Inline>();
                 Cells = new List<TableCell>();
+                EndOfLines = new List<Inline>();
             }
 
             public bool IsInvalidTable { get; set; }
@@ -563,6 +646,8 @@ namespace Markdig.Extensions.Tables
             public List<Inline> ColumnAndLineDelimiters { get; }
 
             public List<TableCell> Cells { get; }
+
+            public List<Inline> EndOfLines { get; }
         }
     }
 }

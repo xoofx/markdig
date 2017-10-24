@@ -5,10 +5,12 @@
 using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
+using Markdig.Extensions.AutoLinks;
 using Markdig.Extensions.Bootstrap;
 using Markdig.Extensions.Citations;
 using Markdig.Extensions.CustomContainers;
 using Markdig.Extensions.DefinitionLists;
+using Markdig.Extensions.Diagrams;
 using Markdig.Extensions.Emoji;
 using Markdig.Extensions.EmphasisExtras;
 using Markdig.Extensions.Figures;
@@ -16,14 +18,18 @@ using Markdig.Extensions.Footers;
 using Markdig.Extensions.Footnotes;
 using Markdig.Extensions.GenericAttributes;
 using Markdig.Extensions.Hardlines;
+using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
+using Markdig.Extensions.NoRefLinks;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
+using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
+using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 
@@ -34,6 +40,17 @@ namespace Markdig
     /// </summary>
     public static class MarkdownExtensions
     {
+        /// <summary>
+        /// Adds the specified extension to the extensions collection.
+        /// </summary>
+        /// <typeparam name="TExtension">The type of the extension.</typeparam>
+        /// <returns>The instance of <see cref="MarkdownPipelineBuilder" /></returns>
+        public static MarkdownPipelineBuilder Use<TExtension>(this MarkdownPipelineBuilder pipeline) where TExtension : class, IMarkdownExtension, new()
+        {
+            pipeline.Extensions.AddIfNotAlready<TExtension>();
+            return pipeline;
+        }
+
         /// <summary>
         /// Uses all extensions except the BootStrap, Emoji, SmartyPants and soft line as hard line breaks extensions.
         /// </summary>
@@ -57,7 +74,42 @@ namespace Markdig
                 .UsePipeTables()
                 .UseListExtras()
                 .UseTaskLists()
+                .UseDiagrams()
+                .UseAutoLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+        }
+        
+        /// <summary>
+        /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<AutoLinkExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses this extension to disable URI escape with % characters for non-US-ASCII characters in order to workaround a bug under IE/Edge with local file links containing non US-ASCII chars. DO NOT USE OTHERWISE.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseNonAsciiNoEscape(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<NonAsciiNoEscapeExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses YAML frontmatter extension that will parse a YAML frontmatter into the MarkdownDocument. Note that they are not rendered by any default HTML renderer.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseYamlFrontMatter(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<YamlFrontMatterExtension>();
+            return pipeline;
         }
 
         /// <summary>
@@ -86,6 +138,17 @@ namespace Markdig
         public static MarkdownPipelineBuilder UsePragmaLines(this MarkdownPipelineBuilder pipeline)
         {
             pipeline.Extensions.AddIfNotAlready<PragmaLineExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Uses the diagrams extension
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseDiagrams(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<DiagramExtension>();
             return pipeline;
         }
 
@@ -354,6 +417,32 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Add rel=nofollow to all links rendered to HTML.
+        /// </summary>
+        /// <param name="pipeline"></param>
+        /// <returns></returns>
+        public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<NoFollowLinksExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Automatically link references to JIRA issues
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <param name="options">Set of required options</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseJiraLinks(this MarkdownPipelineBuilder pipeline, JiraLinkOptions options)
+        {
+            if (!pipeline.Extensions.Contains<JiraLinkExtension>())
+            {
+                pipeline.Extensions.Add(new JiraLinkExtension(options));
+            }
+            return pipeline;
+        }
+
+        /// <summary>
         /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -386,6 +475,8 @@ namespace Markdig
             {
                 return pipeline;
             }
+
+            // TODO: the extension string should come from the extension itself instead of this hardcoded switch case.
 
             foreach (var extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -455,6 +546,24 @@ namespace Markdig
                         break;
                     case "tasklists":
                         pipeline.UseTaskLists();
+                        break;
+                    case "diagrams":
+                        pipeline.UseDiagrams();
+                        break;
+                    case "nofollowlinks":
+                        pipeline.UseNoFollowLinks();
+                        break;
+                    case "nohtml":
+                        pipeline.DisableHtml();
+                        break;
+                    case "yaml":
+                        pipeline.UseYamlFrontMatter();
+                        break;
+                    case "nonascii-noescape":
+                        pipeline.UseNonAsciiNoEscape();
+                        break;
+                    case "autolinks":
+                        pipeline.UseAutoLinks();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
