@@ -42,29 +42,50 @@ namespace Markdig.Renderers.Html
 
                 // We are replacing the HTML attribute `language-mylang` by `mylang` only for a div block
                 // NOTE that we are allocating a closure here
-                renderer.Write("<div")
-                    .WriteAttributes(obj.TryGetAttributes(),
-                        cls => cls.StartsWith(infoPrefix) ? cls.Substring(infoPrefix.Length) : cls)
-                    .Write(">");
+
+                if (renderer.EnableHtmlForBlock)
+                {
+                    renderer.Write("<div")
+                            .WriteAttributes(obj.TryGetAttributes(),
+                                cls => cls.StartsWith(infoPrefix) ? cls.Substring(infoPrefix.Length) : cls)
+                            .Write(">");
+                }
+
                 renderer.WriteLeafRawLines(obj, true, true, true);
-                renderer.WriteLine("</div>");
+
+                if (renderer.EnableHtmlForBlock)
+                {
+                    renderer.WriteLine("</div>");
+                }
 
             }
             else
             {
-                renderer.Write("<pre");
-                if (OutputAttributesOnPre)
+                if (renderer.EnableHtmlForBlock)
                 {
-                    renderer.WriteAttributes(obj);
+                    renderer.Write("<pre");
+
+                    if (OutputAttributesOnPre)
+                    {
+                        renderer.WriteAttributes(obj);
+                    }
+
+                    renderer.Write("><code");
+
+                    if (!OutputAttributesOnPre)
+                    {
+                        renderer.WriteAttributes(obj);
+                    }
+
+                    renderer.Write(">");
                 }
-                renderer.Write("><code");
-                if (!OutputAttributesOnPre)
-                {
-                    renderer.WriteAttributes(obj);
-                }
-                renderer.Write(">");
+
                 renderer.WriteLeafRawLines(obj, true, true);
-                renderer.WriteLine("</code></pre>");
+
+                if (renderer.EnableHtmlForBlock)
+                {
+                    renderer.WriteLine("</code></pre>");
+                }
             }
         }
     }

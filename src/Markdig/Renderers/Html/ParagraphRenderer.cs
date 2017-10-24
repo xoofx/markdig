@@ -13,16 +13,17 @@ namespace Markdig.Renderers.Html
     {
         protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)
         {
-            if (!renderer.ImplicitParagraph)
+            if (!renderer.ImplicitParagraph && renderer.EnableHtmlForBlock)
             {
                 if (!renderer.IsFirstInContainer)
                 {
                     renderer.EnsureLine();
                 }
+
                 renderer.Write("<p").WriteAttributes(obj).Write(">");
             }
             renderer.WriteLeafInline(obj);
-            if (!renderer.ImplicitParagraph)
+            if (!renderer.ImplicitParagraph && renderer.EnableHtmlForBlock)
             {
                 renderer.WriteLine("</p>");
             }

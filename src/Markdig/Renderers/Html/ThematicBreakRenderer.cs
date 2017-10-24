@@ -13,7 +13,10 @@ namespace Markdig.Renderers.Html
     {
         protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)
         {
-            renderer.Write("<hr").WriteAttributes(obj).WriteLine(" />");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("<hr").WriteAttributes(obj).WriteLine(" />");
+            }
         }
     }
 }

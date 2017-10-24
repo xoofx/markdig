@@ -27,9 +27,17 @@ namespace Markdig.Renderers.Html
                 ? HeadingTexts[obj.Level - 1]
                 : "<h" + obj.Level.ToString(CultureInfo.InvariantCulture);
 
-            renderer.Write("<").Write(headingText).WriteAttributes(obj).Write(">");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("<").Write(headingText).WriteAttributes(obj).Write(">");
+            }
+
             renderer.WriteLeafInline(obj);
-            renderer.Write("</").Write(headingText).WriteLine(">");
+
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("</").Write(headingText).WriteLine(">");
+            }
         }
     }
 }
