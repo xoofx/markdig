@@ -74,18 +74,6 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestNormalizeSyntaxUnorderedList()
-        {
-            AssertSyntax("- Foo\n- Bar\n- Foobar", new ListBlock(null)
-            {
-                IsOrdered = false,
-                BulletType = '-',
-
-                new ContainerInline().AppendChild(new LiteralInline("Foo")),
-            });
-        }
-
-        [Test]
         public void TestNormalizeRoundtripCodeBlock()
         {
             AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }");
