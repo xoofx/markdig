@@ -255,6 +255,33 @@ asdf
         }
 
 
+        [Test]
+        public void TestNormalizeRoundtripSpaceBetweenNodes()
+        {
+            AssertNormalizeNoTrim("# Hello World\nFoobar is a better bar.",
+                                  "# Hello World\n\nFoobar is a better bar.");
+        }
+
+        [Test]
+        public void TestNormalizeRoundtripSpaceBetweenNodesEvenForHeadlines()
+        {
+            AssertNormalizeNoTrim("# Hello World\n## Chapter 1\nFoobar is a better bar.",
+                                  "# Hello World\n\n## Chapter 1\n\nFoobar is a better bar.");
+        }
+
+        [Test]
+        public void TestNormalizeRoundtripSpaceRemoveAtStartAndEnd()
+        {
+            AssertNormalizeNoTrim("\n\n# Hello World\n## Chapter 1\nFoobar is a better bar.\n\n",
+                                  "# Hello World\n\n## Chapter 1\n\nFoobar is a better bar.");
+        }
+
+        [Test]
+        public void TestNormalizeRoundtripSpaceShortenBetweenNodes()
+        {
+            AssertNormalizeNoTrim("# Hello World\n\n\n\nFoobar is a better bar.",
+                                  "# Hello World\n\nFoobar is a better bar.");
+        }
 
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
