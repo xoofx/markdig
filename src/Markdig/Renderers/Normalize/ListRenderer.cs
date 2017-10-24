@@ -67,7 +67,7 @@ namespace Markdig.Renderers.Normalize
         }
 
 
-        public int IntLog10Fast(int input) =>
+        private static int IntLog10Fast(int input) =>
             (input < 10) ? 0 :
             (input < 100) ? 1 :
             (input < 1000) ? 2 :
