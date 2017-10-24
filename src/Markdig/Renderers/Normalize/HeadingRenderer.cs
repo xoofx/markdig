@@ -29,7 +29,8 @@ namespace Markdig.Renderers.Normalize
 
             renderer.Write(headingText).Write(' ');
             renderer.WriteLeafInline(obj);
-            renderer.WriteLine().WriteLine();
+
+            renderer.FinishBlock();
         }
     }
 }

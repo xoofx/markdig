@@ -27,7 +27,7 @@ namespace Markdig.Renderers.Normalize.Inlines
                 if (!string.IsNullOrEmpty(link.Title))
                 {
                     renderer.Write(" \"");
-                    renderer.Write(link.Title); // TODO: escape "
+                    renderer.Write(link.Title.Replace(@"""", @"\"""));
                     renderer.Write("\"");
                 }
 

@@ -13,9 +13,11 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)
         {
-            renderer.Write(obj.Delimiter);
-            renderer.Write(obj.Content); // TODO: escape `
-            renderer.Write(obj.Delimiter);
+            var delimiter = obj.Content.Contains(obj.Delimiter + "") ? new string(obj.Delimiter, 2) : obj.Delimiter + "";
+
+            renderer.Write(delimiter);
+            renderer.Write(obj.Content);
+            renderer.Write(delimiter);
         }
     }
 }
