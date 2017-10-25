@@ -7,6 +7,7 @@ using System.Reflection;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Parsers;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
 
 namespace Markdig
@@ -21,6 +22,42 @@ namespace Markdig
 #else
         public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
 #endif
+
+        /// <summary>
+        /// Normalizes the specified markdown to a normalized markdown text.
+        /// </summary>
+        /// <param name="markdown">The markdown.</param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>A normalized markdown text.</returns>
+        public static string Normalize(string markdown, MarkdownPipeline pipeline = null)
+        {
+            var writer = new StringWriter();
+            Normalize(markdown, writer, pipeline);
+            return writer.ToString();
+        }
+
+        /// <summary>
+        /// Normalizes the specified markdown to a normalized markdown text.
+        /// </summary>
+        /// <param name="markdown">The markdown.</param>
+        /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>A normalized markdown text.</returns>
+        public static MarkdownDocument Normalize(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        {
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            pipeline = CheckForSelfPipeline(pipeline, markdown);
+
+            // We override the renderer with our own writer
+            var renderer = new NormalizeRenderer(writer);
+            pipeline.Setup(renderer);
+
+            var document = Parse(markdown, pipeline);
+            renderer.Render(document);
+            writer.Flush();
+
+            return document;
+        }
 
         /// <summary>
         /// Converts a Markdown string to HTML.

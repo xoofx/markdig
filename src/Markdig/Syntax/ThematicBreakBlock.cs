@@ -17,5 +17,9 @@ namespace Markdig.Syntax
         public ThematicBreakBlock(BlockParser parser) : base(parser)
         {
         }
+
+        public char ThematicChar { get; set; }
+
+        public int ThematicCharCount { get; set; }
     }
 }
