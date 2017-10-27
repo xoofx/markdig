@@ -4,10 +4,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using Markdig.Helpers;
-using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Renderers.Normalize.Inlines;
 
