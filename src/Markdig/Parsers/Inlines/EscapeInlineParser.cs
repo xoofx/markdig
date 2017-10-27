@@ -28,7 +28,7 @@ namespace Markdig.Parsers.Inlines
             {
                 processor.Inline = new LiteralInline()
                 {
-                    Content = new StringSlice(new string(c, 1)),
+                    Content = new StringSlice(slice.Text, slice.Start, slice.Start),
                     Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                     Line = line,
                     Column = column
