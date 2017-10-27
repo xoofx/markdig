@@ -61,7 +61,7 @@ namespace Markdig.Renderers.Normalize
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
                     renderer.EnsureLine();
-                    renderer.Write(renderer.Options.DefaultListItemCharacter);
+                    renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
                     renderer.Write(' ');
                     renderer.PushIndent("  ");
                     renderer.WriteChildren(listItem);

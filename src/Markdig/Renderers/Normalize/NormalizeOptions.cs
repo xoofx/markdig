@@ -17,7 +17,7 @@ namespace Markdig.Renderers.Normalize
             EmptyLineAfterCodeBlock = true;
             EmptyLineAfterHeading = true;
             EmptyLineAfterThematicBreak = true;
-            DefaultListItemCharacter = '-';
+            ListItemCharacter = null;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace Markdig.Renderers.Normalize
         public bool EmptyLineAfterThematicBreak { get; set; }
 
         /// <summary>
-        /// The bullet character used for list items. Default is <c>-</c>
+        /// The bullet character used for list items. Default is <c>null</c> leaving the original bullet character as-is.
         /// </summary>
-        public char DefaultListItemCharacter { get; set; }
+        public char? ListItemCharacter { get; set; }
     }
 }

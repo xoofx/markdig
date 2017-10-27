@@ -168,7 +168,7 @@ line3");
             AssertNormalizeNoTrim(@"* foo
   * bar
   
-  baz", options: new NormalizeOptions() { DefaultListItemCharacter = '*' });
+  baz", options: new NormalizeOptions() { ListItemCharacter = '*' });
         }
 
         [Test]
