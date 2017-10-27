@@ -44,13 +44,15 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLeafRawLines(obj, true);
                 renderer.Write(opening);
 
-                renderer.FinishBlock();
+                // TODO: This should be part of a Normalize Option (empty line or not)
+                renderer.FinishBlock(false);
             }
             else
             {
                 renderer.WriteLeafRawLines(obj, false, true);
 
-                renderer.FinishBlock();
+                // TODO: This should be part of a Normalize Option (empty line or not)
+                renderer.FinishBlock(false);
             }
         }
     }

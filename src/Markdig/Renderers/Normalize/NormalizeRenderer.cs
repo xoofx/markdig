@@ -48,12 +48,15 @@ namespace Markdig.Renderers.Normalize
 
         public bool CompactParagraph { get; set; }
 
-        public void FinishBlock()
+        public void FinishBlock(bool emptyLine)
         {
             if (!IsLastInContainer && !CompactParagraph)
             {
                 WriteLine();
-                WriteLine();
+                if (emptyLine)
+                {
+                    WriteLine();
+                }
             }
         }
 

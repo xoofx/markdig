@@ -15,7 +15,8 @@ namespace Markdig.Renderers.Normalize
         {
             renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
 
-            renderer.FinishBlock();
+            // TODO: This should be part of a Normalize Option (empty line or not)
+            renderer.FinishBlock(false);
         }
     }
 }

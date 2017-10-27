@@ -77,8 +77,8 @@ namespace Markdig.Tests
         public void TestNormalizeRoundtripCodeBlock()
         {
             AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }");
-            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\ntext after two newlines");
-            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n\ntext after two newlines");
+            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\ntext after two newlines");
+            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\ntext after two newlines");
             AssertNormalizeNoTrim("````csharp\npublic void HelloWorld();\n{\n}\n````"); 
             AssertNormalizeNoTrim("````csharp hideNewKeyword=true\npublic void HelloWorld();\n{\n}\n````");
         }

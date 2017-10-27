@@ -63,7 +63,7 @@ namespace Markdig.Renderers.Normalize
 
             renderer.CompactParagraph = compact;
 
-            renderer.FinishBlock();
+            renderer.FinishBlock(true);
         }
 
 

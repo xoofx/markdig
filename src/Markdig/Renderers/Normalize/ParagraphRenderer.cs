@@ -19,7 +19,7 @@ namespace Markdig.Renderers.Normalize
             }
             renderer.WriteLeafInline(obj);
 
-            renderer.FinishBlock();
+            renderer.FinishBlock(true);
         }
     }
 }

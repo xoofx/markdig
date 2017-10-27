@@ -17,7 +17,7 @@ namespace Markdig.Renderers.Normalize
             renderer.WriteChildren(obj);
             renderer.PopIndent();
 
-            renderer.FinishBlock();
+            renderer.FinishBlock(true);
         }
     }
 }
