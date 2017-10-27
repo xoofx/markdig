@@ -13,8 +13,8 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, QuoteBlock obj)
         {
-            // TODO: Add an option to add a space after the ">"
-            renderer.PushIndent(obj.QuoteChar.ToString());
+            var quoteIndent = renderer.Options.SpaceAfterQuoteBlock ? obj.QuoteChar + " " : obj.QuoteChar.ToString();
+            renderer.PushIndent(quoteIndent);
             renderer.WriteChildren(obj);
             renderer.PopIndent();
 

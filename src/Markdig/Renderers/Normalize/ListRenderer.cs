@@ -29,12 +29,13 @@ namespace Markdig.Renderers.Normalize
                             break;
                     }
                 }
-                foreach (var item in listBlock)
+                for (var i = 0; i < listBlock.Count; i++)
                 {
-                    var listItem = (ListItemBlock)item;
+                    var item = listBlock[i];
+                    var listItem = (ListItemBlock) item;
                     renderer.EnsureLine();
 
-                    renderer.Write(index + "");
+                    renderer.Write(index.ToString(CultureInfo.InvariantCulture));
                     renderer.Write(listBlock.OrderedDelimiter);
                     renderer.Write(' ');
                     renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
@@ -46,21 +47,32 @@ namespace Markdig.Renderers.Normalize
                             index++;
                             break;
                     }
+                    if (i + 1 < listBlock.Count && listBlock.IsLoose)
+                    {
+                        renderer.EnsureLine();
+                        renderer.WriteLine();
+                    }
                 }
             }
             else
             {
-                foreach (var item in listBlock)
+                for (var i = 0; i < listBlock.Count; i++)
                 {
-                    var listItem = (ListItemBlock)item;
+                    var item = listBlock[i];
+                    var listItem = (ListItemBlock) item;
                     renderer.EnsureLine();
-                    renderer.Write("- ");
+                    renderer.Write(renderer.Options.DefaultListItemCharacter);
+                    renderer.Write(' ');
                     renderer.PushIndent("  ");
                     renderer.WriteChildren(listItem);
                     renderer.PopIndent();
+                    if (i + 1 < listBlock.Count && listBlock.IsLoose)
+                    {
+                        renderer.EnsureLine();
+                        renderer.WriteLine();
+                    }
                 }
             }
-
             renderer.CompactParagraph = compact;
 
             renderer.FinishBlock(true);

@@ -23,8 +23,10 @@ namespace Markdig.Renderers.Normalize
         /// Initializes a new instance of the <see cref="NormalizeRenderer"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public NormalizeRenderer(TextWriter writer) : base(writer)
+        /// <param name="options">The normalize options</param>
+        public NormalizeRenderer(TextWriter writer, NormalizeOptions options = null) : base(writer)
         {
+            Options = options ?? new NormalizeOptions();
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());
             ObjectRenderers.Add(new ListRenderer());
@@ -46,11 +48,13 @@ namespace Markdig.Renderers.Normalize
             ObjectRenderers.Add(new LiteralInlineRenderer());
         }
 
+        public NormalizeOptions Options { get; }
+
         public bool CompactParagraph { get; set; }
 
         public void FinishBlock(bool emptyLine)
         {
-            if (!IsLastInContainer && !CompactParagraph)
+            if (!IsLastInContainer)
             {
                 WriteLine();
                 if (emptyLine)

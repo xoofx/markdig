@@ -27,12 +27,13 @@ namespace Markdig
         /// Normalizes the specified markdown to a normalized markdown text.
         /// </summary>
         /// <param name="markdown">The markdown.</param>
+        /// <param name="options">The normalize options</param>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>A normalized markdown text.</returns>
-        public static string Normalize(string markdown, MarkdownPipeline pipeline = null)
+        public static string Normalize(string markdown, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
         {
             var writer = new StringWriter();
-            Normalize(markdown, writer, pipeline);
+            Normalize(markdown, writer, options, pipeline);
             return writer.ToString();
         }
 
@@ -41,15 +42,16 @@ namespace Markdig
         /// </summary>
         /// <param name="markdown">The markdown.</param>
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
+        /// <param name="options">The normalize options</param>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>A normalized markdown text.</returns>
-        public static MarkdownDocument Normalize(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
         {
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
             pipeline = CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer
-            var renderer = new NormalizeRenderer(writer);
+            var renderer = new NormalizeRenderer(writer, options);
             pipeline.Setup(renderer);
 
             var document = Parse(markdown, pipeline);

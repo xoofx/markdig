@@ -13,13 +13,8 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
         {
-            if (!renderer.CompactParagraph)
-            {
-                renderer.EnsureLine();
-            }
             renderer.WriteLeafInline(obj);
-
-            renderer.FinishBlock(true);
+            renderer.FinishBlock(!renderer.CompactParagraph);
         }
     }
 }

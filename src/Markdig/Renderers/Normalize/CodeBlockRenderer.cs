@@ -26,7 +26,7 @@ namespace Markdig.Renderers.Normalize
                 {
                     renderer.Write(fencedCodeBlock.Info);
                 }
-                if (string.IsNullOrEmpty(fencedCodeBlock.Arguments) == false)
+                if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
                     renderer.Write(" ").Write(fencedCodeBlock.Arguments);
                 }
@@ -43,17 +43,13 @@ namespace Markdig.Renderers.Normalize
 
                 renderer.WriteLeafRawLines(obj, true);
                 renderer.Write(opening);
-
-                // TODO: This should be part of a Normalize Option (empty line or not)
-                renderer.FinishBlock(false);
             }
             else
             {
                 renderer.WriteLeafRawLines(obj, false, true);
-
-                // TODO: This should be part of a Normalize Option (empty line or not)
-                renderer.FinishBlock(false);
             }
+
+            renderer.FinishBlock(renderer.Options.EmptyLineAfterCodeBlock);
         }
     }
 }

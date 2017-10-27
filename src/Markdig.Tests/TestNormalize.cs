@@ -77,8 +77,8 @@ namespace Markdig.Tests
         public void CodeBlock()
         {
             AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }");
-            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\ntext after two newlines");
-            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\ntext after two newlines");
+            AssertNormalizeNoTrim("    public void HelloWorld();\n    {\n    }\n\ntext after two newlines");
+            AssertNormalizeNoTrim("````\npublic void HelloWorld();\n{\n}\n````\n\ntext after two newlines");
             AssertNormalizeNoTrim("````csharp\npublic void HelloWorld();\n{\n}\n````");
             AssertNormalizeNoTrim("````csharp hideNewKeyword=true\npublic void HelloWorld();\n{\n}\n````");
         }
@@ -93,6 +93,7 @@ namespace Markdig.Tests
             AssertNormalizeNoTrim("##### Heading");
             AssertNormalizeNoTrim("###### Heading");
             AssertNormalizeNoTrim("###### Heading\n\ntext after two newlines");
+            AssertNormalizeNoTrim("# Heading\nAnd Text1\n\nAndText2", options: new NormalizeOptions() { EmptyLineAfterHeading = false });
 
             AssertNormalizeNoTrim("Heading\n=======\n\ntext after two newlines", "# Heading\n\ntext after two newlines");
         }
@@ -142,6 +143,51 @@ line3");
         }
 
         [Test]
+        public void ListUnorderedLoose()
+        {
+            AssertNormalizeNoTrim(@"- a
+
+- b
+
+- c");
+        }
+
+        [Test]
+        public void ListOrderedLooseAndCodeBlock()
+        {
+            AssertNormalizeNoTrim(@"1. ```
+   foo
+   ```
+   
+   bar");
+        }
+
+        [Test, Ignore("Not sure this is the correct normalize for this one. Need to check the specs")]
+        public void ListUnorderedLooseTop()
+        {
+            AssertNormalizeNoTrim(@"* foo
+  * bar
+  
+  baz", options: new NormalizeOptions() { DefaultListItemCharacter = '*' });
+        }
+
+        [Test]
+        public void ListUnorderedLooseMultiParagraph()
+        {
+            AssertNormalizeNoTrim(
+@"- a
+  
+  And another paragraph a
+
+- b
+  
+  And another paragraph b
+
+- c");
+        }
+
+
+        [Test]
         public void ListOrdered()
         {
             AssertNormalizeNoTrim(@"1. a
@@ -188,10 +234,16 @@ paragraph2 without newlines");
         public void QuoteBlock()
         {
             AssertNormalizeNoTrim(@"> test1
->
-> test2", @">test1
->
->test2");
+> 
+> test2");
+
+            AssertNormalizeNoTrim(@"> test1
+This is a continuation
+> test2",
+                @"> test1
+> This is a continuation
+> test2"
+);
 
             AssertNormalizeNoTrim(@"> test1
 > -foobar
@@ -199,13 +251,7 @@ paragraph2 without newlines");
 asdf
 
 > test2
-> -foobar sen.", @">test1
->-foobar
-
-asdf
-
->test2
->-foobar sen.");
+> -foobar sen.");
         }
 
         [Test]
@@ -327,28 +373,9 @@ This is a code block
 
     This is an indented code block
     line 2 of indented
-This is a last line
-";
-            var result = @"# Heading 1
 
-This is a paragraph
-
-This is another paragraph
-
-- This is a list item 1
-- This is a list item 2
-- This is a list item 3
-
-```C#
-This is a code block
-```
-> This is a quote block
-
-    This is an indented code block
-    line 2 of indented
 This is a last line";
-
-            AssertNormalizeNoTrim(input, result);
+            AssertNormalizeNoTrim(input);
         }
 
         private static void AssertSyntax(string expected, MarkdownObject syntax)
@@ -371,16 +398,16 @@ This is a last line";
             Assert.AreEqual(expected, actual);
         }
 
-        public void AssertNormalizeNoTrim(string input, string expected = null)
-            => AssertNormalize(input, expected, false);
+        public void AssertNormalizeNoTrim(string input, string expected = null, NormalizeOptions options = null)
+            => AssertNormalize(input, expected, false, options);
 
-        public void AssertNormalize(string input, string expected = null, bool trim = true)
+        public void AssertNormalize(string input, string expected = null, bool trim = true, NormalizeOptions options = null)
         {
             expected = expected ?? input;
             input = NormText(input, trim);
             expected = NormText(expected, trim);
 
-            var result = Markdown.Normalize(input);
+            var result = Markdown.Normalize(input, options);
             result = NormText(result, trim);
 
             Console.WriteLine("```````````````````Source");
