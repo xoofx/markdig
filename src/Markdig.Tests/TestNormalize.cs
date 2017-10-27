@@ -98,7 +98,14 @@ namespace Markdig.Tests
         }
 
         [Test]
-        public void TestNormalizeRoundtripHtml()
+        public void Backslash()
+        {
+            AssertNormalizeNoTrim("This is a hardline  \nAnd this is another hardline\\\nThis is standard newline");
+            AssertNormalizeNoTrim("This is a line\nWith another line\nAnd a last line");
+        }
+
+        [Test]
+        public void HtmlBlock()
         {
             /*AssertNormalizeNoTrim(@"<div id=""foo"" class=""bar
   baz"">
@@ -229,6 +236,8 @@ asdf
         {
             AssertNormalizeNoTrim("normal\nline break");
             AssertNormalizeNoTrim("hard  \nline break");
+            AssertNormalizeNoTrim("This is a hardline  \nAnd this is another hardline\\\nThis is standard newline");
+            AssertNormalizeNoTrim("This is a line\nWith another line\nAnd a last line");
         }
 
         [Test]
@@ -242,7 +251,13 @@ asdf
         }
 
         [Test]
-        public void TestNormalizeRoundtripHtmlEntityInline()
+        public void EscapeInline()
+        {
+            AssertNormalizeNoTrim("This is an escape \\* with another \\[");
+        }
+
+        [Test]
+        public void HtmlEntityInline()
         {
             AssertNormalizeNoTrim("This is a &auml; blank");
         }
