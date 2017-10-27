@@ -189,7 +189,9 @@ paragraph2 without newlines");
         {
             AssertNormalizeNoTrim(@"> test1
 >
-> test2");
+> test2", @">test1
+>
+>test2");
 
             AssertNormalizeNoTrim(@"> test1
 > -foobar
@@ -197,7 +199,13 @@ paragraph2 without newlines");
 asdf
 
 > test2
-> -foobar sen.");
+> -foobar sen.", @">test1
+>-foobar
+
+asdf
+
+>test2
+>-foobar sen.");
         }
 
         [Test]
