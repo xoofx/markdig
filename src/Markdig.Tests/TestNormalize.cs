@@ -298,6 +298,51 @@ asdf
                                   "# Hello World\n\nFoobar is a better bar.");
         }
 
+        [Test]
+        public void BiggerSample()
+        {
+            var input = @"# Heading 1
+
+This is a paragraph
+
+This is another paragraph
+
+- This is a list item 1
+- This is a list item 2
+- This is a list item 3
+
+```C#
+This is a code block
+```
+
+> This is a quote block
+
+    This is an indented code block
+    line 2 of indented
+This is a last line
+";
+            var result = @"# Heading 1
+
+This is a paragraph
+
+This is another paragraph
+
+- This is a list item 1
+- This is a list item 2
+- This is a list item 3
+
+```C#
+This is a code block
+```
+> This is a quote block
+
+    This is an indented code block
+    line 2 of indented
+This is a last line";
+
+            AssertNormalizeNoTrim(input, result);
+        }
+
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
             var writer = new StringWriter();
