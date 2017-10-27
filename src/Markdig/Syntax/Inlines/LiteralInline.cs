@@ -48,6 +48,11 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public StringSlice Content;
 
+        /// <summary>
+        /// A boolean indicating whether the first character of this literal is escaped by `\`.
+        /// </summary>
+        public bool IsFirstCharacterEscaped { get; set; }
+
         public override string ToString()
         {
             return Content.ToString();

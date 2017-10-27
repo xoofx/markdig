@@ -20,9 +20,8 @@ namespace Markdig.Renderers.Normalize.Inlines
         {
             if (obj.IsHard)
             {
-                renderer.Write("  ");
+                renderer.Write(obj.IsBackslash ? "\\" : "  ");
             }
-
             renderer.WriteLine();
         }
     }
