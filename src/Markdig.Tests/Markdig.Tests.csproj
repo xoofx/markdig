@@ -62,6 +62,7 @@
     <Compile Include="TestLineReader.cs" />
     <Compile Include="TestLinkHelper.cs" />
     <Compile Include="TestOrderedList.cs" />
+    <Compile Include="TestPlainText.cs" />
     <Compile Include="TestPragmaLines.cs" />
     <Compile Include="TestSourcePosition.cs" />
     <Compile Include="TestStringSliceList.cs" />
