@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -155,6 +155,51 @@ namespace Markdig
                 return selfPipeline.CreatePipelineFromInput(markdown);
             }
             return pipeline;
+        }
+
+        /// <summary>
+        /// Converts a Markdown string to Plain text and output to the specified writer.
+        /// </summary>
+        /// <param name="markdown">A Markdown text.</param>
+        /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
+        /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <returns>The Markdown document that has been parsed</returns>
+        /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
+        public static MarkdownDocument ToPlainText(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        {
+            if (markdown == null) throw new ArgumentNullException(nameof(markdown));
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            pipeline = CheckForSelfPipeline(pipeline, markdown);
+
+            // We override the renderer with our own writer
+            var renderer = new HtmlRenderer(writer)
+            {
+                EnableHtmlForBlock = false,
+                EnableHtmlForInline = false
+            };
+            pipeline.Setup(renderer);
+
+            var document = Parse(markdown, pipeline);
+            renderer.Render(document);
+            writer.Flush();
+
+            return document;
+        }
+
+        /// <summary>
+        /// Converts a Markdown string to HTML.
+        /// </summary>
+        /// <param name="markdown">A Markdown text.</param>
+        /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <returns>The result of the conversion</returns>
+        /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
+        public static string ToPlainText(string markdown, MarkdownPipeline pipeline = null)
+        {
+            if (markdown == null) throw new ArgumentNullException(nameof(markdown));
+            var writer = new StringWriter();
+            ToPlainText(markdown, writer, pipeline);
+            return writer.ToString();
         }
     }
 }
