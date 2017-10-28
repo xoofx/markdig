@@ -31,6 +31,8 @@ namespace Markdig.Renderers.Normalize
             ObjectRenderers.Add(new ParagraphRenderer());
             ObjectRenderers.Add(new QuoteBlockRenderer());
             ObjectRenderers.Add(new ThematicBreakRenderer());
+            ObjectRenderers.Add(new LinkReferenceDefinitionGroupRenderer());
+            ObjectRenderers.Add(new LinkReferenceDefinitionRenderer());
 
             // Default inline renderers
             ObjectRenderers.Add(new AutolinkInlineRenderer());

@@ -305,6 +305,24 @@ asdf
         }
 
         [Test]
+        public void LinkReferenceDefinition()
+        {
+            // Full link
+            AssertNormalizeNoTrim("This is a [link][MyLink]\n\n[MyLink]: http://company.com");
+
+            AssertNormalizeNoTrim("[MyLink]: http://company.com\nThis is a [link][MyLink]",
+                "This is a [link][MyLink]\n\n[MyLink]: http://company.com");
+
+            AssertNormalizeNoTrim("This is a [link][MyLink] a normal link [link](http://google.com) and another def link [link2][MyLink2]\n\n[MyLink]: http://company.com\n[MyLink2]: http://company2.com");
+
+            // Collapsed link
+            AssertNormalizeNoTrim("This is a [link][]\n\n[link]: http://company.com");
+
+            // Shortcut link
+            AssertNormalizeNoTrim("This is a [link]\n\n[link]: http://company.com");
+        }
+
+        [Test]
         public void EscapeInline()
         {
             AssertNormalizeNoTrim("This is an escape \\* with another \\[");

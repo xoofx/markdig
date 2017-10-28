@@ -20,18 +20,40 @@ namespace Markdig.Renderers.Normalize.Inlines
             renderer.Write('[');
             renderer.WriteChildren(link);
             renderer.Write(']');
-            if (!string.IsNullOrEmpty(link.Url))
+
+            if (link.Label != null)
             {
-                renderer.Write('(').Write(link.Url);
 
-                if (!string.IsNullOrEmpty(link.Title))
+                var literal = link.FirstChild as LiteralInline;
+                if (literal != null && literal.Content.Match(link.Label) && literal.Content.Length == link.Label.Length)
                 {
-                    renderer.Write(" \"");
-                    renderer.Write(link.Title.Replace(@"""", @"\"""));
-                    renderer.Write("\"");
+                    // collapsed reference and shortcut links
+                    if (!link.IsShortcut)
+                    {
+                        renderer.Write("[]");
+                    }
                 }
+                else
+                {
+                    // full link
+                    renderer.Write('[').Write(link.Label).Write(']');
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(link.Url))
+                {
+                    renderer.Write('(').Write(link.Url);
 
-                renderer.Write(')');
+                    if (!string.IsNullOrEmpty(link.Title))
+                    {
+                        renderer.Write(" \"");
+                        renderer.Write(link.Title.Replace(@"""", @"\"""));
+                        renderer.Write("\"");
+                    }
+
+                    renderer.Write(')');
+                }
             }
         }
     }
