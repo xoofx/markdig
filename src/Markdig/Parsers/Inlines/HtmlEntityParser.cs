@@ -21,18 +21,18 @@ namespace Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'&'};
         }
 
-        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+
+        public static bool TryParse(ref StringSlice slice, out string literal, out int match)
         {
+            literal = null;
             string entityName;
             int entityValue;
-            var startPosition = slice.Start;
-            int match = HtmlHelper.ScanEntity(slice.Text, slice.Start, slice.Length, out entityName, out entityValue);
+            match = HtmlHelper.ScanEntity(slice.Text, slice.Start, slice.Length, out entityName, out entityValue);
             if (match == 0)
             {
                 return false;
             }
 
-            string literal = null;
             if (entityName != null)
             {
                 literal = EntityHelper.DecodeEntity(entityName);
@@ -41,6 +41,19 @@ namespace Markdig.Parsers.Inlines
             {
                 literal = (entityValue == 0 ? null : EntityHelper.DecodeEntity(entityValue)) ?? CharHelper.ZeroSafeString;
             }
+            return true;
+        }
+
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+        {
+            int match;
+            string literal;
+            if (!TryParse(ref slice, out literal, out match))
+            {
+                return false;
+            }
+
+            var startPosition = slice.Start;
 
             if (literal != null)
             {

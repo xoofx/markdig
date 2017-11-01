@@ -101,7 +101,7 @@ namespace Markdig.Parsers.Inlines
             }
 
             // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input â€“ the first one in parse order.)
             var child = container.LastChild;
             while (child != null)
             {
@@ -138,12 +138,24 @@ namespace Markdig.Parsers.Inlines
 
             var delimiterChar = slice.CurrentChar;
             var emphasisDesc = emphasisMap[delimiterChar];
-            var pc = slice.PeekCharExtra(-1);
-            if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
-            {
-                return false;
-            }
 
+            var pc = (char)0;
+            if (processor.Inline is HtmlEntityInline)
+            {
+                var htmlEntityInline = (HtmlEntityInline) processor.Inline;
+                if (htmlEntityInline.Transcoded.Length > 0)
+                {
+                    pc = htmlEntityInline.Transcoded[htmlEntityInline.Transcoded.End];
+                }
+            }
+            if (pc == 0)
+            {
+                pc = slice.PeekCharExtra(-1);
+                if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
+                {
+                    return false;
+                }
+            }
             var startPosition = slice.Start;
 
             int delimiterCount = 0;
@@ -159,6 +171,14 @@ namespace Markdig.Parsers.Inlines
             if (delimiterCount < emphasisDesc.MinimumCount)
             {
                 return false;
+            }
+
+            // The following character is actually an entity, we need to decode it
+            int htmlLength;
+            string htmlString;
+            if (HtmlEntityParser.TryParse(ref slice, out htmlString, out htmlLength))
+            {
+                c = htmlString[0];
             }
 
             // Calculate Open-Close for current character
@@ -204,7 +224,7 @@ namespace Markdig.Parsers.Inlines
             // at the end of the CommonMark specs.
 
             // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
+            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input â€“ the first one in parse order.)
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var closeDelimiter = delimiters[i];
@@ -219,7 +239,7 @@ namespace Markdig.Parsers.Inlines
                     while (true)
                     {
                         // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
-                        // for the first matching potential opener (“matching” means same delimiter).
+                        // for the first matching potential opener (â€œmatchingâ€ means same delimiter).
                         EmphasisDelimiterInline openDelimiter = null;
                         int openDelimiterIndex = -1;
                         for (int j = i - 1; j >= 0; j--)
