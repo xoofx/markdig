@@ -28,8 +28,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApp", "TestWebApp\TestWebApp.csproj", "{150B6C1E-00E2-4941-917B-A1C68A286F18}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +58,6 @@ Global
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{150B6C1E-00E2-4941-917B-A1C68A286F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{150B6C1E-00E2-4941-917B-A1C68A286F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{150B6C1E-00E2-4941-917B-A1C68A286F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{150B6C1E-00E2-4941-917B-A1C68A286F18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
