@@ -396,6 +396,21 @@ This is a last line";
             AssertNormalizeNoTrim(input);
         }
 
+        [Test]
+        public void TaskLists()
+        {
+            AssertNormalizeNoTrim("- [X] This is done");
+            AssertNormalizeNoTrim("- [x] This is done",
+                                  "- [X] This is done");
+            AssertNormalizeNoTrim("- [ ] This is not done");
+
+            // ignore
+            AssertNormalizeNoTrim("[x] This is not a task list");
+            AssertNormalizeNoTrim("[ ] This is not a task list");
+        }
+
+
+
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
             var writer = new StringWriter();
@@ -425,7 +440,11 @@ This is a last line";
             input = NormText(input, trim);
             expected = NormText(expected, trim);
 
-            var result = Markdown.Normalize(input, options);
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseTaskLists()
+                .Build();
+
+            var result = Markdown.Normalize(input, options, pipeline: pipeline);
             result = NormText(result, trim);
 
             Console.WriteLine("```````````````````Source");
