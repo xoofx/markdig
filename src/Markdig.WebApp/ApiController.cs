@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +6,13 @@ namespace Markdig.WebApp
 {
     public class ApiController : Controller
     {
+        [HttpGet()]
+        [Route("")]
+        public string Empty()
+        {
+            return string.Empty;
+        }
+
         // GET api/to_html?text=xxx&extensions=advanced
         [Route("api/to_html")]
         [HttpGet()]
