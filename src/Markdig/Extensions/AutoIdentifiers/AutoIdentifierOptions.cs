@@ -22,11 +22,6 @@ namespace Markdig.Extensions.AutoIdentifiers
         Default = AutoLink | AllowOnlyAscii,
 
         /// <summary>
-        /// Renders auto identifiers like GitHub.
-        /// </summary>
-        GitHub = Default | KeepOpeningDigits | DiscardDots,
-
-        /// <summary>
         /// Allows to link to a header by using the same text as the header for the link label. Default is <c>true</c>
         /// </summary>
         AutoLink = 1,
@@ -37,13 +32,8 @@ namespace Markdig.Extensions.AutoIdentifiers
         AllowOnlyAscii = 2,
 
         /// <summary>
-        /// Allows to keep digits starting a heading (by default, it keeps only characters starting from the first letter)
+        /// Renders auto identifiers like GitHub.
         /// </summary>
-        KeepOpeningDigits = 4,
-
-        /// <summary>
-        /// Discard dots when computing an identifier.
-        /// </summary>
-        DiscardDots = 8
+        GitHub = 4,
     }
 }

@@ -18,7 +18,7 @@ namespace Markdig.Helpers
             return TryParseAutolink(ref text, out link, out isEmail);
         }
 
-        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false, bool discardDots = false)
+        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
         {
             var headingBuffer = StringBuilderCache.Local();
             bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
@@ -47,7 +47,7 @@ namespace Markdig.Helpers
                     }
                     else if (hasLetter)
                     {
-                        if (IsReservedPunctuation(c, discardDots))
+                        if (IsReservedPunctuation(c))
                         {
                             if (previousIsSpace)
                             {
@@ -67,7 +67,7 @@ namespace Markdig.Helpers
                         else if (!previousIsSpace && c.IsWhitespace())
                         {
                             var pc = headingBuffer[headingBuffer.Length - 1];
-                            if (!IsReservedPunctuation(pc, discardDots))
+                            if (!IsReservedPunctuation(pc))
                             {
                                 headingBuffer.Append('-');
                             }
@@ -81,7 +81,7 @@ namespace Markdig.Helpers
             while (headingBuffer.Length > 0)
             {
                 var c = headingBuffer[headingBuffer.Length - 1];
-                if (IsReservedPunctuation(c, false))
+                if (IsReservedPunctuation(c))
                 {
                     headingBuffer.Length--;
                 }
@@ -96,10 +96,27 @@ namespace Markdig.Helpers
             return text;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        private static bool IsReservedPunctuation(char c, bool discardDots)
+        public static string UrilizeAsGfm(string headingText)
         {
-            return c == '_' || c == '-' || (!discardDots && c == '.');
+            // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
+            var headingBuffer = StringBuilderCache.Local();
+            for (int i = 0; i < headingText.Length; i++)
+            {
+                var c = char.ToLowerInvariant(headingText[i]);
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+                {
+                    headingBuffer.Append(c == ' ' ? '-' : c);
+                }
+            }
+            var result = headingBuffer.ToString();
+            headingBuffer.Length = 0;
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsReservedPunctuation(char c)
+        {
+            return c == '_' || c == '-' || c == '.';
         }
 
         public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)

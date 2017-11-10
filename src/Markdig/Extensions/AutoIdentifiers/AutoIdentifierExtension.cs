@@ -144,13 +144,15 @@ namespace Markdig.Extensions.AutoIdentifiers
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
 
-            // TODO: Should we have a struct with more configure optionss for LinkHelper.Urilize?
-            headingText = LinkHelper.Urilize(headingText,
-                (options & AutoIdentifierOptions.AllowOnlyAscii) != 0,
-                (options & AutoIdentifierOptions.KeepOpeningDigits) != 0,
-                (options & AutoIdentifierOptions.DiscardDots) != 0);
+            // Urilize the link
+            headingText = (options & AutoIdentifierOptions.GitHub) != 0
+                ? LinkHelper.UrilizeAsGfm(headingText)
+                : LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
 
+            // If the heading is empty, use the word "section" instead
             var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
+
+            // Add a trailing -1, -2, -3...etc. in case of collision
             int index = 0;
             var headingId = baseHeadingId;
             var headingBuffer = StringBuilderCache.Local();
