@@ -56,12 +56,12 @@ namespace Markdig
         /// <summary>
         /// Gets the block parsers.
         /// </summary>
-        public OrderedList<BlockParser> BlockParsers { get; private set; }
+        public OrderedList<BlockParser> BlockParsers { get; }
 
         /// <summary>
         /// Gets the inline parsers.
         /// </summary>
-        public OrderedList<InlineParser> InlineParsers { get; private set; }
+        public OrderedList<InlineParser> InlineParsers { get; }
 
         /// <summary>
         /// Gets the register extensions.

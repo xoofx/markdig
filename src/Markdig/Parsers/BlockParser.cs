@@ -1,6 +1,8 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System.Linq;
 using Markdig.Syntax;
 
 namespace Markdig.Parsers
@@ -23,17 +25,7 @@ namespace Markdig.Parsers
         /// <returns><c>true</c> if the specified char is an opening character.</returns>
         public bool HasOpeningCharacter(char c)
         {
-            if (OpeningCharacters != null)
-            {
-                for (int i = 0; i < OpeningCharacters.Length; i++)
-                {
-                    if (OpeningCharacters[i] == c)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return OpeningCharacters != null && OpeningCharacters.Any(t => t == c);
         }
 
         // TODO: Add comment

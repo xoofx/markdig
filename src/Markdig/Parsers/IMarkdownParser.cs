@@ -6,8 +6,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Base interface for a block or inline parser.
     /// </summary>
-    /// <typeparam name="TProcessor">The type of processor.</typeparam>
-    public interface IMarkdownParser<in TProcessor>
+    public interface IMarkdownParser
     {
         /// <summary>
         /// Gets the opening characters this parser will be triggered if the character is found.

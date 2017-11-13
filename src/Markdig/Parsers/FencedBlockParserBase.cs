@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -71,7 +71,7 @@ namespace Markdig.Parsers
             string infoString;
             string argString = null;
 
-            var c = line.CurrentChar;
+            char c;
             // An info string cannot contain any backsticks
             int firstSpace = -1;
             for (int i = line.Start; i <= line.End; i++)
@@ -161,13 +161,10 @@ namespace Markdig.Parsers
                 fenced.FencedCharCount = count;
                 fenced.Span.Start = startPosition;
                 fenced.Span.End = line.Start;
-            };
+            }
 
             // Try to parse any attached attributes
-            if (TryParseAttributes != null)
-            {
-                TryParseAttributes(processor, ref line, fenced);
-            }
+            TryParseAttributes?.Invoke(processor, ref line, fenced);
 
             // If the info parser was not successfull, early exit
             if (InfoParser != null && !InfoParser(processor, ref line, fenced))

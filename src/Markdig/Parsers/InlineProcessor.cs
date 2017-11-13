@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -38,12 +38,9 @@ namespace Markdig.Parsers
         /// </exception>
         public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation)
         {
-            if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
-            StringBuilders = stringBuilders;
-            Document = document;
-            Parsers = parsers;
+            StringBuilders = stringBuilders ?? throw new ArgumentNullException(nameof(stringBuilders));
+            Document = document ?? throw new ArgumentNullException(nameof(document));
+            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
             PreciseSourceLocation = preciseSourcelocation;
             lineOffsets = new List<StringLineGroup.LineOffset>();
             ParserStates = new object[Parsers.Count];

@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -124,7 +124,7 @@ namespace Markdig.Parsers.Inlines
 
             if (delimiters != null)
             {
-                ProcessEmphasis(state, delimiters);
+                ProcessEmphasis(delimiters);
                 inlinesCache.Release(delimiters);
             }
             return true;
@@ -218,7 +218,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private void ProcessEmphasis(InlineProcessor processor, List<EmphasisDelimiterInline> delimiters)
+        private void ProcessEmphasis(List<EmphasisDelimiterInline> delimiters)
         {
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
@@ -275,7 +275,6 @@ namespace Markdig.Parsers.Inlines
                                 };
 
                             // Update position for emphasis
-                            var openDelimitercount = openDelimiter.DelimiterCount;
                             var closeDelimitercount = closeDelimiter.DelimiterCount;
                             var delimiterDelta = isStrong ? 2 : 1;
 

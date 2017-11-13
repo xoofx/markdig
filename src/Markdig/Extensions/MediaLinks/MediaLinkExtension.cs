@@ -55,10 +55,7 @@ namespace Markdig.Extensions.MediaLinks
                 {
                     var htmlAttributes = new HtmlAttributes();
                     var fromAttributes = linkInline.TryGetAttributes();
-                    if (fromAttributes != null)
-                    {
-                        fromAttributes.CopyTo(htmlAttributes, false, false);
-                    }
+                    fromAttributes?.CopyTo(htmlAttributes, false, false);
 
                     // TODO: this code is not pluggable, so for now, we handle only the following web providers:
                     // - youtube
@@ -85,39 +82,43 @@ namespace Markdig.Extensions.MediaLinks
 
                     if (iFrameUrl != null)
                     {
-                        renderer.Write($"<iframe src=\"{iFrameUrl}\"");
-                        htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
-                        htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
-                        htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
-                        htmlAttributes.AddPropertyIfNotExist("allowfullscreen", null);
-                        renderer.WriteAttributes(htmlAttributes);
-                        renderer.Write("></iframe>");
+                        if (Options.Template == null)
+                        {
+                            renderer.Write($"<iframe src=\"{iFrameUrl}\"");
+                            htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
+                            htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
+                            htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
+                            htmlAttributes.AddPropertyIfNotExist("allowfullscreen", null);
+                            renderer.WriteAttributes(htmlAttributes);
+                            renderer.Write("></iframe>");
+                        }
+                        else
+                        {
+                            renderer.Write(string.Format(Options.Template, iFrameUrl));
+                        }
                         return true;
                     }
-                    else
+                    // Otherwise try to detect if we have an audio/video from the file extension
+                    string mimeType;
+                    var lastDot = path.LastIndexOf('.');
+                    if (lastDot >= 0 &&
+                        Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out mimeType))
                     {
-                        // Otherwise try to detect if we have an audio/video from the file extension
-                        string mimeType;
-                        var lastDot = path.LastIndexOf('.');
-                        if (lastDot >= 0 &&
-                            Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out mimeType))
+                        var isAudio = mimeType.StartsWith("audio");
+                        var tagType = isAudio ? "audio" : "video";
+
+                        renderer.Write($"<{tagType}");
+                        htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
+                        if (!isAudio)
                         {
-                            var isAudio = mimeType.StartsWith("audio");
-                            var tagType = isAudio ? "audio" : "video";
-
-                            renderer.Write($"<{tagType}");
-                            htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
-                            if (!isAudio)
-                            {
-                                htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
-                            }
-                            htmlAttributes.AddPropertyIfNotExist("controls", null);
-                            renderer.WriteAttributes(htmlAttributes);
-
-                            renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
-
-                            return true;
+                            htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
                         }
+                        htmlAttributes.AddPropertyIfNotExist("controls", null);
+                        renderer.WriteAttributes(htmlAttributes);
+
+                        renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
+
+                        return true;
                     }
                 }
             }

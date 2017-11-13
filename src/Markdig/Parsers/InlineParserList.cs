@@ -29,6 +29,6 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the registered post inline processors.
         /// </summary>
-        public IPostInlineProcessor[] PostInlineProcessors { get; private set; }
+        public IPostInlineProcessor[] PostInlineProcessors { get; }
     }
 }

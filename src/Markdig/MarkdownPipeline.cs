@@ -22,12 +22,10 @@ namespace Markdig
         /// </summary>
         internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, StringBuilderCache cache, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
         {
-            if (blockParsers == null) throw new ArgumentNullException(nameof(blockParsers));
-            if (inlineParsers == null) throw new ArgumentNullException(nameof(inlineParsers));
             // Add all default parsers
             Extensions = extensions;
-            BlockParsers = blockParsers;
-            InlineParsers = inlineParsers;
+            BlockParsers = blockParsers ?? throw new ArgumentNullException(nameof(blockParsers));
+            InlineParsers = inlineParsers ?? throw new ArgumentNullException(nameof(inlineParsers));
             StringBuilderCache = cache;
             DebugLog = debugLog;
             DocumentProcessed = documentProcessed;

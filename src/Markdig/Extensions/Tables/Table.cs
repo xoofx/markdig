@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -76,7 +76,7 @@ namespace Markdig.Extensions.Tables
         public void Normalize()
         {
             var maxColumn = 0;
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 var row = this[i] as TableRow;
                 if (row != null && row.Count > maxColumn)
@@ -85,7 +85,7 @@ namespace Markdig.Extensions.Tables
                 }
             }
 
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 var row = this[i] as TableRow;
                 if (row != null)

@@ -38,8 +38,7 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
             Start = start;
             End = end;
         }
@@ -228,7 +227,7 @@ namespace Markdig.Helpers
                 {
                     if (MatchLowercase(text, End, i - Start))
                     {
-                        return i; ;
+                        return i;
                     }
                 }
             }
@@ -238,7 +237,7 @@ namespace Markdig.Helpers
                 {
                     if (Match(text, End, i - Start))
                     {
-                        return i; ;
+                        return i;
                     }
                 }
             }

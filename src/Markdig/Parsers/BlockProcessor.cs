@@ -14,7 +14,7 @@ namespace Markdig.Parsers
     /// </summary>
     public class BlockProcessor
     {
-        private BlockProcessor root;
+        private readonly BlockProcessor root;
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
@@ -23,7 +23,7 @@ namespace Markdig.Parsers
         {
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
-            this.parserStateCache = root.parserStateCache;
+            parserStateCache = root.parserStateCache;
             StringBuilders = root.StringBuilders;
             Document = root.Document;
             Parsers = root.Parsers;
@@ -43,14 +43,11 @@ namespace Markdig.Parsers
         /// </exception>
         public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers)
         {
-            if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
             parserStateCache = new BlockParserStateCache(this);
-            StringBuilders = stringBuilders;
-            Document = document;
+            StringBuilders = stringBuilders ?? throw new ArgumentNullException(nameof(stringBuilders));
+            Document = document ?? throw new ArgumentNullException(nameof(document));
             document.IsOpen = true;
-            Parsers = parsers;
+            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
             OpenedBlocks = new List<Block>();
             NewBlocks = new Stack<Block>();
             root = this;

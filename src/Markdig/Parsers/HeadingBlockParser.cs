@@ -76,10 +76,7 @@ namespace Markdig.Parsers
                 processor.GoToColumn(column + leadingCount + 1);
 
                 // Gives a chance to parse attributes
-                if (TryParseAttributes != null)
-                {
-                    TryParseAttributes(processor, ref processor.Line, headingBlock);
-                }
+                TryParseAttributes?.Invoke(processor, ref processor.Line, headingBlock);
 
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;

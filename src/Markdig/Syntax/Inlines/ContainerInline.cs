@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -215,8 +215,7 @@ namespace Markdig.Syntax.Inlines
 
             public Enumerator(ContainerInline container) : this()
             {
-                if (container == null) throw new ArgumentNullException(nameof(container));
-                this.container = container;
+                this.container = container ?? throw new ArgumentNullException(nameof(container));
                 currentChild = nextChild = container.FirstChild;
             }
 

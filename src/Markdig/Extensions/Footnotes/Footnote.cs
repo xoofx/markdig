@@ -32,7 +32,7 @@ namespace Markdig.Extensions.Footnotes
         /// <summary>
         /// Gets the links referencing this footnote.
         /// </summary>
-        public List<FootnoteLink> Links { get; private set; }
+        public List<FootnoteLink> Links { get; }
 
         /// <summary>
         /// The label span

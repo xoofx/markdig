@@ -24,8 +24,7 @@ namespace Markdig.Extensions.SmartyPants
         /// <exception cref="System.ArgumentNullException"></exception>
         public HtmlSmartyPantRenderer(SmartyPantOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            this.options = options;
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         protected override void Write(HtmlRenderer renderer, SmartyPant obj)

@@ -21,7 +21,7 @@ namespace Testamina.Markdig.Benchmarks
     //[BenchmarkTask(platform: BenchmarkPlatform.X64, jitVersion: BenchmarkJitVersion.RyuJit, processCount: 1, warmupIterationCount: 2)]
     public class Program
     {
-        private string text;
+        private readonly string text;
 
         public Program()
         {
@@ -55,7 +55,7 @@ namespace Testamina.Markdig.Benchmarks
             //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
             //var writer = new StringWriter();
-            global::CommonMark.CommonMarkConverter.Convert(text);
+            CommonMark.CommonMarkConverter.Convert(text);
             //writer.Flush();
             //writer.ToString();
         }

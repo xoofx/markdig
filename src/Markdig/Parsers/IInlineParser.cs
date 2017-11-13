@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
@@ -10,7 +10,7 @@ namespace Markdig.Parsers
     /// </summary>
     /// <seealso cref="InlineParser" />
     /// <seealso cref="InlineProcessor" />
-    public interface IInlineParser<in TProcessor> : IMarkdownParser<TProcessor>
+    public interface IInlineParser<in TProcessor> : IMarkdownParser
     {
         /// <summary>
         /// Tries to match the specified slice.

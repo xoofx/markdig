@@ -1,4 +1,4 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
+﻿// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -15,15 +15,6 @@ namespace Markdig.Parsers.Inlines
     public sealed class LiteralInlineParser : InlineParser
     {
         public delegate void PostMatchDelegate(InlineProcessor processor, ref StringSlice slice);
-
-        /// <summary>
-        /// We don't expect the LiteralInlineParser to be instantiated a end-user, as it is part
-        /// of the default parser pipeline (and should always be the last), working as a literal character
-        /// collector.
-        /// </summary>
-        public LiteralInlineParser()
-        {
-        }
 
         /// <summary>
         /// Gets or sets the post match delegate called after the inline has been processed.

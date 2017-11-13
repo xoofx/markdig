@@ -47,7 +47,7 @@ namespace Markdig.Extensions.Mathematics
 
         private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced)
         {
-            var c = line.CurrentChar;
+            char c;
             for (int i = line.Start; i <= line.End; i++)
             {
                 c = line.Text[i];
