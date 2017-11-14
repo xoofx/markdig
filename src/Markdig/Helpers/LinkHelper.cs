@@ -2,8 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -13,6 +13,8 @@ namespace Markdig.Helpers
     /// </summary>
     public static class LinkHelper
     {
+        private static HashSet<char> InvalidUrlEnding = new HashSet<char> { '<', '.', ',', ':', '"', '\'', ']' };
+
         public static bool TryParseAutolink(StringSlice text, out string link, out bool isEmail)
         {
             return TryParseAutolink(ref text, out link, out isEmail);
@@ -226,7 +228,7 @@ namespace Markdig.Helpers
             }
 
             // append ':' or '@' 
-            builder.Append(c); 
+            builder.Append(c);
 
             if (state < 0)
             {
@@ -615,8 +617,8 @@ namespace Markdig.Helpers
                         isValid = true;
                         break;
                     }
-
-                    if (c == '.' && IsEndOfUri(text.PeekChar()))
+                    
+                    if (InvalidUrlEnding.Contains(c) && IsEndOfUri(text.PeekChar()))
                     {
                         isValid = true;
                         break;

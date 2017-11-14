@@ -20,6 +20,12 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestAutoLinkExtension()
+        {
+            TestSpec("http://your.company.abc, abc", @"<p><a href=""http://your.company.abc"">http://your.company.abc</a>, abc</p>", "advanced");
+        }
+
+        [Test]
         public void TestThematicInsideCodeBlockInsideList()
         {
             var input = @"1. In the :
