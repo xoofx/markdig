@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -472,10 +472,10 @@ namespace Markdig.Helpers
                 }
                 else if (c == '&')
                 {
-                    string namedEntity;
+                    int entityNameStart;
+                    int entityNameLength;
                     int numericEntity;
-                    var match = ScanEntity(text, searchPos, text.Length - searchPos, out namedEntity,
-                        out numericEntity);
+                    var match = ScanEntity(new StringSlice(text, searchPos, text.Length - 1), out numericEntity, out entityNameStart, out entityNameLength);
                     if (match == 0)
                     {
                         searchPos++;
@@ -484,9 +484,10 @@ namespace Markdig.Helpers
                     {
                         searchPos += match;
 
-                        if (namedEntity != null)
+                        if (entityNameLength > 0)
                         {
-                            var decoded = EntityHelper.DecodeEntity(namedEntity);
+                            var namedEntity = new StringSlice(text, entityNameStart, entityNameStart + entityNameLength - 1);
+                            var decoded = EntityHelper.DecodeEntity(namedEntity.ToString());
                             if (decoded != null)
                             {
                                 sb.Append(text, lastPos, searchPos - match - lastPos);
@@ -533,7 +534,7 @@ namespace Markdig.Helpers
         /// Scans an entity.
         /// Returns number of chars matched.
         /// </summary>
-        public static int ScanEntity(string s, int pos, int length, out string namedEntity, out int numericEntity)
+        public static int ScanEntity<T>(T slice, out int numericEntity, out int namedEntityStart,  out int namedEntityLength) where T : ICharIterator
         {
             // Credits: code from CommonMark.NET
             // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
@@ -545,29 +546,29 @@ namespace Markdig.Helpers
                   .? { return 0; }
                 */
 
-            var lastPos = pos + length;
-
-            namedEntity = null;
             numericEntity = 0;
+            namedEntityStart = 0;
+            namedEntityLength = 0;
 
-            if (pos + 3 >= lastPos)
-                return 0;
-
-            if (s[pos] != '&')
-                return 0;
-
-            char c;
-            int i;
-            int counter = 0;
-            if (s[pos + 1] == '#')
+            if (slice.CurrentChar != '&' || slice.PeekChar(3) == '\0')
             {
-                c = s[pos + 2];
+                return 0;
+            }
+
+            var start = slice.Start;
+            char c = slice.NextChar();
+            int counter = 0;
+            
+            if (c == '#')
+            {
+                c = slice.PeekChar();
                 if (c == 'x' || c == 'X')
                 {
+                    c = slice.NextChar(); // skip #
                     // expect 1-8 hex digits starting from pos+3
-                    for (i = pos + 3; i < lastPos; i++)
+                    while (c != '\0')
                     {
-                        c = s[i];
+                        c = slice.NextChar();
                         if (c >= '0' && c <= '9')
                         {
                             if (++counter == 9) return 0;
@@ -588,7 +589,7 @@ namespace Markdig.Helpers
                         }
 
                         if (c == ';')
-                            return counter == 0 ? 0 : i - pos + 1;
+                            return counter == 0 ? 0 : slice.Start - start + 1;
 
                         return 0;
                     }
@@ -596,9 +597,10 @@ namespace Markdig.Helpers
                 else
                 {
                     // expect 1-8 digits starting from pos+2
-                    for (i = pos + 2; i < lastPos; i++)
+                    while (c != '\0')
                     {
-                        c = s[i];
+                        c = slice.NextChar();
+
                         if (c >= '0' && c <= '9')
                         {
                             if (++counter == 9) return 0;
@@ -607,7 +609,7 @@ namespace Markdig.Helpers
                         }
 
                         if (c == ';')
-                            return counter == 0 ? 0 : i - pos + 1;
+                            return counter == 0 ? 0 : slice.Start - start + 1;
 
                         return 0;
                     }
@@ -616,25 +618,26 @@ namespace Markdig.Helpers
             else
             {
                 // expect a letter and 1-31 letters or digits
-                c = s[pos + 1];
                 if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
                     return 0;
 
-                for (i = pos + 2; i < lastPos; i++)
+                namedEntityStart = slice.Start;
+                namedEntityLength++;
+
+                while (c != '\0')
                 {
-                    c = s[i];
+                    c = slice.NextChar();
                     if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
                     {
                         if (++counter == 32)
                             return 0;
-
+                        namedEntityLength++;
                         continue;
                     }
 
                     if (c == ';')
                     {
-                        namedEntity = s.Substring(pos + 1, counter + 1);
-                        return counter == 0 ? 0 : i - pos + 1;
+                        return counter == 0 ? 0 : slice.Start - start + 1;
                     }
 
                     return 0;

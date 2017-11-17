@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -110,17 +110,6 @@ namespace Markdig.Helpers
         {
             var index = Start + offset;
             return index >= Start && index <= End ? Text[index] : (char) 0;
-        }
-
-        /// <summary>
-        /// Peeks the character immediately after the current <see cref="Start"/> position
-        /// or returns `\0` if after the <see cref="End"/> position.
-        /// </summary>
-        /// <returns>The next character, returns `\0` if none.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekChar()
-        {
-            return PeekChar(1);
         }
 
         /// <summary>

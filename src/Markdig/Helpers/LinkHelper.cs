@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -513,7 +514,7 @@ namespace Markdig.Helpers
             return TryParseUrl(ref text, out link);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string link) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, out string link, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -610,16 +611,30 @@ namespace Markdig.Helpers
 
                     hasEscape = false;
 
-                    if (IsEndOfUri(c))
+                    if (IsEndOfUri(c, isAutoLink))
                     {
                         isValid = true;
                         break;
                     }
 
-                    if (c == '.' && IsEndOfUri(text.PeekChar()))
+                    if (isAutoLink)
                     {
-                        isValid = true;
-                        break;
+                        if (c == '&')
+                        {
+                            int entityNameStart;
+                            int entityNameLength;
+                            int entityValue;
+                            if (HtmlHelper.ScanEntity(text, out entityValue, out entityNameStart, out entityNameLength) > 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                        if (IsTrailingUrlStopCharacter(c) && IsEndOfUri(text.PeekChar(), true))
+                        {
+                            isValid = true;
+                            break;
+                        }
                     }
 
                     buffer.Append(c);
@@ -638,9 +653,17 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        private static bool IsEndOfUri(char c)
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsTrailingUrlStopCharacter(char c)
         {
-            return c == '\0' || c.IsSpaceOrTab() || c.IsControl(); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+            // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not be considered part of the autolink, though they may be included in the interior of the link:
+            return c == '?' || c == '!' || c == '.' || c == ',' || c == ':' || c == '*' || c == '*' || c == '_' || c == '~';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsEndOfUri(char c, bool isAutoLink)
+        {
+            return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
         }
 
         public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,

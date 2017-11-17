@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -20873,6 +20873,157 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions AutoLinks");
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
+        }
+    }
+        // ### GFM Support
+        //
+        // Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     Visit www.commonmark.org/help for more information.
+            //
+            // Should be rendered as:
+            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     Visit www.commonmark.org.
+            //     
+            //     Visit www.commonmark.org/a.b.
+            //
+            // Should be rendered as:
+            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.google.com/search?q=Markup+(business)
+            //     
+            //     (www.google.com/search?q=Markup+(business))
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
+            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.google.com/search?q=commonmark&hl=en
+            //     
+            //     www.google.com/search?q=commonmark&hl;
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org/he<lp
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example014()
+        {
+            // Example 14
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     http://commonmark.org
+            //     
+            //     (Visit https://encrypted.google.com/search?q=Markup+(business))
+            //     
+            //     Anonymous FTP is available at ftp://foo.bar.baz.
+            //
+            // Should be rendered as:
+            //     <p><a href="http://commonmark.org">http://commonmark.org</a></p>
+            //     <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
+            //     <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced");
         }
     }
         // ## Jira Links

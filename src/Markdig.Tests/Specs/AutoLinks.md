@@ -76,3 +76,67 @@ Check **http://www.a.com** or __http://www.b.com__
 .
 <p>Check <strong><a href="http://www.a.com">http://www.a.com</a></strong> or <strong><a href="http://www.b.com">http://www.b.com</a></strong></p>
 ````````````````````````````````
+
+### GFM Support
+
+Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
+
+```````````````````````````````` example
+www.commonmark.org
+.
+<p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
+````````````````````````````````
+
+```````````````````````````````` example
+Visit www.commonmark.org/help for more information.
+.
+<p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
+````````````````````````````````
+
+```````````````````````````````` example
+Visit www.commonmark.org.
+
+Visit www.commonmark.org/a.b.
+.
+<p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+<p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+www.google.com/search?q=Markup+(business)
+
+(www.google.com/search?q=Markup+(business))
+.
+<p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
+<p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+www.google.com/search?q=commonmark&hl=en
+
+www.google.com/search?q=commonmark&hl;
+.
+<p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+<p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
+````````````````````````````````
+
+
+```````````````````````````````` example
+www.commonmark.org/he<lp
+.
+<p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+````````````````````````````````
+
+```````````````````````````````` example
+http://commonmark.org
+
+(Visit https://encrypted.google.com/search?q=Markup+(business))
+
+Anonymous FTP is available at ftp://foo.bar.baz.
+.
+<p><a href="http://commonmark.org">http://commonmark.org</a></p>
+<p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
+<p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
+````````````````````````````````

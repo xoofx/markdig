@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -30,11 +30,18 @@ namespace Markdig.Extensions.AutoLinks
             };
         }
 
+
+        private static bool IsValidPreviousCharacter(char c)
+        {
+            // All such recognized autolinks can only come at the beginning of a line, after whitespace, or any of the delimiting characters *, _, ~, and (.
+            return c.IsWhiteSpaceOrZero() || c == '*' || c == '_' || c == '~' || c == '(';
+        }
+
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Previous char must be a whitespace or a punctuation
             var previousChar = slice.PeekCharExtra(-1);
-            if (!previousChar.IsAsciiPunctuation() && !previousChar.IsWhiteSpaceOrZero())
+            if (!IsValidPreviousCharacter(previousChar))
             {
                 return false;
             }
@@ -72,7 +79,7 @@ namespace Markdig.Extensions.AutoLinks
                     break;
 
                 case 'w':
-                    if (!slice.MatchLowercase("ww.", 1) || previousChar == '/') // We won't match http:/www. or /www.xxx
+                    if (!slice.MatchLowercase("ww.", 1)) // We won't match http:/www. or /www.xxx
                     {
                         return false;
                     }
@@ -81,7 +88,7 @@ namespace Markdig.Extensions.AutoLinks
 
             // Parse URL
             string link;
-            if (!LinkHelper.TryParseUrl(ref slice, out link))
+            if (!LinkHelper.TryParseUrl(ref slice, out link, true))
             {
                 return false;
             }
