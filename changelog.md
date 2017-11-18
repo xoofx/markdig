@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.14.5 (18 Nov 2017)
+- Fix changelog link from nuget package
 ## 0.14.4 (18 Nov 2017)
 - Add changelog.md
 - Fix bug when a thematic break is inside a fenced code block inside a pending list (#164)
