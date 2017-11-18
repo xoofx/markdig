@@ -20329,6 +20329,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+        // An autoidentifier should not conflict with an existing link:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     ![scenario image][scenario]
+            //     ## Scenario
+            //     [scenario]: ./scenario.png
+            //
+            // Should be rendered as:
+            //     <p><img src="./scenario.png" alt="scenario image" /></p>
+            //     <h2 id="scenario">Scenario</h2>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("![scenario image][scenario]\n## Scenario\n[scenario]: ./scenario.png", "<p><img src=\"./scenario.png\" alt=\"scenario image\" /></p>\n<h2 id=\"scenario\">Scenario</h2>", "autoidentifiers|advanced");
+        }
+    }
         // # Extensions
         //
         // Adds support for task lists:

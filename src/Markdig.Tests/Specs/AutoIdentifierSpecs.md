@@ -96,3 +96,14 @@ The text of the link can be changed:
 <p><a href="#this-is-a-heading">With a new text</a></p>
 <h1 id="this-is-a-heading">This is a heading</h1>
 ````````````````````````````````
+
+An autoidentifier should not conflict with an existing link:
+
+```````````````````````````````` example
+![scenario image][scenario]
+## Scenario
+[scenario]: ./scenario.png
+.
+<p><img src="./scenario.png" alt="scenario image" /></p>
+<h2 id="scenario">Scenario</h2>
+````````````````````````````````
