@@ -106,7 +106,7 @@ namespace Markdig.Helpers
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekChar(int offset)
+        public char PeekChar(int offset = 1)
         {
             var index = Start + offset;
             return index >= Start && index <= End ? Text[index] : (char) 0;
@@ -166,6 +166,28 @@ namespace Markdig.Helpers
             }
 
             return i == text.Length;
+        }
+
+        /// <summary>
+        /// Expect spaces until a end of line. Return <c>false</c> otherwise.
+        /// </summary>
+        /// <returns><c>true</c> if whitespaces where matched until a end of line</returns>
+        public bool SkipSpacesToEndOfLineOrEndOfDocument()
+        {
+            for (int i = Start; i <= End; i++)
+            {
+                var c = Text[i];
+                if (c.IsWhitespace())
+                {
+                    if (c == '\0' || c == '\n' || (c == '\r' && i + 1 <= End && Text[i + 1] != '\n'))
+                    {
+                        return true;
+                    }
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
