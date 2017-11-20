@@ -20630,6 +20630,7 @@ namespace Markdig.Tests
             // The following CommonMark:
             //     ---
             //     this: is a frontmatter
+            //     
             //     ...
             //     This is a text
             //
@@ -20637,7 +20638,7 @@ namespace Markdig.Tests
             //     <p>This is a text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions YAML frontmatter discard");
-			TestParser.TestSpec("---\nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n\n...\nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
         // If the end front matter marker (`...` or `---`) is not present, it will render the `---` has a `<hr>`:
