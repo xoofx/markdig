@@ -47,6 +47,7 @@ It can end with three dots `...`:
 ```````````````````````````````` example
 ---
 this: is a frontmatter
+
 ...
 This is a text
 .

@@ -82,10 +82,10 @@ namespace Markdig.Extensions.Yaml
                         {
                             c = fullLine.NextChar();
                         }
-                        nc = fullLine.NextChar(); // skip \n
+                        nc = fullLine.PeekChar();
                         if (nc == '-')
                         {
-                            if (fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                            if (fullLine.NextChar() == '-'  && fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
                             {
                                 hasFullYamlFrontMatter = true;
                                 break;
@@ -93,7 +93,7 @@ namespace Markdig.Extensions.Yaml
                         }
                         else if (nc == '.')
                         {
-                            if (fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                            if (fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
                             {
                                 hasFullYamlFrontMatter = true;
                                 break;
