@@ -409,5 +409,13 @@ namespace Markdig.Tests
         {
             Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
         }
+
+        [TestCase(".bc", "bc")]
+        [TestCase("a-.-", "a--")]
+        [TestCase("_a_", "a")]
+        public void TestUrilizeAsGfm_Simple(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.UrilizeAsGfm(input));
+        }
     }
 }
