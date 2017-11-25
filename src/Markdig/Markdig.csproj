@@ -5,7 +5,7 @@
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.14.6</VersionPrefix>
+    <VersionPrefix>0.14.7</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1;uap10.0</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>

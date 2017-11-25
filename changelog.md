@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.14.7 (25 Nov 2017)
+- Fix autolink attached attributes not being displayed properly (#175)
 ## 0.14.6 (21 Nov 2017)
 - Fix yaml frontmatter issue when ending with a empty line (#170)
 ## 0.14.5 (18 Nov 2017)
