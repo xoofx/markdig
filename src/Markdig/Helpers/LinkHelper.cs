@@ -104,7 +104,7 @@ namespace Markdig.Helpers
             for (int i = 0; i < headingText.Length; i++)
             {
                 var c = char.ToLowerInvariant(headingText[i]);
-                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-')
                 {
                     headingBuffer.Append(c == ' ' ? '-' : c);
                 }
