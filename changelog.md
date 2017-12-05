@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.14.8 (05 Dec 2017)
+- Fix potential StackOverflow exception when processing deep nested `|` delimiters (#179)
 ## 0.14.7 (25 Nov 2017)
 - Fix autolink attached attributes not being displayed properly (#175)
 ## 0.14.6 (21 Nov 2017)
