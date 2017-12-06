@@ -6,10 +6,10 @@
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <VersionPrefix>0.14.6</VersionPrefix>
-    <Authors>Alexandre Mutel</Authors>
-    <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1;uap10.0</TargetFrameworks>
+    <Authors></Authors>
+    <TargetFrameworks>netstandard1.1;</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
-    <PackageId>Markdig</PackageId>
+    <PackageId>DocWorks.Markdig</PackageId>
     <PackageId Condition="'$(SignAssembly)' == 'true'">Markdig.Signed</PackageId>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
@@ -18,6 +18,9 @@
     <PackageLicenseUrl>https://github.com/lunet-io/markdig/blob/master/license.txt</PackageLicenseUrl>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.1' ">1.6.0</NetStandardImplicitPackageVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Company>Unity</Company>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">

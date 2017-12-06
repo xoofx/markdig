@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
@@ -18,7 +18,7 @@ namespace Markdig.Parsers
         /// </summary>
         public HeadingBlockParser()
         {
-            OpeningCharacters = new[] {'#'};
+            OpeningCharacters = new[] { '#' };
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Markdig.Parsers
             }
 
             // A space is required after leading #
-            if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpaceOrTab() || c == '\0'))
+            if (leadingCount > 0 && leadingCount <= 6)
             {
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
@@ -70,10 +70,10 @@ namespace Markdig.Parsers
                     HeaderChar = matchingChar,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start =  sourcePosition }
+                    Span = { Start = sourcePosition }
                 };
                 processor.NewBlocks.Push(headingBlock);
-                processor.GoToColumn(column + leadingCount + 1);
+                processor.GoToColumn(column + leadingCount);
 
                 // Gives a chance to parse attributes
                 if (TryParseAttributes != null)
@@ -105,10 +105,7 @@ namespace Markdig.Parsers
 
                         if (countClosingTags > 0)
                         {
-                            if (c.IsSpaceOrTab())
-                            {
-                                processor.Line.End = i - 1;
-                            }
+                            processor.Line.End = i - 1;
                             break;
                         }
                         else
