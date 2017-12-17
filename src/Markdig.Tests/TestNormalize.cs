@@ -440,9 +440,11 @@ This is a last line";
         [Test]
         public void PipeTables()
         {
-            AssertNormalizeNoTrim("| Foo | Bar |\n| :--- | ---: |\n| Hello World | *World* |");
+            AssertNormalizeNoTrim("Foo | Bar\n--- | ---\nHello | *World*", "| Foo | Bar |\n| --- | --- |\n| Hello | *World* |\n");
+            AssertNormalizeNoTrim("Foo | Bar\n:---: | ---:\nHello | *World*", "| Foo | Bar |\n| :---: | ---: |\n| Hello | *World* |\n");
             AssertNormalizeNoTrim("| Foo |\n| --- |\n| Hello World |\n");
             AssertNormalizeNoTrim("| Foo | Bar |\n| --- | --- |\n| Hello World | *World* |\n");
+            AssertNormalizeNoTrim("| Foo | Bar |\n| :--- | ---: |\n| Hello World | *World* |\n");
         }
 
         private static void AssertSyntax(string expected, MarkdownObject syntax)
