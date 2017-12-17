@@ -411,6 +411,15 @@ This is a last line";
 
 
 
+        [Test]
+        public void JiraLinks()
+        {
+            AssertNormalizeNoTrim("FOO-1234");
+            AssertNormalizeNoTrim("AB-1");
+
+            AssertNormalizeNoTrim("**Hello World AB-1**");
+        }
+
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
             var writer = new StringWriter();
@@ -441,6 +450,7 @@ This is a last line";
             expected = NormText(expected, trim);
 
             var pipeline = new MarkdownPipelineBuilder()
+                .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
                 .UseTaskLists()
                 .Build();
 
