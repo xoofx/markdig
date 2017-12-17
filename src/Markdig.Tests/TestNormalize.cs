@@ -437,6 +437,14 @@ This is a last line";
             AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from mailto:hello@example.com", new NormalizeOptions() { ExpandAutoLinks = false, });
         }
 
+        [Test]
+        public void PipeTables()
+        {
+            AssertNormalizeNoTrim("| Foo | Bar |\n| :--- | ---: |\n| Hello World | *World* |");
+            AssertNormalizeNoTrim("| Foo |\n| --- |\n| Hello World |\n");
+            AssertNormalizeNoTrim("| Foo | Bar |\n| --- | --- |\n| Hello World | *World* |\n");
+        }
+
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
             var writer = new StringWriter();
@@ -478,6 +486,7 @@ This is a last line";
                 .UseAutoLinks()
                 .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
                 .UseTaskLists()
+                .UsePipeTables()
                 .Build();
 
             var result = Markdown.Normalize(input, options, pipeline: pipeline);

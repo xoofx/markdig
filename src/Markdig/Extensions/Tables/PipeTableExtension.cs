@@ -1,8 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
 
 namespace Markdig.Extensions.Tables
 {
@@ -47,6 +48,12 @@ namespace Markdig.Extensions.Tables
             if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
             {
                 htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
+            }
+            
+            var normalizeRenderer = renderer as NormalizeRenderer;
+            if (normalizeRenderer != null)
+            {
+                normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeTableRenderer>();
             }
         }
     }
