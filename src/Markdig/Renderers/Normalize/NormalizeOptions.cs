@@ -17,6 +17,7 @@ namespace Markdig.Renderers.Normalize
             EmptyLineAfterCodeBlock = true;
             EmptyLineAfterHeading = true;
             EmptyLineAfterThematicBreak = true;
+            ExpandAutoLinks = true;
             ListItemCharacter = null;
         }
 
@@ -44,5 +45,10 @@ namespace Markdig.Renderers.Normalize
         /// The bullet character used for list items. Default is <c>null</c> leaving the original bullet character as-is.
         /// </summary>
         public char? ListItemCharacter { get; set; }
+
+        /// <summary>
+        /// Expands AutoLinks to the normal inline representation. Default is <c>true</c>
+        /// </summary>
+        public bool ExpandAutoLinks { get; set; }
     }
 }
