@@ -68,6 +68,7 @@ namespace Markdig.Extensions.MediaLinks
                 {".wma", "audio/x-ms-wma"},
                 {".wax", "audio/x-ms-wax"},
                 {".mid", "audio/midi"},
+                {".mp3", "audio/mpeg"},
                 {".mpga", "audio/mpeg"},
                 {".mp4a", "audio/mp4"},
                 {".ecelp4800", "audio/vnd.nuera.ecelp4800"},
