@@ -420,6 +420,19 @@ This is a last line";
             AssertNormalizeNoTrim("**Hello World AB-1**");
         }
 
+        [Test]
+        public void AutoLinks()
+        {
+            AssertNormalizeNoTrim("Hello from http://example.com/foo", "Hello from [http://example.com/foo](http://example.com/foo)", new NormalizeOptions() { ExpandAutoLinks = true, });
+            AssertNormalizeNoTrim("Hello from www.example.com/foo", "Hello from [www.example.com/foo](http://www.example.com/foo)", new NormalizeOptions() { ExpandAutoLinks = true, });
+            AssertNormalizeNoTrim("Hello from ftp://example.com", "Hello from [ftp://example.com](ftp://example.com)", new NormalizeOptions() { ExpandAutoLinks = true, });
+            AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from [mailto:hello@example.com](mailto:hello@example.com)", new NormalizeOptions() { ExpandAutoLinks = true, });
+
+            AssertNormalizeNoTrim("Hello from http://example.com/foo", "Hello from http://example.com/foo", new NormalizeOptions() { ExpandAutoLinks = false, });
+            AssertNormalizeNoTrim("Hello from www.example.com/foo", "Hello from http://www.example.com/foo", new NormalizeOptions() { ExpandAutoLinks = false, });
+            AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from mailto:hello@example.com", new NormalizeOptions() { ExpandAutoLinks = false, });
+        }
+
         private static void AssertSyntax(string expected, MarkdownObject syntax)
         {
             var writer = new StringWriter();
@@ -450,6 +463,7 @@ This is a last line";
             expected = NormText(expected, trim);
 
             var pipeline = new MarkdownPipelineBuilder()
+                .UseAutoLinks()
                 .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
                 .UseTaskLists()
                 .Build();

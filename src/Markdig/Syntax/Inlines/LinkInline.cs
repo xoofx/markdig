@@ -70,6 +70,11 @@ namespace Markdig.Syntax.Inlines
         public bool IsShortcut { get; set; }
 
         /// <summary>
+        /// Gets or sets a boolean indicating whether the inline link was parsed using markdown syntax or was automatic recognized.
+        /// </summary>
+        public bool IsAutoLink { get; set; }
+
+        /// <summary>
         /// Gets or sets the reference this link is attached to. May be null.
         /// </summary>
         public LinkReferenceDefinition Reference { get; set; }

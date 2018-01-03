@@ -158,6 +158,7 @@ namespace Markdig.Extensions.AutoLinks
                 Column = column,
                 Url = c == 'w' ? "http://" + link : link,
                 IsClosed = true,
+                IsAutoLink = true,
             };
             inline.Span.End = inline.Span.Start + link.Length - 1;
             inline.UrlSpan = inline.Span;
