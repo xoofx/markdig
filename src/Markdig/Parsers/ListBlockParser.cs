@@ -86,7 +86,7 @@ namespace Markdig.Parsers
             // interpretations of a line, the thematic break takes precedence
             BlockState result;
             var thematicParser = ThematicBreakParser.Default;
-            if (thematicParser.HasOpeningCharacter(processor.CurrentChar))
+            if (!(processor.LastBlock is FencedCodeBlock) && thematicParser.HasOpeningCharacter(processor.CurrentChar))
             {
                 result = thematicParser.TryOpen(processor);
                 if (result.IsBreak())

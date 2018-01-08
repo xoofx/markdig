@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -24,12 +24,18 @@ namespace Markdig.Extensions.Emoji
         /// <summary>
         /// Initializes a new instance of the <see cref="EmojiParser"/> class.
         /// </summary>
-        public EmojiParser()
+        public EmojiParser(bool enableSmiley = true)
         {
+            EnableSmiley = enableSmiley;
             OpeningCharacters = null;
             EmojiToUnicode = new Dictionary<string, string>(EmojiToUnicodeDefault);
             SmileyToEmoji = new Dictionary<string, string>(SmileyToEmojiDefault);
         }
+
+        /// <summary>
+        /// Gets or sets a boolean indicating whether to process smiley.
+        /// </summary>
+        public bool EnableSmiley { get; set; }
 
         /// <summary>
         /// Gets the emoji to unicode mapping. This can be modified before this parser is initialized.
@@ -81,11 +87,14 @@ namespace Markdig.Extensions.Emoji
                 return false;
             }
 
-            // If we have a smiley, we decode it to emoji
-            string emoji;
-            if (!SmileyToEmoji.TryGetValue(match, out emoji))
+            string emoji = match;
+            if (EnableSmiley)
             {
-                emoji = match;
+                // If we have a smiley, we decode it to emoji
+                if (!SmileyToEmoji.TryGetValue(match, out emoji))
+                {
+                    emoji = match;
+                }
             }
 
             // Decode the eomji to unicode

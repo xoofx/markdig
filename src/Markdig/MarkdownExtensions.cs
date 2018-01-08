@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -409,10 +409,14 @@ namespace Markdig
         /// Uses the emoji and smiley extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="enableSmiley">Enable smiley in addition to Emoji, <c>true</c> by default.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmiley = true)
         {
-            pipeline.Extensions.AddIfNotAlready<EmojiExtension>();
+            if (!pipeline.Extensions.Contains<EmojiExtension>())
+            {
+                pipeline.Extensions.Add(new EmojiExtension(enableSmiley));
+            }
             return pipeline;
         }
 

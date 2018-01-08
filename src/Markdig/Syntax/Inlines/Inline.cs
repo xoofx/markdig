@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -192,17 +192,16 @@ namespace Markdig.Syntax.Inlines
         /// <returns><c>true</c> if this instance contains a parent of the specified type; <c>false</c> otherwise</returns>
         public bool ContainsParentOfType<T>() where T : Inline
         {
-            var delimiter = this as T;
-            if (delimiter != null)
+            var inline = this;
+            while (inline != null)
             {
-                return true;
+                var delimiter = inline as T;
+                if (delimiter != null)
+                {
+                    return true;
+                }
+                inline = inline.Parent;
             }
-
-            if (Parent != null)
-            {
-                return Parent.ContainsParentOfType<T>();
-            }
-
             return false;
         }
 
@@ -213,19 +212,15 @@ namespace Markdig.Syntax.Inlines
         /// <returns>An enumeration on the parents of the specified type</returns>
         public IEnumerable<T> FindParentOfType<T>() where T : Inline
         {
-            var parent = Parent;
-            var delimiter = this as T;
-            if (delimiter != null)
+            var inline = this;
+            while (inline != null)
             {
-                yield return delimiter;
-            }
-
-            if (parent != null)
-            {
-                foreach (var previous in parent.FindParentOfType<T>())
+                var delimiter = inline as T;
+                if (delimiter != null)
                 {
-                    yield return previous;
+                    yield return delimiter;
                 }
+                inline = inline.Parent;
             }
         }
 

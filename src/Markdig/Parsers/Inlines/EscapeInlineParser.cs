@@ -28,10 +28,11 @@ namespace Markdig.Parsers.Inlines
             {
                 processor.Inline = new LiteralInline()
                 {
-                    Content = new StringSlice(new string(c, 1)),
+                    Content = new StringSlice(slice.Text, slice.Start, slice.Start),
                     Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                     Line = line,
-                    Column = column
+                    Column = column,
+                    IsFirstCharacterEscaped = true,
                 };
                 processor.Inline.Span.End = processor.Inline.Span.Start + 1;
                 slice.NextChar();
@@ -44,6 +45,7 @@ namespace Markdig.Parsers.Inlines
                 processor.Inline = new LineBreakInline()
                 {
                     IsHard = true,
+                    IsBackslash = true,
                     Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                     Line = line,
                     Column = column

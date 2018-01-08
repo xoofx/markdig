@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+using System.Text;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -21,26 +23,40 @@ namespace Markdig.Parsers.Inlines
             OpeningCharacters = new[] {'&'};
         }
 
-        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+
+        public static bool TryParse(ref StringSlice slice, out string literal, out int match)
         {
-            string entityName;
+            literal = null;
+            int entityNameStart;
+            int entityNameLength;
             int entityValue;
-            var startPosition = slice.Start;
-            int match = HtmlHelper.ScanEntity(slice.Text, slice.Start, slice.Length, out entityName, out entityValue);
+            match = HtmlHelper.ScanEntity(slice, out entityValue, out entityNameStart, out entityNameLength);
             if (match == 0)
             {
                 return false;
             }
 
-            string literal = null;
-            if (entityName != null)
+            if (entityNameLength > 0)
             {
-                literal = EntityHelper.DecodeEntity(entityName);
+                literal = EntityHelper.DecodeEntity(new StringSlice(slice.Text, entityNameStart, entityNameStart + entityNameLength - 1).ToString());
             }
             else if (entityValue >= 0)
             {
                 literal = (entityValue == 0 ? null : EntityHelper.DecodeEntity(entityValue)) ?? CharHelper.ZeroSafeString;
             }
+            return true;
+        }
+
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+        {
+            int match;
+            string literal;
+            if (!TryParse(ref slice, out literal, out match))
+            {
+                return false;
+            }
+
+            var startPosition = slice.Start;
 
             if (literal != null)
             {

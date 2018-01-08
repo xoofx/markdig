@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -39,7 +39,7 @@ namespace Markdig.Tests
         {
             var text = new StringSlice(uri);
             string link;
-            Assert.True(LinkHelper.TryParseUrl(ref text, out link));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out link, true));
             Assert.AreEqual("http://google.com", link);
             Assert.AreEqual('.', text.CurrentChar);
         }
