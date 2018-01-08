@@ -129,6 +129,7 @@ namespace Markdig.Extensions.MediaLinks
             new KnownProvider {HostPrefix = "www.youtube.com", Delegate = YouTube},
             new KnownProvider {HostPrefix = "vimeo.com", Delegate = Vimeo},
             new KnownProvider {HostPrefix = "music.yandex.ru", Delegate = Yandex, AllowFullScreen = false},
+            new KnownProvider {HostPrefix = "ok.ru", Delegate = Odnoklassniki},
         };
 
 
@@ -185,6 +186,12 @@ namespace Markdig.Extensions.MediaLinks
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
             return items.Length > 0 ? $"https://player.vimeo.com/video/{items[items.Length - 1]}" : null;
+        }
+
+        private static string Odnoklassniki(Uri uri)
+        {
+            var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
+            return items.Length > 0 ? $"https://ok.ru/videoembed/{items[items.Length - 1]}" : null;
         }
 
         private static string Yandex(Uri uri)
