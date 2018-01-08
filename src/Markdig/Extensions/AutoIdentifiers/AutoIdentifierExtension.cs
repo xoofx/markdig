@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Markdig.Helpers;
@@ -89,11 +90,39 @@ namespace Markdig.Extensions.AutoIdentifiers
                     Heading = headingBlock,
                     CreateLinkInline = CreateLinkInlineForHeading
                 };
-                processor.Document.SetLinkReferenceDefinition(text, linkRef);
+
+                var doc = processor.Document;
+                var dictionary = doc.GetData(this) as Dictionary<string, HeadingLinkReferenceDefinition>;
+                if (dictionary == null)
+                {
+                    dictionary = new Dictionary<string, HeadingLinkReferenceDefinition>();
+                    doc.SetData(this, dictionary);
+                    doc.ProcessInlinesBegin += DocumentOnProcessInlinesBegin;
+                }
+                dictionary[text] = linkRef;
             }
 
             // Then we register after inline have been processed to actually generate the proper #id
             headingBlock.ProcessInlinesEnd += HeadingBlock_ProcessInlinesEnd;
+        }
+
+        private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline inline)
+        {
+            var doc = processor.Document;
+            doc.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
+            var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this);
+            foreach (var keyPair in dictionary)
+            {
+                // Here we make sure that auto-identifiers will not override an existing link definition
+                // defined in the document
+                // If it is the case, we skip the auto identifier for the Heading
+                if (!doc.TryGetLinkReferenceDefinition(keyPair.Key, out var linkDef))
+                {
+                    doc.SetLinkReferenceDefinition(keyPair.Key, keyPair.Value);
+                }
+            }
+            // Once we are done, we don't need to keep the intermediate dictionary arround
+            doc.RemoveData(this);
         }
 
         /// <summary>
@@ -144,13 +173,15 @@ namespace Markdig.Extensions.AutoIdentifiers
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
 
-            // TODO: Should we have a struct with more configure optionss for LinkHelper.Urilize?
-            headingText = LinkHelper.Urilize(headingText,
-                (options & AutoIdentifierOptions.AllowOnlyAscii) != 0,
-                (options & AutoIdentifierOptions.KeepOpeningDigits) != 0,
-                (options & AutoIdentifierOptions.DiscardDots) != 0);
+            // Urilize the link
+            headingText = (options & AutoIdentifierOptions.GitHub) != 0
+                ? LinkHelper.UrilizeAsGfm(headingText)
+                : LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
 
+            // If the heading is empty, use the word "section" instead
             var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
+
+            // Add a trailing -1, -2, -3...etc. in case of collision
             int index = 0;
             var headingId = baseHeadingId;
             var headingBuffer = StringBuilderCache.Local();

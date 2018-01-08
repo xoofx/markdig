@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -197,14 +197,14 @@ namespace Markdig.Helpers
         /// <seealso cref="ICharIterator" />
         public struct Iterator : ICharIterator
         {
-            private readonly StringLineGroup lines;
-            private int offset;
+            private readonly StringLineGroup _lines;
+            private int _offset;
 
             public Iterator(StringLineGroup lines)
             {
-                this.lines = lines;
+                this._lines = lines;
                 Start = -1;
-                offset = -1;
+                _offset = -1;
                 SliceIndex = 0;
                 CurrentChar = '\0';
                 End = -2; 
@@ -228,45 +228,47 @@ namespace Markdig.Helpers
             public char NextChar()
             {
                 Start++;
-                offset++;
+                _offset++;
                 if (Start <= End)
                 {
-                    var slice = (StringSlice)lines.Lines[SliceIndex];
-                    if (offset < slice.Length)
+                    var slice = (StringSlice)_lines.Lines[SliceIndex];
+                    if (_offset < slice.Length)
                     {
-                        CurrentChar = slice[slice.Start + offset];
+                        CurrentChar = slice[slice.Start + _offset];
                     }
                     else
                     {
                         CurrentChar = '\n';
                         SliceIndex++;
-                        offset = -1;
+                        _offset = -1;
                     }
                 }
                 else
                 {
                     CurrentChar = '\0';
                     Start = End + 1;
-                    SliceIndex = lines.Count;
-                    offset--;
+                    SliceIndex = _lines.Count;
+                    _offset--;
                 }
                 return CurrentChar;
             }
 
-            public char PeekChar()
+            public char PeekChar(int offset = 1)
             {
-                if (Start + 1 > End)
+                if (offset < 0) throw new ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
+
+                if (Start + offset > End)
                 {
                     return '\0';
                 }
 
-                var slice = (StringSlice)lines.Lines[SliceIndex];
-                if (offset + 1 >= slice.Length)
+                var slice = (StringSlice)_lines.Lines[SliceIndex];
+                if (_offset + offset >= slice.Length)
                 {
                     return '\n';
                 }
 
-                return slice[slice.Start + offset + 1];
+                return slice[slice.Start + _offset + offset];
             }
 
             public bool TrimStart()

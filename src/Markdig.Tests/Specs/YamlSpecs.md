@@ -47,10 +47,23 @@ It can end with three dots `...`:
 ```````````````````````````````` example
 ---
 this: is a frontmatter
+
 ...
 This is a text
 .
 <p>This is a text</p>
+````````````````````````````````
+
+If the end front matter marker (`...` or `---`) is not present, it will render the `---` has a `<hr>`:
+
+```````````````````````````````` example
+---
+this: is a frontmatter
+This is a text
+.
+<hr />
+<p>this: is a frontmatter
+This is a text</p>
 ````````````````````````````````
 
 It expects exactly three dots `...`:
@@ -61,6 +74,10 @@ this: is a frontmatter
 ....
 This is a text
 .
+<hr />
+<p>this: is a frontmatter
+....
+This is a text</p>
 ````````````````````````````````
 
 Front matter ends with the first line containing three dots `...` or three dashes `...`:

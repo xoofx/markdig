@@ -1,9 +1,10 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
 using Markdig.Renderers;
-using Markdig.Syntax.Inlines;
+using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Normalize.Inlines;
 
 namespace Markdig.Extensions.AutoLinks
 {
@@ -24,6 +25,11 @@ namespace Markdig.Extensions.AutoLinks
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
+            var normalizeRenderer = renderer as NormalizeRenderer;
+            if (normalizeRenderer != null && !normalizeRenderer.ObjectRenderers.Contains<NormalizeAutoLinkRenderer>())
+            {
+                normalizeRenderer.ObjectRenderers.InsertBefore<LinkInlineRenderer>(new NormalizeAutoLinkRenderer());
+            }
         }
     }
 }

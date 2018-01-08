@@ -67,17 +67,55 @@ namespace Markdig.Extensions.Yaml
             // this is a YAML front matter blcok
             if (count == 3 && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
-                // Create a front matter block
-                var block = this.CreateFrontMatterBlock(processor);
-                block.Column = processor.Column;
-                block.Span.Start = 0;
-                block.Span.End = line.Start;
+                bool hasFullYamlFrontMatter = false;
+                // We make sure that there is a closing frontmatter somewhere in the document
+                // so here we work on the full document instead of just the line
+                var fullLine = new StringSlice(line.Text, line.Start, line.Text.Length - 1);
+                c = fullLine.CurrentChar;
+                while (c != '\0')
+                {
+                    c = fullLine.NextChar();
+                    if (c == '\n' || c == '\r')
+                    {
+                        var nc = fullLine.PeekChar();
+                        if (c == '\r' && nc == '\n')
+                        {
+                            c = fullLine.NextChar();
+                        }
+                        nc = fullLine.PeekChar();
+                        if (nc == '-')
+                        {
+                            if (fullLine.NextChar() == '-'  && fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                            {
+                                hasFullYamlFrontMatter = true;
+                                break;
+                            }
+                        }
+                        else if (nc == '.')
+                        {
+                            if (fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                            {
+                                hasFullYamlFrontMatter = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 
-                // Store the number of matched string into the context
-                processor.NewBlocks.Push(block);
+                if (hasFullYamlFrontMatter)
+                {
+                    // Create a front matter block
+                    var block = this.CreateFrontMatterBlock(processor);
+                    block.Column = processor.Column;
+                    block.Span.Start = 0;
+                    block.Span.End = line.Start;
 
-                // Discard the current line as it is already parsed
-                return BlockState.ContinueDiscard;
+                    // Store the number of matched string into the context
+                    processor.NewBlocks.Push(block);
+
+                    // Discard the current line as it is already parsed
+                    return BlockState.ContinueDiscard;
+                }
             }
 
             return BlockState.None;

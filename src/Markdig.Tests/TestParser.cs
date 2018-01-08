@@ -1,16 +1,43 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.JiraLinks;
+using NUnit.Framework;
 
 namespace Markdig.Tests
 {
     public class TestParser
     {
+        [Test]
+        public void TestEmphasisAndHtmlEntity()
+        {
+            var markdownText = "*Unlimited-Fun&#174;*&#174;";
+            TestSpec(markdownText, "<p><em>Unlimited-Fun®</em>®</p>");
+        }
+
+        [Test]
+        public void TestThematicInsideCodeBlockInsideList()
+        {
+            var input = @"1. In the :
+
+   ```
+   Id                                   DisplayName         Description
+   --                                   -----------         -----------
+   62375ab9-6b52-47ed-826b-58e47e0e304b Group.Unified       ...
+   ```";
+            TestSpec(input, @"<ol>
+<li><p>In the :</p>
+<pre><code>Id                                   DisplayName         Description
+--                                   -----------         -----------
+62375ab9-6b52-47ed-826b-58e47e0e304b Group.Unified       ...
+</code></pre></li>
+</ol>");
+        }
+
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
         {
             foreach (var pipeline in GetPipeline(extensions))

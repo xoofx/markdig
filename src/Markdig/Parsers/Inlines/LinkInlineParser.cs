@@ -86,7 +86,7 @@ namespace Markdig.Parsers.Inlines
                         }
                     }
 
-                    // If we don’t find one, we return a literal slice node ].
+                    // If we donâ€™t find one, we return a literal slice node ].
                     // (Done after by the LiteralInline parser)
                     return false;
             }
@@ -95,7 +95,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineProcessor state, string label, SourceSpan labelSpan, LinkDelimiterInline parent, int endPosition)
+        private bool ProcessLinkReference(InlineProcessor state, string label, bool isShortcut, SourceSpan labelSpan, LinkDelimiterInline parent, int endPosition)
         {
             bool isValidLink = false;
             LinkReferenceDefinition linkRef;
@@ -120,6 +120,7 @@ namespace Markdig.Parsers.Inlines
                         LabelSpan = labelSpan,
                         UrlSpan = linkRef.UrlSpan,
                         IsImage = parent.IsImage,
+                        IsShortcut = isShortcut,
                         Reference = linkRef,
                         Span = new SourceSpan(parent.Span.Start, endPosition),
                         Line = parent.Line,
@@ -189,7 +190,7 @@ namespace Markdig.Parsers.Inlines
 
             if (openParent != null)
             {
-                // If we do find one, but it’s not active, 
+                // If we do find one, but itâ€™s not active, 
                 // we remove the inactive delimiter from the stack, 
                 // and return a literal text node ].
                 if (!openParent.IsActive)
@@ -205,7 +206,7 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
 
-                // If we find one and it’s active, 
+                // If we find one and itâ€™s active, 
                 // then we parse ahead to see if we have 
                 // an inline link/image, reference link/image, 
                 // compact reference link/image, 
@@ -261,6 +262,8 @@ namespace Markdig.Parsers.Inlines
                         var labelSpan = SourceSpan.Empty;
                         string label = null;
                         bool isLabelSpanLocal = true;
+
+                        bool isShortcut = false;
                         // Handle Collapsed links
                         if (text.CurrentChar == '[')
                         {
@@ -276,6 +279,7 @@ namespace Markdig.Parsers.Inlines
                         else
                         {
                             label = openParent.Label;
+                            isShortcut = true;
                         }
 
                         if (label != null || LinkHelper.TryParseLabel(ref text, true, out label, out labelSpan))
@@ -285,7 +289,7 @@ namespace Markdig.Parsers.Inlines
                                 labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                             }
 
-                            if (ProcessLinkReference(inlineState, label, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1)))
+                            if (ProcessLinkReference(inlineState, label, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1)))
                             {
                                 // Remove the open parent
                                 openParent.Remove();

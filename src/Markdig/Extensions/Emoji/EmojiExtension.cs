@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -12,12 +12,19 @@ namespace Markdig.Extensions.Emoji
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class EmojiExtension : IMarkdownExtension
     {
+        public EmojiExtension(bool enableSmiley = true)
+        {
+            EnableSmiley = enableSmiley;
+        }
+
+        public bool EnableSmiley { get; set; }
+
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<EmojiParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new EmojiParser());
+                pipeline.InlineParsers.Insert(0, new EmojiParser(EnableSmiley));
             }
         }
 

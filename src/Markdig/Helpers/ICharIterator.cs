@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -34,8 +34,9 @@ namespace Markdig.Helpers
         /// <summary>
         /// Peeks at the next character, without incrementing the <see cref="Start"/> position.
         /// </summary>
+        /// <param name="offset"></param>
         /// <returns>The next character. `\0` is end of the iteration.</returns>
-        char PeekChar();
+        char PeekChar(int offset = 1);
 
         /// <summary>
         /// Gets a value indicating whether this instance is empty.

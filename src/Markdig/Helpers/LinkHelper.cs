@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -18,7 +19,7 @@ namespace Markdig.Helpers
             return TryParseAutolink(ref text, out link, out isEmail);
         }
 
-        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false, bool discardDots = false)
+        public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
         {
             var headingBuffer = StringBuilderCache.Local();
             bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
@@ -47,7 +48,7 @@ namespace Markdig.Helpers
                     }
                     else if (hasLetter)
                     {
-                        if (IsReservedPunctuation(c, discardDots))
+                        if (IsReservedPunctuation(c))
                         {
                             if (previousIsSpace)
                             {
@@ -67,7 +68,7 @@ namespace Markdig.Helpers
                         else if (!previousIsSpace && c.IsWhitespace())
                         {
                             var pc = headingBuffer[headingBuffer.Length - 1];
-                            if (!IsReservedPunctuation(pc, discardDots))
+                            if (!IsReservedPunctuation(pc))
                             {
                                 headingBuffer.Append('-');
                             }
@@ -81,7 +82,7 @@ namespace Markdig.Helpers
             while (headingBuffer.Length > 0)
             {
                 var c = headingBuffer[headingBuffer.Length - 1];
-                if (IsReservedPunctuation(c, false))
+                if (IsReservedPunctuation(c))
                 {
                     headingBuffer.Length--;
                 }
@@ -96,10 +97,27 @@ namespace Markdig.Helpers
             return text;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        private static bool IsReservedPunctuation(char c, bool discardDots)
+        public static string UrilizeAsGfm(string headingText)
         {
-            return c == '_' || c == '-' || (!discardDots && c == '.');
+            // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
+            var headingBuffer = StringBuilderCache.Local();
+            for (int i = 0; i < headingText.Length; i++)
+            {
+                var c = char.ToLowerInvariant(headingText[i]);
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+                {
+                    headingBuffer.Append(c == ' ' ? '-' : c);
+                }
+            }
+            var result = headingBuffer.ToString();
+            headingBuffer.Length = 0;
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsReservedPunctuation(char c)
+        {
+            return c == '_' || c == '-' || c == '.';
         }
 
         public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)
@@ -496,7 +514,7 @@ namespace Markdig.Helpers
             return TryParseUrl(ref text, out link);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string link) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, out string link, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -593,16 +611,30 @@ namespace Markdig.Helpers
 
                     hasEscape = false;
 
-                    if (IsEndOfUri(c))
+                    if (IsEndOfUri(c, isAutoLink))
                     {
                         isValid = true;
                         break;
                     }
 
-                    if (c == '.' && IsEndOfUri(text.PeekChar()))
+                    if (isAutoLink)
                     {
-                        isValid = true;
-                        break;
+                        if (c == '&')
+                        {
+                            int entityNameStart;
+                            int entityNameLength;
+                            int entityValue;
+                            if (HtmlHelper.ScanEntity(text, out entityValue, out entityNameStart, out entityNameLength) > 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                        if (IsTrailingUrlStopCharacter(c) && IsEndOfUri(text.PeekChar(), true))
+                        {
+                            isValid = true;
+                            break;
+                        }
                     }
 
                     buffer.Append(c);
@@ -621,9 +653,17 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        private static bool IsEndOfUri(char c)
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsTrailingUrlStopCharacter(char c)
         {
-            return c == '\0' || c.IsSpaceOrTab() || c.IsControl(); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+            // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not be considered part of the autolink, though they may be included in the interior of the link:
+            return c == '?' || c == '!' || c == '.' || c == ',' || c == ':' || c == '*' || c == '*' || c == '_' || c == '~';
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsEndOfUri(char c, bool isAutoLink)
+        {
+            return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
         }
 
         public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,

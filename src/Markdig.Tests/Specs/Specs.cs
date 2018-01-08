@@ -20329,6 +20329,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
+        // An autoidentifier should not conflict with an existing link:
+    [TestFixture]
+    public partial class TestExtensionsHeadingAutoIdentifiers
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions Heading Auto Identifiers
+            //
+            // The following CommonMark:
+            //     ![scenario image][scenario]
+            //     ## Scenario
+            //     [scenario]: ./scenario.png
+            //
+            // Should be rendered as:
+            //     <p><img src="./scenario.png" alt="scenario image" /></p>
+            //     <h2 id="scenario">Scenario</h2>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions Heading Auto Identifiers");
+			TestParser.TestSpec("![scenario image][scenario]\n## Scenario\n[scenario]: ./scenario.png", "<p><img src=\"./scenario.png\" alt=\"scenario image\" /></p>\n<h2 id=\"scenario\">Scenario</h2>", "autoidentifiers|advanced");
+        }
+    }
         // # Extensions
         //
         // Adds support for task lists:
@@ -20607,6 +20630,7 @@ namespace Markdig.Tests
             // The following CommonMark:
             //     ---
             //     this: is a frontmatter
+            //     
             //     ...
             //     This is a text
             //
@@ -20614,10 +20638,10 @@ namespace Markdig.Tests
             //     <p>This is a text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions YAML frontmatter discard");
-			TestParser.TestSpec("---\nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n\n...\nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
-        // It expects exactly three dots `...`:
+        // If the end front matter marker (`...` or `---`) is not present, it will render the `---` has a `<hr>`:
     [TestFixture]
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
@@ -20630,17 +20654,18 @@ namespace Markdig.Tests
             // The following CommonMark:
             //     ---
             //     this: is a frontmatter
-            //     ....
             //     This is a text
             //
             // Should be rendered as:
-            //     
+            //     <hr />
+            //     <p>this: is a frontmatter
+            //     This is a text</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 5, "Extensions YAML frontmatter discard");
-			TestParser.TestSpec("---\nthis: is a frontmatter\n....\nThis is a text", "", "yaml");
+			TestParser.TestSpec("---\nthis: is a frontmatter\nThis is a text", "<hr />\n<p>this: is a frontmatter\nThis is a text</p>", "yaml");
         }
     }
-        // Front matter ends with the first line containing three dots `...` or three dashes `...`:
+        // It expects exactly three dots `...`:
     [TestFixture]
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
@@ -20648,6 +20673,32 @@ namespace Markdig.Tests
         public void ExtensionsYAMLfrontmatterdiscard_Example006()
         {
             // Example 6
+            // Section: Extensions YAML frontmatter discard
+            //
+            // The following CommonMark:
+            //     ---
+            //     this: is a frontmatter
+            //     ....
+            //     This is a text
+            //
+            // Should be rendered as:
+            //     <hr />
+            //     <p>this: is a frontmatter
+            //     ....
+            //     This is a text</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions YAML frontmatter discard");
+			TestParser.TestSpec("---\nthis: is a frontmatter\n....\nThis is a text", "<hr />\n<p>this: is a frontmatter\n....\nThis is a text</p>", "yaml");
+        }
+    }
+        // Front matter ends with the first line containing three dots `...` or three dashes `...`:
+    [TestFixture]
+    public partial class TestExtensionsYAMLfrontmatterdiscard
+    {
+        [Test]
+        public void Example007()
+        {
+            // Example 7
             // Section: Extensions YAML frontmatter discard
             //
             // The following CommonMark:
@@ -20662,7 +20713,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 6, "Extensions YAML frontmatter discard");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions YAML frontmatter discard");
 			TestParser.TestSpec("---\nthis: is a frontmatter\n....\n\nHello\n---\nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
@@ -20673,7 +20724,7 @@ namespace Markdig.Tests
         [Test]
         public void ExtensionsYAMLfrontmatterdiscard_Example007()
         {
-            // Example 7
+            // Example 8
             // Section: Extensions YAML frontmatter discard
             //
             // The following CommonMark:
@@ -20685,7 +20736,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions YAML frontmatter discard");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions YAML frontmatter discard");
 			TestParser.TestSpec("---   \nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
@@ -20696,7 +20747,7 @@ namespace Markdig.Tests
         [Test]
         public void ExtensionsYAMLfrontmatterdiscard_Example008()
         {
-            // Example 8
+            // Example 9
             // Section: Extensions YAML frontmatter discard
             //
             // The following CommonMark:
@@ -20708,7 +20759,7 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions YAML frontmatter discard");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions YAML frontmatter discard");
 			TestParser.TestSpec("---\nthis: is a frontmatter\n...     \nThis is a text", "<p>This is a text</p>", "yaml");
         }
     }
@@ -20873,6 +20924,157 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 7, "Extensions AutoLinks");
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
+        }
+    }
+        // ### GFM Support
+        //
+        // Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example008()
+        {
+            // Example 8
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example009()
+        {
+            // Example 9
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     Visit www.commonmark.org/help for more information.
+            //
+            // Should be rendered as:
+            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example010()
+        {
+            // Example 10
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     Visit www.commonmark.org.
+            //     
+            //     Visit www.commonmark.org/a.b.
+            //
+            // Should be rendered as:
+            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example011()
+        {
+            // Example 11
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.google.com/search?q=Markup+(business)
+            //     
+            //     (www.google.com/search?q=Markup+(business))
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
+            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example012()
+        {
+            // Example 12
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.google.com/search?q=commonmark&hl=en
+            //     
+            //     www.google.com/search?q=commonmark&hl;
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example013()
+        {
+            // Example 13
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org/he<lp
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void Example014()
+        {
+            // Example 14
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     http://commonmark.org
+            //     
+            //     (Visit https://encrypted.google.com/search?q=Markup+(business))
+            //     
+            //     Anonymous FTP is available at ftp://foo.bar.baz.
+            //
+            // Should be rendered as:
+            //     <p><a href="http://commonmark.org">http://commonmark.org</a></p>
+            //     <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
+            //     <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced");
         }
     }
         // ## Jira Links

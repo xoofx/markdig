@@ -26,6 +26,7 @@ namespace Markdig.Renderers.Html.Inlines
                     renderer.Write("mailto:");
                 }
                 renderer.WriteEscapeUrl(obj.Url);
+                renderer.Write('"');
                 renderer.WriteAttributes(obj);
 
                 if (!obj.IsEmail && AutoRelNoFollow)
@@ -33,7 +34,7 @@ namespace Markdig.Renderers.Html.Inlines
                     renderer.Write(" rel=\"nofollow\"");
                 }
 
-                renderer.Write("\">");
+                renderer.Write(">");
             }
 
             renderer.WriteEscape(obj.Url);
