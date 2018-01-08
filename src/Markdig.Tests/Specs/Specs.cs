@@ -355,7 +355,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example001()
+        public void PreliminariesTabs_Example001()
         {
             // Example 1
             // Section: Preliminaries Tabs
@@ -375,7 +375,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example002()
+        public void PreliminariesTabs_Example002()
         {
             // Example 2
             // Section: Preliminaries Tabs
@@ -395,7 +395,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example003()
+        public void PreliminariesTabs_Example003()
         {
             // Example 3
             // Section: Preliminaries Tabs
@@ -420,7 +420,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example004()
+        public void PreliminariesTabs_Example004()
         {
             // Example 4
             // Section: Preliminaries Tabs
@@ -446,7 +446,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example005()
+        public void PreliminariesTabs_Example005()
         {
             // Example 5
             // Section: Preliminaries Tabs
@@ -481,7 +481,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example006()
+        public void PreliminariesTabs_Example006()
         {
             // Example 6
             // Section: Preliminaries Tabs
@@ -503,7 +503,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example007()
+        public void PreliminariesTabs_Example007()
         {
             // Example 7
             // Section: Preliminaries Tabs
@@ -527,7 +527,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example008()
+        public void PreliminariesTabs_Example008()
         {
             // Example 8
             // Section: Preliminaries Tabs
@@ -549,7 +549,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example009()
+        public void PreliminariesTabs_Example009()
         {
             // Example 9
             // Section: Preliminaries Tabs
@@ -580,7 +580,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example010()
+        public void PreliminariesTabs_Example010()
         {
             // Example 10
             // Section: Preliminaries Tabs
@@ -599,7 +599,7 @@ namespace Markdig.Tests
     public partial class TestPreliminariesTabs
     {
         [Test]
-        public void Example011()
+        public void PreliminariesTabs_Example011()
         {
             // Example 11
             // Section: Preliminaries Tabs
@@ -637,7 +637,7 @@ namespace Markdig.Tests
     public partial class TestBlocksandinlinesPrecedence
     {
         [Test]
-        public void Example012()
+        public void BlocksandinlinesPrecedence_Example012()
         {
             // Example 12
             // Section: Blocks and inlines Precedence
@@ -687,7 +687,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example013()
+        public void LeafblocksThematicbreaks_Example013()
         {
             // Example 13
             // Section: Leaf blocks Thematic breaks
@@ -711,7 +711,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example014()
+        public void LeafblocksThematicbreaks_Example014()
         {
             // Example 14
             // Section: Leaf blocks Thematic breaks
@@ -730,7 +730,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example015()
+        public void LeafblocksThematicbreaks_Example015()
         {
             // Example 15
             // Section: Leaf blocks Thematic breaks
@@ -750,7 +750,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example016()
+        public void LeafblocksThematicbreaks_Example016()
         {
             // Example 16
             // Section: Leaf blocks Thematic breaks
@@ -774,7 +774,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example017()
+        public void LeafblocksThematicbreaks_Example017()
         {
             // Example 17
             // Section: Leaf blocks Thematic breaks
@@ -798,7 +798,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example018()
+        public void LeafblocksThematicbreaks_Example018()
         {
             // Example 18
             // Section: Leaf blocks Thematic breaks
@@ -818,7 +818,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example019()
+        public void LeafblocksThematicbreaks_Example019()
         {
             // Example 19
             // Section: Leaf blocks Thematic breaks
@@ -840,7 +840,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example020()
+        public void LeafblocksThematicbreaks_Example020()
         {
             // Example 20
             // Section: Leaf blocks Thematic breaks
@@ -860,7 +860,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example021()
+        public void LeafblocksThematicbreaks_Example021()
         {
             // Example 21
             // Section: Leaf blocks Thematic breaks
@@ -879,7 +879,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example022()
+        public void LeafblocksThematicbreaks_Example022()
         {
             // Example 22
             // Section: Leaf blocks Thematic breaks
@@ -898,7 +898,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example023()
+        public void LeafblocksThematicbreaks_Example023()
         {
             // Example 23
             // Section: Leaf blocks Thematic breaks
@@ -918,7 +918,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example024()
+        public void LeafblocksThematicbreaks_Example024()
         {
             // Example 24
             // Section: Leaf blocks Thematic breaks
@@ -938,7 +938,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example025()
+        public void LeafblocksThematicbreaks_Example025()
         {
             // Example 25
             // Section: Leaf blocks Thematic breaks
@@ -965,7 +965,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example026()
+        public void LeafblocksThematicbreaks_Example026()
         {
             // Example 26
             // Section: Leaf blocks Thematic breaks
@@ -985,7 +985,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example027()
+        public void LeafblocksThematicbreaks_Example027()
         {
             // Example 27
             // Section: Leaf blocks Thematic breaks
@@ -1013,7 +1013,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example028()
+        public void LeafblocksThematicbreaks_Example028()
         {
             // Example 28
             // Section: Leaf blocks Thematic breaks
@@ -1041,7 +1041,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example029()
+        public void LeafblocksThematicbreaks_Example029()
         {
             // Example 29
             // Section: Leaf blocks Thematic breaks
@@ -1065,7 +1065,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example030()
+        public void LeafblocksThematicbreaks_Example030()
         {
             // Example 30
             // Section: Leaf blocks Thematic breaks
@@ -1093,7 +1093,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksThematicbreaks
     {
         [Test]
-        public void Example031()
+        public void LeafblocksThematicbreaks_Example031()
         {
             // Example 31
             // Section: Leaf blocks Thematic breaks
@@ -1133,7 +1133,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example032()
+        public void LeafblocksATXheadings_Example032()
         {
             // Example 32
             // Section: Leaf blocks ATX headings
@@ -1163,7 +1163,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example033()
+        public void LeafblocksATXheadings_Example033()
         {
             // Example 33
             // Section: Leaf blocks ATX headings
@@ -1189,7 +1189,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example034()
+        public void LeafblocksATXheadings_Example034()
         {
             // Example 34
             // Section: Leaf blocks ATX headings
@@ -1212,7 +1212,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example035()
+        public void LeafblocksATXheadings_Example035()
         {
             // Example 35
             // Section: Leaf blocks ATX headings
@@ -1232,7 +1232,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example036()
+        public void LeafblocksATXheadings_Example036()
         {
             // Example 36
             // Section: Leaf blocks ATX headings
@@ -1252,7 +1252,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example037()
+        public void LeafblocksATXheadings_Example037()
         {
             // Example 37
             // Section: Leaf blocks ATX headings
@@ -1272,7 +1272,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example038()
+        public void LeafblocksATXheadings_Example038()
         {
             // Example 38
             // Section: Leaf blocks ATX headings
@@ -1296,7 +1296,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example039()
+        public void LeafblocksATXheadings_Example039()
         {
             // Example 39
             // Section: Leaf blocks ATX headings
@@ -1316,7 +1316,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example040()
+        public void LeafblocksATXheadings_Example040()
         {
             // Example 40
             // Section: Leaf blocks ATX headings
@@ -1338,7 +1338,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example041()
+        public void LeafblocksATXheadings_Example041()
         {
             // Example 41
             // Section: Leaf blocks ATX headings
@@ -1360,7 +1360,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example042()
+        public void LeafblocksATXheadings_Example042()
         {
             // Example 42
             // Section: Leaf blocks ATX headings
@@ -1382,7 +1382,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example043()
+        public void LeafblocksATXheadings_Example043()
         {
             // Example 43
             // Section: Leaf blocks ATX headings
@@ -1404,7 +1404,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example044()
+        public void LeafblocksATXheadings_Example044()
         {
             // Example 44
             // Section: Leaf blocks ATX headings
@@ -1424,7 +1424,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example045()
+        public void LeafblocksATXheadings_Example045()
         {
             // Example 45
             // Section: Leaf blocks ATX headings
@@ -1445,7 +1445,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example046()
+        public void LeafblocksATXheadings_Example046()
         {
             // Example 46
             // Section: Leaf blocks ATX headings
@@ -1470,7 +1470,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example047()
+        public void LeafblocksATXheadings_Example047()
         {
             // Example 47
             // Section: Leaf blocks ATX headings
@@ -1493,7 +1493,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example048()
+        public void LeafblocksATXheadings_Example048()
         {
             // Example 48
             // Section: Leaf blocks ATX headings
@@ -1517,7 +1517,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksATXheadings
     {
         [Test]
-        public void Example049()
+        public void LeafblocksATXheadings_Example049()
         {
             // Example 49
             // Section: Leaf blocks ATX headings
@@ -1571,7 +1571,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example050()
+        public void LeafblocksSetextheadings_Example050()
         {
             // Example 50
             // Section: Leaf blocks Setext headings
@@ -1596,7 +1596,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example051()
+        public void LeafblocksSetextheadings_Example051()
         {
             // Example 51
             // Section: Leaf blocks Setext headings
@@ -1619,7 +1619,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example052()
+        public void LeafblocksSetextheadings_Example052()
         {
             // Example 52
             // Section: Leaf blocks Setext headings
@@ -1645,7 +1645,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example053()
+        public void LeafblocksSetextheadings_Example053()
         {
             // Example 53
             // Section: Leaf blocks Setext headings
@@ -1674,7 +1674,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example054()
+        public void LeafblocksSetextheadings_Example054()
         {
             // Example 54
             // Section: Leaf blocks Setext headings
@@ -1704,7 +1704,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example055()
+        public void LeafblocksSetextheadings_Example055()
         {
             // Example 55
             // Section: Leaf blocks Setext headings
@@ -1725,7 +1725,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example056()
+        public void LeafblocksSetextheadings_Example056()
         {
             // Example 56
             // Section: Leaf blocks Setext headings
@@ -1747,7 +1747,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example057()
+        public void LeafblocksSetextheadings_Example057()
         {
             // Example 57
             // Section: Leaf blocks Setext headings
@@ -1774,7 +1774,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example058()
+        public void LeafblocksSetextheadings_Example058()
         {
             // Example 58
             // Section: Leaf blocks Setext headings
@@ -1795,7 +1795,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example059()
+        public void LeafblocksSetextheadings_Example059()
         {
             // Example 59
             // Section: Leaf blocks Setext headings
@@ -1817,7 +1817,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example060()
+        public void LeafblocksSetextheadings_Example060()
         {
             // Example 60
             // Section: Leaf blocks Setext headings
@@ -1847,7 +1847,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example061()
+        public void LeafblocksSetextheadings_Example061()
         {
             // Example 61
             // Section: Leaf blocks Setext headings
@@ -1870,7 +1870,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example062()
+        public void LeafblocksSetextheadings_Example062()
         {
             // Example 62
             // Section: Leaf blocks Setext headings
@@ -1895,7 +1895,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example063()
+        public void LeafblocksSetextheadings_Example063()
         {
             // Example 63
             // Section: Leaf blocks Setext headings
@@ -1921,7 +1921,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example064()
+        public void LeafblocksSetextheadings_Example064()
         {
             // Example 64
             // Section: Leaf blocks Setext headings
@@ -1945,7 +1945,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example065()
+        public void LeafblocksSetextheadings_Example065()
         {
             // Example 65
             // Section: Leaf blocks Setext headings
@@ -1973,7 +1973,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example066()
+        public void LeafblocksSetextheadings_Example066()
         {
             // Example 66
             // Section: Leaf blocks Setext headings
@@ -1995,7 +1995,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example067()
+        public void LeafblocksSetextheadings_Example067()
         {
             // Example 67
             // Section: Leaf blocks Setext headings
@@ -2016,7 +2016,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example068()
+        public void LeafblocksSetextheadings_Example068()
         {
             // Example 68
             // Section: Leaf blocks Setext headings
@@ -2039,7 +2039,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example069()
+        public void LeafblocksSetextheadings_Example069()
         {
             // Example 69
             // Section: Leaf blocks Setext headings
@@ -2061,7 +2061,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example070()
+        public void LeafblocksSetextheadings_Example070()
         {
             // Example 70
             // Section: Leaf blocks Setext headings
@@ -2086,7 +2086,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example071()
+        public void LeafblocksSetextheadings_Example071()
         {
             // Example 71
             // Section: Leaf blocks Setext headings
@@ -2128,7 +2128,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example072()
+        public void LeafblocksSetextheadings_Example072()
         {
             // Example 72
             // Section: Leaf blocks Setext headings
@@ -2155,7 +2155,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example073()
+        public void LeafblocksSetextheadings_Example073()
         {
             // Example 73
             // Section: Leaf blocks Setext headings
@@ -2184,7 +2184,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example074()
+        public void LeafblocksSetextheadings_Example074()
         {
             // Example 74
             // Section: Leaf blocks Setext headings
@@ -2210,7 +2210,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksSetextheadings
     {
         [Test]
-        public void Example075()
+        public void LeafblocksSetextheadings_Example075()
         {
             // Example 75
             // Section: Leaf blocks Setext headings
@@ -2249,7 +2249,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example076()
+        public void LeafblocksIndentedcodeblocks_Example076()
         {
             // Example 76
             // Section: Leaf blocks Indented code blocks
@@ -2274,7 +2274,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example077()
+        public void LeafblocksIndentedcodeblocks_Example077()
         {
             // Example 77
             // Section: Leaf blocks Indented code blocks
@@ -2300,7 +2300,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example078()
+        public void LeafblocksIndentedcodeblocks_Example078()
         {
             // Example 78
             // Section: Leaf blocks Indented code blocks
@@ -2330,7 +2330,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example079()
+        public void LeafblocksIndentedcodeblocks_Example079()
         {
             // Example 79
             // Section: Leaf blocks Indented code blocks
@@ -2357,7 +2357,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example080()
+        public void LeafblocksIndentedcodeblocks_Example080()
         {
             // Example 80
             // Section: Leaf blocks Indented code blocks
@@ -2391,7 +2391,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example081()
+        public void LeafblocksIndentedcodeblocks_Example081()
         {
             // Example 81
             // Section: Leaf blocks Indented code blocks
@@ -2417,7 +2417,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example082()
+        public void LeafblocksIndentedcodeblocks_Example082()
         {
             // Example 82
             // Section: Leaf blocks Indented code blocks
@@ -2442,7 +2442,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example083()
+        public void LeafblocksIndentedcodeblocks_Example083()
         {
             // Example 83
             // Section: Leaf blocks Indented code blocks
@@ -2466,7 +2466,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example084()
+        public void LeafblocksIndentedcodeblocks_Example084()
         {
             // Example 84
             // Section: Leaf blocks Indented code blocks
@@ -2497,7 +2497,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example085()
+        public void LeafblocksIndentedcodeblocks_Example085()
         {
             // Example 85
             // Section: Leaf blocks Indented code blocks
@@ -2521,7 +2521,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example086()
+        public void LeafblocksIndentedcodeblocks_Example086()
         {
             // Example 86
             // Section: Leaf blocks Indented code blocks
@@ -2545,7 +2545,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksIndentedcodeblocks
     {
         [Test]
-        public void Example087()
+        public void LeafblocksIndentedcodeblocks_Example087()
         {
             // Example 87
             // Section: Leaf blocks Indented code blocks
@@ -2610,7 +2610,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example088()
+        public void LeafblocksFencedcodeblocks_Example088()
         {
             // Example 88
             // Section: Leaf blocks Fenced code blocks
@@ -2635,7 +2635,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example089()
+        public void LeafblocksFencedcodeblocks_Example089()
         {
             // Example 89
             // Section: Leaf blocks Fenced code blocks
@@ -2660,7 +2660,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example090()
+        public void LeafblocksFencedcodeblocks_Example090()
         {
             // Example 90
             // Section: Leaf blocks Fenced code blocks
@@ -2683,7 +2683,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example091()
+        public void LeafblocksFencedcodeblocks_Example091()
         {
             // Example 91
             // Section: Leaf blocks Fenced code blocks
@@ -2707,7 +2707,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example092()
+        public void LeafblocksFencedcodeblocks_Example092()
         {
             // Example 92
             // Section: Leaf blocks Fenced code blocks
@@ -2732,7 +2732,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example093()
+        public void LeafblocksFencedcodeblocks_Example093()
         {
             // Example 93
             // Section: Leaf blocks Fenced code blocks
@@ -2756,7 +2756,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example094()
+        public void LeafblocksFencedcodeblocks_Example094()
         {
             // Example 94
             // Section: Leaf blocks Fenced code blocks
@@ -2782,7 +2782,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example095()
+        public void LeafblocksFencedcodeblocks_Example095()
         {
             // Example 95
             // Section: Leaf blocks Fenced code blocks
@@ -2801,7 +2801,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example096()
+        public void LeafblocksFencedcodeblocks_Example096()
         {
             // Example 96
             // Section: Leaf blocks Fenced code blocks
@@ -2826,7 +2826,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example097()
+        public void LeafblocksFencedcodeblocks_Example097()
         {
             // Example 97
             // Section: Leaf blocks Fenced code blocks
@@ -2853,7 +2853,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example098()
+        public void LeafblocksFencedcodeblocks_Example098()
         {
             // Example 98
             // Section: Leaf blocks Fenced code blocks
@@ -2878,7 +2878,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example099()
+        public void LeafblocksFencedcodeblocks_Example099()
         {
             // Example 99
             // Section: Leaf blocks Fenced code blocks
@@ -2901,7 +2901,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example100()
+        public void LeafblocksFencedcodeblocks_Example100()
         {
             // Example 100
             // Section: Leaf blocks Fenced code blocks
@@ -2925,7 +2925,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example101()
+        public void LeafblocksFencedcodeblocks_Example101()
         {
             // Example 101
             // Section: Leaf blocks Fenced code blocks
@@ -2951,7 +2951,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example102()
+        public void LeafblocksFencedcodeblocks_Example102()
         {
             // Example 102
             // Section: Leaf blocks Fenced code blocks
@@ -2978,7 +2978,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example103()
+        public void LeafblocksFencedcodeblocks_Example103()
         {
             // Example 103
             // Section: Leaf blocks Fenced code blocks
@@ -3004,7 +3004,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example104()
+        public void LeafblocksFencedcodeblocks_Example104()
         {
             // Example 104
             // Section: Leaf blocks Fenced code blocks
@@ -3026,7 +3026,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example105()
+        public void LeafblocksFencedcodeblocks_Example105()
         {
             // Example 105
             // Section: Leaf blocks Fenced code blocks
@@ -3049,7 +3049,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example106()
+        public void LeafblocksFencedcodeblocks_Example106()
         {
             // Example 106
             // Section: Leaf blocks Fenced code blocks
@@ -3073,7 +3073,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example107()
+        public void LeafblocksFencedcodeblocks_Example107()
         {
             // Example 107
             // Section: Leaf blocks Fenced code blocks
@@ -3094,7 +3094,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example108()
+        public void LeafblocksFencedcodeblocks_Example108()
         {
             // Example 108
             // Section: Leaf blocks Fenced code blocks
@@ -3119,7 +3119,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example109()
+        public void LeafblocksFencedcodeblocks_Example109()
         {
             // Example 109
             // Section: Leaf blocks Fenced code blocks
@@ -3147,7 +3147,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example110()
+        public void LeafblocksFencedcodeblocks_Example110()
         {
             // Example 110
             // Section: Leaf blocks Fenced code blocks
@@ -3178,7 +3178,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example111()
+        public void LeafblocksFencedcodeblocks_Example111()
         {
             // Example 111
             // Section: Leaf blocks Fenced code blocks
@@ -3204,7 +3204,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example112()
+        public void LeafblocksFencedcodeblocks_Example112()
         {
             // Example 112
             // Section: Leaf blocks Fenced code blocks
@@ -3230,7 +3230,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example113()
+        public void LeafblocksFencedcodeblocks_Example113()
         {
             // Example 113
             // Section: Leaf blocks Fenced code blocks
@@ -3251,7 +3251,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example114()
+        public void LeafblocksFencedcodeblocks_Example114()
         {
             // Example 114
             // Section: Leaf blocks Fenced code blocks
@@ -3273,7 +3273,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksFencedcodeblocks
     {
         [Test]
-        public void Example115()
+        public void LeafblocksFencedcodeblocks_Example115()
         {
             // Example 115
             // Section: Leaf blocks Fenced code blocks
@@ -3360,7 +3360,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example116()
+        public void LeafblocksHTMLblocks_Example116()
         {
             // Example 116
             // Section: Leaf blocks HTML blocks
@@ -3401,7 +3401,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example117()
+        public void LeafblocksHTMLblocks_Example117()
         {
             // Example 117
             // Section: Leaf blocks HTML blocks
@@ -3435,7 +3435,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example118()
+        public void LeafblocksHTMLblocks_Example118()
         {
             // Example 118
             // Section: Leaf blocks HTML blocks
@@ -3459,7 +3459,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example119()
+        public void LeafblocksHTMLblocks_Example119()
         {
             // Example 119
             // Section: Leaf blocks HTML blocks
@@ -3481,7 +3481,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example120()
+        public void LeafblocksHTMLblocks_Example120()
         {
             // Example 120
             // Section: Leaf blocks HTML blocks
@@ -3508,7 +3508,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example121()
+        public void LeafblocksHTMLblocks_Example121()
         {
             // Example 121
             // Section: Leaf blocks HTML blocks
@@ -3531,7 +3531,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example122()
+        public void LeafblocksHTMLblocks_Example122()
         {
             // Example 122
             // Section: Leaf blocks HTML blocks
@@ -3555,7 +3555,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example123()
+        public void LeafblocksHTMLblocks_Example123()
         {
             // Example 123
             // Section: Leaf blocks HTML blocks
@@ -3581,7 +3581,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example124()
+        public void LeafblocksHTMLblocks_Example124()
         {
             // Example 124
             // Section: Leaf blocks HTML blocks
@@ -3602,7 +3602,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example125()
+        public void LeafblocksHTMLblocks_Example125()
         {
             // Example 125
             // Section: Leaf blocks HTML blocks
@@ -3625,7 +3625,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example126()
+        public void LeafblocksHTMLblocks_Example126()
         {
             // Example 126
             // Section: Leaf blocks HTML blocks
@@ -3648,7 +3648,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example127()
+        public void LeafblocksHTMLblocks_Example127()
         {
             // Example 127
             // Section: Leaf blocks HTML blocks
@@ -3667,7 +3667,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example128()
+        public void LeafblocksHTMLblocks_Example128()
         {
             // Example 128
             // Section: Leaf blocks HTML blocks
@@ -3695,7 +3695,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example129()
+        public void LeafblocksHTMLblocks_Example129()
         {
             // Example 129
             // Section: Leaf blocks HTML blocks
@@ -3723,7 +3723,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example130()
+        public void LeafblocksHTMLblocks_Example130()
         {
             // Example 130
             // Section: Leaf blocks HTML blocks
@@ -3747,7 +3747,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example131()
+        public void LeafblocksHTMLblocks_Example131()
         {
             // Example 131
             // Section: Leaf blocks HTML blocks
@@ -3770,7 +3770,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example132()
+        public void LeafblocksHTMLblocks_Example132()
         {
             // Example 132
             // Section: Leaf blocks HTML blocks
@@ -3793,7 +3793,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example133()
+        public void LeafblocksHTMLblocks_Example133()
         {
             // Example 133
             // Section: Leaf blocks HTML blocks
@@ -3819,7 +3819,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example134()
+        public void LeafblocksHTMLblocks_Example134()
         {
             // Example 134
             // Section: Leaf blocks HTML blocks
@@ -3845,7 +3845,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example135()
+        public void LeafblocksHTMLblocks_Example135()
         {
             // Example 135
             // Section: Leaf blocks HTML blocks
@@ -3874,7 +3874,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example136()
+        public void LeafblocksHTMLblocks_Example136()
         {
             // Example 136
             // Section: Leaf blocks HTML blocks
@@ -3901,7 +3901,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example137()
+        public void LeafblocksHTMLblocks_Example137()
         {
             // Example 137
             // Section: Leaf blocks HTML blocks
@@ -3933,7 +3933,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example138()
+        public void LeafblocksHTMLblocks_Example138()
         {
             // Example 138
             // Section: Leaf blocks HTML blocks
@@ -3963,7 +3963,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example139()
+        public void LeafblocksHTMLblocks_Example139()
         {
             // Example 139
             // Section: Leaf blocks HTML blocks
@@ -3997,7 +3997,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example140()
+        public void LeafblocksHTMLblocks_Example140()
         {
             // Example 140
             // Section: Leaf blocks HTML blocks
@@ -4022,7 +4022,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example141()
+        public void LeafblocksHTMLblocks_Example141()
         {
             // Example 141
             // Section: Leaf blocks HTML blocks
@@ -4048,7 +4048,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example142()
+        public void LeafblocksHTMLblocks_Example142()
         {
             // Example 142
             // Section: Leaf blocks HTML blocks
@@ -4074,7 +4074,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example143()
+        public void LeafblocksHTMLblocks_Example143()
         {
             // Example 143
             // Section: Leaf blocks HTML blocks
@@ -4095,7 +4095,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example144()
+        public void LeafblocksHTMLblocks_Example144()
         {
             // Example 144
             // Section: Leaf blocks HTML blocks
@@ -4118,7 +4118,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example145()
+        public void LeafblocksHTMLblocks_Example145()
         {
             // Example 145
             // Section: Leaf blocks HTML blocks
@@ -4142,7 +4142,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example146()
+        public void LeafblocksHTMLblocks_Example146()
         {
             // Example 146
             // Section: Leaf blocks HTML blocks
@@ -4170,7 +4170,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example147()
+        public void LeafblocksHTMLblocks_Example147()
         {
             // Example 147
             // Section: Leaf blocks HTML blocks
@@ -4200,7 +4200,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example148()
+        public void LeafblocksHTMLblocks_Example148()
         {
             // Example 148
             // Section: Leaf blocks HTML blocks
@@ -4220,7 +4220,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example149()
+        public void LeafblocksHTMLblocks_Example149()
         {
             // Example 149
             // Section: Leaf blocks HTML blocks
@@ -4264,7 +4264,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example150()
+        public void LeafblocksHTMLblocks_Example150()
         {
             // Example 150
             // Section: Leaf blocks HTML blocks
@@ -4287,7 +4287,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example151()
+        public void LeafblocksHTMLblocks_Example151()
         {
             // Example 151
             // Section: Leaf blocks HTML blocks
@@ -4312,7 +4312,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example152()
+        public void LeafblocksHTMLblocks_Example152()
         {
             // Example 152
             // Section: Leaf blocks HTML blocks
@@ -4339,7 +4339,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example153()
+        public void LeafblocksHTMLblocks_Example153()
         {
             // Example 153
             // Section: Leaf blocks HTML blocks
@@ -4365,7 +4365,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example154()
+        public void LeafblocksHTMLblocks_Example154()
         {
             // Example 154
             // Section: Leaf blocks HTML blocks
@@ -4417,7 +4417,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example155()
+        public void LeafblocksHTMLblocks_Example155()
         {
             // Example 155
             // Section: Leaf blocks HTML blocks
@@ -4442,7 +4442,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example156()
+        public void LeafblocksHTMLblocks_Example156()
         {
             // Example 156
             // Section: Leaf blocks HTML blocks
@@ -4475,7 +4475,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example157()
+        public void LeafblocksHTMLblocks_Example157()
         {
             // Example 157
             // Section: Leaf blocks HTML blocks
@@ -4513,7 +4513,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksHTMLblocks
     {
         [Test]
-        public void Example158()
+        public void LeafblocksHTMLblocks_Example158()
         {
             // Example 158
             // Section: Leaf blocks HTML blocks
@@ -4572,7 +4572,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example159()
+        public void LeafblocksLinkreferencedefinitions_Example159()
         {
             // Example 159
             // Section: Leaf blocks Link reference definitions
@@ -4593,7 +4593,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example160()
+        public void LeafblocksLinkreferencedefinitions_Example160()
         {
             // Example 160
             // Section: Leaf blocks Link reference definitions
@@ -4616,7 +4616,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example161()
+        public void LeafblocksLinkreferencedefinitions_Example161()
         {
             // Example 161
             // Section: Leaf blocks Link reference definitions
@@ -4637,7 +4637,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example162()
+        public void LeafblocksLinkreferencedefinitions_Example162()
         {
             // Example 162
             // Section: Leaf blocks Link reference definitions
@@ -4661,7 +4661,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example163()
+        public void LeafblocksLinkreferencedefinitions_Example163()
         {
             // Example 163
             // Section: Leaf blocks Link reference definitions
@@ -4691,7 +4691,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example164()
+        public void LeafblocksLinkreferencedefinitions_Example164()
         {
             // Example 164
             // Section: Leaf blocks Link reference definitions
@@ -4717,7 +4717,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example165()
+        public void LeafblocksLinkreferencedefinitions_Example165()
         {
             // Example 165
             // Section: Leaf blocks Link reference definitions
@@ -4740,7 +4740,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example166()
+        public void LeafblocksLinkreferencedefinitions_Example166()
         {
             // Example 166
             // Section: Leaf blocks Link reference definitions
@@ -4764,7 +4764,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example167()
+        public void LeafblocksLinkreferencedefinitions_Example167()
         {
             // Example 167
             // Section: Leaf blocks Link reference definitions
@@ -4786,7 +4786,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example168()
+        public void LeafblocksLinkreferencedefinitions_Example168()
         {
             // Example 168
             // Section: Leaf blocks Link reference definitions
@@ -4809,7 +4809,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example169()
+        public void LeafblocksLinkreferencedefinitions_Example169()
         {
             // Example 169
             // Section: Leaf blocks Link reference definitions
@@ -4833,7 +4833,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example170()
+        public void LeafblocksLinkreferencedefinitions_Example170()
         {
             // Example 170
             // Section: Leaf blocks Link reference definitions
@@ -4854,7 +4854,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example171()
+        public void LeafblocksLinkreferencedefinitions_Example171()
         {
             // Example 171
             // Section: Leaf blocks Link reference definitions
@@ -4877,7 +4877,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example172()
+        public void LeafblocksLinkreferencedefinitions_Example172()
         {
             // Example 172
             // Section: Leaf blocks Link reference definitions
@@ -4897,7 +4897,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example173()
+        public void LeafblocksLinkreferencedefinitions_Example173()
         {
             // Example 173
             // Section: Leaf blocks Link reference definitions
@@ -4921,7 +4921,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example174()
+        public void LeafblocksLinkreferencedefinitions_Example174()
         {
             // Example 174
             // Section: Leaf blocks Link reference definitions
@@ -4941,7 +4941,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example175()
+        public void LeafblocksLinkreferencedefinitions_Example175()
         {
             // Example 175
             // Section: Leaf blocks Link reference definitions
@@ -4963,7 +4963,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example176()
+        public void LeafblocksLinkreferencedefinitions_Example176()
         {
             // Example 176
             // Section: Leaf blocks Link reference definitions
@@ -4988,7 +4988,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example177()
+        public void LeafblocksLinkreferencedefinitions_Example177()
         {
             // Example 177
             // Section: Leaf blocks Link reference definitions
@@ -5014,7 +5014,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example178()
+        public void LeafblocksLinkreferencedefinitions_Example178()
         {
             // Example 178
             // Section: Leaf blocks Link reference definitions
@@ -5040,7 +5040,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example179()
+        public void LeafblocksLinkreferencedefinitions_Example179()
         {
             // Example 179
             // Section: Leaf blocks Link reference definitions
@@ -5066,7 +5066,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example180()
+        public void LeafblocksLinkreferencedefinitions_Example180()
         {
             // Example 180
             // Section: Leaf blocks Link reference definitions
@@ -5098,7 +5098,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksLinkreferencedefinitions
     {
         [Test]
-        public void Example181()
+        public void LeafblocksLinkreferencedefinitions_Example181()
         {
             // Example 181
             // Section: Leaf blocks Link reference definitions
@@ -5131,7 +5131,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example182()
+        public void LeafblocksParagraphs_Example182()
         {
             // Example 182
             // Section: Leaf blocks Paragraphs
@@ -5154,7 +5154,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example183()
+        public void LeafblocksParagraphs_Example183()
         {
             // Example 183
             // Section: Leaf blocks Paragraphs
@@ -5181,7 +5181,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example184()
+        public void LeafblocksParagraphs_Example184()
         {
             // Example 184
             // Section: Leaf blocks Paragraphs
@@ -5205,7 +5205,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example185()
+        public void LeafblocksParagraphs_Example185()
         {
             // Example 185
             // Section: Leaf blocks Paragraphs
@@ -5228,7 +5228,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example186()
+        public void LeafblocksParagraphs_Example186()
         {
             // Example 186
             // Section: Leaf blocks Paragraphs
@@ -5253,7 +5253,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example187()
+        public void LeafblocksParagraphs_Example187()
         {
             // Example 187
             // Section: Leaf blocks Paragraphs
@@ -5274,7 +5274,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example188()
+        public void LeafblocksParagraphs_Example188()
         {
             // Example 188
             // Section: Leaf blocks Paragraphs
@@ -5299,7 +5299,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksParagraphs
     {
         [Test]
-        public void Example189()
+        public void LeafblocksParagraphs_Example189()
         {
             // Example 189
             // Section: Leaf blocks Paragraphs
@@ -5327,7 +5327,7 @@ namespace Markdig.Tests
     public partial class TestLeafblocksBlanklines
     {
         [Test]
-        public void Example190()
+        public void LeafblocksBlanklines_Example190()
         {
             // Example 190
             // Section: Leaf blocks Blank lines
@@ -5403,7 +5403,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example191()
+        public void ContainerblocksBlockquotes_Example191()
         {
             // Example 191
             // Section: Container blocks Block quotes
@@ -5429,7 +5429,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example192()
+        public void ContainerblocksBlockquotes_Example192()
         {
             // Example 192
             // Section: Container blocks Block quotes
@@ -5455,7 +5455,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example193()
+        public void ContainerblocksBlockquotes_Example193()
         {
             // Example 193
             // Section: Container blocks Block quotes
@@ -5481,7 +5481,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example194()
+        public void ContainerblocksBlockquotes_Example194()
         {
             // Example 194
             // Section: Container blocks Block quotes
@@ -5507,7 +5507,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example195()
+        public void ContainerblocksBlockquotes_Example195()
         {
             // Example 195
             // Section: Container blocks Block quotes
@@ -5534,7 +5534,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example196()
+        public void ContainerblocksBlockquotes_Example196()
         {
             // Example 196
             // Section: Container blocks Block quotes
@@ -5569,7 +5569,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example197()
+        public void ContainerblocksBlockquotes_Example197()
         {
             // Example 197
             // Section: Container blocks Block quotes
@@ -5600,7 +5600,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example198()
+        public void ContainerblocksBlockquotes_Example198()
         {
             // Example 198
             // Section: Container blocks Block quotes
@@ -5629,7 +5629,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example199()
+        public void ContainerblocksBlockquotes_Example199()
         {
             // Example 199
             // Section: Container blocks Block quotes
@@ -5654,7 +5654,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example200()
+        public void ContainerblocksBlockquotes_Example200()
         {
             // Example 200
             // Section: Container blocks Block quotes
@@ -5681,7 +5681,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example201()
+        public void ContainerblocksBlockquotes_Example201()
         {
             // Example 201
             // Section: Container blocks Block quotes
@@ -5716,7 +5716,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example202()
+        public void ContainerblocksBlockquotes_Example202()
         {
             // Example 202
             // Section: Container blocks Block quotes
@@ -5736,7 +5736,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example203()
+        public void ContainerblocksBlockquotes_Example203()
         {
             // Example 203
             // Section: Container blocks Block quotes
@@ -5759,7 +5759,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example204()
+        public void ContainerblocksBlockquotes_Example204()
         {
             // Example 204
             // Section: Container blocks Block quotes
@@ -5783,7 +5783,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example205()
+        public void ContainerblocksBlockquotes_Example205()
         {
             // Example 205
             // Section: Container blocks Block quotes
@@ -5816,7 +5816,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example206()
+        public void ContainerblocksBlockquotes_Example206()
         {
             // Example 206
             // Section: Container blocks Block quotes
@@ -5840,7 +5840,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example207()
+        public void ContainerblocksBlockquotes_Example207()
         {
             // Example 207
             // Section: Container blocks Block quotes
@@ -5865,7 +5865,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example208()
+        public void ContainerblocksBlockquotes_Example208()
         {
             // Example 208
             // Section: Container blocks Block quotes
@@ -5890,7 +5890,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example209()
+        public void ContainerblocksBlockquotes_Example209()
         {
             // Example 209
             // Section: Container blocks Block quotes
@@ -5919,7 +5919,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example210()
+        public void ContainerblocksBlockquotes_Example210()
         {
             // Example 210
             // Section: Container blocks Block quotes
@@ -5942,7 +5942,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example211()
+        public void ContainerblocksBlockquotes_Example211()
         {
             // Example 211
             // Section: Container blocks Block quotes
@@ -5966,7 +5966,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example212()
+        public void ContainerblocksBlockquotes_Example212()
         {
             // Example 212
             // Section: Container blocks Block quotes
@@ -5993,7 +5993,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example213()
+        public void ContainerblocksBlockquotes_Example213()
         {
             // Example 213
             // Section: Container blocks Block quotes
@@ -6020,7 +6020,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example214()
+        public void ContainerblocksBlockquotes_Example214()
         {
             // Example 214
             // Section: Container blocks Block quotes
@@ -6053,7 +6053,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksBlockquotes
     {
         [Test]
-        public void Example215()
+        public void ContainerblocksBlockquotes_Example215()
         {
             // Example 215
             // Section: Container blocks Block quotes
@@ -6118,7 +6118,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example216()
+        public void ContainerblocksListitems_Example216()
         {
             // Example 216
             // Section: Container blocks List items
@@ -6151,7 +6151,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example217()
+        public void ContainerblocksListitems_Example217()
         {
             // Example 217
             // Section: Container blocks List items
@@ -6195,7 +6195,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example218()
+        public void ContainerblocksListitems_Example218()
         {
             // Example 218
             // Section: Container blocks List items
@@ -6219,7 +6219,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example219()
+        public void ContainerblocksListitems_Example219()
         {
             // Example 219
             // Section: Container blocks List items
@@ -6245,7 +6245,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example220()
+        public void ContainerblocksListitems_Example220()
         {
             // Example 220
             // Section: Container blocks List items
@@ -6270,7 +6270,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example221()
+        public void ContainerblocksListitems_Example221()
         {
             // Example 221
             // Section: Container blocks List items
@@ -6303,7 +6303,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example222()
+        public void ContainerblocksListitems_Example222()
         {
             // Example 222
             // Section: Container blocks List items
@@ -6341,7 +6341,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example223()
+        public void ContainerblocksListitems_Example223()
         {
             // Example 223
             // Section: Container blocks List items
@@ -6371,7 +6371,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example224()
+        public void ContainerblocksListitems_Example224()
         {
             // Example 224
             // Section: Container blocks List items
@@ -6395,7 +6395,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example225()
+        public void ContainerblocksListitems_Example225()
         {
             // Example 225
             // Section: Container blocks List items
@@ -6423,7 +6423,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example226()
+        public void ContainerblocksListitems_Example226()
         {
             // Example 226
             // Section: Container blocks List items
@@ -6462,7 +6462,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example227()
+        public void ContainerblocksListitems_Example227()
         {
             // Example 227
             // Section: Container blocks List items
@@ -6496,7 +6496,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example228()
+        public void ContainerblocksListitems_Example228()
         {
             // Example 228
             // Section: Container blocks List items
@@ -6517,7 +6517,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example229()
+        public void ContainerblocksListitems_Example229()
         {
             // Example 229
             // Section: Container blocks List items
@@ -6537,7 +6537,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example230()
+        public void ContainerblocksListitems_Example230()
         {
             // Example 230
             // Section: Container blocks List items
@@ -6558,7 +6558,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example231()
+        public void ContainerblocksListitems_Example231()
         {
             // Example 231
             // Section: Container blocks List items
@@ -6580,7 +6580,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example232()
+        public void ContainerblocksListitems_Example232()
         {
             // Example 232
             // Section: Container blocks List items
@@ -6614,7 +6614,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example233()
+        public void ContainerblocksListitems_Example233()
         {
             // Example 233
             // Section: Container blocks List items
@@ -6642,7 +6642,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example234()
+        public void ContainerblocksListitems_Example234()
         {
             // Example 234
             // Section: Container blocks List items
@@ -6672,7 +6672,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example235()
+        public void ContainerblocksListitems_Example235()
         {
             // Example 235
             // Section: Container blocks List items
@@ -6699,7 +6699,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example236()
+        public void ContainerblocksListitems_Example236()
         {
             // Example 236
             // Section: Container blocks List items
@@ -6732,7 +6732,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example237()
+        public void ContainerblocksListitems_Example237()
         {
             // Example 237
             // Section: Container blocks List items
@@ -6770,7 +6770,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example238()
+        public void ContainerblocksListitems_Example238()
         {
             // Example 238
             // Section: Container blocks List items
@@ -6792,7 +6792,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example239()
+        public void ContainerblocksListitems_Example239()
         {
             // Example 239
             // Section: Container blocks List items
@@ -6820,7 +6820,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example240()
+        public void ContainerblocksListitems_Example240()
         {
             // Example 240
             // Section: Container blocks List items
@@ -6859,7 +6859,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example241()
+        public void ContainerblocksListitems_Example241()
         {
             // Example 241
             // Section: Container blocks List items
@@ -6897,7 +6897,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example242()
+        public void ContainerblocksListitems_Example242()
         {
             // Example 242
             // Section: Container blocks List items
@@ -6922,7 +6922,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example243()
+        public void ContainerblocksListitems_Example243()
         {
             // Example 243
             // Section: Container blocks List items
@@ -6947,7 +6947,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example244()
+        public void ContainerblocksListitems_Example244()
         {
             // Example 244
             // Section: Container blocks List items
@@ -6973,7 +6973,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example245()
+        public void ContainerblocksListitems_Example245()
         {
             // Example 245
             // Section: Container blocks List items
@@ -6999,7 +6999,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example246()
+        public void ContainerblocksListitems_Example246()
         {
             // Example 246
             // Section: Container blocks List items
@@ -7025,7 +7025,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example247()
+        public void ContainerblocksListitems_Example247()
         {
             // Example 247
             // Section: Container blocks List items
@@ -7047,7 +7047,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example248()
+        public void ContainerblocksListitems_Example248()
         {
             // Example 248
             // Section: Container blocks List items
@@ -7080,7 +7080,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example249()
+        public void ContainerblocksListitems_Example249()
         {
             // Example 249
             // Section: Container blocks List items
@@ -7115,7 +7115,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example250()
+        public void ContainerblocksListitems_Example250()
         {
             // Example 250
             // Section: Container blocks List items
@@ -7150,7 +7150,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example251()
+        public void ContainerblocksListitems_Example251()
         {
             // Example 251
             // Section: Container blocks List items
@@ -7185,7 +7185,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example252()
+        public void ContainerblocksListitems_Example252()
         {
             // Example 252
             // Section: Container blocks List items
@@ -7225,7 +7225,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example253()
+        public void ContainerblocksListitems_Example253()
         {
             // Example 253
             // Section: Container blocks List items
@@ -7260,7 +7260,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example254()
+        public void ContainerblocksListitems_Example254()
         {
             // Example 254
             // Section: Container blocks List items
@@ -7284,7 +7284,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example255()
+        public void ContainerblocksListitems_Example255()
         {
             // Example 255
             // Section: Container blocks List items
@@ -7313,7 +7313,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example256()
+        public void ContainerblocksListitems_Example256()
         {
             // Example 256
             // Section: Container blocks List items
@@ -7350,7 +7350,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example257()
+        public void ContainerblocksListitems_Example257()
         {
             // Example 257
             // Section: Container blocks List items
@@ -7387,7 +7387,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example258()
+        public void ContainerblocksListitems_Example258()
         {
             // Example 258
             // Section: Container blocks List items
@@ -7415,7 +7415,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example259()
+        public void ContainerblocksListitems_Example259()
         {
             // Example 259
             // Section: Container blocks List items
@@ -7442,7 +7442,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example260()
+        public void ContainerblocksListitems_Example260()
         {
             // Example 260
             // Section: Container blocks List items
@@ -7468,7 +7468,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example261()
+        public void ContainerblocksListitems_Example261()
         {
             // Example 261
             // Section: Container blocks List items
@@ -7493,7 +7493,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example262()
+        public void ContainerblocksListitems_Example262()
         {
             // Example 262
             // Section: Container blocks List items
@@ -7523,7 +7523,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksListitems
     {
         [Test]
-        public void Example263()
+        public void ContainerblocksListitems_Example263()
         {
             // Example 263
             // Section: Container blocks List items
@@ -7770,7 +7770,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example264()
+        public void ContainerblocksLists_Example264()
         {
             // Example 264
             // Section: Container blocks Lists
@@ -7797,7 +7797,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example265()
+        public void ContainerblocksLists_Example265()
         {
             // Example 265
             // Section: Container blocks Lists
@@ -7827,7 +7827,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example266()
+        public void ContainerblocksLists_Example266()
         {
             // Example 266
             // Section: Container blocks Lists
@@ -7916,7 +7916,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example267()
+        public void ContainerblocksLists_Example267()
         {
             // Example 267
             // Section: Container blocks Lists
@@ -7938,7 +7938,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example268()
+        public void ContainerblocksLists_Example268()
         {
             // Example 268
             // Section: Container blocks Lists
@@ -7964,7 +7964,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example269()
+        public void ContainerblocksLists_Example269()
         {
             // Example 269
             // Section: Container blocks Lists
@@ -7998,7 +7998,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example270()
+        public void ContainerblocksLists_Example270()
         {
             // Example 270
             // Section: Container blocks Lists
@@ -8039,7 +8039,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example271()
+        public void ContainerblocksLists_Example271()
         {
             // Example 271
             // Section: Container blocks Lists
@@ -8072,7 +8072,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example272()
+        public void ContainerblocksLists_Example272()
         {
             // Example 272
             // Section: Container blocks Lists
@@ -8114,7 +8114,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example273()
+        public void ContainerblocksLists_Example273()
         {
             // Example 273
             // Section: Container blocks Lists
@@ -8151,7 +8151,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example274()
+        public void ContainerblocksLists_Example274()
         {
             // Example 274
             // Section: Container blocks Lists
@@ -8186,7 +8186,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example275()
+        public void ContainerblocksLists_Example275()
         {
             // Example 275
             // Section: Container blocks Lists
@@ -8219,7 +8219,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example276()
+        public void ContainerblocksLists_Example276()
         {
             // Example 276
             // Section: Container blocks Lists
@@ -8252,7 +8252,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example277()
+        public void ContainerblocksLists_Example277()
         {
             // Example 277
             // Section: Container blocks Lists
@@ -8286,7 +8286,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example278()
+        public void ContainerblocksLists_Example278()
         {
             // Example 278
             // Section: Container blocks Lists
@@ -8320,7 +8320,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example279()
+        public void ContainerblocksLists_Example279()
         {
             // Example 279
             // Section: Container blocks Lists
@@ -8357,7 +8357,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example280()
+        public void ContainerblocksLists_Example280()
         {
             // Example 280
             // Section: Container blocks Lists
@@ -8392,7 +8392,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example281()
+        public void ContainerblocksLists_Example281()
         {
             // Example 281
             // Section: Container blocks Lists
@@ -8423,7 +8423,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example282()
+        public void ContainerblocksLists_Example282()
         {
             // Example 282
             // Section: Container blocks Lists
@@ -8457,7 +8457,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example283()
+        public void ContainerblocksLists_Example283()
         {
             // Example 283
             // Section: Container blocks Lists
@@ -8478,7 +8478,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example284()
+        public void ContainerblocksLists_Example284()
         {
             // Example 284
             // Section: Container blocks Lists
@@ -8506,7 +8506,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example285()
+        public void ContainerblocksLists_Example285()
         {
             // Example 285
             // Section: Container blocks Lists
@@ -8536,7 +8536,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example286()
+        public void ContainerblocksLists_Example286()
         {
             // Example 286
             // Section: Container blocks Lists
@@ -8566,7 +8566,7 @@ namespace Markdig.Tests
     public partial class TestContainerblocksLists
     {
         [Test]
-        public void Example287()
+        public void ContainerblocksLists_Example287()
         {
             // Example 287
             // Section: Container blocks Lists
@@ -8611,7 +8611,7 @@ namespace Markdig.Tests
     public partial class TestInlines
     {
         [Test]
-        public void Example288()
+        public void Inlines_Example288()
         {
             // Example 288
             // Section: Inlines
@@ -8636,7 +8636,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example289()
+        public void InlinesBackslashescapes_Example289()
         {
             // Example 289
             // Section: Inlines Backslash escapes
@@ -8657,7 +8657,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example290()
+        public void InlinesBackslashescapes_Example290()
         {
             // Example 290
             // Section: Inlines Backslash escapes
@@ -8678,7 +8678,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example291()
+        public void InlinesBackslashescapes_Example291()
         {
             // Example 291
             // Section: Inlines Backslash escapes
@@ -8712,7 +8712,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example292()
+        public void InlinesBackslashescapes_Example292()
         {
             // Example 292
             // Section: Inlines Backslash escapes
@@ -8732,7 +8732,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example293()
+        public void InlinesBackslashescapes_Example293()
         {
             // Example 293
             // Section: Inlines Backslash escapes
@@ -8755,7 +8755,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example294()
+        public void InlinesBackslashescapes_Example294()
         {
             // Example 294
             // Section: Inlines Backslash escapes
@@ -8774,7 +8774,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example295()
+        public void InlinesBackslashescapes_Example295()
         {
             // Example 295
             // Section: Inlines Backslash escapes
@@ -8794,7 +8794,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example296()
+        public void InlinesBackslashescapes_Example296()
         {
             // Example 296
             // Section: Inlines Backslash escapes
@@ -8816,7 +8816,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example297()
+        public void InlinesBackslashescapes_Example297()
         {
             // Example 297
             // Section: Inlines Backslash escapes
@@ -8835,7 +8835,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example298()
+        public void InlinesBackslashescapes_Example298()
         {
             // Example 298
             // Section: Inlines Backslash escapes
@@ -8856,7 +8856,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example299()
+        public void InlinesBackslashescapes_Example299()
         {
             // Example 299
             // Section: Inlines Backslash escapes
@@ -8875,7 +8875,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example300()
+        public void InlinesBackslashescapes_Example300()
         {
             // Example 300
             // Section: Inlines Backslash escapes
@@ -8896,7 +8896,7 @@ namespace Markdig.Tests
     public partial class TestInlinesBackslashescapes
     {
         [Test]
-        public void Example301()
+        public void InlinesBackslashescapes_Example301()
         {
             // Example 301
             // Section: Inlines Backslash escapes
@@ -8933,7 +8933,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example302()
+        public void InlinesEntityandnumericcharacterreferences_Example302()
         {
             // Example 302
             // Section: Inlines Entity and numeric character references
@@ -8963,7 +8963,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example303()
+        public void InlinesEntityandnumericcharacterreferences_Example303()
         {
             // Example 303
             // Section: Inlines Entity and numeric character references
@@ -8987,7 +8987,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example304()
+        public void InlinesEntityandnumericcharacterreferences_Example304()
         {
             // Example 304
             // Section: Inlines Entity and numeric character references
@@ -9007,7 +9007,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example305()
+        public void InlinesEntityandnumericcharacterreferences_Example305()
         {
             // Example 305
             // Section: Inlines Entity and numeric character references
@@ -9031,7 +9031,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example306()
+        public void InlinesEntityandnumericcharacterreferences_Example306()
         {
             // Example 306
             // Section: Inlines Entity and numeric character references
@@ -9052,7 +9052,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example307()
+        public void InlinesEntityandnumericcharacterreferences_Example307()
         {
             // Example 307
             // Section: Inlines Entity and numeric character references
@@ -9074,7 +9074,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example308()
+        public void InlinesEntityandnumericcharacterreferences_Example308()
         {
             // Example 308
             // Section: Inlines Entity and numeric character references
@@ -9093,7 +9093,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example309()
+        public void InlinesEntityandnumericcharacterreferences_Example309()
         {
             // Example 309
             // Section: Inlines Entity and numeric character references
@@ -9112,7 +9112,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example310()
+        public void InlinesEntityandnumericcharacterreferences_Example310()
         {
             // Example 310
             // Section: Inlines Entity and numeric character references
@@ -9133,7 +9133,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example311()
+        public void InlinesEntityandnumericcharacterreferences_Example311()
         {
             // Example 311
             // Section: Inlines Entity and numeric character references
@@ -9157,7 +9157,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example312()
+        public void InlinesEntityandnumericcharacterreferences_Example312()
         {
             // Example 312
             // Section: Inlines Entity and numeric character references
@@ -9176,7 +9176,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEntityandnumericcharacterreferences
     {
         [Test]
-        public void Example313()
+        public void InlinesEntityandnumericcharacterreferences_Example313()
         {
             // Example 313
             // Section: Inlines Entity and numeric character references
@@ -9209,7 +9209,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example314()
+        public void InlinesCodespans_Example314()
         {
             // Example 314
             // Section: Inlines Code spans
@@ -9230,7 +9230,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example315()
+        public void InlinesCodespans_Example315()
         {
             // Example 315
             // Section: Inlines Code spans
@@ -9251,7 +9251,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example316()
+        public void InlinesCodespans_Example316()
         {
             // Example 316
             // Section: Inlines Code spans
@@ -9271,7 +9271,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example317()
+        public void InlinesCodespans_Example317()
         {
             // Example 317
             // Section: Inlines Code spans
@@ -9294,7 +9294,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example318()
+        public void InlinesCodespans_Example318()
         {
             // Example 318
             // Section: Inlines Code spans
@@ -9316,7 +9316,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example319()
+        public void InlinesCodespans_Example319()
         {
             // Example 319
             // Section: Inlines Code spans
@@ -9347,7 +9347,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example320()
+        public void InlinesCodespans_Example320()
         {
             // Example 320
             // Section: Inlines Code spans
@@ -9368,7 +9368,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example321()
+        public void InlinesCodespans_Example321()
         {
             // Example 321
             // Section: Inlines Code spans
@@ -9395,7 +9395,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example322()
+        public void InlinesCodespans_Example322()
         {
             // Example 322
             // Section: Inlines Code spans
@@ -9415,7 +9415,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example323()
+        public void InlinesCodespans_Example323()
         {
             // Example 323
             // Section: Inlines Code spans
@@ -9436,7 +9436,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example324()
+        public void InlinesCodespans_Example324()
         {
             // Example 324
             // Section: Inlines Code spans
@@ -9456,7 +9456,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example325()
+        public void InlinesCodespans_Example325()
         {
             // Example 325
             // Section: Inlines Code spans
@@ -9476,7 +9476,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example326()
+        public void InlinesCodespans_Example326()
         {
             // Example 326
             // Section: Inlines Code spans
@@ -9496,7 +9496,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example327()
+        public void InlinesCodespans_Example327()
         {
             // Example 327
             // Section: Inlines Code spans
@@ -9517,7 +9517,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example328()
+        public void InlinesCodespans_Example328()
         {
             // Example 328
             // Section: Inlines Code spans
@@ -9536,7 +9536,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example329()
+        public void InlinesCodespans_Example329()
         {
             // Example 329
             // Section: Inlines Code spans
@@ -9557,7 +9557,7 @@ namespace Markdig.Tests
     public partial class TestInlinesCodespans
     {
         [Test]
-        public void Example330()
+        public void InlinesCodespans_Example330()
         {
             // Example 330
             // Section: Inlines Code spans
@@ -9781,7 +9781,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example331()
+        public void InlinesEmphasisandstrongemphasis_Example331()
         {
             // Example 331
             // Section: Inlines Emphasis and strong emphasis
@@ -9802,7 +9802,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example332()
+        public void InlinesEmphasisandstrongemphasis_Example332()
         {
             // Example 332
             // Section: Inlines Emphasis and strong emphasis
@@ -9824,7 +9824,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example333()
+        public void InlinesEmphasisandstrongemphasis_Example333()
         {
             // Example 333
             // Section: Inlines Emphasis and strong emphasis
@@ -9844,7 +9844,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example334()
+        public void InlinesEmphasisandstrongemphasis_Example334()
         {
             // Example 334
             // Section: Inlines Emphasis and strong emphasis
@@ -9864,7 +9864,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example335()
+        public void InlinesEmphasisandstrongemphasis_Example335()
         {
             // Example 335
             // Section: Inlines Emphasis and strong emphasis
@@ -9883,7 +9883,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example336()
+        public void InlinesEmphasisandstrongemphasis_Example336()
         {
             // Example 336
             // Section: Inlines Emphasis and strong emphasis
@@ -9903,7 +9903,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example337()
+        public void InlinesEmphasisandstrongemphasis_Example337()
         {
             // Example 337
             // Section: Inlines Emphasis and strong emphasis
@@ -9924,7 +9924,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example338()
+        public void InlinesEmphasisandstrongemphasis_Example338()
         {
             // Example 338
             // Section: Inlines Emphasis and strong emphasis
@@ -9945,7 +9945,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example339()
+        public void InlinesEmphasisandstrongemphasis_Example339()
         {
             // Example 339
             // Section: Inlines Emphasis and strong emphasis
@@ -9965,7 +9965,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example340()
+        public void InlinesEmphasisandstrongemphasis_Example340()
         {
             // Example 340
             // Section: Inlines Emphasis and strong emphasis
@@ -9984,7 +9984,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example341()
+        public void InlinesEmphasisandstrongemphasis_Example341()
         {
             // Example 341
             // Section: Inlines Emphasis and strong emphasis
@@ -10003,7 +10003,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example342()
+        public void InlinesEmphasisandstrongemphasis_Example342()
         {
             // Example 342
             // Section: Inlines Emphasis and strong emphasis
@@ -10024,7 +10024,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example343()
+        public void InlinesEmphasisandstrongemphasis_Example343()
         {
             // Example 343
             // Section: Inlines Emphasis and strong emphasis
@@ -10046,7 +10046,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example344()
+        public void InlinesEmphasisandstrongemphasis_Example344()
         {
             // Example 344
             // Section: Inlines Emphasis and strong emphasis
@@ -10069,7 +10069,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example345()
+        public void InlinesEmphasisandstrongemphasis_Example345()
         {
             // Example 345
             // Section: Inlines Emphasis and strong emphasis
@@ -10090,7 +10090,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example346()
+        public void InlinesEmphasisandstrongemphasis_Example346()
         {
             // Example 346
             // Section: Inlines Emphasis and strong emphasis
@@ -10110,7 +10110,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example347()
+        public void InlinesEmphasisandstrongemphasis_Example347()
         {
             // Example 347
             // Section: Inlines Emphasis and strong emphasis
@@ -10134,7 +10134,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example348()
+        public void InlinesEmphasisandstrongemphasis_Example348()
         {
             // Example 348
             // Section: Inlines Emphasis and strong emphasis
@@ -10155,7 +10155,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example349()
+        public void InlinesEmphasisandstrongemphasis_Example349()
         {
             // Example 349
             // Section: Inlines Emphasis and strong emphasis
@@ -10175,7 +10175,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example350()
+        public void InlinesEmphasisandstrongemphasis_Example350()
         {
             // Example 350
             // Section: Inlines Emphasis and strong emphasis
@@ -10198,7 +10198,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example351()
+        public void InlinesEmphasisandstrongemphasis_Example351()
         {
             // Example 351
             // Section: Inlines Emphasis and strong emphasis
@@ -10219,7 +10219,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example352()
+        public void InlinesEmphasisandstrongemphasis_Example352()
         {
             // Example 352
             // Section: Inlines Emphasis and strong emphasis
@@ -10239,7 +10239,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example353()
+        public void InlinesEmphasisandstrongemphasis_Example353()
         {
             // Example 353
             // Section: Inlines Emphasis and strong emphasis
@@ -10259,7 +10259,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example354()
+        public void InlinesEmphasisandstrongemphasis_Example354()
         {
             // Example 354
             // Section: Inlines Emphasis and strong emphasis
@@ -10278,7 +10278,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example355()
+        public void InlinesEmphasisandstrongemphasis_Example355()
         {
             // Example 355
             // Section: Inlines Emphasis and strong emphasis
@@ -10297,7 +10297,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example356()
+        public void InlinesEmphasisandstrongemphasis_Example356()
         {
             // Example 356
             // Section: Inlines Emphasis and strong emphasis
@@ -10319,7 +10319,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example357()
+        public void InlinesEmphasisandstrongemphasis_Example357()
         {
             // Example 357
             // Section: Inlines Emphasis and strong emphasis
@@ -10339,7 +10339,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example358()
+        public void InlinesEmphasisandstrongemphasis_Example358()
         {
             // Example 358
             // Section: Inlines Emphasis and strong emphasis
@@ -10360,7 +10360,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example359()
+        public void InlinesEmphasisandstrongemphasis_Example359()
         {
             // Example 359
             // Section: Inlines Emphasis and strong emphasis
@@ -10382,7 +10382,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example360()
+        public void InlinesEmphasisandstrongemphasis_Example360()
         {
             // Example 360
             // Section: Inlines Emphasis and strong emphasis
@@ -10402,7 +10402,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example361()
+        public void InlinesEmphasisandstrongemphasis_Example361()
         {
             // Example 361
             // Section: Inlines Emphasis and strong emphasis
@@ -10422,7 +10422,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example362()
+        public void InlinesEmphasisandstrongemphasis_Example362()
         {
             // Example 362
             // Section: Inlines Emphasis and strong emphasis
@@ -10443,7 +10443,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example363()
+        public void InlinesEmphasisandstrongemphasis_Example363()
         {
             // Example 363
             // Section: Inlines Emphasis and strong emphasis
@@ -10463,7 +10463,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example364()
+        public void InlinesEmphasisandstrongemphasis_Example364()
         {
             // Example 364
             // Section: Inlines Emphasis and strong emphasis
@@ -10486,7 +10486,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example365()
+        public void InlinesEmphasisandstrongemphasis_Example365()
         {
             // Example 365
             // Section: Inlines Emphasis and strong emphasis
@@ -10506,7 +10506,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example366()
+        public void InlinesEmphasisandstrongemphasis_Example366()
         {
             // Example 366
             // Section: Inlines Emphasis and strong emphasis
@@ -10525,7 +10525,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example367()
+        public void InlinesEmphasisandstrongemphasis_Example367()
         {
             // Example 367
             // Section: Inlines Emphasis and strong emphasis
@@ -10544,7 +10544,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example368()
+        public void InlinesEmphasisandstrongemphasis_Example368()
         {
             // Example 368
             // Section: Inlines Emphasis and strong emphasis
@@ -10563,7 +10563,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example369()
+        public void InlinesEmphasisandstrongemphasis_Example369()
         {
             // Example 369
             // Section: Inlines Emphasis and strong emphasis
@@ -10585,7 +10585,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example370()
+        public void InlinesEmphasisandstrongemphasis_Example370()
         {
             // Example 370
             // Section: Inlines Emphasis and strong emphasis
@@ -10608,7 +10608,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example371()
+        public void InlinesEmphasisandstrongemphasis_Example371()
         {
             // Example 371
             // Section: Inlines Emphasis and strong emphasis
@@ -10632,7 +10632,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example372()
+        public void InlinesEmphasisandstrongemphasis_Example372()
         {
             // Example 372
             // Section: Inlines Emphasis and strong emphasis
@@ -10653,7 +10653,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example373()
+        public void InlinesEmphasisandstrongemphasis_Example373()
         {
             // Example 373
             // Section: Inlines Emphasis and strong emphasis
@@ -10672,7 +10672,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example374()
+        public void InlinesEmphasisandstrongemphasis_Example374()
         {
             // Example 374
             // Section: Inlines Emphasis and strong emphasis
@@ -10693,7 +10693,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example375()
+        public void InlinesEmphasisandstrongemphasis_Example375()
         {
             // Example 375
             // Section: Inlines Emphasis and strong emphasis
@@ -10713,7 +10713,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example376()
+        public void InlinesEmphasisandstrongemphasis_Example376()
         {
             // Example 376
             // Section: Inlines Emphasis and strong emphasis
@@ -10736,7 +10736,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example377()
+        public void InlinesEmphasisandstrongemphasis_Example377()
         {
             // Example 377
             // Section: Inlines Emphasis and strong emphasis
@@ -10757,7 +10757,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example378()
+        public void InlinesEmphasisandstrongemphasis_Example378()
         {
             // Example 378
             // Section: Inlines Emphasis and strong emphasis
@@ -10778,7 +10778,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example379()
+        public void InlinesEmphasisandstrongemphasis_Example379()
         {
             // Example 379
             // Section: Inlines Emphasis and strong emphasis
@@ -10798,7 +10798,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example380()
+        public void InlinesEmphasisandstrongemphasis_Example380()
         {
             // Example 380
             // Section: Inlines Emphasis and strong emphasis
@@ -10817,7 +10817,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example381()
+        public void InlinesEmphasisandstrongemphasis_Example381()
         {
             // Example 381
             // Section: Inlines Emphasis and strong emphasis
@@ -10836,7 +10836,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example382()
+        public void InlinesEmphasisandstrongemphasis_Example382()
         {
             // Example 382
             // Section: Inlines Emphasis and strong emphasis
@@ -10858,7 +10858,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example383()
+        public void InlinesEmphasisandstrongemphasis_Example383()
         {
             // Example 383
             // Section: Inlines Emphasis and strong emphasis
@@ -10881,7 +10881,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example384()
+        public void InlinesEmphasisandstrongemphasis_Example384()
         {
             // Example 384
             // Section: Inlines Emphasis and strong emphasis
@@ -10900,7 +10900,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example385()
+        public void InlinesEmphasisandstrongemphasis_Example385()
         {
             // Example 385
             // Section: Inlines Emphasis and strong emphasis
@@ -10923,7 +10923,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example386()
+        public void InlinesEmphasisandstrongemphasis_Example386()
         {
             // Example 386
             // Section: Inlines Emphasis and strong emphasis
@@ -10942,7 +10942,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example387()
+        public void InlinesEmphasisandstrongemphasis_Example387()
         {
             // Example 387
             // Section: Inlines Emphasis and strong emphasis
@@ -10961,7 +10961,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example388()
+        public void InlinesEmphasisandstrongemphasis_Example388()
         {
             // Example 388
             // Section: Inlines Emphasis and strong emphasis
@@ -10980,7 +10980,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example389()
+        public void InlinesEmphasisandstrongemphasis_Example389()
         {
             // Example 389
             // Section: Inlines Emphasis and strong emphasis
@@ -10999,7 +10999,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example390()
+        public void InlinesEmphasisandstrongemphasis_Example390()
         {
             // Example 390
             // Section: Inlines Emphasis and strong emphasis
@@ -11018,7 +11018,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example391()
+        public void InlinesEmphasisandstrongemphasis_Example391()
         {
             // Example 391
             // Section: Inlines Emphasis and strong emphasis
@@ -11053,7 +11053,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example392()
+        public void InlinesEmphasisandstrongemphasis_Example392()
         {
             // Example 392
             // Section: Inlines Emphasis and strong emphasis
@@ -11072,7 +11072,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example393()
+        public void InlinesEmphasisandstrongemphasis_Example393()
         {
             // Example 393
             // Section: Inlines Emphasis and strong emphasis
@@ -11091,7 +11091,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example394()
+        public void InlinesEmphasisandstrongemphasis_Example394()
         {
             // Example 394
             // Section: Inlines Emphasis and strong emphasis
@@ -11111,7 +11111,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example395()
+        public void InlinesEmphasisandstrongemphasis_Example395()
         {
             // Example 395
             // Section: Inlines Emphasis and strong emphasis
@@ -11130,7 +11130,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example396()
+        public void InlinesEmphasisandstrongemphasis_Example396()
         {
             // Example 396
             // Section: Inlines Emphasis and strong emphasis
@@ -11150,7 +11150,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example397()
+        public void InlinesEmphasisandstrongemphasis_Example397()
         {
             // Example 397
             // Section: Inlines Emphasis and strong emphasis
@@ -11169,7 +11169,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example398()
+        public void InlinesEmphasisandstrongemphasis_Example398()
         {
             // Example 398
             // Section: Inlines Emphasis and strong emphasis
@@ -11192,7 +11192,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example399()
+        public void InlinesEmphasisandstrongemphasis_Example399()
         {
             // Example 399
             // Section: Inlines Emphasis and strong emphasis
@@ -11211,7 +11211,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example400()
+        public void InlinesEmphasisandstrongemphasis_Example400()
         {
             // Example 400
             // Section: Inlines Emphasis and strong emphasis
@@ -11234,7 +11234,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example401()
+        public void InlinesEmphasisandstrongemphasis_Example401()
         {
             // Example 401
             // Section: Inlines Emphasis and strong emphasis
@@ -11253,7 +11253,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example402()
+        public void InlinesEmphasisandstrongemphasis_Example402()
         {
             // Example 402
             // Section: Inlines Emphasis and strong emphasis
@@ -11272,7 +11272,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example403()
+        public void InlinesEmphasisandstrongemphasis_Example403()
         {
             // Example 403
             // Section: Inlines Emphasis and strong emphasis
@@ -11291,7 +11291,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example404()
+        public void InlinesEmphasisandstrongemphasis_Example404()
         {
             // Example 404
             // Section: Inlines Emphasis and strong emphasis
@@ -11310,7 +11310,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example405()
+        public void InlinesEmphasisandstrongemphasis_Example405()
         {
             // Example 405
             // Section: Inlines Emphasis and strong emphasis
@@ -11329,7 +11329,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example406()
+        public void InlinesEmphasisandstrongemphasis_Example406()
         {
             // Example 406
             // Section: Inlines Emphasis and strong emphasis
@@ -11348,7 +11348,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example407()
+        public void InlinesEmphasisandstrongemphasis_Example407()
         {
             // Example 407
             // Section: Inlines Emphasis and strong emphasis
@@ -11367,7 +11367,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example408()
+        public void InlinesEmphasisandstrongemphasis_Example408()
         {
             // Example 408
             // Section: Inlines Emphasis and strong emphasis
@@ -11387,7 +11387,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example409()
+        public void InlinesEmphasisandstrongemphasis_Example409()
         {
             // Example 409
             // Section: Inlines Emphasis and strong emphasis
@@ -11408,7 +11408,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example410()
+        public void InlinesEmphasisandstrongemphasis_Example410()
         {
             // Example 410
             // Section: Inlines Emphasis and strong emphasis
@@ -11428,7 +11428,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example411()
+        public void InlinesEmphasisandstrongemphasis_Example411()
         {
             // Example 411
             // Section: Inlines Emphasis and strong emphasis
@@ -11447,7 +11447,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example412()
+        public void InlinesEmphasisandstrongemphasis_Example412()
         {
             // Example 412
             // Section: Inlines Emphasis and strong emphasis
@@ -11467,7 +11467,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example413()
+        public void InlinesEmphasisandstrongemphasis_Example413()
         {
             // Example 413
             // Section: Inlines Emphasis and strong emphasis
@@ -11486,7 +11486,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example414()
+        public void InlinesEmphasisandstrongemphasis_Example414()
         {
             // Example 414
             // Section: Inlines Emphasis and strong emphasis
@@ -11505,7 +11505,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example415()
+        public void InlinesEmphasisandstrongemphasis_Example415()
         {
             // Example 415
             // Section: Inlines Emphasis and strong emphasis
@@ -11524,7 +11524,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example416()
+        public void InlinesEmphasisandstrongemphasis_Example416()
         {
             // Example 416
             // Section: Inlines Emphasis and strong emphasis
@@ -11543,7 +11543,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example417()
+        public void InlinesEmphasisandstrongemphasis_Example417()
         {
             // Example 417
             // Section: Inlines Emphasis and strong emphasis
@@ -11562,7 +11562,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example418()
+        public void InlinesEmphasisandstrongemphasis_Example418()
         {
             // Example 418
             // Section: Inlines Emphasis and strong emphasis
@@ -11584,7 +11584,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example419()
+        public void InlinesEmphasisandstrongemphasis_Example419()
         {
             // Example 419
             // Section: Inlines Emphasis and strong emphasis
@@ -11603,7 +11603,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example420()
+        public void InlinesEmphasisandstrongemphasis_Example420()
         {
             // Example 420
             // Section: Inlines Emphasis and strong emphasis
@@ -11622,7 +11622,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example421()
+        public void InlinesEmphasisandstrongemphasis_Example421()
         {
             // Example 421
             // Section: Inlines Emphasis and strong emphasis
@@ -11641,7 +11641,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example422()
+        public void InlinesEmphasisandstrongemphasis_Example422()
         {
             // Example 422
             // Section: Inlines Emphasis and strong emphasis
@@ -11660,7 +11660,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example423()
+        public void InlinesEmphasisandstrongemphasis_Example423()
         {
             // Example 423
             // Section: Inlines Emphasis and strong emphasis
@@ -11679,7 +11679,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example424()
+        public void InlinesEmphasisandstrongemphasis_Example424()
         {
             // Example 424
             // Section: Inlines Emphasis and strong emphasis
@@ -11699,7 +11699,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example425()
+        public void InlinesEmphasisandstrongemphasis_Example425()
         {
             // Example 425
             // Section: Inlines Emphasis and strong emphasis
@@ -11718,7 +11718,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example426()
+        public void InlinesEmphasisandstrongemphasis_Example426()
         {
             // Example 426
             // Section: Inlines Emphasis and strong emphasis
@@ -11737,7 +11737,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example427()
+        public void InlinesEmphasisandstrongemphasis_Example427()
         {
             // Example 427
             // Section: Inlines Emphasis and strong emphasis
@@ -11756,7 +11756,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example428()
+        public void InlinesEmphasisandstrongemphasis_Example428()
         {
             // Example 428
             // Section: Inlines Emphasis and strong emphasis
@@ -11775,7 +11775,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example429()
+        public void InlinesEmphasisandstrongemphasis_Example429()
         {
             // Example 429
             // Section: Inlines Emphasis and strong emphasis
@@ -11794,7 +11794,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example430()
+        public void InlinesEmphasisandstrongemphasis_Example430()
         {
             // Example 430
             // Section: Inlines Emphasis and strong emphasis
@@ -11813,7 +11813,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example431()
+        public void InlinesEmphasisandstrongemphasis_Example431()
         {
             // Example 431
             // Section: Inlines Emphasis and strong emphasis
@@ -11835,7 +11835,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example432()
+        public void InlinesEmphasisandstrongemphasis_Example432()
         {
             // Example 432
             // Section: Inlines Emphasis and strong emphasis
@@ -11854,7 +11854,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example433()
+        public void InlinesEmphasisandstrongemphasis_Example433()
         {
             // Example 433
             // Section: Inlines Emphasis and strong emphasis
@@ -11873,7 +11873,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example434()
+        public void InlinesEmphasisandstrongemphasis_Example434()
         {
             // Example 434
             // Section: Inlines Emphasis and strong emphasis
@@ -11892,7 +11892,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example435()
+        public void InlinesEmphasisandstrongemphasis_Example435()
         {
             // Example 435
             // Section: Inlines Emphasis and strong emphasis
@@ -11911,7 +11911,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example436()
+        public void InlinesEmphasisandstrongemphasis_Example436()
         {
             // Example 436
             // Section: Inlines Emphasis and strong emphasis
@@ -11932,7 +11932,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example437()
+        public void InlinesEmphasisandstrongemphasis_Example437()
         {
             // Example 437
             // Section: Inlines Emphasis and strong emphasis
@@ -11951,7 +11951,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example438()
+        public void InlinesEmphasisandstrongemphasis_Example438()
         {
             // Example 438
             // Section: Inlines Emphasis and strong emphasis
@@ -11970,7 +11970,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example439()
+        public void InlinesEmphasisandstrongemphasis_Example439()
         {
             // Example 439
             // Section: Inlines Emphasis and strong emphasis
@@ -11989,7 +11989,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example440()
+        public void InlinesEmphasisandstrongemphasis_Example440()
         {
             // Example 440
             // Section: Inlines Emphasis and strong emphasis
@@ -12010,7 +12010,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example441()
+        public void InlinesEmphasisandstrongemphasis_Example441()
         {
             // Example 441
             // Section: Inlines Emphasis and strong emphasis
@@ -12029,7 +12029,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example442()
+        public void InlinesEmphasisandstrongemphasis_Example442()
         {
             // Example 442
             // Section: Inlines Emphasis and strong emphasis
@@ -12050,7 +12050,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example443()
+        public void InlinesEmphasisandstrongemphasis_Example443()
         {
             // Example 443
             // Section: Inlines Emphasis and strong emphasis
@@ -12070,7 +12070,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example444()
+        public void InlinesEmphasisandstrongemphasis_Example444()
         {
             // Example 444
             // Section: Inlines Emphasis and strong emphasis
@@ -12089,7 +12089,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example445()
+        public void InlinesEmphasisandstrongemphasis_Example445()
         {
             // Example 445
             // Section: Inlines Emphasis and strong emphasis
@@ -12109,7 +12109,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example446()
+        public void InlinesEmphasisandstrongemphasis_Example446()
         {
             // Example 446
             // Section: Inlines Emphasis and strong emphasis
@@ -12128,7 +12128,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example447()
+        public void InlinesEmphasisandstrongemphasis_Example447()
         {
             // Example 447
             // Section: Inlines Emphasis and strong emphasis
@@ -12148,7 +12148,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example448()
+        public void InlinesEmphasisandstrongemphasis_Example448()
         {
             // Example 448
             // Section: Inlines Emphasis and strong emphasis
@@ -12167,7 +12167,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example449()
+        public void InlinesEmphasisandstrongemphasis_Example449()
         {
             // Example 449
             // Section: Inlines Emphasis and strong emphasis
@@ -12187,7 +12187,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example450()
+        public void InlinesEmphasisandstrongemphasis_Example450()
         {
             // Example 450
             // Section: Inlines Emphasis and strong emphasis
@@ -12206,7 +12206,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example451()
+        public void InlinesEmphasisandstrongemphasis_Example451()
         {
             // Example 451
             // Section: Inlines Emphasis and strong emphasis
@@ -12225,7 +12225,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example452()
+        public void InlinesEmphasisandstrongemphasis_Example452()
         {
             // Example 452
             // Section: Inlines Emphasis and strong emphasis
@@ -12244,7 +12244,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example453()
+        public void InlinesEmphasisandstrongemphasis_Example453()
         {
             // Example 453
             // Section: Inlines Emphasis and strong emphasis
@@ -12263,7 +12263,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example454()
+        public void InlinesEmphasisandstrongemphasis_Example454()
         {
             // Example 454
             // Section: Inlines Emphasis and strong emphasis
@@ -12282,7 +12282,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example455()
+        public void InlinesEmphasisandstrongemphasis_Example455()
         {
             // Example 455
             // Section: Inlines Emphasis and strong emphasis
@@ -12301,7 +12301,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example456()
+        public void InlinesEmphasisandstrongemphasis_Example456()
         {
             // Example 456
             // Section: Inlines Emphasis and strong emphasis
@@ -12320,7 +12320,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example457()
+        public void InlinesEmphasisandstrongemphasis_Example457()
         {
             // Example 457
             // Section: Inlines Emphasis and strong emphasis
@@ -12339,7 +12339,7 @@ namespace Markdig.Tests
     public partial class TestInlinesEmphasisandstrongemphasis
     {
         [Test]
-        public void Example458()
+        public void InlinesEmphasisandstrongemphasis_Example458()
         {
             // Example 458
             // Section: Inlines Emphasis and strong emphasis
@@ -12430,7 +12430,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example459()
+        public void InlinesLinks_Example459()
         {
             // Example 459
             // Section: Inlines Links
@@ -12450,7 +12450,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example460()
+        public void InlinesLinks_Example460()
         {
             // Example 460
             // Section: Inlines Links
@@ -12470,7 +12470,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example461()
+        public void InlinesLinks_Example461()
         {
             // Example 461
             // Section: Inlines Links
@@ -12489,7 +12489,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example462()
+        public void InlinesLinks_Example462()
         {
             // Example 462
             // Section: Inlines Links
@@ -12510,7 +12510,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example463()
+        public void InlinesLinks_Example463()
         {
             // Example 463
             // Section: Inlines Links
@@ -12529,7 +12529,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example464()
+        public void InlinesLinks_Example464()
         {
             // Example 464
             // Section: Inlines Links
@@ -12548,7 +12548,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example465()
+        public void InlinesLinks_Example465()
         {
             // Example 465
             // Section: Inlines Links
@@ -12569,7 +12569,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example466()
+        public void InlinesLinks_Example466()
         {
             // Example 466
             // Section: Inlines Links
@@ -12591,7 +12591,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example467()
+        public void InlinesLinks_Example467()
         {
             // Example 467
             // Section: Inlines Links
@@ -12612,7 +12612,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example468()
+        public void InlinesLinks_Example468()
         {
             // Example 468
             // Section: Inlines Links
@@ -12633,7 +12633,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example469()
+        public void InlinesLinks_Example469()
         {
             // Example 469
             // Section: Inlines Links
@@ -12652,7 +12652,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example470()
+        public void InlinesLinks_Example470()
         {
             // Example 470
             // Section: Inlines Links
@@ -12673,7 +12673,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example471()
+        public void InlinesLinks_Example471()
         {
             // Example 471
             // Section: Inlines Links
@@ -12693,7 +12693,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example472()
+        public void InlinesLinks_Example472()
         {
             // Example 472
             // Section: Inlines Links
@@ -12720,7 +12720,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example473()
+        public void InlinesLinks_Example473()
         {
             // Example 473
             // Section: Inlines Links
@@ -12747,7 +12747,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example474()
+        public void InlinesLinks_Example474()
         {
             // Example 474
             // Section: Inlines Links
@@ -12769,7 +12769,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example475()
+        public void InlinesLinks_Example475()
         {
             // Example 475
             // Section: Inlines Links
@@ -12789,7 +12789,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example476()
+        public void InlinesLinks_Example476()
         {
             // Example 476
             // Section: Inlines Links
@@ -12814,7 +12814,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example477()
+        public void InlinesLinks_Example477()
         {
             // Example 477
             // Section: Inlines Links
@@ -12835,7 +12835,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example478()
+        public void InlinesLinks_Example478()
         {
             // Example 478
             // Section: Inlines Links
@@ -12855,7 +12855,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example479()
+        public void InlinesLinks_Example479()
         {
             // Example 479
             // Section: Inlines Links
@@ -12875,7 +12875,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example480()
+        public void InlinesLinks_Example480()
         {
             // Example 480
             // Section: Inlines Links
@@ -12910,7 +12910,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example481()
+        public void InlinesLinks_Example481()
         {
             // Example 481
             // Section: Inlines Links
@@ -12932,7 +12932,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example482()
+        public void InlinesLinks_Example482()
         {
             // Example 482
             // Section: Inlines Links
@@ -12953,7 +12953,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example483()
+        public void InlinesLinks_Example483()
         {
             // Example 483
             // Section: Inlines Links
@@ -12972,7 +12972,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example484()
+        public void InlinesLinks_Example484()
         {
             // Example 484
             // Section: Inlines Links
@@ -12991,7 +12991,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example485()
+        public void InlinesLinks_Example485()
         {
             // Example 485
             // Section: Inlines Links
@@ -13010,7 +13010,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example486()
+        public void InlinesLinks_Example486()
         {
             // Example 486
             // Section: Inlines Links
@@ -13030,7 +13030,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example487()
+        public void InlinesLinks_Example487()
         {
             // Example 487
             // Section: Inlines Links
@@ -13049,7 +13049,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example488()
+        public void InlinesLinks_Example488()
         {
             // Example 488
             // Section: Inlines Links
@@ -13069,7 +13069,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example489()
+        public void InlinesLinks_Example489()
         {
             // Example 489
             // Section: Inlines Links
@@ -13088,7 +13088,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example490()
+        public void InlinesLinks_Example490()
         {
             // Example 490
             // Section: Inlines Links
@@ -13107,7 +13107,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example491()
+        public void InlinesLinks_Example491()
         {
             // Example 491
             // Section: Inlines Links
@@ -13128,7 +13128,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example492()
+        public void InlinesLinks_Example492()
         {
             // Example 492
             // Section: Inlines Links
@@ -13147,7 +13147,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example493()
+        public void InlinesLinks_Example493()
         {
             // Example 493
             // Section: Inlines Links
@@ -13168,7 +13168,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example494()
+        public void InlinesLinks_Example494()
         {
             // Example 494
             // Section: Inlines Links
@@ -13189,7 +13189,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example495()
+        public void InlinesLinks_Example495()
         {
             // Example 495
             // Section: Inlines Links
@@ -13208,7 +13208,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example496()
+        public void InlinesLinks_Example496()
         {
             // Example 496
             // Section: Inlines Links
@@ -13227,7 +13227,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example497()
+        public void InlinesLinks_Example497()
         {
             // Example 497
             // Section: Inlines Links
@@ -13276,7 +13276,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example498()
+        public void InlinesLinks_Example498()
         {
             // Example 498
             // Section: Inlines Links
@@ -13302,7 +13302,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example499()
+        public void InlinesLinks_Example499()
         {
             // Example 499
             // Section: Inlines Links
@@ -13323,7 +13323,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example500()
+        public void InlinesLinks_Example500()
         {
             // Example 500
             // Section: Inlines Links
@@ -13345,7 +13345,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example501()
+        public void InlinesLinks_Example501()
         {
             // Example 501
             // Section: Inlines Links
@@ -13366,7 +13366,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example502()
+        public void InlinesLinks_Example502()
         {
             // Example 502
             // Section: Inlines Links
@@ -13388,7 +13388,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example503()
+        public void InlinesLinks_Example503()
         {
             // Example 503
             // Section: Inlines Links
@@ -13409,7 +13409,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example504()
+        public void InlinesLinks_Example504()
         {
             // Example 504
             // Section: Inlines Links
@@ -13435,7 +13435,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example505()
+        public void InlinesLinks_Example505()
         {
             // Example 505
             // Section: Inlines Links
@@ -13456,7 +13456,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example506()
+        public void InlinesLinks_Example506()
         {
             // Example 506
             // Section: Inlines Links
@@ -13479,7 +13479,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example507()
+        public void InlinesLinks_Example507()
         {
             // Example 507
             // Section: Inlines Links
@@ -13500,7 +13500,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example508()
+        public void InlinesLinks_Example508()
         {
             // Example 508
             // Section: Inlines Links
@@ -13521,7 +13521,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example509()
+        public void InlinesLinks_Example509()
         {
             // Example 509
             // Section: Inlines Links
@@ -13543,7 +13543,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example510()
+        public void InlinesLinks_Example510()
         {
             // Example 510
             // Section: Inlines Links
@@ -13565,7 +13565,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example511()
+        public void InlinesLinks_Example511()
         {
             // Example 511
             // Section: Inlines Links
@@ -13588,7 +13588,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example512()
+        public void InlinesLinks_Example512()
         {
             // Example 512
             // Section: Inlines Links
@@ -13612,7 +13612,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example513()
+        public void InlinesLinks_Example513()
         {
             // Example 513
             // Section: Inlines Links
@@ -13633,7 +13633,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example514()
+        public void InlinesLinks_Example514()
         {
             // Example 514
             // Section: Inlines Links
@@ -13685,7 +13685,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example515()
+        public void InlinesLinks_Example515()
         {
             // Example 515
             // Section: Inlines Links
@@ -13711,7 +13711,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example516()
+        public void InlinesLinks_Example516()
         {
             // Example 516
             // Section: Inlines Links
@@ -13734,7 +13734,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example517()
+        public void InlinesLinks_Example517()
         {
             // Example 517
             // Section: Inlines Links
@@ -13756,7 +13756,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example518()
+        public void InlinesLinks_Example518()
         {
             // Example 518
             // Section: Inlines Links
@@ -13778,7 +13778,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example519()
+        public void InlinesLinks_Example519()
         {
             // Example 519
             // Section: Inlines Links
@@ -13800,7 +13800,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example520()
+        public void InlinesLinks_Example520()
         {
             // Example 520
             // Section: Inlines Links
@@ -13822,7 +13822,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example521()
+        public void InlinesLinks_Example521()
         {
             // Example 521
             // Section: Inlines Links
@@ -13844,7 +13844,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example522()
+        public void InlinesLinks_Example522()
         {
             // Example 522
             // Section: Inlines Links
@@ -13866,7 +13866,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example523()
+        public void InlinesLinks_Example523()
         {
             // Example 523
             // Section: Inlines Links
@@ -13900,7 +13900,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example524()
+        public void InlinesLinks_Example524()
         {
             // Example 524
             // Section: Inlines Links
@@ -13921,7 +13921,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example525()
+        public void InlinesLinks_Example525()
         {
             // Example 525
             // Section: Inlines Links
@@ -13943,7 +13943,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example526()
+        public void InlinesLinks_Example526()
         {
             // Example 526
             // Section: Inlines Links
@@ -13966,7 +13966,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example527()
+        public void InlinesLinks_Example527()
         {
             // Example 527
             // Section: Inlines Links
@@ -13997,7 +13997,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example528()
+        public void InlinesLinks_Example528()
         {
             // Example 528
             // Section: Inlines Links
@@ -14018,7 +14018,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example529()
+        public void InlinesLinks_Example529()
         {
             // Example 529
             // Section: Inlines Links
@@ -14039,7 +14039,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example530()
+        public void InlinesLinks_Example530()
         {
             // Example 530
             // Section: Inlines Links
@@ -14060,7 +14060,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example531()
+        public void InlinesLinks_Example531()
         {
             // Example 531
             // Section: Inlines Links
@@ -14082,7 +14082,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example532()
+        public void InlinesLinks_Example532()
         {
             // Example 532
             // Section: Inlines Links
@@ -14104,7 +14104,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example533()
+        public void InlinesLinks_Example533()
         {
             // Example 533
             // Section: Inlines Links
@@ -14127,7 +14127,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example534()
+        public void InlinesLinks_Example534()
         {
             // Example 534
             // Section: Inlines Links
@@ -14150,7 +14150,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example535()
+        public void InlinesLinks_Example535()
         {
             // Example 535
             // Section: Inlines Links
@@ -14173,7 +14173,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example536()
+        public void InlinesLinks_Example536()
         {
             // Example 536
             // Section: Inlines Links
@@ -14195,7 +14195,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example537()
+        public void InlinesLinks_Example537()
         {
             // Example 537
             // Section: Inlines Links
@@ -14217,7 +14217,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example538()
+        public void InlinesLinks_Example538()
         {
             // Example 538
             // Section: Inlines Links
@@ -14238,7 +14238,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example539()
+        public void InlinesLinks_Example539()
         {
             // Example 539
             // Section: Inlines Links
@@ -14261,7 +14261,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example540()
+        public void InlinesLinks_Example540()
         {
             // Example 540
             // Section: Inlines Links
@@ -14284,7 +14284,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example541()
+        public void InlinesLinks_Example541()
         {
             // Example 541
             // Section: Inlines Links
@@ -14308,7 +14308,7 @@ namespace Markdig.Tests
     public partial class TestInlinesLinks
     {
         [Test]
-        public void Example542()
+        public void InlinesLinks_Example542()
         {
             // Example 542
             // Section: Inlines Links
@@ -14341,7 +14341,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example543()
+        public void InlinesImages_Example543()
         {
             // Example 543
             // Section: Inlines Images
@@ -14360,7 +14360,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example544()
+        public void InlinesImages_Example544()
         {
             // Example 544
             // Section: Inlines Images
@@ -14381,7 +14381,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example545()
+        public void InlinesImages_Example545()
         {
             // Example 545
             // Section: Inlines Images
@@ -14400,7 +14400,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example546()
+        public void InlinesImages_Example546()
         {
             // Example 546
             // Section: Inlines Images
@@ -14425,7 +14425,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example547()
+        public void InlinesImages_Example547()
         {
             // Example 547
             // Section: Inlines Images
@@ -14446,7 +14446,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example548()
+        public void InlinesImages_Example548()
         {
             // Example 548
             // Section: Inlines Images
@@ -14467,7 +14467,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example549()
+        public void InlinesImages_Example549()
         {
             // Example 549
             // Section: Inlines Images
@@ -14486,7 +14486,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example550()
+        public void InlinesImages_Example550()
         {
             // Example 550
             // Section: Inlines Images
@@ -14505,7 +14505,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example551()
+        public void InlinesImages_Example551()
         {
             // Example 551
             // Section: Inlines Images
@@ -14524,7 +14524,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example552()
+        public void InlinesImages_Example552()
         {
             // Example 552
             // Section: Inlines Images
@@ -14544,7 +14544,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example553()
+        public void InlinesImages_Example553()
         {
             // Example 553
             // Section: Inlines Images
@@ -14565,7 +14565,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example554()
+        public void InlinesImages_Example554()
         {
             // Example 554
             // Section: Inlines Images
@@ -14587,7 +14587,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example555()
+        public void InlinesImages_Example555()
         {
             // Example 555
             // Section: Inlines Images
@@ -14608,7 +14608,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example556()
+        public void InlinesImages_Example556()
         {
             // Example 556
             // Section: Inlines Images
@@ -14630,7 +14630,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example557()
+        public void InlinesImages_Example557()
         {
             // Example 557
             // Section: Inlines Images
@@ -14653,7 +14653,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example558()
+        public void InlinesImages_Example558()
         {
             // Example 558
             // Section: Inlines Images
@@ -14677,7 +14677,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example559()
+        public void InlinesImages_Example559()
         {
             // Example 559
             // Section: Inlines Images
@@ -14698,7 +14698,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example560()
+        public void InlinesImages_Example560()
         {
             // Example 560
             // Section: Inlines Images
@@ -14720,7 +14720,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example561()
+        public void InlinesImages_Example561()
         {
             // Example 561
             // Section: Inlines Images
@@ -14743,7 +14743,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example562()
+        public void InlinesImages_Example562()
         {
             // Example 562
             // Section: Inlines Images
@@ -14766,7 +14766,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example563()
+        public void InlinesImages_Example563()
         {
             // Example 563
             // Section: Inlines Images
@@ -14789,7 +14789,7 @@ namespace Markdig.Tests
     public partial class TestInlinesImages
     {
         [Test]
-        public void Example564()
+        public void InlinesImages_Example564()
         {
             // Example 564
             // Section: Inlines Images
@@ -14833,7 +14833,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example565()
+        public void InlinesAutolinks_Example565()
         {
             // Example 565
             // Section: Inlines Autolinks
@@ -14852,7 +14852,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example566()
+        public void InlinesAutolinks_Example566()
         {
             // Example 566
             // Section: Inlines Autolinks
@@ -14871,7 +14871,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example567()
+        public void InlinesAutolinks_Example567()
         {
             // Example 567
             // Section: Inlines Autolinks
@@ -14891,7 +14891,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example568()
+        public void InlinesAutolinks_Example568()
         {
             // Example 568
             // Section: Inlines Autolinks
@@ -14914,7 +14914,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example569()
+        public void InlinesAutolinks_Example569()
         {
             // Example 569
             // Section: Inlines Autolinks
@@ -14933,7 +14933,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example570()
+        public void InlinesAutolinks_Example570()
         {
             // Example 570
             // Section: Inlines Autolinks
@@ -14952,7 +14952,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example571()
+        public void InlinesAutolinks_Example571()
         {
             // Example 571
             // Section: Inlines Autolinks
@@ -14971,7 +14971,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example572()
+        public void InlinesAutolinks_Example572()
         {
             // Example 572
             // Section: Inlines Autolinks
@@ -14991,7 +14991,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example573()
+        public void InlinesAutolinks_Example573()
         {
             // Example 573
             // Section: Inlines Autolinks
@@ -15011,7 +15011,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example574()
+        public void InlinesAutolinks_Example574()
         {
             // Example 574
             // Section: Inlines Autolinks
@@ -15044,7 +15044,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example575()
+        public void InlinesAutolinks_Example575()
         {
             // Example 575
             // Section: Inlines Autolinks
@@ -15063,7 +15063,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example576()
+        public void InlinesAutolinks_Example576()
         {
             // Example 576
             // Section: Inlines Autolinks
@@ -15083,7 +15083,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example577()
+        public void InlinesAutolinks_Example577()
         {
             // Example 577
             // Section: Inlines Autolinks
@@ -15103,7 +15103,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example578()
+        public void InlinesAutolinks_Example578()
         {
             // Example 578
             // Section: Inlines Autolinks
@@ -15122,7 +15122,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example579()
+        public void InlinesAutolinks_Example579()
         {
             // Example 579
             // Section: Inlines Autolinks
@@ -15141,7 +15141,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example580()
+        public void InlinesAutolinks_Example580()
         {
             // Example 580
             // Section: Inlines Autolinks
@@ -15160,7 +15160,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example581()
+        public void InlinesAutolinks_Example581()
         {
             // Example 581
             // Section: Inlines Autolinks
@@ -15179,7 +15179,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example582()
+        public void InlinesAutolinks_Example582()
         {
             // Example 582
             // Section: Inlines Autolinks
@@ -15198,7 +15198,7 @@ namespace Markdig.Tests
     public partial class TestInlinesAutolinks
     {
         [Test]
-        public void Example583()
+        public void InlinesAutolinks_Example583()
         {
             // Example 583
             // Section: Inlines Autolinks
@@ -15291,7 +15291,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example584()
+        public void InlinesRawHTML_Example584()
         {
             // Example 584
             // Section: Inlines Raw HTML
@@ -15311,7 +15311,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example585()
+        public void InlinesRawHTML_Example585()
         {
             // Example 585
             // Section: Inlines Raw HTML
@@ -15331,7 +15331,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example586()
+        public void InlinesRawHTML_Example586()
         {
             // Example 586
             // Section: Inlines Raw HTML
@@ -15353,7 +15353,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example587()
+        public void InlinesRawHTML_Example587()
         {
             // Example 587
             // Section: Inlines Raw HTML
@@ -15375,7 +15375,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example588()
+        public void InlinesRawHTML_Example588()
         {
             // Example 588
             // Section: Inlines Raw HTML
@@ -15395,7 +15395,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example589()
+        public void InlinesRawHTML_Example589()
         {
             // Example 589
             // Section: Inlines Raw HTML
@@ -15415,7 +15415,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example590()
+        public void InlinesRawHTML_Example590()
         {
             // Example 590
             // Section: Inlines Raw HTML
@@ -15435,7 +15435,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example591()
+        public void InlinesRawHTML_Example591()
         {
             // Example 591
             // Section: Inlines Raw HTML
@@ -15455,7 +15455,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example592()
+        public void InlinesRawHTML_Example592()
         {
             // Example 592
             // Section: Inlines Raw HTML
@@ -15477,7 +15477,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example593()
+        public void InlinesRawHTML_Example593()
         {
             // Example 593
             // Section: Inlines Raw HTML
@@ -15497,7 +15497,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example594()
+        public void InlinesRawHTML_Example594()
         {
             // Example 594
             // Section: Inlines Raw HTML
@@ -15517,7 +15517,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example595()
+        public void InlinesRawHTML_Example595()
         {
             // Example 595
             // Section: Inlines Raw HTML
@@ -15537,7 +15537,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example596()
+        public void InlinesRawHTML_Example596()
         {
             // Example 596
             // Section: Inlines Raw HTML
@@ -15558,7 +15558,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example597()
+        public void InlinesRawHTML_Example597()
         {
             // Example 597
             // Section: Inlines Raw HTML
@@ -15578,7 +15578,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example598()
+        public void InlinesRawHTML_Example598()
         {
             // Example 598
             // Section: Inlines Raw HTML
@@ -15601,7 +15601,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example599()
+        public void InlinesRawHTML_Example599()
         {
             // Example 599
             // Section: Inlines Raw HTML
@@ -15621,7 +15621,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example600()
+        public void InlinesRawHTML_Example600()
         {
             // Example 600
             // Section: Inlines Raw HTML
@@ -15641,7 +15641,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example601()
+        public void InlinesRawHTML_Example601()
         {
             // Example 601
             // Section: Inlines Raw HTML
@@ -15662,7 +15662,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example602()
+        public void InlinesRawHTML_Example602()
         {
             // Example 602
             // Section: Inlines Raw HTML
@@ -15682,7 +15682,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example603()
+        public void InlinesRawHTML_Example603()
         {
             // Example 603
             // Section: Inlines Raw HTML
@@ -15701,7 +15701,7 @@ namespace Markdig.Tests
     public partial class TestInlinesRawHTML
     {
         [Test]
-        public void Example604()
+        public void InlinesRawHTML_Example604()
         {
             // Example 604
             // Section: Inlines Raw HTML
@@ -15726,7 +15726,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example605()
+        public void InlinesHardlinebreaks_Example605()
         {
             // Example 605
             // Section: Inlines Hard line breaks
@@ -15749,7 +15749,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example606()
+        public void InlinesHardlinebreaks_Example606()
         {
             // Example 606
             // Section: Inlines Hard line breaks
@@ -15771,7 +15771,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example607()
+        public void InlinesHardlinebreaks_Example607()
         {
             // Example 607
             // Section: Inlines Hard line breaks
@@ -15793,7 +15793,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example608()
+        public void InlinesHardlinebreaks_Example608()
         {
             // Example 608
             // Section: Inlines Hard line breaks
@@ -15814,7 +15814,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example609()
+        public void InlinesHardlinebreaks_Example609()
         {
             // Example 609
             // Section: Inlines Hard line breaks
@@ -15837,7 +15837,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example610()
+        public void InlinesHardlinebreaks_Example610()
         {
             // Example 610
             // Section: Inlines Hard line breaks
@@ -15858,7 +15858,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example611()
+        public void InlinesHardlinebreaks_Example611()
         {
             // Example 611
             // Section: Inlines Hard line breaks
@@ -15880,7 +15880,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example612()
+        public void InlinesHardlinebreaks_Example612()
         {
             // Example 612
             // Section: Inlines Hard line breaks
@@ -15900,7 +15900,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example613()
+        public void InlinesHardlinebreaks_Example613()
         {
             // Example 613
             // Section: Inlines Hard line breaks
@@ -15921,7 +15921,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example614()
+        public void InlinesHardlinebreaks_Example614()
         {
             // Example 614
             // Section: Inlines Hard line breaks
@@ -15942,7 +15942,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example615()
+        public void InlinesHardlinebreaks_Example615()
         {
             // Example 615
             // Section: Inlines Hard line breaks
@@ -15966,7 +15966,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example616()
+        public void InlinesHardlinebreaks_Example616()
         {
             // Example 616
             // Section: Inlines Hard line breaks
@@ -15985,7 +15985,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example617()
+        public void InlinesHardlinebreaks_Example617()
         {
             // Example 617
             // Section: Inlines Hard line breaks
@@ -16004,7 +16004,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example618()
+        public void InlinesHardlinebreaks_Example618()
         {
             // Example 618
             // Section: Inlines Hard line breaks
@@ -16023,7 +16023,7 @@ namespace Markdig.Tests
     public partial class TestInlinesHardlinebreaks
     {
         [Test]
-        public void Example619()
+        public void InlinesHardlinebreaks_Example619()
         {
             // Example 619
             // Section: Inlines Hard line breaks
@@ -16049,7 +16049,7 @@ namespace Markdig.Tests
     public partial class TestInlinesSoftlinebreaks
     {
         [Test]
-        public void Example620()
+        public void InlinesSoftlinebreaks_Example620()
         {
             // Example 620
             // Section: Inlines Soft line breaks
@@ -16072,7 +16072,7 @@ namespace Markdig.Tests
     public partial class TestInlinesSoftlinebreaks
     {
         [Test]
-        public void Example621()
+        public void InlinesSoftlinebreaks_Example621()
         {
             // Example 621
             // Section: Inlines Soft line breaks
@@ -16103,7 +16103,7 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example622()
+        public void InlinesTextualcontent_Example622()
         {
             // Example 622
             // Section: Inlines Textual content
@@ -16122,7 +16122,7 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example623()
+        public void InlinesTextualcontent_Example623()
         {
             // Example 623
             // Section: Inlines Textual content
@@ -16142,7 +16142,7 @@ namespace Markdig.Tests
     public partial class TestInlinesTextualcontent
     {
         [Test]
-        public void Example624()
+        public void InlinesTextualcontent_Example624()
         {
             // Example 624
             // Section: Inlines Textual content
@@ -16515,7 +16515,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example001()
+        public void ExtensionsPipeTable_Example001()
         {
             // Example 1
             // Section: Extensions Pipe Table
@@ -16550,7 +16550,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example002()
+        public void ExtensionsPipeTable_Example002()
         {
             // Example 2
             // Section: Extensions Pipe Table
@@ -16585,7 +16585,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example003()
+        public void ExtensionsPipeTable_Example003()
         {
             // Example 3
             // Section: Extensions Pipe Table
@@ -16613,7 +16613,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example004()
+        public void ExtensionsPipeTable_Example004()
         {
             // Example 4
             // Section: Extensions Pipe Table
@@ -16648,7 +16648,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example005()
+        public void ExtensionsPipeTable_Example005()
         {
             // Example 5
             // Section: Extensions Pipe Table
@@ -16672,7 +16672,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example006()
+        public void ExtensionsPipeTable_Example006()
         {
             // Example 6
             // Section: Extensions Pipe Table
@@ -16694,7 +16694,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example007()
+        public void ExtensionsPipeTable_Example007()
         {
             // Example 7
             // Section: Extensions Pipe Table
@@ -16747,7 +16747,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example008()
+        public void ExtensionsPipeTable_Example008()
         {
             // Example 8
             // Section: Extensions Pipe Table
@@ -16783,7 +16783,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example009()
+        public void ExtensionsPipeTable_Example009()
         {
             // Example 9
             // Section: Extensions Pipe Table
@@ -16828,7 +16828,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example010()
+        public void ExtensionsPipeTable_Example010()
         {
             // Example 10
             // Section: Extensions Pipe Table
@@ -16863,7 +16863,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example011()
+        public void ExtensionsPipeTable_Example011()
         {
             // Example 11
             // Section: Extensions Pipe Table
@@ -16897,7 +16897,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example012()
+        public void ExtensionsPipeTable_Example012()
         {
             // Example 12
             // Section: Extensions Pipe Table
@@ -16932,7 +16932,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example013()
+        public void ExtensionsPipeTable_Example013()
         {
             // Example 13
             // Section: Extensions Pipe Table
@@ -16977,7 +16977,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example014()
+        public void ExtensionsPipeTable_Example014()
         {
             // Example 14
             // Section: Extensions Pipe Table
@@ -17019,7 +17019,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example015()
+        public void ExtensionsPipeTable_Example015()
         {
             // Example 15
             // Section: Extensions Pipe Table
@@ -17062,7 +17062,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example016()
+        public void ExtensionsPipeTable_Example016()
         {
             // Example 16
             // Section: Extensions Pipe Table
@@ -17099,7 +17099,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example017()
+        public void ExtensionsPipeTable_Example017()
         {
             // Example 17
             // Section: Extensions Pipe Table
@@ -17127,7 +17127,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example018()
+        public void ExtensionsPipeTable_Example018()
         {
             // Example 18
             // Section: Extensions Pipe Table
@@ -17169,7 +17169,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example019()
+        public void ExtensionsPipeTable_Example019()
         {
             // Example 19
             // Section: Extensions Pipe Table
@@ -17192,7 +17192,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example020()
+        public void ExtensionsPipeTable_Example020()
         {
             // Example 20
             // Section: Extensions Pipe Table
@@ -17229,7 +17229,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example021()
+        public void ExtensionsPipeTable_Example021()
         {
             // Example 21
             // Section: Extensions Pipe Table
@@ -17266,7 +17266,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example022()
+        public void ExtensionsPipeTable_Example022()
         {
             // Example 22
             // Section: Extensions Pipe Table
@@ -17293,7 +17293,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example023()
+        public void ExtensionsPipeTable_Example023()
         {
             // Example 23
             // Section: Extensions Pipe Table
@@ -17324,7 +17324,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example024()
+        public void ExtensionsPipeTable_Example024()
         {
             // Example 24
             // Section: Extensions Pipe Table
@@ -17376,7 +17376,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsPipeTable
     {
         [Test]
-        public void Example025()
+        public void ExtensionsPipeTable_Example025()
         {
             // Example 25
             // Section: Extensions Pipe Table
@@ -17419,7 +17419,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsFootontes
     {
         [Test]
-        public void Example001()
+        public void ExtensionsFootontes_Example001()
         {
             // Example 1
             // Section: Extensions Footontes
@@ -17488,7 +17488,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsFootontes
     {
         [Test]
-        public void Example002()
+        public void ExtensionsFootontes_Example002()
         {
             // Example 2
             // Section: Extensions Footontes
@@ -17532,7 +17532,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsFootontes
     {
         [Test]
-        public void Example003()
+        public void ExtensionsFootontes_Example003()
         {
             // Example 3
             // Section: Extensions Footontes
@@ -17587,7 +17587,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGenericAttributes
     {
         [Test]
-        public void Example001()
+        public void ExtensionsGenericAttributes_Example001()
         {
             // Example 1
             // Section: Extensions Generic Attributes
@@ -17620,7 +17620,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGenericAttributes
     {
         [Test]
-        public void Example002()
+        public void ExtensionsGenericAttributes_Example002()
         {
             // Example 2
             // Section: Extensions Generic Attributes
@@ -17650,7 +17650,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsStrikethrough
     {
         [Test]
-        public void Example001()
+        public void ExtensionsStrikethrough_Example001()
         {
             // Example 1
             // Section: Extensions Strikethrough
@@ -17672,7 +17672,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSuperscriptandSubscript
     {
         [Test]
-        public void Example002()
+        public void ExtensionsSuperscriptandSubscript_Example002()
         {
             // Example 2
             // Section: Extensions Superscript and Subscript
@@ -17692,7 +17692,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSuperscriptandSubscript
     {
         [Test]
-        public void Example003()
+        public void ExtensionsSuperscriptandSubscript_Example003()
         {
             // Example 3
             // Section: Extensions Superscript and Subscript
@@ -17717,7 +17717,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsInserted
     {
         [Test]
-        public void Example004()
+        public void ExtensionsInserted_Example004()
         {
             // Example 4
             // Section: Extensions Inserted
@@ -17739,7 +17739,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMarked
     {
         [Test]
-        public void Example005()
+        public void ExtensionsMarked_Example005()
         {
             // Example 5
             // Section: Extensions Marked
@@ -17759,7 +17759,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsEmphasisonHtmlEntities
     {
         [Test]
-        public void Example006()
+        public void ExtensionsEmphasisonHtmlEntities_Example006()
         {
             // Example 6
             // Section: Extensions Emphasis on Html Entities
@@ -17789,7 +17789,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHardlinebreak
     {
         [Test]
-        public void Example001()
+        public void ExtensionsHardlinebreak_Example001()
         {
             // Example 1
             // Section: Extensions Hardline break
@@ -17847,7 +17847,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example001()
+        public void ExtensionsGridTable_Example001()
         {
             // Example 1
             // Section: Extensions Grid Table
@@ -17877,7 +17877,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example002()
+        public void ExtensionsGridTable_Example002()
         {
             // Example 2
             // Section: Extensions Grid Table
@@ -17900,7 +17900,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example003()
+        public void ExtensionsGridTable_Example003()
         {
             // Example 3
             // Section: Extensions Grid Table
@@ -17945,7 +17945,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example004()
+        public void ExtensionsGridTable_Example004()
         {
             // Example 4
             // Section: Extensions Grid Table
@@ -17976,7 +17976,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example005()
+        public void ExtensionsGridTable_Example005()
         {
             // Example 5
             // Section: Extensions Grid Table
@@ -18014,7 +18014,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example006()
+        public void ExtensionsGridTable_Example006()
         {
             // Example 6
             // Section: Extensions Grid Table
@@ -18047,7 +18047,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example007()
+        public void ExtensionsGridTable_Example007()
         {
             // Example 7
             // Section: Extensions Grid Table
@@ -18080,7 +18080,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example008()
+        public void ExtensionsGridTable_Example008()
         {
             // Example 8
             // Section: Extensions Grid Table
@@ -18127,7 +18127,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example009()
+        public void ExtensionsGridTable_Example009()
         {
             // Example 9
             // Section: Extensions Grid Table
@@ -18173,7 +18173,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example010()
+        public void ExtensionsGridTable_Example010()
         {
             // Example 10
             // Section: Extensions Grid Table
@@ -18205,7 +18205,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsGridTable
     {
         [Test]
-        public void Example011()
+        public void ExtensionsGridTable_Example011()
         {
             // Example 11
             // Section: Extensions Grid Table
@@ -18233,7 +18233,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example001()
+        public void ExtensionsCustomContainer_Example001()
         {
             // Example 1
             // Section: Extensions Custom Container
@@ -18256,7 +18256,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example002()
+        public void ExtensionsCustomContainer_Example002()
         {
             // Example 2
             // Section: Extensions Custom Container
@@ -18279,7 +18279,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example003()
+        public void ExtensionsCustomContainer_Example003()
         {
             // Example 3
             // Section: Extensions Custom Container
@@ -18302,7 +18302,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example004()
+        public void ExtensionsCustomContainer_Example004()
         {
             // Example 4
             // Section: Extensions Custom Container
@@ -18338,7 +18338,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example005()
+        public void ExtensionsCustomContainer_Example005()
         {
             // Example 5
             // Section: Extensions Custom Container
@@ -18361,7 +18361,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCustomContainer
     {
         [Test]
-        public void Example006()
+        public void ExtensionsCustomContainer_Example006()
         {
             // Example 6
             // Section: Extensions Custom Container
@@ -18386,7 +18386,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsInlineCustomContainer
     {
         [Test]
-        public void Example007()
+        public void ExtensionsInlineCustomContainer_Example007()
         {
             // Example 7
             // Section: Extensions Inline Custom Container 
@@ -18406,7 +18406,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsInlineCustomContainer
     {
         [Test]
-        public void Example008()
+        public void ExtensionsInlineCustomContainer_Example008()
         {
             // Example 8
             // Section: Extensions Inline Custom Container 
@@ -18426,7 +18426,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsInlineCustomContainer
     {
         [Test]
-        public void Example009()
+        public void ExtensionsInlineCustomContainer_Example009()
         {
             // Example 9
             // Section: Extensions Inline Custom Container 
@@ -18452,7 +18452,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example001()
+        public void ExtensionsDefinitionlists_Example001()
         {
             // Example 1
             // Section: Extensions Definition lists
@@ -18512,7 +18512,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example002()
+        public void ExtensionsDefinitionlists_Example002()
         {
             // Example 2
             // Section: Extensions Definition lists
@@ -18543,7 +18543,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example003()
+        public void ExtensionsDefinitionlists_Example003()
         {
             // Example 3
             // Section: Extensions Definition lists
@@ -18565,7 +18565,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example004()
+        public void ExtensionsDefinitionlists_Example004()
         {
             // Example 4
             // Section: Extensions Definition lists
@@ -18589,7 +18589,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example005()
+        public void ExtensionsDefinitionlists_Example005()
         {
             // Example 5
             // Section: Extensions Definition lists
@@ -18613,7 +18613,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsDefinitionlists
     {
         [Test]
-        public void Example006()
+        public void ExtensionsDefinitionlists_Example006()
         {
             // Example 6
             // Section: Extensions Definition lists
@@ -18656,7 +18656,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsEmoji
     {
         [Test]
-        public void Example001()
+        public void ExtensionsEmoji_Example001()
         {
             // Example 1
             // Section: Extensions Emoji
@@ -18676,7 +18676,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsEmoji
     {
         [Test]
-        public void Example002()
+        public void ExtensionsEmoji_Example002()
         {
             // Example 2
             // Section: Extensions Emoji
@@ -18696,7 +18696,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsEmoji
     {
         [Test]
-        public void Example003()
+        public void ExtensionsEmoji_Example003()
         {
             // Example 3
             // Section: Extensions Emoji
@@ -18716,7 +18716,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsEmoji
     {
         [Test]
-        public void Example004()
+        public void ExtensionsEmoji_Example004()
         {
             // Example 4
             // Section: Extensions Emoji
@@ -18746,7 +18746,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example001()
+        public void ExtensionsAbbreviation_Example001()
         {
             // Example 1
             // Section: Extensions Abbreviation
@@ -18768,7 +18768,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example002()
+        public void ExtensionsAbbreviation_Example002()
         {
             // Example 2
             // Section: Extensions Abbreviation
@@ -18790,7 +18790,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example003()
+        public void ExtensionsAbbreviation_Example003()
         {
             // Example 3
             // Section: Extensions Abbreviation
@@ -18812,7 +18812,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example004()
+        public void ExtensionsAbbreviation_Example004()
         {
             // Example 4
             // Section: Extensions Abbreviation
@@ -18834,7 +18834,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example005()
+        public void ExtensionsAbbreviation_Example005()
         {
             // Example 5
             // Section: Extensions Abbreviation
@@ -18858,7 +18858,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example006()
+        public void ExtensionsAbbreviation_Example006()
         {
             // Example 6
             // Section: Extensions Abbreviation
@@ -18880,7 +18880,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example007()
+        public void ExtensionsAbbreviation_Example007()
         {
             // Example 7
             // Section: Extensions Abbreviation
@@ -18902,7 +18902,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example008()
+        public void ExtensionsAbbreviation_Example008()
         {
             // Example 8
             // Section: Extensions Abbreviation
@@ -18925,7 +18925,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAbbreviation
     {
         [Test]
-        public void Example009()
+        public void ExtensionsAbbreviation_Example009()
         {
             // Example 9
             // Section: Extensions Abbreviation
@@ -18953,7 +18953,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
         [Test]
-        public void Example001()
+        public void ExtensionsOrderedlistwithalphaletter_Example001()
         {
             // Example 1
             // Section: Extensions Ordered list with alpha letter
@@ -18979,7 +18979,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
         [Test]
-        public void Example002()
+        public void ExtensionsOrderedlistwithalphaletter_Example002()
         {
             // Example 2
             // Section: Extensions Ordered list with alpha letter
@@ -19005,7 +19005,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
         [Test]
-        public void Example003()
+        public void ExtensionsOrderedlistwithalphaletter_Example003()
         {
             // Example 3
             // Section: Extensions Ordered list with alpha letter
@@ -19029,7 +19029,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithalphaletter
     {
         [Test]
-        public void Example004()
+        public void ExtensionsOrderedlistwithalphaletter_Example004()
         {
             // Example 4
             // Section: Extensions Ordered list with alpha letter
@@ -19059,7 +19059,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithromanletter
     {
         [Test]
-        public void Example005()
+        public void ExtensionsOrderedlistwithromanletter_Example005()
         {
             // Example 5
             // Section: Extensions Ordered list with roman letter
@@ -19087,7 +19087,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithromanletter
     {
         [Test]
-        public void Example006()
+        public void ExtensionsOrderedlistwithromanletter_Example006()
         {
             // Example 6
             // Section: Extensions Ordered list with roman letter
@@ -19115,7 +19115,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithromanletter
     {
         [Test]
-        public void Example007()
+        public void ExtensionsOrderedlistwithromanletter_Example007()
         {
             // Example 7
             // Section: Extensions Ordered list with roman letter
@@ -19139,7 +19139,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsOrderedlistwithromanletter
     {
         [Test]
-        public void Example008()
+        public void ExtensionsOrderedlistwithromanletter_Example008()
         {
             // Example 8
             // Section: Extensions Ordered list with roman letter
@@ -19175,7 +19175,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsFigures
     {
         [Test]
-        public void Example001()
+        public void ExtensionsFigures_Example001()
         {
             // Example 1
             // Section: Extensions Figures
@@ -19202,7 +19202,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsFooters
     {
         [Test]
-        public void Example002()
+        public void ExtensionsFooters_Example002()
         {
             // Example 2
             // Section: Extensions Footers
@@ -19226,7 +19226,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsCite
     {
         [Test]
-        public void Example003()
+        public void ExtensionsCite_Example003()
         {
             // Example 3
             // Section: Extensions Cite
@@ -19252,7 +19252,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example001()
+        public void ExtensionsMathInline_Example001()
         {
             // Example 1
             // Section: Extensions Math Inline
@@ -19272,7 +19272,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example002()
+        public void ExtensionsMathInline_Example002()
         {
             // Example 2
             // Section: Extensions Math Inline
@@ -19292,7 +19292,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example003()
+        public void ExtensionsMathInline_Example003()
         {
             // Example 3
             // Section: Extensions Math Inline
@@ -19313,7 +19313,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example004()
+        public void ExtensionsMathInline_Example004()
         {
             // Example 4
             // Section: Extensions Math Inline
@@ -19335,7 +19335,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example005()
+        public void ExtensionsMathInline_Example005()
         {
             // Example 5
             // Section: Extensions Math Inline
@@ -19354,7 +19354,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example006()
+        public void ExtensionsMathInline_Example006()
         {
             // Example 6
             // Section: Extensions Math Inline
@@ -19373,7 +19373,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example007()
+        public void ExtensionsMathInline_Example007()
         {
             // Example 7
             // Section: Extensions Math Inline
@@ -19392,7 +19392,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example008()
+        public void ExtensionsMathInline_Example008()
         {
             // Example 8
             // Section: Extensions Math Inline
@@ -19412,7 +19412,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example009()
+        public void ExtensionsMathInline_Example009()
         {
             // Example 9
             // Section: Extensions Math Inline
@@ -19432,7 +19432,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example010()
+        public void ExtensionsMathInline_Example010()
         {
             // Example 10
             // Section: Extensions Math Inline
@@ -19452,7 +19452,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example011()
+        public void ExtensionsMathInline_Example011()
         {
             // Example 11
             // Section: Extensions Math Inline
@@ -19472,7 +19472,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example012()
+        public void ExtensionsMathInline_Example012()
         {
             // Example 12
             // Section: Extensions Math Inline
@@ -19492,7 +19492,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example013()
+        public void ExtensionsMathInline_Example013()
         {
             // Example 13
             // Section: Extensions Math Inline
@@ -19512,7 +19512,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example014()
+        public void ExtensionsMathInline_Example014()
         {
             // Example 14
             // Section: Extensions Math Inline
@@ -19532,7 +19532,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example015()
+        public void ExtensionsMathInline_Example015()
         {
             // Example 15
             // Section: Extensions Math Inline
@@ -19552,7 +19552,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathInline
     {
         [Test]
-        public void Example016()
+        public void ExtensionsMathInline_Example016()
         {
             // Example 16
             // Section: Extensions Math Inline
@@ -19575,7 +19575,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMathBlock
     {
         [Test]
-        public void Example017()
+        public void ExtensionsMathBlock_Example017()
         {
             // Example 17
             // Section: Extensions Math Block
@@ -19610,7 +19610,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsBootstrap
     {
         [Test]
-        public void Example001()
+        public void ExtensionsBootstrap_Example001()
         {
             // Example 1
             // Section: Extensions Bootstrap
@@ -19645,7 +19645,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsBootstrap
     {
         [Test]
-        public void Example002()
+        public void ExtensionsBootstrap_Example002()
         {
             // Example 2
             // Section: Extensions Bootstrap
@@ -19667,7 +19667,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsBootstrap
     {
         [Test]
-        public void Example003()
+        public void ExtensionsBootstrap_Example003()
         {
             // Example 3
             // Section: Extensions Bootstrap
@@ -19692,7 +19692,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsBootstrap
     {
         [Test]
-        public void Example004()
+        public void ExtensionsBootstrap_Example004()
         {
             // Example 4
             // Section: Extensions Bootstrap
@@ -19718,7 +19718,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMedialinks
     {
         [Test]
-        public void Example001()
+        public void ExtensionsMedialinks_Example001()
         {
             // Example 1
             // Section: Extensions Media links
@@ -19756,7 +19756,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example001()
+        public void ExtensionsSmartyPantsQuotes_Example001()
         {
             // Example 1
             // Section: Extensions SmartyPants Quotes
@@ -19775,7 +19775,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example002()
+        public void ExtensionsSmartyPantsQuotes_Example002()
         {
             // Example 2
             // Section: Extensions SmartyPants Quotes
@@ -19794,7 +19794,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example003()
+        public void ExtensionsSmartyPantsQuotes_Example003()
         {
             // Example 3
             // Section: Extensions SmartyPants Quotes
@@ -19814,7 +19814,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example004()
+        public void ExtensionsSmartyPantsQuotes_Example004()
         {
             // Example 4
             // Section: Extensions SmartyPants Quotes
@@ -19833,7 +19833,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example005()
+        public void ExtensionsSmartyPantsQuotes_Example005()
         {
             // Example 5
             // Section: Extensions SmartyPants Quotes
@@ -19852,7 +19852,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example006()
+        public void ExtensionsSmartyPantsQuotes_Example006()
         {
             // Example 6
             // Section: Extensions SmartyPants Quotes
@@ -19872,7 +19872,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example007()
+        public void ExtensionsSmartyPantsQuotes_Example007()
         {
             // Example 7
             // Section: Extensions SmartyPants Quotes
@@ -19891,7 +19891,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example008()
+        public void ExtensionsSmartyPantsQuotes_Example008()
         {
             // Example 8
             // Section: Extensions SmartyPants Quotes
@@ -19910,7 +19910,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example009()
+        public void ExtensionsSmartyPantsQuotes_Example009()
         {
             // Example 9
             // Section: Extensions SmartyPants Quotes
@@ -19930,7 +19930,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example010()
+        public void ExtensionsSmartyPantsQuotes_Example010()
         {
             // Example 10
             // Section: Extensions SmartyPants Quotes
@@ -19949,7 +19949,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example011()
+        public void ExtensionsSmartyPantsQuotes_Example011()
         {
             // Example 11
             // Section: Extensions SmartyPants Quotes
@@ -19968,7 +19968,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example012()
+        public void ExtensionsSmartyPantsQuotes_Example012()
         {
             // Example 12
             // Section: Extensions SmartyPants Quotes
@@ -19988,7 +19988,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsQuotes
     {
         [Test]
-        public void Example013()
+        public void ExtensionsSmartyPantsQuotes_Example013()
         {
             // Example 13
             // Section: Extensions SmartyPants Quotes
@@ -20008,7 +20008,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example014()
+        public void ExtensionsSmartyPantsSeparators_Example014()
         {
             // Example 14
             // Section: Extensions SmartyPants Separators
@@ -20027,7 +20027,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example015()
+        public void ExtensionsSmartyPantsSeparators_Example015()
         {
             // Example 15
             // Section: Extensions SmartyPants Separators
@@ -20046,7 +20046,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example016()
+        public void ExtensionsSmartyPantsSeparators_Example016()
         {
             // Example 16
             // Section: Extensions SmartyPants Separators
@@ -20066,7 +20066,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example017()
+        public void ExtensionsSmartyPantsSeparators_Example017()
         {
             // Example 17
             // Section: Extensions SmartyPants Separators
@@ -20101,7 +20101,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsSmartyPantsSeparators
     {
         [Test]
-        public void Example018()
+        public void ExtensionsSmartyPantsSeparators_Example018()
         {
             // Example 18
             // Section: Extensions SmartyPants Separators
@@ -20127,7 +20127,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example001()
+        public void ExtensionsHeadingAutoIdentifiers_Example001()
         {
             // Example 1
             // Section: Extensions Heading Auto Identifiers
@@ -20149,7 +20149,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example002()
+        public void ExtensionsHeadingAutoIdentifiers_Example002()
         {
             // Example 2
             // Section: Extensions Heading Auto Identifiers
@@ -20169,7 +20169,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example003()
+        public void ExtensionsHeadingAutoIdentifiers_Example003()
         {
             // Example 3
             // Section: Extensions Heading Auto Identifiers
@@ -20189,7 +20189,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example004()
+        public void ExtensionsHeadingAutoIdentifiers_Example004()
         {
             // Example 4
             // Section: Extensions Heading Auto Identifiers
@@ -20209,7 +20209,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example005()
+        public void ExtensionsHeadingAutoIdentifiers_Example005()
         {
             // Example 5
             // Section: Extensions Heading Auto Identifiers
@@ -20231,7 +20231,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example006()
+        public void ExtensionsHeadingAutoIdentifiers_Example006()
         {
             // Example 6
             // Section: Extensions Heading Auto Identifiers
@@ -20251,7 +20251,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example007()
+        public void ExtensionsHeadingAutoIdentifiers_Example007()
         {
             // Example 7
             // Section: Extensions Heading Auto Identifiers
@@ -20274,7 +20274,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example008()
+        public void ExtensionsHeadingAutoIdentifiers_Example008()
         {
             // Example 8
             // Section: Extensions Heading Auto Identifiers
@@ -20296,7 +20296,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example009()
+        public void ExtensionsHeadingAutoIdentifiers_Example009()
         {
             // Example 9
             // Section: Extensions Heading Auto Identifiers
@@ -20318,7 +20318,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example010()
+        public void ExtensionsHeadingAutoIdentifiers_Example010()
         {
             // Example 10
             // Section: Extensions Heading Auto Identifiers
@@ -20369,7 +20369,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsTaskLists
     {
         [Test]
-        public void Example001()
+        public void ExtensionsTaskLists_Example001()
         {
             // Example 1
             // Section: Extensions TaskLists
@@ -20397,7 +20397,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsTaskLists
     {
         [Test]
-        public void Example002()
+        public void ExtensionsTaskLists_Example002()
         {
             // Example 2
             // Section: Extensions TaskLists
@@ -20423,7 +20423,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsMermaiddiagrams
     {
         [Test]
-        public void Example001()
+        public void ExtensionsMermaiddiagrams_Example001()
         {
             // Example 1
             // Section: Extensions Mermaid diagrams
@@ -20456,7 +20456,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsnomnomldiagrams
     {
         [Test]
-        public void Example002()
+        public void Extensionsnomnomldiagrams_Example002()
         {
             // Example 2
             // Section: Extensions nomnoml diagrams
@@ -20504,7 +20504,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsNoHTML
     {
         [Test]
-        public void Example001()
+        public void ExtensionsNoHTML_Example001()
         {
             // Example 1
             // Section: Extensions NoHTML
@@ -20524,7 +20524,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsNoHTML
     {
         [Test]
-        public void Example002()
+        public void ExtensionsNoHTML_Example002()
         {
             // Example 2
             // Section: Extensions NoHTML
@@ -20554,7 +20554,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example001()
+        public void ExtensionsYAMLfrontmatterdiscard_Example001()
         {
             // Example 1
             // Section: Extensions YAML frontmatter discard
@@ -20577,7 +20577,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example002()
+        public void ExtensionsYAMLfrontmatterdiscard_Example002()
         {
             // Example 2
             // Section: Extensions YAML frontmatter discard
@@ -20603,7 +20603,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example003()
+        public void ExtensionsYAMLfrontmatterdiscard_Example003()
         {
             // Example 3
             // Section: Extensions YAML frontmatter discard
@@ -20628,7 +20628,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example004()
+        public void ExtensionsYAMLfrontmatterdiscard_Example004()
         {
             // Example 4
             // Section: Extensions YAML frontmatter discard
@@ -20652,7 +20652,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example005()
+        public void ExtensionsYAMLfrontmatterdiscard_Example005()
         {
             // Example 5
             // Section: Extensions YAML frontmatter discard
@@ -20676,7 +20676,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example006()
+        public void ExtensionsYAMLfrontmatterdiscard_Example006()
         {
             // Example 6
             // Section: Extensions YAML frontmatter discard
@@ -20728,7 +20728,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example008()
+        public void ExtensionsYAMLfrontmatterdiscard_Example007()
         {
             // Example 8
             // Section: Extensions YAML frontmatter discard
@@ -20751,7 +20751,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example009()
+        public void ExtensionsYAMLfrontmatterdiscard_Example008()
         {
             // Example 9
             // Section: Extensions YAML frontmatter discard
@@ -20785,7 +20785,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example001()
+        public void ExtensionsAutoLinks_Example001()
         {
             // Example 1
             // Section: Extensions AutoLinks
@@ -20811,7 +20811,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example002()
+        public void ExtensionsAutoLinks_Example002()
         {
             // Example 2
             // Section: Extensions AutoLinks
@@ -20837,7 +20837,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example003()
+        public void ExtensionsAutoLinks_Example003()
         {
             // Example 3
             // Section: Extensions AutoLinks
@@ -20857,7 +20857,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example004()
+        public void ExtensionsAutoLinks_Example004()
         {
             // Example 4
             // Section: Extensions AutoLinks
@@ -20877,7 +20877,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example005()
+        public void ExtensionsAutoLinks_Example005()
         {
             // Example 5
             // Section: Extensions AutoLinks
@@ -20897,7 +20897,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example006()
+        public void ExtensionsAutoLinks_Example006()
         {
             // Example 6
             // Section: Extensions AutoLinks
@@ -20917,7 +20917,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinks
     {
         [Test]
-        public void Example007()
+        public void ExtensionsAutoLinks_Example007()
         {
             // Example 7
             // Section: Extensions AutoLinks
@@ -21106,7 +21106,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example001()
+        public void JiraLinks_Example001()
         {
             // Example 1
             // Section:  Jira Links
@@ -21125,7 +21125,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example002()
+        public void JiraLinks_Example002()
         {
             // Example 2
             // Section:  Jira Links
@@ -21144,7 +21144,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example003()
+        public void JiraLinks_Example003()
         {
             // Example 3
             // Section:  Jira Links
@@ -21164,7 +21164,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example004()
+        public void JiraLinks_Example004()
         {
             // Example 4
             // Section:  Jira Links
@@ -21183,7 +21183,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example005()
+        public void JiraLinks_Example005()
         {
             // Example 5
             // Section:  Jira Links
@@ -21202,7 +21202,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example006()
+        public void JiraLinks_Example006()
         {
             // Example 6
             // Section:  Jira Links
@@ -21222,7 +21222,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example007()
+        public void JiraLinks_Example007()
         {
             // Example 7
             // Section:  Jira Links
@@ -21241,7 +21241,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example008()
+        public void JiraLinks_Example008()
         {
             // Example 8
             // Section:  Jira Links
@@ -21260,7 +21260,7 @@ namespace Markdig.Tests
     public partial class TestJiraLinks
     {
         [Test]
-        public void Example009()
+        public void JiraLinks_Example009()
         {
             // Example 9
             // Section:  Jira Links
