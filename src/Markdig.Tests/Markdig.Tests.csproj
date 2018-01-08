@@ -98,10 +98,10 @@
     <None Include="Specs\EmphasisExtraSpecs.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Specs\Specs.tt">
+    <None Include="Specs\Specs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Specs.cs</LastGenOutput>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
