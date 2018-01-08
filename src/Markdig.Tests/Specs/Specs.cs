@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -19729,14 +19729,17 @@ namespace Markdig.Tests
             //     ![Video2](https://vimeo.com/8607834)
             //     
             //     ![Video3](https://sample.com/video.mp4)
+            //     
+            //     ![Audio4](https://music.yandex.ru/album/411845/track/4402274)
             //
             // Should be rendered as:
             //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen></iframe></p>
             //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen></iframe></p>
             //     <p><video width="500" height="281" controls><source type="video/mp4" src="https://sample.com/video.mp4"></source></video></p>
+            //     <p><iframe src="https://music.yandex.ru/iframe/#track/4402274/411845/" width="500" height="281" frameborder="0"></iframe></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Media links");
-			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)\n\n![Video3](https://sample.com/video.mp4)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><video width=\"500\" height=\"281\" controls><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>", "medialinks|advanced+medialinks");
+			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)\n\n![Video3](https://sample.com/video.mp4)\n\n![Audio4](https://music.yandex.ru/album/411845/track/4402274)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen></iframe></p>\n<p><video width=\"500\" height=\"281\" controls><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>", "medialinks|advanced+medialinks");
         }
     }
         // # Extensions

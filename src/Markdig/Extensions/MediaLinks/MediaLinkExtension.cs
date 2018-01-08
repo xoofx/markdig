@@ -116,32 +116,50 @@ namespace Markdig.Extensions.MediaLinks
         }
 
         #region Known providers
-        private static readonly Dictionary<string, Func<Uri, string>> KnownHosts = new Dictionary<string, Func<Uri, string>>()
+
+        private class KnownProvider
         {
-            {"www.youtube.com", YouTube},
-            {"vimeo.com", Vimeo },
+            public string HostPrefix { get; set; }
+            public Func<Uri, string> Delegate { get; set; }
+            public bool AllowFullScreen { get; set; } = true; //Should be false for audio embedding
+        }
+
+        private static readonly List<KnownProvider> KnownHosts = new List<KnownProvider>()
+        {
+            new KnownProvider {HostPrefix = "www.youtube.com", Delegate = YouTube},
+            new KnownProvider {HostPrefix = "vimeo.com", Delegate = Vimeo},
+            new KnownProvider {HostPrefix = "music.yandex.ru", Delegate = Yandex, AllowFullScreen = false},
         };
 
 
         private bool TryRenderIframeFromKnownProviders(Uri uri, HtmlRenderer renderer, LinkInline linkInline)
         {
-            var iFrameUrl = 
+            var foundProvider = 
                 KnownHosts
-                    .Where(pair => uri.Host.StartsWith(pair.Key, StringComparison.OrdinalIgnoreCase))  // when host is match
-                    .Select(pair => pair.Value(uri))                                                   // try to call delegate to get iframeUrl
-                    .FirstOrDefault(iframeSrc => iframeSrc != null);                                   // use first success
+                    .Where(pair => uri.Host.StartsWith(pair.HostPrefix, StringComparison.OrdinalIgnoreCase))  // when host is match
+                    .Select(provider =>
+                        new
+                        {
+                            provider.AllowFullScreen,
+                            Result = provider.Delegate(uri) // try to call delegate to get iframeUrl
+                        }
+                        )
+                    .FirstOrDefault(provider => provider.Result != null);                                   // use first success
 
-            if (iFrameUrl == null)
+            if (foundProvider == null)
             {
                 return false;
             }
 
             var htmlAttributes = GetHtmlAttributes(linkInline);
-            renderer.Write($"<iframe src=\"{iFrameUrl}\"");
+            renderer.Write($"<iframe src=\"{foundProvider.Result}\"");
             htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
             htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
-            htmlAttributes.AddPropertyIfNotExist("allowfullscreen", null);
+            if (foundProvider.AllowFullScreen)
+            {
+                htmlAttributes.AddPropertyIfNotExist("allowfullscreen", null);
+            }
             renderer.WriteAttributes(htmlAttributes);
             renderer.Write("></iframe>");
 
@@ -167,6 +185,26 @@ namespace Markdig.Extensions.MediaLinks
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
             return items.Length > 0 ? $"https://player.vimeo.com/video/{items[items.Length - 1]}" : null;
+        }
+
+        private static string Yandex(Uri uri)
+        {
+            var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
+            var albumKeyword
+                = items.Skip(0).FirstOrDefault();
+            var albumId
+                = items.Skip(1).FirstOrDefault();
+            var trackKeyword
+                = items.Skip(2).FirstOrDefault();
+            var trackId
+                = items.Skip(3).FirstOrDefault();
+
+            if (albumKeyword != "album" || albumId == null || trackKeyword != "track" || trackId == null)
+            {
+                return null;
+            }
+
+            return $"https://music.yandex.ru/iframe/#track/{trackId}/{albumId}/";
         }
         #endregion
     }
