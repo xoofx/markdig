@@ -74,6 +74,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="project.json" />
+    <None Include="Specs\DownloadCommonMarkSpec.md">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DownloadCommonMarkSpec.tt</DependentUpon>
+    </None>
     <None Include="Specs\JiraLinks.md" />
     <None Include="Specs\AutoLinks.md" />
     <None Include="Specs\AutoIdentifierSpecs.md" />
@@ -100,10 +105,10 @@
     <None Include="Specs\EmphasisExtraSpecs.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Specs\Specs.tt">
+    <None Include="Specs\Specs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Specs.cs</LastGenOutput>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -114,6 +119,12 @@
       <Project>{8a58a7e2-627c-4f41-933f-5ac92adfab48}</Project>
       <Name>Markdig</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Specs\DownloadCommonMarkSpec.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DownloadCommonMarkSpec.md</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

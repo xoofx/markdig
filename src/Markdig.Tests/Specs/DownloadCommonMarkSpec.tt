@@ -1,0 +1,22 @@
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".md" #>
+<#
+    var downloadFileName = "https://raw.githubusercontent.com/jgm/CommonMark/4ec06917c3a3632be4a935ffa0973092bd2621be/spec.txt";
+    var resultName = "DownloadCommonMarkSpec.md";
+    string content;
+
+    try {
+        var fileName = Host.ResolvePath(resultName);
+        content = File.ReadAllText(fileName);
+    }
+    catch {
+        using (var client = new System.Net.WebClient() { Encoding = Encoding.UTF8 })
+			content = client.DownloadString(downloadFileName);
+    }
+#>
+<#= content #>

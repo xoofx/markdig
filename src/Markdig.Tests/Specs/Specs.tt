@@ -39,7 +39,7 @@ SOFTWARE.
 <#@ output extension=".cs" encoding="utf-8"#>
 <#
     var specFiles = new KeyValuePair<string, string>[] {
-		new KeyValuePair<string, string>("https://raw.githubusercontent.com/jgm/CommonMark/4ec06917c3a3632be4a935ffa0973092bd2621be/spec.txt", string.Empty), // 0.28
+		new KeyValuePair<string, string>(Host.ResolvePath("DownloadCommonMarkSpec.md"), string.Empty), // 0.28
 		new KeyValuePair<string, string>(Host.ResolvePath("PipeTableSpecs.md"), "pipetables|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "attributes|advanced"),
@@ -73,6 +73,7 @@ using NUnit.Framework;
 namespace Markdig.Tests
 {
 <#
+
 foreach (var specFileItem in specFiles)
 {
 	var specFile = specFileItem.Key;
@@ -187,16 +188,7 @@ private IEnumerable<object> ReadSpecs(string fileName)
     var sectionSpecNumbers = new Dictionary<string, int>();
     var endOfTests = false;
 
-	string content;
-	if (fileName.StartsWith("http"))
-	{
-		using (var client = new System.Net.WebClient() { Encoding = Encoding.UTF8 })
-			content = client.DownloadString(fileName);
-	}
-	else
-	{
-		content = File.ReadAllText(fileName);
-	}
+	string content = File.ReadAllText(fileName);
 
     using (var reader = new StringReader(content))
     {
