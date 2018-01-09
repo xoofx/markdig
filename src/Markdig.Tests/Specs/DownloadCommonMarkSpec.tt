@@ -5,7 +5,6 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".md" #>
-
 <#
     var downloadFileName = "https://raw.githubusercontent.com/jgm/CommonMark/4ec06917c3a3632be4a935ffa0973092bd2621be/spec.txt";
     var resultName = "DownloadCommonMarkSpec.md";
@@ -20,5 +19,4 @@
 			content = client.DownloadString(downloadFileName);
     }
 #>
-XXXX
 <#= content #>
