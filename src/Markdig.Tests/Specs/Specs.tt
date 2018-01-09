@@ -149,7 +149,7 @@ private class Spec
 
     public string Name
     {
-        get { return string.Format("Example{0:000}", Example); }
+        get { return string.Format("{0}_Example{1:000}", SecHeadingCompact, Example); }
     }
 }
 
