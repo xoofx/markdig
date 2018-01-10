@@ -160,6 +160,9 @@ namespace Markdig.Extensions.AutoLinks
                 IsClosed = true,
                 IsAutoLink = true,
             };
+
+            var skipFromBeginning = c == 'm' ? 7 : 0; // For mailto: skip "mailto:" for content
+
             inline.Span.End = inline.Span.Start + link.Length - 1;
             inline.UrlSpan = inline.Span;
             inline.AppendChild(new LiteralInline()
@@ -167,7 +170,7 @@ namespace Markdig.Extensions.AutoLinks
                 Span = inline.Span,
                 Line = line,
                 Column = column,
-                Content = new StringSlice(slice.Text, startPosition, startPosition + link.Length - 1),
+                Content = new StringSlice(slice.Text, startPosition + skipFromBeginning, startPosition + link.Length - 1),
                 IsClosed = true
             });
             processor.Inline = inline;

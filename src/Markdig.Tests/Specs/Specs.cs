@@ -20340,7 +20340,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsHeadingAutoIdentifiers
     {
         [Test]
-        public void Example011()
+        public void ExtensionsHeadingAutoIdentifiers_Example011()
         {
             // Example 11
             // Section: Extensions Heading Auto Identifiers
@@ -20702,7 +20702,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void Example007()
+        public void ExtensionsYAMLfrontmatterdiscard_Example007()
         {
             // Example 7
             // Section: Extensions YAML frontmatter discard
@@ -20728,7 +20728,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void ExtensionsYAMLfrontmatterdiscard_Example007()
+        public void ExtensionsYAMLfrontmatterdiscard_Example008()
         {
             // Example 8
             // Section: Extensions YAML frontmatter discard
@@ -20751,7 +20751,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsYAMLfrontmatterdiscard
     {
         [Test]
-        public void ExtensionsYAMLfrontmatterdiscard_Example008()
+        public void ExtensionsYAMLfrontmatterdiscard_Example009()
         {
             // Example 9
             // Section: Extensions YAML frontmatter discard
@@ -20799,11 +20799,11 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <p>This is a <a href="http://www.google.com">http://www.google.com</a> URL and <a href="https://www.google.com">https://www.google.com</a>
             //     This is a <a href="ftp://test.com">ftp://test.com</a>
-            //     And a <a href="mailto:email@toto.com">mailto:email@toto.com</a>
+            //     And a <a href="mailto:email@toto.com">email@toto.com</a>
             //     And a plain <a href="http://www.google.com">www.google.com</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions AutoLinks");
-			TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">mailto:email@toto.com</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
+			TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">email@toto.com</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
         }
     }
         // But incomplete links will not be matched:
@@ -20939,7 +20939,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example008()
+        public void ExtensionsAutoLinksGFMSupport_Example008()
         {
             // Example 8
             // Section: Extensions AutoLinks GFM Support
@@ -20958,7 +20958,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example009()
+        public void ExtensionsAutoLinksGFMSupport_Example009()
         {
             // Example 9
             // Section: Extensions AutoLinks GFM Support
@@ -20977,7 +20977,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example010()
+        public void ExtensionsAutoLinksGFMSupport_Example010()
         {
             // Example 10
             // Section: Extensions AutoLinks GFM Support
@@ -20999,7 +20999,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example011()
+        public void ExtensionsAutoLinksGFMSupport_Example011()
         {
             // Example 11
             // Section: Extensions AutoLinks GFM Support
@@ -21021,7 +21021,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example012()
+        public void ExtensionsAutoLinksGFMSupport_Example012()
         {
             // Example 12
             // Section: Extensions AutoLinks GFM Support
@@ -21043,7 +21043,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example013()
+        public void ExtensionsAutoLinksGFMSupport_Example013()
         {
             // Example 13
             // Section: Extensions AutoLinks GFM Support
@@ -21062,7 +21062,7 @@ namespace Markdig.Tests
     public partial class TestExtensionsAutoLinksGFMSupport
     {
         [Test]
-        public void Example014()
+        public void ExtensionsAutoLinksGFMSupport_Example014()
         {
             // Example 14
             // Section: Extensions AutoLinks GFM Support

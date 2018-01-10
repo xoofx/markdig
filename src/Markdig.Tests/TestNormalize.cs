@@ -426,7 +426,7 @@ This is a last line";
             AssertNormalizeNoTrim("Hello from http://example.com/foo", "Hello from [http://example.com/foo](http://example.com/foo)", new NormalizeOptions() { ExpandAutoLinks = true, });
             AssertNormalizeNoTrim("Hello from www.example.com/foo", "Hello from [www.example.com/foo](http://www.example.com/foo)", new NormalizeOptions() { ExpandAutoLinks = true, });
             AssertNormalizeNoTrim("Hello from ftp://example.com", "Hello from [ftp://example.com](ftp://example.com)", new NormalizeOptions() { ExpandAutoLinks = true, });
-            AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from [mailto:hello@example.com](mailto:hello@example.com)", new NormalizeOptions() { ExpandAutoLinks = true, });
+            AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from [hello@example.com](mailto:hello@example.com)", new NormalizeOptions() { ExpandAutoLinks = true, });
 
             AssertNormalizeNoTrim("Hello from http://example.com/foo", "Hello from http://example.com/foo", new NormalizeOptions() { ExpandAutoLinks = false, });
             AssertNormalizeNoTrim("Hello from www.example.com/foo", "Hello from http://www.example.com/foo", new NormalizeOptions() { ExpandAutoLinks = false, });
