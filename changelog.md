@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.14.9 (15 Jan 2018)
+- AutoLinkParser should to remove mailto: in outputted text ([(PR #195)](https://github.com/lunet-io/markdig/pull/195))
+- Add support for `music.yandex.ru` and `ok.ru` for MediaLinks extension ([(PR #193)](https://github.com/lunet-io/markdig/pull/193))
 ## 0.14.8 (05 Dec 2017)
 - Fix potential StackOverflow exception when processing deep nested `|` delimiters (#179)
 ## 0.14.7 (25 Nov 2017)
