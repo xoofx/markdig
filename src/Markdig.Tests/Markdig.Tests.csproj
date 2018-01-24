@@ -65,6 +65,7 @@
     <Compile Include="TestOrderedList.cs" />
     <Compile Include="TestPlainText.cs" />
     <Compile Include="TestPragmaLines.cs" />
+    <Compile Include="TestLinkRewriter.cs" />
     <Compile Include="TestRelativeUrlReplacement.cs" />
     <Compile Include="TestSourcePosition.cs" />
     <Compile Include="TestStringSliceList.cs" />

@@ -81,6 +81,11 @@ namespace Markdig.Renderers
         public Uri BaseUrl { get; set; }
 
         /// <summary>
+        /// Allows links to be rewritten
+        /// </summary>
+        public Func<string,string> LinkRewriter { get; set; }
+
+        /// <summary>
         /// Writes the content escaped for HTML.
         /// </summary>
         /// <param name="content">The content.</param>
@@ -200,6 +205,11 @@ namespace Markdig.Renderers
             if (BaseUrl != null && !Uri.TryCreate(content, UriKind.Absolute, out Uri _))
             {
                 content = new Uri(BaseUrl, content).AbsoluteUri;
+            }
+
+            if (LinkRewriter != null)
+            {
+                content = LinkRewriter(content);
             }
 
             int previousPosition = 0;
