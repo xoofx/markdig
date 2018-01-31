@@ -16,6 +16,7 @@ namespace Markdig.Extensions.MediaLinks
         {
             Width = "500";
             Height = "281";
+            Class = "";
             ExtensionToMimeType = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 {".3gp", "video/3gpp"},
@@ -86,6 +87,8 @@ namespace Markdig.Extensions.MediaLinks
         public string Width { get; set; }
 
         public string Height { get; set; }
+
+        public string Class { get; set; }
 
         public Dictionary<string, string> ExtensionToMimeType { get; }
     }
