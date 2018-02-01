@@ -154,8 +154,16 @@ namespace Markdig.Extensions.MediaLinks
 
             var htmlAttributes = GetHtmlAttributes(linkInline);
             renderer.Write($"<iframe src=\"{foundProvider.Result}\"");
-            htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
-            htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
+
+            if(!string.IsNullOrEmpty(Options.Width))
+                htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
+
+            if (!string.IsNullOrEmpty(Options.Height))
+                htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
+
+            if (!string.IsNullOrEmpty(Options.Class))
+                htmlAttributes.AddPropertyIfNotExist("class", Options.Class);
+
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)
             {
