@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Markdig.Extensions.AutoIdentifiers;
 
 namespace Markdig.WebApp
 {
@@ -20,20 +21,12 @@ namespace Markdig.WebApp
         {
             try
             {
-                if (text == null)
-                {
-                    text = string.Empty;
-                }
+                string mdText = System.IO.File.ReadAllText("C:\\Learning\\DocWorks\\documentationmanual\\documentation\\content\\md\\codeTest.md");
+                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+                pipeline.Extensions.Remove(pipeline.Extensions.Find<AutoIdentifierExtension>());
+                var htmlString = Markdig.Markdown.ToHtml(mdText, pipeline.Build());
 
-                if (text.Length > 1000)
-                {
-                    text = text.Substring(0, 1000);
-                }
-
-                var pipeline = new MarkdownPipelineBuilder().Configure(extension).Build();
-                var result = Markdown.ToHtml(text, pipeline);
-
-                return new {name = "markdig", html = result, version = Markdown.Version};
+                return new { name = "markdig", html = htmlString, version = Markdown.Version };
             }
             catch (Exception ex)
             {
