@@ -12,7 +12,7 @@ Allows to automatically creates an identifier for a heading:
 <h1 id="this-is-a-heading">This is a heading</h1>
 ````````````````````````````````
 
-Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
+Only punctuation `-`, `_` and `.` is kept, all other non letter characters are discarded.
 Consecutive same character `-`, `_` or `.` are rendered into a single one
 Characters `-`, `_` and `.` at the end of the string are also discarded.
 
