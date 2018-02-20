@@ -29,6 +29,7 @@ using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
+using Markdig.Extensions.TextRenderer;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
@@ -586,6 +587,18 @@ namespace Markdig
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
             }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Configures the string to be used for line-endings, when writing.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="newLine">The string to be used for line-endings.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder ConfigureNewLine(this MarkdownPipelineBuilder pipeline, string newLine)
+        {
+            pipeline.Use(new ConfigureNewLineExtension(newLine));
             return pipeline;
         }
     }
