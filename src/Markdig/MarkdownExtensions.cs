@@ -52,6 +52,19 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Adds the specified extension instance to the extensions collection.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="extension">The instance of the extension to be added.</param>
+        /// <typeparam name="TExtension">The type of the extension.</typeparam>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder Use<TExtension>(this MarkdownPipelineBuilder pipeline, TExtension extension) where TExtension : class, IMarkdownExtension
+        {
+            pipeline.Extensions.AddIfNotAlready(extension);
+            return pipeline;
+        }
+
+        /// <summary>
         /// Uses all extensions except the BootStrap, Emoji, SmartyPants and soft line as hard line breaks extensions.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
