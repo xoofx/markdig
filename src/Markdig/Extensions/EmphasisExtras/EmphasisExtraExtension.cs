@@ -16,6 +16,11 @@ namespace Markdig.Extensions.EmphasisExtras
     public class EmphasisExtraExtension : IMarkdownExtension
     {
         /// <summary>
+        /// Initializes a new instance with <see cref="EmphasisExtraOptions.Default"/>.
+        /// </summary>
+        public EmphasisExtraExtension() : this(EmphasisExtraOptions.Default) { }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisExtraExtension"/> class.
         /// </summary>
         /// <param name="options">The options.</param>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -541,7 +541,7 @@ literal      ( 2, 3) 11-12
 paragraph    ( 0, 0)  0-9
 attributes   ( 0, 4)  4-9
 literal      ( 0, 0)  0-3
-", "attributes");
+", "genericattributes");
         }
 
         [Test]
@@ -552,7 +552,7 @@ literal      ( 0, 0)  0-3
 heading      ( 0, 0)  0-4
 attributes   ( 0, 5)  5-10
 literal      ( 0, 2)  2-3
-", "attributes");
+", "genericattributes");
         }
 
         [Test]
@@ -566,7 +566,7 @@ linebreak    ( 0, 1)  1-1
 literal      ( 1, 0)  2-5
 math         ( 1, 4)  6-11
 attributes   ( 0, 0)  0--1
-", "mathematics");
+", "math");
         }
 
         [Test]

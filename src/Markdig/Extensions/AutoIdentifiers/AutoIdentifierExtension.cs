@@ -26,6 +26,12 @@ namespace Markdig.Extensions.AutoIdentifiers
         private readonly AutoIdentifierOptions options;
 
         /// <summary>
+        /// Initializes a new instance with <see cref="AutoIdentifierOptions.Default"/>.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        public AutoIdentifierExtension() : this(AutoIdentifierOptions.Default) { }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AutoIdentifierExtension"/> class.
         /// </summary>
         /// <param name="options">The options.</param>

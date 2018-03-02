@@ -16,9 +16,9 @@ namespace Markdig.Extensions.JiraLinks
     {
         private readonly JiraLinkOptions _options;
 
-        public JiraLinkExtension(JiraLinkOptions options)
+        public JiraLinkExtension(JiraLinkOptions options = null)
         {
-            _options = options;
+            _options = options ?? new JiraLinkOptions("https://jira.atlassian.com");
         }
 
         public void Setup(MarkdownPipelineBuilder pipeline)

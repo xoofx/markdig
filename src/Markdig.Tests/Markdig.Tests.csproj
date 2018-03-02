@@ -61,6 +61,7 @@
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
     <Compile Include="TestLinkHelper.cs" />
+    <Compile Include="TestMarkdownExtensions.cs" />
     <Compile Include="TestNormalize.cs" />
     <Compile Include="TestOrderedList.cs" />
     <Compile Include="TestPlainText.cs" />
