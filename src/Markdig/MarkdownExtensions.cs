@@ -32,6 +32,9 @@ using Markdig.Extensions.TaskLists;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace Markdig
 {
@@ -91,7 +94,7 @@ namespace Markdig
                 .UseAutoLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
-        
+
         /// <summary>
         /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
         /// </summary>
@@ -450,7 +453,7 @@ namespace Markdig
         /// <param name="pipeline">The pipeline</param>
         /// <param name="options">Set of required options</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseJiraLinks(this MarkdownPipelineBuilder pipeline, JiraLinkOptions options)
+        public static MarkdownPipelineBuilder UseJiraLinks(this MarkdownPipelineBuilder pipeline, JiraLinkOptions options = null)
         {
             if (!pipeline.Extensions.Contains<JiraLinkExtension>())
             {
@@ -488,105 +491,104 @@ namespace Markdig
         /// <returns>The modified pipeline</returns>
         public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string extensions)
         {
-            if (extensions == null)
+            if (extensions == null || extensions == "")
             {
                 return pipeline;
             }
 
-            // TODO: the extension string should come from the extension itself instead of this hardcoded switch case.
-
-            foreach (var extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
+            //Get all implementing IMarkdownExtensions
+#if NETSTANDARD_11
+            var markdownExtensionTypes = typeof(IMarkdownExtension).GetTypeInfo().Assembly.DefinedTypes
+                .Where(x => x.ImplementedInterfaces.Contains(typeof(IMarkdownExtension)) && !x.IsInterface && !x.IsAbstract)
+                .Select(x => x.GetType());
+#elif PORTABLE_40
+            var markdownExtensionTypes = typeof(IMarkdownExtension).Assembly.GetTypes()
+                .Where(x => typeof(IMarkdownExtension).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract);
+#else
+            var markdownExtensionTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => typeof(IMarkdownExtension).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract);
+#endif
+            //Create a map to easier get the Type to string
+            Dictionary<string, Type> markdownExtensions = markdownExtensionTypes.ToDictionary(type => GetExtensionName(type), type => type);
+            //General null-parameter array for constructors
+            object[] parameters = new object[] { null };
+            //Iterate the given string for matching installed extensions
+            foreach (string extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                switch (extension.ToLowerInvariant())
+                //Special case for "Advanced" extensions as it is no distinct extension class
+                if (extension == "advanced")
                 {
-                    case "common":
-                        break;
-                    case "advanced":
-                        pipeline.UseAdvancedExtensions();
-                        break;
-                    case "pipetables":
-                        pipeline.UsePipeTables();
-                        break;
-                    case "emphasisextras":
-                        pipeline.UseEmphasisExtras();
-                        break;
-                    case "listextras":
-                        pipeline.UseListExtras();
-                        break;
-                    case "hardlinebreak":
-                        pipeline.UseSoftlineBreakAsHardlineBreak();
-                        break;
-                    case "footnotes":
-                        pipeline.UseFootnotes();
-                        break;
-                    case "footers":
-                        pipeline.UseFooters();
-                        break;
-                    case "citations":
-                        pipeline.UseCitations();
-                        break;
-                    case "attributes":
-                        pipeline.UseGenericAttributes();
-                        break;
-                    case "gridtables":
-                        pipeline.UseGridTables();
-                        break;
-                    case "abbreviations":
-                        pipeline.UseAbbreviations();
-                        break;
-                    case "emojis":
-                        pipeline.UseEmojiAndSmiley();
-                        break;
-                    case "definitionlists":
-                        pipeline.UseDefinitionLists();
-                        break;
-                    case "customcontainers":
-                        pipeline.UseCustomContainers();
-                        break;
-                    case "figures":
-                        pipeline.UseFigures();
-                        break;
-                    case "mathematics":
-                        pipeline.UseMathematics();
-                        break;
-                    case "bootstrap":
-                        pipeline.UseBootstrap();
-                        break;
-                    case "medialinks":
-                        pipeline.UseMediaLinks();
-                        break;
-                    case "smartypants":
-                        pipeline.UseSmartyPants();
-                        break;
-                    case "autoidentifiers":
-                        pipeline.UseAutoIdentifiers();
-                        break;
-                    case "tasklists":
-                        pipeline.UseTaskLists();
-                        break;
-                    case "diagrams":
-                        pipeline.UseDiagrams();
-                        break;
-                    case "nofollowlinks":
-                        pipeline.UseNoFollowLinks();
-                        break;
-                    case "nohtml":
-                        pipeline.DisableHtml();
-                        break;
-                    case "yaml":
-                        pipeline.UseYamlFrontMatter();
-                        break;
-                    case "nonascii-noescape":
-                        pipeline.UseNonAsciiNoEscape();
-                        break;
-                    case "autolinks":
-                        pipeline.UseAutoLinks();
-                        break;
-                    default:
-                        throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
+                    pipeline.UseAdvancedExtensions();
+                }
+                else if (markdownExtensions.ContainsKey(extension.ToLowerInvariant()))
+                {
+                    Type markdownExtensionType = markdownExtensions[extension.ToLowerInvariant()];
+                    IMarkdownExtension instance = null;
+                    //Try to instanciate the extension by try/catch because of much missing reflection methods in netstandard1.1
+                    try
+                    {
+                        instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtensionType);
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtensionType, parameters);
+                        }
+                        catch { /* SelfPipeline is special and does not need to be captured in the Configure method */ }
+                    }
+
+#if NETSTANDARD_11
+                    MethodInfo[] methods = pipeline.Extensions.GetType().GetRuntimeMethods().ToArray();
+#else
+                    MethodInfo[] methods = pipeline.Extensions.GetType().GetMethods();
+#endif
+                    //A little generic magic as the OrderedList needs the TypeClass for its Contains() check, therefore not casting to IMarkdownExtension
+                    methods.Single(m => m.Name == "AddIfNotAlready" && m.GetParameters().Count() == 1)
+                        .MakeGenericMethod(new Type[] { markdownExtensionType })
+                        .Invoke(pipeline.Extensions, new object[] { instance });
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
             }
             return pipeline;
+        }
+
+        /// <summary>
+        /// Converts a given list of extension types and passes these to the original configuration method
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <param name="pipeline"></param>
+        /// <param name="extensionTypes"></param>
+        /// <returns></returns>
+        public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, params Type[] extensionTypes)
+        {
+            return pipeline.Configure(String.Join("+", extensionTypes.Select(extensionType => GetExtensionName(extensionType)).ToArray()));
+        }
+
+        /// <summary>
+        /// Return the given extension class name as shortened, lowercase abbreviation to use with
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <typeparam name="TExtension"></typeparam>
+        /// <returns></returns>
+        public static string GetExtensionName<TExtension>() where TExtension : IMarkdownExtension
+        {
+            return typeof(TExtension).Name.Replace("Extension", "").ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Return the given class name as shortened, lowercase abbreviation to use with
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <param name="extensionType"></param>
+        /// <returns></returns>
+        public static string GetExtensionName(Type extensionType)
+        {
+            return extensionType.Name.Replace("Extension", "").ToLowerInvariant();
         }
     }
 }
