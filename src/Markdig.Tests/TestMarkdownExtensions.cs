@@ -22,17 +22,19 @@ namespace Markdig.Tests
         [Test(Description = "Testing for dynamic extension configuration")]
         public void TestConfigure()
         {
-            MarkdownPipelineBuilder builder = new MarkdownPipelineBuilder().Configure("autolink+gridtable+pipetable");
+            MarkdownPipelineBuilder builder = new MarkdownPipelineBuilder().Configure("emphasisextras+gridtable+pipetable");
             Assert.AreEqual(3, builder.Extensions.Count());
             Assert.IsInstanceOf(typeof(GridTableExtension), builder.Extensions[1]);
 
-            builder = new MarkdownPipelineBuilder().Configure("advanced+emoji");
+            builder = new MarkdownPipelineBuilder().Configure("advanced+emojis");
             Assert.AreEqual(19, builder.Extensions.Count());
             Assert.That(builder.Extensions.Any(extension => extension.GetType() == typeof(EmojiExtension)));
 
             builder = new MarkdownPipelineBuilder().Configure(typeof(GridTableExtension), typeof(PipeTableExtension));
             Assert.AreEqual(2, builder.Extensions.Count());
             Assert.That(builder.Extensions.Any(extension => extension.GetType() == typeof(GridTableExtension)));
+
+            Assert.Throws<ArgumentException>(delegate { new MarkdownPipelineBuilder().Configure("xyz+123"); });
         }
 
         /// <summary>
