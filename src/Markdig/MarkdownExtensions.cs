@@ -511,93 +511,94 @@ namespace Markdig
 #endif
             //Create a map to easier get the Type to string
             Dictionary<string, Type> markdownExtensions = markdownExtensionTypes.ToDictionary(type => GetExtensionName(type), type => type);
-            //General null-parameter array for constructors
-            object[] parameters = new object[] { null };
+
+            //A little generic magic as the OrderedList needs the TypeClass for its Contains() check, therefore not casting to IMarkdownExtension
+            MethodInfo methodAddIfNotAlready = pipeline.Extensions.GetType()
+#if NETSTANDARD_11
+                .GetRuntimeMethods().ToArray()
+#else
+                .GetMethods()
+#endif            
+                .Single(m => m.Name == "AddIfNotAlready" && m.GetParameters().Count() == 1);
+
             //Iterate the given string for matching installed extensions
             foreach (string extension in extensions.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                //Special case for "Advanced" extensions as it is no distinct extension class
-                if (extension == "advanced")
+                switch (extension.ToLowerInvariant())
                 {
-                    pipeline.UseAdvancedExtensions();
-                }
-                else if (extension == "nohtml")
-                {
-                    pipeline.DisableHtml();
-                }
-                else
-                {
-                    //Check for class names without and with additional 's' as some names were labeled as such
-                    Type markdownExtensionType = markdownExtensions.FirstOrDefault(markdownExtension => markdownExtension.Key == extension.ToLowerInvariant() || markdownExtension.Key + "s" == extension.ToLowerInvariant()).Value;
-                    if (markdownExtensionType != null)
-                    {
-                        IMarkdownExtension instance = null;
-                        //Try to instanciate the extension by try/catch because of much missing reflection methods in netstandard1.1
-                        try
+                    //Special case for "Advanced" extensions as it is no distinct extension class
+                    case "advanced":
+                        pipeline.UseAdvancedExtensions();
+                        break;
+                    //Special case for "DisableHTML" as it is no distinct extension class
+                    case "nohtml":
+                        pipeline.DisableHtml();
+                        break;
+                    default:
+                        //Check for class names without and with additional 's' as some names were labeled as such
+                        Type markdownExtension = markdownExtensions.FirstOrDefault(x => x.Key.ToLowerInvariant() == extension.ToLowerInvariant() || x.Key.ToLowerInvariant() + "s" == extension.ToLowerInvariant()).Value;
+                        if (markdownExtension != null)
                         {
-                            instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtensionType);
-                        }
-                        catch
-                        {
+                            IMarkdownExtension instance = null;
+                            //Works best for parameterless constructor extensions (should become standard)
                             try
                             {
-                                instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtensionType, parameters);
+                                instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtension);
                             }
-                            catch { /* SelfPipeline is special and does not need to be captured in the Configure method */ }
+                            catch
+                            {
+                                try
+                                {
+                                    //Try with an empty constructor (works only for non-specific constructors with objects, not simple types e.g. bool <- create parameterless constructor)
+                                    instance = (IMarkdownExtension)Activator.CreateInstance(markdownExtension, new object[] { null });
+                                } catch { /* Special cases such SelfPipeline are not handled inside this method */ }
+                            }
+                            //Add to the extensions
+                            methodAddIfNotAlready.MakeGenericMethod(new Type[] { markdownExtension }).Invoke(pipeline.Extensions, new object[] { instance });
                         }
-
-#if NETSTANDARD_11
-                        MethodInfo[] methods = pipeline.Extensions.GetType().GetRuntimeMethods().ToArray();
-#else
-                        MethodInfo[] methods = pipeline.Extensions.GetType().GetMethods();
-#endif
-                        //A little generic magic as the OrderedList needs the TypeClass for its Contains() check, therefore not casting to IMarkdownExtension
-                        methods.Single(m => m.Name == "AddIfNotAlready" && m.GetParameters().Count() == 1)
-                            .MakeGenericMethod(new Type[] { markdownExtensionType })
-                            .Invoke(pipeline.Extensions, new object[] { instance });
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
-                    }
+                        else
+                        {
+                            throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
+                        }
+                        break;
                 }
 
-                }
-                return pipeline;
             }
+            return pipeline;
+        }
 
-            /// <summary>
-            /// Converts a given list of extension types and passes these to the original configuration method
-            /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
-            /// </summary>
-            /// <param name="pipeline"></param>
-            /// <param name="extensionTypes"></param>
-            /// <returns></returns>
-            public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, params Type[] extensionTypes)
-            {
-                return pipeline.Configure(String.Join("+", extensionTypes.Select(extensionType => GetExtensionName(extensionType)).ToArray()));
-            }
+        /// <summary>
+        /// Converts a given list of extension types and passes these to the original configuration method
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <param name="pipeline"></param>
+        /// <param name="extensionTypes"></param>
+        /// <returns></returns>
+        public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, params Type[] extensionTypes)
+        {
+            return pipeline.Configure(String.Join("+", extensionTypes.Select(extensionType => GetExtensionName(extensionType)).ToArray()));
+        }
 
-            /// <summary>
-            /// Return the given extension class name as shortened, lowercase abbreviation to use with
-            /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
-            /// </summary>
-            /// <typeparam name="TExtension"></typeparam>
-            /// <returns></returns>
-            public static string GetExtensionName<TExtension>() where TExtension : IMarkdownExtension
-            {
-                return typeof(TExtension).Name.Replace("Extension", "").ToLowerInvariant();
-            }
+        /// <summary>
+        /// Return the given extension class name as shortened, lowercase abbreviation to use with
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <typeparam name="TExtension"></typeparam>
+        /// <returns></returns>
+        public static string GetExtensionName<TExtension>() where TExtension : IMarkdownExtension
+        {
+            return typeof(TExtension).Name.Replace("Extension", "");
+        }
 
-            /// <summary>
-            /// Return the given class name as shortened, lowercase abbreviation to use with
-            /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
-            /// </summary>
-            /// <param name="extensionType"></param>
-            /// <returns></returns>
-            public static string GetExtensionName(Type extensionType)
-            {
-                return extensionType.Name.Replace("Extension", "").ToLowerInvariant();
-            }
+        /// <summary>
+        /// Return the given class name as shortened, lowercase abbreviation to use with
+        /// <see cref="Configure(MarkdownPipelineBuilder, string)"/>
+        /// </summary>
+        /// <param name="extensionType"></param>
+        /// <returns></returns>
+        public static string GetExtensionName(Type extensionType)
+        {
+            return extensionType.Name.Replace("Extension", "");
         }
     }
+}

@@ -12,6 +12,8 @@ namespace Markdig.Extensions.Emoji
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class EmojiExtension : IMarkdownExtension
     {
+        public EmojiExtension() : this(true) { }
+
         public EmojiExtension(bool enableSmiley = true)
         {
             EnableSmiley = enableSmiley;

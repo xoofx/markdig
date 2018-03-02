@@ -44,7 +44,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("FootnotesSpecs.md"), "footnotes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GenericAttributesSpecs.md"), "genericattributes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("EmphasisExtraSpecs.md"), "emphasisextras|advanced"),
-		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "hardlinebreak|advanced+hardlinebreak"),
+		new KeyValuePair<string, string>(Host.ResolvePath("HardlineBreakSpecs.md"), "softlinebreakashardline|advanced+softlinebreakashardline"),
 		new KeyValuePair<string, string>(Host.ResolvePath("GridTableSpecs.md"), "gridtables|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("CustomContainerSpecs.md"), "customcontainers+genericattributes|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("DefinitionListSpecs.md"), "definitionlists+genericattributes|advanced"),

@@ -43,11 +43,11 @@ namespace Markdig.Tests
         [Test(Description = "Test the extension name resolver")]
         public void TestGetExtensionName()
         {
-            Assert.AreEqual("emoji", MarkdownExtensions.GetExtensionName<EmojiExtension>());
-            Assert.AreEqual("pipetable", MarkdownExtensions.GetExtensionName<PipeTableExtension>());
+            Assert.AreEqual("Emoji", MarkdownExtensions.GetExtensionName<EmojiExtension>());
+            Assert.AreEqual("PipeTable", MarkdownExtensions.GetExtensionName<PipeTableExtension>());
 
-            Assert.AreEqual("emoji", MarkdownExtensions.GetExtensionName(typeof(EmojiExtension)));
-            Assert.AreEqual("pipetable", MarkdownExtensions.GetExtensionName(typeof(PipeTableExtension)));
+            Assert.AreEqual("Emoji", MarkdownExtensions.GetExtensionName(typeof(EmojiExtension)));
+            Assert.AreEqual("PipeTable", MarkdownExtensions.GetExtensionName(typeof(PipeTableExtension)));
         }
 
         /// <summary>
