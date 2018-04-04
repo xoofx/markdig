@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0 (4 Apr 2018)
+- Add `ConfigureNewLine` extension method to `MarkdownPipelineBuilder` ([(PR #214)](https://github.com/lunet-io/markdig/pull/214))
+- Add alternative `Use` extension method to `MarkdownPipelineBuilder` that receives an object instance ([(PR #213)](https://github.com/lunet-io/markdig/pull/213))
+- Added class attribute to media link extension ([(PR #203)](https://github.com/lunet-io/markdig/pull/203))
+- Optional link rewriter func for HtmlRenderer #143 ([(PR #201)](https://github.com/lunet-io/markdig/pull/201))
+- Upgrade NUnit3TestAdapter from 3.2 to 3.9 to address Resharper test runner problems ([(PR #199)](https://github.com/lunet-io/markdig/pull/199))
+- HTML renderer supports converting relative URLs on links and images to absolute #143 ([(PR #197)](https://github.com/lunet-io/markdig/pull/197))
+
 ## 0.14.9 (15 Jan 2018)
 - AutoLinkParser should to remove mailto: in outputted text ([(PR #195)](https://github.com/lunet-io/markdig/pull/195))
 - Add support for `music.yandex.ru` and `ok.ru` for MediaLinks extension ([(PR #193)](https://github.com/lunet-io/markdig/pull/193))
