@@ -52,6 +52,12 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**JIRA links**](src/Markdig.Tests/Specs/JiraLinks.md) to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
+### Third Party Extensions
+
+- [**WPF/XAML Markdown Renderer**: `markdig.wpf`](https://github.com/Kryptos-FR/markdig.wpf)
+- [**Syntax highlighting**: `Markdig.SyntaxHighlighting`](https://github.com/RichardSlater/Markdig.SyntaxHighlighting)
+- [**Embedded C# scripting**: `Markdig.Extensions.ScriptCs`](https://github.com/macaba/Markdig.Extensions.ScriptCs)
+
 ## Documentation
 
 > The repository is under construction. There will be a dedicated website and proper documentation at some point!
