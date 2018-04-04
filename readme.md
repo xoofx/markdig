@@ -50,6 +50,9 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**Diagrams**](src/Markdig.Tests/Specs/DiagramsSpecs.md) extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports [`mermaid`](https://knsv.github.io/mermaid/) and [`nomnoml`](https://github.com/skanaar/nomnoml) diagrams)
   - [**YAML frontmatter**](src/Markdig.Tests/Specs/YamlSpecs.md) to parse without evaluating the frontmatter and to discard it from the HTML output (typically used for previewing without the frontmatter in MarkdownEditor)
   - [**JIRA links**](src/Markdig.Tests/Specs/JiraLinks.md) to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
+- Third party extensions
+  - [**Syntax highlighting**](https://github.com/RichardSlater/Markdig.SyntaxHighlighting)
+  - [**Embedded C# scripting**](https://github.com/macaba/Markdig.Extensions.ScriptCs)
 - Compatible with .NET 3.5, 4.0+ and .NET Core (`netstandard1.1+`)
 	
 ### Third Party Extensions
