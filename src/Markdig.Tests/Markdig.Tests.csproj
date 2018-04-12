@@ -57,6 +57,7 @@
       <DependentUpon>Specs.tt</DependentUpon>
     </Compile>
     <Compile Include="Specs\TestEmphasisPlus.cs" />
+    <Compile Include="TestConfigureNewLine.cs" />
     <Compile Include="TestHtmlAttributes.cs" />
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
