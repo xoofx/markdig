@@ -13,5 +13,14 @@ namespace Markdig.Tests
             var actual = Markdown.ToPlainText(markdownText);
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void TestPlain2()
+        {
+            var markdownText = "*Hello*,\r\n [world](http://example.com)!";
+            var expected = "Hello,\n world!";
+            var actual = Markdown.ToPlainText(markdownText);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
