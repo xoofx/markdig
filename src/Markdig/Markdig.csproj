@@ -51,6 +51,10 @@
     <DefineConstants>$(DefineConstants);NETSTANDARD_11;SUPPORT_UNSAFE</DefineConstants>
   </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);SUPPORT_FIXED_STRING;SUPPORT_UNSAFE</DefineConstants>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">10.0.10240.0</TargetPlatformVersion>
