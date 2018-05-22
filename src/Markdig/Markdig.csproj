@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
@@ -51,7 +51,7 @@
     <DefineConstants>$(DefineConstants);NETSTANDARD_11;SUPPORT_UNSAFE</DefineConstants>
   </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);SUPPORT_FIXED_STRING;SUPPORT_UNSAFE</DefineConstants>
   </PropertyGroup>
   
