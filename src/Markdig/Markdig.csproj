@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>A fast, powerfull, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
+    <Description>A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <AssemblyTitle>Markdig</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
