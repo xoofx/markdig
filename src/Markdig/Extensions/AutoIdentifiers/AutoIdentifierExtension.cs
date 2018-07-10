@@ -21,8 +21,6 @@ namespace Markdig.Extensions.AutoIdentifiers
     public class AutoIdentifierExtension : IMarkdownExtension
     {
         private const string AutoIdentifierKey = "AutoIdentifier";
-        private readonly HtmlRenderer stripRenderer;
-        private readonly StringWriter headingWriter;
         private readonly AutoIdentifierOptions options;
 
         /// <summary>
@@ -32,14 +30,6 @@ namespace Markdig.Extensions.AutoIdentifiers
         public AutoIdentifierExtension(AutoIdentifierOptions options)
         {
             this.options = options;
-            headingWriter = new StringWriter();
-            // Use internally a HtmlRenderer to strip links from a heading
-            stripRenderer = new HtmlRenderer(headingWriter)
-            {
-                // Set to false both to avoid having any HTML tags in the output
-                EnableHtmlForInline = false,
-                EnableHtmlEscape = false
-            };
         }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -168,7 +158,15 @@ namespace Markdig.Extensions.AutoIdentifiers
                 return;
             }
 
-            // Use a HtmlRenderer with 
+            // Use internally a HtmlRenderer to strip links from a heading
+            var headingWriter = new StringWriter();
+            var stripRenderer = new HtmlRenderer(headingWriter)
+            {
+                // Set to false both to avoid having any HTML tags in the output
+                EnableHtmlForInline = false,
+                EnableHtmlEscape = false
+            };
+
             stripRenderer.Render(headingBlock.Inline);
             var headingText = headingWriter.ToString();
             headingWriter.GetStringBuilder().Length = 0;
