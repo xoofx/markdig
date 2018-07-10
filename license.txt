@@ -1,4 +1,4 @@
-Copyright (c) 2016, Alexandre Mutel
+Copyright (c) 2018, Alexandre Mutel
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification

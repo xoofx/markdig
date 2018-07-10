@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.1 (10 July 2018)
+- Add support for `netstandard2.0`
+- Make AutoIdentifierExtension thread safe
+
 ## 0.15.0 (4 Apr 2018)
 - Add `ConfigureNewLine` extension method to `MarkdownPipelineBuilder` ([(PR #214)](https://github.com/lunet-io/markdig/pull/214))
 - Add alternative `Use` extension method to `MarkdownPipelineBuilder` that receives an object instance ([(PR #213)](https://github.com/lunet-io/markdig/pull/213))
