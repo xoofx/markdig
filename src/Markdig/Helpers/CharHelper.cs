@@ -21,7 +21,7 @@ namespace Markdig.Helpers
         public const string ZeroSafeString = "\uFFFD";
 
         // We don't support LCDM
-        private static IDictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
+        private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
 
         private static readonly char[] punctuationExceptions = { '−', '-', '†', '‡' };
 
