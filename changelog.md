@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.15.2 (21 Aug 2018)
+- Fix footnotes parsing when they are defined after a container that has been closed in the meantime (#223)
+
 ## 0.15.1 (10 July 2018)
 - Add support for `netstandard2.0`
 - Make AutoIdentifierExtension thread safe
