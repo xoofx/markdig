@@ -33,7 +33,8 @@ namespace Markdig.Extensions.Footnotes
         private BlockState TryOpen(BlockProcessor processor, bool isContinue)
         {
             // We expect footnote to appear only at document level and not indented more than a code indent block
-            if (processor.IsCodeIndent || (!isContinue && processor.CurrentContainer.GetType() != typeof(MarkdownDocument)) || (isContinue && !(processor.CurrentContainer is Footnote)))
+            var currentContainer = processor.GetCurrentContainerOpened();
+            if (processor.IsCodeIndent || (!isContinue && currentContainer.GetType() != typeof(MarkdownDocument)) || (isContinue && !(currentContainer is FootnoteGroup)))
             {
                 return BlockState.None;
             }

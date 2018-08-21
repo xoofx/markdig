@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Generated the 08/21/2018 10:54:59
+using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -17565,6 +17566,39 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n[^2]: Footnote 2 text\n[^3]: Footnote 3 text\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
+        // A footnote link inside a list should work as well:
+    [TestFixture]
+    public partial class TestExtensionsFootontes
+    {
+        [Test]
+        public void ExtensionsFootontes_Example004()
+        {
+            // Example 4
+            // Section: Extensions Footontes
+            //
+            // The following CommonMark:
+            //     - abc
+            //     - def[^1]
+            //     
+            //     [^1]: Here is the footnote.
+            //
+            // Should be rendered as:
+            //     <ul>
+            //     <li>abc</li>
+            //     <li>def<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a></li>
+            //     </ul>
+            //     <div class="footnotes">
+            //     <hr />
+            //     <ol>
+            //     <li id="fn:1">
+            //     <p>Here is the footnote.<a href="#fnref:1" class="footnote-back-ref">&#8617;</a></p></li>
+            //     </ol>
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Footontes");
+			TestParser.TestSpec("- abc\n- def[^1]\n\n[^1]: Here is the footnote.", "<ul>\n<li>abc</li>\n<li>def<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></li>\n</ul>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
@@ -20142,7 +20176,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
-        // Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
+        // Only punctuation `-`, `_` and `.` is kept, all other non letter characters are discarded.
         // Consecutive same character `-`, `_` or `.` are rendered into a single one
         // Characters `-`, `_` and `.` at the end of the string are also discarded.
     [TestFixture]

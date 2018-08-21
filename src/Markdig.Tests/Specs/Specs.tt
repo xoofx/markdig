@@ -67,6 +67,7 @@ SOFTWARE.
     var emptyLines = false;
     var displayEmptyLines = false;
 #>
+// Generated the <#= DateTime.Now #>
 using System;
 using NUnit.Framework;
 

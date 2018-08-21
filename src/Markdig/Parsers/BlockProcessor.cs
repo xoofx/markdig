@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -161,6 +161,21 @@ namespace Markdig.Parsers
         /// Gets or sets a value indicating whether to continue processing the current line.
         /// </summary>
         private bool ContinueProcessingLine { get; set; }
+
+        /// <summary>
+        /// Get the current Container that is currently opened
+        /// </summary>
+        /// <returns>The current Container that is currently opened</returns>
+        public ContainerBlock GetCurrentContainerOpened()
+        {
+            var container = CurrentContainer;
+            while (container != null && !container.IsOpen)
+            {
+                container = container.Parent;
+            }
+
+            return container;
+        }
 
         /// <summary>
         /// Returns the next character in the line being processed. Update <see cref="Start"/> and <see cref="Column"/>.
