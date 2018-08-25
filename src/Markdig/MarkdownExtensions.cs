@@ -33,6 +33,7 @@ using Markdig.Extensions.TextRenderer;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using Markdig.Extensions.Globalization;
 
 namespace Markdig
 {
@@ -457,6 +458,17 @@ namespace Markdig
             {
                 pipeline.Extensions.Add(new JiraLinkExtension(options));
             }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Explicitly add dir="rtl" attribtue for elements that start with RTL characters.
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseGlobalization(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<GlobalizationExtension>();
             return pipeline;
         }
 
