@@ -595,6 +595,9 @@ namespace Markdig
                     case "autolinks":
                         pipeline.UseAutoLinks();
                         break;
+                    case "globalization":
+                        pipeline.UseGlobalization();
+                        break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
