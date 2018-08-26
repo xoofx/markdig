@@ -1,4 +1,5 @@
 using Markdig.Extensions.Tables;
+using Markdig.Extensions.TaskLists;
 using Markdig.Helpers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -55,6 +56,11 @@ namespace Markdig.Extensions.Globalization
             {
                 foreach (var child in container)
                 {
+                    // TaskList items contain an "X", which will cause
+                    // the function to always return false.
+                    if (child is TaskList)
+                        continue;
+
                     return ShouldBeRightToLeft(child);
                 }
             }
