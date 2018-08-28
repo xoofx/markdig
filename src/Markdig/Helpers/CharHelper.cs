@@ -1,3 +1,13 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+
+
+// The IsHighSurrogate, IsLowSurrogate and ConvertToUtf32 methods are copied from
+// .Net Core source code which is under MIT license. They are copied here because
+// they don't exist in `portable40-net40+sl5+win8+wp8+wpa81`, We probably should remove them
+// once we dropped support for that target platform and use the official .Net methods.
+
 //The MIT License(MIT)
 
 //Copyright(c) .NET Foundation and Contributors
