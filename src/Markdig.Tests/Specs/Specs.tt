@@ -63,6 +63,7 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("YamlSpecs.md"), "yaml"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoLinks.md"), "autolinks|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("JiraLinks.md"), "jiralinks"),
+        new KeyValuePair<string, string>(Host.ResolvePath("GlobalizationSpecs.md"), "globalization+advanced+emojis"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;

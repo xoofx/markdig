@@ -33,6 +33,7 @@ using Markdig.Extensions.TextRenderer;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using Markdig.Extensions.Globalization;
 
 namespace Markdig
 {
@@ -461,6 +462,17 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Adds support for right-to-left content by adding appropriate html attribtues.
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseGlobalization(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<GlobalizationExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
         /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -582,6 +594,9 @@ namespace Markdig
                         break;
                     case "autolinks":
                         pipeline.UseAutoLinks();
+                        break;
+                    case "globalization":
+                        pipeline.UseGlobalization();
                         break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
