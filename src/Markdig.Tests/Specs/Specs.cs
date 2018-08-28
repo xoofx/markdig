@@ -1,4 +1,4 @@
-﻿// Generated the 08/28/2018 16:17:07
+﻿// Generated the 08/28/2018 16:28:47
 using System;
 using NUnit.Framework;
 
@@ -21346,19 +21346,19 @@ namespace Markdig.Tests
             // Should be rendered as:
             //     <h1 id="fruits">Fruits</h1>
             //     <p>In botany, a <a href="https://en.wikipedia.org/wiki/Fruit">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>
-            //     <blockquote class="blockquote">
+            //     <blockquote>
             //     <p>Fruits are good for health
             //     -- Anonymous</p>
             //     </blockquote>
             //     <h1 id="section" dir="rtl">میوە</h1>
             //     <p dir="rtl"><a href="https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95" dir="rtl">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>
-            //     <blockquote class="blockquote" dir="rtl">
+            //     <blockquote dir="rtl">
             //     <p dir="rtl">میوە بۆ تەندروستی باشە
             //     -- نەزانراو</p>
             //     </blockquote>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Globalization");
-			TestParser.TestSpec("# Fruits\nIn botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.\n\n> Fruits are good for health\n-- Anonymous\n\n# میوە\n[میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو\n\n> میوە بۆ تەندروستی باشە\n-- نەزانراو", "<h1 id=\"fruits\">Fruits</h1>\n<p>In botany, a <a href=\"https://en.wikipedia.org/wiki/Fruit\">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>\n<blockquote class=\"blockquote\">\n<p>Fruits are good for health\n-- Anonymous</p>\n</blockquote>\n<h1 id=\"section\" dir=\"rtl\">میوە</h1>\n<p dir=\"rtl\"><a href=\"https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95\" dir=\"rtl\">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>\n<blockquote class=\"blockquote\" dir=\"rtl\">\n<p dir=\"rtl\">میوە بۆ تەندروستی باشە\n-- نەزانراو</p>\n</blockquote>", "globalization");
+			TestParser.TestSpec("# Fruits\nIn botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.\n\n> Fruits are good for health\n-- Anonymous\n\n# میوە\n[میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو\n\n> میوە بۆ تەندروستی باشە\n-- نەزانراو", "<h1 id=\"fruits\">Fruits</h1>\n<p>In botany, a <a href=\"https://en.wikipedia.org/wiki/Fruit\">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>\n<blockquote>\n<p>Fruits are good for health\n-- Anonymous</p>\n</blockquote>\n<h1 id=\"section\" dir=\"rtl\">میوە</h1>\n<p dir=\"rtl\"><a href=\"https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95\" dir=\"rtl\">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>\n<blockquote dir=\"rtl\">\n<p dir=\"rtl\">میوە بۆ تەندروستی باشە\n-- نەزانراو</p>\n</blockquote>", "globalization+advanced+emojis");
         }
     }
         // Lists:
@@ -21465,7 +21465,7 @@ namespace Markdig.Tests
             //     </ul>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Globalization");
-			TestParser.TestSpec("## Types of fruits\n- Berries\n  - Strawberry\n  - kiwifruit\n- Citrus\n  - Orange\n  - Lemon\n\n## Examples of fruits :yum:\n1. Apple\n2. Banana\n3. Orange\n\n## Grocery List\n- [X] 􏿽 Watermelon\n- [X] Apricot\n- [ ] Fig \n\n## نموونەی میوە :yum:\n1. ? سێو\n2. 5 مۆز \n3. 􏿽 پرتەقاڵ\n\n## جۆرەکانی میوە\n- توو\n  - فڕاولە\n  - کیوی\n- مزرەمەنی\n  - پڕتەقاڵ\n  - لیمۆ\n\n## لیستی کڕین\n- [X] شووتی\n- [X] قەیسی\n- [ ] هەنجیر", "<h2 id=\"types-of-fruits\">Types of fruits</h2>\n<ul>\n<li>Berries\n<ul>\n<li>Strawberry</li>\n<li>kiwifruit</li>\n</ul>\n</li>\n<li>Citrus\n<ul>\n<li>Orange</li>\n<li>Lemon</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"examples-of-fruits\">Examples of fruits 😋</h2>\n<ol>\n<li>Apple</li>\n<li>Banana</li>\n<li>Orange</li>\n</ol>\n<h2 id=\"grocery-list\">Grocery List</h2>\n<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> 􏿽 Watermelon</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Apricot</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Fig</li>\n</ul>\n<h2 id=\"section\" dir=\"rtl\">نموونەی میوە 😋</h2>\n<ol dir=\"rtl\">\n<li>? سێو</li>\n<li>5 مۆز</li>\n<li>􏿽 پرتەقاڵ</li>\n</ol>\n<h2 id=\"section-1\" dir=\"rtl\">جۆرەکانی میوە</h2>\n<ul dir=\"rtl\">\n<li>توو\n<ul dir=\"rtl\">\n<li>فڕاولە</li>\n<li>کیوی</li>\n</ul>\n</li>\n<li>مزرەمەنی\n<ul dir=\"rtl\">\n<li>پڕتەقاڵ</li>\n<li>لیمۆ</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"section-2\" dir=\"rtl\">لیستی کڕین</h2>\n<ul class=\"contains-task-list\" dir=\"rtl\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> شووتی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> قەیسی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> هەنجیر</li>\n</ul>", "globalization");
+			TestParser.TestSpec("## Types of fruits\n- Berries\n  - Strawberry\n  - kiwifruit\n- Citrus\n  - Orange\n  - Lemon\n\n## Examples of fruits :yum:\n1. Apple\n2. Banana\n3. Orange\n\n## Grocery List\n- [X] 􏿽 Watermelon\n- [X] Apricot\n- [ ] Fig \n\n## نموونەی میوە :yum:\n1. ? سێو\n2. 5 مۆز \n3. 􏿽 پرتەقاڵ\n\n## جۆرەکانی میوە\n- توو\n  - فڕاولە\n  - کیوی\n- مزرەمەنی\n  - پڕتەقاڵ\n  - لیمۆ\n\n## لیستی کڕین\n- [X] شووتی\n- [X] قەیسی\n- [ ] هەنجیر", "<h2 id=\"types-of-fruits\">Types of fruits</h2>\n<ul>\n<li>Berries\n<ul>\n<li>Strawberry</li>\n<li>kiwifruit</li>\n</ul>\n</li>\n<li>Citrus\n<ul>\n<li>Orange</li>\n<li>Lemon</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"examples-of-fruits\">Examples of fruits 😋</h2>\n<ol>\n<li>Apple</li>\n<li>Banana</li>\n<li>Orange</li>\n</ol>\n<h2 id=\"grocery-list\">Grocery List</h2>\n<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> 􏿽 Watermelon</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Apricot</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Fig</li>\n</ul>\n<h2 id=\"section\" dir=\"rtl\">نموونەی میوە 😋</h2>\n<ol dir=\"rtl\">\n<li>? سێو</li>\n<li>5 مۆز</li>\n<li>􏿽 پرتەقاڵ</li>\n</ol>\n<h2 id=\"section-1\" dir=\"rtl\">جۆرەکانی میوە</h2>\n<ul dir=\"rtl\">\n<li>توو\n<ul dir=\"rtl\">\n<li>فڕاولە</li>\n<li>کیوی</li>\n</ul>\n</li>\n<li>مزرەمەنی\n<ul dir=\"rtl\">\n<li>پڕتەقاڵ</li>\n<li>لیمۆ</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"section-2\" dir=\"rtl\">لیستی کڕین</h2>\n<ul class=\"contains-task-list\" dir=\"rtl\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> شووتی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> قەیسی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> هەنجیر</li>\n</ul>", "globalization+advanced+emojis");
         }
     }
         // Tables:
@@ -21490,7 +21490,7 @@ namespace Markdig.Tests
             //     شەکر| ١٠گ|٩گ
             //
             // Should be rendered as:
-            //     <table class="table">
+            //     <table>
             //     <thead>
             //     <tr>
             //     <th>Nuitrion</th>
@@ -21511,7 +21511,7 @@ namespace Markdig.Tests
             //     </tr>
             //     </tbody>
             //     </table>
-            //     <table class="table" dir="rtl" align="right">
+            //     <table dir="rtl" align="right">
             //     <thead>
             //     <tr>
             //     <th>پێکهاتە</th>
@@ -21534,7 +21534,7 @@ namespace Markdig.Tests
             //     </table>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Globalization");
-			TestParser.TestSpec("Nuitrion |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table class=\"table\">\n<thead>\n<tr>\n<th>Nuitrion</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table class=\"table\" dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization");
+			TestParser.TestSpec("Nuitrion |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table>\n<thead>\n<tr>\n<th>Nuitrion</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization+advanced+emojis");
         }
     }
 }

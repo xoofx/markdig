@@ -25,13 +25,13 @@ In botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing st
 .
 <h1 id="fruits">Fruits</h1>
 <p>In botany, a <a href="https://en.wikipedia.org/wiki/Fruit">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>
-<blockquote class="blockquote">
+<blockquote>
 <p>Fruits are good for health
 -- Anonymous</p>
 </blockquote>
 <h1 id="section" dir="rtl">میوە</h1>
 <p dir="rtl"><a href="https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95" dir="rtl">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>
-<blockquote class="blockquote" dir="rtl">
+<blockquote dir="rtl">
 <p dir="rtl">میوە بۆ تەندروستی باشە
 -- نەزانراو</p>
 </blockquote>
@@ -144,7 +144,7 @@ Sugar|10g|9g
 کالۆری|٥٢|٤٧
 شەکر| ١٠گ|٩گ
 .
-<table class="table">
+<table>
 <thead>
 <tr>
 <th>Nuitrion</th>
@@ -165,7 +165,7 @@ Sugar|10g|9g
 </tr>
 </tbody>
 </table>
-<table class="table" dir="rtl" align="right">
+<table dir="rtl" align="right">
 <thead>
 <tr>
 <th>پێکهاتە</th>
