@@ -8,6 +8,8 @@ Adds support for RTL content by adding `dir="rtl"` and `align="right` attributes
 Whether a markdown block is marked as RTL or not is determined by the [first strong character](https://en.wikipedia.org/wiki/Bi-directional_text#Strong_characters) of the block.
 
 **Note**: You might need to add `<meta charset="UTF-8">` to the head of the html file to be able to see the result correctly.
+
+Headings and block quotes:
 ```````````````````````````````` example
 # Fruits
 In botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.
@@ -15,6 +17,28 @@ In botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing st
 > Fruits are good for health
 -- Anonymous
 
+# میوە
+[میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو
+
+> میوە بۆ تەندروستی باشە
+-- نەزانراو
+.
+<h1 id="fruits">Fruits</h1>
+<p>In botany, a <a href="https://en.wikipedia.org/wiki/Fruit">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>
+<blockquote class="blockquote">
+<p>Fruits are good for health
+-- Anonymous</p>
+</blockquote>
+<h1 id="section" dir="rtl">میوە</h1>
+<p dir="rtl"><a href="https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95" dir="rtl">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>
+<blockquote class="blockquote" dir="rtl">
+<p dir="rtl">میوە بۆ تەندروستی باشە
+-- نەزانراو</p>
+</blockquote>
+````````````````````````````````
+
+Lists:
+```````````````````````````````` example
 ## Types of fruits
 - Berries
   - Strawberry
@@ -29,25 +53,14 @@ In botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing st
 3. Orange
 
 ## Grocery List
-- [X] Watermelon
+- [X] 􏿽 Watermelon
 - [X] Apricot
-- [ ] Fig
-
-Nuitrion |Apple | Oranges
---|-- | --
-Calories|52|47
-Sugar|10g|9g
-
-# میوە
-[میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو
-
-> میوە بۆ تەندروستی باشە
--- نەزانراو
+- [ ] Fig 
 
 ## نموونەی میوە :yum:
 1. ? سێو
-2. مۆز
-3. پرتەقاڵ
+2. 5 مۆز 
+3. 􏿽 پرتەقاڵ
 
 ## جۆرەکانی میوە
 - توو
@@ -61,18 +74,7 @@ Sugar|10g|9g
 - [X] شووتی
 - [X] قەیسی
 - [ ] هەنجیر
-
- پێکهاتە |سێو | پڕتەقاڵ
---|-- | --
-کالۆری|٥٢|٤٧
-شەکر| ١٠گ|٩گ
 .
-<h1 id="fruits">Fruits</h1>
-<p>In botany, a <a href="https://en.wikipedia.org/wiki/Fruit">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>
-<blockquote class="blockquote">
-<p>Fruits are good for health
--- Anonymous</p>
-</blockquote>
 <h2 id="types-of-fruits">Types of fruits</h2>
 <ul>
 <li>Berries
@@ -96,10 +98,52 @@ Sugar|10g|9g
 </ol>
 <h2 id="grocery-list">Grocery List</h2>
 <ul class="contains-task-list">
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Watermelon</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> 􏿽 Watermelon</li>
 <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Apricot</li>
 <li class="task-list-item"><input disabled="disabled" type="checkbox" /> Fig</li>
 </ul>
+<h2 id="section" dir="rtl">نموونەی میوە 😋</h2>
+<ol dir="rtl">
+<li>? سێو</li>
+<li>5 مۆز</li>
+<li>􏿽 پرتەقاڵ</li>
+</ol>
+<h2 id="section-1" dir="rtl">جۆرەکانی میوە</h2>
+<ul dir="rtl">
+<li>توو
+<ul dir="rtl">
+<li>فڕاولە</li>
+<li>کیوی</li>
+</ul>
+</li>
+<li>مزرەمەنی
+<ul dir="rtl">
+<li>پڕتەقاڵ</li>
+<li>لیمۆ</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-2" dir="rtl">لیستی کڕین</h2>
+<ul class="contains-task-list" dir="rtl">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> شووتی</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> قەیسی</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> هەنجیر</li>
+</ul>
+````````````````````````````````
+
+Tables:
+
+```````````````````````````````` example
+Nuitrion |Apple | Oranges
+--|-- | --
+Calories|52|47
+Sugar|10g|9g
+
+ پێکهاتە |سێو | پڕتەقاڵ
+--|-- | --
+کالۆری|٥٢|٤٧
+شەکر| ١٠گ|٩گ
+.
 <table class="table">
 <thead>
 <tr>
@@ -121,39 +165,6 @@ Sugar|10g|9g
 </tr>
 </tbody>
 </table>
-<h1 id="section" dir="rtl">میوە</h1>
-<p dir="rtl"><a href="https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95" dir="rtl">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>
-<blockquote class="blockquote" dir="rtl">
-<p dir="rtl">میوە بۆ تەندروستی باشە
--- نەزانراو</p>
-</blockquote>
-<h2 id="section-1" dir="rtl">نموونەی میوە 😋</h2>
-<ol dir="rtl">
-<li>? سێو</li>
-<li>مۆز</li>
-<li>پرتەقاڵ</li>
-</ol>
-<h2 id="section-2" dir="rtl">جۆرەکانی میوە</h2>
-<ul dir="rtl">
-<li>توو
-<ul dir="rtl">
-<li>فڕاولە</li>
-<li>کیوی</li>
-</ul>
-</li>
-<li>مزرەمەنی
-<ul dir="rtl">
-<li>پڕتەقاڵ</li>
-<li>لیمۆ</li>
-</ul>
-</li>
-</ul>
-<h2 id="section-3" dir="rtl">لیستی کڕین</h2>
-<ul class="contains-task-list" dir="rtl">
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> شووتی</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> قەیسی</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" /> هەنجیر</li>
-</ul>
 <table class="table" dir="rtl" align="right">
 <thead>
 <tr>

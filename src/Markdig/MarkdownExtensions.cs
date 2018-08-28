@@ -462,7 +462,7 @@ namespace Markdig
         }
 
         /// <summary>
-        /// Explicitly add dir="rtl" attribtue for elements that start with RTL characters.
+        /// Adds support for right-to-left content by adding appropriate html attribtues.
         /// </summary>
         /// <param name="pipeline">The pipeline</param>
         /// <returns>The modified pipeline</returns>
