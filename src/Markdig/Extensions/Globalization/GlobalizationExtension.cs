@@ -6,7 +6,6 @@ using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Markdig.Extensions.Globalization
 {
@@ -15,8 +14,6 @@ namespace Markdig.Extensions.Globalization
     /// </summary>
     public class GlobalizationExtension : IMarkdownExtension
     {
-        private const string Direction = "dir";
-        private const string RightToLeft = "rtl";
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
@@ -35,7 +32,7 @@ namespace Markdig.Extensions.Globalization
                 if (ShouldBeRightToLeft(node))
                 {
                     var attributes = node.GetAttributes();
-                    attributes.AddPropertyIfNotExist(Direction, RightToLeft);
+                    attributes.AddPropertyIfNotExist("dir", "rtl");
 
                     if (node is Table table)
                     {
@@ -90,13 +87,13 @@ namespace Markdig.Extensions.Globalization
             return false;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         private bool StartsWithRtlCharacter(string text)
         {
-            foreach (var c in text)
+            foreach (var c in CharHelper.ToUtf32(text))
             {
                 if (CharHelper.IsRightToLeft(c))
                     return true;
+
                 else if (CharHelper.IsLeftToRight(c))
                     return false;
             }

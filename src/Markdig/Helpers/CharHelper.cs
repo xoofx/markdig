@@ -1,6 +1,27 @@
-// Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
-// See the license.txt file in the project root for more information.
+//The MIT License(MIT)
+
+//Copyright(c) .NET Foundation and Contributors
+
+//All rights reserved.
+
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+
+//The above copyright notice and this permission notice shall be included in all
+//copies or substantial portions of the Software.
+
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//SOFTWARE.
+
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -19,6 +40,14 @@ namespace Markdig.Helpers
         public const char ZeroSafeChar = '\uFFFD';
 
         public const string ZeroSafeString = "\uFFFD";
+
+        private const char HighSurrogateStart = '\ud800';
+        private const char HighSurrogateEnd = '\udbff';
+        private const char LowSurrogateStart = '\udc00';
+        private const char LowSurrogateEnd = '\udfff';
+
+        // The starting codepoint for Unicode plane 1.  Plane 1 contains 0x010000 ~ 0x01ffff.
+        private const int UnicodePlane01Start = 0x10000;
 
         // We don't support LCDM
         private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
@@ -308,10 +337,51 @@ namespace Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public static bool IsRightToLeft(char c)
+        public static bool IsHighSurrogate(char c)
+        {
+            return ((c >= HighSurrogateStart) && (c <= HighSurrogateEnd));
+        }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public static bool IsLowSurrogate(char c)
+        {
+            return ((c >= LowSurrogateStart) && (c <= LowSurrogateEnd));
+        }
+
+        public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
+        {
+            if (!IsHighSurrogate(highSurrogate))
+            {
+                throw new ArgumentOutOfRangeException(nameof(highSurrogate), "Invalid high surrogate");
+            }
+            if (!IsLowSurrogate(lowSurrogate))
+            {
+                throw new ArgumentOutOfRangeException(nameof(lowSurrogate), "Invalid low surrogate");
+            }
+            return (((highSurrogate - HighSurrogateStart) * 0x400) + (lowSurrogate - LowSurrogateStart) + UnicodePlane01Start);
+        }
+
+        public static IEnumerable<int> ToUtf32(string text)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (IsHighSurrogate(text[i]) && i < text.Length - 1 && IsLowSurrogate(text[i + 1]))
+                {
+                    yield return ConvertToUtf32(text[i], text[i + 1]);
+                }
+                else
+                {
+                    yield return text[i];
+                }
+            }
+        }
+
+        public static bool IsRightToLeft(int c)
         {
             // Generated from Table D.1 of RFC3454
             // http://www.ietf.org/rfc/rfc3454.txt
+
+            // Probably should use a binary search approach
 
             return c >= 0x0005D0 && c <= 0x0005EA ||
                    c >= 0x0005F0 && c <= 0x0005F4 ||
@@ -344,11 +414,13 @@ namespace Markdig.Helpers
                    c == 0x00FB3E;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public static bool IsLeftToRight(char c)
+        public static bool IsLeftToRight(int c)
         {
             // Generated from Table D.2 of RFC3454
             // http://www.ietf.org/rfc/rfc3454.txt
+
+            // Probably should use a binary search approach
+
             return c >= 0x000041 && c <= 0x00005A ||
                    c >= 0x000061 && c <= 0x00007A ||
                    c >= 0x0000C0 && c <= 0x0000D6 ||
