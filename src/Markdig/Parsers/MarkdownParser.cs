@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -87,6 +87,9 @@ namespace Markdig.Parsers
         {
             ProcessBlocks();
             ProcessInlines();
+
+            // At this point the LineIndex is the same as the number of lines in the document
+            document.LineCount = blockProcessor.LineIndex;
             
             // Allow to call a hook after processing a document
             documentProcessed?.Invoke(document);
@@ -146,8 +149,7 @@ namespace Markdig.Parsers
                 for (; item.Index < container.Count; item.Index++)
                 {
                     var block = container[item.Index];
-                    var leafBlock = block as LeafBlock;
-                    if (leafBlock != null)
+                    if (block is LeafBlock leafBlock)
                     {
                         leafBlock.OnProcessInlinesBegin(inlineProcessor);
                         if (leafBlock.ProcessInlines)
