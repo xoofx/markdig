@@ -75,7 +75,11 @@ namespace Markdig.Extensions.Footnotes
             var linkRef = new FootnoteLinkReferenceDefinition()
             {
                 Footnote = footnote,
-                CreateLinkInline = CreateLinkToFootnote
+                CreateLinkInline = CreateLinkToFootnote,
+                Line = processor.LineIndex,
+                Span = new SourceSpan(start, processor.Start - 2), // account for ]:
+                LabelSpan = labelSpan,
+                Label = label
             };
             processor.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
             processor.NewBlocks.Push(footnote);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Markdig.Extensions.Footnotes;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -140,6 +141,48 @@ literal      ( 0, 2)  2-3
 emphasis     ( 0, 4)  4-9
 literal      ( 0, 6)  6-7
 ");
+        }
+
+        [Test]
+        public void TestFootnoteLinkReferenceDefinition()
+        {
+            //                             01 2 345678
+            var footnote = Markdown.Parse("0\n\n [^1]:", new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseFootnotes().Build()).Descendants().OfType<FootnoteLinkReferenceDefinition>().FirstOrDefault();
+            Assert.NotNull(footnote);
+
+            Assert.AreEqual(2, footnote.Line);
+            Assert.AreEqual(new SourceSpan(4, 7), footnote.Span);
+            Assert.AreEqual(new SourceSpan(5, 6), footnote.LabelSpan);
+        }
+
+        [Test]
+        public void TestLinkReferenceDefinition1()
+        {
+            //                         0         1
+            //                         0123456789012345
+            var link = Markdown.Parse("[234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(0, link.Line);
+            Assert.AreEqual(new SourceSpan(0, 14), link.Span);
+            Assert.AreEqual(new SourceSpan(1, 3), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(7, 9), link.UrlSpan);
+            Assert.AreEqual(new SourceSpan(11, 14), link.TitleSpan);
+        }
+
+        [Test]
+        public void TestLinkReferenceDefinition2()
+        {
+            //                         0          1
+            //                         01 2 34567890123456789
+            var link = Markdown.Parse("0\n\n [234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(2, link.Line);
+            Assert.AreEqual(new SourceSpan(4, 18), link.Span);
+            Assert.AreEqual(new SourceSpan(5, 7), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(11, 13), link.UrlSpan);
+            Assert.AreEqual(new SourceSpan(15, 18), link.TitleSpan);
         }
 
         [Test]
