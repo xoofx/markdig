@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -29,10 +29,13 @@ namespace Markdig.Syntax
         public void Set(string label, LinkReferenceDefinition link)
         {
             if (link == null) throw new ArgumentNullException(nameof(link));
-            Links[label] = link;
             if (!Contains(link))
             {
                 Add(link);
+                if (!Links.ContainsKey(label))
+                {
+                    Links[label] = link;
+                }
             }
         }
 

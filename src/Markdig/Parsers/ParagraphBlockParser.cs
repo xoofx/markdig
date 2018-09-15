@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
@@ -9,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for a <see cref="ParagraphBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class ParagraphBlockParser : BlockParser
     {
         public override BlockState TryOpen(BlockProcessor processor)
@@ -152,14 +152,19 @@ namespace Markdig.Parsers
             {
                 // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
                 var iterator = lines.ToCharIterator();
-                LinkReferenceDefinition linkReferenceDefinition;
-                if (LinkReferenceDefinition.TryParse(ref iterator, out linkReferenceDefinition))
+                if (LinkReferenceDefinition.TryParse(ref iterator, out LinkReferenceDefinition linkReferenceDefinition))
                 {
-                    if (!state.Document.ContainsLinkReferenceDefinition(linkReferenceDefinition.Label))
-                    {
-                        state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition);
-                    }
+                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition);
                     atLeastOneFound = true;
+
+                    // Correct the locations of each field
+                    linkReferenceDefinition.Line = lines.Lines[0].Line;
+                    int lineStartPosition = lines.Lines[0].Position + 1;
+
+                    linkReferenceDefinition.Span        = linkReferenceDefinition.Span      .MoveForward(lineStartPosition);
+                    linkReferenceDefinition.LabelSpan   = linkReferenceDefinition.LabelSpan .MoveForward(lineStartPosition);
+                    linkReferenceDefinition.UrlSpan     = linkReferenceDefinition.UrlSpan   .MoveForward(lineStartPosition);
+                    linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(lineStartPosition);
 
                     // Remove lines that have been matched
                     if (iterator.Start > iterator.End)

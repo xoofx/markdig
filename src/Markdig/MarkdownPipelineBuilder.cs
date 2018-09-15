@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -116,9 +116,16 @@ namespace Markdig
                 extension.Setup(this);
             }
 
-            pipeline = new MarkdownPipeline(new OrderedList<IMarkdownExtension>(Extensions),
-                new BlockParserList(BlockParsers), new InlineParserList(InlineParsers), StringBuilderCache, DebugLog,
-                GetDocumentProcessed) {PreciseSourceLocation = PreciseSourceLocation};
+            pipeline = new MarkdownPipeline(
+                new OrderedList<IMarkdownExtension>(Extensions),
+                new BlockParserList(BlockParsers),
+                new InlineParserList(InlineParsers),
+                StringBuilderCache,
+                DebugLog,
+                GetDocumentProcessed)
+            {
+                PreciseSourceLocation = PreciseSourceLocation
+            };
             return pipeline;
         }
     }
