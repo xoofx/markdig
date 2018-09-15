@@ -156,11 +156,26 @@ literal      ( 0, 6)  6-7
         }
 
         [Test]
-        public void TestLinkReferenceDefinition()
+        public void TestLinkReferenceDefinition1()
+        {
+            //                         0         1
+            //                         0123456789012345
+            var link = Markdown.Parse("[234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            Assert.NotNull(link);
+
+            Assert.AreEqual(0, link.Line);
+            Assert.AreEqual(new SourceSpan(0, 14), link.Span);
+            Assert.AreEqual(new SourceSpan(1, 3), link.LabelSpan);
+            Assert.AreEqual(new SourceSpan(7, 9), link.UrlSpan);
+            Assert.AreEqual(new SourceSpan(11, 14), link.TitleSpan);
+        }
+
+        [Test]
+        public void TestLinkReferenceDefinition2()
         {
             //                         0          1
-            //                         01 2 3456789012345678
-            var link = Markdown.Parse("0\n\n [234]: /56 'yo'", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            //                         01 2 34567890123456789
+            var link = Markdown.Parse("0\n\n [234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(2, link.Line);

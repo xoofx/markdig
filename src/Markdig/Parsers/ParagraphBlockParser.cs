@@ -159,12 +159,12 @@ namespace Markdig.Parsers
 
                     // Correct the locations of each field
                     linkReferenceDefinition.Line = lines.Lines[0].Line;
-                    int lineStartPosition = lines.Lines[0].Position + 1;
+                    int startPosition = lines.Lines[0].Slice.Start;
 
-                    linkReferenceDefinition.Span        = linkReferenceDefinition.Span      .MoveForward(lineStartPosition);
-                    linkReferenceDefinition.LabelSpan   = linkReferenceDefinition.LabelSpan .MoveForward(lineStartPosition);
-                    linkReferenceDefinition.UrlSpan     = linkReferenceDefinition.UrlSpan   .MoveForward(lineStartPosition);
-                    linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(lineStartPosition);
+                    linkReferenceDefinition.Span        = linkReferenceDefinition.Span      .MoveForward(startPosition);
+                    linkReferenceDefinition.LabelSpan   = linkReferenceDefinition.LabelSpan .MoveForward(startPosition);
+                    linkReferenceDefinition.UrlSpan     = linkReferenceDefinition.UrlSpan   .MoveForward(startPosition);
+                    linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(startPosition);
 
                     // Remove lines that have been matched
                     if (iterator.Start > iterator.End)
