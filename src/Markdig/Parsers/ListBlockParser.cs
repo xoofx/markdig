@@ -262,10 +262,12 @@ namespace Markdig.Parsers
                 }
             }
 
+            int.TryParse(listInfo.OrderedStart, out int order);
             var newListItem = new ListItemBlock(this)
             {
                 Column = initColumn,
                 ColumnWidth = columnWidth,
+                Order = order,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition)
             };
             state.NewBlocks.Push(newListItem);

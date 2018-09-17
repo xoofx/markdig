@@ -399,6 +399,42 @@ literal      ( 1, 2)  6-6
         }
 
         [Test]
+        public void TestListBlock2()
+        {
+            string test = @"
+1. Foo
+9. Bar
+5. Foo
+6. Bar
+987123. FooBar";
+            test = test.Replace("\r\n", "\n");
+            var list = Markdown.Parse(test, new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<ListBlock>().FirstOrDefault();
+            Assert.NotNull(list);
+
+            Assert.AreEqual(1, list.Line);
+            Assert.True(list.IsOrdered);
+            List<ListItemBlock> items = list.Cast<ListItemBlock>().ToList();
+            Assert.AreEqual(5, items.Count);
+
+            // Test orders
+            Assert.AreEqual(1, items[0].Order);
+            Assert.AreEqual(9, items[1].Order);
+            Assert.AreEqual(5, items[2].Order);
+            Assert.AreEqual(6, items[3].Order);
+            Assert.AreEqual(987123, items[4].Order);
+
+            // Test positions
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.AreEqual(i + 1, items[i].Line);
+                Assert.AreEqual(1 + (i * 7), items[i].Span.Start);
+                Assert.AreEqual(6, items[i].Span.Length);
+            }
+            Assert.AreEqual(5, items[4].Line);
+            Assert.AreEqual(new SourceSpan(29, 42), items[4].Span);
+        }
+
+        [Test]
         public void TestEscapeInline()
         {
             //      0123
