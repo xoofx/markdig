@@ -85,6 +85,9 @@ namespace Markdig.Parsers
         /// <returns>A document instance</returns>
         private MarkdownDocument Parse()
         {
+            if (preciseSourceLocation)
+                document.LineStartIndexes = new List<int>();
+
             ProcessBlocks();
             ProcessInlines();
 

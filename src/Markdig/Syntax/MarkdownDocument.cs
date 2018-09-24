@@ -1,6 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using System.Collections.Generic;
+
 namespace Markdig.Syntax
 {
     /// <summary>
@@ -20,5 +22,11 @@ namespace Markdig.Syntax
         /// Gets the number of lines in this <see cref="MarkdownDocument"/>
         /// </summary>
         public int LineCount;
+
+        /// <summary>
+        /// Gets a list of zero-based indexes of line beginnings in the source span
+        /// <para>Available if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is used, otherwise null</para>
+        /// </summary>
+        public List<int> LineStartIndexes;
     }
 }
