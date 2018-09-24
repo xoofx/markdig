@@ -4,6 +4,8 @@
 - Add support for RTL ([(PR #239)](https://github.com/lunet-io/markdig/pull/239))
 - Add MarkdownDocument.LineCount ([(PR #241)](https://github.com/lunet-io/markdig/pull/241))
 - Fix source positions for link definitions ([(PR #243)](https://github.com/lunet-io/markdig/pull/243))
+- Add ListItemBlock.Order ([(PR #244)](https://github.com/lunet-io/markdig/pull/244))
+- Add MarkdownDocument.LineStartIndexes ([(PR #247)](https://github.com/lunet-io/markdig/pull/247))
 
 ## 0.15.2 (21 Aug 2018)
 - Fix footnotes parsing when they are defined after a container that has been closed in the meantime (#223)
