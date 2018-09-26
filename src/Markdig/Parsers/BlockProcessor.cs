@@ -444,6 +444,8 @@ namespace Markdig.Parsers
         {
             CurrentLineStartPosition = newLine.Start;
 
+            Document.LineStartIndexes?.Add(CurrentLineStartPosition);
+
             ContinueProcessingLine = true;
 
             ResetLine(newLine);
