@@ -54,22 +54,29 @@ namespace Markdig.Extensions.AutoLinks
             }
 
             var startPosition = slice.Start;
+            int domainOffset = 0;
 
             var c = slice.CurrentChar;
             // Precheck URL
             switch (c)
             {
                 case 'h':
-                    if (!slice.MatchLowercase("ttp://", 1) && !slice.MatchLowercase("ttps://", 1))
+                    if (slice.MatchLowercase("ttp://", 1))
                     {
-                        return false;
+                        domainOffset = 7; // http://
                     }
+                    else if (slice.MatchLowercase("ttps://", 1))
+                    {
+                        domainOffset = 8; // https://
+                    }
+                    else return false;
                     break;
                 case 'f':
                     if (!slice.MatchLowercase("tp://", 1))
                     {
                         return false;
                     }
+                    domainOffset = 6; // ftp://
                     break;
                 case 'm':
                     if (!slice.MatchLowercase("ailto:", 1))
@@ -83,6 +90,7 @@ namespace Markdig.Extensions.AutoLinks
                     {
                         return false;
                     }
+                    domainOffset = 4; // www.
                     break;
             }
 
@@ -131,19 +139,19 @@ namespace Markdig.Extensions.AutoLinks
                     }
                     break;
                 case 'm':
-                    if (string.Equals(link, "mailto:", StringComparison.OrdinalIgnoreCase) || !link.Contains("@"))
+                    int atIndex = link.IndexOf('@');
+                    if (atIndex == -1 ||
+                        atIndex == 7) // mailto:@ - no email part
                     {
                         return false;
                     }
+                    domainOffset = atIndex + 1;
                     break;
+            }
 
-                case 'w':
-                    // We require at least two .
-                    if (link.Length <= "www.x.y".Length || link.IndexOf(".", 4, StringComparison.Ordinal) < 0)
-                    {
-                        return false;
-                    }
-                    break;
+            if (!LinkHelper.IsValidDomain(link, domainOffset))
+            {
+                return false;
             }
 
             int line;
