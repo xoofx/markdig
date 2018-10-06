@@ -1,4 +1,4 @@
-﻿// Generated the 08/28/2018 16:28:47
+﻿// Generated the 10/06/2018 18:03:17
 using System;
 using NUnit.Framework;
 
@@ -18262,7 +18262,7 @@ namespace Markdig.Tests
         //
         // ## Custom Container
         //
-        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</div>` block.
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -20966,28 +20966,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
         }
     }
+        // It is not mentioned by the spec, but empty emails won't be matched (only a subset of [RFC2368](https://tools.ietf.org/html/rfc2368) is supported by auto links):
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void ExtensionsAutoLinks_Example008()
+        {
+            // Example 8
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     mailto:email@test.com is okay, but mailto:@test.com is not
+            //
+            // Should be rendered as:
+            //     <p><a href="mailto:email@test.com">email@test.com</a> is okay, but mailto:@test.com is not</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks");
+			TestParser.TestSpec("mailto:email@test.com is okay, but mailto:@test.com is not", "<p><a href=\"mailto:email@test.com\">email@test.com</a> is okay, but mailto:@test.com is not</p>", "autolinks|advanced");
+        }
+    }
         // ### GFM Support
         //
         // Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
-    [TestFixture]
-    public partial class TestExtensionsAutoLinksGFMSupport
-    {
-        [Test]
-        public void ExtensionsAutoLinksGFMSupport_Example008()
-        {
-            // Example 8
-            // Section: Extensions AutoLinks GFM Support
-            //
-            // The following CommonMark:
-            //     www.commonmark.org
-            //
-            // Should be rendered as:
-            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
-        }
-    }
     [TestFixture]
     public partial class TestExtensionsAutoLinksGFMSupport
     {
@@ -20998,13 +20999,13 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     Visit www.commonmark.org/help for more information.
+            //     www.commonmark.org
             //
             // Should be rendered as:
-            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
+            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21017,16 +21018,13 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     Visit www.commonmark.org.
-            //     
-            //     Visit www.commonmark.org/a.b.
+            //     Visit www.commonmark.org/help for more information.
             //
             // Should be rendered as:
-            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
-            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
+			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21039,16 +21037,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.google.com/search?q=Markup+(business)
+            //     Visit www.commonmark.org.
             //     
-            //     (www.google.com/search?q=Markup+(business))
+            //     Visit www.commonmark.org/a.b.
             //
             // Should be rendered as:
-            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
-            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
+			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21061,16 +21059,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.google.com/search?q=commonmark&hl=en
+            //     www.google.com/search?q=Markup+(business)
             //     
-            //     www.google.com/search?q=commonmark&hl;
+            //     (www.google.com/search?q=Markup+(business))
             //
             // Should be rendered as:
-            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
-            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
+            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
+            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21083,13 +21081,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.commonmark.org/he<lp
+            //     www.google.com/search?q=commonmark&hl=en
+            //     
+            //     www.google.com/search?q=commonmark&hl;
             //
             // Should be rendered as:
-            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21099,6 +21100,25 @@ namespace Markdig.Tests
         public void ExtensionsAutoLinksGFMSupport_Example014()
         {
             // Example 14
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org/he<lp
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void ExtensionsAutoLinksGFMSupport_Example015()
+        {
+            // Example 15
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
@@ -21113,8 +21133,128 @@ namespace Markdig.Tests
             //     <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
             //     <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions AutoLinks GFM Support");
 			TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced");
+        }
+    }
+        // ### Valid Domain Tests
+        //
+        // Domain names that have empty segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example016()
+        {
+            // Example 16
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www..
+            //     www..com
+            //     http://test.
+            //     http://.test
+            //     http://.
+            //     http://..
+            //     ftp://test.
+            //     ftp://.test
+            //     mailto:email@test.
+            //     mailto:email@.test
+            //
+            // Should be rendered as:
+            //     <p>www..
+            //     www..com
+            //     http://test.
+            //     http://.test
+            //     http://.
+            //     http://..
+            //     ftp://test.
+            //     ftp://.test
+            //     mailto:email@test.
+            //     mailto:email@.test</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test", "<p>www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names with too few segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example017()
+        {
+            // Example 17
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www
+            //     www.com
+            //     http://test
+            //     ftp://test
+            //     mailto:email@test
+            //
+            // Should be rendered as:
+            //     <p>www
+            //     www.com
+            //     http://test
+            //     ftp://test
+            //     mailto:email@test</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www\nwww.com\nhttp://test\nftp://test\nmailto:email@test", "<p>www\nwww.com\nhttp://test\nftp://test\nmailto:email@test</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names that contain an underscores in the last two segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example018()
+        {
+            // Example 18
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www._test.foo.bar is okay, but www._test.foo is not
+            //     
+            //     http://te_st.foo.bar is okay, as is http://test.foo_.bar.foo
+            //     
+            //     But http://te_st.foo, http://test.foo_.bar and http://test._foo are not
+            //     
+            //     ftp://test_.foo.bar is okay, but ftp://test.fo_o is not
+            //     
+            //     mailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www._test.foo.bar">www._test.foo.bar</a> is okay, but www._test.foo is not</p>
+            //     <p><a href="http://te_st.foo.bar">http://te_st.foo.bar</a> is okay, as is <a href="http://test.foo_.bar.foo">http://test.foo_.bar.foo</a></p>
+            //     <p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>
+            //     <p><a href="ftp://test_.foo.bar">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>
+            //     <p><a href="mailto:email@_test.foo.bar">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www._test.foo.bar is okay, but www._test.foo is not\n\nhttp://te_st.foo.bar is okay, as is http://test.foo_.bar.foo\n\nBut http://te_st.foo, http://test.foo_.bar and http://test._foo are not\n\nftp://test_.foo.bar is okay, but ftp://test.fo_o is not\n\nmailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not", "<p><a href=\"http://www._test.foo.bar\">www._test.foo.bar</a> is okay, but www._test.foo is not</p>\n<p><a href=\"http://te_st.foo.bar\">http://te_st.foo.bar</a> is okay, as is <a href=\"http://test.foo_.bar.foo\">http://test.foo_.bar.foo</a></p>\n<p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>\n<p><a href=\"ftp://test_.foo.bar\">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>\n<p><a href=\"mailto:email@_test.foo.bar\">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names that contain invalid characters (not AlphaNumberic, -, _ or .) won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example019()
+        {
+            // Example 19
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     https://[your-domain]/api
+            //
+            // Should be rendered as:
+            //     <p>https://[your-domain]/api</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("https://[your-domain]/api", "<p>https://[your-domain]/api</p>", "autolinks|advanced");
         }
     }
         // ## Jira Links
