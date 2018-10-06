@@ -3,8 +3,6 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.Runtime.CompilerServices;
-using System.Text;
-using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -666,6 +664,54 @@ namespace Markdig.Helpers
             return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
         }
 
+        public static bool IsValidDomain(string link, int prefixLength)
+        {
+            // https://github.github.com/gfm/#extended-www-autolink
+            // A valid domain consists of alphanumeric characters, underscores (_), hyphens (-) and periods (.).
+            // There must be at least one period, and no underscores may be present in the last two segments of the domain.
+
+            int segmentCount = 1;
+            bool segmentHasCharacters = false;
+            int lastUnderscoreSegment = -1;
+
+            for (int i = prefixLength; i < link.Length; i++)
+            {
+                char c = link[i];
+
+                if (c == '.') // New segment
+                {
+                    if (!segmentHasCharacters)
+                        return false;
+
+                    segmentCount++;
+                    segmentHasCharacters = false;
+                    continue;
+                }
+
+                if (!c.IsAlphaNumeric())
+                {
+                    if (c == '/') // End of domain name
+                        break;
+
+                    if (c == '_')
+                    {
+                        lastUnderscoreSegment = segmentCount;
+                    }
+                    else if (c != '-')
+                    {
+                        // An invalid character has been found
+                        return false;
+                    }
+                }
+
+                segmentHasCharacters = true;
+            }
+
+            return segmentCount != 1 && // At least one dot was present
+                segmentHasCharacters && // Last segment has valid characters
+                segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
+        }
+
         public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
             out string title) where T : ICharIterator
         {
@@ -784,7 +830,6 @@ namespace Markdig.Helpers
             SourceSpan labelSpan;
             return TryParseLabel(ref lines, false, out label, out labelSpan);
         }
-
 
         public static bool TryParseLabel<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
         {

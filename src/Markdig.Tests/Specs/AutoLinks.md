@@ -1,4 +1,4 @@
-# Extensions
+﻿# Extensions
 
 This section describes the different extensions supported:
 
@@ -77,6 +77,14 @@ Check **http://www.a.com** or __http://www.b.com__
 <p>Check <strong><a href="http://www.a.com">http://www.a.com</a></strong> or <strong><a href="http://www.b.com">http://www.b.com</a></strong></p>
 ````````````````````````````````
 
+It is not mentioned by the spec, but empty emails won't be matched (only a subset of [RFC2368](https://tools.ietf.org/html/rfc2368) is supported by auto links):
+
+```````````````````````````````` example
+mailto:email@test.com is okay, but mailto:@test.com is not
+.
+<p><a href="mailto:email@test.com">email@test.com</a> is okay, but mailto:@test.com is not</p>
+````````````````````````````````
+
 ### GFM Support
 
 Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
@@ -139,4 +147,76 @@ Anonymous FTP is available at ftp://foo.bar.baz.
 <p><a href="http://commonmark.org">http://commonmark.org</a></p>
 <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
 <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
+````````````````````````````````
+
+### Valid Domain Tests
+
+Domain names that have empty segments won't be matched
+
+```````````````````````````````` example
+www..
+www..com
+http://test.
+http://.test
+http://.
+http://..
+ftp://test.
+ftp://.test
+mailto:email@test.
+mailto:email@.test
+.
+<p>www..
+www..com
+http://test.
+http://.test
+http://.
+http://..
+ftp://test.
+ftp://.test
+mailto:email@test.
+mailto:email@.test</p>
+````````````````````````````````
+
+Domain names with too few segments won't be matched
+
+```````````````````````````````` example
+www
+www.com
+http://test
+ftp://test
+mailto:email@test
+.
+<p>www
+www.com
+http://test
+ftp://test
+mailto:email@test</p>
+````````````````````````````````
+
+Domain names that contain an underscores in the last two segments won't be matched
+
+```````````````````````````````` example
+www._test.foo.bar is okay, but www._test.foo is not
+
+http://te_st.foo.bar is okay, as is http://test.foo_.bar.foo
+
+But http://te_st.foo, http://test.foo_.bar and http://test._foo are not
+
+ftp://test_.foo.bar is okay, but ftp://test.fo_o is not
+
+mailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not
+.
+<p><a href="http://www._test.foo.bar">www._test.foo.bar</a> is okay, but www._test.foo is not</p>
+<p><a href="http://te_st.foo.bar">http://te_st.foo.bar</a> is okay, as is <a href="http://test.foo_.bar.foo">http://test.foo_.bar.foo</a></p>
+<p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>
+<p><a href="ftp://test_.foo.bar">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>
+<p><a href="mailto:email@_test.foo.bar">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>
+````````````````````````````````
+
+Domain names that contain invalid characters (not AlphaNumberic, -, _ or .) won't be matched
+
+```````````````````````````````` example
+https://[your-domain]/api
+.
+<p>https://[your-domain]/api</p>
 ````````````````````````````````
