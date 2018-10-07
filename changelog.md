@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.15.4 (07 Oct 2018)
+- Add autolink domain GFM validation ([(PR #239)](https://github.com/lunet-io/markdig/pull/253))
+
 ## 0.15.3 (15 Sep 2018)
 - Add support for RTL ([(PR #239)](https://github.com/lunet-io/markdig/pull/239))
 - Add MarkdownDocument.LineCount ([(PR #241)](https://github.com/lunet-io/markdig/pull/241))
