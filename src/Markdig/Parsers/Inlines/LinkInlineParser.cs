@@ -136,7 +136,7 @@ namespace Markdig.Parsers.Inlines
                     {
                         child = new LiteralInline()
                         {
-                            Content = new StringSlice(label),
+                            Content = StringSlice.Empty,
                             IsClosed = true,
                             // Not exact but we leave it like this
                             Span = parent.Span,
