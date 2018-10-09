@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 extern alias newcmark;
@@ -8,8 +8,8 @@ using System.IO;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Diagnostics;
-using BenchmarkDotNet.Diagnostics.Windows;
+//using BenchmarkDotNet.Diagnostics;
+//using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using newcmark::CommonMark.Extension;
@@ -38,59 +38,59 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
-        public void TestCommonMarkCpp()
-        {
-            //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            CommonMarkLib.ToHtml(text);
-            //File.WriteAllText("spec.html", writer.ToString());
-        }
+        //[Benchmark]
+        //public void TestCommonMarkCpp()
+        //{
+        //    //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+        //    CommonMarkLib.ToHtml(text);
+        //    //File.WriteAllText("spec.html", writer.ToString());
+        //}
 
-        [Benchmark]
-        public void TestCommonMarkNet()
-        {
-            ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            // var reader = new StringReader(text);
-            //CommonMark.CommonMarkConverter.Parse(reader);
-            //CommonMark.CommonMarkConverter.Parse(reader);
-            //reader.Dispose();
-            //var writer = new StringWriter();
-            global::CommonMark.CommonMarkConverter.Convert(text);
-            //writer.Flush();
-            //writer.ToString();
-        }
+        //[Benchmark]
+        //public void TestCommonMarkNet()
+        //{
+        //    ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+        //    // var reader = new StringReader(text);
+        //    //CommonMark.CommonMarkConverter.Parse(reader);
+        //    //CommonMark.CommonMarkConverter.Parse(reader);
+        //    //reader.Dispose();
+        //    //var writer = new StringWriter();
+        //    global::CommonMark.CommonMarkConverter.Convert(text);
+        //    //writer.Flush();
+        //    //writer.ToString();
+        //}
 
-        [Benchmark]
-        public void TestCommonMarkNetNew()
-        {
-            ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
-            // var reader = new StringReader(text);
-            //CommonMark.CommonMarkConverter.Parse(reader);
-            //CommonMark.CommonMarkConverter.Parse(reader);
-            //reader.Dispose();
-            //var writer = new StringWriter();
-            newcmark::CommonMark.CommonMarkConverter.Convert(text);
-            //writer.Flush();
-            //writer.ToString();
-        }
+        //[Benchmark]
+        //public void TestCommonMarkNetNew()
+        //{
+        //    ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
+        //    // var reader = new StringReader(text);
+        //    //CommonMark.CommonMarkConverter.Parse(reader);
+        //    //CommonMark.CommonMarkConverter.Parse(reader);
+        //    //reader.Dispose();
+        //    //var writer = new StringWriter();
+        //    newcmark::CommonMark.CommonMarkConverter.Convert(text);
+        //    //writer.Flush();
+        //    //writer.ToString();
+        //}
 
-        [Benchmark]
-        public void TestMarkdownDeep()
-        {
-            new MarkdownDeep.Markdown().Transform(text);
-        }
+        //[Benchmark]
+        //public void TestMarkdownDeep()
+        //{
+        //    new MarkdownDeep.Markdown().Transform(text);
+        //}
 
-        [Benchmark]
-        public void TestMarkdownSharp()
-        {
-            new MarkdownSharp.Markdown().Transform(text);
-        }
+        //[Benchmark]
+        //public void TestMarkdownSharp()
+        //{
+        //    new MarkdownSharp.Markdown().Transform(text);
+        //}
 
-        [Benchmark]
-        public void TestMoonshine()
-        {
-            Sundown.MoonShine.Markdownify(text);
-        }
+        //[Benchmark]
+        //public void TestMoonshine()
+        //{
+        //    Sundown.MoonShine.Markdownify(text);
+        //}
 
         static void Main(string[] args)
         {
@@ -115,10 +115,10 @@ namespace Testamina.Markdig.Benchmarks
                     {
                         program.TestMarkdig();
                     }
-                    else
-                    {
-                        program.TestCommonMarkNetNew();
-                    }
+                    //else
+                    //{
+                    //    program.TestCommonMarkNetNew();
+                    //}
                 }
                 clock.Stop();
                 Console.WriteLine((markdig ? "MarkDig" : "CommonMark") +  $" => time: {(double)clock.ElapsedMilliseconds/count}ms (total {clock.ElapsedMilliseconds}ms)");
