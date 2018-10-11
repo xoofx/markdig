@@ -2,7 +2,7 @@
 
 This section describes the different extensions supported:
 
-## Footontes
+## Footnotes
 
 Allows footnotes using the following syntax (taken from pandoc example):
 
