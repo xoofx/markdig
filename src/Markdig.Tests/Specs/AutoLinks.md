@@ -1,4 +1,4 @@
-﻿# Extensions
+# Extensions
 
 This section describes the different extensions supported:
 
@@ -219,4 +219,24 @@ Domain names that contain invalid characters (not AlphaNumberic, -, _ or .) won'
 https://[your-domain]/api
 .
 <p>https://[your-domain]/api</p>
+````````````````````````````````
+
+Domain names followed by ?, : or # instead of / are matched
+
+```````````````````````````````` example
+https://github.com?
+
+https://github.com?a
+
+https://github.com#a
+
+https://github.com:
+
+https://github.com:443
+.
+<p><a href="https://github.com">https://github.com</a>?</p>
+<p><a href="https://github.com?a">https://github.com?a</a></p>
+<p><a href="https://github.com#a">https://github.com#a</a></p>
+<p><a href="https://github.com">https://github.com</a>:</p>
+<p><a href="https://github.com:443">https://github.com:443</a></p>
 ````````````````````````````````
