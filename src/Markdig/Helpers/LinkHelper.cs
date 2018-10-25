@@ -690,7 +690,7 @@ namespace Markdig.Helpers
 
                 if (!c.IsAlphaNumeric())
                 {
-                    if (c == '/') // End of domain name
+                    if (c == '/' || c == '?' || c == '#' || c == ':') // End of domain name
                         break;
 
                     if (c == '_')
