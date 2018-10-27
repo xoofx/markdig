@@ -80,7 +80,7 @@ This is a text
 This is a text</p>
 ````````````````````````````````
 
-Front matter ends with the first line containing three dots `...` or three dashes `...`:
+Front matter ends with the first line containing three dots `...` or three dashes `---`:
 
 ```````````````````````````````` example
 ---
