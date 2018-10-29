@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -119,6 +119,21 @@ namespace Markdig.Helpers
                     return true;
                 }
             }
+            return false;
+        }
+
+        /// <summary>
+        /// Replaces <typeparamref name="TElement"/> with <paramref name="newElement"/> or adds <paramref name="newElement"/>.
+        /// </summary>
+        /// <typeparam name="TElement">Element type to find in the list</typeparam>
+        /// <param name="newElement">Object to add/replace the found element with</param>
+        /// <returns><c>true</c> if a replacement was made; otherwise <c>false</c>.</returns>
+        public bool ReplaceOrAdd<TElement>(T newElement) where TElement : T
+        {
+            if (Replace<TElement>(newElement))
+                return true;
+
+            Add(newElement);
             return false;
         }
     }
