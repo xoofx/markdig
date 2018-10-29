@@ -19,7 +19,7 @@ namespace Markdig.Extensions.AutoLinks
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoLinkParser"/> class.
         /// </summary>
-        public AutoLinkParser()
+        public AutoLinkParser(string validPreviousCharacters = DefaultValidPreviousCharacters)
         {
             OpeningCharacters = new char[]
             {
@@ -28,20 +28,19 @@ namespace Markdig.Extensions.AutoLinks
                 'm', // for mailto:
                 'w', // for www.
             };
+
+            ValidPreviousCharacters = validPreviousCharacters;
         }
 
-
-        private static bool IsValidPreviousCharacter(char c)
-        {
-            // All such recognized autolinks can only come at the beginning of a line, after whitespace, or any of the delimiting characters *, _, ~, and (.
-            return c.IsWhiteSpaceOrZero() || c == '*' || c == '_' || c == '~' || c == '(';
-        }
+        // All such recognized autolinks can only come at the beginning of a line, after whitespace, or any of the delimiting characters *, _, ~, and (.
+        public readonly string ValidPreviousCharacters;
+        public const string DefaultValidPreviousCharacters = "*_~(";
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Previous char must be a whitespace or a punctuation
             var previousChar = slice.PeekCharExtra(-1);
-            if (!IsValidPreviousCharacter(previousChar))
+            if (!previousChar.IsWhiteSpaceOrZero() && ValidPreviousCharacters.IndexOf(previousChar) == -1)
             {
                 return false;
             }

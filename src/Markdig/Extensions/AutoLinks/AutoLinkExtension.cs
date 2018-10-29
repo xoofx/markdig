@@ -14,12 +14,19 @@ namespace Markdig.Extensions.AutoLinks
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class AutoLinkExtension : IMarkdownExtension
     {
+        public readonly string ValidPreviousCharacters;
+
+        public AutoLinkExtension(string validPreviousCharacters = AutoLinkParser.DefaultValidPreviousCharacters)
+        {
+            ValidPreviousCharacters = validPreviousCharacters;
+        }
+
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<AutoLinkParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new AutoLinkParser());
+                pipeline.InlineParsers.Insert(0, new AutoLinkParser(ValidPreviousCharacters));
             }
         }
 
