@@ -24,15 +24,9 @@ namespace Markdig.Renderers.Html.Inlines
                 {
                     renderer.WriteLine("<br />");
                 }
-                else
-                {
-                    renderer.WriteLine();
-                }
             }
-            else
-            {
-                renderer.Write(" ");
-            }
+
+            renderer.EnsureLine();
         }
     }
 }

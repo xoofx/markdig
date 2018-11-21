@@ -87,6 +87,8 @@ namespace Markdig.Renderers.Html
                     renderer.WriteLine("</code></pre>");
                 }
             }
+
+            renderer.EnsureLine();
         }
     }
 }

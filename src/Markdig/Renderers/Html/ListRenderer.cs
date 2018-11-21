@@ -59,6 +59,7 @@ namespace Markdig.Renderers.Html
                     renderer.WriteLine("</li>");
                 }
 
+                renderer.EnsureLine();
                 renderer.ImplicitParagraph = previousImplicit;
             }
 
@@ -66,6 +67,8 @@ namespace Markdig.Renderers.Html
             {
                 renderer.WriteLine(listBlock.IsOrdered ? "</ol>" : "</ul>");
             }
+
+            renderer.EnsureLine();
         }
     }
 }
