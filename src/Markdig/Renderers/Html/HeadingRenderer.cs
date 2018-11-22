@@ -38,6 +38,8 @@ namespace Markdig.Renderers.Html
             {
                 renderer.Write("</").Write(headingText).WriteLine(">");
             }
+
+            renderer.EnsureLine();
         }
     }
 }

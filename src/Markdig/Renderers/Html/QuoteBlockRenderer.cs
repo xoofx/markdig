@@ -26,6 +26,7 @@ namespace Markdig.Renderers.Html
             {
                 renderer.WriteLine("</blockquote>");
             }
+            renderer.EnsureLine();
         }
     }
 }
