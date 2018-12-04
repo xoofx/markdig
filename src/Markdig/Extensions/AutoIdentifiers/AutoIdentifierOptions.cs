@@ -12,7 +12,7 @@ namespace Markdig.Extensions.AutoIdentifiers
     public enum AutoIdentifierOptions
     {
         /// <summary>
-        /// No options: does not apply any additional formatting and/or tranformations.  
+        /// No options: does not apply any additional formatting and/or transformations.  
         /// </summary>
         None = 0,
 
