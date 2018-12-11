@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.5 (11 Dec 2018)
+- Empty image alt text for link reference definitions ([(PR #254)](https://github.com/lunet-io/markdig/pull/254))
+- Fix AutoLink Match links without slash after domain ([(PR #260)](https://github.com/lunet-io/markdig/pull/260))
+- Make AutoLink ValidPreviousCharacters configurable ([(PR #264)](https://github.com/lunet-io/markdig/pull/264))
+- Ensuring line breaks when renderer does not have html enabled ([(PR #270)](https://github.com/lunet-io/markdig/pull/270))
+
 ## 0.15.4 (07 Oct 2018)
 - Add autolink domain GFM validation ([(PR #239)](https://github.com/lunet-io/markdig/pull/253))
 
