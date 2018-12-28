@@ -21,6 +21,13 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestInvalidHtmlEntity()
+        {
+            var input = "9&ddr;&*&ddr;&de��__";
+            TestSpec(input, "<p>9&amp;ddr;&amp;*&amp;ddr;&amp;de��__</p>");
+        }
+
+        [Test]
         public void TestEmphasisAndHtmlEntity()
         {
             var markdownText = "*Unlimited-Fun&#174;*&#174;";

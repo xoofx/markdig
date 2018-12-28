@@ -44,7 +44,7 @@ namespace Markdig.Parsers.Inlines
             {
                 literal = (entityValue == 0 ? null : EntityHelper.DecodeEntity(entityValue)) ?? CharHelper.ZeroSafeString;
             }
-            return true;
+            return literal != null;
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
