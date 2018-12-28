@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.6 (28 Dec 2018)
+- Fix potential hang when parsing LinkReferenceDefinition #278
+- Fix parsing of an invalid html entity (#277)
+- Fix IndexOutOfRangeException while parsing fenced code block with a single trailing space (#276)
+- Add tests for checking that ArgumentOutOfRangeException doesn't occur on invalid input md string (#275)
+
 ## 0.15.5 (11 Dec 2018)
 - Empty image alt text for link reference definitions ([(PR #254)](https://github.com/lunet-io/markdig/pull/254))
 - Fix AutoLink Match links without slash after domain ([(PR #260)](https://github.com/lunet-io/markdig/pull/260))
