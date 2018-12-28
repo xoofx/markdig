@@ -239,10 +239,10 @@ namespace Markdig.Helpers
                         lines.RemoveAt(i);
                     }
 
-                    if (lines.Lines.Length > 0)
+                    if (lines.Count > 0 && _offset > 0)
                     {
-                        lines.Lines[0].Column = _offset - lines.Lines[0].Slice.Start;
-                        lines.Lines[0].Slice.Start = _offset;
+                        lines.Lines[0].Column += _offset;
+                        lines.Lines[0].Slice.Start += _offset;
                     }
                 }
 
