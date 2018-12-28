@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.JiraLinks;
@@ -12,6 +13,13 @@ namespace Markdig.Tests
 {
     public class TestParser
     {
+        [Test]
+        public void TestFixHang()
+        {
+            var input = File.ReadAllText("hang.md");
+            var html = Markdown.ToHtml(input);
+        }
+
         [Test]
         public void TestEmphasisAndHtmlEntity()
         {

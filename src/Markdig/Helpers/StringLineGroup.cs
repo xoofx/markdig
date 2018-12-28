@@ -225,6 +225,30 @@ namespace Markdig.Helpers
 
             public int SliceIndex { get; private set; }
 
+            public StringLineGroup Remaining()
+            {
+                var lines = _lines;
+                if (CurrentChar == '\0')
+                {
+                    lines.Clear();
+                }
+                else
+                {
+                    for (int i = SliceIndex - 1; i >= 0; i--)
+                    {
+                        lines.RemoveAt(i);
+                    }
+
+                    if (lines.Lines.Length > 0)
+                    {
+                        lines.Lines[0].Column = _offset - lines.Lines[0].Slice.Start;
+                        lines.Lines[0].Slice.Start = _offset;
+                    }
+                }
+
+                return lines;
+            }
+
             public char NextChar()
             {
                 Start++;

@@ -76,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="hang.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="project.json" />
     <None Include="Specs\GlobalizationSpecs.md" />
     <None Include="Specs\JiraLinks.md" />

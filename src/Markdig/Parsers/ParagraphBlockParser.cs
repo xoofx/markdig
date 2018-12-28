@@ -166,18 +166,7 @@ namespace Markdig.Parsers
                     linkReferenceDefinition.UrlSpan     = linkReferenceDefinition.UrlSpan   .MoveForward(startPosition);
                     linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(startPosition);
 
-                    // Remove lines that have been matched
-                    if (iterator.Start > iterator.End)
-                    {
-                        lines.Clear();
-                    }
-                    else
-                    {
-                        for (int i = iterator.SliceIndex - 1; i >= 0; i--)
-                        {
-                            lines.RemoveAt(i);
-                        }
-                    }
+                    lines = iterator.Remaining();
                 }
                 else
                 {
