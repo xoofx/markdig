@@ -16,7 +16,7 @@ namespace Markdig.Tests
         [Test]
         public void TestFixHang()
         {
-            var input = File.ReadAllText("hang.md");
+            var input = File.ReadAllText(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "hang.md"));
             var html = Markdown.ToHtml(input);
         }
 
@@ -30,7 +30,7 @@ namespace Markdig.Tests
         [Test]
         public void TestInvalidCharacterHandling()
         {
-            var input = File.ReadAllText("ArgumentOutOfRangeException.md");
+            var input = File.ReadAllText(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "ArgumentOutOfRangeException.md"));
             var html = Markdown.ToHtml(input);
         }
 
