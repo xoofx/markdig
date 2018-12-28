@@ -28,6 +28,13 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestInvalidCharacterHandling()
+        {
+            var input = File.ReadAllText("ArgumentOutOfRangeException.md");
+            var html = Markdown.ToHtml(input);
+        }
+
+        [Test]
         public void TestInvalidCodeEscape()
         {
             var input = "```**Header**	";
