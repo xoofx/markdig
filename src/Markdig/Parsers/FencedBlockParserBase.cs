@@ -94,7 +94,7 @@ namespace Markdig.Parsers
 
                 // Skip any spaces after info string
                 firstSpace++;
-                while (true)
+                while (firstSpace <= line.End)
                 {
                     c = line[firstSpace];
                     if (c.IsSpaceOrTab())

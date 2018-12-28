@@ -28,6 +28,13 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestInvalidCodeEscape()
+        {
+            var input = "```**Header**	";
+            var html = Markdown.ToHtml(input);
+        }
+
+        [Test]
         public void TestEmphasisAndHtmlEntity()
         {
             var markdownText = "*Unlimited-Fun&#174;*&#174;";
