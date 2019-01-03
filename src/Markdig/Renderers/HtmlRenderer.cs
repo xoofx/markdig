@@ -315,7 +315,7 @@ namespace Markdig.Renderers
                 {
                     Write(" ").Write(property.Key);
                     Write("=").Write("\"");
-                    WriteEscape(property.Value ?? property.Key);
+                    WriteEscape(property.Value ?? "");
                     Write("\"");
                 }
             }

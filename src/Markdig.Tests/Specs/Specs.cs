@@ -17643,10 +17643,10 @@ namespace Markdig.Tests
             //     <h1 id="heading-link2">This is a heading</h1>
             //     <p><a href="http://google.com" id="a-link" class="myclass" data-lang="fr" data-value="This is a value">This is a link</a></p>
             //     <h2 id="heading-link2">This is a heading</h2>
-            //     <p id="myparagraph" attached-bool-property attached-bool-property2>This is a paragraph with an attached attributes </p>
+            //     <p id="myparagraph" attached-bool-property="" attached-bool-property2="">This is a paragraph with an attached attributes </p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Generic Attributes");
-			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n# This is a heading # {#heading-link2}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------\n\nThis is a paragraph with an attached attributes {#myparagraph attached-bool-property attached-bool-property2}", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<h1 id=\"heading-link2\">This is a heading</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>\n<p id=\"myparagraph\" attached-bool-property attached-bool-property2>This is a paragraph with an attached attributes </p>", "attributes|advanced");
+			TestParser.TestSpec("# This is a heading with an an attribute{#heading-link}\n\n# This is a heading # {#heading-link2}\n\n[This is a link](http://google.com){#a-link .myclass data-lang=fr data-value=\"This is a value\"}\n\nThis is a heading{#heading-link2}\n-----------------\n\nThis is a paragraph with an attached attributes {#myparagraph attached-bool-property attached-bool-property2}", "<h1 id=\"heading-link\">This is a heading with an an attribute</h1>\n<h1 id=\"heading-link2\">This is a heading</h1>\n<p><a href=\"http://google.com\" id=\"a-link\" class=\"myclass\" data-lang=\"fr\" data-value=\"This is a value\">This is a link</a></p>\n<h2 id=\"heading-link2\">This is a heading</h2>\n<p id=\"myparagraph\" attached-bool-property=\"\" attached-bool-property2=\"\">This is a paragraph with an attached attributes </p>", "attributes|advanced");
         }
     }
         // The following shows that attributes can be attached to the next block if they are used inside a single line just preceding the block (and preceded by a blank line or beginning of a block container):
@@ -19769,14 +19769,14 @@ namespace Markdig.Tests
             //     ![Video5](https://ok.ru/video/26870090463)
             //
             // Should be rendered as:
-            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
-            //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
-            //     <p><video width="500" height="281" controls><source type="video/mp4" src="https://sample.com/video.mp4"></source></video></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><video width="500" height="281" controls=""><source type="video/mp4" src="https://sample.com/video.mp4"></source></video></p>
             //     <p><iframe src="https://music.yandex.ru/iframe/#track/4402274/411845/" width="500" height="281" frameborder="0"></iframe></p>
-            //     <p><iframe src="https://ok.ru/videoembed/26870090463" width="500" height="281" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+            //     <p><iframe src="https://ok.ru/videoembed/26870090463" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Media links");
-			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)\n\n![Video3](https://sample.com/video.mp4)\n\n![Audio4](https://music.yandex.ru/album/411845/track/4402274)\n\n![Video5](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></p>\n<p><video width=\"500\" height=\"281\" controls><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></p>", "medialinks|advanced+medialinks");
+			TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)\n\n![Video3](https://sample.com/video.mp4)\n\n![Audio4](https://music.yandex.ru/album/411845/track/4402274)\n\n![Video5](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>", "medialinks|advanced+medialinks");
         }
     }
         // # Extensions
