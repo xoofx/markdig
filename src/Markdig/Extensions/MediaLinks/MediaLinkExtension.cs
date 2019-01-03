@@ -105,7 +105,7 @@ namespace Markdig.Extensions.MediaLinks
                 {
                     htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
                 }
-                htmlAttributes.AddPropertyIfNotExist("controls", null);
+                htmlAttributes.AddPropertyIfNotExist("controls", "");
                 renderer.WriteAttributes(htmlAttributes);
 
                 renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
@@ -167,7 +167,7 @@ namespace Markdig.Extensions.MediaLinks
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)
             {
-                htmlAttributes.AddPropertyIfNotExist("allowfullscreen", "allowfullscreen");
+                htmlAttributes.AddPropertyIfNotExist("allowfullscreen", "");
             }
             renderer.WriteAttributes(htmlAttributes);
             renderer.Write("></iframe>");
