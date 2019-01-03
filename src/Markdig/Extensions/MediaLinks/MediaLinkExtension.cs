@@ -167,7 +167,7 @@ namespace Markdig.Extensions.MediaLinks
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)
             {
-                htmlAttributes.AddPropertyIfNotExist("allowfullscreen", null);
+                htmlAttributes.AddPropertyIfNotExist("allowfullscreen", "allowfullscreen");
             }
             renderer.WriteAttributes(htmlAttributes);
             renderer.Write("></iframe>");
