@@ -314,12 +314,9 @@ namespace Markdig.Renderers
                 foreach (var property in attributes.Properties)
                 {
                     Write(" ").Write(property.Key);
-                    if (property.Value != null)
-                    {
-                        Write("=").Write("\"");
-                        WriteEscape(property.Value);
-                        Write("\"");
-                    }
+                    Write("=").Write("\"");
+                    WriteEscape(property.Value ?? "");
+                    Write("\"");
                 }
             }
 
