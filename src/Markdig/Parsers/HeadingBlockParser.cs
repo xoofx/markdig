@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -55,6 +56,7 @@ namespace Markdig.Parsers
             var c = line.CurrentChar;
             var matchingChar = c;
 
+            Debug.Assert(MaxLeadingCount > 0);
             int leadingCount = 0;
             while (c != '\0' && leadingCount <= MaxLeadingCount)
             {
