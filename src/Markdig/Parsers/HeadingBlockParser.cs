@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
@@ -22,6 +22,11 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
+        /// Gets or sets the max count of the leading unescaped # characters
+        /// </summary>
+        public int MaxLeadingCount { get; set; } = 6;
+
+        /// <summary>
         /// A delegates that allows to process attached attributes after #
         /// </summary>
         public TryParseAttributesDelegate TryParseAttributes { get; set; }
@@ -36,7 +41,7 @@ namespace Markdig.Parsers
 
             // 4.2 ATX headings
             // An ATX heading consists of a string of characters, parsed as inline content, 
-            // between an opening sequence of 1–6 unescaped # characters and an optional 
+            // between an opening sequence of 1–6(configurable) unescaped # characters and an optional 
             // closing sequence of any number of unescaped # characters. The opening sequence 
             // of # characters must be followed by a space or by the end of line. The optional
             // closing sequence of #s must be preceded by a space and may be followed by spaces
@@ -51,7 +56,7 @@ namespace Markdig.Parsers
             var matchingChar = c;
 
             int leadingCount = 0;
-            while (c != '\0' && leadingCount <= 6)
+            while (c != '\0' && leadingCount <= MaxLeadingCount)
             {
                 if (c != matchingChar)
                 {
@@ -62,7 +67,7 @@ namespace Markdig.Parsers
             }
 
             // A space is required after leading #
-            if (leadingCount > 0 && leadingCount <= 6 && (c.IsSpaceOrTab() || c == '\0'))
+            if (leadingCount > 0 && leadingCount <= MaxLeadingCount && (c.IsSpaceOrTab() || c == '\0'))
             {
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
