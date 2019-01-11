@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.7 (11 Jan 2019)
+- Add configurable leading count for ATX headers ([(PR #282)](https://github.com/lunet-io/markdig/pull/282))
+- Render XML well-formed boolean attribute ([(PR #281)](https://github.com/lunet-io/markdig/pull/281))
+
 ## 0.15.6 (28 Dec 2018)
 - Fix potential hang when parsing LinkReferenceDefinition #278
 - Fix parsing of an invalid html entity (#277)
