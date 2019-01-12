@@ -29,11 +29,12 @@ namespace Markdig
         /// <param name="markdown">The markdown.</param>
         /// <param name="options">The normalize options</param>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>A normalized markdown text.</returns>
-        public static string Normalize(string markdown, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
+        public static string Normalize(string markdown, NormalizeOptions options = null, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             var writer = new StringWriter();
-            Normalize(markdown, writer, options, pipeline);
+            Normalize(markdown, writer, options, pipeline, context);
             return writer.ToString();
         }
 
@@ -44,8 +45,9 @@ namespace Markdig
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
         /// <param name="options">The normalize options</param>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>A normalized markdown text.</returns>
-        public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
             pipeline = CheckForSelfPipeline(pipeline, markdown);
@@ -54,7 +56,7 @@ namespace Markdig
             var renderer = new NormalizeRenderer(writer, options);
             pipeline.Setup(renderer);
 
-            var document = Parse(markdown, pipeline);
+            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             writer.Flush();
 
@@ -82,9 +84,10 @@ namespace Markdig
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>The Markdown document that has been parsed</returns>
         /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
-        public static MarkdownDocument ToHtml(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument ToHtml(string markdown, TextWriter writer, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -95,7 +98,7 @@ namespace Markdig
             var renderer = new HtmlRenderer(writer);
             pipeline.Setup(renderer);
 
-            var document = Parse(markdown, pipeline);
+            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             writer.Flush();
 
@@ -108,15 +111,16 @@ namespace Markdig
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="renderer">The renderer to convert Markdown to.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="System.ArgumentNullException">if markdown or writer variable are null</exception>
-        public static object Convert(string markdown, IMarkdownRenderer renderer, MarkdownPipeline pipeline = null)
+        public static object Convert(string markdown, IMarkdownRenderer renderer, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             if (renderer == null) throw new ArgumentNullException(nameof(renderer));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             pipeline = CheckForSelfPipeline(pipeline, markdown);
-            var document = Parse(markdown, pipeline);
+            var document = Parse(markdown, pipeline, context);
             pipeline.Setup(renderer);
             return renderer.Render(document);
         }
@@ -138,15 +142,16 @@ namespace Markdig
         /// </summary>
         /// <param name="markdown">The markdown text.</param>
         /// <param name="pipeline">The pipeline used for the parsing.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline)
+        public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
 
             pipeline = CheckForSelfPipeline(pipeline, markdown);
-            return MarkdownParser.Parse(markdown, pipeline);
+            return MarkdownParser.Parse(markdown, pipeline, context);
         }
 
         private static MarkdownPipeline CheckForSelfPipeline(MarkdownPipeline pipeline, string markdown)
@@ -165,9 +170,10 @@ namespace Markdig
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>The Markdown document that has been parsed</returns>
         /// <exception cref="System.ArgumentNullException">if reader or writer variable are null</exception>
-        public static MarkdownDocument ToPlainText(string markdown, TextWriter writer, MarkdownPipeline pipeline = null)
+        public static MarkdownDocument ToPlainText(string markdown, TextWriter writer, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -182,7 +188,7 @@ namespace Markdig
             };
             pipeline.Setup(renderer);
 
-            var document = Parse(markdown, pipeline);
+            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             writer.Flush();
 
@@ -194,13 +200,14 @@ namespace Markdig
         /// </summary>
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static string ToPlainText(string markdown, MarkdownPipeline pipeline = null)
+        public static string ToPlainText(string markdown, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             var writer = new StringWriter();
-            ToPlainText(markdown, writer, pipeline);
+            ToPlainText(markdown, writer, pipeline, context);
             return writer.ToString();
         }
     }
