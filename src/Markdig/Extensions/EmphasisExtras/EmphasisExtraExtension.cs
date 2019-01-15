@@ -68,7 +68,9 @@ namespace Markdig.Extensions.EmphasisExtras
 
                 if (requireTilde && !hasTilde)
                 {
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', 1, 2, true));
+                    int minimumCount = (Options & EmphasisExtraOptions.Subscript) != 0 ? 1 : 2;
+                    int maximumCount = (Options & EmphasisExtraOptions.Strikethrough) != 0 ? 2 : 1;
+                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', minimumCount, maximumCount, true));
                 }
                 if (requireSup && !hasSup)
                 {
