@@ -164,11 +164,11 @@ namespace Markdig.Parsers.Inlines
             {
                 delimiterCount++;
                 c = slice.NextChar();
-            } while (c == delimiterChar);
+            } while (c == delimiterChar && delimiterCount <= emphasisDesc.MaximumCount);
 
 
             // If the emphasis doesn't have the minimum required character or has more than the maximum required
-            if (delimiterCount < emphasisDesc.MinimumCount || delimiterCount > emphasisDesc.MaximumCount)
+            if (delimiterCount < emphasisDesc.MinimumCount)
             {
                 return false;
             }
