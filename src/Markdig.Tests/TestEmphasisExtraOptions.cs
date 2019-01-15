@@ -7,21 +7,21 @@ namespace Markdig.Tests
     public class TestEmphasisExtraOptions
     {
         [Test]
-        public void StrikethroughThenSubscript()
+        public void DisableSubscript1()
         {
-            TestParser.TestSpec("~~~test~~~", "<del><sup>test</sup></del>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough | EmphasisExtraOptions.Subscript).Build());
+            TestParser.TestSpec("~~test~~", "<del>test</del>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
         }
 
         [Test]
-        public void DisableSubscript()
+        public void DisableSubscript2()
         {
-            TestParser.TestSpec("~~~test~~~", "<del>~test~</del>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
+            TestParser.TestSpec("~test~", "~test~", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
         }
 
         [Test]
         public void DisableStrikethrough()
         {
-            TestParser.TestSpec("~~~test~~~", "<sup>~~test~~</sup>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
+            TestParser.TestSpec("~~test~~", "<sup>~test~</sup>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
         }
     }
 }
