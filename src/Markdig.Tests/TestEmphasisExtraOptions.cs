@@ -21,13 +21,13 @@ namespace Markdig.Tests
         [Test]
         public void DisableStrikethrough1()
         {
-            TestParser.TestSpec("~~test~~", "<p><sup>~test~</sup></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
+            TestParser.TestSpec("~~test~~", "<p><sub>~test~</sub></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
         }
 
         [Test]
         public void DisableStrikethrough2()
         {
-            TestParser.TestSpec("~test~", "<p><sup>test</sup></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
+            TestParser.TestSpec("~test~", "<p><sub>test</sub></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
         }
     }
 }
