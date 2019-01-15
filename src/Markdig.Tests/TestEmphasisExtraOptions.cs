@@ -9,19 +9,19 @@ namespace Markdig.Tests
         [Test]
         public void DisableSubscript1()
         {
-            TestParser.TestSpec("~~test~~", "<del>test</del>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
+            TestParser.TestSpec("~~test~~", "<p><del>test</del></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
         }
 
         [Test]
         public void DisableSubscript2()
         {
-            TestParser.TestSpec("~test~", "~test~", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
+            TestParser.TestSpec("~test~", "<p>~test~</p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Strikethrough).Build());
         }
 
         [Test]
         public void DisableStrikethrough()
         {
-            TestParser.TestSpec("~~test~~", "<sup>~test~</sup>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
+            TestParser.TestSpec("~~test~~", "<p><sup>~test~</sup></p>", new MarkdownPipelineBuilder().UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build());
         }
     }
 }
