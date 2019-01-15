@@ -241,6 +241,7 @@ namespace Markdig.Parsers.Inlines
                         // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
                         // for the first matching potential opener (“matching” means same delimiter).
                         EmphasisDelimiterInline openDelimiter = null;
+                        EmphasisDescriptor emphasisDesc = null;
                         int openDelimiterIndex = -1;
                         for (int j = i - 1; j >= 0; j--)
                         {
@@ -256,6 +257,7 @@ namespace Markdig.Parsers.Inlines
                                 previousOpenDelimiter.DelimiterCount > 0 && !isOddMatch)
                             {
                                 openDelimiter = previousOpenDelimiter;
+                                emphasisDesc = emphasisMap[previousOpenDelimiter.DelimiterChar];
                                 openDelimiterIndex = j;
                                 break;
                             }
@@ -264,7 +266,7 @@ namespace Markdig.Parsers.Inlines
                         if (openDelimiter != null)
                         {
                             process_delims:
-                            bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2;
+                            bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2 && emphasisDesc.MaximumCount >= 2;
 
                             // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
                             var emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong)
