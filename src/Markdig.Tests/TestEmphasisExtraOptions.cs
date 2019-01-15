@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Markdig.Extensions.EmphasisExtras;
 
 namespace Markdig.Tests
 {
