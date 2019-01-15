@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Parsers.Inlines;
@@ -68,7 +68,9 @@ namespace Markdig.Extensions.EmphasisExtras
 
                 if (requireTilde && !hasTilde)
                 {
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', 1, 2, true));
+                    var minimumCount = (Options & EmphasisExtraOptions.Subscript) != 0 ? 1 : 2;
+                    var maximumCount = (Options & EmphasisExtraOptions.Strikethrough) != 0 ? 2 : 1;
+                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', minimumCount, maximumCount, true));
                 }
                 if (requireSup && !hasSup)
                 {
