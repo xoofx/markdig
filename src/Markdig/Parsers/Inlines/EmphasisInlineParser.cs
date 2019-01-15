@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -100,7 +100,7 @@ namespace Markdig.Parsers.Inlines
                 delimiters.Add((EmphasisDelimiterInline)container);
             }
 
-            // Move current_position forward in the delimiter stack (if needed) until 
+            // Move current_position forward in the delimiter stack (if needed) until
             // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
             var child = container.LastChild;
             while (child != null)
@@ -132,8 +132,8 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
-            // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
+            // First, some definitions. A delimiter run is either a sequence of one or more * characters that
+            // is not preceded or followed by a * character, or a sequence of one or more _ characters that
             // is not preceded or followed by a _ character.
 
             var delimiterChar = slice.CurrentChar;
@@ -167,8 +167,8 @@ namespace Markdig.Parsers.Inlines
             } while (c == delimiterChar);
 
 
-            // If the emphasis doesn't have the minimum required character
-            if (delimiterCount < emphasisDesc.MinimumCount)
+            // If the emphasis doesn't have the minimum required character or has more than the maximum required
+            if (delimiterCount < emphasisDesc.MinimumCount || delimiterCount > emphasisDesc.MaximumCount)
             {
                 return false;
             }
@@ -223,7 +223,7 @@ namespace Markdig.Parsers.Inlines
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
 
-            // Move current_position forward in the delimiter stack (if needed) until 
+            // Move current_position forward in the delimiter stack (if needed) until
             // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
             for (int i = 0; i < delimiters.Count; i++)
             {
@@ -238,7 +238,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     while (true)
                     {
-                        // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
+                        // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type)
                         // for the first matching potential opener (“matching” means same delimiter).
                         EmphasisDelimiterInline openDelimiter = null;
                         int openDelimiterIndex = -1;
@@ -318,7 +318,7 @@ namespace Markdig.Parsers.Inlines
                                 };
 
                                 literalDelimiter.ReplaceBy(literal);
-                                
+
                                 delimiters.RemoveAt(k);
                                 i--;
                             }
