@@ -33,10 +33,9 @@ namespace Markdig.Syntax
             while (stack.Count > 0)
             {
                 var block = stack.Pop();
-                var push = pushStack.Pop();
+                if (pushStack.Pop()) yield return block;
                 if (block is ContainerBlock containerBlock)
                 {
-                    if (push) yield return containerBlock;
                     int subBlockIndex = containerBlock.Count;
                     while (subBlockIndex-- > 0)
                     {
@@ -55,7 +54,6 @@ namespace Markdig.Syntax
                 }
                 else if (block is ContainerInline containerInline)
                 {
-                    if (push) yield return containerInline;
                     var child = containerInline.LastChild;
                     while (child != null)
                     {
@@ -64,7 +62,6 @@ namespace Markdig.Syntax
                         child = child.PreviousSibling;
                     }
                 }
-                else yield return block;
             }
         }
 
