@@ -94,25 +94,36 @@ namespace Markdig.Syntax.Inlines
         /// <returns>An enumeration of T</returns>
         public IEnumerable<T> FindDescendants<T>() where T : Inline
         {
-            var child = FirstChild;
+            // Fast-path an empty container to avoid allocating a Stack
+            if (LastChild == null) yield break;
+
+            Stack<Inline> stack = new Stack<Inline>();
+
+            var child = LastChild;
             while (child != null)
             {
-                var next = child.NextSibling;
+                stack.Push(child);
+                child = child.PreviousSibling;
+            }
 
-                if (child  is T)
+            while (stack.Count > 0)
+            {
+                child = stack.Pop();
+
+                if (child is T childT)
                 {
-                    yield return (T)child;
+                    yield return childT;
                 }
 
-                if (child is ContainerInline)
+                if (child is ContainerInline containerInline)
                 {
-                    foreach (var subChild in ((ContainerInline) child).FindDescendants<T>())
+                    child = containerInline.LastChild;
+                    while (child != null)
                     {
-                        yield return subChild;
+                        stack.Push(child);
+                        child = child.PreviousSibling;
                     }
                 }
-               
-                child = next;
             }
         }
 
