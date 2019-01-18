@@ -77,29 +77,7 @@ namespace Markdig.Syntax
         /// An iteration over the descendant elements
         /// </returns>
         public static IEnumerable<T> Descendants<T>(this ContainerInline inline) where T : Inline
-        {
-            var child = inline.FirstChild;
-            while (child != null)
-            {
-                var next = child.NextSibling;
-                T childT = child as T;
-                if (childT != null)
-                {
-                    yield return childT;
-                }
-
-                ContainerInline subContainer = child as ContainerInline;
-                if (subContainer != null)
-                {
-                    foreach (var sub in subContainer.Descendants<T>())
-                    {
-                        yield return sub;
-                    }
-                }
-
-                child = next;
-            }
-        }
+            => inline.FindDescendants<T>();
 
         /// <summary>
         /// Iterates over the descendant elements for the specified markdown <see cref="Block" /> element and filters by the type {T}.
