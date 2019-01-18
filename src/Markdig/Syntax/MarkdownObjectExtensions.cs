@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -14,55 +14,57 @@ namespace Markdig.Syntax
     {
         /// <summary>
         /// Iterates over the descendant elements for the specified markdown element, including <see cref="Block"/> and <see cref="Inline"/>.
+        /// <para>The descendant elements are returned in DFS-like order.</para>
         /// </summary>
         /// <param name="markdownObject">The markdown object.</param>
         /// <returns>An iteration over the descendant elements</returns>
         public static IEnumerable<MarkdownObject> Descendants(this MarkdownObject markdownObject)
         {
-            // TODO: implement a recursiveless method
+            // Fast-path an object with no children to avoid allocating Stack objects
+            if (!(markdownObject is ContainerBlock) && !(markdownObject is ContainerInline)) yield break;
 
-            var block = markdownObject as ContainerBlock;
-            if (block != null)
+            // TODO: A single Stack<(MarkdownObject block, bool push)> when ValueTuples are available
+            Stack<MarkdownObject> stack = new Stack<MarkdownObject>();
+            Stack<bool> pushStack = new Stack<bool>();
+
+            stack.Push(markdownObject);
+            pushStack.Push(false);
+
+            while (stack.Count > 0)
             {
-                foreach (var subBlock in block)
+                var block = stack.Pop();
+                var push = pushStack.Pop();
+                if (block is ContainerBlock containerBlock)
                 {
-                    yield return subBlock;
-
-                    foreach (var sub in subBlock.Descendants())
+                    if (push) yield return containerBlock;
+                    int subBlockIndex = containerBlock.Count;
+                    while (subBlockIndex-- > 0)
                     {
-                        yield return sub;
-                    }
-
-                    // Visit leaf block that have inlines
-                    var leafBlock = subBlock as LeafBlock;
-                    if (leafBlock?.Inline != null)
-                    {
-                        foreach (var subInline in Descendants(leafBlock.Inline))
+                        var subBlock = containerBlock[subBlockIndex];
+                        if (subBlock is LeafBlock leafBlock)
                         {
-                            yield return subInline;
+                            if (leafBlock.Inline != null)
+                            {
+                                stack.Push(leafBlock.Inline);
+                                pushStack.Push(false);
+                            }
                         }
+                        stack.Push(subBlock);
+                        pushStack.Push(true);
                     }
                 }
-            }
-            else
-            {
-                var inline = markdownObject as ContainerInline;
-                if (inline != null)
+                else if (block is ContainerInline containerInline)
                 {
-                    var child = inline.FirstChild;
+                    if (push) yield return containerInline;
+                    var child = containerInline.LastChild;
                     while (child != null)
                     {
-                        var next = child.NextSibling;
-                        yield return child;
-
-                        foreach (var sub in child.Descendants())
-                        {
-                            yield return sub;
-                        }
-
-                        child = next;
+                        stack.Push(child);
+                        pushStack.Push(true);
+                        child = child.PreviousSibling;
                     }
                 }
+                else yield return block;
             }
         }
 
@@ -80,13 +82,13 @@ namespace Markdig.Syntax
             while (child != null)
             {
                 var next = child.NextSibling;
-                var childT = child as T;
+                T childT = child as T;
                 if (childT != null)
                 {
                     yield return childT;
                 }
 
-                var subContainer = child as ContainerInline;
+                ContainerInline subContainer = child as ContainerInline;
                 if (subContainer != null)
                 {
                     foreach (var sub in subContainer.Descendants<T>())
@@ -111,14 +113,12 @@ namespace Markdig.Syntax
         {
             foreach (var subBlock in block)
             {
-                var subBlockT = subBlock as T;
-                if (subBlockT != null)
+                if (subBlock is T subBlockT)
                 {
                     yield return subBlockT;
                 }
 
-                var subBlockContainer = subBlock as ContainerBlock;
-                if (subBlockContainer != null)
+                if (subBlock is ContainerBlock subBlockContainer)
                 {
                     foreach (var sub in subBlockContainer.Descendants<T>())
                     {
