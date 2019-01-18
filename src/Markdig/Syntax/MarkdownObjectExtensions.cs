@@ -89,8 +89,20 @@ namespace Markdig.Syntax
         /// </returns>
         public static IEnumerable<T> Descendants<T>(this ContainerBlock block) where T : Block
         {
-            foreach (var subBlock in block)
+            // Fast-path an empty container to avoid allocating a Stack
+            if (block.Count == 0) yield break;
+
+            Stack<Block> stack = new Stack<Block>();
+
+            int childrenCount = block.Count;
+            while (childrenCount-- > 0)
             {
+                stack.Push(block[childrenCount]);
+            }
+
+            while (stack.Count > 0)
+            {
+                var subBlock = stack.Pop();
                 if (subBlock is T subBlockT)
                 {
                     yield return subBlockT;
@@ -98,9 +110,10 @@ namespace Markdig.Syntax
 
                 if (subBlock is ContainerBlock subBlockContainer)
                 {
-                    foreach (var sub in subBlockContainer.Descendants<T>())
+                    childrenCount = subBlockContainer.Count;
+                    while (childrenCount-- > 0)
                     {
-                        yield return sub;
+                        stack.Push(subBlockContainer[childrenCount]);
                     }
                 }
             }
