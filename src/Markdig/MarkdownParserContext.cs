@@ -10,7 +10,7 @@ namespace Markdig
         /// <summary>
         /// Gets or sets the context property collection.
         /// </summary>
-        public IDictionary<object, object> Properties { get; set; }
+        public Dictionary<object, object> Properties { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownParserContext" /> class.
