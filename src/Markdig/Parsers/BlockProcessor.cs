@@ -41,7 +41,7 @@ namespace Markdig.Parsers
         /// <param name="parsers">The list of parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers)
+        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
         {
             if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -51,6 +51,7 @@ namespace Markdig.Parsers
             Document = document;
             document.IsOpen = true;
             Parsers = parsers;
+            Context = context;
             OpenedBlocks = new List<Block>();
             NewBlocks = new Stack<Block>();
             root = this;
@@ -66,6 +67,11 @@ namespace Markdig.Parsers
         /// Gets the list of <see cref="BlockParser"/> configured with this parser state.
         /// </summary>
         public BlockParserList Parsers { get; }
+
+        /// <summary>
+        /// Gets the parser context or <c>null</c> if none is available.
+        /// </summary>
+        public MarkdownParserContext Context { get; }
 
         /// <summary>
         /// Gets the current active container.
