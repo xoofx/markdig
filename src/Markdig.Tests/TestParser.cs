@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.JiraLinks;
@@ -154,6 +155,21 @@ namespace Markdig.Tests
             html = Regex.Replace(html, @"<li>\s+", "<li>");
             html = html.Normalize(NormalizationForm.FormKD);
             return html;
+        }
+
+        public static readonly string[] SpecsMarkdown;
+        static TestParser()
+        {
+            string assemblyDir = Path.GetDirectoryName(typeof(TestParser).Assembly.Location);
+            string specsDir = Path.GetFullPath(Path.Combine(assemblyDir, "../../Specs"));
+
+            var files = Directory.GetFiles(specsDir).Where(file => file.EndsWith(".md", StringComparison.Ordinal)).ToList();
+            SpecsMarkdown = new string[files.Count];
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                SpecsMarkdown[i] = File.ReadAllText(files[i]);
+            }
         }
     }
 }

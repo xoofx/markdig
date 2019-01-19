@@ -10,9 +10,15 @@ namespace Markdig.Tests
     public class TestDescendantsOrder
     {
         [Test]
-        [TestCase("Foo *bar* ***foo***\n\nHello world\n\n# Header 123\n\n`Something`\n\n1. Test `abc` *def*\n2. ghi\n```c#\nEmpty\n```\nTest\n")]
-        // Note - Tested agains the entire tests dataset when implemented
-        public void AssertSameDescendantsOrder(string markdown)
+        public void TestSchemas()
+        {
+            foreach (var markdown in TestParser.SpecsMarkdown)
+            {
+                AssertSameDescendantsOrder(markdown);
+            }
+        }
+
+        private void AssertSameDescendantsOrder(string markdown)
         {
             var syntaxTree = Markdown.Parse(markdown, new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
 
