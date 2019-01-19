@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="Specs\TestEmphasisPlus.cs" />
     <Compile Include="TestEmphasisExtraOptions.cs" />
+    <Compile Include="TestDescendantsOrder.cs" />
     <Compile Include="TestConfigureNewLine.cs" />
     <Compile Include="TestHtmlAttributes.cs" />
     <Compile Include="TestHtmlHelper.cs" />

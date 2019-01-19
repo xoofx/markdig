@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -14,53 +14,52 @@ namespace Markdig.Syntax
     {
         /// <summary>
         /// Iterates over the descendant elements for the specified markdown element, including <see cref="Block"/> and <see cref="Inline"/>.
+        /// <para>The descendant elements are returned in DFS-like order.</para>
         /// </summary>
         /// <param name="markdownObject">The markdown object.</param>
         /// <returns>An iteration over the descendant elements</returns>
         public static IEnumerable<MarkdownObject> Descendants(this MarkdownObject markdownObject)
         {
-            // TODO: implement a recursiveless method
+            // Fast-path an object with no children to avoid allocating Stack objects
+            if (!(markdownObject is ContainerBlock) && !(markdownObject is ContainerInline)) yield break;
 
-            var block = markdownObject as ContainerBlock;
-            if (block != null)
+            // TODO: A single Stack<(MarkdownObject block, bool push)> when ValueTuples are available
+            Stack<MarkdownObject> stack = new Stack<MarkdownObject>();
+            Stack<bool> pushStack = new Stack<bool>();
+
+            stack.Push(markdownObject);
+            pushStack.Push(false);
+
+            while (stack.Count > 0)
             {
-                foreach (var subBlock in block)
+                var block = stack.Pop();
+                if (pushStack.Pop()) yield return block;
+                if (block is ContainerBlock containerBlock)
                 {
-                    yield return subBlock;
-
-                    foreach (var sub in subBlock.Descendants())
+                    int subBlockIndex = containerBlock.Count;
+                    while (subBlockIndex-- > 0)
                     {
-                        yield return sub;
-                    }
-
-                    // Visit leaf block that have inlines
-                    var leafBlock = subBlock as LeafBlock;
-                    if (leafBlock?.Inline != null)
-                    {
-                        foreach (var subInline in Descendants(leafBlock.Inline))
+                        var subBlock = containerBlock[subBlockIndex];
+                        if (subBlock is LeafBlock leafBlock)
                         {
-                            yield return subInline;
+                            if (leafBlock.Inline != null)
+                            {
+                                stack.Push(leafBlock.Inline);
+                                pushStack.Push(false);
+                            }
                         }
+                        stack.Push(subBlock);
+                        pushStack.Push(true);
                     }
                 }
-            }
-            else
-            {
-                var inline = markdownObject as ContainerInline;
-                if (inline != null)
+                else if (block is ContainerInline containerInline)
                 {
-                    var child = inline.FirstChild;
+                    var child = containerInline.LastChild;
                     while (child != null)
                     {
-                        var next = child.NextSibling;
-                        yield return child;
-
-                        foreach (var sub in child.Descendants())
-                        {
-                            yield return sub;
-                        }
-
-                        child = next;
+                        stack.Push(child);
+                        pushStack.Push(true);
+                        child = child.PreviousSibling;
                     }
                 }
             }
@@ -75,29 +74,7 @@ namespace Markdig.Syntax
         /// An iteration over the descendant elements
         /// </returns>
         public static IEnumerable<T> Descendants<T>(this ContainerInline inline) where T : Inline
-        {
-            var child = inline.FirstChild;
-            while (child != null)
-            {
-                var next = child.NextSibling;
-                var childT = child as T;
-                if (childT != null)
-                {
-                    yield return childT;
-                }
-
-                var subContainer = child as ContainerInline;
-                if (subContainer != null)
-                {
-                    foreach (var sub in subContainer.Descendants<T>())
-                    {
-                        yield return sub;
-                    }
-                }
-
-                child = next;
-            }
-        }
+            => inline.FindDescendants<T>();
 
         /// <summary>
         /// Iterates over the descendant elements for the specified markdown <see cref="Block" /> element and filters by the type {T}.
@@ -109,20 +86,31 @@ namespace Markdig.Syntax
         /// </returns>
         public static IEnumerable<T> Descendants<T>(this ContainerBlock block) where T : Block
         {
-            foreach (var subBlock in block)
+            // Fast-path an empty container to avoid allocating a Stack
+            if (block.Count == 0) yield break;
+
+            Stack<Block> stack = new Stack<Block>();
+
+            int childrenCount = block.Count;
+            while (childrenCount-- > 0)
             {
-                var subBlockT = subBlock as T;
-                if (subBlockT != null)
+                stack.Push(block[childrenCount]);
+            }
+
+            while (stack.Count > 0)
+            {
+                var subBlock = stack.Pop();
+                if (subBlock is T subBlockT)
                 {
                     yield return subBlockT;
                 }
 
-                var subBlockContainer = subBlock as ContainerBlock;
-                if (subBlockContainer != null)
+                if (subBlock is ContainerBlock subBlockContainer)
                 {
-                    foreach (var sub in subBlockContainer.Descendants<T>())
+                    childrenCount = subBlockContainer.Count;
+                    while (childrenCount-- > 0)
                     {
-                        yield return sub;
+                        stack.Push(subBlockContainer[childrenCount]);
                     }
                 }
             }
