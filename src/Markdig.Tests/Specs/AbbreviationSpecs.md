@@ -98,3 +98,12 @@ PRAA
 .
 <p>PRAA</p>
 ````````````````````````````````
+
+One-character abbreviations should be allowed
+
+```````````````````````````````` example
+*[A]: Test
+A
+.
+<p><abbr title="Test">A</abbr></p>
+````````````````````````````````

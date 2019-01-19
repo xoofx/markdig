@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System.Collections.Generic;
@@ -98,7 +98,7 @@ namespace Markdig.Extensions.Abbreviations
                 // This is slow, but we don't have much the choice
                 var content = literal.Content;
                 var text = content.Text;
-                for (int i = content.Start; i < content.End; i++)
+                for (int i = content.Start; i <= content.End; i++)
                 {
                     string match;
                     if (matcher.TryMatch(text, i, content.End - i + 1, out match) && IsValidAbbreviation(match, content, i))
