@@ -7,7 +7,11 @@ namespace SpecFileGen
 {
     class Program
     {
-        const string SpecificationsDirectory = "../../../../Markdig.Tests/Specs/";
+        static readonly string SpecificationsDirectory =
+            Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(typeof(Spec).Assembly.Location),
+                    "../../../../Markdig.Tests/Specs/"));
 
         class Spec
         {
