@@ -68,6 +68,36 @@ namespace Markdig.Tests
 </ol>");
         }
 
+        [Test]
+        public void EnsureSpecsAreUpToDate()
+        {
+            // In CI, SpecFileGen is guaranteed to run
+            if (IsContinuousIntegration)
+                return;
+
+            foreach (var specFilePath in SpecsFilePaths)
+            {
+                string testFilePath = Path.ChangeExtension(specFilePath, ".cs");
+
+                Assert.True(File.Exists(testFilePath),
+                    "A new specification file has been added. Add the spec to the list in SpecFileGen and regenerate the tests.");
+
+                DateTime specTime = File.GetLastWriteTimeUtc(specFilePath);
+                DateTime testTime = File.GetLastWriteTimeUtc(testFilePath);
+
+                // If file creation times aren't preserved by git, add some leeway
+                // If specs have come from git, assume that they were regenerated since CI would fail otherwise
+                testTime = testTime.AddSeconds(2);
+
+                // This might not catch a changed spec every time, but should most of the time. Otherwise CI will catch it
+
+                // This could also trigger, if a user has modified the spec file but reverted the change - can't think of a good workaround
+                Assert.Less(specTime, testTime,
+                    "Specification files have been modified. Run SpecFileGen to regenerate the tests. " +
+                    "If you have modified the specification file but reverted all changes, ignore this error.");
+            }
+        }
+
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
         {
             foreach (var pipeline in GetPipeline(extensions))
@@ -157,18 +187,30 @@ namespace Markdig.Tests
             return html;
         }
 
+        public static readonly bool IsContinuousIntegration = Environment.GetEnvironmentVariable("CI") != null;
+
+        /// <summary>
+        /// Contains absolute paths to specification markdown files (order is the same as in <see cref="SpecsMarkdown"/>)
+        /// </summary>
+        public static readonly string[] SpecsFilePaths;
+        /// <summary>
+        /// Contains the markdown source for specification files (order is the same as in <see cref="SpecsFilePaths"/>)
+        /// </summary>
         public static readonly string[] SpecsMarkdown;
         static TestParser()
         {
             string assemblyDir = Path.GetDirectoryName(typeof(TestParser).Assembly.Location);
             string specsDir = Path.GetFullPath(Path.Combine(assemblyDir, "../../Specs"));
 
-            var files = Directory.GetFiles(specsDir).Where(file => file.EndsWith(".md", StringComparison.Ordinal)).ToList();
-            SpecsMarkdown = new string[files.Count];
+            SpecsFilePaths = Directory.GetFiles(specsDir)
+                .Where(file => file.EndsWith(".md", StringComparison.Ordinal) && !file.Contains("readme"))
+                .ToArray();
 
-            for (int i = 0; i < files.Count; i++)
+            SpecsMarkdown = new string[SpecsFilePaths.Length];
+
+            for (int i = 0; i < SpecsFilePaths.Length; i++)
             {
-                SpecsMarkdown[i] = File.ReadAllText(files[i]);
+                SpecsMarkdown[i] = File.ReadAllText(SpecsFilePaths[i]);
             }
         }
     }
