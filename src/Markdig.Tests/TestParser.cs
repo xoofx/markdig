@@ -93,8 +93,8 @@ namespace Markdig.Tests
 
                 // This could also trigger, if a user has modified the spec file but reverted the change - can't think of a good workaround
                 Assert.Less(specTime, testTime,
-                    "Specification files have been modified. Run SpecFileGen to regenerate the tests. " +
-                    "If you have modified the specification file but reverted all changes, ignore this error.");
+                    $"{Path.GetFileName(specFilePath)} has been modified. Run SpecFileGen to regenerate the tests. " +
+                    "If you have modified a specification file, but reverted all changes, ignore this error or revert the 'changed' timestamp metadata on the file.");
             }
         }
 
