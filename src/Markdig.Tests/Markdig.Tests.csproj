@@ -51,12 +51,32 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specs\Specs.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Specs.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Specs\TestEmphasisPlus.cs" />
+    <Compile Include="Specs\AbbreviationSpecs.cs" />
+    <Compile Include="Specs\AutoIdentifierSpecs.cs" />
+    <Compile Include="Specs\AutoLinks.cs" />
+    <Compile Include="Specs\BootstrapSpecs.cs" />
+    <Compile Include="Specs\CommonMark.cs" />
+    <Compile Include="Specs\CustomContainerSpecs.cs" />
+    <Compile Include="Specs\DefinitionListSpecs.cs" />
+    <Compile Include="Specs\DiagramsSpecs.cs" />
+    <Compile Include="Specs\EmojiSpecs.cs" />
+    <Compile Include="Specs\EmphasisExtraSpecs.cs" />
+    <Compile Include="Specs\FigureFooterAndCiteSpecs.cs" />
+    <Compile Include="Specs\FootnotesSpecs.cs" />
+    <Compile Include="Specs\GenericAttributesSpecs.cs" />
+    <Compile Include="Specs\GlobalizationSpecs.cs" />
+    <Compile Include="Specs\GridTableSpecs.cs" />
+    <Compile Include="Specs\HardlineBreakSpecs.cs" />
+    <Compile Include="Specs\JiraLinks.cs" />
+    <Compile Include="Specs\ListExtraSpecs.cs" />
+    <Compile Include="Specs\MathSpecs.cs" />
+    <Compile Include="Specs\MediaSpecs.cs" />
+    <Compile Include="Specs\NoHtmlSpecs.cs" />
+    <Compile Include="Specs\PipeTableSpecs.cs" />
+    <Compile Include="Specs\SmartyPantsSpecs.cs" />
+    <Compile Include="Specs\TaskListSpecs.cs" />
+    <Compile Include="Specs\YamlSpecs.cs" />
+    <Compile Include="TestEmphasisPlus.cs" />
     <Compile Include="TestEmphasisExtraOptions.cs" />
     <Compile Include="TestDescendantsOrder.cs" />
     <Compile Include="TestConfigureNewLine.cs" />
@@ -85,6 +105,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="project.json" />
+    <None Include="Specs\CommonMark.md" />
     <None Include="Specs\GlobalizationSpecs.md" />
     <None Include="Specs\JiraLinks.md" />
     <None Include="Specs\AutoLinks.md" />
@@ -110,12 +131,6 @@
     <None Include="Specs\MathSpecs.md" />
     <None Include="Specs\PipeTableSpecs.md" />
     <None Include="Specs\EmphasisExtraSpecs.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Specs\Specs.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Specs.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeNormDApp\UnicodeNormDApp.csproj", "{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFileGen", "SpecFileGen\SpecFileGen.csproj", "{DB6E2ED5-7884-4E97-84AF-35E2480CF685}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6E2ED5-7884-4E97-84AF-35E2480CF685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6E2ED5-7884-4E97-84AF-35E2480CF685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6E2ED5-7884-4E97-84AF-35E2480CF685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6E2ED5-7884-4E97-84AF-35E2480CF685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

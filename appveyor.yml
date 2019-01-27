@@ -28,6 +28,8 @@ install:
 build:
   project: src/Markdig.sln
   verbosity: minimal
+after_build:
+  - dotnet run --project SpecFileGen/SpecFileGen.csproj -c Release
 before_package:
 - cmd: >-
      msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
