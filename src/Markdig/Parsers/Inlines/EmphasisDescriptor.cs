@@ -23,7 +23,6 @@ namespace Markdig.Parsers.Inlines
             if (minimumCount < 1) throw new ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be >= 1");
             if (maximumCount < 1) throw new ArgumentOutOfRangeException(nameof(maximumCount), "maximumCount must be >= 1");
             if (minimumCount > maximumCount) throw new ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be <= maximumCount");
-            if (maximumCount > 2) throw new ArgumentOutOfRangeException(nameof(maximumCount), "maximum must be <= 2");
 
             Character = character;
             MinimumCount = minimumCount;
@@ -42,7 +41,7 @@ namespace Markdig.Parsers.Inlines
         public readonly int MinimumCount;
 
         /// <summary>
-        /// The maximum number of character this emphasis is expected to have (must be >=1 and >= minumunCount and &lt;= 2)
+        /// The maximum number of character this emphasis is expected to have (must be >=1 and >= minumunCount)
         /// </summary>
         public readonly int MaximumCount;
 
