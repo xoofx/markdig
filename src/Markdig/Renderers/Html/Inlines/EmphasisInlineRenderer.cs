@@ -2,13 +2,14 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using Markdig.Syntax.Inlines;
+using System.Diagnostics;
 
 namespace Markdig.Renderers.Html.Inlines
 {
     /// <summary>
     /// A HTML renderer for an <see cref="EmphasisInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.EmphasisInline}" />
+    /// <seealso cref="Html.HtmlObjectRenderer{EmphasisInline}" />
     public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     {
         /// <summary>
@@ -55,7 +56,8 @@ namespace Markdig.Renderers.Html.Inlines
         {
             if (obj.DelimiterChar == '*' || obj.DelimiterChar == '_')
             {
-                return obj.IsDouble ? "strong" : "em";
+                Debug.Assert(obj.DelimiterCount <= 2);
+                return obj.DelimiterCount == 2 ? "strong" : "em";
             }
             return null;
         }

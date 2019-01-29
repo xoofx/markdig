@@ -6,13 +6,14 @@ using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
+using System.Diagnostics;
 
 namespace Markdig.Extensions.Citations
 {
     /// <summary>
     /// Extension for cite ""...""
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class CitationExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -26,8 +27,7 @@ namespace Markdig.Extensions.Citations
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 // Extend the rendering here.
                 var emphasisRenderer = renderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
@@ -42,7 +42,8 @@ namespace Markdig.Extensions.Citations
 
         private static string GetTag(EmphasisInline emphasisInline)
         {
-            return emphasisInline.IsDouble && emphasisInline.DelimiterChar == '"' ? "cite" : null;
+            Debug.Assert(emphasisInline.DelimiterCount <= 2);
+            return emphasisInline.DelimiterCount == 2 && emphasisInline.DelimiterChar == '"' ? "cite" : null;
         }
     }
 }

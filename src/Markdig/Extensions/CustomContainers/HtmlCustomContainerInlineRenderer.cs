@@ -9,7 +9,7 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// A HTML renderer for a <see cref="CustomContainerInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{CustomContainerInline}" />
+    /// <seealso cref="Renderers.Html.HtmlObjectRenderer{CustomContainerInline}" />
     public class HtmlCustomContainerInlineRenderer : HtmlObjectRenderer<CustomContainerInline>
     {
         protected override void Write(HtmlRenderer renderer, CustomContainerInline obj)

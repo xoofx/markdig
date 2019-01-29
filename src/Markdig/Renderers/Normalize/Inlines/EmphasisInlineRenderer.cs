@@ -8,12 +8,12 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for an <see cref="EmphasisInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.Inlines.EmphasisInline}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{EmphasisInline}" />
     public class EmphasisInlineRenderer : NormalizeObjectRenderer<EmphasisInline>
     {
         protected override void Write(NormalizeRenderer renderer, EmphasisInline obj)
         {
-            var emphasisText = new string(obj.DelimiterChar, obj.IsDouble ? 2 : 1);
+            var emphasisText = new string(obj.DelimiterChar, obj.DelimiterCount);
             renderer.Write(emphasisText);
             renderer.WriteChildren(obj);
             renderer.Write(emphasisText);
