@@ -22,12 +22,12 @@ namespace Markdig.Tests
 
         public static void AreEqual(string expectedValue, string actualValue)
         {
-            AreEqual(actualValue, expectedValue, DiffStyle.Full, Console.Out);
+            AreEqual(expectedValue, actualValue, DiffStyle.Full, Console.Out);
         }
 
         public static void AreEqual(string expectedValue, string actualValue, DiffStyle diffStyle)
         {
-            AreEqual(actualValue, expectedValue, diffStyle, Console.Out);
+            AreEqual(expectedValue, actualValue, diffStyle, Console.Out);
         }
 
         public static void AreEqual(string expectedValue, string actualValue, DiffStyle diffStyle, TextWriter output)
