@@ -76,6 +76,7 @@
     <Compile Include="Specs\SmartyPantsSpecs.cs" />
     <Compile Include="Specs\TaskListSpecs.cs" />
     <Compile Include="Specs\YamlSpecs.cs" />
+    <Compile Include="TestEmphasisExtended.cs" />
     <Compile Include="TestEmphasisPlus.cs" />
     <Compile Include="TestEmphasisExtraOptions.cs" />
     <Compile Include="TestDescendantsOrder.cs" />
