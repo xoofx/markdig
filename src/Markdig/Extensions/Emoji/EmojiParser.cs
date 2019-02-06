@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -13,13 +12,13 @@ namespace Markdig.Extensions.Emoji
     /// <summary>
     /// The inline parser used to for emoji.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class EmojiParser : InlineParser
     {
         private static readonly Dictionary<string, string> EmojiToUnicodeDefault;
         private static readonly Dictionary<string, string> SmileyToEmojiDefault;
 
-        private TextMatchHelper textMatchHelper;
+        private CompactPrefixTree<string> _emojiPrefixTree;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmojiParser"/> class.
@@ -28,8 +27,6 @@ namespace Markdig.Extensions.Emoji
         {
             EnableSmiley = enableSmiley;
             OpeningCharacters = null;
-            EmojiToUnicode = new Dictionary<string, string>(EmojiToUnicodeDefault);
-            SmileyToEmoji = new Dictionary<string, string>(SmileyToEmojiDefault);
         }
 
         /// <summary>
@@ -37,91 +34,97 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public bool EnableSmiley { get; set; }
 
+        private Dictionary<string, string> _emojiToUnicode = null;
         /// <summary>
         /// Gets the emoji to unicode mapping. This can be modified before this parser is initialized.
         /// </summary>
-        public Dictionary<string, string>  EmojiToUnicode { get; }
+        public Dictionary<string, string> EmojiToUnicode
+        {
+            // Lazy init, maybe it won't be necesarry at all
+            get => (_emojiToUnicode = _emojiToUnicode ?? new Dictionary<string, string>(EmojiToUnicodeDefault, StringComparer.Ordinal));
+        }
 
+        private Dictionary<string, string> _smileyToEmoji = null;
         /// <summary>
         /// Gets the smiley to emoji mapping. This can be modified before this parser is initialized.
         /// </summary>
-        public Dictionary<string, string>  SmileyToEmoji { get; }
+        public Dictionary<string, string> SmileyToEmoji
+        {
+            // Lazy init, maybe it won't be necesarry at all
+            get => (_smileyToEmoji = _smileyToEmoji ?? new Dictionary<string, string>(SmileyToEmojiDefault, StringComparer.Ordinal));
+        }
 
         public override void Initialize()
         {
-            var firstChars = new HashSet<char>();
-            var textToMatch = new HashSet<string>();
+            // Don't allocate a new dictionary if we don't need it
+            var emojiToUnicode = _emojiToUnicode ?? EmojiToUnicodeDefault;
 
-            foreach (var emoji in EmojiToUnicode)
+            if (EnableSmiley)
             {
-                firstChars.Add(emoji.Key[0]);
-                textToMatch.Add(emoji.Key);
-            }
+                // Don't allocate a new dictionary if we don't need it
+                var smileyToEmoji = _smileyToEmoji ?? SmileyToEmojiDefault;
 
-            foreach (var smiley in SmileyToEmoji)
+                int jointCount = emojiToUnicode.Count + smileyToEmoji.Count;
+                // Count * 2 seems to be a good fit for the data set
+                _emojiPrefixTree = new CompactPrefixTree<string>(jointCount, jointCount * 2);
+                foreach (var emoji in emojiToUnicode)
+                    _emojiPrefixTree.Add(emoji);
+
+                // This is not the best data set for the prefix tree as it will have to check the first character linearly
+                // A work-around would require a bunch of substrings / removing the leading ':' from emojis, neither one is pretty
+                // This way we sacrifice a few microseconds for not introducing breaking changes, emojis aren't all that common anyhow
+
+                var firstChars = new HashSet<char> { ':' };
+
+                foreach (var smiley in smileyToEmoji)
+                {
+                    if (!emojiToUnicode.TryGetValue(smiley.Value, out string unicode))
+                        throw new ArgumentException("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value);
+
+                    firstChars.Add(smiley.Key[0]);
+
+                    if (!_emojiPrefixTree.TryAdd(smiley.Key, unicode))
+                        throw new ArgumentException("Smiley {0} is already present in the Emoji dictionary", smiley.Key);
+                }
+
+                OpeningCharacters = new List<char>(firstChars).ToArray();
+            }
+            else
             {
-                firstChars.Add(smiley.Key[0]);
-                textToMatch.Add(smiley.Key);
-            }
-
-            textMatchHelper = new TextMatchHelper(textToMatch);
-
-            OpeningCharacters = new List<char>(firstChars).ToArray();
-            Array.Sort(OpeningCharacters);
+                OpeningCharacters = new[] { ':' };
+                _emojiPrefixTree = new CompactPrefixTree<string>(emojiToUnicode);
+            };
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            string match;
-
             // Previous char must be a space
             if (!slice.PeekCharExtra(-1).IsWhiteSpaceOrZero())
             {
                 return false;
             }
 
-            // Try to match an existing emoji
-            var startPosition = slice.Start;
-            if (!textMatchHelper.TryMatch(slice.Text, slice.Start, slice.Length, out match))
+            // Try to match an emoji
+            if (!_emojiPrefixTree.TryMatchLongest(slice.Text, slice.Start, slice.Length, out KeyValuePair<string, string> match))
             {
                 return false;
             }
-
-            string emoji = match;
-            if (EnableSmiley)
-            {
-                // If we have a smiley, we decode it to emoji
-                if (!SmileyToEmoji.TryGetValue(match, out emoji))
-                {
-                    emoji = match;
-                }
-            }
-
-            // Decode the eomji to unicode
-            string unicode;
-            if (!EmojiToUnicode.TryGetValue(emoji, out unicode))
-            {
-                // Should not happen but in case
-                return false;
-            }
-
-            // Move the cursor to the character after the matched string
-            slice.Start += match.Length;
 
             // Push the EmojiInline
-            int line;
-            int column;
-            processor.Inline = new EmojiInline(unicode)
+            processor.Inline = new EmojiInline(match.Value)
             {
                 Span =
                 {
-                    Start = processor.GetSourcePosition(startPosition, out line, out column),
+                    Start = processor.GetSourcePosition(slice.Start, out int line, out int column),
                 },
                 Line = line,
                 Column = column,
-                Match = match
+                Match = match.Key
             };
-            processor.Inline.Span.End = processor.Inline.Span.Start + match.Length - 1;
+            processor.Inline.Span.End = processor.Inline.Span.Start + match.Key.Length - 1;
+
+            // Move the cursor to the character after the matched string
+            slice.Start += match.Key.Length;
 
             return true;
         }
@@ -1082,12 +1085,12 @@ namespace Markdig.Extensions.Emoji
 
                 // Custom arrows
                 {"<-", ":custom_arrow_left:" },
-                {"->", ":custom_arrow_rigth:" },
-                {"<->", ":custom_arrow_left_rigth:" },
+                {"->", ":custom_arrow_right:" },
+                {"<->", ":custom_arrow_left_right:" },
 
                 {"<=", ":custom_arrow_left_strong:" },
-                {"=>", ":custom_arrow_rigth_strong:" },
-                {"<=>", ":custom_arrow_left_rigth_strong:" },
+                {"=>", ":custom_arrow_right_strong:" },
+                {"<=>", ":custom_arrow_left_right_strong:" },
             };
         }
         #endregion
