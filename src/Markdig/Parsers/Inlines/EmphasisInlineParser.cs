@@ -65,7 +65,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
         public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }
-        public List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = new List<TryCreateEmphasisInlineDelegate>();
+        public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = new List<TryCreateEmphasisInlineDelegate>();
 
         public override void Initialize()
         {

@@ -11,7 +11,7 @@ namespace Markdig.Syntax.Inlines
     /// An emphasis and strong emphasis (Section 6.4 CommonMark specs).
     /// </summary>
     /// <seealso cref="ContainerInline" />
-    [DebuggerDisplay("{DelimiterChar} Strong: {IsDouble}")]
+    [DebuggerDisplay("{DelimiterChar} Count: {DelimiterCount}")]
     public class EmphasisInline : ContainerInline
     {
         /// <summary>
