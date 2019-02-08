@@ -1,4 +1,4 @@
-// Generated: 21. 01. 2019 14:26:34
+// Generated: 6. 02. 2019 16:15:54
 
 // --------------------------------
 //           Abbreviations
@@ -192,6 +192,45 @@ namespace Markdig.Tests.Specs.Abbreviations
 
             Console.WriteLine("Example 9\nSection Extensions / Abbreviation\n");
             TestParser.TestSpec("*[PR]: Pull Request\n\nPRAA", "<p>PRAA</p>", "abbreviations|advanced");
+        }
+
+        // Single character abbreviations should be matched
+        [Test]
+        public void ExtensionsAbbreviation_Example010()
+        {
+            // Example 10
+            // Section: Extensions / Abbreviation
+            //
+            // The following Markdown:
+            //     *[A]: Foo
+            //     
+            //     A
+            //
+            // Should be rendered as:
+            //     <p><abbr title="Foo">A</abbr></p>
+
+            Console.WriteLine("Example 10\nSection Extensions / Abbreviation\n");
+            TestParser.TestSpec("*[A]: Foo\n\nA", "<p><abbr title=\"Foo\">A</abbr></p>", "abbreviations|advanced");
+        }
+
+        // The longest matching abbreviation should be used
+        [Test]
+        public void ExtensionsAbbreviation_Example011()
+        {
+            // Example 11
+            // Section: Extensions / Abbreviation
+            //
+            // The following Markdown:
+            //     *[Foo]: foo
+            //     *[Foo Bar]: foobar
+            //     
+            //     Foo B
+            //
+            // Should be rendered as:
+            //     <p><abbr title="foo">Foo</abbr> B</p>
+
+            Console.WriteLine("Example 11\nSection Extensions / Abbreviation\n");
+            TestParser.TestSpec("*[Foo]: foo\n*[Foo Bar]: foobar\n\nFoo B", "<p><abbr title=\"foo\">Foo</abbr> B</p>", "abbreviations|advanced");
         }
     }
 }

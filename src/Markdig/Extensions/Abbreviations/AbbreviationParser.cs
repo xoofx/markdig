@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Abbreviations
     /// <summary>
     /// A block parser for abbreviations.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class AbbreviationParser : BlockParser
     {
         /// <summary>
@@ -40,8 +40,7 @@ namespace Markdig.Extensions.Abbreviations
             }
 
             SourceSpan labelSpan;
-            string label;
-            if (!LinkHelper.TryParseLabel(ref slice, out label, out labelSpan))
+            if (!LinkHelper.TryParseLabel(ref slice, out string label, out labelSpan))
             {
                 return BlockState.None;
             }
@@ -85,8 +84,7 @@ namespace Markdig.Extensions.Abbreviations
             }
 
             // Build a text matcher from the abbreviations labels
-            var labels = new HashSet<string>(abbreviations.Keys);
-            var matcher = new TextMatchHelper(labels);
+            var prefixTree = new CompactPrefixTree<Abbreviation>(abbreviations);
 
             inlineProcessor.LiteralInlineParser.PostMatch += (InlineProcessor processor, ref StringSlice slice) =>
             {
@@ -98,19 +96,34 @@ namespace Markdig.Extensions.Abbreviations
                 // This is slow, but we don't have much the choice
                 var content = literal.Content;
                 var text = content.Text;
-                for (int i = content.Start; i < content.End; i++)
-                {
-                    string match;
-                    if (matcher.TryMatch(text, i, content.End - i + 1, out match) && IsValidAbbreviation(match, content, i))
-                    {
-                        var indexAfterMatch = i + match.Length;
 
-                        // We should have a match, but in case...
-                        Abbreviation abbr;
-                        if (!abbreviations.TryGetValue(match, out abbr))
+                for (int i = content.Start; i <= content.End; i++)
+                {
+                    // Abbreviation must be a whole word == start at the start of a line or after a whitespace
+                    if (i != 0)
+                    {
+                        for (i = i - 1; i <= content.End; i++)
+                        {
+                            if (text[i].IsWhitespace())
+                            {
+                                i++;
+                                goto ValidAbbreviationStart;
+                            }
+                        }
+                        break;
+                    }
+
+                ValidAbbreviationStart:;
+
+                    if (prefixTree.TryMatchLongest(text, i, content.End - i + 1, out KeyValuePair<string, Abbreviation> abbreviationMatch))
+                    {
+                        var match = abbreviationMatch.Key;
+                        if (!IsValidAbbreviationEnding(match, content, i))
                         {
                             continue;
                         }
+
+                        var indexAfterMatch = i + match.Length;
 
                         // If we don't have a container, create a new one
                         if (container == null)
@@ -124,13 +137,11 @@ namespace Markdig.Extensions.Abbreviations
                                 };
                         }
 
-                        int line;
-                        int column;
-                        var abbrInline = new AbbreviationInline(abbr)
+                        var abbrInline = new AbbreviationInline(abbreviationMatch.Value)
                         {
                             Span =
                             {
-                                Start = processor.GetSourcePosition(i, out line, out column),
+                                Start = processor.GetSourcePosition(i, out int line, out int column),
                             },
                             Line = line,
                             Column = column
@@ -138,13 +149,9 @@ namespace Markdig.Extensions.Abbreviations
                         abbrInline.Span.End = abbrInline.Span.Start + match.Length - 1;
 
                         // Append the previous literal
-                        if (i > content.Start)
+                        if (i > content.Start && literal.Parent == null)
                         {
-                            if (literal.Parent == null)
-                            {
-                                container.AppendChild(literal);
-                            }
-
+                            container.AppendChild(literal);
                         }
 
                         literal.Span.End = abbrInline.Span.Start - 1;
@@ -152,11 +159,10 @@ namespace Markdig.Extensions.Abbreviations
                         literal.Content.End = i - 1;
 
 
-                        // Appned the abbreviation
+                        // Append the abbreviation
                         container.AppendChild(abbrInline);
 
-                        // If this is the end of the string, clear the literal 
-                        // and exit
+                        // If this is the end of the string, clear the literal and exit
                         if (content.End == indexAfterMatch - 1)
                         {
                             literal = null;
@@ -188,34 +194,12 @@ namespace Markdig.Extensions.Abbreviations
             };
         }
 
-        private static bool IsValidAbbreviation(string match, StringSlice content, int matchIndex)
+        private static bool IsValidAbbreviationEnding(string match, StringSlice content, int matchIndex)
         {
-            // The word matched must be embraced by punctuation or whitespace or \0.
-            var index = matchIndex - 1;
-            while (index >= content.Start)
-            {
-                var c = content.PeekCharAbsolute(index);
-                if (!(c == '\0' || c.IsWhitespace() || c.IsAsciiPunctuation()))
-                {
-                    return false;
-                }
-
-                if (c.IsAlphaNumeric())
-                {
-                    return false;
-                }
-
-                if (!c.IsAsciiPunctuation() || c.IsWhitespace())
-                {
-                    break;
-                }
-                index--;
-            }
-
             // This will check if the next char at the end of the StringSlice is whitespace, punctuation or \0.
             var contentNew = content;
             contentNew.End = content.End + 1;
-            index = matchIndex + match.Length;
+            int index = matchIndex + match.Length;
             while (index <= contentNew.End)
             {
                 var c = contentNew.PeekCharAbsolute(index);

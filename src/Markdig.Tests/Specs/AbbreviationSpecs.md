@@ -98,3 +98,24 @@ PRAA
 .
 <p>PRAA</p>
 ````````````````````````````````
+
+Single character abbreviations should be matched
+
+```````````````````````````````` example
+*[A]: Foo
+
+A
+.
+<p><abbr title="Foo">A</abbr></p>
+````````````````````````````````
+
+The longest matching abbreviation should be used
+
+```````````````````````````````` example
+*[Foo]: foo
+*[Foo Bar]: foobar
+
+Foo B
+.
+<p><abbr title="foo">Foo</abbr> B</p>
+````````````````````````````````

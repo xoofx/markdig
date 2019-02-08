@@ -7,7 +7,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <VersionPrefix>0.15.7</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
-    <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1;netstandard2.0;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.1;netstandard2.0;uap10.0;netcoreapp2.1</TargetFrameworks>
     <AssemblyName>Markdig</AssemblyName>
     <PackageId>Markdig</PackageId>
     <PackageId Condition="'$(SignAssembly)' == 'true'">Markdig.Signed</PackageId>
@@ -18,6 +18,7 @@
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.1' ">1.6.0</NetStandardImplicitPackageVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
@@ -53,6 +54,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);SUPPORT_FIXED_STRING;SUPPORT_UNSAFE</DefineConstants>
+  </PropertyGroup>
+ 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+    <DefineConstants>$(DefineConstants);SUPPORT_FIXED_STRING;SUPPORT_UNSAFE;NETCORE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
