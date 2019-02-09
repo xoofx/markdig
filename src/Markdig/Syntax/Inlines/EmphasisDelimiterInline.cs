@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 
@@ -11,7 +12,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A delimiter used for parsing emphasis.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.DelimiterInline" />
+    /// <seealso cref="DelimiterInline" />
     public class EmphasisDelimiterInline : DelimiterInline
     {
         /// <summary>
@@ -19,11 +20,10 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         /// <param name="parser">The parser.</param>
         /// <param name="descriptor">The descriptor.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor) : base(parser)
         {
-            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
-            Descriptor = descriptor;
+            Descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
             DelimiterChar = descriptor.Character;
         }
 
@@ -45,6 +45,18 @@ namespace Markdig.Syntax.Inlines
         public override string ToLiteral()
         {
             return DelimiterCount > 0 ? new string(DelimiterChar, DelimiterCount) : string.Empty;
+        }
+
+        public LiteralInline AsLiteralInline()
+        {
+            return new LiteralInline()
+            {
+                Content = new StringSlice(ToLiteral()),
+                IsClosed = true,
+                Span = Span,
+                Line = Line,
+                Column = Column
+            };
         }
     }
 }

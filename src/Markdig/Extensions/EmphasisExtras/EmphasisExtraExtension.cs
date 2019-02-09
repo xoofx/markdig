@@ -6,13 +6,14 @@ using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
+using System.Diagnostics;
 
 namespace Markdig.Extensions.EmphasisExtras
 {
     /// <summary>
     /// Extension for strikethrough, subscript, superscript, inserted and marked.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class EmphasisExtraExtension : IMarkdownExtension
     {
         /// <summary>
@@ -89,8 +90,7 @@ namespace Markdig.Extensions.EmphasisExtras
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 // Extend the rendering here.
                 var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
@@ -108,7 +108,8 @@ namespace Markdig.Extensions.EmphasisExtras
             switch (c)
             {
                 case '~':
-                    return emphasisInline.IsDouble ? "del" : "sub";
+                    Debug.Assert(emphasisInline.DelimiterCount <= 2);
+                    return emphasisInline.DelimiterCount == 2 ? "del" : "sub";
                 case '^':
                     return "sup";
                 case '+':

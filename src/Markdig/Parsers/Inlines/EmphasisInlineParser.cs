@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -14,14 +15,16 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for <see cref="EmphasisInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     /// <seealso cref="IPostInlineProcessor" />
     public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     {
         private CharacterMap<EmphasisDescriptor> emphasisMap;
-        private readonly DelimitersObjectCache inlinesCache;
+        private readonly DelimitersObjectCache inlinesCache = new DelimitersObjectCache();
 
+        [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
         public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
+        public delegate EmphasisInline TryCreateEmphasisInlineDelegate(char emphasisChar, int delimiterCount);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisInlineParser"/> class.
@@ -33,7 +36,6 @@ namespace Markdig.Parsers.Inlines
                 new EmphasisDescriptor('*', 1, 2, true),
                 new EmphasisDescriptor('_', 1, 2, false)
             };
-            inlinesCache = new DelimitersObjectCache();
         }
 
         /// <summary>
@@ -61,7 +63,9 @@ namespace Markdig.Parsers.Inlines
         /// <summary>
         /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
         /// </summary>
+        [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
         public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }
+        public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = new List<TryCreateEmphasisInlineDelegate>();
 
         public override void Initialize()
         {
@@ -87,17 +91,16 @@ namespace Markdig.Parsers.Inlines
 
         public bool PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
-            var container = root as ContainerInline;
-            if (container == null)
+            if (!(root is ContainerInline container))
             {
                 return true;
             }
 
             List<EmphasisDelimiterInline> delimiters = null;
-            if (container is EmphasisDelimiterInline)
+            if (container is EmphasisDelimiterInline emphasisDelimiter)
             {
                 delimiters = inlinesCache.Get();
-                delimiters.Add((EmphasisDelimiterInline)container);
+                delimiters.Add(emphasisDelimiter);
             }
 
             // Move current_position forward in the delimiter stack (if needed) until 
@@ -109,8 +112,7 @@ namespace Markdig.Parsers.Inlines
                 {
                     break;
                 }
-                var delimiter = child as EmphasisDelimiterInline;
-                if (delimiter != null)
+                if (child is EmphasisDelimiterInline delimiter)
                 {
                     if (delimiters == null)
                     {
@@ -132,17 +134,16 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            // First, some definitions. A delimiter run is either a sequence of one or more * characters that 
-            // is not preceded or followed by a * character, or a sequence of one or more _ characters that 
-            // is not preceded or followed by a _ character.
+            // First, some definitions.
+            // A delimiter run is a sequence of one or more delimiter characters that is not preceded or followed by the same delimiter character
+            // The amount of delimiter characters in the delimiter run may exceed emphasisDesc.MaximumCount, as that is handeled in `ProcessEmphasis`
 
             var delimiterChar = slice.CurrentChar;
             var emphasisDesc = emphasisMap[delimiterChar];
 
-            var pc = (char)0;
-            if (processor.Inline is HtmlEntityInline)
+            char pc = (char)0;
+            if (processor.Inline is HtmlEntityInline htmlEntityInline)
             {
-                var htmlEntityInline = (HtmlEntityInline) processor.Inline;
                 if (htmlEntityInline.Transcoded.Length > 0)
                 {
                     pc = htmlEntityInline.Transcoded[htmlEntityInline.Transcoded.End];
@@ -153,6 +154,9 @@ namespace Markdig.Parsers.Inlines
                 pc = slice.PeekCharExtra(-1);
                 if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
                 {
+                    // If we get here, we determined that either:
+                    // a) there weren't enough delimiters in the delimiter run to satisfy the MinimumCount condition
+                    // b) the previous character couldn't open/close
                     return false;
                 }
             }
@@ -174,38 +178,26 @@ namespace Markdig.Parsers.Inlines
             }
 
             // The following character is actually an entity, we need to decode it
-            int htmlLength;
-            string htmlString;
-            if (HtmlEntityParser.TryParse(ref slice, out htmlString, out htmlLength))
+            if (HtmlEntityParser.TryParse(ref slice, out string htmlString, out int htmlLength))
             {
                 c = htmlString[0];
             }
 
             // Calculate Open-Close for current character
-            bool canOpen;
-            bool canClose;
-            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out canOpen, out canClose);
+            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out bool canOpen, out bool canClose);
 
             // We have potentially an open or close emphasis
             if (canOpen || canClose)
             {
                 var delimiterType = DelimiterType.Undefined;
-                if (canOpen)
-                {
-                    delimiterType |= DelimiterType.Open;
-                }
-                if (canClose)
-                {
-                    delimiterType |= DelimiterType.Close;
-                }
+                if (canOpen) delimiterType |= DelimiterType.Open;
+                if (canClose) delimiterType |= DelimiterType.Close;
 
-                int line;
-                int column;
                 var delimiter = new EmphasisDelimiterInline(this, emphasisDesc)
                 {
                     DelimiterCount = delimiterCount,
                     Type = delimiterType,
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Column = column,
                     Line = line,
                 };
@@ -223,25 +215,27 @@ namespace Markdig.Parsers.Inlines
             // The following method is inspired by the "An algorithm for parsing nested emphasis and links"
             // at the end of the CommonMark specs.
 
+            // TODO: Benchmark difference between using List and LinkedList here since there could be a few Remove calls
+
             // Move current_position forward in the delimiter stack (if needed) until 
             // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var closeDelimiter = delimiters[i];
                 // Skip delimiters not supported by this instance
-                if (emphasisMap[closeDelimiter.DelimiterChar] == null)
+                EmphasisDescriptor emphasisDesc = emphasisMap[closeDelimiter.DelimiterChar];
+                if (emphasisDesc == null)
                 {
                     continue;
                 }
 
-                if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount > 0)
+                if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
                 {
                     while (true)
                     {
                         // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
                         // for the first matching potential opener (“matching” means same delimiter).
                         EmphasisDelimiterInline openDelimiter = null;
-                        EmphasisDescriptor emphasisDesc = null;
                         int openDelimiterIndex = -1;
                         for (int j = i - 1; j >= 0; j--)
                         {
@@ -254,10 +248,9 @@ namespace Markdig.Parsers.Inlines
 
                             if (previousOpenDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
                                 (previousOpenDelimiter.Type & DelimiterType.Open) != 0 &&
-                                previousOpenDelimiter.DelimiterCount > 0 && !isOddMatch)
+                                previousOpenDelimiter.DelimiterCount >= emphasisDesc.MinimumCount && !isOddMatch)
                             {
                                 openDelimiter = previousOpenDelimiter;
-                                emphasisDesc = emphasisMap[previousOpenDelimiter.DelimiterChar];
                                 openDelimiterIndex = j;
                                 break;
                             }
@@ -265,21 +258,44 @@ namespace Markdig.Parsers.Inlines
 
                         if (openDelimiter != null)
                         {
-                            process_delims:
-                            bool isStrong = openDelimiter.DelimiterCount >= 2 && closeDelimiter.DelimiterCount >= 2 && emphasisDesc.MaximumCount >= 2;
+                        process_delims:
+                            Debug.Assert(openDelimiter.DelimiterCount >= emphasisDesc.MinimumCount, "Extra emphasis should have been discarded by now");
+                            Debug.Assert(closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount, "Extra emphasis should have been discarded by now");
+                            int delimiterDelta = Math.Min(Math.Min(openDelimiter.DelimiterCount, closeDelimiter.DelimiterCount), emphasisDesc.MaximumCount);
 
                             // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
-                            var emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong)
-                                ?? new EmphasisInline()
+                            EmphasisInline emphasis = null;
+                            {
+                                if (delimiterDelta <= 2) // We can try using the legacy delegate
                                 {
-                                    DelimiterChar = closeDelimiter.DelimiterChar,
-                                    IsDouble = isStrong
-                                };
+                                    #pragma warning disable CS0618 // Support fields marked as obsolete
+                                    emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong: delimiterDelta == 2);
+                                    #pragma warning restore CS0618 // Support fields marked as obsolete
+                                }
+                                if (emphasis == null)
+                                {
+                                    // Go in backwards order to give priority to newer delegates
+                                    for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
+                                    {
+                                        emphasis = TryCreateEmphasisInlineList[delegateIndex].Invoke(closeDelimiter.DelimiterChar, delimiterDelta);
+                                        if (emphasis != null) break;
+                                    }
+
+                                    if (emphasis == null)
+                                    {
+                                        emphasis = new EmphasisInline()
+                                        {
+                                            DelimiterChar = closeDelimiter.DelimiterChar,
+                                            DelimiterCount = delimiterDelta
+                                        };
+                                    }
+                                }
+                            }
+                            Debug.Assert(emphasis != null);
 
                             // Update position for emphasis
                             var openDelimitercount = openDelimiter.DelimiterCount;
                             var closeDelimitercount = closeDelimiter.DelimiterCount;
-                            var delimiterDelta = isStrong ? 2 : 1;
 
                             emphasis.Span.Start = openDelimiter.Span.Start;
                             emphasis.Line = openDelimiter.Line;
@@ -310,17 +326,7 @@ namespace Markdig.Parsers.Inlines
                             for (int k = i - 1; k >= openDelimiterIndex + 1; k--)
                             {
                                 var literalDelimiter = delimiters[k];
-                                var literal = new LiteralInline()
-                                {
-                                    Content = new StringSlice(literalDelimiter.ToLiteral()),
-                                    IsClosed = true,
-                                    Span = literalDelimiter.Span,
-                                    Line = literalDelimiter.Line,
-                                    Column = literalDelimiter.Column
-                                };
-
-                                literalDelimiter.ReplaceBy(literal);
-                                
+                                literalDelimiter.ReplaceBy(literalDelimiter.AsLiteralInline());                                
                                 delimiters.RemoveAt(k);
                                 i--;
                             }
@@ -345,9 +351,16 @@ namespace Markdig.Parsers.Inlines
                             }
 
                             // The current delimiters are matching
-                            if (openDelimiter.DelimiterCount > 0)
+                            if (openDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
                             {
                                 goto process_delims;
+                            }
+                            else if (openDelimiter.DelimiterCount > 0)
+                            {
+                                // There are still delimiter characters left, there's just not enough of them
+                                openDelimiter.ReplaceBy(openDelimiter.AsLiteralInline());
+                                delimiters.RemoveAt(openDelimiterIndex);
+                                i--;
                             }
                             else
                             {
@@ -364,17 +377,7 @@ namespace Markdig.Parsers.Inlines
                         }
                         else if ((closeDelimiter.Type & DelimiterType.Open) == 0)
                         {
-                            var literal = new LiteralInline()
-                            {
-                                Content = new StringSlice(closeDelimiter.ToLiteral()),
-                                IsClosed = true,
-                                Span = closeDelimiter.Span,
-                                Line = closeDelimiter.Line,
-                                Column = closeDelimiter.Column
-                            };
-
-                            closeDelimiter.ReplaceBy(literal);
-                            // Notifies processor as we are creating an inline locally
+                            closeDelimiter.ReplaceBy(closeDelimiter.AsLiteralInline());
                             delimiters.RemoveAt(i);
                             i--;
                             break;
@@ -391,16 +394,7 @@ namespace Markdig.Parsers.Inlines
             for (int i = 0; i < delimiters.Count; i++)
             {
                 var delimiter = delimiters[i];
-                var literal = new LiteralInline()
-                {
-                    Content = new StringSlice(delimiter.ToLiteral()),
-                    IsClosed = true,
-                    Span = delimiter.Span,
-                    Line = delimiter.Line,
-                    Column = delimiter.Column
-                };
-
-                delimiter.ReplaceBy(literal);
+                delimiter.ReplaceBy(delimiter.AsLiteralInline());
             }
             delimiters.Clear();
         }

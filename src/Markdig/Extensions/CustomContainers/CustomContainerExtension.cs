@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -10,7 +10,7 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// Extension to allow custom containers.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class CustomContainerExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -26,22 +26,20 @@ namespace Markdig.Extensions.CustomContainers
             if (inlineParser != null && !inlineParser.HasEmphasisChar(':'))
             {
                 inlineParser.EmphasisDescriptors.Add(new EmphasisDescriptor(':', 2, 2, true));
-                var previousCreateEmphasisInline = inlineParser.CreateEmphasisInline;
-                inlineParser.CreateEmphasisInline = (emphasisChar, strong) =>
+                inlineParser.TryCreateEmphasisInlineList.Add((emphasisChar, delimiterCount) =>
                 {
-                    if (strong && emphasisChar == ':')
+                    if (delimiterCount == 2 && emphasisChar == ':')
                     {
                         return new CustomContainerInline();
                     }
-                    return previousCreateEmphasisInline?.Invoke(emphasisChar, strong);
-                };
+                    return null;
+                });
             }
         }
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlCustomContainerRenderer>())
                 {

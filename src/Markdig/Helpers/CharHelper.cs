@@ -71,12 +71,8 @@ namespace Markdig.Helpers
             // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
             // or a punctuation character. 
             // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
-            bool nextIsPunctuation;
-            bool nextIsWhiteSpace;
-            bool prevIsPunctuation;
-            bool prevIsWhiteSpace;
-            pc.CheckUnicodeCategory(out prevIsWhiteSpace, out prevIsPunctuation);
-            c.CheckUnicodeCategory(out nextIsWhiteSpace, out nextIsPunctuation);
+            pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
+            c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
 
             var prevIsExcepted = prevIsPunctuation && punctuationExceptions.Contains(pc);
             var nextIsExcepted = nextIsPunctuation && punctuationExceptions.Contains(c);
