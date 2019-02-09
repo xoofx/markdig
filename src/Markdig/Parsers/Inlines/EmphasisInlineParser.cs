@@ -229,7 +229,7 @@ namespace Markdig.Parsers.Inlines
                     continue;
                 }
 
-                if (closeDelimiter.Type.HasFlag(DelimiterType.Close) && closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
+                if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
                 {
                     while (true)
                     {
@@ -241,13 +241,13 @@ namespace Markdig.Parsers.Inlines
                         {
                             var previousOpenDelimiter = delimiters[j];
 
-                            var isOddMatch = (closeDelimiter.Type.HasFlag(DelimiterType.Open) ||
-                                             previousOpenDelimiter.Type.HasFlag(DelimiterType.Close)) &&
+                            var isOddMatch = ((closeDelimiter.Type & DelimiterType.Open) != 0 ||
+                                             (previousOpenDelimiter.Type & DelimiterType.Close) != 0) &&
                                              previousOpenDelimiter.DelimiterCount != closeDelimiter.DelimiterCount &&
                                              (previousOpenDelimiter.DelimiterCount + closeDelimiter.DelimiterCount) % 3 == 0;
 
                             if (previousOpenDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
-                                previousOpenDelimiter.Type.HasFlag(DelimiterType.Open) &&
+                                (previousOpenDelimiter.Type & DelimiterType.Open) != 0 &&
                                 previousOpenDelimiter.DelimiterCount >= emphasisDesc.MinimumCount && !isOddMatch)
                             {
                                 openDelimiter = previousOpenDelimiter;
@@ -375,7 +375,7 @@ namespace Markdig.Parsers.Inlines
                                 i--;
                             }
                         }
-                        else if (!closeDelimiter.Type.HasFlag(DelimiterType.Open))
+                        else if ((closeDelimiter.Type & DelimiterType.Open) == 0)
                         {
                             closeDelimiter.ReplaceBy(closeDelimiter.AsLiteralInline());
                             delimiters.RemoveAt(i);
