@@ -51,5 +51,7 @@ namespace Markdig.Extensions.Tables
         /// Gets or sets whether this cell can be closed.
         /// </summary>
         public bool AllowClose { get; set; }
+
+        public bool IsEmptyCell { get; set; }
     }
 }
