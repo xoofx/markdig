@@ -3,7 +3,10 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Markdig.Parsers;
+using Markdig.Renderers;
 using Markdig.Syntax;
 
 namespace Markdig.Extensions.Tables
@@ -70,6 +73,7 @@ namespace Markdig.Extensions.Tables
             return true;
         }
 
+        
         /// <summary>
         /// Normalizes the number of columns of this table by taking the maximum columns and appending empty cells.
         /// </summary>
@@ -94,6 +98,32 @@ namespace Markdig.Extensions.Tables
                     {
                         row.Add(new TableCell());
                     }
+                }
+            }
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            HtmlRenderer r = new HtmlRenderer(sw);
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                sb.Capacity = sb.Length = 0;
+                var row = this[i] as TableRow;
+                var cell = (TableCell)row[1];
+                r.Write(cell);
+                if (sb.ToString().Equals("<p></p>\n"))
+                {
+                    row.RemoveAt(1);
+                    cell = (TableCell)row[0];
+                    cell.ColumnSpan = 2;
+                }
+
+                sb.Capacity = sb.Length = 0;
+                cell = (TableCell) row[0];
+                r.Write(cell);
+                if (sb.ToString().Equals("<p></p>\n"))
+                {
+                    cell.IsEmptyCell = true;
                 }
             }
         }
