@@ -101,29 +101,52 @@ namespace Markdig.Extensions.Tables
                 }
             }
 
+            if (this.Count <= 0) return; //Now rows - return.
+
             var sb = new StringBuilder();
             var sw = new StringWriter(sb);
             HtmlRenderer r = new HtmlRenderer(sw);
 
-            for (int i = 0; i < this.Count; i++)
+            var firstRow = this[0] as TableRow;
+            if (firstRow.Count <= 1) return; //One or less columns. Break.
+
+            var secondCell = firstRow[1] as TableCell;
+            r.Write(secondCell);
+            if (!sb.ToString().Equals("<p></p>\n")) return; //First row, second cell is not empty. Break.
+
+            var enable = false; //Is there at least one row with first column empty?
+
+            for (int i = 1; i < this.Count; i++)
             {
                 sb.Capacity = sb.Length = 0;
                 var row = this[i] as TableRow;
-                var cell = (TableCell)row[1];
-                r.Write(cell);
-                if (sb.ToString().Equals("<p></p>\n"))
-                {
-                    row.RemoveAt(1);
-                    cell = (TableCell)row[0];
-                    cell.ColumnSpan = 2;
-                }
-
-                sb.Capacity = sb.Length = 0;
-                cell = (TableCell) row[0];
+                var cell = row[0] as TableCell;
                 r.Write(cell);
                 if (sb.ToString().Equals("<p></p>\n"))
                 {
                     cell.IsEmptyCell = true;
+                    enable = true;
+                }
+            }
+
+            if (!enable) return; //No row does have first column empty. Break.
+
+            //Merge cells which does have second column empty.
+            firstRow.RemoveAt(1);
+            var firstCell = firstRow[0] as TableCell;
+            firstCell.ColumnSpan = 2;
+
+            for (int i = 1; i < this.Count; i++)
+            {
+                sb.Capacity = sb.Length = 0;
+                var row = this[i] as TableRow;
+                var cell = row[1] as TableCell;
+                r.Write(cell);
+                if (sb.ToString().Equals("<p></p>\n"))
+                {
+                    row.RemoveAt(1);
+                    cell = row[0] as TableCell;
+                    cell.ColumnSpan = 2;
                 }
             }
         }
