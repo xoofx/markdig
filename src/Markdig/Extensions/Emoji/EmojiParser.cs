@@ -17,6 +17,10 @@ namespace Markdig.Extensions.Emoji
     {
         private static readonly Dictionary<string, string> EmojiToUnicodeDefault;
         private static readonly Dictionary<string, string> SmileyToEmojiDefault;
+        private static readonly CompactPrefixTree<string> EmojiPrefixTreeDefault;
+        private static readonly CompactPrefixTree<string> EmojiSmileyPrefixTreeDefault;
+        private static readonly char[] EmojiOpeningCharactersDefault;
+        private static readonly char[] EmojiSmileyOpeningCharactersDefault;
 
         private CompactPrefixTree<string> _emojiPrefixTree;
 
@@ -56,44 +60,8 @@ namespace Markdig.Extensions.Emoji
 
         public override void Initialize()
         {
-            // Don't allocate a new dictionary if we don't need it
-            var emojiToUnicode = _emojiToUnicode ?? EmojiToUnicodeDefault;
-
-            if (EnableSmiley)
-            {
-                // Don't allocate a new dictionary if we don't need it
-                var smileyToEmoji = _smileyToEmoji ?? SmileyToEmojiDefault;
-
-                int jointCount = emojiToUnicode.Count + smileyToEmoji.Count;
-                // Count * 2 seems to be a good fit for the data set
-                _emojiPrefixTree = new CompactPrefixTree<string>(jointCount, jointCount * 2);
-                foreach (var emoji in emojiToUnicode)
-                    _emojiPrefixTree.Add(emoji);
-
-                // This is not the best data set for the prefix tree as it will have to check the first character linearly
-                // A work-around would require a bunch of substrings / removing the leading ':' from emojis, neither one is pretty
-                // This way we sacrifice a few microseconds for not introducing breaking changes, emojis aren't all that common anyhow
-
-                var firstChars = new HashSet<char> { ':' };
-
-                foreach (var smiley in smileyToEmoji)
-                {
-                    if (!emojiToUnicode.TryGetValue(smiley.Value, out string unicode))
-                        throw new ArgumentException("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value);
-
-                    firstChars.Add(smiley.Key[0]);
-
-                    if (!_emojiPrefixTree.TryAdd(smiley.Key, unicode))
-                        throw new ArgumentException("Smiley {0} is already present in the Emoji dictionary", smiley.Key);
-                }
-
-                OpeningCharacters = new List<char>(firstChars).ToArray();
-            }
-            else
-            {
-                OpeningCharacters = new[] { ':' };
-                _emojiPrefixTree = new CompactPrefixTree<string>(emojiToUnicode);
-            };
+            OpeningCharacters = EnableSmiley ? EmojiSmileyOpeningCharactersDefault : EmojiOpeningCharactersDefault;
+            _emojiPrefixTree = EnableSmiley ? EmojiSmileyPrefixTreeDefault : EmojiPrefixTreeDefault;
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -128,7 +96,7 @@ namespace Markdig.Extensions.Emoji
 
             return true;
         }
-        
+
         #region Emojis and Smileys
         static EmojiParser()
         {
@@ -1092,6 +1060,34 @@ namespace Markdig.Extensions.Emoji
                 {"=>", ":custom_arrow_right_strong:" },
                 {"<=>", ":custom_arrow_left_right_strong:" },
             };
+
+            // Build Emoji and Smiley CompactPrefixTree
+            EmojiPrefixTreeDefault = new CompactPrefixTree<string>(EmojiToUnicodeDefault);
+
+            int jointCount = EmojiToUnicodeDefault.Count + SmileyToEmojiDefault.Count;
+            // Count * 2 seems to be a good fit for the data set
+            EmojiSmileyPrefixTreeDefault = new CompactPrefixTree<string>(jointCount, jointCount * 2);
+
+            // This is not the best data set for the prefix tree as it will have to check the first character linearly
+            // A work-around would require a bunch of substrings / removing the leading ':' from emojis, neither one is pretty
+            // This way we sacrifice a few microseconds for not introducing breaking changes, emojis aren't all that common anyhow
+
+            var firstChars = new HashSet<char> { ':' };
+            foreach (var emoji in EmojiToUnicodeDefault)
+                EmojiSmileyPrefixTreeDefault.Add(emoji);
+            foreach (var smiley in SmileyToEmojiDefault)
+            {
+                if (!EmojiToUnicodeDefault.TryGetValue(smiley.Value, out string unicode))
+                    throw new ArgumentException("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value);
+
+                firstChars.Add(smiley.Key[0]);
+
+                if (!EmojiSmileyPrefixTreeDefault.TryAdd(smiley.Key, unicode))
+                    throw new ArgumentException("Smiley {0} is already present in the Emoji dictionary", smiley.Key);
+            }
+
+            EmojiOpeningCharactersDefault = new[] { ':' };
+            EmojiSmileyOpeningCharactersDefault = new List<char>(firstChars).ToArray();
         }
         #endregion
     }
