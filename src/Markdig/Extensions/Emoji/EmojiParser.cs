@@ -38,26 +38,6 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public bool EnableSmiley { get; set; }
 
-        private Dictionary<string, string> _emojiToUnicode = null;
-        /// <summary>
-        /// Gets the emoji to unicode mapping. This can be modified before this parser is initialized.
-        /// </summary>
-        public Dictionary<string, string> EmojiToUnicode
-        {
-            // Lazy init, maybe it won't be necesarry at all
-            get => (_emojiToUnicode = _emojiToUnicode ?? new Dictionary<string, string>(EmojiToUnicodeDefault, StringComparer.Ordinal));
-        }
-
-        private Dictionary<string, string> _smileyToEmoji = null;
-        /// <summary>
-        /// Gets the smiley to emoji mapping. This can be modified before this parser is initialized.
-        /// </summary>
-        public Dictionary<string, string> SmileyToEmoji
-        {
-            // Lazy init, maybe it won't be necesarry at all
-            get => (_smileyToEmoji = _smileyToEmoji ?? new Dictionary<string, string>(SmileyToEmojiDefault, StringComparer.Ordinal));
-        }
-
         public override void Initialize()
         {
             OpeningCharacters = EnableSmiley ? EmojiSmileyOpeningCharactersDefault : EmojiOpeningCharactersDefault;
