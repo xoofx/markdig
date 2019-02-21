@@ -8,8 +8,6 @@ using System.Runtime.CompilerServices;
 
 /*
  * Ported to Markdig from https://github.com/MihaZupan/SharpCollections
- * Specifically, the version below is:
- * https://github.com/MihaZupan/SharpCollections/blob/91e613e0e6f55c26b75d8332ca65d72cc962ac52/src/SharpCollections/Generic/CompactPrefixTree.cs
  * 
  * If you encounter any problems related to this data structure, please cc @MihaZupan
  *
@@ -55,7 +53,7 @@ namespace Markdig.Helpers
         }
 
         [DebuggerDisplay("{Char}, Child: {ChildChar} at {ChildIndex}, Match: {MatchIndex}, Children: {Children?.Count ?? 0}")]
-        private struct Node // 4 bytes of padding on x64, possible room for a Length field if needed later
+        private struct Node
         {
             /// <summary>
             /// The character this node represents, should never be 0
@@ -71,9 +69,9 @@ namespace Markdig.Helpers
             /// </summary>
             public int MatchIndex;
             /// <summary>
-            /// May be null if the only has one child
+            /// -1 if not present
             /// </summary>
-            public List<int> Children;
+            public int Children;
         }
 
         private Node[] _tree;
@@ -81,6 +79,10 @@ namespace Markdig.Helpers
 
         private KeyValuePair<string, TValue>[] _matches;
         private static readonly KeyValuePair<string, TValue>[] _emptyMatches = new KeyValuePair<string, TValue>[0];
+
+        private int _childrenIndex = 0;
+        private int[] _children = _emptyChildren;
+        private static readonly int[] _emptyChildren = new int[0];
 
         #region Size and Capacity
 
@@ -116,17 +118,24 @@ namespace Markdig.Helpers
                 }
             }
         }
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         private void EnsureTreeCapacity(int min)
         {
-            // Expansion logic as in System.Collections.Generic.List<T>
             if (_tree.Length < min)
             {
-                int newCapacity = _tree.Length * 2;
-                if ((uint)min > int.MaxValue) newCapacity = int.MaxValue;
-                if (newCapacity < min) newCapacity = min;
-                TreeCapacity = newCapacity;
+                EnsureTreeCapacityRare(min);
             }
             Debug.Assert(_tree.Length >= min);
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void EnsureTreeCapacityRare(int min)
+        {
+            // Expansion logic as in System.Collections.Generic.List<T>
+            Debug.Assert(min > _tree.Length);
+            int newCapacity = _tree.Length * 2;
+            if ((uint)min > int.MaxValue) newCapacity = int.MaxValue;
+            if (newCapacity < min) newCapacity = min;
+            TreeCapacity = newCapacity;
         }
 
         /// <summary>
@@ -158,17 +167,83 @@ namespace Markdig.Helpers
                 }
             }
         }
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         private void EnsureCapacity(int min)
         {
             // Expansion logic as in System.Collections.Generic.List<T>
             if (_matches.Length < min)
             {
-                int newCapacity = _matches.Length * 2;
-                if ((uint)min > int.MaxValue) newCapacity = int.MaxValue;
-                if (newCapacity < min) newCapacity = min;
-                Capacity = newCapacity;
+                EnsureCapacityRare(min);
             }
             Debug.Assert(_matches.Length >= min);
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void EnsureCapacityRare(int min)
+        {
+            // Expansion logic as in System.Collections.Generic.List<T>
+            Debug.Assert(min > _matches.Length);
+            int newCapacity = _matches.Length * 2;
+            if ((uint)min > int.MaxValue) newCapacity = int.MaxValue;
+            if (newCapacity < min) newCapacity = min;
+            Capacity = newCapacity;
+        }
+
+        /// <summary>
+        /// Gets the size of the children buffer in the internal tree structure
+        /// <para>You might be looking for <see cref="Count"/></para>
+        /// <para>Exposing this might help in deducing more efficient initial parameters</para>
+        /// </summary>
+        public int ChildrenCount => _childrenIndex;
+        /// <summary>
+        /// Gets or sets the capacity of the internal children buffer
+        /// <para>You might be looking for <see cref="Capacity"/></para>
+        /// </summary>
+        public int ChildrenCapacity
+        {
+            get
+            {
+                return _children.Length;
+            }
+            set
+            {
+                if (value < _childrenIndex)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value, ExceptionReason.SmallCapacity);
+
+                if (value != _childrenIndex)
+                {
+                    int[] newChildren = new int[value];
+                    if (_childrenIndex > 0)
+                    {
+                        Array.Copy(_children, 0, newChildren, 0, _childrenIndex);
+                    }
+
+                    // Set new odd indexes to -1
+                    for (int i = _childrenIndex + 1; i < newChildren.Length; i += 2)
+                        newChildren[i] = -1;
+
+                    _children = newChildren;
+                }
+            }
+        }
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private void EnsureChildrenCapacity(int min)
+        {
+            if (_children.Length < min)
+            {
+                EnsureChildrenCapacityRare(min);
+            }
+            Debug.Assert(_children.Length >= min);
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void EnsureChildrenCapacityRare(int min)
+        {
+            // Expansion logic as in System.Collections.Generic.List<T>
+            Debug.Assert(min > _children.Length);
+            Debug.Assert(_childrenIndex % 2 == 0);
+            int newCapacity = _children.Length * 2;
+            if ((uint)min > int.MaxValue) newCapacity = int.MaxValue;
+            if (newCapacity < min) newCapacity = min;
+            ChildrenCapacity = newCapacity;
         }
 
         #endregion Size and Capacity
@@ -215,21 +290,22 @@ namespace Markdig.Helpers
 
         #endregion RootChar
 
-        private void Init(int matchCapacity, int treeCapacity)
+        private void Init(int matchCapacity, int treeCapacity, int childrenCapacity)
         {
             for (int i = 0; i < _asciiRootMap.Length; i++)
                 _asciiRootMap[i] = -1;
 
             _matches = matchCapacity == 0 ? _emptyMatches : new KeyValuePair<string, TValue>[matchCapacity];
             _tree = treeCapacity == 0 ? _emptyTree : new Node[treeCapacity];
+            EnsureChildrenCapacity(childrenCapacity);
         }
 
         /// <summary>
         /// Constructs a new <see cref="CompactPrefixTree{TValue}"/> with no initial prefixes
         /// </summary>
-        public CompactPrefixTree(int matchCapacity = 0, int treeCapacity = 0)
+        public CompactPrefixTree(int matchCapacity = 0, int treeCapacity = 0, int childrenCapacity = 0)
         {
-            Init(matchCapacity, treeCapacity);
+            Init(matchCapacity, treeCapacity, childrenCapacity);
         }
         /// <summary>
         /// Constructs a new <see cref="CompactPrefixTree{TValue}"/> with the supplied matches
@@ -239,7 +315,7 @@ namespace Markdig.Helpers
         {
             if (input == null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.input);
 
-            Init(input.Count, input.Count * 2);
+            Init(input.Count, input.Count * 2, input.Count * 2);
 
             using (var e = input.GetEnumerator())
             {
@@ -263,7 +339,7 @@ namespace Markdig.Helpers
             [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
             get
             {
-                if (index >= Count) ThrowHelper.ThrowIndexOutOfRangeException();
+                if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
                 return _matches[index];
             }
         }
@@ -357,20 +433,22 @@ namespace Markdig.Helpers
             if (key.Length == 0) ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.key, ExceptionReason.String_Empty);
             Debug.Assert(!string.IsNullOrEmpty(key));
 
-            if (TryGetRoot(key[0], out int rootNodeIndex))
+            char rootChar = key[0];
+            if (TryGetRoot(rootChar, out int rootNodeIndex))
             {
-                ref Node node = ref _tree[rootNodeIndex];
+                var tree = _tree;
+                ref Node node = ref tree[rootNodeIndex];
                 for (int i = 1; i < key.Length; i++)
                 {
                     char c = key[i];
 
                     if (node.ChildChar == c)
                     {
-                        node = ref _tree[node.ChildIndex];
+                        node = ref tree[node.ChildIndex];
                         continue;
                     }
 
-                    if (node.Children == null)
+                    if (node.Children == -1)
                     {
                         // This could be a leaf node
                         if (node.ChildChar == 0)
@@ -407,23 +485,26 @@ namespace Markdig.Helpers
                                 node.ChildIndex = TreeSize;
                                 node.ChildChar = key[previousIndex];
                                 EnsureTreeCapacity(TreeSize + intermediaryNodesToInsert);
+                                tree = _tree;
                                 for (int j = 0; j < intermediaryNodesToInsert - 1; j++)
                                 {
-                                    _tree[TreeSize + j] = new Node()
+                                    tree[TreeSize + j] = new Node()
                                     {
                                         Char = previousKey[previousIndex + j],
                                         ChildChar = previousKey[previousIndex + j + 1],
                                         ChildIndex = TreeSize + j + 1,
-                                        MatchIndex = -1
+                                        MatchIndex = -1,
+                                        Children = -1
                                     };
                                 }
                                 TreeSize += intermediaryNodesToInsert;
-                                _tree[TreeSize - 1] = new Node()
+                                tree[TreeSize - 1] = new Node()
                                 {
                                     Char = previousKey[previousIndex + intermediaryNodesToInsert - 1],
-                                    MatchIndex = -1
+                                    MatchIndex = -1,
+                                    Children = -1
                                 };
-                                node = ref _tree[TreeSize - 1];
+                                node = ref tree[TreeSize - 1];
                             }
 
                             node.ChildIndex = TreeSize;
@@ -445,7 +526,8 @@ namespace Markdig.Helpers
                                     _tree[TreeSize] = new Node()
                                     {
                                         Char = key[i],
-                                        MatchIndex = Count
+                                        MatchIndex = Count,
+                                        Children = -1
                                     };
                                 }
                                 else // if key.Length < previousKey.Length
@@ -458,7 +540,8 @@ namespace Markdig.Helpers
                                     _tree[TreeSize] = new Node()
                                     {
                                         Char = previousKey[i],
-                                        MatchIndex = previousMatchIndex
+                                        MatchIndex = previousMatchIndex,
+                                        Children = -1
                                     };
                                 }
                                 Count++;
@@ -469,22 +552,28 @@ namespace Markdig.Helpers
                             // Insert two leaf nodes
                             Debug.Assert(node.Char != 0 && node.Char == previousKey[i - 1]);
                             Debug.Assert(node.MatchIndex == -1);
-                            Debug.Assert(node.Children == null);
+                            Debug.Assert(node.Children == -1);
 
                             node.ChildChar = previousKey[i];
-                            node.Children = new List<int>(4) { TreeSize + 1 };
+                            node.Children = _childrenIndex;
+
+                            EnsureChildrenCapacity(_childrenIndex + 2);
+                            _children[_childrenIndex] = TreeSize + 1;
+                            _childrenIndex += 2;
 
                             // Insert the two leaf nodes
                             EnsureTreeCapacity(TreeSize + 2);
                             _tree[TreeSize] = new Node()
                             {
                                 Char = previousKey[i],
-                                MatchIndex = previousMatchIndex
+                                MatchIndex = previousMatchIndex,
+                                Children = -1
                             };
                             _tree[TreeSize + 1] = new Node()
                             {
                                 Char = key[i],
-                                MatchIndex = Count
+                                MatchIndex = Count,
+                                Children = -1
                             };
 
                             Count++;
@@ -497,7 +586,11 @@ namespace Markdig.Helpers
                             Debug.Assert(node.MatchIndex == -1 || key.StartsWith(_matches[node.MatchIndex].Key));
 
                             // Set this pair as the current node's first element in the Children list
-                            node.Children = new List<int>(4) { TreeSize };
+                            node.Children = _childrenIndex;
+                            EnsureChildrenCapacity(_childrenIndex + 2);
+                            _children[_childrenIndex] = TreeSize;
+                            _childrenIndex += 2;
+
                             InsertLeafNode(in pair, c);
                             return true;
                         }
@@ -505,16 +598,26 @@ namespace Markdig.Helpers
                     else
                     {
                         // Look for a child node with a matching Char in all of children
-                        // Keep a reference to the current node's children since we're re-assigning the node reference
-                        List<int> children = node.Children;
-                        for (int k = 0; k < children.Count; k++)
+                        var children = _children;
+                        int childrenIndex = node.Children;
+                        int lastChildrenIndex = childrenIndex;
+                        do
                         {
-                            node = ref _tree[children[k]];
+                            if ((uint)childrenIndex >= (uint)children.Length)
+                                break;
+                            node = ref _tree[children[childrenIndex]];
                             if (node.Char == c) goto NextChar;
+                            lastChildrenIndex = childrenIndex;
+                            childrenIndex = children[childrenIndex + 1];
                         }
+                        while (true);
 
                         // A child node was not found, add a new one to children
-                        children.Add(TreeSize);
+                        EnsureChildrenCapacity(_childrenIndex + 2);
+                        _children[lastChildrenIndex + 1] = _childrenIndex;
+                        _children[_childrenIndex] = TreeSize;
+                        _childrenIndex += 2;
+
                         InsertLeafNode(in pair, c);
                         return true;
                     }
@@ -539,7 +642,7 @@ namespace Markdig.Helpers
                         // This will never occur if the input was sorted
                         Debug.Assert(previousMatch.Key.Length > key.Length);
                         Debug.Assert(previousMatch.Key.StartsWith(key));
-                        Debug.Assert(node.ChildChar == 0 && node.Children == null);
+                        Debug.Assert(node.ChildChar == 0 && node.Children == -1);
 
                         // It is a leaf node
                         // Move the prevMatch one node inward
@@ -551,7 +654,8 @@ namespace Markdig.Helpers
                         _tree[TreeSize] = new Node()
                         {
                             Char = previousMatch.Key[key.Length],
-                            MatchIndex = previousMatchIndex
+                            MatchIndex = previousMatchIndex,
+                            Children = -1
                         };
                         TreeSize++;
 
@@ -581,8 +685,8 @@ namespace Markdig.Helpers
             }
             else // if the root character is not yet in the collection
             {
-                SetRootChar(key[0]);
-                InsertLeafNode(in pair, key[0]);
+                SetRootChar(rootChar);
+                InsertLeafNode(in pair, rootChar);
                 return true;
             }
         }
@@ -595,7 +699,8 @@ namespace Markdig.Helpers
             _tree[TreeSize] = new Node()
             {
                 Char = nodeChar,
-                MatchIndex = Count
+                MatchIndex = Count,
+                Children = -1
             };
 
             Count++;
@@ -697,15 +802,17 @@ namespace Markdig.Helpers
                     goto NextChar;
                 }
 
-                // Keep a reference to the current node's children since we're re-assigning the node reference
-                List<int> children = node.Children;
-                if (children == null) goto Return;
-                for (int j = 0; j < children.Count; j++)
+                var children = _children;
+                int childrenIndex = node.Children;
+                do
                 {
-                    node = ref _tree[children[j]];
+                    if ((uint)childrenIndex >= (uint)children.Length)
+                        goto Return;
+                    node = ref _tree[children[childrenIndex]];
                     if (node.Char == c) goto NextChar;
+                    childrenIndex = children[childrenIndex + 1];
                 }
-                goto Return;
+                while (true);
 
             NextChar:;
                 depth++;
@@ -849,15 +956,17 @@ namespace Markdig.Helpers
                     goto NextChar;
                 }
 
-                // Keep a reference to the current node's children since we're re-assigning the node reference
-                List<int> children = node.Children;
-                if (children == null) return false;
-                for (int j = 0; j < children.Count; j++)
+                var children = _children;
+                int childrenIndex = node.Children;
+                do
                 {
-                    node = ref _tree[children[j]];
+                    if ((uint)childrenIndex >= (uint)children.Length)
+                        return false;
+                    node = ref _tree[children[childrenIndex]];
                     if (node.Char == c) goto NextChar;
+                    childrenIndex = children[childrenIndex + 1];
                 }
-                return false;
+                while (true);
 
             NextChar:;
                 depth++;
@@ -987,15 +1096,17 @@ namespace Markdig.Helpers
                     goto NextChar;
                 }
 
-                // Keep a reference to the current node's children since we're re-assigning the node reference
-                List<int> children = node.Children;
-                Debug.Assert(children != null);
-                for (int j = 0; j < children.Count; j++)
+                var children = _children;
+                int childrenIndex = node.Children;
+                do
                 {
-                    node = ref _tree[children[j]];
+                    if ((uint)childrenIndex >= (uint)children.Length)
+                        return false;
+                    node = ref _tree[children[childrenIndex]];
                     if (node.Char == c) goto NextChar;
+                    childrenIndex = children[childrenIndex + 1];
                 }
-                return false;
+                while (true);
 
             NextChar:;
                 if (node.MatchIndex != -1)

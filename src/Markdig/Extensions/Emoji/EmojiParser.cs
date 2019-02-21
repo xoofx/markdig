@@ -1046,7 +1046,7 @@ namespace Markdig.Extensions.Emoji
 
             int jointCount = EmojiToUnicodeDefault.Count + SmileyToEmojiDefault.Count;
             // Count * 2 seems to be a good fit for the data set
-            EmojiSmileyPrefixTreeDefault = new CompactPrefixTree<string>(jointCount, jointCount * 2);
+            EmojiSmileyPrefixTreeDefault = new CompactPrefixTree<string>(jointCount, jointCount * 2, jointCount * 2);
 
             // This is not the best data set for the prefix tree as it will have to check the first character linearly
             // A work-around would require a bunch of substrings / removing the leading ':' from emojis, neither one is pretty
