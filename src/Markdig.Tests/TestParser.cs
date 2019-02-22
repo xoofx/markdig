@@ -98,6 +98,74 @@ namespace Markdig.Tests
             }
         }
 
+
+        [Test]
+        public void VisualizeMathExpressions()
+        {
+            string math = @"Math expressions
+
+$\frac{n!}{k!(n-k)!} = \binom{n}{k}$
+
+$$\frac{n!}{k!(n-k)!} = \binom{n}{k}$$
+
+$$
+\frac{n!}{k!(n-k)!} = \binom{n}{k}
+$$
+
+<div class=""math"">
+\begin{align}
+\sqrt{37} & = \sqrt{\frac{73^2-1}{12^2}} \\
+ & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\ 
+ & = \sqrt{\frac{73^2}{12^2}}\sqrt{\frac{73^2-1}{73^2}} \\
+ & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\ 
+ & \approx \frac{73}{12}\left(1 - \frac{1}{2\cdot73^2}\right)
+\end{align}
+</div>
+";
+            Console.WriteLine("Math Expressions:\n");
+
+            var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
+
+
+            var html = Markdown.ToHtml(math, pl);
+            Console.WriteLine(html);
+        }
+
+        [Test]
+        public void InlineMathExpression()
+        {
+            string math = @"Math expressions
+
+$\frac{n!}{k!(n-k)!} = \binom{n}{k}$
+";
+            var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
+
+            var html = Markdown.ToHtml(math, pl);
+            Console.WriteLine(html);
+
+            Assert.IsTrue(html.Contains("<p><span class=\"math\">\\("),"Leading bracket missing");
+            Assert.IsTrue(html.Contains("\\)</span></p>"), "Trailing bracket missing");
+        }
+
+        [Test]
+        public void BlockMathExpression()
+        {
+            string math = @"Math expressions
+
+$$
+\frac{n!}{k!(n-k)!} = \binom{n}{k}
+$$
+";
+            var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
+
+            var html = Markdown.ToHtml(math, pl);
+            Console.WriteLine(html);
+
+            Assert.IsTrue(html.Contains("<div class=\"math\">\n\\["), "Leading bracket missing");
+            Assert.IsTrue(html.Contains("\\]</div>"), "Trailing bracket missing");
+        }
+
+
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
         {
             foreach (var pipeline in GetPipeline(extensions))
