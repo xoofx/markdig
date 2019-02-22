@@ -9,7 +9,7 @@ Allows to define a mathematic block embraced by `$...$`
 ```````````````````````````````` example
 This is a $math block$
 .
-<p>This is a <span class="math">math block</span></p>
+<p>This is a <span class="math">\(math block\)</span></p>
 ````````````````````````````````
 
 Or by `$$...$$` embracing it by:
@@ -17,7 +17,7 @@ Or by `$$...$$` embracing it by:
 ```````````````````````````````` example
 This is a $$math block$$
 .
-<p>This is a <span class="math">math block</span></p>
+<p>This is a <span class="math">\(math block\)</span></p>
 ````````````````````````````````
 
 Newlines inside an inline math are not allowed:
@@ -27,7 +27,7 @@ This is not a $$math
 block$$ and? this is a $$math block$$
 .
 <p>This is not a $$math
-block$$ and? this is a <span class="math">math block</span></p>
+block$$ and? this is a <span class="math">\(math block\)</span></p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -35,7 +35,7 @@ This is not a $math
 block$ and? this is a $math block$
 .
 <p>This is not a $math
-block$ and? this is a <span class="math">math block</span></p>
+block$ and? this is a <span class="math">(\math block\)</span></p>
 ````````````````````````````````
 An opening `$` can be followed by a space if the closing is also preceded by a space `$`:
 
