@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 (25 Feb 2019)
+- Improve performance of emoji-abbreviation parser ([(PR #305)](https://github.com/lunet-io/markdig/pull/305))
+- Change output for math extension to use a rendering more compatible with existing Math JS libraries ([(PR #311)](https://github.com/lunet-io/markdig/pull/311))
+- Improve emphasis parser to allow to match more than 2 characters ([(PR #301)](https://github.com/lunet-io/markdig/pull/301))
+- Output attached attributes to a `<tr>` from a table row ([(PR #300)](https://github.com/lunet-io/markdig/pull/300))
+- Improve MarkdownObject.Descendants() search ([(PR #288)](https://github.com/lunet-io/markdig/pull/288))
+- Allow to pass a `MarkdownParserContext` ([(PR #285)](https://github.com/lunet-io/markdig/pull/285))
+
 ## 0.15.7 (11 Jan 2019)
 - Add configurable leading count for ATX headers ([(PR #282)](https://github.com/lunet-io/markdig/pull/282))
 - Render XML well-formed boolean attribute ([(PR #281)](https://github.com/lunet-io/markdig/pull/281))
