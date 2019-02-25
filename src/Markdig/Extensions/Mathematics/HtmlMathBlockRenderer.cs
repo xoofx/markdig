@@ -15,8 +15,10 @@ namespace Markdig.Extensions.Mathematics
         protected override void Write(HtmlRenderer renderer, MathBlock obj)
         {
             renderer.EnsureLine();
-            renderer.Write("<div").WriteAttributes(obj).Write(">");
+            renderer.Write("<div").WriteAttributes(obj).WriteLine(">");
+            renderer.WriteLine("\\[");
             renderer.WriteLeafRawLines(obj, true, true);
+            renderer.Write("\\]");
             renderer.WriteLine("</div>");
         }
     }

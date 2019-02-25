@@ -14,9 +14,9 @@ namespace Markdig.Extensions.Mathematics
     {
         protected override void Write(HtmlRenderer renderer, MathInline obj)
         {
-            renderer.Write("<span").WriteAttributes(obj).Write(">");
+            renderer.Write("<span").WriteAttributes(obj).Write(">\\(");
             renderer.WriteEscape(ref obj.Content);
-            renderer.Write("</span>");
+            renderer.Write("\\)</span>");
         }
     }
 }
