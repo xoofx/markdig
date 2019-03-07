@@ -28,6 +28,8 @@ namespace Markdig.Tests
         [TestCase(/* markdownText: */ "`foo\nbar`", /* expected: */ "foo bar\n")] // new line within codespan is treated as whitespace (Example317)
         [TestCase(/* markdownText: */ "```\nfoo bar\n```", /* expected: */ "foo bar\n")]
         [TestCase(/* markdownText: */ "- foo\n- bar\n- baz", /* expected: */ "foo\nbar\nbaz\n")]
+        [TestCase(/* markdownText: */ "- foo<baz", /* expected: */ "foo<baz\n")]
+        [TestCase(/* markdownText: */ "- foo&lt;baz", /* expected: */ "foo<baz\n")]
         public void TestPlainEnsureNewLine(string markdownText, string expected)
         {            
             var actual = Markdown.ToPlainText(markdownText);
