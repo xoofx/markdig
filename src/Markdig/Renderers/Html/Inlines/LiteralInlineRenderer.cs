@@ -14,9 +14,13 @@ namespace Markdig.Renderers.Html.Inlines
         protected override void Write(HtmlRenderer renderer, LiteralInline obj)
         {
             if (renderer.EnableHtmlForInline)
+            {
                 renderer.WriteEscape(obj.Content);
+            }
             else
+            {
                 renderer.Write(obj.Content);
+            }
         }
     }
 }
