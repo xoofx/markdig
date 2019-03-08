@@ -143,7 +143,7 @@ $\frac{n!}{k!(n-k)!} = \binom{n}{k}$
             var html = Markdown.ToHtml(math, pl);
             Console.WriteLine(html);
 
-            Assert.IsTrue(html.Contains("<p><span class=\"math\">\\("),"Leading bracket missing");
+            Assert.IsTrue(html.Contains("<p><span class=\"math\">\\("), "Leading bracket missing");
             Assert.IsTrue(html.Contains("\\)</span></p>"), "Trailing bracket missing");
         }
 
@@ -166,20 +166,20 @@ $$
         }
 
 
-        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
+        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null, bool plainText = false)
         {
             foreach (var pipeline in GetPipeline(extensions))
             {
                 Console.WriteLine($"Pipeline configured with extensions: {pipeline.Key}");
-                TestSpec(inputText, expectedOutputText, pipeline.Value);
+                TestSpec(inputText, expectedOutputText, pipeline.Value, plainText);
             }
         }
 
-        public static void TestSpec(string inputText, string expectedOutputText, MarkdownPipeline pipeline)
+        public static void TestSpec(string inputText, string expectedOutputText, MarkdownPipeline pipeline, bool plainText = false)
         {
             // Uncomment this line to get more debug information for process inlines.
             //pipeline.DebugLog = Console.Out;
-            var result = Markdown.ToHtml(inputText, pipeline);
+            var result = plainText ? Markdown.ToPlainText(inputText, pipeline) : Markdown.ToHtml(inputText, pipeline);
 
             result = Compact(result);
             expectedOutputText = Compact(expectedOutputText);

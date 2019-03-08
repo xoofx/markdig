@@ -36,5 +36,12 @@ namespace Markdig.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        [TestCase(/* markdownText: */ ":::\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers|advanced")]
+        [TestCase(/* markdownText: */ ":::bar\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers+attributes|advanced")]
+        public void TestPlainWithExtensions(string markdownText, string expected, string extensions)
+        {
+            TestParser.TestSpec(markdownText, expected, extensions, true);
+        }
     }
 }
