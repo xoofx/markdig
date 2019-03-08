@@ -15,10 +15,16 @@ namespace Markdig.Extensions.CustomContainers
         protected override void Write(HtmlRenderer renderer, CustomContainer obj)
         {
             renderer.EnsureLine();
-            renderer.Write("<div").WriteAttributes(obj).Write(">");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("<div").WriteAttributes(obj).Write(">");
+            }
             // We don't escape a CustomContainer
             renderer.WriteChildren(obj);
-            renderer.WriteLine("</div>");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.WriteLine("</div>");
+            }
         }
     }
 }
