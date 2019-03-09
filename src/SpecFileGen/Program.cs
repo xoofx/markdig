@@ -92,7 +92,7 @@ namespace SpecFileGen
                     }
                 }
 
-                string generated = "// Generated: " + DateTime.UtcNow.ToString() + '\n';
+                string generated = "// Generated: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + '\n';
                 File.WriteAllText(spec.OutputPath, generated + source);
                 anyChanged = true;
             }
