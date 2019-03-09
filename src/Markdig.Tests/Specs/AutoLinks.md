@@ -240,3 +240,62 @@ https://github.com:443
 <p><a href="https://github.com">https://github.com</a>:</p>
 <p><a href="https://github.com:443">https://github.com:443</a></p>
 ````````````````````````````````
+
+### Unicode support
+
+Links with unicode characters in the path / query / fragment are matched and url encoded
+
+```````````````````````````````` example
+http://abc.net/☃
+
+http://abc.net?☃
+
+http://abc.net#☃
+
+http://abc.net/foo#☃
+.
+<p><a href="http://abc.net/%E2%98%83">http://abc.net/☃</a></p>
+<p><a href="http://abc.net?%E2%98%83">http://abc.net?☃</a></p>
+<p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
+<p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
+````````````````````````````````
+
+Unicode characters in the FQDN are matched and IDNA encoded
+
+```````````````````````````````` example
+http://☃.net?☃
+.
+<p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
+````````````````````````````````
+
+Same goes for regular autolinks
+
+```````````````````````````````` example
+<http://abc.net/☃>
+
+<http://abc.net?☃>
+
+<http://abc.net#☃>
+
+<http://abc.net/foo#☃>
+.
+<p><a href="http://abc.net/%E2%98%83">http://abc.net/☃</a></p>
+<p><a href="http://abc.net?%E2%98%83">http://abc.net?☃</a></p>
+<p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
+<p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
+````````````````````````````````
+
+```````````````````````````````` example
+<http://☃.net?☃>
+.
+<p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
+````````````````````````````````
+
+It also complies with CommonMark's vision of priority.
+This will therefore be seen as an autolink and not as code inline.
+
+```````````````````````````````` example
+<http://foö.bar.`baz>`
+.
+<p><a href="http://xn--fo-gka.bar.%60baz">http://foö.bar.`baz</a>`</p>
+````````````````````````````````

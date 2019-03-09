@@ -1,4 +1,4 @@
-// Generated: 21. 01. 2019 14:26:34
+// Generated: 2019-03-09 18:40:39
 
 // --------------------------------
 //            Auto Links
@@ -444,6 +444,115 @@ namespace Markdig.Tests.Specs.AutoLinks
 
             Console.WriteLine("Example 20\nSection Extensions / AutoLinks / Valid Domain Tests\n");
             TestParser.TestSpec("https://github.com?\n\nhttps://github.com?a\n\nhttps://github.com#a\n\nhttps://github.com:\n\nhttps://github.com:443", "<p><a href=\"https://github.com\">https://github.com</a>?</p>\n<p><a href=\"https://github.com?a\">https://github.com?a</a></p>\n<p><a href=\"https://github.com#a\">https://github.com#a</a></p>\n<p><a href=\"https://github.com\">https://github.com</a>:</p>\n<p><a href=\"https://github.com:443\">https://github.com:443</a></p>", "autolinks|advanced");
+        }
+    }
+
+    [TestFixture]
+    public class TestExtensionsAutoLinksUnicodeSupport
+    {
+        // ### Unicode support
+        // 
+        // Links with unicode characters in the path / query / fragment are matched and url encoded
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example021()
+        {
+            // Example 21
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     http://abc.net/☃
+            //     
+            //     http://abc.net?☃
+            //     
+            //     http://abc.net#☃
+            //     
+            //     http://abc.net/foo#☃
+            //
+            // Should be rendered as:
+            //     <p><a href="http://abc.net/%E2%98%83">http://abc.net/☃</a></p>
+            //     <p><a href="http://abc.net?%E2%98%83">http://abc.net?☃</a></p>
+            //     <p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
+            //     <p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
+
+            Console.WriteLine("Example 21\nSection Extensions / AutoLinks / Unicode support\n");
+            TestParser.TestSpec("http://abc.net/☃\n\nhttp://abc.net?☃\n\nhttp://abc.net#☃\n\nhttp://abc.net/foo#☃", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced");
+        }
+
+        // Unicode characters in the FQDN are matched and IDNA encoded
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example022()
+        {
+            // Example 22
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     http://☃.net?☃
+            //
+            // Should be rendered as:
+            //     <p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
+
+            Console.WriteLine("Example 22\nSection Extensions / AutoLinks / Unicode support\n");
+            TestParser.TestSpec("http://☃.net?☃", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced");
+        }
+
+        // Same goes for regular autolinks
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example023()
+        {
+            // Example 23
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     <http://abc.net/☃>
+            //     
+            //     <http://abc.net?☃>
+            //     
+            //     <http://abc.net#☃>
+            //     
+            //     <http://abc.net/foo#☃>
+            //
+            // Should be rendered as:
+            //     <p><a href="http://abc.net/%E2%98%83">http://abc.net/☃</a></p>
+            //     <p><a href="http://abc.net?%E2%98%83">http://abc.net?☃</a></p>
+            //     <p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
+            //     <p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
+
+            Console.WriteLine("Example 23\nSection Extensions / AutoLinks / Unicode support\n");
+            TestParser.TestSpec("<http://abc.net/☃>\n\n<http://abc.net?☃>\n\n<http://abc.net#☃>\n\n<http://abc.net/foo#☃>", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced");
+        }
+
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example024()
+        {
+            // Example 24
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     <http://☃.net?☃>
+            //
+            // Should be rendered as:
+            //     <p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
+
+            Console.WriteLine("Example 24\nSection Extensions / AutoLinks / Unicode support\n");
+            TestParser.TestSpec("<http://☃.net?☃>", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced");
+        }
+
+        // It also complies with CommonMark's vision of priority.
+        // This will therefore be seen as an autolink and not as code inline.
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example025()
+        {
+            // Example 25
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     <http://foö.bar.`baz>`
+            //
+            // Should be rendered as:
+            //     <p><a href="http://xn--fo-gka.bar.%60baz">http://foö.bar.`baz</a>`</p>
+
+            Console.WriteLine("Example 25\nSection Extensions / AutoLinks / Unicode support\n");
+            TestParser.TestSpec("<http://foö.bar.`baz>`", "<p><a href=\"http://xn--fo-gka.bar.%60baz\">http://foö.bar.`baz</a>`</p>", "autolinks|advanced");
         }
     }
 }
