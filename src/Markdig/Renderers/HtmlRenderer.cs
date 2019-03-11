@@ -193,9 +193,7 @@ namespace Markdig.Renderers
             return this;
         }
 
-#if !(NETSTANDARD_11 || PORTABLE)
         private static readonly IdnMapping IdnMapping = new IdnMapping();
-#endif
 
         /// <summary>
         /// Writes the URL escaped for HTML.
@@ -219,7 +217,6 @@ namespace Markdig.Renderers
 
             int previousPosition = 0;
 
-#if !(NETSTANDARD_11 || PORTABLE)
             // ab://c.d = 8 chars
             int schemeOffset = content.Length < 8 ? -1 : content.IndexOf("://", 2, StringComparison.Ordinal);
             if (schemeOffset != -1) // This is an absolute URL
@@ -267,7 +264,6 @@ namespace Markdig.Renderers
                     previousPosition = schemeOffset; // Don't write anything as we might need to escape it
                 }
             }
-#endif
 
             for (var i = previousPosition; i < content.Length; i++)
             {
