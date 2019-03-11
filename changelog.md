@@ -1,5 +1,8 @@
 # Changelog
 
+## WIP
+- Allow non-ASCII characters in url domain names ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
+
 ## 0.16.0 (25 Feb 2019)
 - Improve performance of emoji-abbreviation parser ([(PR #305)](https://github.com/lunet-io/markdig/pull/305))
 - Change output for math extension to use a rendering more compatible with existing Math JS libraries ([(PR #311)](https://github.com/lunet-io/markdig/pull/311))

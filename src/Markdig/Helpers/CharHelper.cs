@@ -34,12 +34,11 @@
 
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Helper class for handling characters.
     /// </summary>
@@ -224,6 +223,30 @@ namespace Markdig.Helpers
                     || category == UnicodeCategory.InitialQuotePunctuation
                     || category == UnicodeCategory.FinalQuotePunctuation
                     || category == UnicodeCategory.OtherPunctuation);
+            }
+        }
+
+        // Same as CheckUnicodeCategory
+        internal static bool IsSpaceOrPunctuation(this char c)
+        {
+            if (c <= 'ÿ')
+            {
+                return c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085' ||
+                    (c >= 33 && c <= 47 && c != 38) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+            }
+            else
+            {
+                var category = CharUnicodeInfo.GetUnicodeCategory(c);
+                return category == UnicodeCategory.SpaceSeparator
+                    || category == UnicodeCategory.LineSeparator
+                    || category == UnicodeCategory.ParagraphSeparator
+                    || category == UnicodeCategory.ConnectorPunctuation
+                    || category == UnicodeCategory.DashPunctuation
+                    || category == UnicodeCategory.OpenPunctuation
+                    || category == UnicodeCategory.ClosePunctuation
+                    || category == UnicodeCategory.InitialQuotePunctuation
+                    || category == UnicodeCategory.FinalQuotePunctuation
+                    || category == UnicodeCategory.OtherPunctuation;
             }
         }
 

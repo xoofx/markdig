@@ -409,5 +409,11 @@ namespace Markdig.Tests
         {
             Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
         }
+
+        [Test]
+        public void TestUnicodeInDomainNameOfLinkReferenceDefinition()
+        {
+            TestParser.TestSpec("[Foo]\n\n[Foo]: http://ünicode.com", "<p><a href=\"http://xn--nicode-2ya.com\">Foo</a></p>");
+        }
     }
 }
