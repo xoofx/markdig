@@ -302,14 +302,19 @@ namespace Markdig.Helpers
                     }
 
                     // Chars valid for both scheme and email
-                    if (c > ' ' && c < 127 && c != '<')
+                    if (c <= 127)
+                    {
+                        if (c > ' ' && c != '>')
+                        {
+                            builder.Append(c);
+                        }
+                        else break;
+                    }
+                    else if (!c.IsSpaceOrPunctuation())
                     {
                         builder.Append(c);
                     }
-                    else
-                    {
-                        break;
-                    }
+                    else break;
                 }
             }
 
@@ -319,9 +324,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseInlineLink(StringSlice text, out string link, out string title)
         {
-            SourceSpan linkSpan;
-            SourceSpan titleSpan;
-            return TryParseInlineLink(ref text, out link, out title, out linkSpan, out titleSpan);
+            return TryParseInlineLink(ref text, out link, out title, out _, out _);
         }
 
         public static bool TryParseInlineLink(StringSlice text, out string link, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan)
@@ -670,6 +673,9 @@ namespace Markdig.Helpers
             // A valid domain consists of alphanumeric characters, underscores (_), hyphens (-) and periods (.).
             // There must be at least one period, and no underscores may be present in the last two segments of the domain.
 
+            // Extended as of https://github.com/lunet-io/markdig/issues/316 to accept non-ascii characters,
+            // as long as they are not in the space or punctuation categories
+
             int segmentCount = 1;
             bool segmentHasCharacters = false;
             int lastUnderscoreSegment = -1;
@@ -697,7 +703,7 @@ namespace Markdig.Helpers
                     {
                         lastUnderscoreSegment = segmentCount;
                     }
-                    else if (c != '-')
+                    else if (c != '-' && c.IsSpaceOrPunctuation())
                     {
                         // An invalid character has been found
                         return false;
