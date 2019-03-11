@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -83,7 +84,7 @@ namespace Markdig.Renderers
         /// <summary>
         /// Allows links to be rewritten
         /// </summary>
-        public Func<string,string> LinkRewriter { get; set; }
+        public Func<string, string> LinkRewriter { get; set; }
 
         /// <summary>
         /// Writes the content escaped for HTML.
@@ -192,6 +193,10 @@ namespace Markdig.Renderers
             return this;
         }
 
+#if !(NETSTANDARD_11 || PORTABLE)
+        private static readonly IdnMapping IdnMapping = new IdnMapping();
+#endif
+
         /// <summary>
         /// Writes the URL escaped for HTML.
         /// </summary>
@@ -213,9 +218,58 @@ namespace Markdig.Renderers
             }
 
             int previousPosition = 0;
-            int length = content.Length;
 
-            for (var i = 0; i < length; i++)
+#if !(NETSTANDARD_11 || PORTABLE)
+            // ab://c.d = 8 chars
+            int schemeOffset = content.Length < 8 ? -1 : content.IndexOf("://", 2, StringComparison.Ordinal);
+            if (schemeOffset != -1) // This is an absolute URL
+            {
+                schemeOffset += 3; // skip ://
+                Write(content, 0, schemeOffset);
+
+                bool idnaEncodeDomain = false;
+                int endOfDomain = schemeOffset;
+                for (; endOfDomain < content.Length; endOfDomain++)
+                {
+                    char c = content[endOfDomain];
+                    if (c == '/' || c == '?' || c == '#' || c == ':') // End of domain part
+                    {
+                        break;
+                    }
+                    if (c > 127)
+                    {
+                        idnaEncodeDomain = true;
+                    }
+                }
+
+                if (idnaEncodeDomain)
+                {
+                    string domainName = IdnMapping.GetAscii(content, schemeOffset, endOfDomain - schemeOffset);
+
+                    // Escape the characters (see Commonmark example 327 and think of it with a non-ascii symbol)
+                    previousPosition = 0;
+                    for (int i = 0; i < domainName.Length; i++)
+                    {
+                        var escape = HtmlHelper.EscapeUrlCharacter(domainName[i]);
+                        if (escape != null)
+                        {
+                            Write(domainName, previousPosition, i - previousPosition);
+                            previousPosition = i + 1;
+                            Write(escape);
+                        }
+                    }
+                    Write(domainName, previousPosition, domainName.Length - previousPosition);
+
+                    previousPosition = endOfDomain;
+                }
+                else
+                {
+                    previousPosition = schemeOffset; // Don't write anything as we might need to escape it
+                }
+            }
+#endif
+
+            for (var i = previousPosition; i < content.Length; i++)
             {
                 var c = content[i];
 
@@ -242,7 +296,7 @@ namespace Markdig.Renderers
                     else
                     {
                         byte[] bytes;
-                        if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
+                        if (c >= '\ud800' && c <= '\udfff' && previousPosition < content.Length)
                         {
                             bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
                             // Skip next char as it is decoded above
@@ -261,7 +315,7 @@ namespace Markdig.Renderers
                 }
             }
 
-            Write(content, previousPosition, length - previousPosition);
+            Write(content, previousPosition, content.Length - previousPosition);
             return this;
         }
 
@@ -360,5 +414,5 @@ namespace Markdig.Renderers
             }
             return this;
         }
-   }
+    }
 }
