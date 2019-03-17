@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -7,9 +8,25 @@ namespace Markdig.Tests
     public class MiscTests
     {
         [Test]
+        public void TestChangelogPRLinksMatchDescription()
+        {
+            string solutionFolder = Path.GetFullPath(Path.Combine(TestParser.TestsDirectory, "../.."));
+            string changelogPath = Path.Combine(solutionFolder, "changelog.md");
+            string changelog = File.ReadAllText(changelogPath);
+            var matches = Regex.Matches(changelog, @"\(\[\(PR #(\d+)\)\]\(.*?pull\/(\d+)\)\)");
+            Assert.Greater(matches.Count, 0);
+            foreach (Match match in matches)
+            {
+                Assert.True(int.TryParse(match.Groups[1].Value, out int textNr));
+                Assert.True(int.TryParse(match.Groups[2].Value, out int linkNr));
+                Assert.AreEqual(textNr, linkNr);
+            }
+        }
+
+        [Test]
         public void TestFixHang()
         {
-            var input = File.ReadAllText(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "hang.md"));
+            var input = File.ReadAllText(Path.Combine(TestParser.TestsDirectory, "hang.md"));
             _ = Markdown.ToHtml(input);
         }
 
@@ -23,7 +40,7 @@ namespace Markdig.Tests
         [Test]
         public void TestInvalidCharacterHandling()
         {
-            var input = File.ReadAllText(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "ArgumentOutOfRangeException.md"));
+            var input = File.ReadAllText(Path.Combine(TestParser.TestsDirectory, "ArgumentOutOfRangeException.md"));
             _ = Markdown.ToHtml(input);
         }
 
