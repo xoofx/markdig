@@ -41,7 +41,12 @@ namespace Markdig.Tests
         [TestCase(/* markdownText: */ ":::bar\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers+attributes|advanced")]
         public void TestPlainWithExtensions(string markdownText, string expected, string extensions)
         {
-            TestParser.TestSpec(markdownText, expected, extensions, true);
+            TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
+        }
+
+        public static void TestSpec(string markdownText, string expected, string extensions)
+        {
+            TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
         }
     }
 }

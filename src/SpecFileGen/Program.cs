@@ -11,7 +11,14 @@ namespace SpecFileGen
             Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(typeof(Spec).Assembly.Location),
-                    "../../../../Markdig.Tests/Specs/"));
+                    "../../../../Markdig.Tests/"));
+
+        enum RendererType
+        {
+            Html,
+            Normalize,
+            PlainText
+        }
 
         class Spec
         {
@@ -19,16 +26,33 @@ namespace SpecFileGen
             public readonly string Path;
             public readonly string OutputPath;
             public readonly string Extensions;
+            public readonly RendererType RendererType;
             public int TestCount;
 
-            public Spec(string name, string fileName, string extensions)
+            public Spec(string name, string fileName, string extensions, RendererType rendererType = RendererType.Html)
             {
                 Name = name;
-                Path = SpecificationsDirectory + fileName;
+                Path = SpecificationsDirectory;
+                if (rendererType == RendererType.Html) Path += "Specs";
+                else if (rendererType == RendererType.Normalize) Path += "NormalizeSpecs";
+                else if (rendererType == RendererType.PlainText) Path += "PlainTextSpecs";
+                Path += "/" + fileName;
                 OutputPath = Path.Substring(0, Path.Length - 2) + "cs";
                 Extensions = extensions;
+                RendererType = rendererType;
             }
         }
+        class NormalizeSpec : Spec
+        {
+            public NormalizeSpec(string name, string fileName, string extensions)
+                : base(name, fileName, extensions, rendererType: RendererType.Normalize) { }
+        }
+        class PlainTextSpec : Spec
+        {
+            public PlainTextSpec(string name, string fileName, string extensions)
+                : base(name, fileName, extensions, rendererType: RendererType.PlainText) { }
+        }
+
         static readonly Spec[] Specs = new[]
         {
             new Spec("CommonMark v. 0.28",  "CommonMark.md",                ""),
@@ -56,6 +80,10 @@ namespace SpecFileGen
             new Spec("Jira Links",          "JiraLinks.md",                 "jiralinks"),
             new Spec("Globalization",       "GlobalizationSpecs.md",        "globalization+advanced+emojis"),
             new Spec("Figures, Footers and Cites", "FigureFooterAndCiteSpecs.md", "figures+footers+citations|advanced"),
+
+            //new NormalizeSpec("", "", ""),
+
+            //new PlainTextSpec("", "", ""),
         };
 
         static void Main(string[] args)
@@ -241,7 +269,8 @@ namespace SpecFileGen
                 WriteTest(name, compressedName, ++number, spec.Extensions, lines,
                     commentOffset, commentEnd,
                     markdownOffset, markdownEnd,
-                    htmlOffset, htmlEnd);
+                    htmlOffset, htmlEnd,
+                    spec.RendererType);
             }
 
         End:
@@ -258,7 +287,7 @@ namespace SpecFileGen
             return source;
         }
 
-        static void WriteTest(string name, string compressedName, int number, string extensions, string[] lines, int commentOffset, int commentEnd, int markdownOffset, int markdownEnd, int htmlOffset, int htmlEnd)
+        static void WriteTest(string name, string compressedName, int number, string extensions, string[] lines, int commentOffset, int commentEnd, int markdownOffset, int markdownEnd, int htmlOffset, int htmlEnd, RendererType rendererType)
         {
             if (commentOffset != commentEnd)
             {
@@ -297,7 +326,10 @@ namespace SpecFileGen
             Indent(3); Line($"Console.WriteLine(\"Example {number}\\nSection {name}\\n\");");
 
             Indent(3);
-            Write("TestParser.TestSpec(\"");
+            if      (rendererType == RendererType.Html)      Write("TestParser");
+            else if (rendererType == RendererType.Normalize) Write("TestNormalize");
+            else if (rendererType == RendererType.PlainText) Write("TestPlainText");
+            Write(".TestSpec(\"");
             for (int i = markdownOffset; i < markdownEnd; i++)
             {
                 Write(Escape(lines[i]));
@@ -337,7 +369,7 @@ namespace SpecFileGen
             foreach (var part in name.Replace(',', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
                 compressedName += char.IsLower(part[0])
-                    ? char.ToUpper(part[0]) + part.Substring(1)
+                    ? char.ToUpper(part[0]) + (part.Length > 1 ? part.Substring(1) : "")
                     : part;
             }
             return compressedName;

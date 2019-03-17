@@ -409,8 +409,6 @@ This is a last line";
             AssertNormalizeNoTrim("[ ] This is not a task list");
         }
 
-
-
         [Test]
         public void JiraLinks()
         {
@@ -453,16 +451,24 @@ This is a last line";
             Assert.AreEqual(expected, actual);
         }
 
-        public void AssertNormalizeNoTrim(string input, string expected = null, NormalizeOptions options = null)
+        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
+        {
+            foreach (var pipeline in TestParser.GetPipeline(extensions))
+            {
+                AssertNormalize(inputText, expectedOutputText, trim: false, pipeline: pipeline.Value);
+            }
+        }
+
+        public static void AssertNormalizeNoTrim(string input, string expected = null, NormalizeOptions options = null)
             => AssertNormalize(input, expected, false, options);
 
-        public void AssertNormalize(string input, string expected = null, bool trim = true, NormalizeOptions options = null)
+        public static void AssertNormalize(string input, string expected = null, bool trim = true, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
         {
             expected = expected ?? input;
             input = NormText(input, trim);
             expected = NormText(expected, trim);
 
-            var pipeline = new MarkdownPipelineBuilder()
+            pipeline = pipeline ?? new MarkdownPipelineBuilder()
                 .UseAutoLinks()
                 .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
                 .UseTaskLists()
@@ -471,16 +477,7 @@ This is a last line";
             var result = Markdown.Normalize(input, options, pipeline: pipeline);
             result = NormText(result, trim);
 
-            Console.WriteLine("```````````````````Source");
-            Console.WriteLine(TestParser.DisplaySpaceAndTabs(input));
-            Console.WriteLine("```````````````````Result");
-            Console.WriteLine(TestParser.DisplaySpaceAndTabs(result));
-            Console.WriteLine("```````````````````Expected");
-            Console.WriteLine(TestParser.DisplaySpaceAndTabs(expected));
-            Console.WriteLine("```````````````````");
-            Console.WriteLine();
-
-            TextAssert.AreEqual(expected, result);
+            TestParser.PrintAssertExpected(input, result, expected);
         }
 
         private static string NormText(string text, bool trim)

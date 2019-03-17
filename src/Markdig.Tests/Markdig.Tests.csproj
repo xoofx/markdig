@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MiscTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Specs\AbbreviationSpecs.cs" />
@@ -142,6 +143,10 @@
       <Project>{8a58a7e2-627c-4f41-933f-5ac92adfab48}</Project>
       <Name>Markdig</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NormalizeSpecs\" />
+    <Folder Include="PlainTextSpecs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
