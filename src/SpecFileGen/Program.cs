@@ -81,9 +81,9 @@ namespace SpecFileGen
             new Spec("Globalization",       "GlobalizationSpecs.md",        "globalization+advanced+emojis"),
             new Spec("Figures, Footers and Cites", "FigureFooterAndCiteSpecs.md", "figures+footers+citations|advanced"),
 
-            //new NormalizeSpec("", "", ""),
+            new NormalizeSpec("Headings", "Headings.md", ""),
 
-            //new PlainTextSpec("", "", ""),
+            new PlainTextSpec("Sample", "SamplePlainText.md", ""),
         };
 
         static void Main(string[] args)
@@ -179,7 +179,10 @@ namespace SpecFileGen
             Line("using System;");
             Line("using NUnit.Framework;");
             Line();
-            Write("namespace Markdig.Tests.Specs."); Line(CompressedName(spec.Name).Replace('.', '_'));
+            Write("namespace Markdig.Tests.Specs.");
+            if      (spec.RendererType == RendererType.Normalize) Write("Normalize.");
+            else if (spec.RendererType == RendererType.PlainText) Write("PlainText.");
+            Line(CompressedName(spec.Name).Replace('.', '_'));
             Line("{");
 
             var lines = specSource.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);

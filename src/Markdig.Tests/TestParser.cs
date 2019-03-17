@@ -141,7 +141,7 @@ namespace Markdig.Tests
         public static readonly bool IsContinuousIntegration = Environment.GetEnvironmentVariable("CI") != null;
 
         public static readonly string TestsDirectory =
-            Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "../.."));
+            Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "../../.."));
 
         /// <summary>
         /// Contains absolute paths to specification markdown files (order is the same as in <see cref="SpecsMarkdown"/>)

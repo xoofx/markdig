@@ -6,15 +6,6 @@ namespace Markdig.Tests
     public class TestPlainText
     {
         [Test]
-        public void TestPlain()
-        {
-            var markdownText = "*Hello*, [world](http://example.com)!";
-            var expected = "Hello, world!\n";
-            var actual = Markdown.ToPlainText(markdownText);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
         [TestCase(/* markdownText: */ "foo bar", /* expected: */ "foo bar\n")]
         [TestCase(/* markdownText: */ "foo\nbar", /* expected: */ "foo\nbar\n")]
         [TestCase(/* markdownText: */ "*foo\nbar*", /* expected: */ "foo\nbar\n")]
