@@ -6,164 +6,159 @@
   <Comment CommentText="Inline Parsers Extensions">
     <Position X="10.448" Y="3.885" Height="0.406" Width="1.7" />
   </Comment>
-  <Class Name="Textamina.Markdig.Parsers.BlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.BlockParser" Collapsed="true">
     <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAIAAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
+      <HashCode>ACAIAAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAACAAQA=</HashCode>
       <FileName>Parsers\BlockParser.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Extensions.Footnotes.FootnoteParser" Collapsed="true">
+  <Class Name="Markdig.Extensions.Footnotes.FootnoteParser" Collapsed="true">
     <Position X="4.25" Y="2" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
       <FileName>Extensions\Footnotes\FootnoteParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Extensions.Tables.GridTableParser" Collapsed="true">
+  <Class Name="Markdig.Extensions.Tables.GridTableParser" Collapsed="true">
     <Position X="4.25" Y="3" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAAAAABAAAAAAAAAAAABAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <HashCode>ACAACAAEAAAgBAAIAAAAAAAAAAAAAAGAAACAgACAAAA=</HashCode>
       <FileName>Extensions\Tables\GridTableParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.FencedCodeBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.FencedCodeBlockParser" Collapsed="true">
     <Position X="0.5" Y="4" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAQAAAAAAAAAAAAAAAAAAAIAAAAAAAAAACAAAAAIAA=</HashCode>
+      <HashCode>AAAAAACAAAAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Parsers\FencedCodeBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.HeadingBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.HeadingBlockParser" Collapsed="true">
     <Position X="0.5" Y="5" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAACAAAg=</HashCode>
       <FileName>Parsers\HeadingBlockParser.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.HtmlBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.HtmlBlockParser" Collapsed="true">
     <Position X="0.5" Y="6" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAwAAAAAAAAAAAAACACAAAAAAAAABAAAACAAAAAAAQ=</HashCode>
+      <HashCode>ACAwAAAAAABAAAAgACgCAAAAAAAAABAAAACAAAAAAAQ=</HashCode>
       <FileName>Parsers\HtmlBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.IndentedCodeBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.IndentedCodeBlockParser" Collapsed="true">
     <Position X="0.5" Y="7" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
       <FileName>Parsers\IndentedCodeBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.ListBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.ListBlockParser" Collapsed="true">
     <Position X="0.5" Y="2" Width="2" />
     <TypeIdentifier>
-      <HashCode>gCAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
+      <HashCode>ACAAIAAAAAAAAQAgAAAAAAAQAABAAAAAAACAAACAAAA=</HashCode>
       <FileName>Parsers\ListBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.ParagraphBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.ParagraphBlockParser" Collapsed="true">
     <Position X="0.5" Y="3" Width="2" />
     <TypeIdentifier>
       <HashCode>ECAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
       <FileName>Parsers\ParagraphBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.QuoteBlockParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.QuoteBlockParser" Collapsed="true">
     <Position X="0.5" Y="8" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Parsers\QuoteBlockParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.ThematicBreakParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.ThematicBreakParser" Collapsed="true">
     <Position X="0.5" Y="9" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\ThematicBreakParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.InlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.InlineParser" Collapsed="true">
     <Position X="8.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\InlineParser.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Extensions.Attributes.AttributesParser" Collapsed="true">
-    <Position X="10.5" Y="3" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AIAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Extensions\Attributes\AttributesParser.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Textamina.Markdig.Extensions.Tables.PipeTableParser" Collapsed="true">
+  <Class Name="Markdig.Extensions.Tables.PipeTableParser" Collapsed="true">
     <Position X="10.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQkAggAAAAAAQCAQAAAAAAAAAAAACAAAAAAIAIAAAA=</HashCode>
+      <HashCode>AAAEAgiAAAAAAACAQAABAAAAAAAAACAAAAAAIAJAAAA=</HashCode>
       <FileName>Extensions\Tables\PipeTableParser.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.AutolineInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.AutolineInlineParser" Collapsed="true">
     <Position X="7" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\AutolineInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.CodeInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.CodeInlineParser" Collapsed="true">
     <Position X="7" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\CodeInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.EmphasisInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.EmphasisInlineParser" Collapsed="true">
     <Position X="7" Y="4.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAQAAgAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEAAAgSAAAAAAQAAIAAAAAgAAAAAABAAAAAAABAAEAA=</HashCode>
       <FileName>Parsers\Inlines\EmphasisInlineParser.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.EscapeInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.EscapeInlineParser" Collapsed="true">
     <Position X="7" Y="5.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\EscapeInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.HtmlEntityParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.HtmlEntityParser" Collapsed="true">
     <Position X="7" Y="6.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AIAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\HtmlEntityParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.LineBreakInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.LineBreakInlineParser" Collapsed="true">
     <Position X="7" Y="7.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAACAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\LineBreakInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.LinkInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.LinkInlineParser" Collapsed="true">
     <Position X="7" Y="8.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAQBAAAAA=</HashCode>
       <FileName>Parsers\Inlines\LinkInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.Inlines.LiteralInlineParser" Collapsed="true">
+  <Class Name="Markdig.Parsers.Inlines.LiteralInlineParser" Collapsed="true">
     <Position X="7" Y="9.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Parsers\Inlines\LiteralInlineParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Parsers.ParserBase&lt;TParserState&gt;" Collapsed="true">
+  <Class Name="Markdig.Parsers.ParserBase&lt;TProcessor&gt;" Collapsed="true">
     <Position X="5.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
@@ -171,28 +166,35 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Textamina.Markdig.Extensions.CustomContainers.CustomContainerParser" Collapsed="true">
+  <Class Name="Markdig.Extensions.CustomContainers.CustomContainerParser" Collapsed="true">
     <Position X="4.25" Y="4" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\CustomContainers\CustomContainerParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Textamina.Markdig.Extensions.DefinitionLists.DefinitionListParser" Collapsed="true">
+  <Class Name="Markdig.Extensions.DefinitionLists.DefinitionListParser" Collapsed="true">
     <Position X="4.25" Y="5" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Extensions\DefinitionLists\DefinitionListParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Textamina.Markdig.Parsers.IMarkdownParser&lt;TParserState&gt;" Collapsed="true">
+  <Class Name="Markdig.Extensions.GenericAttributes.GenericAttributesParser" Collapsed="true">
+    <Position X="10.5" Y="3" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AJAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\GenericAttributes\GenericAttributesParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Markdig.Parsers.IMarkdownParser&lt;TProcessor&gt;" Collapsed="true">
     <Position X="12.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>Parsers\IMarkdownParser.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Textamina.Markdig.Parsers.IBlockParser&lt;TParserState&gt;" Collapsed="true">
+  <Interface Name="Markdig.Parsers.IBlockParser&lt;TProcessor&gt;" Collapsed="true">
     <Position X="12.5" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAACAAAA=</HashCode>
