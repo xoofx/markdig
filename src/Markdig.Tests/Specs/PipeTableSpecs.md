@@ -8,7 +8,7 @@ A pipe table is detected when:
 
 **Rule #1**
 - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
-- The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
+- The second row must separate the first header row from subsequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
   - starting by optional spaces
   - followed by an optional `:` to specify left align
   - followed by a sequence of at least one `-` character
@@ -463,7 +463,7 @@ a | b `
 <p>a | b <code>0 |</code></p> 
 ````````````````````````````````
 
-**Rule #7**
+**Rule #8**
 
 A HTML inline has a higher precedence than a column delimiter `|`: 
  
@@ -488,7 +488,7 @@ a <a href="" title="|"></a> | b
 </table>
 ````````````````````````````````
 
-**Rule #8**
+**Rule #9**
 
 Links have a higher precedence than the column delimiter character `|`:
 
@@ -513,7 +513,7 @@ a  | b
 </table>
 ````````````````````````````````
 
-** Rule #9**
+**Rule #10**
 
 It is possible to have a single row header only:
 
@@ -546,7 +546,7 @@ a  | b
 </table>
 ````````````````````````````````
 
-** Tests **
+**Tests**
 
 Tests trailing spaces after pipes
 
@@ -586,7 +586,7 @@ Tests trailing spaces after pipes
 </table>
 ````````````````````````````````
 
-** Normalized columns count **
+**Normalized columns count**
 
 The tables are normalized to the maximum number of columns found in a table
 
