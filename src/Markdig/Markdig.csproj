@@ -58,7 +58,7 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">10.0.17763.0</TargetPlatformVersion>
     <TargetPlatformMinVersion Condition="'$(TargetPlatformMinVersion)' == ''">10.0.10240.0</TargetPlatformMinVersion>
     <DefineConstants>$(DefineConstants);NETSTANDARD_11;SUPPORT_UNSAFE</DefineConstants>
   </PropertyGroup>
