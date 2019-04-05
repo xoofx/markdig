@@ -37,7 +37,7 @@ namespace SpecFileGen
                 else if (rendererType == RendererType.Normalize) Path += "NormalizeSpecs";
                 else if (rendererType == RendererType.PlainText) Path += "PlainTextSpecs";
                 Path += "/" + fileName;
-                OutputPath = Path.Substring(0, Path.Length - 2) + "cs";
+                OutputPath = System.IO.Path.ChangeExtension(Path, "generated.cs");
                 Extensions = extensions;
                 RendererType = rendererType;
             }
@@ -86,7 +86,7 @@ namespace SpecFileGen
             new PlainTextSpec("Sample", "SamplePlainText.md", ""),
         };
 
-        static void Main(string[] args)
+        static void Main()
         {
             Console.WriteLine("Generating {0} specs ...", Specs.Length);
 

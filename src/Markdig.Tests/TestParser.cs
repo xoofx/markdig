@@ -23,7 +23,7 @@ namespace Markdig.Tests
 
             foreach (var specFilePath in SpecsFilePaths)
             {
-                string testFilePath = Path.ChangeExtension(specFilePath, ".cs");
+                string testFilePath = Path.ChangeExtension(specFilePath, ".generated.cs");
 
                 Assert.True(File.Exists(testFilePath),
                     "A new specification file has been added. Add the spec to the list in SpecFileGen and regenerate the tests.");
