@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Markdig.Extensions.AutoLinks;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -157,6 +158,16 @@ $$
             // Does not also disable link reference definitions
             TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>");
             TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>", noHeadingsPipeline);
+        }
+
+        [Test]
+        public void CanOpenAutoLinksInNewWindow()
+        {
+            var pipeline = new MarkdownPipelineBuilder().UseAutoLinks().Build();
+            var newWindowPipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions() { OpenInNewWindow = true }).Build();
+
+            TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
+            TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\" target=\"blank\">www.foo.bar</a></p>", newWindowPipeline);
         }
     }
 }

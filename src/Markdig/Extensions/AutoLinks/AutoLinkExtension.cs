@@ -11,14 +11,14 @@ namespace Markdig.Extensions.AutoLinks
     /// <summary>
     /// Extension to automatically create <see cref="LinkInline"/> when a link url http: or mailto: is found.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class AutoLinkExtension : IMarkdownExtension
     {
-        public readonly string ValidPreviousCharacters;
+        public readonly AutoLinkOptions Options;
 
-        public AutoLinkExtension(string validPreviousCharacters = AutoLinkParser.DefaultValidPreviousCharacters)
+        public AutoLinkExtension(AutoLinkOptions options)
         {
-            ValidPreviousCharacters = validPreviousCharacters;
+            Options = options ?? new AutoLinkOptions();
         }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -26,14 +26,13 @@ namespace Markdig.Extensions.AutoLinks
             if (!pipeline.InlineParsers.Contains<AutoLinkParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new AutoLinkParser(ValidPreviousCharacters));
+                pipeline.InlineParsers.Insert(0, new AutoLinkParser(Options));
             }
         }
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var normalizeRenderer = renderer as NormalizeRenderer;
-            if (normalizeRenderer != null && !normalizeRenderer.ObjectRenderers.Contains<NormalizeAutoLinkRenderer>())
+            if (renderer is NormalizeRenderer normalizeRenderer && !normalizeRenderer.ObjectRenderers.Contains<NormalizeAutoLinkRenderer>())
             {
                 normalizeRenderer.ObjectRenderers.InsertBefore<LinkInlineRenderer>(new NormalizeAutoLinkRenderer());
             }

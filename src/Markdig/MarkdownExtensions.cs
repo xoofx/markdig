@@ -99,9 +99,9 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, string validPreviousCharacters = AutoLinkParser.DefaultValidPreviousCharacters)
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions options = null)
         {
-            pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(validPreviousCharacters));
+            pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(options));
             return pipeline;
         }
 
