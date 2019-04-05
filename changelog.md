@@ -1,6 +1,7 @@
 # Changelog
 
 ## WIP
+- Add `DisableHeadings` extension method to `MarkdownPipelineBuilder`
 - Drop support for netstandard1.1 and Portable Class Libraries ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 - Allow non-ASCII characters in url domain names ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 

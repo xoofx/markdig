@@ -45,7 +45,13 @@ namespace Markdig.Helpers
                     return (TElement)this[i];
                 }
             }
-            return default(TElement);
+            return default;
+        }
+
+        public bool TryFind<TElement>(out TElement element) where TElement : T
+        {
+            element = Find<TElement>();
+            return element != null;
         }
 
         public TElement FindExact<TElement>() where TElement : T
@@ -57,7 +63,7 @@ namespace Markdig.Helpers
                     return (TElement)this[i];
                 }
             }
-            return default(TElement);
+            return default;
         }
 
         public void AddIfNotAlready<TElement>() where TElement : class, T, new()
@@ -134,6 +140,22 @@ namespace Markdig.Helpers
                 return true;
 
             Add(newElement);
+            return false;
+        }
+
+        /// <summary>
+        /// Removes the first occurence of <typeparamref name="TElement"/>
+        /// </summary>
+        public bool TryRemove<TElement>() where TElement : T
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i] is TElement)
+                {
+                    RemoveAt(i);
+                    return true;
+                }
+            }
             return false;
         }
     }

@@ -616,5 +616,20 @@ namespace Markdig
             pipeline.Use(new ConfigureNewLineExtension(newLine));
             return pipeline;
         }
+
+        /// <summary>
+        /// Disables parsing of ATX and Setex headings
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder DisableHeadings(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.BlockParsers.TryRemove<HeadingBlockParser>();
+            if (pipeline.BlockParsers.TryFind<ParagraphBlockParser>(out var parser))
+            {
+                parser.ParseSetexHeadings = false;
+            }
+            return pipeline;
+        }
     }
 }

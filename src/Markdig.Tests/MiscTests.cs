@@ -142,5 +142,21 @@ $$
             Assert.IsTrue(html.Contains("<div class=\"math\">\n\\["), "Leading bracket missing");
             Assert.IsTrue(html.Contains("\\]</div>"), "Trailing bracket missing");
         }
+
+        [Test]
+        public void CanDisableParsingHeadings()
+        {
+            var noHeadingsPipeline = new MarkdownPipelineBuilder().DisableHeadings().Build();
+
+            TestParser.TestSpec("Foo\n===", "<h1>Foo</h1>");
+            TestParser.TestSpec("Foo\n===", "<p>Foo\n===</p>", noHeadingsPipeline);
+
+            TestParser.TestSpec("# Heading 1", "<h1>Heading 1</h1>");
+            TestParser.TestSpec("# Heading 1", "<p># Heading 1</p>", noHeadingsPipeline);
+
+            // Does not also disable link reference definitions
+            TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>");
+            TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>", noHeadingsPipeline);
+        }
     }
 }
