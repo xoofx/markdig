@@ -152,17 +152,15 @@ namespace Markdig.Extensions.AutoLinks
                 return false;
             }
 
-            int line;
-            int column;
             var inline = new LinkInline()
             {
                 Span =
                 {
-                    Start = processor.GetSourcePosition(startPosition, out line, out column),
+                    Start = processor.GetSourcePosition(startPosition, out int line, out int column),
                 },
                 Line = line,
                 Column = column,
-                Url = c == 'w' ? "http://" + link : link,
+                Url = c == 'w' ? ((Options.UseHttpsPrefixForWWWLinks ? "https://" : "http://") + link) : link,
                 IsClosed = true,
                 IsAutoLink = true,
             };

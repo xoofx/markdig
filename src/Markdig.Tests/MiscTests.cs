@@ -169,5 +169,15 @@ $$
             TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
             TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\" target=\"blank\">www.foo.bar</a></p>", newWindowPipeline);
         }
+
+        [Test]
+        public void CanUseHttpsPrefixForWWWAutoLinks()
+        {
+            var pipeline = new MarkdownPipelineBuilder().UseAutoLinks().Build();
+            var httpsPipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions() { UseHttpsPrefixForWWWLinks = true }).Build();
+
+            TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
+            TestParser.TestSpec("www.foo.bar", "<p><a href=\"https://www.foo.bar\">www.foo.bar</a></p>", httpsPipeline);
+        }
     }
 }
