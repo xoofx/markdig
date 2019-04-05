@@ -160,7 +160,7 @@ namespace Markdig.Extensions.AutoLinks
                 },
                 Line = line,
                 Column = column,
-                Url = c == 'w' ? ((Options.UseHttpsPrefixForWWWLinks ? "https://" : "http://") + link) : link,
+                Url = c == 'w' ? ((Options.UseHttpsForWWWLinks ? "https://" : "http://") + link) : link,
                 IsClosed = true,
                 IsAutoLink = true,
             };

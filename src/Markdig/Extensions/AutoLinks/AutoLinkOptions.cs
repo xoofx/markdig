@@ -17,6 +17,6 @@ namespace Markdig.Extensions.AutoLinks
         /// <summary>
         /// Should a www link be prefixed with https:// instead of http:// (false by default)
         /// </summary>
-        public bool UseHttpsPrefixForWWWLinks { get; set; }
+        public bool UseHttpsForWWWLinks { get; set; }
     }
 }
