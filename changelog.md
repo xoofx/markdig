@@ -1,8 +1,8 @@
 # Changelog
 
 ## WIP
-- Add `AutoLinkOptions` with `OpenInNewWindow`, `UseHttpsPrefixForWWWLinks`
-- Add `DisableHeadings` extension method to `MarkdownPipelineBuilder`
+- Add `AutoLinkOptions` with `OpenInNewWindow`, `UseHttpsPrefixForWWWLinks` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
+- Add `DisableHeadings` extension method to `MarkdownPipelineBuilder` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
 - Drop support for netstandard1.1 and Portable Class Libraries ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 - Allow non-ASCII characters in url domain names ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 
