@@ -116,13 +116,13 @@ namespace Markdig.Parsers
 
             if (headingChar != 0)
             {
-                // We dicard the paragraph that will be transformed to a heading
-                state.Discard(paragraph);
-
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
                 // lines are empty, we can early exit and remove the paragraph
                 if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
                 {
+                    // We dicard the paragraph that will be transformed to a heading
+                    state.Discard(paragraph);
+
                     var level = headingChar == '=' ? 1 : 2;
 
                     var heading = new HeadingBlock(this)
@@ -136,8 +136,9 @@ namespace Markdig.Parsers
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);
+
+                    return BlockState.BreakDiscard;
                 }
-                return BlockState.BreakDiscard;
             }
 
             block.UpdateSpanEnd(state.Line.End);
