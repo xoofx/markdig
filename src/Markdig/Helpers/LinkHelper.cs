@@ -554,12 +554,12 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    hasEscape = false;
-
-                    if (c.IsWhitespace()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (c.IsNewLine())
                     {
                         break;
                     }
+
+                    hasEscape = false;
 
                     buffer.Append(c);
 
@@ -758,7 +758,8 @@ namespace Markdig.Helpers
             text.TrimStart();
 
             urlSpan.Start = text.Start;
-            if (!TryParseUrl(ref text, out url) || string.IsNullOrEmpty(url))
+            bool isAngleBracketsUrl = text.CurrentChar == '<';
+            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }
