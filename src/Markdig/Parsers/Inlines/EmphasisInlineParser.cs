@@ -244,7 +244,8 @@ namespace Markdig.Parsers.Inlines
                             var isOddMatch = ((closeDelimiter.Type & DelimiterType.Open) != 0 ||
                                              (previousOpenDelimiter.Type & DelimiterType.Close) != 0) &&
                                              previousOpenDelimiter.DelimiterCount != closeDelimiter.DelimiterCount &&
-                                             (previousOpenDelimiter.DelimiterCount + closeDelimiter.DelimiterCount) % 3 == 0;
+                                             (previousOpenDelimiter.DelimiterCount + closeDelimiter.DelimiterCount) % 3 == 0 &&
+                                             (previousOpenDelimiter.DelimiterCount % 3 != 0 || closeDelimiter.DelimiterCount % 3 != 0);
 
                             if (previousOpenDelimiter.DelimiterChar == closeDelimiter.DelimiterChar &&
                                 (previousOpenDelimiter.Type & DelimiterType.Open) != 0 &&
