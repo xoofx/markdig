@@ -53,9 +53,10 @@ namespace SpecFileGen
                 : base(name, fileName, extensions, rendererType: RendererType.PlainText) { }
         }
 
+        // NOTE: Beware of Copy/Pasting spec files - some characters may change (non-breaking space into space)!
         static readonly Spec[] Specs = new[]
         {
-            new Spec("CommonMark v. 0.28",  "CommonMark.md",                ""),
+            new Spec("CommonMark v. 0.29",  "CommonMark.md",                ""),
             new Spec("Pipe Tables",         "PipeTableSpecs.md",            "pipetables|advanced"),
             new Spec("Footnotes",           "FootnotesSpecs.md",            "footnotes|advanced"),
             new Spec("Generic Attributes",  "GenericAttributesSpecs.md",    "attributes|advanced"),
