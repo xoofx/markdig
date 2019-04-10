@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -45,7 +45,7 @@ namespace Markdig.Extensions.Mathematics
             return block;
         }
 
-        private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced)
+        private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
             var c = line.CurrentChar;
             for (int i = line.Start; i <= line.End; i++)
