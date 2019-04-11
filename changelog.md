@@ -1,6 +1,7 @@
 # Changelog
 
 ## WIP
+- Update to latest CommonMark specs 0.29 ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
 - Add `AutoLinkOptions` with `OpenInNewWindow`, `UseHttpsForWWWLinks` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
 - Add `DisableHeadings` extension method to `MarkdownPipelineBuilder` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
 - Drop support for netstandard1.1 and Portable Class Libraries ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
