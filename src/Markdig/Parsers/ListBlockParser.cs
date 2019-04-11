@@ -179,14 +179,14 @@ namespace Markdig.Parsers
 
         private BlockState TryParseListItem(BlockProcessor state, Block block)
         {
-            // If we have a code indent and we are not in a ListItem, early exit
-            if (!(block is ListItemBlock) && state.IsCodeIndent)
+            var currentListItem = block as ListItemBlock;
+            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent;
+
+            // We can early exit if we have a code indent and we are either (1) not in a ListItem, (2) preceded by a blank line, (3) in an unordered list
+            if (state.IsCodeIndent && (currentListItem is null || currentListItem.LastChild is BlankLineBlock || !currentParent.IsOrdered))
             {
                 return BlockState.None;
             }
-
-            var currentListItem = block as ListItemBlock;
-            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent;
 
             var initColumnBeforeIndent = state.ColumnBeforeIndent;
             var initColumn = state.Column;
