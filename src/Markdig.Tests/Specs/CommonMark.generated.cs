@@ -1,4 +1,4 @@
-// Generated: 2019-04-10 17:47:05
+// Generated: 2019-04-12 15:26:42
 
 // --------------------------------
 //        CommonMark v. 0.29
@@ -8392,18 +8392,18 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //
             // The following Markdown:
             //     &nbsp &x; &#; &#x;
-            //     &#987654321;
+            //     &#87654321;
             //     &#abcdef0;
             //     &ThisIsNotDefined; &hi?;
             //
             // Should be rendered as:
             //     <p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
-            //     &amp;#987654321;
+            //     &amp;#87654321;
             //     &amp;#abcdef0;
             //     &amp;ThisIsNotDefined; &amp;hi?;</p>
 
             Console.WriteLine("Example 314\nSection Inlines / Entity and numeric character references\n");
-            TestParser.TestSpec("&nbsp &x; &#; &#x;\n&#987654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#987654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "");
+            TestParser.TestSpec("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "");
         }
 
         // Although HTML5 does accept some entity references

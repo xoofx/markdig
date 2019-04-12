@@ -5714,12 +5714,12 @@ Here are some nonentities:
 
 ```````````````````````````````` example
 &nbsp &x; &#; &#x;
-&#987654321;
+&#87654321;
 &#abcdef0;
 &ThisIsNotDefined; &hi?;
 .
 <p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
-&amp;#987654321;
+&amp;#87654321;
 &amp;#abcdef0;
 &amp;ThisIsNotDefined; &amp;hi?;</p>
 ````````````````````````````````

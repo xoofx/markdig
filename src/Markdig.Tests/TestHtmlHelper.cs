@@ -26,12 +26,5 @@ namespace Markdig.Tests
             Assert.True(HtmlHelper.TryParseHtmlTag(text, out string outputTag));
             Assert.AreEqual(inputTag, outputTag);
         }
-
-        [Test]
-        public void DoNotParseEntitiesOver7ArabicDigitsLong()
-        {
-            // ToDo: Remove this test once https://github.com/commonmark/commonmark-spec/pull/575 is merged
-            TestParser.TestSpec("&#87654321;", "<p>&amp;#87654321;</p>");
-        }
     }
 }
