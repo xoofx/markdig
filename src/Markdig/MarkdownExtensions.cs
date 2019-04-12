@@ -99,9 +99,9 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, string validPreviousCharacters = AutoLinkParser.DefaultValidPreviousCharacters)
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions options = null)
         {
-            pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(validPreviousCharacters));
+            pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(options));
             return pipeline;
         }
 
@@ -614,6 +614,21 @@ namespace Markdig
         public static MarkdownPipelineBuilder ConfigureNewLine(this MarkdownPipelineBuilder pipeline, string newLine)
         {
             pipeline.Use(new ConfigureNewLineExtension(newLine));
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Disables parsing of ATX and Setex headings
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder DisableHeadings(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.BlockParsers.TryRemove<HeadingBlockParser>();
+            if (pipeline.BlockParsers.TryFind<ParagraphBlockParser>(out var parser))
+            {
+                parser.ParseSetexHeadings = false;
+            }
             return pipeline;
         }
     }

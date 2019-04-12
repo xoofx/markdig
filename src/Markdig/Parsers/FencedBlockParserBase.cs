@@ -17,8 +17,9 @@ namespace Markdig.Parsers
         /// <param name="state">The parser processor.</param>
         /// <param name="line">The being processed line.</param>
         /// <param name="fenced">The fenced code block.</param>
+        /// <param name="openingCharacter">The opening character for the fenced code block (usually ` or ~)</param>
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
-        public delegate bool InfoParserDelegate(BlockProcessor state, ref StringSlice line, IFencedBlock fenced);
+        public delegate bool InfoParserDelegate(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter);
 
 
         /// <summary>
@@ -65,26 +66,38 @@ namespace Markdig.Parsers
         /// <param name="line">The line.</param>
         /// <param name="fenced">The fenced code block.</param>
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
-        public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line,
-            IFencedBlock fenced)
+        public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
             string infoString;
             string argString = null;
 
-            var c = line.CurrentChar;
-            // An info string cannot contain any backsticks
+            // An info string cannot contain any backsticks (unless it is a tilde block)
             int firstSpace = -1;
-            for (int i = line.Start; i <= line.End; i++)
+            if (openingCharacter == '`')
             {
-                c = line.Text[i];
-                if (c == '`')
+                for (int i = line.Start; i <= line.End; i++)
                 {
-                    return false;
-                }
+                    char c = line.Text[i];
+                    if (c == '`')
+                    {
+                        return false;
+                    }
 
-                if (firstSpace < 0 && c.IsSpaceOrTab())
+                    if (firstSpace < 0 && c.IsSpaceOrTab())
+                    {
+                        firstSpace = i;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = line.Start; i <= line.End; i++)
                 {
-                    firstSpace = i;
+                    if (line.Text[i].IsSpaceOrTab())
+                    {
+                        firstSpace = i;
+                        break;
+                    }
                 }
             }
 
@@ -96,7 +109,7 @@ namespace Markdig.Parsers
                 firstSpace++;
                 while (firstSpace <= line.End)
                 {
-                    c = line[firstSpace];
+                    char c = line[firstSpace];
                     if (c.IsSpaceOrTab())
                     {
                         firstSpace++;
@@ -164,13 +177,10 @@ namespace Markdig.Parsers
             };
 
             // Try to parse any attached attributes
-            if (TryParseAttributes != null)
-            {
-                TryParseAttributes(processor, ref line, fenced);
-            }
+            TryParseAttributes?.Invoke(processor, ref line, fenced);
 
             // If the info parser was not successfull, early exit
-            if (InfoParser != null && !InfoParser(processor, ref line, fenced))
+            if (InfoParser != null && !InfoParser(processor, ref line, fenced, matchChar))
             {
                 return BlockState.None;
             }
@@ -214,7 +224,7 @@ namespace Markdig.Parsers
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence opening character followed only by whitespaces.
-            if (count <=0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+            if (count <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 block.UpdateSpanEnd(line.Start - 1);
 

@@ -65,25 +65,25 @@ namespace Markdig.Helpers
 
         public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
         {
-            // A left-flanking delimiter run is a delimiter run that is 
-            // (a) not followed by Unicode whitespace, and
-            // (b) either not followed by a punctuation character, or preceded by Unicode whitespace 
-            // or a punctuation character. 
-            // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
             c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
 
             var prevIsExcepted = prevIsPunctuation && punctuationExceptions.Contains(pc);
             var nextIsExcepted = nextIsPunctuation && punctuationExceptions.Contains(c);
 
+            // A left-flanking delimiter run is a delimiter run that is
+            // (1) not followed by Unicode whitespace, and either
+            // (2a) not followed by a punctuation character or
+            // (2b) followed by a punctuation character and preceded by Unicode whitespace or a punctuation character.
+            // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             canOpen = !nextIsWhiteSpace &&
                            ((!nextIsPunctuation || nextIsExcepted) || prevIsWhiteSpace || prevIsPunctuation);
 
 
-            // A right-flanking delimiter run is a delimiter run that is 
-            // (a) not preceded by Unicode whitespace, and 
-            // (b) either not preceded by a punctuation character, or followed by Unicode whitespace 
-            // or a punctuation character. 
+            // A right-flanking delimiter run is a delimiter run that is
+            // (1) not preceded by Unicode whitespace, and either
+            // (1a) not preceded by a punctuation character, or
+            // (2b) preceded by a punctuation character and followed by Unicode whitespace or a punctuation character.
             // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             canClose = !prevIsWhiteSpace &&
                             ((!prevIsPunctuation || prevIsExcepted) || nextIsWhiteSpace || nextIsPunctuation);

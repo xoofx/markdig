@@ -540,12 +540,6 @@ namespace Markdig.Helpers
             // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
             // See license for details:  https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md
 
-            /*!re2c
-                  [&] ([#] ([Xx][A-Fa-f0-9]{1,8}|[0-9]{1,8}) |[A-Za-z][A-Za-z0-9]{1,31} ) [;]
-                     { return (p - start); }
-                  .? { return 0; }
-                */
-
             numericEntity = 0;
             namedEntityStart = 0;
             namedEntityLength = 0;
@@ -565,25 +559,25 @@ namespace Markdig.Helpers
                 if (c == 'x' || c == 'X')
                 {
                     c = slice.NextChar(); // skip #
-                    // expect 1-8 hex digits starting from pos+3
+                    // expect 1-6 hex digits starting from pos+3
                     while (c != '\0')
                     {
                         c = slice.NextChar();
                         if (c >= '0' && c <= '9')
                         {
-                            if (++counter == 9) return 0;
+                            if (++counter == 7) return 0;
                             numericEntity = numericEntity*16 + (c - '0');
                             continue;
                         }
                         else if (c >= 'A' && c <= 'F')
                         {
-                            if (++counter == 9) return 0;
+                            if (++counter == 7) return 0;
                             numericEntity = numericEntity*16 + (c - 'A' + 10);
                             continue;
                         }
                         else if (c >= 'a' && c <= 'f')
                         {
-                            if (++counter == 9) return 0;
+                            if (++counter == 7) return 0;
                             numericEntity = numericEntity*16 + (c - 'a' + 10);
                             continue;
                         }
@@ -596,14 +590,14 @@ namespace Markdig.Helpers
                 }
                 else
                 {
-                    // expect 1-8 digits starting from pos+2
+                    // expect 1-7 digits starting from pos+2
                     while (c != '\0')
                     {
                         c = slice.NextChar();
 
                         if (c >= '0' && c <= '9')
                         {
-                            if (++counter == 9) return 0;
+                            if (++counter == 8) return 0;
                             numericEntity = numericEntity*10 + (c - '0');
                             continue;
                         }

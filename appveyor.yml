@@ -1,6 +1,7 @@
 version: 10.0.{build}
 image: Visual Studio 2017
 configuration: Release
+
 install:
 - ps: >-
     cd src
@@ -25,21 +26,29 @@ install:
         }
       }
     }
+
 build:
   project: src/Markdig.sln
   verbosity: minimal
+
 after_build:
-  - dotnet run --project SpecFileGen/SpecFileGen.csproj -c Release
+- cmd: >-
+    dotnet run --project SpecFileGen/SpecFileGen.csproj -c Release
+
+    dotnet test -v n Markdig.Tests
+
 before_package:
 - cmd: >-
-     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
+    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
 
-     msbuild /t:Clean Markdig/Markdig.csproj
-     
-     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release;SignAssembly=true Markdig/Markdig.csproj
+    msbuild /t:Clean Markdig/Markdig.csproj
+
+    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release;SignAssembly=true Markdig/Markdig.csproj
+
 artifacts:
 - path: src\Markdig\Bin\Release\*.nupkg
   name: Markdig Nugets
+
 deploy:
 - provider: NuGet
   api_key:

@@ -6,15 +6,6 @@ namespace Markdig.Tests
     public class TestPlainText
     {
         [Test]
-        public void TestPlain()
-        {
-            var markdownText = "*Hello*, [world](http://example.com)!";
-            var expected = "Hello, world!\n";
-            var actual = Markdown.ToPlainText(markdownText);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
         [TestCase(/* markdownText: */ "foo bar", /* expected: */ "foo bar\n")]
         [TestCase(/* markdownText: */ "foo\nbar", /* expected: */ "foo\nbar\n")]
         [TestCase(/* markdownText: */ "*foo\nbar*", /* expected: */ "foo\nbar\n")]
@@ -41,7 +32,12 @@ namespace Markdig.Tests
         [TestCase(/* markdownText: */ ":::bar\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers+attributes|advanced")]
         public void TestPlainWithExtensions(string markdownText, string expected, string extensions)
         {
-            TestParser.TestSpec(markdownText, expected, extensions, true);
+            TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
+        }
+
+        public static void TestSpec(string markdownText, string expected, string extensions)
+        {
+            TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
         }
     }
 }

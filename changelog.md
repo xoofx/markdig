@@ -1,6 +1,10 @@
 # Changelog
 
 ## WIP
+- Update to latest CommonMark specs 0.29 ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
+- Add `AutoLinkOptions` with `OpenInNewWindow`, `UseHttpsForWWWLinks` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
+- Add `DisableHeadings` extension method to `MarkdownPipelineBuilder` ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
+- Drop support for netstandard1.1 and Portable Class Libraries ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 - Allow non-ASCII characters in url domain names ([(PR #319)](https://github.com/lunet-io/markdig/pull/319))
 
 ## 0.16.0 (25 Feb 2019)
@@ -28,7 +32,7 @@
 - Ensuring line breaks when renderer does not have html enabled ([(PR #270)](https://github.com/lunet-io/markdig/pull/270))
 
 ## 0.15.4 (07 Oct 2018)
-- Add autolink domain GFM validation ([(PR #239)](https://github.com/lunet-io/markdig/pull/253))
+- Add autolink domain GFM validation ([(PR #253)](https://github.com/lunet-io/markdig/pull/253))
 
 ## 0.15.3 (15 Sep 2018)
 - Add support for RTL ([(PR #239)](https://github.com/lunet-io/markdig/pull/239))

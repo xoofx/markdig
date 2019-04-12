@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.AutoLinks
@@ -19,8 +20,10 @@ namespace Markdig.Extensions.AutoLinks
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoLinkParser"/> class.
         /// </summary>
-        public AutoLinkParser(string validPreviousCharacters = DefaultValidPreviousCharacters)
+        public AutoLinkParser(AutoLinkOptions options)
         {
+            Options = options ?? throw new ArgumentNullException(nameof(options));
+
             OpeningCharacters = new char[]
             {
                 'h', // for http:// and https://
@@ -28,19 +31,15 @@ namespace Markdig.Extensions.AutoLinks
                 'm', // for mailto:
                 'w', // for www.
             };
-
-            ValidPreviousCharacters = validPreviousCharacters;
         }
 
-        // All such recognized autolinks can only come at the beginning of a line, after whitespace, or any of the delimiting characters *, _, ~, and (.
-        public readonly string ValidPreviousCharacters;
-        public const string DefaultValidPreviousCharacters = "*_~(";
+        public readonly AutoLinkOptions Options;
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Previous char must be a whitespace or a punctuation
             var previousChar = slice.PeekCharExtra(-1);
-            if (!previousChar.IsWhiteSpaceOrZero() && ValidPreviousCharacters.IndexOf(previousChar) == -1)
+            if (!previousChar.IsWhiteSpaceOrZero() && Options.ValidPreviousCharacters.IndexOf(previousChar) == -1)
             {
                 return false;
             }
@@ -153,17 +152,15 @@ namespace Markdig.Extensions.AutoLinks
                 return false;
             }
 
-            int line;
-            int column;
             var inline = new LinkInline()
             {
                 Span =
                 {
-                    Start = processor.GetSourcePosition(startPosition, out line, out column),
+                    Start = processor.GetSourcePosition(startPosition, out int line, out int column),
                 },
                 Line = line,
                 Column = column,
-                Url = c == 'w' ? "http://" + link : link,
+                Url = c == 'w' ? ((Options.UseHttpsForWWWLinks ? "https://" : "http://") + link) : link,
                 IsClosed = true,
                 IsAutoLink = true,
             };
@@ -181,6 +178,11 @@ namespace Markdig.Extensions.AutoLinks
                 IsClosed = true
             });
             processor.Inline = inline;
+
+            if (Options.OpenInNewWindow)
+            {
+                inline.GetAttributes().AddPropertyIfNotExist("target", "blank");
+            }
 
             return true;
         }

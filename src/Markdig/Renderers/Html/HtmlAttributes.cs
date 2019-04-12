@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -79,26 +79,20 @@ namespace Markdig.Renderers.Html
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (Properties == null)
             {
-                Properties = new List<KeyValuePair<string, string>>(4) {new KeyValuePair<string, string>(name, value == null ? null : Convert.ToString(value, CultureInfo.InvariantCulture))};
+                Properties = new List<KeyValuePair<string, string>>(4);
             }
             else
             {
-                // Check that there is not already a property with the same key
-                bool copyProp = true;
                 for (int i = 0; i < Properties.Count; i++)
                 {
-                    var againstProp = Properties[i];
-                    if (againstProp.Key == name)
+                    if (Properties[i].Key == name)
                     {
-                        copyProp = false;
-                        break;
+                        return;
                     }
                 }
-                if (copyProp)
-                {
-                    Properties.Add(new KeyValuePair<string, string>(name, value == null ? null : Convert.ToString(value, CultureInfo.InvariantCulture)));
-                }
             }
+
+            Properties.Add(new KeyValuePair<string, string>(name, value == null ? null : Convert.ToString(value, CultureInfo.InvariantCulture)));
         }
 
         /// <summary>

@@ -159,7 +159,7 @@ namespace Markdig.Parsers
             }
 
             // Cannot start with </script </pre or </style
-            if ((tagIndex == 50 || tagIndex == 51 || tagIndex == 54))
+            if ((tagIndex == 49 || tagIndex == 50 || tagIndex == 53))
             {
                 if (c == '/' || hasLeadingClose)
                 {
@@ -323,30 +323,29 @@ namespace Markdig.Parsers
             "main", // 39
             "menu", // 40
             "menuitem", // 41
-            "meta", // 42
-            "nav", // 43
-            "noframes", // 44
-            "ol", // 45
-            "optgroup", // 46
-            "option", // 47
-            "p", // 48
-            "param", // 49
-            "pre", // 50       <=== special group 1
-            "script", // 51    <=== special group 1
-            "section", // 52
-            "source", // 53
-            "style", // 54     <=== special group 1
-            "summary", // 55
-            "table", // 56
-            "tbody", // 57
-            "td", // 58
-            "tfoot", // 59
-            "th", // 60
-            "thead", // 61
-            "title", // 62
-            "tr", // 63
-            "track", // 64
-            "ul", // 65
+            "nav", // 42
+            "noframes", // 43
+            "ol", // 44
+            "optgroup", // 45
+            "option", // 46
+            "p", // 47
+            "param", // 48
+            "pre", // 49       <=== special group 1
+            "script", // 50    <=== special group 1
+            "section", // 51
+            "source", // 52
+            "style", // 53     <=== special group 1
+            "summary", // 54
+            "table", // 55
+            "tbody", // 56
+            "td", // 57
+            "tfoot", // 58
+            "th", // 59
+            "thead", // 60
+            "title", // 61
+            "tr", // 62
+            "track", // 63
+            "ul", // 64
         };
     }
 }

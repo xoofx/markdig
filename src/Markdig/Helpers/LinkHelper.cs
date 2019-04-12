@@ -524,7 +524,7 @@ namespace Markdig.Helpers
             var c = text.CurrentChar;
 
             // a sequence of zero or more characters between an opening < and a closing > 
-            // that contains no spaces, line breaks, or unescaped < or > characters, or
+            // that contains no line breaks, or unescaped < or > characters, or
             if (c == '<')
             {
                 bool hasEscape = false;
@@ -554,12 +554,12 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    hasEscape = false;
-
-                    if (c.IsWhitespace()) // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
+                    if (c.IsNewLine())
                     {
                         break;
                     }
+
+                    hasEscape = false;
 
                     buffer.Append(c);
 
@@ -567,7 +567,7 @@ namespace Markdig.Helpers
             }
             else
             {
-                // a nonempty sequence of characters that does not include ASCII space or control characters, 
+                // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
                 // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
                 // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
                 // parentheses. 
@@ -758,7 +758,8 @@ namespace Markdig.Helpers
             text.TrimStart();
 
             urlSpan.Start = text.Start;
-            if (!TryParseUrl(ref text, out url) || string.IsNullOrEmpty(url))
+            bool isAngleBracketsUrl = text.CurrentChar == '<';
+            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }

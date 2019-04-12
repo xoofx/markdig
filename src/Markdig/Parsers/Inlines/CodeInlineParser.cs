@@ -23,7 +23,6 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            int openSticks = 0;
             var match = slice.CurrentChar;
             if (slice.PeekCharExtra(-1) == match)
             {
@@ -32,82 +31,84 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
 
+            int openSticks = 0;
+            int closeSticks = 0;
+
             // Match the opened sticks
-            var c = slice.CurrentChar;
+            char c = slice.CurrentChar;
             while (c == match)
             {
                 openSticks++;
                 c = slice.NextChar();
             }
 
-            bool isMatching = false;
-
             var builder = processor.StringBuilders.Get();
-            int closeSticks = 0;
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
-            // A code span begins with a backtick string and ends with a backtick string of equal length. 
-            // The contents of the code span are the characters between the two backtick strings, with leading and trailing spaces and line endings removed, and whitespace collapsed to single spaces.
-            var pc = ' ';
+            // A code span begins with a backtick string and ends with a backtick string of equal length.
+            // The contents of the code span are the characters between the two backtick strings, normalized in the following ways:
 
-            int newLinesFound = 0;
+            // 1. line endings are converted to spaces.
+
+            // 2. If the resulting string both begins AND ends with a space character, but does not consist entirely
+            // of space characters, a single space character is removed from the front and back.
+            // This allows you to include code that begins or ends with backtick characters, which must be separated by
+            // whitespace from the opening or closing backtick strings.
+
+            bool allSpace = true;
+
             while (c != '\0')
             {
                 // Transform '\n' into a single space
                 if (c == '\n')
                 {
-                    newLinesFound++;
                     c = ' ';
                 }
 
-                if (c != match && (c != ' ' || pc != ' '))
+                if (c == match)
                 {
-                    builder.Append(c);
-                }
-                else
-                {
-                    while (c == match)
+                    do
                     {
                         closeSticks++;
-                        pc = c;
                         c = slice.NextChar();
                     }
+                    while (c == match);
 
                     if (openSticks == closeSticks)
                     {
                         break;
                     }
-                }
 
-                if (closeSticks > 0)
-                {
+                    allSpace = false;
                     builder.Append(match, closeSticks);
                     closeSticks = 0;
                 }
                 else
                 {
-                    pc = c;
+                    builder.Append(c);
+                    if (c != ' ')
+                    {
+                        allSpace = false;
+                    }
                     c = slice.NextChar();
                 }
             }
 
+            bool isMatching = false;
             if (closeSticks == openSticks)
             {
-                // Remove trailing space
-                if (builder.Length > 0)
+                // Remove one space from front and back if the string is not all spaces
+                if (!allSpace && builder.Length > 2 && builder[0] == ' ' && builder[builder.Length - 1] == ' ')
                 {
-                    if (builder[builder.Length - 1].IsWhitespace())
-                    {
-                        builder.Length--;
-                    }
+                    builder.Length--;
+                    builder.Remove(0, 1); // More expensive, alternative is to have a double-pass algorithm
                 }
-                int line;
-                int column;
+
                 processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
                     Content = builder.ToString(),
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column
                 };

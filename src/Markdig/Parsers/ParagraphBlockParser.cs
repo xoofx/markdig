@@ -12,6 +12,8 @@ namespace Markdig.Parsers
     /// <seealso cref="BlockParser" />
     public class ParagraphBlockParser : BlockParser
     {
+        public bool ParseSetexHeadings { get; set; } = true;
+
         public override BlockState TryOpen(BlockProcessor processor)
         {
             if (processor.IsBlankLine)
@@ -35,7 +37,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            if (!processor.IsCodeIndent && !(block.Parent is QuoteBlock))
+            if (ParseSetexHeadings && !processor.IsCodeIndent && !(block.Parent is QuoteBlock))
             {
                 return TryParseSetexHeading(processor, block);
             }
@@ -46,8 +48,7 @@ namespace Markdig.Parsers
 
         public override bool Close(BlockProcessor processor, Block block)
         {
-            var paragraph = block as ParagraphBlock;
-            if (paragraph != null)
+            if (block is ParagraphBlock paragraph)
             {
                 TryMatchLinkReferenceDefinition(ref paragraph.Lines, processor);
 
@@ -115,13 +116,13 @@ namespace Markdig.Parsers
 
             if (headingChar != 0)
             {
-                // We dicard the paragraph that will be transformed to a heading
-                state.Discard(paragraph);
-
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining 
                 // lines are empty, we can early exit and remove the paragraph
                 if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
                 {
+                    // We dicard the paragraph that will be transformed to a heading
+                    state.Discard(paragraph);
+
                     var level = headingChar == '=' ? 1 : 2;
 
                     var heading = new HeadingBlock(this)
@@ -135,8 +136,9 @@ namespace Markdig.Parsers
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);
+
+                    return BlockState.BreakDiscard;
                 }
-                return BlockState.BreakDiscard;
             }
 
             block.UpdateSpanEnd(state.Line.End);

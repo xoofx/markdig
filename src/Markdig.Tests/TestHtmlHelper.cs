@@ -1,9 +1,8 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using NUnit.Framework;
 using Markdig.Helpers;
-using Markdig.Syntax;
 
 namespace Markdig.Tests
 {
@@ -15,8 +14,7 @@ namespace Markdig.Tests
         {
             var inputTag = "<a>";
             var text = new StringSlice(inputTag);
-            string outputTag;
-            Assert.True(HtmlHelper.TryParseHtmlTag(text, out outputTag));
+            Assert.True(HtmlHelper.TryParseHtmlTag(text, out string outputTag));
             Assert.AreEqual(inputTag, outputTag);
         }
 
@@ -25,8 +23,7 @@ namespace Markdig.Tests
         {
             var inputTag = "<a href='http://google.com'>";
             var text = new StringSlice(inputTag);
-            string outputTag;
-            Assert.True(HtmlHelper.TryParseHtmlTag(text, out outputTag));
+            Assert.True(HtmlHelper.TryParseHtmlTag(text, out string outputTag));
             Assert.AreEqual(inputTag, outputTag);
         }
     }
