@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -71,7 +71,7 @@ namespace Markdig.Parsers
             string infoString;
             string argString = null;
 
-            // An info string cannot contain any backsticks (unless it is a tilde block)
+            // An info string cannot contain any backticks (unless it is a tilde block)
             int firstSpace = -1;
             if (openingCharacter == '`')
             {
