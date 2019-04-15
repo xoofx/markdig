@@ -207,7 +207,7 @@ namespace Markdig.Parsers
         public void NextColumn()
         {
             var c = Line.CurrentChar;
-            // If we are accross a tab, we should just add 1 column
+            // If we are across a tab, we should just add 1 column
             if (c == '\t' && CharHelper.IsAcrossTab(Column))
             {
                 Column++;
