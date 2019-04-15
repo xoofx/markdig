@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:27:23
 
 // --------------------------------
 //            Jira Links
@@ -25,7 +25,7 @@ namespace Markdig.Tests.Specs.JiraLinks
         // The rules for detecting a link are:
         // 
         // - The project key must be composed of onre or more capitalised ASCII letter `[A-Z]+`
-        // - A single hypen `-` must separate the project key and issue number. 
+        // - A single hyphen `-` must separate the project key and issue number. 
         // - The issue number is composed of 1 or more digits `[0, 9]+`
         // - The reference must be preceeded by either `(` or whitespace or EOF.
         // - The reference must be followed by either `)` or whitespace or EOF.

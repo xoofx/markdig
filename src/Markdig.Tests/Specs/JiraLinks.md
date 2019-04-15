@@ -11,7 +11,7 @@ var pipeline = new MarkdownPipelineBuilder()
 The rules for detecting a link are:
 
 - The project key must be composed of onre or more capitalised ASCII letter `[A-Z]+`
-- A single hypen `-` must separate the project key and issue number. 
+- A single hyphen `-` must separate the project key and issue number. 
 - The issue number is composed of 1 or more digits `[0, 9]+`
 - The reference must be preceeded by either `(` or whitespace or EOF.
 - The reference must be followed by either `)` or whitespace or EOF.
