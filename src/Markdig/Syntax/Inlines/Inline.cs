@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Inserts the specified inline before this instance.
         /// </summary>
-        /// <param name="previous">The inlnie previous to insert before this instance.</param>
+        /// <param name="previous">The inline previous to insert before this instance.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public void InsertBefore(Inline previous)
@@ -126,7 +126,7 @@ namespace Markdig.Syntax.Inlines
         /// <param name="inline">The inline.</param>
         /// <param name="copyChildren">if set to <c>true</c> the children of this instance are copied to the specified inline.</param>
         /// <returns>The last children</returns>
-        /// <exception cref="System.ArgumentNullException">If inlnie is null</exception>
+        /// <exception cref="System.ArgumentNullException">If inline is null</exception>
         public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
             if (inline == null) throw new ArgumentNullException(nameof(inline));
