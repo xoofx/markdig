@@ -146,7 +146,7 @@ namespace Markdig.Extensions.Mathematics
                 c.CheckUnicodeCategory(out closeNextIsWhiteSpace, out closeNextIsPunctuation);
 
                 // A closing $/$$ should be followed by at least a punctuation or a whitespace
-                // and if the character after an openning $/$$ was a whitespace, it should be
+                // and if the character after an opening $/$$ was a whitespace, it should be
                 // a whitespace as well for the character preceding the closing of $/$$
                 if ((!closeNextIsPunctuation && !closeNextIsWhiteSpace) || (openNextIsWhiteSpace != closePrevIsWhiteSpace))
                 {
