@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -41,7 +41,7 @@ namespace Markdig.Parsers.Inlines
         public readonly int MinimumCount;
 
         /// <summary>
-        /// The maximum number of character this emphasis is expected to have (must be >=1 and >= minumunCount)
+        /// The maximum number of character this emphasis is expected to have (must be >=1 and >= minimumCount)
         /// </summary>
         public readonly int MaximumCount;
 
