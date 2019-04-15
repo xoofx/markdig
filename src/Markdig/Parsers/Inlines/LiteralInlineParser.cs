@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
@@ -38,7 +38,7 @@ namespace Markdig.Parsers.Inlines
             int column;
             var startPosition = processor.GetSourcePosition(slice.Start, out line, out column);
 
-            // Sligthly faster to perform our own search for opening characters
+            // Slightly faster to perform our own search for opening characters
             var nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
             //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
             int length;
