@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:20:50
 
 // --------------------------------
 //               Emoji
@@ -52,7 +52,7 @@ namespace Markdig.Tests.Specs.Emoji
             TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
         }
 
-        // Emoji can be followed by close ponctuation (or any other characters):
+        // Emoji can be followed by close punctuation (or any other characters):
         [Test]
         public void ExtensionsEmoji_Example003()
         {
