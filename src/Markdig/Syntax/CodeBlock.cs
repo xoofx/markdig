@@ -1,15 +1,15 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
 {
     /// <summary>
-    /// Repressents an indented code block.
+    /// Represents an indented code block.
     /// </summary>
     /// <remarks>
-    /// Related to CommonMark spec: 4.4 Indented code blocks 
+    /// Related to CommonMark spec: 4.4 Indented code blocks
     /// </remarks>
     public class CodeBlock : LeafBlock
     {
