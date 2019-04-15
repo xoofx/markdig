@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:33:49
 
 // --------------------------------
 //             Footnotes
@@ -84,7 +84,7 @@ namespace Markdig.Tests.Specs.Footnotes
             TestParser.TestSpec("Here is a footnote reference,[^1] and another.[^longnote]\n\nThis is another reference to [^1]\n\n[^1]: Here is the footnote.\n\nAnd another reference to [^longnote]\n\n[^longnote]: Here's one with multiple blocks.\n\n    Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.\n\n    > This is a block quote\n    > Inside a footnote\n\n        { some.code }\n\n    The whole paragraph can be indented, or just the first\n    line.  In this way, multi-paragraph footnotes work like\n    multi-paragraph list items.\n\nThis paragraph won't be part of the note, because it\nisn't indented.", "<p>Here is a footnote reference,<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a> and another.<a id=\"fnref:3\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This is another reference to <a id=\"fnref:2\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></p>\n<p>And another reference to <a id=\"fnref:4\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a></p>\n<p>This paragraph won't be part of the note, because it\nisn't indented.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n<li id=\"fn:2\">\n<p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they\nbelong to the previous footnote.</p>\n<blockquote>\n<p>This is a block quote\nInside a footnote</p>\n</blockquote>\n<pre><code>{ some.code }\n</code></pre>\n<p>The whole paragraph can be indented, or just the first\nline.  In this way, multi-paragraph footnotes work like\nmulti-paragraph list items.<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a><a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p>\n</li>\n</ol>\n</div>", "footnotes|advanced");
         }
 
-        // Check with mulitple consecutive footnotes:
+        // Check with multiple consecutive footnotes:
         [Test]
         public void ExtensionsFootnotes_Example002()
         {
