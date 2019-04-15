@@ -155,17 +155,17 @@ namespace Markdig.Parsers
 
             list.CountBlankLinesReset = 0;
 
-            int columWidth = listItem.ColumnWidth;
-            if (columWidth < 0)
+            int columnWidth = listItem.ColumnWidth;
+            if (columnWidth < 0)
             {
-                columWidth = -columWidth;
+                columnWidth = -columnWidth;
             }
 
-            if (state.Indent >= columWidth)
+            if (state.Indent >= columnWidth)
             {
-                if (state.Indent > columWidth && state.IsCodeIndent)
+                if (state.Indent > columnWidth && state.IsCodeIndent)
                 {
-                    state.GoToColumn(state.ColumnBeforeIndent + columWidth);
+                    state.GoToColumn(state.ColumnBeforeIndent + columnWidth);
                 }
 
                 // Update list-item source end position
