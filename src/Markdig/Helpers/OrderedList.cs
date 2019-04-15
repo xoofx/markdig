@@ -144,7 +144,7 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
-        /// Removes the first occurence of <typeparamref name="TElement"/>
+        /// Removes the first occurrence of <typeparamref name="TElement"/>
         /// </summary>
         public bool TryRemove<TElement>() where TElement : T
         {
