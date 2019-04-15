@@ -243,7 +243,7 @@ A pipe may be present at both the beginning/ending of each line:
 </table>
 ````````````````````````````````
 
-Or may be ommitted on one side:
+Or may be omitted on one side:
 
 ```````````````````````````````` example
 a|b|

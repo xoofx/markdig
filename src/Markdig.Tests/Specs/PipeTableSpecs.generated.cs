@@ -1,4 +1,4 @@
-// Generated: 2019-04-15 05:53:09
+// Generated: 2019-04-15 05:54:35
 
 // --------------------------------
 //            Pipe Tables
@@ -347,7 +347,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
 
-        // Or may be ommitted on one side:
+        // Or may be omitted on one side:
         [Test]
         public void ExtensionsPipeTable_Example011()
         {
