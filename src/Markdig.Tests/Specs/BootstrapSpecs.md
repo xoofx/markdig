@@ -1,6 +1,6 @@
 # Extensions
 
-Adds support for outputing bootstrap ready tags:
+Adds support for outputting bootstrap ready tags:
 
 ## Bootstrap
  
