@@ -1,4 +1,4 @@
-// Generated: 2019-04-15 05:27:55
+// Generated: 2019-04-15 05:29:08
 
 // --------------------------------
 //            Jira Links
@@ -27,7 +27,7 @@ namespace Markdig.Tests.Specs.JiraLinks
         // - The project key must be composed of one or more capitalised ASCII letter `[A-Z]+`
         // - A single hyphen `-` must separate the project key and issue number. 
         // - The issue number is composed of 1 or more digits `[0, 9]+`
-        // - The reference must be preceeded by either `(` or whitespace or EOF.
+        // - The reference must be preceded by either `(` or whitespace or EOF.
         // - The reference must be followed by either `)` or whitespace or EOF.
         // 
         // The following are valid examples:
