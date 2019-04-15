@@ -86,7 +86,7 @@ namespace Markdig.Extensions.GenericAttributes
         /// </summary>
         /// <param name="slice">The slice to parse.</param>
         /// <param name="attributes">The output attributes or null if not found or invalid</param>
-        /// <returns><c>true</c> if parsing the HTML attributes was succsesfull</returns>
+        /// <returns><c>true</c> if parsing the HTML attributes was successful</returns>
         public static bool TryParse(ref StringSlice slice, out HtmlAttributes attributes)
         {
             attributes = null;
