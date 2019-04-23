@@ -139,7 +139,7 @@
 ## 0.8.3
 - fix NullReferenceException with Gridtables extension when a single `+` is entered on a line
 ## 0.8.2
-- fix potential cast exception with Abreviation extension and empty literals
+- fix potential cast exception with Abbreviation extension and empty literals
 ## 0.8.1
 - new extension to disable URI escaping for non-US-ASCII characters to workaround a bug in Edge/IE
 - Fix an issue with abbreviations with left/right multiple non-punctuation/space characters

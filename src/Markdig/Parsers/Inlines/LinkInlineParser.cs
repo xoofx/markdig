@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -190,8 +190,8 @@ namespace Markdig.Parsers.Inlines
 
             if (openParent != null)
             {
-                // If we do find one, but it’s not active, 
-                // we remove the inactive delimiter from the stack, 
+                // If we do find one, but it’s not active,
+                // we remove the inactive delimiter from the stack,
                 // and return a literal text node ].
                 if (!openParent.IsActive)
                 {
@@ -206,10 +206,10 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
 
-                // If we find one and it’s active, 
-                // then we parse ahead to see if we have 
-                // an inline link/image, reference link/image, 
-                // compact reference link/image, 
+                // If we find one and it’s active,
+                // then we parse ahead to see if we have
+                // an inline link/image, reference link/image,
+                // compact reference link/image,
                 // or shortcut reference link/image
                 var parentDelimiter = openParent.Parent;
                 var savedText = text;
@@ -243,8 +243,8 @@ namespace Markdig.Parsers.Inlines
                             // Process emphasis delimiters
                             inlineState.PostProcessInlines(0, link, null, false);
 
-                            // If we have a link (and not an image), 
-                            // we also set all [ delimiters before the opening delimiter to inactive. 
+                            // If we have a link (and not an image),
+                            // we also set all [ delimiters before the opening delimiter to inactive.
                             // (This will prevent us from getting links within links.)
                             if (!openParent.IsImage)
                             {
@@ -309,7 +309,7 @@ namespace Markdig.Parsers.Inlines
 
                 // We have a nested [ ]
                 // firstParent.Remove();
-                // The opening [ will be transformed to a literal followed by all the childrens of the [ 
+                // The opening [ will be transformed to a literal followed by all the children of the [
 
                 var literal = new LiteralInline()
                 {

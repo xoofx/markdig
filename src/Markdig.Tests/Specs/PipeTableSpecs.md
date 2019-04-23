@@ -7,7 +7,7 @@ This section describes the different extensions supported:
 A pipe table is detected when:
 
 **Rule #1**
-- Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+- Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backtick \`) or a HTML inline.
 - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
   - starting by optional spaces
   - followed by an optional `:` to specify left align
@@ -243,7 +243,7 @@ A pipe may be present at both the beginning/ending of each line:
 </table>
 ````````````````````````````````
 
-Or may be ommitted on one side:
+Or may be omitted on one side:
 
 ```````````````````````````````` example
 a|b|
@@ -454,7 +454,7 @@ A column delimiter has a higher priority than emphasis delimiter
 
 **Rule #7**
 
-A backstick/code delimiter has a higher precedence than a column delimiter `|`:
+A backtick/code delimiter has a higher precedence than a column delimiter `|`:
  
 ```````````````````````````````` example
 a | b `

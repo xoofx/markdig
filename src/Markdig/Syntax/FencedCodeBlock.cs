@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
 {
     /// <summary>
-    /// Repressents a fenced code block.
+    /// Represents a fenced code block.
     /// </summary>
     /// <remarks>
     /// Related to CommonMark spec: 4.5 Fenced code blocks
@@ -27,7 +27,7 @@ namespace Markdig.Syntax
         }
 
         /// <summary>
-        /// Gets or sets the language parsed after the first line of 
+        /// Gets or sets the language parsed after the first line of
         /// the fenced code block. May be null.
         /// </summary>
         public string Info { get; set; }
@@ -49,7 +49,7 @@ namespace Markdig.Syntax
         public char FencedChar { get; set; }
 
         /// <summary>
-        /// Gets or sets the indent count when the fenced code block was indented 
+        /// Gets or sets the indent count when the fenced code block was indented
         /// and we need to remove up to indent count chars spaces from the begining of a line.
         /// </summary>
         internal int IndentCount { get; set; }

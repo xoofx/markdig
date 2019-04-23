@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
@@ -129,7 +129,7 @@ namespace Markdig.Parsers
         public int Column { get; set; }
 
         /// <summary>
-        /// Gets the position of the current character in the line being processed. 
+        /// Gets the position of the current character in the line being processed.
         /// </summary>
         public int Start => Line.Start;
 
@@ -144,12 +144,12 @@ namespace Markdig.Parsers
         public bool IsCodeIndent => Indent >= 4;
 
         /// <summary>
-        /// Gets the column position before the indent occured.
+        /// Gets the column position before the indent occurred.
         /// </summary>
         public int ColumnBeforeIndent { get; private set; }
 
         /// <summary>
-        /// Gets the character position before the indent occured.
+        /// Gets the character position before the indent occurred.
         /// </summary>
         public int StartBeforeIndent { get; private set; }
 
@@ -207,7 +207,7 @@ namespace Markdig.Parsers
         public void NextColumn()
         {
             var c = Line.CurrentChar;
-            // If we are accross a tab, we should just add 1 column
+            // If we are across a tab, we should just add 1 column
             if (c == '\t' && CharHelper.IsAcrossTab(Column))
             {
                 Column++;
@@ -239,7 +239,7 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
-        /// Parses the indentation from the current position in the line, updating <see cref="StartBeforeIndent"/>, 
+        /// Parses the indentation from the current position in the line, updating <see cref="StartBeforeIndent"/>,
         /// <see cref="ColumnBeforeIndent"/>, <see cref="Start"/> and <see cref="Column"/> accordingly
         /// taking into account space taken by tabs.
         /// </summary>
@@ -542,7 +542,7 @@ namespace Markdig.Parsers
                 OpenedBlocks[i].IsOpen = true;
             }
         }
-        
+
         /// <summary>
         /// Updates the <see cref="CurrentBlock"/> and <see cref="CurrentContainer"/>.
         /// </summary>
@@ -580,7 +580,7 @@ namespace Markdig.Parsers
         /// </exception>
         private void TryContinueBlocks()
         {
-            // Set all blocks non opened. 
+            // Set all blocks non opened.
             // They will be marked as open in the following loop
             for (int i = 1; i < OpenedBlocks.Count; i++)
             {

@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 namespace Markdig.Parsers
@@ -20,7 +20,7 @@ namespace Markdig.Parsers
         /// <param name="state">The block processor</param>
         /// <param name="pendingBulletType">The type of the current bullet type</param>
         /// <param name="result">The result of parsing</param>
-        /// <returns><c>true</c> if parsing was sucessfull; <c>false</c> otherwise</returns>
+        /// <returns><c>true</c> if parsing was successful; <c>false</c> otherwise</returns>
         public abstract bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result);
     }
 }

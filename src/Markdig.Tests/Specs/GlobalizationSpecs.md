@@ -134,7 +134,7 @@ Lists:
 Tables:
 
 ```````````````````````````````` example
-Nuitrion |Apple | Oranges
+Nutrition |Apple | Oranges
 --|-- | --
 Calories|52|47
 Sugar|10g|9g
@@ -147,7 +147,7 @@ Sugar|10g|9g
 <table>
 <thead>
 <tr>
-<th>Nuitrion</th>
+<th>Nutrition</th>
 <th>Apple</th>
 <th>Oranges</th>
 </tr>

@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:54:35
 
 // --------------------------------
 //            Pipe Tables
@@ -21,7 +21,7 @@ namespace Markdig.Tests.Specs.PipeTables
         // A pipe table is detected when:
         // 
         // **Rule #1**
-        // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backstick \`) or a HTML inline.
+        // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backtick \`) or a HTML inline.
         // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
         //   - starting by optional spaces
         //   - followed by an optional `:` to specify left align
@@ -347,7 +347,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
 
-        // Or may be ommitted on one side:
+        // Or may be omitted on one side:
         [Test]
         public void ExtensionsPipeTable_Example011()
         {
@@ -629,7 +629,7 @@ namespace Markdig.Tests.Specs.PipeTables
 
         // **Rule #7**
         // 
-        // A backstick/code delimiter has a higher precedence than a column delimiter `|`:
+        // A backtick/code delimiter has a higher precedence than a column delimiter `|`:
         [Test]
         public void ExtensionsPipeTable_Example019()
         {

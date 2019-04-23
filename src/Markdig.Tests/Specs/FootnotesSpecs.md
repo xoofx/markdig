@@ -61,7 +61,7 @@ multi-paragraph list items.<a href="#fnref:3" class="footnote-back-ref">&#8617;<
 </div>
 ````````````````````````````````
 
-Check with mulitple consecutive footnotes:
+Check with multiple consecutive footnotes:
 
 ```````````````````````````````` example
 Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].

@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:23:49
 
 // --------------------------------
 //             Bootstrap
@@ -14,7 +14,7 @@ namespace Markdig.Tests.Specs.Bootstrap
     {
         // # Extensions
         // 
-        // Adds support for outputing bootstrap ready tags:
+        // Adds support for outputting bootstrap ready tags:
         // 
         // ## Bootstrap
         //  

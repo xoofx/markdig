@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -111,12 +111,12 @@ namespace Markdig.Extensions.AutoIdentifiers
                     doc.SetLinkReferenceDefinition(keyPair.Key, keyPair.Value);
                 }
             }
-            // Once we are done, we don't need to keep the intermediate dictionary arround
+            // Once we are done, we don't need to keep the intermediate dictionary around
             doc.RemoveData(this);
         }
 
         /// <summary>
-        /// Callback when there is a reference to found to a heading. 
+        /// Callback when there is a reference to found to a heading.
         /// Note that reference are only working if they are declared after.
         /// </summary>
         private Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline child)

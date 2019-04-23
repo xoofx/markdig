@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:30:00
 
 // --------------------------------
 //            Jira Links
@@ -14,7 +14,7 @@ namespace Markdig.Tests.Specs.JiraLinks
     {
         // ## Jira Links
         // 
-        // The JiraLinks extension will automatically add links to JIRA issue items within your markdown, e.g. XX-1234. For this to happen, you must configure the extension when adding to the pipeline, e.g. 
+        // The JiraLinks extension will automatically add links to JIRA issue items within your markdown, e.g. XX-1234. For this to happen, you must configure the extension when adding to the pipeline, e.g.
         // 
         // ```
         // var pipeline = new MarkdownPipelineBuilder()
@@ -24,10 +24,10 @@ namespace Markdig.Tests.Specs.JiraLinks
         // 
         // The rules for detecting a link are:
         // 
-        // - The project key must be composed of onre or more capitalised ASCII letter `[A-Z]+`
-        // - A single hypen `-` must separate the project key and issue number. 
+        // - The project key must be composed of one or more capitalized ASCII letter `[A-Z]+`
+        // - A single hyphen `-` must separate the project key and issue number.
         // - The issue number is composed of 1 or more digits `[0, 9]+`
-        // - The reference must be preceeded by either `(` or whitespace or EOF.
+        // - The reference must be preceded by either `(` or whitespace or EOF.
         // - The reference must be followed by either `)` or whitespace or EOF.
         // 
         // The following are valid examples:

@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-15 05:25:26
 
 // --------------------------------
 //           Globalization
@@ -173,7 +173,7 @@ namespace Markdig.Tests.Specs.Globalization
             // Section: Extensions / Globalization
             //
             // The following Markdown:
-            //     Nuitrion |Apple | Oranges
+            //     Nutrition |Apple | Oranges
             //     --|-- | --
             //     Calories|52|47
             //     Sugar|10g|9g
@@ -187,7 +187,7 @@ namespace Markdig.Tests.Specs.Globalization
             //     <table>
             //     <thead>
             //     <tr>
-            //     <th>Nuitrion</th>
+            //     <th>Nutrition</th>
             //     <th>Apple</th>
             //     <th>Oranges</th>
             //     </tr>
@@ -228,7 +228,7 @@ namespace Markdig.Tests.Specs.Globalization
             //     </table>
 
             Console.WriteLine("Example 3\nSection Extensions / Globalization\n");
-            TestParser.TestSpec("Nuitrion |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table>\n<thead>\n<tr>\n<th>Nuitrion</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization+advanced+emojis");
+            TestParser.TestSpec("Nutrition |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table>\n<thead>\n<tr>\n<th>Nutrition</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization+advanced+emojis");
         }
     }
 }

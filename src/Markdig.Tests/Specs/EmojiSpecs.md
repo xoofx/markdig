@@ -20,7 +20,7 @@ These are not:) an emoji with a:) x:angry:x
 <p>These are not:) an emoji with a:) x:angry:x</p>
 ````````````````````````````````
 
-Emoji can be followed by close ponctuation (or any other characters):
+Emoji can be followed by close punctuation (or any other characters):
 
 ```````````````````````````````` example
 We all need :), it makes us :muscle:. (and :ok_hand:).
