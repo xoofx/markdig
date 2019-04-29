@@ -185,7 +185,8 @@ namespace Markdig.Extensions.MediaLinks
 
         private static string YouTube(Uri uri)
         {
-            if (string.Equals(uri.AbsolutePath, "/embed", StringComparison.OrdinalIgnoreCase) || string.Equals(uri.AbsolutePath, "/embed/", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(uri.AbsolutePath, "/embed", StringComparison.OrdinalIgnoreCase) || string.Equals(uri.AbsolutePath, "/embed/", StringComparison.OrdinalIgnoreCase))
+            {
                 return uri.ToString();
             }
             var queryParams = SplitQuery(uri);
@@ -195,15 +196,18 @@ namespace Markdig.Extensions.MediaLinks
             );
         }
 
-        private static string YouTubeShortened(Uri uri) {
+        private static string YouTubeShortened(Uri uri)
+        {
             return BuildYouTubeIframeUrl(
                 uri.AbsolutePath.Substring(1),
                 SplitQuery(uri).FirstOrDefault(p => p.StartsWith("t="))?.Substring(2)
             );
         }
 
-        private static string BuildYouTubeIframeUrl(string videoId, string startTime) {
-            if (string.IsNullOrEmpty(videoId)) {
+        private static string BuildYouTubeIframeUrl(string videoId, string startTime)
+        {
+            if (string.IsNullOrEmpty(videoId))
+            {
                 return null;
             }
             string url = $"https://www.youtube.com/embed/{videoId}";
