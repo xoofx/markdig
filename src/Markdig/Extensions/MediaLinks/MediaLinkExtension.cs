@@ -190,15 +190,15 @@ namespace Markdig.Extensions.MediaLinks
             }
             var queryParams = SplitQuery(uri);
             return BuildYouTubeIframeUrl(
-                queryParams.Where(p => p.StartsWith("v=")).FirstOrDefault(p => p.Substring(2)),
-                queryParams.Where(p => p.StartsWith("t=")).FirstOrDefault(p => p.Substring(2))
+                queryParams.Where(p => p.StartsWith("v=")).Select(p => p.Substring(2)).FirstOrDefault(),
+                queryParams.Where(p => p.StartsWith("t=")).Select(p => p.Substring(2)).FirstOrDefault()
             );
         }
 
         private static string YouTubeShortened(Uri uri) {
             return BuildYouTubeIframeUrl(
                 uri.AbsolutePath.Substring(1),
-                SplitQuery(uri).Where(p => p.StartsWith("t=")).FirstOrDefault(p => p.Substring(2))
+                SplitQuery(uri).Where(p => p.StartsWith("t=")).Select(p => p.Substring(2)).FirstOrDefault()
             );
         }
 
