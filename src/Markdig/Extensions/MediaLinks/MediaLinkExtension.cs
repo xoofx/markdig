@@ -154,7 +154,9 @@ namespace Markdig.Extensions.MediaLinks
             }
 
             var htmlAttributes = GetHtmlAttributes(linkInline);
-            renderer.Write($"<iframe src=\"{foundProvider.Result}\"");
+            renderer.Write("<iframe src=\"");
+            renderer.WriteEscapeUrl(foundProvider.Result);
+            renderer.Write("\"");
 
             if(!string.IsNullOrEmpty(Options.Width))
                 htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
@@ -185,9 +187,14 @@ namespace Markdig.Extensions.MediaLinks
 
         private static string YouTube(Uri uri)
         {
-            if (string.Equals(uri.AbsolutePath, "/embed", StringComparison.OrdinalIgnoreCase) || string.Equals(uri.AbsolutePath, "/embed/", StringComparison.OrdinalIgnoreCase))
+            string uriPath = uri.AbsolutePath;
+            if (string.Equals(uriPath, "/embed", StringComparison.OrdinalIgnoreCase) || uriPath.StartsWith("/embed/", StringComparison.OrdinalIgnoreCase))
             {
                 return uri.ToString();
+            }
+            if (!string.Equals(uriPath, "/watch", StringComparison.OrdinalIgnoreCase) && !uriPath.StartsWith("/watch/", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
             }
             var queryParams = SplitQuery(uri);
             return BuildYouTubeIframeUrl(

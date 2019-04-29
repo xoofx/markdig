@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-04-29 18:40:06
 
 // --------------------------------
 //               Media
@@ -26,25 +26,40 @@ namespace Markdig.Tests.Specs.Media
             // Section: Extensions / Media links
             //
             // The following Markdown:
-            //     ![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)
+            //     ![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)
             //     
-            //     ![Video2](https://vimeo.com/8607834)
+            //     ![youtube.com with t](https://www.youtube.com/watch?v=mswPy5bt3TQ&t=100)
             //     
-            //     ![Video3](https://sample.com/video.mp4)
+            //     ![youtu.be](https://youtu.be/mswPy5bt3TQ)
             //     
-            //     ![Audio4](https://music.yandex.ru/album/411845/track/4402274)
+            //     ![youtu.be with t](https://youtu.be/mswPy5bt3TQ?t=100)
             //     
-            //     ![Video5](https://ok.ru/video/26870090463)
+            //     ![youtube.com/embed 1](https://www.youtube.com/embed/mswPy5bt3TQ?start=100&rel=0)
+            //      
+            //     ![youtube.com/embed 2](https://www.youtube.com/embed?listType=playlist&list=PLC77007E23FF423C6)
+            //     
+            //     ![vimeo](https://vimeo.com/8607834)
+            //     
+            //     ![static mp4](https://sample.com/video.mp4)
+            //     
+            //     ![yandex.ru](https://music.yandex.ru/album/411845/track/4402274)
+            //     
+            //     ![ok.ru](https://ok.ru/video/26870090463)
             //
             // Should be rendered as:
             //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ?start=100" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ?start=100" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed/mswPy5bt3TQ?start=100&amp;rel=0" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
+            //     <p><iframe src="https://www.youtube.com/embed?listType=playlist&amp;list=PLC77007E23FF423C6" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
             //     <p><iframe src="https://player.vimeo.com/video/8607834" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
             //     <p><video width="500" height="281" controls=""><source type="video/mp4" src="https://sample.com/video.mp4"></source></video></p>
             //     <p><iframe src="https://music.yandex.ru/iframe/#track/4402274/411845/" width="500" height="281" frameborder="0"></iframe></p>
             //     <p><iframe src="https://ok.ru/videoembed/26870090463" width="500" height="281" frameborder="0" allowfullscreen=""></iframe></p>
 
             Console.WriteLine("Example 1\nSection Extensions / Media links\n");
-            TestParser.TestSpec("![Video1](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![Video2](https://vimeo.com/8607834)\n\n![Video3](https://sample.com/video.mp4)\n\n![Audio4](https://music.yandex.ru/album/411845/track/4402274)\n\n![Video5](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>", "medialinks|advanced+medialinks");
+            TestParser.TestSpec("![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)\n\n![youtube.com with t](https://www.youtube.com/watch?v=mswPy5bt3TQ&t=100)\n\n![youtu.be](https://youtu.be/mswPy5bt3TQ)\n\n![youtu.be with t](https://youtu.be/mswPy5bt3TQ?t=100)\n\n![youtube.com/embed 1](https://www.youtube.com/embed/mswPy5bt3TQ?start=100&rel=0)\n \n![youtube.com/embed 2](https://www.youtube.com/embed?listType=playlist&list=PLC77007E23FF423C6)\n\n![vimeo](https://vimeo.com/8607834)\n\n![static mp4](https://sample.com/video.mp4)\n\n![yandex.ru](https://music.yandex.ru/album/411845/track/4402274)\n\n![ok.ru](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ?start=100\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ?start=100\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ?start=100&amp;rel=0\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://www.youtube.com/embed?listType=playlist&amp;list=PLC77007E23FF423C6\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>", "medialinks|advanced+medialinks");
         }
     }
 }
