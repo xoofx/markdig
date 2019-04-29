@@ -271,8 +271,13 @@ asdf
         [Test]
         public void CodeInline()
         {
+            AssertNormalizeNoTrim("This has a ` ` in it");
             AssertNormalizeNoTrim("This has a `HelloWorld()` in it");
             AssertNormalizeNoTrim(@"This has a ``Hello`World()`` in it");
+            AssertNormalizeNoTrim(@"This has a ``` Hello`World() ``` in it", @"This has a ``Hello`World()`` in it");
+            AssertNormalizeNoTrim(@"This has a ``Hello`World()` `` in it");
+            AssertNormalizeNoTrim(@"This has a `` `Hello`World()`` in it");
+            AssertNormalizeNoTrim(@"This has a ``` ``Hello`World()` ``` in it");
         }
 
         [Test]

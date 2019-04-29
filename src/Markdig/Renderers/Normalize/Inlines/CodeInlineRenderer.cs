@@ -13,10 +13,28 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)
         {
-            var delimiter = obj.Content.Contains(obj.Delimiter + "") ? new string(obj.Delimiter, 2) : obj.Delimiter + "";
-
+            var delimiter = obj.Delimiter.ToString();
+            while (obj.Content.Contains(delimiter))
+            {
+                delimiter += obj.Delimiter;
+            }
             renderer.Write(delimiter);
-            renderer.Write(obj.Content);
+            if (obj.Content.Length != 0)
+            {
+                if (obj.Content[0] == obj.Delimiter)
+                {
+                    renderer.Write(' ');
+                }
+                renderer.Write(obj.Content);
+                if (obj.Content[obj.Content.Length - 1] == obj.Delimiter)
+                {
+                    renderer.Write(' ');
+                }
+            }
+            else
+            {
+                renderer.Write(' ');
+            }
             renderer.Write(delimiter);
         }
     }
