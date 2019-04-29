@@ -13,12 +13,24 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)
         {
-            var delimiter = obj.Delimiter.ToString();
-            while (obj.Content.Contains(delimiter))
+            var delimiterCount = 0;
+            for (var i = 0; i < obj.Content.Length; i++)
             {
-                delimiter += obj.Delimiter;
+                var index = obj.Content.IndexOf(obj.Delimiter, i);
+                if (index == -1) break;
+
+                var count = 1;
+                for (i = index + 1; i < obj.Content.Length; i++)
+                {
+                    if (obj.Content[i] == obj.Delimiter) count++;
+                    else break;
+                }
+
+                if (delimiterCount < count)
+                    delimiterCount = count;
             }
-            renderer.Write(delimiter);
+            var delimiterRun = new string(obj.Delimiter, delimiterCount + 1);
+            renderer.Write(delimiterRun);
             if (obj.Content.Length != 0)
             {
                 if (obj.Content[0] == obj.Delimiter)
@@ -35,7 +47,7 @@ namespace Markdig.Renderers.Normalize.Inlines
             {
                 renderer.Write(' ');
             }
-            renderer.Write(delimiter);
+            renderer.Write(delimiterRun);
         }
     }
 }

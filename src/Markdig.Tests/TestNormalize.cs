@@ -276,6 +276,7 @@ asdf
             AssertNormalizeNoTrim(@"This has a ``Hello`World()`` in it");
             AssertNormalizeNoTrim(@"This has a ``` Hello`World() ``` in it", @"This has a ``Hello`World()`` in it");
             AssertNormalizeNoTrim(@"This has a ``Hello`World()` `` in it");
+            AssertNormalizeNoTrim(@"This has a ```` ``Hello```World()` ```` in it");
             AssertNormalizeNoTrim(@"This has a `` `Hello`World()`` in it");
             AssertNormalizeNoTrim(@"This has a ``` ``Hello`World()` ``` in it");
         }
