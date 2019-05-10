@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -127,6 +127,7 @@ namespace Markdig.Extensions.MediaLinks
         private static readonly List<KnownProvider> KnownHosts = new List<KnownProvider>()
         {
             new KnownProvider {HostPrefix = "www.youtube.com", Delegate = YouTube},
+            new KnownProvider {HostPrefix = "youtu.be", Delegate = YouTubeShortened},
             new KnownProvider {HostPrefix = "vimeo.com", Delegate = Vimeo},
             new KnownProvider {HostPrefix = "music.yandex.ru", Delegate = Yandex, AllowFullScreen = false},
             new KnownProvider {HostPrefix = "ok.ru", Delegate = Odnoklassniki},
@@ -135,7 +136,7 @@ namespace Markdig.Extensions.MediaLinks
 
         private bool TryRenderIframeFromKnownProviders(Uri uri, HtmlRenderer renderer, LinkInline linkInline)
         {
-            var foundProvider = 
+            var foundProvider =
                 KnownHosts
                     .Where(pair => uri.Host.StartsWith(pair.HostPrefix, StringComparison.OrdinalIgnoreCase))  // when host is match
                     .Select(provider =>
@@ -153,7 +154,9 @@ namespace Markdig.Extensions.MediaLinks
             }
 
             var htmlAttributes = GetHtmlAttributes(linkInline);
-            renderer.Write($"<iframe src=\"{foundProvider.Result}\"");
+            renderer.Write("<iframe src=\"");
+            renderer.WriteEscapeUrl(foundProvider.Result);
+            renderer.Write("\"");
 
             if(!string.IsNullOrEmpty(Options.Width))
                 htmlAttributes.AddPropertyIfNotExist("width", Options.Width);
@@ -184,10 +187,38 @@ namespace Markdig.Extensions.MediaLinks
 
         private static string YouTube(Uri uri)
         {
-            var query = SplitQuery(uri);
-            return query.Length > 0 && query[0].StartsWith("v=")
-                ? $"https://www.youtube.com/embed/{query[0].Substring(2)}"
-                : null;
+            string uriPath = uri.AbsolutePath;
+            if (string.Equals(uriPath, "/embed", StringComparison.OrdinalIgnoreCase) || uriPath.StartsWith("/embed/", StringComparison.OrdinalIgnoreCase))
+            {
+                return uri.ToString();
+            }
+            if (!string.Equals(uriPath, "/watch", StringComparison.OrdinalIgnoreCase) && !uriPath.StartsWith("/watch/", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+            var queryParams = SplitQuery(uri);
+            return BuildYouTubeIframeUrl(
+                queryParams.FirstOrDefault(p => p.StartsWith("v="))?.Substring(2),
+                queryParams.FirstOrDefault(p => p.StartsWith("t="))?.Substring(2)
+            );
+        }
+
+        private static string YouTubeShortened(Uri uri)
+        {
+            return BuildYouTubeIframeUrl(
+                uri.AbsolutePath.Substring(1),
+                SplitQuery(uri).FirstOrDefault(p => p.StartsWith("t="))?.Substring(2)
+            );
+        }
+
+        private static string BuildYouTubeIframeUrl(string videoId, string startTime)
+        {
+            if (string.IsNullOrEmpty(videoId))
+            {
+                return null;
+            }
+            string url = $"https://www.youtube.com/embed/{videoId}";
+            return string.IsNullOrEmpty(startTime) ? url : $"{url}?start={startTime}";
         }
 
         private static string Vimeo(Uri uri)
