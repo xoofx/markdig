@@ -9,14 +9,14 @@ install:
     nuget restore Markdig.sln
 
     $env:MARKDIG_BUILD_NUMBER = ([int]$env:APPVEYOR_BUILD_NUMBER).ToString("000")
-   
+
     $env:MARKDIG_VERSION_SUFFIX = ""
 
     $env:appveyor_nuget_push = 'false'
 
     if(-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
       if($env:appveyor_repo_tag -eq 'True') {
-    	  if($env:appveyor_repo_tag_name -match '^v[0-9]') {
+    	  if($env:appveyor_repo_tag_name -match '^[0-9]') {
            $env:appveyor_nuget_push = 'true'
            $env:MARKDIG_VERSION_SUFFIX = ""
         }
