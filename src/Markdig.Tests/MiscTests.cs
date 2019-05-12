@@ -9,6 +9,14 @@ namespace Markdig.Tests
     public class MiscTests
     {
         [Test]
+        public void TestAltTextIsCorrectlyEscaped()
+        {
+            TestParser.TestSpec(
+                @"![This is image alt text with quotation ' and double quotation ""hello"" world](girl.png)",
+                @"<p><img src=""girl.png"" alt=""This is image alt text with quotation ' and double quotation &quot;hello&quot; world"" /></p>");
+        }
+
+        [Test]
         public void TestChangelogPRLinksMatchDescription()
         {
             string solutionFolder = Path.GetFullPath(Path.Combine(TestParser.TestsDirectory, "../.."));

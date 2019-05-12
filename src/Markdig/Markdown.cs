@@ -184,7 +184,8 @@ namespace Markdig
             var renderer = new HtmlRenderer(writer)
             {
                 EnableHtmlForBlock = false,
-                EnableHtmlForInline = false
+                EnableHtmlForInline = false,
+                EnableHtmlEscape = false,
             };
             pipeline.Setup(renderer);
 
