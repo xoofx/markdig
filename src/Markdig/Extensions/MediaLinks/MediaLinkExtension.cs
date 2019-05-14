@@ -54,18 +54,28 @@ namespace Markdig.Extensions.MediaLinks
             }
 
             Uri uri;
+            bool isSchemaRelative = false;
             // Only process absolute Uri
             if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out uri) || !uri.IsAbsoluteUri)
             {
-                return false;
+                // see https://tools.ietf.org/html/rfc3986#section-4.2
+                // since reletive uri doesn't support many properties, "http" is used as a placeholder here.
+                if (linkInline.Url.StartsWith("//") && Uri.TryCreate("http:" + linkInline.Url, UriKind.Absolute, out uri))
+                {
+                    isSchemaRelative = true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
-            if (TryRenderIframeFromKnownProviders(uri, renderer, linkInline))
+            if (TryRenderIframeFromKnownProviders(uri, isSchemaRelative, renderer, linkInline))
             {
                 return true;
             }
 
-            if (TryGuessAudioVideoFile(uri, renderer, linkInline))
+            if (TryGuessAudioVideoFile(uri, isSchemaRelative, renderer, linkInline))
             {
                 return true;
             }
@@ -85,7 +95,7 @@ namespace Markdig.Extensions.MediaLinks
             return htmlAttributes;
         }
 
-        private bool TryGuessAudioVideoFile(Uri uri, HtmlRenderer renderer, LinkInline linkInline)
+        private bool TryGuessAudioVideoFile(Uri uri, bool isSchemaRelative, HtmlRenderer renderer, LinkInline linkInline)
         {
             var path = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped);
             // Otherwise try to detect if we have an audio/video from the file extension
@@ -114,14 +124,14 @@ namespace Markdig.Extensions.MediaLinks
             return false;
         }
 
-        private bool TryRenderIframeFromKnownProviders(Uri uri, HtmlRenderer renderer, LinkInline linkInline)
+        private bool TryRenderIframeFromKnownProviders(Uri uri, bool isSchemaRelative, HtmlRenderer renderer, LinkInline linkInline)
         {
 
             IHostProvider foundProvider = null;
             string iframeUrl = null;
             foreach (var provider in Options.Hosts)
             {
-                if (!provider.TryHandle(uri, out iframeUrl))
+                if (!provider.TryHandle(uri, isSchemaRelative, out iframeUrl))
                     continue;
                 foundProvider = provider;
                 break;

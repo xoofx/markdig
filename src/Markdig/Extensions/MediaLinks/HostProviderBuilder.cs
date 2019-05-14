@@ -17,7 +17,7 @@ namespace Markdig.Extensions.MediaLinks
             public bool AllowFullScreen { get; set; } = true;
             public string Tag { get; set; }
 
-            public bool TryHandle(Uri mediaUri, out string iframeUrl)
+            public bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl)
             {
                 if (!mediaUri.Host.StartsWith(HostPrefix, StringComparison.OrdinalIgnoreCase))
                 {

@@ -20,8 +20,10 @@ namespace Markdig.Extensions.MediaLinks
         /// Generate url for iframe.
         /// </summary>
         /// <param name="mediaUri">Input media uri.</param>
+        /// <param name="isSchemaRelative"><see langword="true"/> if <paramref name="mediaUri"/> is a schema relative uri, i.e. uri starts with "//".</param>
         /// <param name="iframeUrl">Generated url for iframe.</param>
-        bool TryHandle(Uri mediaUri, out string iframeUrl);
+        /// <seealso href="https://tools.ietf.org/html/rfc3986#section-4.2"/>
+        bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl);
 
         /// <summary>
         /// Should the generated iframe has allowfullscreen attribute.
