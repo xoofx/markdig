@@ -76,12 +76,14 @@ namespace Markdig.Extensions.MediaLinks
                 {".ecelp7470", "audio/vnd.nuera.ecelp7470"},
                 {".ecelp9600", "audio/vnd.nuera.ecelp9600"},
                 {".oga", "audio/ogg"},
+                {".ogg", "audio/ogg"},
                 {".weba", "audio/webm"},
                 {".ram", "audio/x-pn-realaudio"},
                 {".rmp", "audio/x-pn-realaudio-plugin"},
                 {".au", "audio/basic"},
                 {".wav", "audio/x-wav"},
             };
+            Hosts = new List<IHostProvider>(HostProviderBuilder.KnownHosts.Values);
         }
 
         public string Width { get; set; }
@@ -91,5 +93,7 @@ namespace Markdig.Extensions.MediaLinks
         public string Class { get; set; }
 
         public Dictionary<string, string> ExtensionToMimeType { get; }
+
+        public List<IHostProvider> Hosts { get; }
     }
 }
