@@ -2,7 +2,7 @@
 
 ## WIP
 - Fix regression when escaping HTML characters ([(PR #340)](https://github.com/lunet-io/markdig/pull/340))
-- Add `IHostProvider` for medialink customization (#337) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
+- Add `IHostProvider` for medialink customization (#337), support protocol-less url (#135) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
 
 ## 0.17.0 (10 May 2019)
 - Update to latest CommonMark specs 0.29 ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
