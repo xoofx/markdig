@@ -18,11 +18,11 @@ namespace Markdig.Tests
         [Test]
         [TestCase("![static mp4](https://sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n")]
         [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n")]
-        [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
-        [TestCase("![yandex.ru](https://music.yandex.ru/album/411845/track/4402274)", "<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n")]
-        [TestCase("![vimeo](https://vimeo.com/8607834)", "<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
-        [TestCase("![ok.ru](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
-        [TestCase("![ok.ru](//ok.ru/video/26870090463)", "<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
+        [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" class=\"youtube\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
+        [TestCase("![yandex.ru](https://music.yandex.ru/album/411845/track/4402274)", "<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" width=\"500\" height=\"281\" class=\"yandex\" frameborder=\"0\"></iframe></p>\n")]
+        [TestCase("![vimeo](https://vimeo.com/8607834)", "<p><iframe src=\"https://player.vimeo.com/video/8607834\" width=\"500\" height=\"281\" class=\"vimeo\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
+        [TestCase("![ok.ru](https://ok.ru/video/26870090463)", "<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" class=\"odnoklassniki\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
+        [TestCase("![ok.ru](//ok.ru/video/26870090463)", "<p><iframe src=\"https://ok.ru/videoembed/26870090463\" width=\"500\" height=\"281\" class=\"odnoklassniki\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
         public void TestBuiltInHosts(string markdown, string expected)
         {
             string html = Markdown.ToHtml(markdown, GetPipeline());
@@ -31,7 +31,7 @@ namespace Markdig.Tests
 
         private class TestHostProvider : IHostProvider
         {
-            public string Tag { get; }
+            public string Class { get; } = "regex";
             public bool AllowFullScreen { get; }
 
             public bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl)
@@ -55,9 +55,9 @@ namespace Markdig.Tests
         }
 
         [Test]
-        [TestCase("![p1](https://sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n", @"^https?://sample.com/(.+)$", @"https://example.com/$1")]
-        [TestCase("![p1](//sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n", @"^//sample.com/(.+)$", @"https://example.com/$1")]
-        [TestCase("![p1](https://sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4?token=aaabbb\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n", @"^https?://sample.com/(.+)$", @"https://example.com/$1?token=aaabbb")]
+        [TestCase("![p1](https://sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4\" width=\"500\" height=\"281\" class=\"regex\" frameborder=\"0\"></iframe></p>\n", @"^https?://sample.com/(.+)$", @"https://example.com/$1")]
+        [TestCase("![p1](//sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4\" width=\"500\" height=\"281\" class=\"regex\" frameborder=\"0\"></iframe></p>\n", @"^//sample.com/(.+)$", @"https://example.com/$1")]
+        [TestCase("![p1](https://sample.com/video.mp4)", "<p><iframe src=\"https://example.com/video.mp4?token=aaabbb\" width=\"500\" height=\"281\" class=\"regex\" frameborder=\"0\"></iframe></p>\n", @"^https?://sample.com/(.+)$", @"https://example.com/$1?token=aaabbb")]
         public void TestCustomHostProvider(string markdown, string expected, string provider, string replace)
         {
             string html = Markdown.ToHtml(markdown, GetPipeline(new MediaOptions

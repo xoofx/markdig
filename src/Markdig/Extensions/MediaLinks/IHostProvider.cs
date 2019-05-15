@@ -12,9 +12,9 @@ namespace Markdig.Extensions.MediaLinks
     public interface IHostProvider
     {
         /// <summary>
-        /// A tag associated with the provider.
+        /// "class" attribute of generated iframe.
         /// </summary>
-        string Tag { get; }
+        string Class { get; }
 
         /// <summary>
         /// Generate url for iframe.

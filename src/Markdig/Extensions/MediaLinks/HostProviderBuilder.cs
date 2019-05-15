@@ -15,7 +15,7 @@ namespace Markdig.Extensions.MediaLinks
             public string HostPrefix { get; set; }
             public Func<Uri, string> Delegate { get; set; }
             public bool AllowFullScreen { get; set; } = true;
-            public string Tag { get; set; }
+            public string Class { get; set; }
 
             public bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl)
             {
@@ -35,27 +35,25 @@ namespace Markdig.Extensions.MediaLinks
         /// <param name="hostPrefix">Prefix of host that can be handled.</param>
         /// <param name="handler">Handler that generate iframe url, if uri cannot be handled, it can return <see langword="null"/>.</param>
         /// <param name="allowFullScreen">Should the generated iframe has allowfullscreen attribute.</param>
-        /// <param name="tag">Tag of created <see cref="IHostProvider"/>, if not provided, <paramref name="hostPrefix"/> will be used.</param>
+        /// <param name="iframeClass">"class" attribute of generated iframe.</param>
         /// <returns>A <see cref="IHostProvider"/> with delegate handler.</returns>
-        public static IHostProvider Create(string hostPrefix, Func<Uri, string> handler, bool allowFullScreen = true, string tag = null)
+        public static IHostProvider Create(string hostPrefix, Func<Uri, string> handler, bool allowFullScreen = true, string iframeClass = null)
         {
             if (string.IsNullOrEmpty(hostPrefix))
                 throw new ArgumentException("hostPrefix is null or empty.", nameof(hostPrefix));
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
-            if (tag == null)
-                tag = hostPrefix;
-            return new DelegateProvider { HostPrefix = hostPrefix, Delegate = handler, AllowFullScreen = allowFullScreen, Tag = tag };
+            return new DelegateProvider { HostPrefix = hostPrefix, Delegate = handler, AllowFullScreen = allowFullScreen, Class = iframeClass };
         }
 
         public static Dictionary<string, IHostProvider> KnownHosts { get; }
             = new Dictionary<string, IHostProvider>(StringComparer.OrdinalIgnoreCase)
             {
-                ["YouTube"] = Create("www.youtube.com", YouTube),
-                ["YouTubeShortened"] = Create("youtu.be", YouTubeShortened),
-                ["Vimeo"] = Create("vimeo.com", Vimeo),
-                ["Yandex"] = Create("music.yandex.ru", Yandex, allowFullScreen: false),
-                ["Odnoklassniki"] = Create("ok.ru", Odnoklassniki),
+                ["YouTube"] = Create("www.youtube.com", YouTube, iframeClass: "youtube"),
+                ["YouTubeShortened"] = Create("youtu.be", YouTubeShortened, iframeClass: "youtube"),
+                ["Vimeo"] = Create("vimeo.com", Vimeo, iframeClass: "vimeo"),
+                ["Yandex"] = Create("music.yandex.ru", Yandex, allowFullScreen: false, iframeClass: "yandex"),
+                ["Odnoklassniki"] = Create("ok.ru", Odnoklassniki, iframeClass: "odnoklassniki"),
             };
 
         #region Known providers

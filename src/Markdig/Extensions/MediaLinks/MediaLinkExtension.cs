@@ -115,6 +115,10 @@ namespace Markdig.Extensions.MediaLinks
                     htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
                 }
                 htmlAttributes.AddPropertyIfNotExist("controls", null);
+
+                if (!string.IsNullOrEmpty(Options.Class))
+                    htmlAttributes.AddPropertyIfNotExist("class", Options.Class);
+
                 renderer.WriteAttributes(htmlAttributes);
 
                 renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
@@ -153,8 +157,11 @@ namespace Markdig.Extensions.MediaLinks
             if (!string.IsNullOrEmpty(Options.Height))
                 htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
 
-            if (!string.IsNullOrEmpty(Options.Class))
-                htmlAttributes.AddPropertyIfNotExist("class", Options.Class);
+            if (!string.IsNullOrEmpty(Options.Class) || !string.IsNullOrEmpty(foundProvider.Class))
+                htmlAttributes.AddPropertyIfNotExist("class",
+                    (!string.IsNullOrEmpty(Options.Class) && !string.IsNullOrEmpty(foundProvider.Class))
+                    ? Options.Class + " " + foundProvider.Class
+                    : Options.Class + foundProvider.Class);
 
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)
