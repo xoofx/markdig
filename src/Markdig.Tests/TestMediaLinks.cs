@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Markdig.Tests
 {
     [TestFixture]
-    public class TestMediaLink
+    public class TestMediaLinks
     {
         private MarkdownPipeline GetPipeline(MediaOptions options = null)
         {
@@ -66,6 +66,20 @@ namespace Markdig.Tests
                 {
                     new TestHostProvider(provider, replace),
                 }
+            }));
+            Assert.AreEqual(html, expected);
+        }
+
+        [Test]
+        [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n", "")]
+        [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" class=\"youtube\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n", "")]
+        [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\" class=\"k\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n", "k")]
+        [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" width=\"500\" height=\"281\" class=\"k youtube\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n", "k")]
+        public void TestCustomClass(string markdown, string expected, string klass)
+        {
+            string html = Markdown.ToHtml(markdown, GetPipeline(new MediaOptions
+            {
+                Class = klass,
             }));
             Assert.AreEqual(html, expected);
         }

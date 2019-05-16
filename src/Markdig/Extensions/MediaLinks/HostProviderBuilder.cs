@@ -104,13 +104,13 @@ namespace Markdig.Extensions.MediaLinks
         private static string Vimeo(Uri uri)
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
-            return items.Length > 0 ? $"https://player.vimeo.com/video/{items[items.Length - 1]}" : null;
+            return items.Length > 0 ? $"https://player.vimeo.com/video/{ items[items.Length - 1] }" : null;
         }
 
         private static string Odnoklassniki(Uri uri)
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
-            return items.Length > 0 ? $"https://ok.ru/videoembed/{items[items.Length - 1]}" : null;
+            return items.Length > 0 ? $"https://ok.ru/videoembed/{ items[items.Length - 1] }" : null;
         }
 
         private static string Yandex(Uri uri)
