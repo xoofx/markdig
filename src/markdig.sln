@@ -13,12 +13,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig", "Markdig\Markdig.csproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.Signed", "Markdig.Signed\Markdig.Signed.csproj", "{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Tests", "Markdig.Tests\Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Benchmarks", "Markdig.Benchmarks\Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.Benchmarks", "Markdig.Benchmarks\Markdig.Benchmarks.csproj", "{6A19F040-BC7C-4283-873A-177B5324F1ED}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
@@ -41,6 +43,10 @@ Global
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -41,12 +41,10 @@ before_package:
 - cmd: >-
     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
 
-    msbuild /t:Clean Markdig/Markdig.csproj
-
-    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release;SignAssembly=true Markdig/Markdig.csproj
+    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig.Signed/Markdig.Signed.csproj
 
 artifacts:
-- path: src\Markdig\Bin\Release\*.nupkg
+- path: src\**\*.nupkg
   name: Markdig Nugets
 
 deploy:
