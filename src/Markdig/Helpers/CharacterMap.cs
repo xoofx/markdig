@@ -118,20 +118,11 @@ namespace Markdig.Helpers
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
             var maxChar = isOpeningCharacter.Length;
-#if SUPPORT_UNSAFE
+
             unsafe
-#endif
             {
-#if SUPPORT_FIXED_STRING
-            fixed (char* pText = text)
-#else
-                var pText = text;
-#endif
-#if SUPPORT_UNSAFE
+                fixed (char* pText = text)
                 fixed (bool* openingChars = isOpeningCharacter)
-#else
-                var openingChars = isOpeningCharacter;
-#endif
                 {
                     if (nonAsciiMap == null)
                     {

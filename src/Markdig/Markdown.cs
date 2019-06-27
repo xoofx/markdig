@@ -17,7 +17,7 @@ namespace Markdig
     /// </summary>
     public static partial class Markdown
     {
-#if NETSTANDARD_11
+#if UAP
         public static readonly string Version = typeof(Markdown).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
 #else
         public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
