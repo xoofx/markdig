@@ -6,6 +6,8 @@ install:
 - ps: >-
     cd src
 
+    dotnet tool install -g coveralls.net --version 1.0.0
+
     nuget restore Markdig.sln
 
     $env:MARKDIG_BUILD_NUMBER = ([int]$env:APPVEYOR_BUILD_NUMBER).ToString("000")
@@ -31,11 +33,24 @@ build:
   project: src/Markdig.sln
   verbosity: minimal
 
-after_build:
-- cmd: >-
-    dotnet run --project SpecFileGen/SpecFileGen.csproj -c Release
+after_build: >
+  dotnet SpecFileGen/bin/Release/netcoreapp2.2/SpecFileGen.dll
 
-    dotnet test -v n Markdig.Tests
+test_script:
+- cmd: >-
+    dotnet test Markdig.Tests -c Release --no-build
+
+    dotnet test Markdig.Tests -c Debug
+
+    dotnet test Markdig.Tests -c Release -f netcoreapp2.1 /p:CollectCoverage=true /p:Include=\"[Markdig]*\" /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../coverage.xml
+
+after_test:
+- ps: >-
+    if($env:APPVEYOR_REPO_BRANCH -eq "master") {
+      cd ..
+      csmacnz.Coveralls --opencover -i coverage.xml
+      cd src
+    }
 
 before_package:
 - cmd: >-
