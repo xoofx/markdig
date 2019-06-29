@@ -103,12 +103,12 @@ namespace SpecFileGen
                     continue;
                 }
 
-                string source = ParseSpecification(spec, File.ReadAllText(spec.Path));
+                string source = ParseSpecification(spec, File.ReadAllText(spec.Path)).Replace("\r\n", "\n", StringComparison.Ordinal);
                 totalTests += spec.TestCount;
 
                 if (File.Exists(spec.OutputPath))  // If the source hasn't changed, don't bump the generated tag
                 {
-                    string previousSource = File.ReadAllText(spec.OutputPath);
+                    string previousSource = File.ReadAllText(spec.OutputPath).Replace("\r\n", "\n", StringComparison.Ordinal);
                     int start = previousSource.IndexOf('\n', StringComparison.Ordinal) + 1;
                     int previousLength = previousSource.Length - start;
                     if (start != 0 && previousLength == source.Length)
