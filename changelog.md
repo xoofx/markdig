@@ -1,7 +1,8 @@
 # Changelog
 
-## WIP
+## 0.17.1 (04 July 2019)
 - Fix regression when escaping HTML characters ([(PR #340)](https://github.com/lunet-io/markdig/pull/340))
+- Update Emoji Dictionary ([(PR #346)](https://github.com/lunet-io/markdig/pull/346))
 
 ## 0.17.0 (10 May 2019)
 - Update to latest CommonMark specs 0.29 ([(PR #327)](https://github.com/lunet-io/markdig/pull/327))
