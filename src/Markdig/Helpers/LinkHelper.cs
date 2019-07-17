@@ -597,20 +597,23 @@ namespace Markdig.Helpers
                         }
                     }
 
-                    if (hasEscape && !c.IsAsciiPunctuation())
+                    if (!isAutoLink)
                     {
-                        buffer.Append('\\');
-                    }
+                        if (hasEscape && !c.IsAsciiPunctuation())
+                        {
+                            buffer.Append('\\');
+                        }
 
-                    // If we have an escape
-                    if (c == '\\')
-                    {
-                        hasEscape = true;
-                        c = text.NextChar();
-                        continue;
-                    }
+                        // If we have an escape
+                        if (c == '\\')
+                        {
+                            hasEscape = true;
+                            c = text.NextChar();
+                            continue;
+                        }
 
-                    hasEscape = false;
+                        hasEscape = false;
+                    }
 
                     if (IsEndOfUri(c, isAutoLink))
                     {
@@ -622,10 +625,7 @@ namespace Markdig.Helpers
                     {
                         if (c == '&')
                         {
-                            int entityNameStart;
-                            int entityNameLength;
-                            int entityValue;
-                            if (HtmlHelper.ScanEntity(text, out entityValue, out entityNameStart, out entityNameLength) > 0)
+                            if (HtmlHelper.ScanEntity(text, out _, out _, out _) > 0)
                             {
                                 isValid = true;
                                 break;
