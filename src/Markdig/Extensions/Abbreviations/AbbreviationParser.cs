@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -86,6 +87,10 @@ namespace Markdig.Extensions.Abbreviations
             // Build a text matcher from the abbreviations labels
             var prefixTree = new CompactPrefixTree<Abbreviation>(abbreviations);
 
+            int maxAbbreviationLength = 0;
+            for (int i = 0; i < prefixTree.Count; i++)
+                maxAbbreviationLength = Math.Max(maxAbbreviationLength, prefixTree[i].Key.Length);
+
             inlineProcessor.LiteralInlineParser.PostMatch += (InlineProcessor processor, ref StringSlice slice) =>
             {
                 var literal = (LiteralInline)processor.Inline;
@@ -97,12 +102,18 @@ namespace Markdig.Extensions.Abbreviations
                 var content = literal.Content;
                 var text = content.Text;
 
-                for (int i = content.Start; i <= content.End; i++)
+                // We may have already checked this literal, when it was shorter
+                // We can skip the part we already checked, leaving room for a potential unfinished abbreviation
+                RefInt lastLiteralEnd = GetLastLiteralEnd(literal);
+                int start = Math.Max(content.Start, lastLiteralEnd.Value - maxAbbreviationLength);
+                lastLiteralEnd.Value = content.End;
+
+                for (int i = start; i <= content.End; i++)
                 {
                     // Abbreviation must be a whole word == start at the start of a line or after a whitespace
                     if (i != 0)
                     {
-                        for (i = i - 1; i <= content.End; i++)
+                        for (i = i - 1; i < content.End; i++)
                         {
                             if (text[i].IsWhitespace())
                             {
@@ -220,6 +231,17 @@ namespace Markdig.Extensions.Abbreviations
                 index++;
             }
             return true;
+        }
+
+        private static readonly object Key = new object();
+        private static RefInt GetLastLiteralEnd(LiteralInline literal)
+        {
+            if (!(literal.GetData(Key) is RefInt refInt))
+            {
+                refInt = new RefInt();
+                literal.SetData(Key, refInt);
+            }
+            return refInt;
         }
     }
 }
