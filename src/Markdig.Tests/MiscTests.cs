@@ -18,7 +18,7 @@ namespace Markdig.Tests
             _ = Markdown.ToHtml(input, new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
             stopwatch.Stop();
 
-            Assert.Less(stopwatch.ElapsedMilliseconds, 250);
+            Assert.Less(stopwatch.ElapsedMilliseconds, TestParser.IsContinuousIntegration ? 1000 : 250);
         }
 
         [Test]
