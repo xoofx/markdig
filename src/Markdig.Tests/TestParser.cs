@@ -143,6 +143,13 @@ namespace Markdig.Tests
         public static readonly string TestsDirectory =
             Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "../../.."));
 
+        public static readonly string IssuesMarkdownDirectory = Path.Combine(TestsDirectory, "IssuesMarkdown");
+
+        public static string ReadIssuesMarkdown(int issue)
+        {
+            return File.ReadAllText(Path.Combine(IssuesMarkdownDirectory, issue.ToString() + ".md"));
+        }
+
         /// <summary>
         /// Contains absolute paths to specification markdown files (order is the same as in <see cref="SpecsMarkdown"/>)
         /// </summary>

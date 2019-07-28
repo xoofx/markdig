@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.AutoLinks;
@@ -8,6 +9,18 @@ namespace Markdig.Tests
 {
     public class MiscTests
     {
+        [Test]
+        public void IsIssue306Corrected()
+        {
+            var input = TestParser.ReadIssuesMarkdown(306);
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            _ = Markdown.ToHtml(input, new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
+            stopwatch.Stop();
+
+            Assert.Less(stopwatch.ElapsedMilliseconds, 250);
+        }
+
         [Test]
         public void IsIssue356Corrected()
         {
@@ -45,7 +58,7 @@ namespace Markdig.Tests
         [Test]
         public void TestFixHang()
         {
-            var input = File.ReadAllText(Path.Combine(TestParser.TestsDirectory, "hang.md"));
+            var input = TestParser.ReadIssuesMarkdown(278);
             _ = Markdown.ToHtml(input);
         }
 
@@ -59,7 +72,7 @@ namespace Markdig.Tests
         [Test]
         public void TestInvalidCharacterHandling()
         {
-            var input = File.ReadAllText(Path.Combine(TestParser.TestsDirectory, "ArgumentOutOfRangeException.md"));
+            var input = TestParser.ReadIssuesMarkdown(275);
             _ = Markdown.ToHtml(input);
         }
 
