@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -16,7 +16,7 @@ namespace Markdig.Extensions.GenericAttributes
     /// Extension that allows to attach HTML attributes to the previous <see cref="Inline"/> or current <see cref="Block"/>.
     /// This extension should be enabled last after enabling other extensions.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class GenericAttributesExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -29,8 +29,7 @@ namespace Markdig.Extensions.GenericAttributes
             // Plug into all IAttributesParseable
             foreach (var parser in pipeline.BlockParsers)
             {
-                var attributesParseable = parser as IAttributesParseable;
-                if (attributesParseable != null)
+                if (parser is IAttributesParseable attributesParseable)
                 {
                     attributesParseable.TryParseAttributes = TryProcessAttributesForHeading;
                 }
@@ -53,8 +52,7 @@ namespace Markdig.Extensions.GenericAttributes
                     var copy = line;
                     copy.Start = indexOfAttributes;
                     var startOfAttributes = copy.Start;
-                    HtmlAttributes attributes;
-                    if (GenericAttributesParser.TryParse(ref copy, out attributes))
+                    if (GenericAttributesParser.TryParse(ref copy, out HtmlAttributes attributes))
                     {
                         var htmlAttributes = block.GetAttributes();
                         attributes.CopyTo(htmlAttributes);
