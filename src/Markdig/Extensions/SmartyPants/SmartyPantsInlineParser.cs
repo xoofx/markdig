@@ -95,9 +95,7 @@ namespace Markdig.Extensions.SmartyPants
             // Skip char
             c = slice.NextChar();
 
-            bool canOpen;
-            bool canClose;
-            CharHelper.CheckOpenCloseDelimiter(pc, c, false, out canOpen, out canClose);
+            CharHelper.CheckOpenCloseDelimiter(pc, c, false, out bool canOpen, out bool canClose);
 
             bool postProcess = false;
 
@@ -156,11 +154,9 @@ namespace Markdig.Extensions.SmartyPants
             }
 
             // Create the SmartyPant inline
-            int line;
-            int column;
             var pant = new SmartyPant()
             {
-                Span = {Start = processor.GetSourcePosition(startingPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startingPosition, out int line, out int column) },
                 Line = line,
                 Column = column,
                 OpeningCharacter = openingChar,
@@ -195,96 +191,90 @@ namespace Markdig.Extensions.SmartyPants
             return quotePants;
         }
 
+        private struct Opener
+        {
+            public int Type;
+            public int Index;
+
+            public Opener(int type, int index)
+            {
+                Type = type;
+                Index = index;
+            }
+        }
+
         private void BlockOnProcessInlinesEnd(InlineProcessor processor, Inline inline)
         {
             processor.Block.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
 
             var pants = (ListSmartyPants) processor.ParserStates[Index];
 
-            // We only change quote into left or right quotes if we find proper balancing
-            var previousIndices = new int[3] {-1, -1, -1};
+            Stack<Opener> openers = new Stack<Opener>(4);
 
             for (int i = 0; i < pants.Count; i++)
             {
                 var quote = pants[i];
+                var quoteType = quote.Type;
 
-                int currentTypeIndex = -1;
-                SmartyPantType expectedLeftQuote = 0;
-                SmartyPantType expectedRightQuote = 0;
+                int type;
+                bool isLeft;
 
-                if (quote.Type == SmartyPantType.LeftQuote || quote.Type == SmartyPantType.RightQuote)
+                if (quoteType == SmartyPantType.LeftQuote || quoteType == SmartyPantType.RightQuote)
                 {
-                    currentTypeIndex = 0;
-                    expectedLeftQuote = SmartyPantType.LeftQuote;
-                    expectedRightQuote = SmartyPantType.RightQuote;
+                    type = 0;
+                    isLeft = quoteType == SmartyPantType.LeftQuote;
                 }
-                else if (quote.Type == SmartyPantType.LeftDoubleQuote || quote.Type == SmartyPantType.RightDoubleQuote)
+                else if (quoteType == SmartyPantType.LeftDoubleQuote || quoteType == SmartyPantType.RightDoubleQuote)
                 {
-                    currentTypeIndex = 1;
-                    expectedLeftQuote = SmartyPantType.LeftDoubleQuote;
-                    expectedRightQuote = SmartyPantType.RightDoubleQuote;
+                    type = 1;
+                    isLeft = quoteType == SmartyPantType.LeftDoubleQuote;
                 }
-                else if (quote.Type == SmartyPantType.LeftAngleQuote || quote.Type == SmartyPantType.RightAngleQuote)
+                else if (quoteType == SmartyPantType.LeftAngleQuote || quoteType == SmartyPantType.RightAngleQuote)
                 {
-                    currentTypeIndex = 2;
-                    expectedLeftQuote = SmartyPantType.LeftAngleQuote;
-                    expectedRightQuote = SmartyPantType.RightAngleQuote;
-                }
-
-                if (currentTypeIndex < 0)
-                {
-                    continue;
-                }
-
-                int previousIndex = previousIndices[currentTypeIndex];
-                var previousQuote = previousIndex >= 0 ? pants[previousIndex] : null;
-                if (previousQuote == null)
-                {
-                    if (quote.Type == expectedLeftQuote)
-                    {
-                        previousIndices[currentTypeIndex] = i;
-                    }
+                    type = 2;
+                    isLeft = quoteType == SmartyPantType.LeftAngleQuote;
                 }
                 else
                 {
-                    if (quote.Type == expectedRightQuote)
-                    {
-                        // Replace all intermediate unmatched left or right SmartyPants to their literal equivalent
-                        pants.RemoveAt(i);
-                        i--;
-                        for (int j = i; j > previousIndex; j--)
-                        {
-                            var toReplace = pants[j];
-                            pants.RemoveAt(j);
-                            toReplace.ReplaceBy(new LiteralInline(toReplace.ToString())
-                            {
-                                Span = toReplace.Span,
-                                Line = toReplace.Line,
-                                Column = toReplace.Column,
-                            });
-                            i--;
-                        }
+                    quote.ReplaceBy(quote.AsLiteralInline());
+                    continue;
+                }
 
-                        // If we matched, we remove left/right quotes from the list
-                        pants.RemoveAt(previousIndex);
-                        previousIndices[currentTypeIndex] = -1;
-                    }
-                    else
+                if (isLeft)
+                {
+                    openers.Push(new Opener(type, i));
+                }
+                else
+                {
+                    bool found = false;
+
+                    while (openers.Count > 0)
                     {
-                        previousIndices[currentTypeIndex] = i;
+                        Opener opener = openers.Pop();
+                        var previousQuote = pants[opener.Index];
+
+                        if (opener.Type == type)
+                        {
+                            found = true;
+                            break;
+                        }
+                        else
+                        {
+                            previousQuote.ReplaceBy(previousQuote.AsLiteralInline());
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        quote.ReplaceBy(quote.AsLiteralInline());
                     }
                 }
             }
 
-            // If we have any quotes lefts, replace them by there literal equivalent
-            foreach (var quote in pants)
+            foreach (var opener in openers)
             {
-                quote.ReplaceBy(new LiteralInline(quote.ToString())
-                {
-                    Span = quote.Span,
-                    Line = quote.Line,
-                    Column = quote.Column,
-                });
+                var quote = pants[opener.Index];
+                quote.ReplaceBy(quote.AsLiteralInline());
             }
 
             pants.Clear();
@@ -294,8 +284,7 @@ namespace Markdig.Extensions.SmartyPants
             bool isFinalProcessing)
         {
             // Don't try to process anything if there are no dash
-            var quotePants = state.ParserStates[Index] as ListSmartyPants;
-            if (quotePants == null || !quotePants.HasDash)
+            if (!(state.ParserStates[Index] is ListSmartyPants quotePants) || !quotePants.HasDash)
             {
                 return true;
             }
@@ -309,10 +298,8 @@ namespace Markdig.Extensions.SmartyPants
                 {
                     var next = child.NextSibling;
 
-                    if (child is LiteralInline)
+                    if (child is LiteralInline literal)
                     {
-                        var literal = (LiteralInline) child;
-
                         var startIndex = 0;
 
                         var indexOfDash = literal.Content.IndexOf("--", startIndex);
