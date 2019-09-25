@@ -53,6 +53,12 @@ This is a "text 'with" a another text'
 ````````````````````````````````
 
 ```````````````````````````````` example
+This is 'a "text 'with" a another text'
+.
+<p>This is &lsquo;a &ldquo;text 'with&rdquo; a another text&rsquo;</p>
+````````````````````````````````
+
+```````````````````````````````` example
 This is a 'text <<with' a another text>>
 .
 <p>This is a &lsquo;text &lt;&lt;with&rsquo; a another text&gt;&gt;</p>
@@ -89,6 +95,14 @@ An emphasis starting inside left/right quotes will span over the right quote:
 This is "a *text" with an emphasis*
 .
 <p>This is &ldquo;a <em>text&rdquo; with an emphasis</em></p>
+````````````````````````````````
+
+Multiple sets of quotes can be used
+
+```````````````````````````````` example
+"aaa" "bbb" "ccc" "ddd"
+.
+<p>&ldquo;aaa&rdquo; &ldquo;bbb&rdquo; &ldquo;ccc&rdquo; &ldquo;ddd&rdquo;</p>
 ````````````````````````````````
 
 ## SmartyPants Separators

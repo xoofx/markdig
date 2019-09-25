@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -10,7 +10,7 @@ namespace Markdig.Extensions.SmartyPants
     /// <summary>
     /// A HTML renderer for a <see cref="SmartyPant"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{SmartyPant}" />
+    /// <seealso cref="HtmlObjectRenderer{SmartyPant}" />
     public class HtmlSmartyPantRenderer : HtmlObjectRenderer<SmartyPant>
     {
         private static readonly SmartyPantOptions DefaultOptions = new SmartyPantOptions();
@@ -21,17 +21,15 @@ namespace Markdig.Extensions.SmartyPants
         /// Initializes a new instance of the <see cref="HtmlSmartyPantRenderer"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public HtmlSmartyPantRenderer(SmartyPantOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            this.options = options;
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         protected override void Write(HtmlRenderer renderer, SmartyPant obj)
         {
-            string text;
-            if (!options.Mapping.TryGetValue(obj.Type, out text))
+            if (!options.Mapping.TryGetValue(obj.Type, out string text))
             {
                 DefaultOptions.Mapping.TryGetValue(obj.Type, out text);
             }
