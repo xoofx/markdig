@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2019-08-01 13:57:17
 
 // --------------------------------
 //        Generic Attributes
@@ -78,6 +78,29 @@ namespace Markdig.Tests.Specs.GenericAttributes
 
             Console.WriteLine("Example 2\nSection Extensions / Generic Attributes\n");
             TestParser.TestSpec("{#fenced-id .fenced-class}\n~~~\nThis is a fenced with attached attributes\n~~~ ", "<pre><code id=\"fenced-id\" class=\"fenced-class\">This is a fenced with attached attributes\n</code></pre>", "attributes|advanced");
+        }
+
+        // Attribute values can be one character long
+        [Test]
+        public void ExtensionsGenericAttributes_Example003()
+        {
+            // Example 3
+            // Section: Extensions / Generic Attributes
+            //
+            // The following Markdown:
+            //     [Foo](url){data-x=1}
+            //     
+            //     [Foo](url){data-x='1'}
+            //     
+            //     [Foo](url){data-x=11}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-x="1">Foo</a></p>
+            //     <p><a href="url" data-x="1">Foo</a></p>
+            //     <p><a href="url" data-x="11">Foo</a></p>
+
+            Console.WriteLine("Example 3\nSection Extensions / Generic Attributes\n");
+            TestParser.TestSpec("[Foo](url){data-x=1}\n\n[Foo](url){data-x='1'}\n\n[Foo](url){data-x=11}", "<p><a href=\"url\" data-x=\"1\">Foo</a></p>\n<p><a href=\"url\" data-x=\"1\">Foo</a></p>\n<p><a href=\"url\" data-x=\"11\">Foo</a></p>", "attributes|advanced");
         }
     }
 }
