@@ -59,7 +59,7 @@ namespace Markdig.Extensions.MediaLinks
             if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out uri) || !uri.IsAbsoluteUri)
             {
                 // see https://tools.ietf.org/html/rfc3986#section-4.2
-                // since reletive uri doesn't support many properties, "http" is used as a placeholder here.
+                // since relative uri doesn't support many properties, "http" is used as a placeholder here.
                 if (linkInline.Url.StartsWith("//") && Uri.TryCreate("http:" + linkInline.Url, UriKind.Absolute, out uri))
                 {
                     isSchemaRelative = true;
