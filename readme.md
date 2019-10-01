@@ -1,4 +1,4 @@
-# Markdig [![Build status](https://ci.appveyor.com/api/projects/status/hk391x8jcskxt1u8?svg=true)](https://ci.appveyor.com/project/xoofx/markdig) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/) [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
+# Markdig [![Build status](https://ci.appveyor.com/api/projects/status/hk391x8jcskxt1u8?svg=true)](https://ci.appveyor.com/project/xoofx/markdig) [![Coverage Status](https://coveralls.io/repos/github/lunet-io/markdig/badge.svg?branch=master)](https://coveralls.io/github/lunet-io/markdig?branch=master) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/) [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
 
 <img align="right" width="160px" height="160px" src="img/markdig.png">
 

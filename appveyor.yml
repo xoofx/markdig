@@ -1,10 +1,14 @@
 version: 10.0.{build}
 image: Visual Studio 2017
 configuration: Release
-
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: /SEtLgIE6ZrJaWBC1xFZIeESiwfwiXEk9N4pSJ53rFhqBZC2sXJg7ZxZ1DBhnZGu
 install:
 - ps: >-
     cd src
+
+    dotnet tool install -g coveralls.net --version 1.0.0
 
     nuget restore Markdig.sln
 
@@ -31,22 +35,35 @@ build:
   project: src/Markdig.sln
   verbosity: minimal
 
-after_build:
-- cmd: >-
-    dotnet run --project SpecFileGen/SpecFileGen.csproj -c Release
+after_build: >
+  dotnet SpecFileGen/bin/Release/netcoreapp2.2/SpecFileGen.dll
 
-    dotnet test -v n Markdig.Tests
+test_script:
+- cmd: >-
+    dotnet test Markdig.Tests -c Release --no-build
+
+    dotnet test Markdig.Tests -c Debug
+
+    dotnet test Markdig.Tests -c Release -f netcoreapp2.1 /p:CollectCoverage=true /p:Include=\"[Markdig]*\" /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../coverage.xml
+
+after_test:
+- ps: >-
+    if($env:APPVEYOR_REPO_BRANCH -eq "master") {
+      cd ..
+      if (Test-Path "./coverage.xml") {
+        csmacnz.Coveralls --opencover -i "./coverage.xml" --repoToken $env:COVERALLS_REPO_TOKEN --basePath "$env:APPVEYOR_BUILD_FOLDER" --useRelativePath --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
+      }
+      cd src
+    }
 
 before_package:
 - cmd: >-
     msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig/Markdig.csproj
 
-    msbuild /t:Clean Markdig/Markdig.csproj
-
-    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release;SignAssembly=true Markdig/Markdig.csproj
+    msbuild /t:pack /p:VersionSuffix="%MARKDIG_VERSION_SUFFIX%" /p:Configuration=Release Markdig.Signed/Markdig.Signed.csproj
 
 artifacts:
-- path: src\Markdig\Bin\Release\*.nupkg
+- path: src\**\*.nupkg
   name: Markdig Nugets
 
 deploy:

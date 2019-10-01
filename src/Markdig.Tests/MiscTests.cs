@@ -9,6 +9,16 @@ namespace Markdig.Tests
     public class MiscTests
     {
         [Test]
+        public void IsIssue356Corrected()
+        {
+            string input = @"https://foo.bar/path/\#m4mv5W0GYKZpGvfA.97";
+            string expected = @"<p><a href=""https://foo.bar/path/%5C#m4mv5W0GYKZpGvfA.97"">https://foo.bar/path/\#m4mv5W0GYKZpGvfA.97</a></p>";
+
+            TestParser.TestSpec($"<{input}>", expected);
+            TestParser.TestSpec(input, expected, "autolinks|advanced");
+        }
+
+        [Test]
         public void TestAltTextIsCorrectlyEscaped()
         {
             TestParser.TestSpec(

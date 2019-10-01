@@ -47,3 +47,17 @@ This is a fenced with attached attributes
 <pre><code id="fenced-id" class="fenced-class">This is a fenced with attached attributes
 </code></pre>
 ````````````````````````````````
+
+Attribute values can be one character long
+
+```````````````````````````````` example
+[Foo](url){data-x=1}
+
+[Foo](url){data-x='1'}
+
+[Foo](url){data-x=11}
+.
+<p><a href="url" data-x="1">Foo</a></p>
+<p><a href="url" data-x="1">Foo</a></p>
+<p><a href="url" data-x="11">Foo</a></p>
+````````````````````````````````

@@ -14,7 +14,7 @@ namespace Markdig.Extensions.GenericAttributes
     /// <summary>
     /// An inline parser used to parse a HTML attributes that can be attached to the previous <see cref="Inline"/> or current <see cref="Block"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class GenericAttributesParser : InlineParser
     {
         /// <summary>
@@ -27,9 +27,8 @@ namespace Markdig.Extensions.GenericAttributes
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            HtmlAttributes attributes;
             var startPosition = slice.Start;
-            if (TryParse(ref slice, out attributes))
+            if (TryParse(ref slice, out HtmlAttributes attributes))
             {
                 var inline = processor.Inline;
 
@@ -50,8 +49,10 @@ namespace Markdig.Extensions.GenericAttributes
 
                 // If the current block is a Paragraph, but only the HtmlAttributes is used,
                 // Try to attach the attributes to the following block
-                var paragraph = objectToAttach as ParagraphBlock;
-                if (paragraph != null && paragraph.Inline.FirstChild == null && processor.Inline == null && slice.IsEmptyOrWhitespace())
+                if (objectToAttach is ParagraphBlock paragraph &&
+                    paragraph.Inline.FirstChild == null &&
+                    processor.Inline == null &&
+                    slice.IsEmptyOrWhitespace())
                 {
                     var parent = paragraph.Parent;
                     var indexOfParagraph = parent.IndexOf(paragraph);
@@ -67,9 +68,7 @@ namespace Markdig.Extensions.GenericAttributes
                 attributes.CopyTo(currentHtmlAttributes, true, false);
 
                 // Update the position of the attributes
-                int line;
-                int column;
-                currentHtmlAttributes.Span.Start = processor.GetSourcePosition(startPosition, out line, out column);
+                currentHtmlAttributes.Span.Start = processor.GetSourcePosition(startPosition, out int line, out int column);
                 currentHtmlAttributes.Line = line;
                 currentHtmlAttributes.Column = column;
                 currentHtmlAttributes.Span.End = currentHtmlAttributes.Span.Start + slice.Start - startPosition - 1;
@@ -223,6 +222,7 @@ namespace Markdig.Extensions.GenericAttributes
                     {
                         // Parse until we match a space or a special html character
                         startValue = line.Start;
+                        bool valid = false;
                         while (true)
                         {
                             if (c == '\0')
@@ -234,9 +234,10 @@ namespace Markdig.Extensions.GenericAttributes
                                 break;
                             }
                             c = line.NextChar();
+                            valid = true;
                         }
                         endValue = line.Start - 1;
-                        if (endValue == startValue)
+                        if (!valid)
                         {
                             break;
                         }

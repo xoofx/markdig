@@ -1,43 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6A19F040-BC7C-4283-873A-177B5324F1ED}</ProjectGuid>
+    <TargetFrameworks>net471</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markdig.Benchmarks</RootNamespace>
-    <AssemblyName>Markdig.Benchmarks</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <CopyNuGetImplementations>true</CopyNuGetImplementations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="spec.md" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="CommonMarkNew, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <HintPath>lib\CommonMarkNew.dll</HintPath>
@@ -45,31 +14,12 @@
       <Aliases>newcmark</Aliases>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="MoonShine">
       <HintPath>lib\MoonShine.dll</HintPath>
     </Reference>
     <Reference Include="MarkdownDeep">
       <HintPath>lib\MarkdownDeep.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CommonMarkLib.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestMatchPerf.cs" />
-    <Compile Include="TestStringPerf.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="cmark.dll">
@@ -83,21 +33,16 @@
     <Content Include="spec.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="app.config" />
-    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Markdig">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Markdig\Bin\$(Configuration)\net40\Markdig.dll</HintPath>
-    </Reference>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.6" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.10.6" />
+    <PackageReference Include="CommonMark.NET" Version="0.15.1" />
+    <PackageReference Include="MarkdownSharp" Version="1.13.0.0" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="0.8.31-beta" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="1.0.41.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Markdig\Markdig.csproj" />
+  </ItemGroup>
 </Project>
