@@ -278,7 +278,7 @@ namespace Markdig.Parsers.Inlines
                     }
                     return true;
                 }
-                else
+                else if (text.CurrentChar != ']' && text.CurrentChar != '[')
                 {
                     return false;
                 }
