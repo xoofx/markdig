@@ -85,6 +85,21 @@ namespace Markdig.Renderers
             indents = new List<string>();
         }
 
+        internal void Reset()
+        {
+            if (Writer is StringWriter stringWriter)
+            {
+                stringWriter.GetStringBuilder().Length = 0;
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot reset this TextWriter instance");
+            }
+
+            previousWasLine = true;
+            indents.Clear();
+        }
+
         /// <summary>
         /// Ensures a newline.
         /// </summary>
