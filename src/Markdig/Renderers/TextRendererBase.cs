@@ -70,7 +70,9 @@ namespace Markdig.Renderers
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
         private bool previousWasLine;
+#if !NETCORE
         private char[] buffer;
+#endif
         private readonly List<string> indents;
 
         /// <summary>
@@ -79,7 +81,9 @@ namespace Markdig.Renderers
         /// <param name="writer">The writer.</param>
         protected TextRendererBase(TextWriter writer) : base(writer)
         {
+#if !NETCORE
             buffer = new char[1024];
+#endif
             // We assume that we are starting as if we had previously a newline
             previousWasLine = true;
             indents = new List<string>();
@@ -208,6 +212,10 @@ namespace Markdig.Renderers
 
             WriteIndent();
             previousWasLine = false;
+
+#if NETCORE
+            Writer.Write(content.AsSpan(offset, length));
+#else
             if (offset == 0 && content.Length == length)
             {
                 Writer.Write(content);
@@ -225,6 +233,7 @@ namespace Markdig.Renderers
                     Writer.Write(buffer, 0, length);
                 }
             }
+#endif
             return (T) this;
         }
 
