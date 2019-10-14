@@ -5,26 +5,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Markdig.Extensions.Tables;
 
 namespace Markdig.Helpers
 {
     /// <summary>
     /// A group of <see cref="StringLine"/>.
     /// </summary>
-    /// <seealso cref="System.Collections.IEnumerable" />
+    /// <seealso cref="IEnumerable" />
     public struct StringLineGroup : IEnumerable
     {
+        // Feel free to change these numbers if you see a positive change
+        private static readonly CustomArrayPool<StringLine> _pool
+            = new CustomArrayPool<StringLine>(512, 386, 128, 64);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         /// <param name="capacity"></param>
-        public StringLineGroup(int capacity)
+        public StringLineGroup(int capacity, bool willRelease = false)
         {
             if (capacity <= 0) throw new ArgumentOutOfRangeException(nameof(capacity));
-            Lines = new StringLine[capacity];
+            Lines = _pool.Rent(willRelease ? Math.Max(8, capacity) : capacity);
             Count = 0;
         }
 
@@ -183,12 +185,22 @@ namespace Markdig.Helpers
 
         private void IncreaseCapacity()
         {
-            var newItems = new StringLine[Lines.Length * 2];
+            var newItems = _pool.Rent(Lines.Length * 2);
             if (Count > 0)
             {
                 Array.Copy(Lines, 0, newItems, 0, Count);
+                Array.Clear(Lines, 0, Count);
             }
+            _pool.Return(Lines);
             Lines = newItems;
+        }
+
+        internal void Release()
+        {
+            Array.Clear(Lines, 0, Count);
+            _pool.Return(Lines);
+            Lines = null;
+            Count = -1;
         }
 
         /// <summary>
@@ -207,7 +219,7 @@ namespace Markdig.Helpers
                 _offset = -1;
                 SliceIndex = 0;
                 CurrentChar = '\0';
-                End = -2; 
+                End = -2;
                 for (int i = 0; i < lines.Count; i++)
                 {
                     End += lines.Lines[i].Slice.Length + 1; // Add chars

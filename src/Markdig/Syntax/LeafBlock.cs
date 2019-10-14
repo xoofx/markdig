@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using System.Diagnostics;
@@ -51,7 +51,7 @@ namespace Markdig.Syntax
         {
             if (Lines.Lines == null)
             {
-                Lines = new StringLineGroup(4);
+                Lines = new StringLineGroup(4, ProcessInlines);
             }
 
             var stringLine = new StringLine(ref slice, line, column, sourceLinePosition);
@@ -64,12 +64,9 @@ namespace Markdig.Syntax
             {
                 // We need to expand tabs to spaces
                 var builder = StringBuilderCache.Local();
-                for (int i = column; i < CharHelper.AddTab(column); i++)
-                {
-                    builder.Append(' ');
-                }
+                builder.Append(' ', CharHelper.AddTab(column) - column);
                 builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
-                stringLine.Slice = new StringSlice(builder.ToString());
+                stringLine.Slice = new StringSlice(builder.GetStringAndReset());
                 Lines.Add(ref stringLine);
             }
         }

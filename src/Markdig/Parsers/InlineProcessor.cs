@@ -192,7 +192,7 @@ namespace Markdig.Parsers
             previousLineIndexForSliceOffset = 0;
             lineOffsets.Clear();
             var text = leafBlock.Lines.ToSlice(lineOffsets);
-            leafBlock.Lines = new StringLineGroup();
+            leafBlock.Lines.Release();
 
             int previousStart = -1;
 
