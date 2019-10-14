@@ -130,6 +130,11 @@ namespace Markdig.Helpers
                 return Lines[0];
             }
 
+            if (lineOffsets != null && lineOffsets.Capacity < lineOffsets.Count + Count)
+            {
+                lineOffsets.Capacity = Math.Max(lineOffsets.Count + Count, lineOffsets.Capacity * 2);
+            }
+
             // Else use a builder
             var builder = StringBuilderCache.Local();
             int previousStartOfLine = 0;
@@ -153,9 +158,7 @@ namespace Markdig.Helpers
             {
                 lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, Lines[Count - 1].Column, Lines[Count - 1].Slice.Start - Lines[Count - 1].Position, previousStartOfLine, builder.Length));
             }
-            var str = builder.ToString();
-            builder.Length = 0;
-            return new StringSlice(str);
+            return new StringSlice(builder.GetStringAndReset());
         }
 
         /// <summary>
