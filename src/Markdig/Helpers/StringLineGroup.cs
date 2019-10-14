@@ -313,13 +313,11 @@ namespace Markdig.Helpers
             public bool TrimStart()
             {
                 var c = CurrentChar;
-                bool hasSpaces = false;
                 while (c.IsWhitespace())
                 {
-                    hasSpaces = true;
                     c = NextChar();
                 }
-                return hasSpaces;
+                return IsEmpty;
             }
         }
 

@@ -313,7 +313,6 @@ namespace Markdig.Helpers
         public bool TrimStart()
         {
             // Strip leading spaces
-            var start = Start;
             for (; Start <= End; Start++)
             {
                 if (!Text[Start].IsWhitespace())
@@ -321,7 +320,7 @@ namespace Markdig.Helpers
                     break;
                 }
             }
-            return start != Start;
+            return IsEmpty;
         }
 
         /// <summary>
