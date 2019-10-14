@@ -102,7 +102,7 @@ namespace Markdig.Helpers
             Lines[Count++] = new StringLine(ref slice);
         }
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             return ToSlice().ToString();
         }
@@ -112,7 +112,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="lineOffsets">The position of the `\n` line offsets from the beginning of the returned slice.</param>
         /// <returns>A single slice concatenating the lines of this instance</returns>
-        public StringSlice ToSlice(List<LineOffset> lineOffsets = null)
+        public readonly StringSlice ToSlice(List<LineOffset> lineOffsets = null)
         {
             // Optimization case when no lines
             if (Count == 0)
@@ -165,7 +165,7 @@ namespace Markdig.Helpers
         /// Converts this instance into a <see cref="ICharIterator"/>.
         /// </summary>
         /// <returns></returns>
-        public Iterator ToCharIterator()
+        public readonly Iterator ToCharIterator()
         {
             return new Iterator(this);
         }
@@ -236,7 +236,7 @@ namespace Markdig.Helpers
 
             public int End { get; private set; }
 
-            public bool IsEmpty => Start > End;
+            public readonly bool IsEmpty => Start > End;
 
             public int SliceIndex { get; private set; }
 
@@ -292,7 +292,7 @@ namespace Markdig.Helpers
                 return CurrentChar;
             }
 
-            public char PeekChar(int offset = 1)
+            public readonly char PeekChar(int offset = 1)
             {
                 if (offset < 0) throw new ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
 

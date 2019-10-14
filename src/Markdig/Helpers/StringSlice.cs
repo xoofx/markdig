@@ -122,7 +122,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekChar()
+        public readonly char PeekChar()
         {
             int index = Start + 1;
             return index <= End ? Text[index] : '\0';
@@ -135,7 +135,7 @@ namespace Markdig.Helpers
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekChar(int offset)
+        public readonly char PeekChar(int offset)
         {
             var index = Start + offset;
             return index >= Start && index <= End ? Text[index] : '\0';
@@ -146,7 +146,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekCharAbsolute(int index)
+        public readonly char PeekCharAbsolute(int index)
         {
             string text = Text;
             return (uint)index < (uint)text.Length ? text[index] : '\0';
@@ -159,7 +159,7 @@ namespace Markdig.Helpers
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekCharExtra(int offset)
+        public readonly char PeekCharExtra(int offset)
         {
             var index = Start + offset;
             var text = Text;
@@ -172,7 +172,7 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
-        public bool Match(string text, int offset = 0)
+        public readonly bool Match(string text, int offset = 0)
         {
             return Match(text, End, offset);
         }
@@ -184,7 +184,7 @@ namespace Markdig.Helpers
         /// <param name="end">The end.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
-        public bool Match(string text, int end, int offset)
+        public readonly bool Match(string text, int end, int offset)
         {
             var index = Start + offset;
 
@@ -230,7 +230,7 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
-        public bool MatchLowercase(string text, int offset = 0)
+        public readonly bool MatchLowercase(string text, int offset = 0)
         {
             return MatchLowercase(text, End, offset);
         }
@@ -242,7 +242,7 @@ namespace Markdig.Helpers
         /// <param name="end">The end.</param>
         /// <param name="offset">The offset.</param>
         /// <returns><c>true</c> if the text matches; <c>false</c> otherwise</returns>
-        public bool MatchLowercase(string text, int end, int offset)
+        public readonly bool MatchLowercase(string text, int end, int offset)
         {
             var index = Start + offset;
 
@@ -267,7 +267,7 @@ namespace Markdig.Helpers
         /// <param name="offset">The offset.</param>
         /// <param name="ignoreCase">true if ignore case</param>
         /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
-        public int IndexOf(string text, int offset = 0, bool ignoreCase = false)
+        public readonly int IndexOf(string text, int offset = 0, bool ignoreCase = false)
         {
             offset += Start;
             int length = End - offset + 1;
@@ -288,7 +288,7 @@ namespace Markdig.Helpers
         /// Searches for the specified character within this slice.
         /// </summary>
         /// <returns>A value >= 0 if the character was found, otherwise &lt; 0</returns>
-        public int IndexOf(char c)
+        public readonly int IndexOf(char c)
         {
             int start = Start;
             int length = End - start + 1;
@@ -372,7 +372,7 @@ namespace Markdig.Helpers
         /// <returns>
         /// A <see cref="string" /> that represents this instance.
         /// </returns>
-        public override string ToString()
+        public readonly override string ToString()
         {
             string text = Text;
             int start = Start;
@@ -389,7 +389,7 @@ namespace Markdig.Helpers
         /// Determines whether this slice is empty or made only of whitespaces.
         /// </summary>
         /// <returns><c>true</c> if this slice is empty or made only of whitespaces; <c>false</c> otherwise</returns>
-        public bool IsEmptyOrWhitespace()
+        public readonly bool IsEmptyOrWhitespace()
         {
             for (int i = Start; i <= End; i++)
             {
