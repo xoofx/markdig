@@ -1,5 +1,5 @@
 version: 10.0.{build}
-image: Visual Studio 2017
+image: Visual Studio 2019
 configuration: Release
 environment:
   COVERALLS_REPO_TOKEN:
