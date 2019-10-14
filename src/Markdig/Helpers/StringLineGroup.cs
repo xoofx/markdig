@@ -323,7 +323,7 @@ namespace Markdig.Helpers
             }
         }
 
-        public struct LineOffset
+        public readonly struct LineOffset
         {
             public LineOffset(int linePosition, int column, int offset, int start, int end)
             {

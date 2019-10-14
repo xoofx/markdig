@@ -191,10 +191,10 @@ namespace Markdig.Extensions.SmartyPants
             return quotePants;
         }
 
-        private struct Opener
+        private readonly struct Opener
         {
-            public int Type;
-            public int Index;
+            public readonly int Type;
+            public readonly int Index;
 
             public Opener(int type, int index)
             {
