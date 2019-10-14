@@ -38,8 +38,7 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
             Start = start;
             End = end;
         }
@@ -62,24 +61,40 @@ namespace Markdig.Helpers
         /// <summary>
         /// Gets the length.
         /// </summary>
-        public int Length => End - Start + 1;
+        public readonly int Length => End - Start + 1;
 
         /// <summary>
         /// Gets the current character.
         /// </summary>
-        public char CurrentChar => Start <= End ? this[Start] : '\0';
+        public readonly char CurrentChar
+        {
+            get
+            {
+                int start = Start;
+                return start <= End ? Text[start] : '\0';
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
-        public bool IsEmpty => Start > End;
+        public readonly bool IsEmpty
+        {
+            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            get => Start > End;
+        }
 
         /// <summary>
         /// Gets the <see cref="System.Char"/> at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns>A character in the slice at the specified index (not from <see cref="Start"/> but from the begining of the slice)</returns>
-        public char this[int index] => Text[index];
+        public readonly char this[int index]
+        {
+            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            get => Text[index];
+        }
+
 
         /// <summary>
         /// Goes to the next character, incrementing the <see cref="Start" /> position.
@@ -90,13 +105,27 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char NextChar()
         {
-            Start++;
-            if (Start > End)
+            int start = Start;
+            if (start >= End)
             {
                 Start = End + 1;
                 return '\0';
             }
-            return Text[Start];
+            start++;
+            Start = start;
+            return Text[start];
+        }
+
+        /// <summary>
+        /// Peeks a character at the offset of 1 from the current <see cref="Start"/> position
+        /// inside the range <see cref="Start"/> and <see cref="End"/>, returns `\0` if outside this range.
+        /// </summary>
+        /// <returns>The character at offset, returns `\0` if none.</returns>
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        public char PeekChar()
+        {
+            int index = Start + 1;
+            return index <= End ? Text[index] : '\0';
         }
 
         /// <summary>
@@ -106,10 +135,10 @@ namespace Markdig.Helpers
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public char PeekChar(int offset = 1)
+        public char PeekChar(int offset)
         {
             var index = Start + offset;
-            return index >= Start && index <= End ? Text[index] : (char) 0;
+            return index >= Start && index <= End ? Text[index] : '\0';
         }
 
         /// <summary>
@@ -119,7 +148,8 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public char PeekCharAbsolute(int index)
         {
-            return index >= 0 && index < Text.Length ? Text[index] : (char)0;
+            string text = Text;
+            return (uint)index < (uint)text.Length ? text[index] : '\0';
         }
 
         /// <summary>
@@ -132,7 +162,8 @@ namespace Markdig.Helpers
         public char PeekCharExtra(int offset)
         {
             var index = Start + offset;
-            return index >= 0 && index < Text.Length ? Text[index] : (char)0;
+            var text = Text;
+            return (uint)index < (uint)text.Length ? text[index] : '\0';
         }
 
         /// <summary>
@@ -156,16 +187,19 @@ namespace Markdig.Helpers
         public bool Match(string text, int end, int offset)
         {
             var index = Start + offset;
-            int i = 0;
-            for (; index <= end && i < text.Length; i++, index++)
+
+            if (end - index + 1 < text.Length)
+                return false;
+
+            string sliceText = Text;
+            for (int i = 0; i < text.Length; i++, index++)
             {
-                if (text[i] != Text[index])
+                if (text[i] != sliceText[index])
                 {
                     return false;
                 }
             }
-
-            return i == text.Length;
+            return true;
         }
 
         /// <summary>
@@ -211,16 +245,19 @@ namespace Markdig.Helpers
         public bool MatchLowercase(string text, int end, int offset)
         {
             var index = Start + offset;
-            int i = 0;
-            for (; index <= end && i < text.Length; i++, index++)
+
+            if (end - index + 1 < text.Length)
+                return false;
+
+            string sliceText = Text;
+            for (int i = 0; i < text.Length; i++, index++)
             {
-                if (text[i] != char.ToLowerInvariant(Text[index]))
+                if (text[i] != char.ToLowerInvariant(sliceText[index]))
                 {
                     return false;
                 }
             }
-
-            return i == text.Length;
+            return true;
         }
 
         /// <summary>
@@ -232,28 +269,19 @@ namespace Markdig.Helpers
         /// <returns><c>true</c> if the text was found; <c>false</c> otherwise</returns>
         public int IndexOf(string text, int offset = 0, bool ignoreCase = false)
         {
-            var end = End - text.Length + 1;
-            if (ignoreCase)
-            {
-                for (int i = Start + offset; i <= end; i++)
-                {
-                    if (MatchLowercase(text, End, i - Start))
-                    {
-                        return i; ;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = Start + offset; i <= end; i++)
-                {
-                    if (Match(text, End, i - Start))
-                    {
-                        return i; ;
-                    }
-                }
-            }
-            return -1;
+            offset += Start;
+            int length = End - offset + 1;
+
+            if (length <= 0)
+                return -1;
+
+#if NETCORE
+            var span = Text.AsSpan(offset, length);
+            int index = ignoreCase ? span.IndexOf(text, StringComparison.OrdinalIgnoreCase) : span.IndexOf(text);
+            return index == -1 ? index : index + offset;
+#else
+            return Text.IndexOf(text, offset, length, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+#endif
         }
 
         /// <summary>
@@ -262,14 +290,18 @@ namespace Markdig.Helpers
         /// <returns>A value >= 0 if the character was found, otherwise &lt; 0</returns>
         public int IndexOf(char c)
         {
-            for (int i = Start; i <= End; i++)
-            {
-                if (Text[i] == c)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            int start = Start;
+            int length = End - start + 1;
+
+            if (length <= 0)
+                return -1;
+
+#if NETCORE
+            int index = Text.AsSpan(start, length).IndexOf(c);
+            return index == -1 ? index : index + start;
+#else
+            return Text.IndexOf(c, start, length);
+#endif
         }
 
         /// <summary>
@@ -336,24 +368,22 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
-            if (Text != null && Start <= End)
-            {
-                var length = Length;
-                if (Start == 0 && Text.Length == length)
-                {
-                    return Text;
-                }
+            string text = Text;
+            int start = Start;
+            int length = End - start + 1;
 
-                return Text.Substring(Start, length);
+            if (text is null || length <= 0)
+            {
+                return string.Empty;
             }
-            return string.Empty;
+            return text.Substring(start, length);
         }
 
         /// <summary>

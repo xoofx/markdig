@@ -49,7 +49,7 @@ namespace Markdig.Extensions.SmartyPants
             {
                 case '\'':
                     type = SmartyPantType.Quote; // We will resolve them at the end of parsing all inlines
-                    if (slice.PeekChar(1) == '\'')
+                    if (slice.PeekChar() == '\'')
                     {
                         slice.NextChar();
                         type = SmartyPantType.DoubleQuote; // We will resolve them at the end of parsing all inlines

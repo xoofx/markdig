@@ -373,7 +373,7 @@ namespace Markdig.Helpers
             }
             builder.Append('-');
             builder.Append('-');
-            if (text.PeekChar(1) == '>')
+            if (text.PeekChar() == '>')
             {
                 return false;
             }

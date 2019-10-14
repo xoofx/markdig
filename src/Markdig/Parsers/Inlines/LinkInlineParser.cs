@@ -267,7 +267,7 @@ namespace Markdig.Parsers.Inlines
                         // Handle Collapsed links
                         if (text.CurrentChar == '[')
                         {
-                            if (text.PeekChar(1) == ']')
+                            if (text.PeekChar() == ']')
                             {
                                 label = openParent.Label;
                                 labelSpan = openParent.LabelSpan;

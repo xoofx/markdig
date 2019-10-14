@@ -124,7 +124,9 @@ namespace Markdig.Parsers
             }
             else
             {
-                infoString = line.ToString().Trim();
+                var lineCopy = line;
+                lineCopy.Trim();
+                infoString = lineCopy.ToString();
             }
 
             fenced.Info = HtmlHelper.Unescape(infoString);
