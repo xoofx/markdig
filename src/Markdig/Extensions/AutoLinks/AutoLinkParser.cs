@@ -14,7 +14,7 @@ namespace Markdig.Extensions.AutoLinks
     /// <summary>
     /// The inline parser used to for autolinks.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class AutoLinkParser : InlineParser
     {
         /// <summary>
@@ -31,9 +31,13 @@ namespace Markdig.Extensions.AutoLinks
                 'm', // for mailto:
                 'w', // for www.
             };
+
+            _listOfCharCache = new ListOfCharCache();
         }
 
         public readonly AutoLinkOptions Options;
+
+        private readonly ListOfCharCache _listOfCharCache;
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
@@ -44,11 +48,11 @@ namespace Markdig.Extensions.AutoLinks
                 return false;
             }
 
-            List<char> pendingEmphasis;
+            List<char> pendingEmphasis = _listOfCharCache.Get();
             // Check that an autolink is possible in the current context
-            if (!IsAutoLinkValidInCurrentContext(processor, out pendingEmphasis))
+            if (!IsAutoLinkValidInCurrentContext(processor, pendingEmphasis))
             {
-                return false;
+                goto ReturnFalse;
             }
 
             var startPosition = slice.Start;
@@ -67,41 +71,40 @@ namespace Markdig.Extensions.AutoLinks
                     {
                         domainOffset = 8; // https://
                     }
-                    else return false;
+                    else goto ReturnFalse;
                     break;
                 case 'f':
                     if (!slice.MatchLowercase("tp://", 1))
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     domainOffset = 6; // ftp://
                     break;
                 case 'm':
                     if (!slice.MatchLowercase("ailto:", 1))
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     break;
 
                 case 'w':
                     if (!slice.MatchLowercase("ww.", 1)) // We won't match http:/www. or /www.xxx
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     domainOffset = 4; // www.
                     break;
             }
 
             // Parse URL
-            string link;
-            if (!LinkHelper.TryParseUrl(ref slice, out link, true))
+            if (!LinkHelper.TryParseUrl(ref slice, out string link, true))
             {
-                return false;
+                goto ReturnFalse;
             }
 
 
             // If we have any pending emphasis, remove any pending emphasis characters from the end of the link
-            if (pendingEmphasis != null)
+            if (pendingEmphasis.Count > 0)
             {
                 for (int i = link.Length - 1; i >= 0; i--)
                 {
@@ -127,13 +130,13 @@ namespace Markdig.Extensions.AutoLinks
                     if (string.Equals(link, "http://", StringComparison.OrdinalIgnoreCase) ||
                         string.Equals(link, "https://", StringComparison.OrdinalIgnoreCase))
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     break;
                 case 'f':
                     if (string.Equals(link, "ftp://", StringComparison.OrdinalIgnoreCase))
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     break;
                 case 'm':
@@ -141,7 +144,7 @@ namespace Markdig.Extensions.AutoLinks
                     if (atIndex == -1 ||
                         atIndex == 7) // mailto:@ - no email part
                     {
-                        return false;
+                        goto ReturnFalse;
                     }
                     domainOffset = atIndex + 1;
                     break;
@@ -149,7 +152,7 @@ namespace Markdig.Extensions.AutoLinks
 
             if (!LinkHelper.IsValidDomain(link, domainOffset))
             {
-                return false;
+                goto ReturnFalse;
             }
 
             var inline = new LinkInline()
@@ -184,19 +187,21 @@ namespace Markdig.Extensions.AutoLinks
                 inline.GetAttributes().AddPropertyIfNotExist("target", "blank");
             }
 
+            _listOfCharCache.Release(pendingEmphasis);
             return true;
+
+        ReturnFalse:
+            _listOfCharCache.Release(pendingEmphasis);
+            return false;
         }
 
-        private bool IsAutoLinkValidInCurrentContext(InlineProcessor processor, out List<char> pendingEmphasis)
+        private bool IsAutoLinkValidInCurrentContext(InlineProcessor processor, List<char> pendingEmphasis)
         {
-            pendingEmphasis = null;
-
             // Case where there is a pending HtmlInline <a>
             var currentInline = processor.Inline;
             while (currentInline != null)
             {
-                var htmlInline = currentInline as HtmlInline;
-                if (htmlInline != null)
+                if (currentInline is HtmlInline htmlInline)
                 {
                     // If we have a </a> we don't expect nested <a>
                     if (htmlInline.Tag.StartsWith("</a", StringComparison.OrdinalIgnoreCase))
@@ -211,7 +216,7 @@ namespace Markdig.Extensions.AutoLinks
                     }
                 }
 
-                // Check previous sibling and parents in the tree 
+                // Check previous sibling and parents in the tree
                 currentInline = currentInline.PreviousSibling ?? currentInline.Parent;
             }
 
@@ -221,8 +226,7 @@ namespace Markdig.Extensions.AutoLinks
             int countBrackets = 0;
             while (currentInline != null)
             {
-                var linkDelimiterInline = currentInline as LinkDelimiterInline;
-                if (linkDelimiterInline != null && linkDelimiterInline.IsActive)
+                if (currentInline is LinkDelimiterInline linkDelimiterInline && linkDelimiterInline.IsActive)
                 {
                     if (linkDelimiterInline.Type == DelimiterType.Open)
                     {
@@ -236,14 +240,8 @@ namespace Markdig.Extensions.AutoLinks
                 else
                 {
                     // Record all pending characters for emphasis
-                    var emphasisDelimiter = currentInline as EmphasisDelimiterInline;
-                    if (emphasisDelimiter != null)
+                    if (currentInline is EmphasisDelimiterInline emphasisDelimiter)
                     {
-                        if (pendingEmphasis == null)
-                        {
-                            // Not optimized for GC, but we don't expect this case much
-                            pendingEmphasis = new List<char>();
-                        }
                         if (!pendingEmphasis.Contains(emphasisDelimiter.DelimiterChar))
                         {
                             pendingEmphasis.Add(emphasisDelimiter.DelimiterChar);
@@ -254,6 +252,14 @@ namespace Markdig.Extensions.AutoLinks
             }
 
             return countBrackets <= 0;
+        }
+
+        private class ListOfCharCache : DefaultObjectCache<List<char>>
+        {
+            protected override void Reset(List<char> instance)
+            {
+                instance.Clear();
+            }
         }
     }
 }
