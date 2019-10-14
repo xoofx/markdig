@@ -134,7 +134,7 @@ namespace Markdig.Parsers
             return text.Replace('\0', CharHelper.ZeroSafeChar);
         }
 
-        private class ContainerItemCache : DefaultObjectCache<ContainerItem>
+        private sealed class ContainerItemCache : DefaultObjectCache<ContainerItem>
         {
             protected override void Reset(ContainerItem instance)
             {

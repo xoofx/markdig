@@ -254,7 +254,7 @@ namespace Markdig.Extensions.AutoLinks
             return countBrackets <= 0;
         }
 
-        private class ListOfCharCache : DefaultObjectCache<List<char>>
+        private sealed class ListOfCharCache : DefaultObjectCache<List<char>>
         {
             protected override void Reset(List<char> instance)
             {

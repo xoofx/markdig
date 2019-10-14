@@ -83,7 +83,7 @@ namespace Markdig
             _rendererCache.Release(renderer);
         }
 
-        private class HtmlRendererCache : ObjectCache<HtmlRenderer>
+        private sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
         {
             public Action<HtmlRenderer> OnNewInstanceCreated;
 

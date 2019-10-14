@@ -359,7 +359,7 @@ namespace Markdig.Extensions.SmartyPants
         }
 
 
-        private class ListSmartyPants : List<SmartyPant>
+        private sealed class ListSmartyPants : List<SmartyPant>
         {
             public bool HasDash { get; set; }
         }

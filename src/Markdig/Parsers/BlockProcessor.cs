@@ -878,7 +878,7 @@ namespace Markdig.Parsers
             NewBlocks.Clear();
         }
 
-        private class BlockParserStateCache : ObjectCache<BlockProcessor>
+        private sealed class BlockParserStateCache : ObjectCache<BlockProcessor>
         {
             private readonly BlockProcessor root;
 

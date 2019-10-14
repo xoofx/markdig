@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Internal state used by the <see cref="GridTableParser"/>
     /// </summary>
-    internal class GridTableState
+    internal sealed class GridTableState
     {
         public int Start { get; set; }
 

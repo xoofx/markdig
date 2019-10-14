@@ -191,7 +191,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             attributes.Id = headingId;
         }
 
-        private class StripRendererCache : ObjectCache<HtmlRenderer>
+        private sealed class StripRendererCache : ObjectCache<HtmlRenderer>
         {
             protected override HtmlRenderer NewInstance()
             {
