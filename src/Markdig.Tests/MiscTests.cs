@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.AutoLinks;
 using NUnit.Framework;
@@ -8,6 +9,45 @@ namespace Markdig.Tests
 {
     public class MiscTests
     {
+        [TestCase("link [foo [bar]]")] // https://spec.commonmark.org/0.29/#example-508
+        [TestCase("link [foo][bar]")]
+        [TestCase("link [][foo][bar][]")]
+        [TestCase("link [][foo][bar][[]]")]
+        [TestCase("link [foo] [bar]")]
+        [TestCase("link [[foo] [] [bar] [[abc]def]]")]
+        [TestCase("[]")]
+        [TestCase("[ ]")]
+        [TestCase("[bar][]")]
+        [TestCase("[bar][ foo]")]
+        [TestCase("[bar][foo ][]")]
+        [TestCase("[bar][fo[ ]o ][][]")]
+        [TestCase("[a]b[c[d[e]f]g]h")]
+        [TestCase("a[b[c[d]e]f[g]h]i foo [j]k[l[m]n]o")]
+        [TestCase("a[b[c[d]e]f[g]h]i[] [][foo][bar][] foo [j]k[l[m]n]o")]
+        [TestCase("a[b[c[d]e]f[g]h]i foo [j]k[l[m]n]o[][]")]
+        public void LinkTextMayContainBalancedBrackets(string linkText)
+        {
+            string markdown = $"[{linkText}](/uri)";
+            string expected = $@"<p><a href=""/uri"">{linkText}</a></p>";
+
+            TestParser.TestSpec(markdown, expected);
+
+            // Make the link text unbalanced
+            foreach (var bracketIndex in linkText
+                .Select((c, i) => new Tuple<char, int>(c, i))
+                .Where(t => t.Item1 == '[' || t.Item1 == ']')
+                .Select(t => t.Item2))
+            {
+                string brokenLinkText = linkText.Remove(bracketIndex, 1);
+
+                markdown = $"[{brokenLinkText}](/uri)";
+                expected = $@"<p><a href=""/uri"">{brokenLinkText}</a></p>";
+
+                string actual = Markdown.ToHtml(markdown);
+                Assert.AreNotEqual(expected, actual);
+            }
+        }
+
         [Test]
         public void IsIssue356Corrected()
         {

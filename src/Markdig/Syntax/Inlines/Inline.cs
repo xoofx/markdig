@@ -215,13 +215,26 @@ namespace Markdig.Syntax.Inlines
             var inline = this;
             while (inline != null)
             {
-                var delimiter = inline as T;
-                if (delimiter != null)
+                if (inline is T inlineOfT)
                 {
-                    yield return delimiter;
+                    yield return inlineOfT;
                 }
                 inline = inline.Parent;
             }
+        }
+
+        internal T FirstParentOfType<T>() where T : Inline
+        {
+            var inline = this;
+            while (inline != null)
+            {
+                if (inline is T inlineOfT)
+                {
+                    return inlineOfT;
+                }
+                inline = inline.Parent;
+            }
+            return null;
         }
 
         public Inline FindBestParent()
