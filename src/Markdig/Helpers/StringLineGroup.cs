@@ -5,26 +5,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Markdig.Extensions.Tables;
 
 namespace Markdig.Helpers
 {
     /// <summary>
     /// A group of <see cref="StringLine"/>.
     /// </summary>
-    /// <seealso cref="System.Collections.IEnumerable" />
+    /// <seealso cref="IEnumerable" />
     public struct StringLineGroup : IEnumerable
     {
+        // Feel free to change these numbers if you see a positive change
+        private static readonly CustomArrayPool<StringLine> _pool
+            = new CustomArrayPool<StringLine>(512, 386, 128, 64);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         /// <param name="capacity"></param>
-        public StringLineGroup(int capacity)
+        public StringLineGroup(int capacity, bool willRelease = false)
         {
             if (capacity <= 0) throw new ArgumentOutOfRangeException(nameof(capacity));
-            Lines = new StringLine[capacity];
+            Lines = _pool.Rent(willRelease ? Math.Max(8, capacity) : capacity);
             Count = 0;
         }
 
@@ -100,7 +102,7 @@ namespace Markdig.Helpers
             Lines[Count++] = new StringLine(ref slice);
         }
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             return ToSlice().ToString();
         }
@@ -110,7 +112,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="lineOffsets">The position of the `\n` line offsets from the beginning of the returned slice.</param>
         /// <returns>A single slice concatenating the lines of this instance</returns>
-        public StringSlice ToSlice(List<LineOffset> lineOffsets = null)
+        public readonly StringSlice ToSlice(List<LineOffset> lineOffsets = null)
         {
             // Optimization case when no lines
             if (Count == 0)
@@ -126,6 +128,11 @@ namespace Markdig.Helpers
                     lineOffsets.Add(new LineOffset(Lines[0].Position, Lines[0].Column, Lines[0].Slice.Start - Lines[0].Position, Lines[0].Slice.Start, Lines[0].Slice.End + 1));
                 }
                 return Lines[0];
+            }
+
+            if (lineOffsets != null && lineOffsets.Capacity < lineOffsets.Count + Count)
+            {
+                lineOffsets.Capacity = Math.Max(lineOffsets.Count + Count, lineOffsets.Capacity * 2);
             }
 
             // Else use a builder
@@ -151,16 +158,14 @@ namespace Markdig.Helpers
             {
                 lineOffsets.Add(new LineOffset(Lines[Count - 1].Position, Lines[Count - 1].Column, Lines[Count - 1].Slice.Start - Lines[Count - 1].Position, previousStartOfLine, builder.Length));
             }
-            var str = builder.ToString();
-            builder.Length = 0;
-            return new StringSlice(str);
+            return new StringSlice(builder.GetStringAndReset());
         }
 
         /// <summary>
         /// Converts this instance into a <see cref="ICharIterator"/>.
         /// </summary>
         /// <returns></returns>
-        public Iterator ToCharIterator()
+        public readonly Iterator ToCharIterator()
         {
             return new Iterator(this);
         }
@@ -183,12 +188,22 @@ namespace Markdig.Helpers
 
         private void IncreaseCapacity()
         {
-            var newItems = new StringLine[Lines.Length * 2];
+            var newItems = _pool.Rent(Lines.Length * 2);
             if (Count > 0)
             {
                 Array.Copy(Lines, 0, newItems, 0, Count);
+                Array.Clear(Lines, 0, Count);
             }
+            _pool.Return(Lines);
             Lines = newItems;
+        }
+
+        internal void Release()
+        {
+            Array.Clear(Lines, 0, Count);
+            _pool.Return(Lines);
+            Lines = null;
+            Count = -1;
         }
 
         /// <summary>
@@ -207,7 +222,7 @@ namespace Markdig.Helpers
                 _offset = -1;
                 SliceIndex = 0;
                 CurrentChar = '\0';
-                End = -2; 
+                End = -2;
                 for (int i = 0; i < lines.Count; i++)
                 {
                     End += lines.Lines[i].Slice.Length + 1; // Add chars
@@ -221,7 +236,7 @@ namespace Markdig.Helpers
 
             public int End { get; private set; }
 
-            public bool IsEmpty => Start > End;
+            public readonly bool IsEmpty => Start > End;
 
             public int SliceIndex { get; private set; }
 
@@ -277,7 +292,7 @@ namespace Markdig.Helpers
                 return CurrentChar;
             }
 
-            public char PeekChar(int offset = 1)
+            public readonly char PeekChar(int offset = 1)
             {
                 if (offset < 0) throw new ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
 
@@ -298,17 +313,15 @@ namespace Markdig.Helpers
             public bool TrimStart()
             {
                 var c = CurrentChar;
-                bool hasSpaces = false;
                 while (c.IsWhitespace())
                 {
-                    hasSpaces = true;
                     c = NextChar();
                 }
-                return hasSpaces;
+                return IsEmpty;
             }
         }
 
-        public struct LineOffset
+        public readonly struct LineOffset
         {
             public LineOffset(int linePosition, int column, int offset, int start, int end)
             {
