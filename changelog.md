@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## 0.18.0 (24 Oct 2019)
 - Ignore backslashes in GFM AutoLinks ([(PR #357)](https://github.com/lunet-io/markdig/pull/357))
 - Fix SmartyPants quote matching ([(PR #360)](https://github.com/lunet-io/markdig/pull/360))
 - Fix generic attributes with values of length 1 ([(PR #361)](https://github.com/lunet-io/markdig/pull/361))
