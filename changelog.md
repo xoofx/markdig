@@ -1,5 +1,6 @@
 # Changelog
 
+- Re-allow emojis and smileys customization, that was broken in [PR #308](https://github.com/lunet-io/markdig/pull/308) ([PR #386](https://github.com/lunet-io/markdig/pull/386))
 - Add `IHostProvider` for medialink customization (#337), support protocol-less url (#135) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
 
 ## 0.18.0 (24 Oct 2019)
