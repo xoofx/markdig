@@ -425,12 +425,13 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="enableSmiley">Enable smiley in addition to Emoji, <c>true</c> by default.</param>
+        /// <param name="customEmojiMapping">Enable optional customization of the emojis and smileys mapping.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmiley = true)
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmiley = true, EmojiMapping customEmojiMapping = null)
         {
             if (!pipeline.Extensions.Contains<EmojiExtension>())
             {
-                pipeline.Extensions.Add(new EmojiExtension(enableSmiley));
+                pipeline.Extensions.Add(new EmojiExtension(enableSmiley, customEmojiMapping));
             }
             return pipeline;
         }
