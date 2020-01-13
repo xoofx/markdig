@@ -15,27 +15,14 @@ namespace Markdig.Extensions.Emoji
     public class EmojiParser : InlineParser
     {
         private readonly EmojiMapping _emojiMapping;
-        private CompactPrefixTree<string> _emojiPrefixTree;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmojiParser"/> class.
         /// </summary>
-        public EmojiParser(bool enableSmiley = true, EmojiMapping emojiMapping = null)
+        public EmojiParser(EmojiMapping emojiMapping)
         {
-            EnableSmiley = enableSmiley;
-            _emojiMapping = emojiMapping ?? EmojiMapping.DefaultEmojiMapping;
-            OpeningCharacters = null;
-        }
-
-        /// <summary>
-        /// Gets or sets a boolean indicating whether to process smiley.
-        /// </summary>
-        public bool EnableSmiley { get; set; }
-
-        public override void Initialize()
-        {
-            OpeningCharacters = EnableSmiley ? _emojiMapping.EmojiSmileyOpeningCharacters : _emojiMapping.EmojiOpeningCharacters;
-            _emojiPrefixTree = EnableSmiley ? _emojiMapping.EmojiSmileyPrefixTree : _emojiMapping.EmojiPrefixTree;
+            _emojiMapping = emojiMapping;
+            OpeningCharacters = _emojiMapping.OpeningCharacters;
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -47,7 +34,7 @@ namespace Markdig.Extensions.Emoji
             }
 
             // Try to match an emoji
-            if (!_emojiPrefixTree.TryMatchLongest(slice.Text, slice.Start, slice.Length, out KeyValuePair<string, string> match))
+            if (!_emojiMapping.PrefixTree.TryMatchLongest(slice.Text, slice.Start, slice.Length, out KeyValuePair<string, string> match))
             {
                 return false;
             }

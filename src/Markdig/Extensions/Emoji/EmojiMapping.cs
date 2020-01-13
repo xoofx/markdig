@@ -16,12 +16,18 @@ namespace Markdig.Extensions.Emoji
         /// <summary>
         /// The default emojis and smileys mapping.
         /// </summary>
-        public static readonly EmojiMapping DefaultEmojiMapping = new EmojiMapping();
+        public static readonly EmojiMapping DefaultEmojiAndSmileyMapping = new EmojiMapping();
 
-        internal CompactPrefixTree<string> EmojiPrefixTree { get; }
-        internal CompactPrefixTree<string> EmojiSmileyPrefixTree { get; }
-        internal char[] EmojiOpeningCharacters { get; }
-        internal char[] EmojiSmileyOpeningCharacters { get; }
+        /// <summary>
+        /// The default emojis mapping, without smileys.
+        /// </summary>
+        public static readonly EmojiMapping DefaultEmojiOnlyMapping = new EmojiMapping(enableSmiley: false);
+
+        private static readonly Dictionary<string, string> _emptyDictionary = new Dictionary<string, string>();
+
+        internal CompactPrefixTree<string> PrefixTree { get; }
+
+        internal char[] OpeningCharacters { get; }
 
         #region Emojis and Smileys
 
@@ -1729,21 +1735,29 @@ namespace Markdig.Extensions.Emoji
 
         #endregion
 
-        public EmojiMapping(IDictionary<string, string> emojiToUnicode = null, IDictionary<string, string> smileyToEmoji = null)
+        /// <summary>
+        /// Constructs a mapping for the default emojis and smileys.
+        /// </summary>
+        public EmojiMapping(bool enableSmiley = true)
+            : this(GetDefaultEmojiToUnicode(), enableSmiley ? GetDefaultSmileyToEmoji() : _emptyDictionary) { }
+
+        /// <summary>
+        /// Constructs a mapping from a dictionary of emojis to unicode, and a dictionary of smileys to emojis.
+        /// </summary>
+        public EmojiMapping(IDictionary<string, string> emojiToUnicode, IDictionary<string, string> smileyToEmoji)
         {
             if (emojiToUnicode == null)
-                emojiToUnicode = GetDefaultEmojiToUnicode();
+                throw new ArgumentNullException(nameof(emojiToUnicode));
 
             if (smileyToEmoji == null)
-                smileyToEmoji = GetDefaultSmileyToEmoji();
+                throw new ArgumentNullException(nameof(smileyToEmoji));
 
             // Build Emoji and Smiley CompactPrefixTree
 
-            EmojiPrefixTree = new CompactPrefixTree<string>(emojiToUnicode.Count, emojiToUnicode.Count, emojiToUnicode.Count);
-
             int jointCount = emojiToUnicode.Count + smileyToEmoji.Count;
+
             // Count * 2 seems to be a good fit for the data set
-            EmojiSmileyPrefixTree = new CompactPrefixTree<string>(jointCount, jointCount * 2, jointCount * 2);
+            PrefixTree = new CompactPrefixTree<string>(jointCount, jointCount * 2, jointCount * 2);
 
             // This is not the best data set for the prefix tree as it will have to check the first character linearly
             // A work-around would require a bunch of substrings / removing the leading ':' from emojis, neither one is pretty
@@ -1753,32 +1767,28 @@ namespace Markdig.Extensions.Emoji
 
             foreach (var emoji in emojiToUnicode)
             {
-                EmojiPrefixTree.Add(emoji);
-                EmojiSmileyPrefixTree.Add(emoji);
-
                 if (string.IsNullOrEmpty(emoji.Key))
                     throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(emojiToUnicode));
 
                 firstChars.Add(emoji.Key[0]);
+                PrefixTree.Add(emoji);
             }
-
-            EmojiOpeningCharacters = new List<char>(firstChars).ToArray();
 
             foreach (var smiley in smileyToEmoji)
             {
-                if (!emojiToUnicode.TryGetValue(smiley.Value, out string unicode))
-                    throw new ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value));
-
                 if (string.IsNullOrEmpty(smiley.Key))
                     throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(smileyToEmoji));
 
+                if (!emojiToUnicode.TryGetValue(smiley.Value, out string unicode))
+                    throw new ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value));
+
                 firstChars.Add(smiley.Key[0]);
 
-                if (!EmojiSmileyPrefixTree.TryAdd(smiley.Key, unicode))
+                if (!PrefixTree.TryAdd(smiley.Key, unicode))
                     throw new ArgumentException(string.Format("Smiley {0} is already present in the Emoji dictionary", smiley.Key));
             }
 
-            EmojiSmileyOpeningCharacters = new List<char>(firstChars).ToArray();
+            OpeningCharacters = new List<char>(firstChars).ToArray();
         }
     }
 }

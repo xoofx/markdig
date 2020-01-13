@@ -12,21 +12,19 @@ namespace Markdig.Extensions.Emoji
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class EmojiExtension : IMarkdownExtension
     {
-        public EmojiExtension(bool enableSmiley = true, EmojiMapping customEmojiMapping = null)
+        public EmojiExtension(EmojiMapping emojiMapping)
         {
-            EnableSmiley = enableSmiley;
-            CustomEmojiMapping = customEmojiMapping;
+            EmojiMapping = emojiMapping;
         }
 
-        public bool EnableSmiley { get; set; }
-        public EmojiMapping CustomEmojiMapping { get; }
+        public EmojiMapping EmojiMapping { get; }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<EmojiParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new EmojiParser(EnableSmiley, CustomEmojiMapping));
+                pipeline.InlineParsers.Insert(0, new EmojiParser(EmojiMapping));
             }
         }
 
