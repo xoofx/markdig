@@ -421,23 +421,23 @@ namespace Markdig
         }
 
         /// <summary>
-        /// Uses the emoji and smiley extension.
+        /// Uses the emojis and smileys extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <param name="enableSmiley">Enable smiley in addition to Emoji, <c>true</c> by default.</param>
+        /// <param name="enableSmileys">Enable smileys in addition to emoji shortcodes, <c>true</c> by default.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmiley = true)
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmileys = true)
         {
             if (!pipeline.Extensions.Contains<EmojiExtension>())
             {
-                var emojiMapping = enableSmiley ? EmojiMapping.DefaultEmojiAndSmileyMapping : EmojiMapping.DefaultEmojiOnlyMapping;
+                var emojiMapping = enableSmileys ? EmojiMapping.DefaultEmojisAndSmileysMapping : EmojiMapping.DefaultEmojisOnlyMapping;
                 pipeline.Extensions.Add(new EmojiExtension(emojiMapping));
             }
             return pipeline;
         }
 
         /// <summary>
-        /// Uses the emoji and smiley extension.
+        /// Uses the emojis and smileys extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="customEmojiMapping">Enable customization of the emojis and smileys mapping.</param>

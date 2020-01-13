@@ -9,7 +9,7 @@ using Markdig.Parsers;
 namespace Markdig.Extensions.Emoji
 {
     /// <summary>
-    /// The inline parser used for emoji.
+    /// The inline parser used for emojis.
     /// </summary>
     /// <seealso cref="InlineParser" />
     public class EmojiParser : InlineParser
@@ -33,7 +33,7 @@ namespace Markdig.Extensions.Emoji
                 return false;
             }
 
-            // Try to match an emoji
+            // Try to match an emoji shortcode or smiley
             if (!_emojiMapping.PrefixTree.TryMatchLongest(slice.Text, slice.Start, slice.Length, out KeyValuePair<string, string> match))
             {
                 return false;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -8,7 +8,7 @@ using Markdig.Syntax.Inlines;
 namespace Markdig.Extensions.Emoji
 {
     /// <summary>
-    /// An emoji inline 
+    /// An emoji inline.
     /// </summary>
     /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
     public class EmojiInline : LiteralInline
@@ -32,7 +32,7 @@ namespace Markdig.Extensions.Emoji
         }
 
         /// <summary>
-        /// Gets or sets the original match string (either an emoji or a text smiley)
+        /// Gets or sets the original match string (either an emoji shortcode or a text smiley)
         /// </summary>
         public string Match { get; set; }
     }

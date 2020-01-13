@@ -58,8 +58,8 @@ namespace Markdig.Tests
         [TestCase(":/", "<p>😕</p>\n")] // default smiley still works
         public void TestOverrideDefaultWithCustomEmoji(string input, string expected)
         {
-            var emojiToUnicode = EmojiMapping.GetDefaultEmojiToUnicode();
-            var smileyToEmoji = EmojiMapping.GetDefaultSmileyToEmoji();
+            var emojiToUnicode = EmojiMapping.GetDefaultEmojiShortcodeToUnicode();
+            var smileyToEmoji = EmojiMapping.GetDefaultSmileyToEmojiShortcode();
 
             emojiToUnicode[":smiley:"] = "♥";
 
@@ -80,8 +80,8 @@ namespace Markdig.Tests
         [TestCase(":/", "<p>😕</p>\n")] // default smiley still works
         public void TestOverrideDefaultWithCustomSmiley(string input, string expected)
         {
-            var emojiToUnicode = EmojiMapping.GetDefaultEmojiToUnicode();
-            var smileyToEmoji = EmojiMapping.GetDefaultSmileyToEmoji();
+            var emojiToUnicode = EmojiMapping.GetDefaultEmojiShortcodeToUnicode();
+            var smileyToEmoji = EmojiMapping.GetDefaultSmileyToEmojiShortcode();
 
             emojiToUnicode[":testheart:"] = "♥";
             smileyToEmoji["hello"] = ":testheart:";

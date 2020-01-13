@@ -9,21 +9,19 @@ using Markdig.Helpers;
 namespace Markdig.Extensions.Emoji
 {
     /// <summary>
-    /// An emoji and smiley mapping, to be used by <see cref="EmojiParser"/>.
+    /// An emoji shortcodes and smileys mapping, to be used by <see cref="EmojiParser"/>.
     /// </summary>
     public class EmojiMapping
     {
         /// <summary>
-        /// The default emojis and smileys mapping.
+        /// The default emoji shortcodes and smileys mapping.
         /// </summary>
-        public static readonly EmojiMapping DefaultEmojiAndSmileyMapping = new EmojiMapping();
+        public static readonly EmojiMapping DefaultEmojisAndSmileysMapping = new EmojiMapping();
 
         /// <summary>
-        /// The default emojis mapping, without smileys.
+        /// The default emoji shortcodes mapping, without smileys.
         /// </summary>
-        public static readonly EmojiMapping DefaultEmojiOnlyMapping = new EmojiMapping(enableSmiley: false);
-
-        private static readonly Dictionary<string, string> _emptyDictionary = new Dictionary<string, string>();
+        public static readonly EmojiMapping DefaultEmojisOnlyMapping = new EmojiMapping(enableSmileys: false);
 
         internal CompactPrefixTree<string> PrefixTree { get; }
 
@@ -32,10 +30,10 @@ namespace Markdig.Extensions.Emoji
         #region Emojis and Smileys
 
         /// <summary>
-        /// Returns a new instance of the default emoji to unicode dictionary.
+        /// Returns a new instance of the default emoji shortcode to emoji unicode dictionary.
         /// It can be used to create a customized <see cref="EmojiMapping"/>.
         /// </summary>
-        public static IDictionary<string, string> GetDefaultEmojiToUnicode()
+        public static IDictionary<string, string> GetDefaultEmojiShortcodeToUnicode()
         {
             return new Dictionary<string, string>()
             {
@@ -1649,10 +1647,10 @@ namespace Markdig.Extensions.Emoji
         }
 
         /// <summary>
-        /// Gets a new instance of the default smiley to emoji dictionary.
+        /// Gets a new instance of the default smiley to emoji shortcode dictionary.
         /// It can be used to create a customized <see cref="EmojiMapping"/>.
         /// </summary>
-        public static IDictionary<string, string> GetDefaultSmileyToEmoji()
+        public static IDictionary<string, string> GetDefaultSmileyToEmojiShortcode()
         {
             return new Dictionary<string, string>()
             {
@@ -1736,25 +1734,27 @@ namespace Markdig.Extensions.Emoji
         #endregion
 
         /// <summary>
-        /// Constructs a mapping for the default emojis and smileys.
+        /// Constructs a mapping for the default emoji shortcodes and smileys.
         /// </summary>
-        public EmojiMapping(bool enableSmiley = true)
-            : this(GetDefaultEmojiToUnicode(), enableSmiley ? GetDefaultSmileyToEmoji() : _emptyDictionary) { }
+        public EmojiMapping(bool enableSmileys = true)
+            : this(GetDefaultEmojiShortcodeToUnicode(),
+                  enableSmileys ? GetDefaultSmileyToEmojiShortcode() : new Dictionary<string, string>())
+        { }
 
         /// <summary>
-        /// Constructs a mapping from a dictionary of emojis to unicode, and a dictionary of smileys to emojis.
+        /// Constructs a mapping from a dictionary of emoji shortcodes to unicode, and a dictionary of smileys to emoji shortcodes.
         /// </summary>
-        public EmojiMapping(IDictionary<string, string> emojiToUnicode, IDictionary<string, string> smileyToEmoji)
+        public EmojiMapping(IDictionary<string, string> shortcodeToUnicode, IDictionary<string, string> smileyToShortcode)
         {
-            if (emojiToUnicode == null)
-                throw new ArgumentNullException(nameof(emojiToUnicode));
+            if (shortcodeToUnicode == null)
+                throw new ArgumentNullException(nameof(shortcodeToUnicode));
 
-            if (smileyToEmoji == null)
-                throw new ArgumentNullException(nameof(smileyToEmoji));
+            if (smileyToShortcode == null)
+                throw new ArgumentNullException(nameof(smileyToShortcode));
 
-            // Build Emoji and Smiley CompactPrefixTree
+            // Build emojis and smileys CompactPrefixTree
 
-            int jointCount = emojiToUnicode.Count + smileyToEmoji.Count;
+            int jointCount = shortcodeToUnicode.Count + smileyToShortcode.Count;
 
             // Count * 2 seems to be a good fit for the data set
             PrefixTree = new CompactPrefixTree<string>(jointCount, jointCount * 2, jointCount * 2);
@@ -1765,27 +1765,27 @@ namespace Markdig.Extensions.Emoji
 
             var firstChars = new HashSet<char>();
 
-            foreach (var emoji in emojiToUnicode)
+            foreach (var shortcode in shortcodeToUnicode)
             {
-                if (string.IsNullOrEmpty(emoji.Key))
-                    throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(emojiToUnicode));
+                if (string.IsNullOrEmpty(shortcode.Key))
+                    throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(shortcodeToUnicode));
 
-                firstChars.Add(emoji.Key[0]);
-                PrefixTree.Add(emoji);
+                firstChars.Add(shortcode.Key[0]);
+                PrefixTree.Add(shortcode);
             }
 
-            foreach (var smiley in smileyToEmoji)
+            foreach (var smiley in smileyToShortcode)
             {
                 if (string.IsNullOrEmpty(smiley.Key))
-                    throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(smileyToEmoji));
+                    throw new ArgumentException("The dictionaries cannot contain null or empty keys", nameof(smileyToShortcode));
 
-                if (!emojiToUnicode.TryGetValue(smiley.Value, out string unicode))
-                    throw new ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji dictionary", smiley.Value));
+                if (!shortcodeToUnicode.TryGetValue(smiley.Value, out string unicode))
+                    throw new ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji shortcodes dictionary", smiley.Value));
 
                 firstChars.Add(smiley.Key[0]);
 
                 if (!PrefixTree.TryAdd(smiley.Key, unicode))
-                    throw new ArgumentException(string.Format("Smiley {0} is already present in the Emoji dictionary", smiley.Key));
+                    throw new ArgumentException(string.Format("Smiley {0} is already present in the emoji mapping", smiley.Key));
             }
 
             OpeningCharacters = new List<char>(firstChars).ToArray();
