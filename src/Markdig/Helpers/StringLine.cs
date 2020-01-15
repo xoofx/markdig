@@ -77,7 +77,7 @@ namespace Markdig.Helpers
             return line.Slice;
         }
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             return Slice.ToString();
         }

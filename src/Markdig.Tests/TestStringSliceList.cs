@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Text;
 using Markdig.Helpers;
@@ -81,8 +81,18 @@ namespace Markdig.Tests
         public void TestSkipWhitespaces()
         {
             var text = new StringLineGroup("             ABC").ToCharIterator();
-            Assert.True(text.TrimStart());
+            Assert.False(text.TrimStart());
             Assert.AreEqual('A', text.CurrentChar);
+
+            text = new StringLineGroup("        ").ToCharIterator();
+            Assert.True(text.TrimStart());
+            Assert.AreEqual('\0', text.CurrentChar);
+
+            var slice = new StringSlice("             ABC");
+            Assert.False(slice.TrimStart());
+
+            slice = new StringSlice("        ");
+            Assert.True(slice.TrimStart());
         }
 
         [Test]

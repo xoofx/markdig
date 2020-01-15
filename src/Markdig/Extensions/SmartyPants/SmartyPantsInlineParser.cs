@@ -49,7 +49,7 @@ namespace Markdig.Extensions.SmartyPants
             {
                 case '\'':
                     type = SmartyPantType.Quote; // We will resolve them at the end of parsing all inlines
-                    if (slice.PeekChar(1) == '\'')
+                    if (slice.PeekChar() == '\'')
                     {
                         slice.NextChar();
                         type = SmartyPantType.DoubleQuote; // We will resolve them at the end of parsing all inlines
@@ -191,10 +191,10 @@ namespace Markdig.Extensions.SmartyPants
             return quotePants;
         }
 
-        private struct Opener
+        private readonly struct Opener
         {
-            public int Type;
-            public int Index;
+            public readonly int Type;
+            public readonly int Index;
 
             public Opener(int type, int index)
             {
@@ -359,7 +359,7 @@ namespace Markdig.Extensions.SmartyPants
         }
 
 
-        private class ListSmartyPants : List<SmartyPant>
+        private sealed class ListSmartyPants : List<SmartyPant>
         {
             public bool HasDash { get; set; }
         }

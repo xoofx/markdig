@@ -500,6 +500,11 @@ namespace Markdig.Parsers
                 if (!block.Parser.Close(this, block))
                 {
                     block.Parent?.Remove(block);
+
+                    if (block is LeafBlock leaf)
+                    {
+                        leaf.Lines.Release();
+                    }
                 }
                 else
                 {
@@ -873,7 +878,7 @@ namespace Markdig.Parsers
             NewBlocks.Clear();
         }
 
-        private class BlockParserStateCache : ObjectCache<BlockProcessor>
+        private sealed class BlockParserStateCache : ObjectCache<BlockProcessor>
         {
             private readonly BlockProcessor root;
 

@@ -22,6 +22,7 @@ namespace Markdig.Extensions.AutoIdentifiers
     {
         private const string AutoIdentifierKey = "AutoIdentifier";
         private readonly AutoIdentifierOptions options;
+        private readonly StripRendererCache rendererCache = new StripRendererCache();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoIdentifierExtension"/> class.
@@ -159,17 +160,11 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
 
             // Use internally a HtmlRenderer to strip links from a heading
-            var headingWriter = new StringWriter();
-            var stripRenderer = new HtmlRenderer(headingWriter)
-            {
-                // Set to false both to avoid having any HTML tags in the output
-                EnableHtmlForInline = false,
-                EnableHtmlEscape = false
-            };
+            var stripRenderer = rendererCache.Get();
 
             stripRenderer.Render(headingBlock.Inline);
-            var headingText = headingWriter.ToString();
-            headingWriter.GetStringBuilder().Length = 0;
+            var headingText = stripRenderer.Writer.ToString();
+            rendererCache.Release(stripRenderer);
 
             // Urilize the link
             headingText = (options & AutoIdentifierOptions.GitHub) != 0
@@ -194,6 +189,26 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
 
             attributes.Id = headingId;
+        }
+
+        private sealed class StripRendererCache : ObjectCache<HtmlRenderer>
+        {
+            protected override HtmlRenderer NewInstance()
+            {
+                var headingWriter = new StringWriter();
+                var stripRenderer = new HtmlRenderer(headingWriter)
+                {
+                    // Set to false both to avoid having any HTML tags in the output
+                    EnableHtmlForInline = false,
+                    EnableHtmlEscape = false
+                };
+                return stripRenderer;
+            }
+
+            protected override void Reset(HtmlRenderer instance)
+            {
+                instance.Reset();
+            }
         }
     }
 }

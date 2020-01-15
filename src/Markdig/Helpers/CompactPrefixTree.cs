@@ -25,7 +25,7 @@ namespace Markdig.Helpers
     /// <para>Something between a Trie and a full Radix tree, but stored linearly in memory</para>
     /// </summary>
     /// <typeparam name="TValue">The value associated with the key</typeparam>
-    internal class CompactPrefixTree<TValue>
+    internal sealed class CompactPrefixTree<TValue>
 //#if !LEGACY
 //        : IReadOnlyDictionary<string, TValue>, IReadOnlyList<KeyValuePair<string, TValue>>
 //#endif

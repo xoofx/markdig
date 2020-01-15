@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
@@ -61,6 +61,43 @@ namespace Markdig
             foreach (var extension in Extensions)
             {
                 extension.Setup(this, renderer);
+            }
+        }
+
+
+        private HtmlRendererCache _rendererCache = null;
+
+        internal HtmlRenderer GetCacheableHtmlRenderer()
+        {
+            if (_rendererCache is null)
+            {
+                _rendererCache = new HtmlRendererCache
+                {
+                    OnNewInstanceCreated = Setup
+                };
+            }
+            return _rendererCache.Get();
+        }
+        internal void ReleaseCacheableHtmlRenderer(HtmlRenderer renderer)
+        {
+            _rendererCache.Release(renderer);
+        }
+
+        private sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
+        {
+            public Action<HtmlRenderer> OnNewInstanceCreated;
+
+            protected override HtmlRenderer NewInstance()
+            {
+                var writer = new StringWriter();
+                var renderer = new HtmlRenderer(writer);
+                OnNewInstanceCreated(renderer);
+                return renderer;
+            }
+
+            protected override void Reset(HtmlRenderer instance)
+            {
+                instance.Reset();
             }
         }
     }

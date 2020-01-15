@@ -100,7 +100,7 @@ namespace Markdig.Parsers
             if (c == '!')
             {
                 c = line.NextChar();
-                if (c == '-' && line.PeekChar(1) == '-')
+                if (c == '-' && line.PeekChar() == '-')
                 {
                     return CreateHtmlBlock(state, HtmlBlockType.Comment, startColumn, startPosition); // group 2
                 }
@@ -140,7 +140,7 @@ namespace Markdig.Parsers
             }
 
             if (
-                !(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar(1) == '>') || c.IsWhitespace() ||
+                !(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar() == '>') || c.IsWhitespace() ||
                   c == '\0'))
             {
                 return BlockState.None;

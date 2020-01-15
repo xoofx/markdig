@@ -1,4 +1,4 @@
-﻿
+
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
@@ -138,7 +138,7 @@ namespace Markdig.Extensions.Tables
         private static void SetRowSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line, out bool isHeaderRow, out bool hasRowSpan)
         {
             var lineStart = line.Start;
-            isHeaderRow = line.PeekChar(1) == '=' || line.PeekChar(2) == '=';
+            isHeaderRow = line.PeekChar() == '=' || line.PeekChar(2) == '=';
             hasRowSpan = false;
             foreach (var columnSlice in columns)
             {
