@@ -46,7 +46,7 @@ namespace Markdig.Extensions.MediaLinks
             return new DelegateProvider { HostPrefix = hostPrefix, Delegate = handler, AllowFullScreen = allowFullScreen, Class = iframeClass };
         }
 
-        public static Dictionary<string, IHostProvider> KnownHosts { get; }
+        internal static Dictionary<string, IHostProvider> KnownHosts { get; }
             = new Dictionary<string, IHostProvider>(StringComparer.OrdinalIgnoreCase)
             {
                 ["YouTube"] = Create("www.youtube.com", YouTube, iframeClass: "youtube"),
