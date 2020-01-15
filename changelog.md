@@ -1,11 +1,14 @@
 # Changelog
 
+- Add `IHostProvider` for medialink customization (#337), support protocol-less url (#135) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
+
 ## 0.18.0 (24 Oct 2019)
 - Ignore backslashes in GFM AutoLinks ([(PR #357)](https://github.com/lunet-io/markdig/pull/357))
 - Fix SmartyPants quote matching ([(PR #360)](https://github.com/lunet-io/markdig/pull/360))
 - Fix generic attributes with values of length 1 ([(PR #361)](https://github.com/lunet-io/markdig/pull/361))
 - Fix link text balanced bracket matching ([(PR #375)](https://github.com/lunet-io/markdig/pull/375))
 - Improve overall performance and substantially reduce allocations ([(PR #377)](https://github.com/lunet-io/markdig/pull/377))
+
 
 ## 0.17.1 (04 July 2019)
 - Fix regression when escaping HTML characters ([(PR #340)](https://github.com/lunet-io/markdig/pull/340))
