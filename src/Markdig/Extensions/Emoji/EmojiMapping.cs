@@ -35,7 +35,7 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public static IDictionary<string, string> GetDefaultEmojiShortcodeToUnicode()
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>(1603)
             {
                 {":100:", "💯"},
                 {":1234:", "🔢"},
@@ -1652,7 +1652,7 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public static IDictionary<string, string> GetDefaultSmileyToEmojiShortcode()
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>(71)
             {
                 {">:(", ":angry:"},
                 {">:-(", ":angry:"},
