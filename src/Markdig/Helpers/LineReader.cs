@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -13,6 +13,8 @@ namespace Markdig.Helpers
     /// </summary>
     public struct LineReader
     {
+        private static readonly char[] lineDelimiters = new char[] { '\r', '\n' };
+
         private readonly string text;
 
         /// <summary>
@@ -38,34 +40,31 @@ namespace Markdig.Helpers
         /// <returns>A new line or null if the end of <see cref="TextReader"/> has been reached</returns>
         public StringSlice? ReadLine()
         {
-            if (SourcePosition >= text.Length)
+            int startPosition = SourcePosition;
+
+            if (startPosition >= text.Length)
             {
                 return null;
             }
 
-            var startPosition = SourcePosition;
-            var position = SourcePosition;
-            var slice = new StringSlice(text, startPosition, startPosition);
-            for (;position < text.Length; position++)
+            int position = text.IndexOfAny(lineDelimiters, startPosition);
+
+            if (position < 0)
             {
-                var c = text[position];
-                if (c == '\r' || c == '\n')
-                {
-                    slice.End = position - 1;
-                    if (c == '\r' && position + 1 < text.Length && text[position + 1] == '\n')
-                    {
-                        position++;
-                    }
-                    position++;
-                    SourcePosition = position;
-                    return slice;
-                }
+                SourcePosition = text.Length;
+                return new StringSlice(text, startPosition, text.Length - 1);
             }
-
-            slice.End = position - 1;
-            SourcePosition = position;
-
-            return slice;
+            else
+            {
+                var slice = new StringSlice(text, startPosition, position - 1);
+                if (text[position] == '\r' && position + 1 < text.Length && text[position + 1] == '\n')
+                {
+                    position++;
+                }
+                position++;
+                SourcePosition = position;
+                return slice;
+            }
         }
-   }
+    }
 }
