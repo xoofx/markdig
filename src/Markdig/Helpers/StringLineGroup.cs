@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
@@ -270,7 +271,7 @@ namespace Markdig.Helpers
                 _offset++;
                 if (Start <= End)
                 {
-                    var slice = (StringSlice)_lines.Lines[SliceIndex];
+                    var slice = _lines.Lines[SliceIndex].Slice;
                     if (_offset < slice.Length)
                     {
                         CurrentChar = slice[slice.Start + _offset];
@@ -301,13 +302,27 @@ namespace Markdig.Helpers
                     return '\0';
                 }
 
-                var slice = (StringSlice)_lines.Lines[SliceIndex];
-                if (_offset + offset >= slice.Length)
+                offset += _offset;
+
+                int sliceIndex = SliceIndex;
+                var slice = _lines.Lines[sliceIndex].Slice;
+
+                while (offset > slice.Length)
+                {
+                    // We are not peeking at the same line
+                    offset -= slice.Length + 1; // + 1 for new line
+
+                    Debug.Assert(sliceIndex + 1 < _lines.Lines.Length, "'Start + offset > End' check above should prevent us from indexing out of range");
+                    slice = _lines.Lines[++sliceIndex].Slice;
+                }
+
+                if (offset == slice.Length)
                 {
                     return '\n';
                 }
 
-                return slice[slice.Start + _offset + offset];
+                Debug.Assert(offset < slice.Length);
+                return slice[slice.Start + offset];
             }
 
             public bool TrimStart()
