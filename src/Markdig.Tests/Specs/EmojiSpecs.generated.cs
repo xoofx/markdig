@@ -1,4 +1,4 @@
-// Generated: 2019-04-15 05:20:50
+// Generated: 2020-01-13 21:08:58
 
 // --------------------------------
 //               Emoji
@@ -18,7 +18,7 @@ namespace Markdig.Tests.Specs.Emoji
         // 
         // ## Emoji
         // 
-        // Emoji and smiley can be converted to their respective unicode characters:
+        // Emoji shortcodes and smileys can be converted to their respective unicode characters:
         [Test]
         public void ExtensionsEmoji_Example001()
         {
@@ -52,7 +52,7 @@ namespace Markdig.Tests.Specs.Emoji
             TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
         }
 
-        // Emoji can be followed by close punctuation (or any other characters):
+        // Emojis can be followed by close punctuation (or any other characters):
         [Test]
         public void ExtensionsEmoji_Example003()
         {
@@ -69,7 +69,7 @@ namespace Markdig.Tests.Specs.Emoji
             TestParser.TestSpec("We all need :), it makes us :muscle:. (and :ok_hand:).", "<p>We all need 😃, it makes us 💪. (and 👌).</p>", "emojis|advanced+emojis");
         }
 
-        // Sentences can end with Emoji:
+        // Sentences can end with emojis:
         [Test]
         public void ExtensionsEmoji_Example004()
         {

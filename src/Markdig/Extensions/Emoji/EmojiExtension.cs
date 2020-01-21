@@ -7,24 +7,24 @@ using Markdig.Renderers;
 namespace Markdig.Extensions.Emoji
 {
     /// <summary>
-    /// Extension to allow emoji and smiley replacement.
+    /// Extension to allow emoji shortcodes and smileys replacement.
     /// </summary>
     /// <seealso cref="Markdig.IMarkdownExtension" />
     public class EmojiExtension : IMarkdownExtension
     {
-        public EmojiExtension(bool enableSmiley = true)
+        public EmojiExtension(EmojiMapping emojiMapping)
         {
-            EnableSmiley = enableSmiley;
+            EmojiMapping = emojiMapping;
         }
 
-        public bool EnableSmiley { get; set; }
+        public EmojiMapping EmojiMapping { get; }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<EmojiParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new EmojiParser(EnableSmiley));
+                pipeline.InlineParsers.Insert(0, new EmojiParser(EmojiMapping));
             }
         }
 

@@ -93,7 +93,7 @@ namespace Markdig
                 .UseAutoLinks()
                 .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
         }
-        
+
         /// <summary>
         /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
         /// </summary>
@@ -421,20 +421,35 @@ namespace Markdig
         }
 
         /// <summary>
-        /// Uses the emoji and smiley extension.
+        /// Uses the emojis and smileys extension.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <param name="enableSmiley">Enable smiley in addition to Emoji, <c>true</c> by default.</param>
+        /// <param name="enableSmileys">Enable smileys in addition to emoji shortcodes, <c>true</c> by default.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmiley = true)
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, bool enableSmileys = true)
         {
             if (!pipeline.Extensions.Contains<EmojiExtension>())
             {
-                pipeline.Extensions.Add(new EmojiExtension(enableSmiley));
+                var emojiMapping = enableSmileys ? EmojiMapping.DefaultEmojisAndSmileysMapping : EmojiMapping.DefaultEmojisOnlyMapping;
+                pipeline.Extensions.Add(new EmojiExtension(emojiMapping));
             }
             return pipeline;
         }
 
+        /// <summary>
+        /// Uses the emojis and smileys extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="customEmojiMapping">Enable customization of the emojis and smileys mapping.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseEmojiAndSmiley(this MarkdownPipelineBuilder pipeline, EmojiMapping customEmojiMapping)
+        {
+            if (!pipeline.Extensions.Contains<EmojiExtension>())
+            {
+                pipeline.Extensions.Add(new EmojiExtension(customEmojiMapping));
+            }
+            return pipeline;
+        }
         /// <summary>
         /// Add rel=nofollow to all links rendered to HTML.
         /// </summary>
