@@ -159,6 +159,13 @@ namespace Markdig.Tests
 
         static TestParser()
         {
+            const string RunningInsideVisualStudioPath = "\\src\\.vs\\markdig\\";
+            int index = TestsDirectory.IndexOf(RunningInsideVisualStudioPath);
+            if (index != -1)
+            {
+                TestsDirectory = TestsDirectory.Substring(0, index) + "\\src\\Markdig.Tests";
+            }
+
             SpecsFilePaths = Directory.GetDirectories(TestsDirectory)
                 .Where(dir => dir.EndsWith("Specs"))
                 .SelectMany(dir => Directory.GetFiles(dir)
