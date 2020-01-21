@@ -393,11 +393,11 @@ namespace Markdig.Helpers
             return (((highSurrogate - HighSurrogateStart) * 0x400) + (lowSurrogate - LowSurrogateStart) + UnicodePlane01Start);
         }
 
-        public static IEnumerable<int> ToUtf32(string text)
+        public static IEnumerable<int> ToUtf32(StringSlice text)
         {
-            for (int i = 0; i < text.Length; i++)
+            for (int i = text.Start; i <= text.End; i++)
             {
-                if (IsHighSurrogate(text[i]) && i < text.Length - 1 && IsLowSurrogate(text[i + 1]))
+                if (IsHighSurrogate(text[i]) && i < text.End && IsLowSurrogate(text[i + 1]))
                 {
                     yield return ConvertToUtf32(text[i], text[i + 1]);
                 }

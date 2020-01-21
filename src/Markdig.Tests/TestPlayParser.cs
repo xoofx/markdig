@@ -57,7 +57,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
 > some other text";
             var doc = Markdown.Parse(text);
 
-            Assert.True(doc.Descendants().OfType<LiteralInline>().All(x => !x.Content.IsEmpty),
+            Assert.True(doc.Descendants<LiteralInline>().All(x => !x.Content.IsEmpty),
                 "There should not have any empty literals");
         }
 
