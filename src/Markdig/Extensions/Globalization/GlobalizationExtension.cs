@@ -38,7 +38,7 @@ namespace Markdig.Extensions.Globalization
                     var attributes = node.GetAttributes();
                     attributes.AddPropertyIfNotExist("dir", "rtl");
 
-                    if (node is Table table)
+                    if (node is Table)
                     {
                         attributes.AddPropertyIfNotExist("align", "right");
                     }
@@ -71,19 +71,16 @@ namespace Markdig.Extensions.Globalization
             }
             else if (item is LiteralInline literal)
             {
-                return StartsWithRtlCharacter(literal.ToString());
+                return StartsWithRtlCharacter(literal.Content);
             }
 
-            foreach (var descendant in item.Descendants())
+            foreach (var paragraph in item.Descendants<ParagraphBlock>())
             {
-                if (descendant is ParagraphBlock p)
+                foreach (var inline in paragraph.Inline)
                 {
-                    foreach (var i in p.Inline)
+                    if (inline is LiteralInline literal)
                     {
-                        if (i is LiteralInline l)
-                        {
-                            return StartsWithRtlCharacter(l.ToString());
-                        }
+                        return StartsWithRtlCharacter(literal.Content);
                     }
                 }
             }
@@ -91,9 +88,9 @@ namespace Markdig.Extensions.Globalization
             return false;
         }
 
-        private bool StartsWithRtlCharacter(string text)
+        private bool StartsWithRtlCharacter(StringSlice slice)
         {
-            foreach (var c in CharHelper.ToUtf32(text))
+            foreach (var c in CharHelper.ToUtf32(slice))
             {
                 if (CharHelper.IsRightToLeft(c))
                     return true;

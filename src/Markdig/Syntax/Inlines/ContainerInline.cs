@@ -1,9 +1,11 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+using Markdig.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace Markdig.Syntax.Inlines
@@ -94,8 +96,20 @@ namespace Markdig.Syntax.Inlines
         /// <returns>An enumeration of T</returns>
         public IEnumerable<T> FindDescendants<T>() where T : Inline
         {
-            // Fast-path an empty container to avoid allocating a Stack
-            if (LastChild == null) yield break;
+            if (FirstChild is null)
+            {
+                return ArrayHelper<T>.Empty;
+            }
+            else
+            {
+                return FindDescendantsInternal<T>();
+            }
+        }
+        internal IEnumerable<T> FindDescendantsInternal<T>() where T : MarkdownObject
+        {
+#if !UAP
+            Debug.Assert(typeof(T).IsSubclassOf(typeof(Inline)));
+#endif
 
             Stack<Inline> stack = new Stack<Inline>();
 

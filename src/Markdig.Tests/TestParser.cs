@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.JiraLinks;
+using Markdig.Syntax;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -151,6 +152,11 @@ namespace Markdig.Tests
         /// Contains the markdown source for specification files (order is the same as in <see cref="SpecsFilePaths"/>)
         /// </summary>
         public static readonly string[] SpecsMarkdown;
+        /// <summary>
+        /// Contains the markdown syntax tree for specification files (order is the same as in <see cref="SpecsFilePaths"/>)
+        /// </summary>
+        public static readonly MarkdownDocument[] SpecsSyntaxTrees;
+
         static TestParser()
         {
             SpecsFilePaths = Directory.GetDirectories(TestsDirectory)
@@ -161,10 +167,16 @@ namespace Markdig.Tests
                 .ToArray();
 
             SpecsMarkdown = new string[SpecsFilePaths.Length];
+            SpecsSyntaxTrees = new MarkdownDocument[SpecsFilePaths.Length];
+
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .Build();
 
             for (int i = 0; i < SpecsFilePaths.Length; i++)
             {
-                SpecsMarkdown[i] = File.ReadAllText(SpecsFilePaths[i]);
+                string markdown = SpecsMarkdown[i] = File.ReadAllText(SpecsFilePaths[i]);
+                SpecsSyntaxTrees[i] = Markdown.Parse(markdown, pipeline);
             }
         }
     }

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Markdig.Extensions.Footnotes;
-using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -147,7 +146,7 @@ literal      ( 0, 6)  6-7
         public void TestFootnoteLinkReferenceDefinition()
         {
             //                             01 2 345678
-            var footnote = Markdown.Parse("0\n\n [^1]:", new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseFootnotes().Build()).Descendants().OfType<FootnoteLinkReferenceDefinition>().FirstOrDefault();
+            var footnote = Markdown.Parse("0\n\n [^1]:", new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseFootnotes().Build()).Descendants<FootnoteLinkReferenceDefinition>().FirstOrDefault();
             Assert.NotNull(footnote);
 
             Assert.AreEqual(2, footnote.Line);
@@ -160,7 +159,7 @@ literal      ( 0, 6)  6-7
         {
             //                         0         1
             //                         0123456789012345
-            var link = Markdown.Parse("[234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            var link = Markdown.Parse("[234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<LinkReferenceDefinition>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(0, link.Line);
@@ -175,7 +174,7 @@ literal      ( 0, 6)  6-7
         {
             //                         0          1
             //                         01 2 34567890123456789
-            var link = Markdown.Parse("0\n\n [234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkReferenceDefinition>().FirstOrDefault();
+            var link = Markdown.Parse("0\n\n [234]: /56 'yo' ", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<LinkReferenceDefinition>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(2, link.Line);
@@ -213,7 +212,7 @@ literal      ( 0, 4)  4-5
         {
             //                         0           1
             //                         01 2 3456789012345
-            var link = Markdown.Parse("0\n\n01 [234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            var link = Markdown.Parse("0\n\n01 [234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<LinkInline>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
@@ -226,7 +225,7 @@ literal      ( 0, 4)  4-5
         {
             //                         0           1
             //                         01 2 34567890123456789
-            var link = Markdown.Parse("0\n\n01 [234](/56 'yo')", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            var link = Markdown.Parse("0\n\n01 [234](/56 'yo')", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<LinkInline>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(new SourceSpan(7, 9), link.LabelSpan);
@@ -240,7 +239,7 @@ literal      ( 0, 4)  4-5
         {
             //                         0           1
             //                         01 2 3456789012345
-            var link = Markdown.Parse("0\n\n01![234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<LinkInline>().FirstOrDefault();
+            var link = Markdown.Parse("0\n\n01![234](/56)", new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<LinkInline>().FirstOrDefault();
             Assert.NotNull(link);
 
             Assert.AreEqual(new SourceSpan(5, 15), link.Span);
@@ -408,7 +407,7 @@ literal      ( 1, 2)  6-6
 6. Bar
 987123. FooBar";
             test = test.Replace("\r\n", "\n");
-            var list = Markdown.Parse(test, new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants().OfType<ListBlock>().FirstOrDefault();
+            var list = Markdown.Parse(test, new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build()).Descendants<ListBlock>().FirstOrDefault();
             Assert.NotNull(list);
 
             Assert.AreEqual(1, list.Line);
