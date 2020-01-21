@@ -177,7 +177,7 @@ namespace Markdig.Helpers
         {
             // 2.1 Characters and lines 
             // A whitespace character is a space(U + 0020), tab(U + 0009), newline(U + 000A), line tabulation (U + 000B), form feed (U + 000C), or carriage return (U + 000D).
-            return c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
+            return c <= ' ' && (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -304,7 +304,7 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsAlpha(this char c)
         {
-            return ((uint)(c - 'a') <= ('z' - 'a')) || ((uint)(c - 'A') <= ('Z' - 'A'));
+            return (uint)((c - 'A') & ~0x20) <= ('Z' - 'A');
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
@@ -371,14 +371,18 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsHighSurrogate(char c)
         {
-            return ((c >= HighSurrogateStart) && (c <= HighSurrogateEnd));
+            return IsInInclusiveRange(c, HighSurrogateStart, HighSurrogateEnd);
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
         public static bool IsLowSurrogate(char c)
         {
-            return ((c >= LowSurrogateStart) && (c <= LowSurrogateEnd));
+            return IsInInclusiveRange(c, LowSurrogateStart, LowSurrogateEnd);
         }
+
+        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        private static bool IsInInclusiveRange(char c, char min, char max)
+            => (uint) (c - min) <= (uint) (max - min);
 
         public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
         {
@@ -399,7 +403,8 @@ namespace Markdig.Helpers
             {
                 if (IsHighSurrogate(text[i]) && i < text.End && IsLowSurrogate(text[i + 1]))
                 {
-                    yield return ConvertToUtf32(text[i], text[i + 1]);
+                    Debug.Assert(char.IsSurrogatePair(text[i], text[i + 1]));
+                    yield return char.ConvertToUtf32(text[i], text[i + 1]);
                 }
                 else
                 {
