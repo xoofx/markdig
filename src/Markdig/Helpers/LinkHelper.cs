@@ -101,15 +101,13 @@ namespace Markdig.Helpers
             var headingBuffer = StringBuilderCache.Local();
             for (int i = 0; i < headingText.Length; i++)
             {
-                var c = char.ToLowerInvariant(headingText[i]);
+                var c = headingText[i];
                 if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
                 {
-                    headingBuffer.Append(c == ' ' ? '-' : c);
+                    headingBuffer.Append(c == ' ' ? '-' : char.ToLowerInvariant(c));
                 }
             }
-            var result = headingBuffer.ToString();
-            headingBuffer.Length = 0;
-            return result;
+            return headingBuffer.GetStringAndReset();
         }
 
         [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
