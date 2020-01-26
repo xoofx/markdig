@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig", "Markdig\Markdig.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.Signed", "Markdig.Signed\Markdig.Signed.csproj", "{C37C7B94-1219-4ED9-ABAC-C0B4B8FE8750}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdig.Tests", "Markdig.Tests\Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.Tests", "Markdig.Tests\Markdig.Tests.csproj", "{A0C5CB5F-5568-40AB-B945-D6D2664D51B0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A58A7E2-627C-4F41-933F-5AC92ADFAB48} = {8A58A7E2-627C-4F41-933F-5AC92ADFAB48}
 	EndProjectSection
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFileGen", "SpecFileGen\SpecFileGen.csproj", "{DB6E2ED5-7884-4E97-84AF-35E2480CF685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecFileGen", "SpecFileGen\SpecFileGen.csproj", "{DB6E2ED5-7884-4E97-84AF-35E2480CF685}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

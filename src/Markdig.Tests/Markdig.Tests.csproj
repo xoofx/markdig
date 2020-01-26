@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
+  	<TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
     <OutputType>Library</OutputType>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
