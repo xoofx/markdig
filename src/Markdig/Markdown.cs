@@ -17,11 +17,7 @@ namespace Markdig
     /// </summary>
     public static partial class Markdown
     {
-#if UAP
-        public static readonly string Version = typeof(Markdown).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-#else
         public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
-#endif
 
         /// <summary>
         /// Normalizes the specified markdown to a normalized markdown text.
