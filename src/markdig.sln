@@ -5,8 +5,8 @@ VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
 	ProjectSection(SolutionItems) = preProject
-		..\appveyor.yml = ..\appveyor.yml
 		..\changelog.md = ..\changelog.md
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
 		..\license.txt = ..\license.txt
 		..\readme.md = ..\readme.md
 	EndProjectSection
@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.Benchmarks", "Markd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig.WebApp", "Markdig.WebApp\Markdig.WebApp.csproj", "{3CAD9801-9976-46BE-BACA-F6D0D21FDC00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnicodeNormDApp", "UnicodeNormDApp\UnicodeNormDApp.csproj", "{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnicodeNormDApp", "UnicodeNormDApp\UnicodeNormDApp.csproj", "{33FFC0B9-0187-44F9-9424-BB5AF5B4FB84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mdtoc", "mdtoc\mdtoc.csproj", "{E3CDFF0F-5BFC-42E9-BDBA-2797651900A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecFileGen", "SpecFileGen\SpecFileGen.csproj", "{DB6E2ED5-7884-4E97-84AF-35E2480CF685}"
 EndProject

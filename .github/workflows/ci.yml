@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+    paths-ignore:
+    - 'doc/**'
+    - 'img/**'
+    - 'changelog.md'
+    - 'readme.md'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+
+    - name: Add coveralls.net
+      run: dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
+
+    - name: Build (Release)
+      run: dotnet build src -c Release
+
+    - name: SpecFileGen
+      run: dotnet src/SpecFileGen/bin/Release/netcoreapp2.1/SpecFileGen.dll
+
+    - name: Test (Release)
+      run: dotnet test src -c Release
+
+    - name: Build & Test (Debug)
+      run: dotnet test src -c Debug
+
+    - name: Coveralls
+      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[Markdig]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov  /p:CoverletOutput=./coverage.info
+
+    - name: Coveralls Upload
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: src/Markdig.Tests/coverage.info
+
+    - name: Pack
+      run: dotnet pack src -c Release
+
+    - name: Publish
+      if: github.event_name == 'push'
+      run: |      
+          if ( "${{github.ref}}" -match "^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$" ) {
+              dotnet nuget push src/Markdig/bin/Release/*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
+              dotnet nuget push src/Markdig.Signed/bin/Release/*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
+          } else {
+              echo "publish is only enabled by tagging with a release tag"
+          }
