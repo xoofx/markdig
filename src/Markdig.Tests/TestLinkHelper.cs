@@ -322,6 +322,16 @@ namespace Markdig.Tests
             Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
         }
 
+        [TestCase("Header identifiers in HTML", "header-identifiers-in-html")]
+        [TestCase("* Dogs*?--in *my* house?", "-dogs--in-my-house")]
+        [TestCase("[HTML], [S5], or [RTF]?", "html-s5-or-rtf")]
+        [TestCase("3. Applications", "3-applications")]
+        [TestCase("33", "33")]
+        public void TestUrilizeGfm(string input, string expectedResult)
+        {
+            Assert.AreEqual(expectedResult, LinkHelper.UrilizeAsGfm(input));
+        }
+
         [TestCase("abc", "abc")]
         [TestCase("a-c", "a-c")]
         [TestCase("a c", "a-c")]

@@ -1,11 +1,13 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Markdig.Helpers
 {
     /// <summary>
     /// Inspired by CoreLib, taken from https://github.com/MihaZupan/SharpCollections, cc @MihaZupan
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class ThrowHelper
     {
         public static void ThrowArgumentNullException(ExceptionArgument argument)

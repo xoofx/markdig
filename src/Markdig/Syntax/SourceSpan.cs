@@ -55,8 +55,7 @@ namespace Markdig.Syntax
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is SourceSpan && Equals((SourceSpan) obj);
+            return obj is SourceSpan sourceSpan && Equals(sourceSpan);
         }
 
         public override int GetHashCode()

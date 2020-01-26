@@ -158,6 +158,10 @@ namespace Markdig.Syntax
             {
                 throw new ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
             }
+            if (index < 0 || index > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
             if (Count == children.Length)
             {
                 EnsureCapacity(Count + 1);

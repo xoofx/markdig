@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 /*
@@ -25,6 +26,7 @@ namespace Markdig.Helpers
     /// <para>Something between a Trie and a full Radix tree, but stored linearly in memory</para>
     /// </summary>
     /// <typeparam name="TValue">The value associated with the key</typeparam>
+    [ExcludeFromCodeCoverage]
     internal sealed class CompactPrefixTree<TValue>
 //#if !LEGACY
 //        : IReadOnlyDictionary<string, TValue>, IReadOnlyList<KeyValuePair<string, TValue>>
