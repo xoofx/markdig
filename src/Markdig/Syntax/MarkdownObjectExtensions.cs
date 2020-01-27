@@ -72,15 +72,6 @@ namespace Markdig.Syntax
         /// <returns>An iteration over the descendant elements</returns>
         public static IEnumerable<T> Descendants<T>(this MarkdownObject markdownObject) where T : MarkdownObject
         {
-#if UAP
-            foreach (MarkdownObject descendant in markdownObject.Descendants())
-            {
-                if (descendant is T descendantT)
-                {
-                    yield return descendantT;
-                }
-            }
-#else
             if (typeof(T).IsSubclassOf(typeof(Block)))
             {
                 if (markdownObject is ContainerBlock containerBlock && containerBlock.Count > 0)
@@ -104,7 +95,6 @@ namespace Markdig.Syntax
             }
 
             return ArrayHelper<T>.Empty;
-#endif
         }
 
         /// <summary>
@@ -140,9 +130,7 @@ namespace Markdig.Syntax
 
         private static IEnumerable<T> BlockDescendantsInternal<T>(ContainerBlock block) where T : MarkdownObject
         {
-#if !UAP
             Debug.Assert(typeof(T).IsSubclassOf(typeof(Block)));
-#endif
 
             Stack<Block> stack = new Stack<Block>();
 
@@ -173,9 +161,7 @@ namespace Markdig.Syntax
 
         private static IEnumerable<T> InlineDescendantsInternal<T>(ContainerBlock block) where T : MarkdownObject
         {
-#if !UAP
             Debug.Assert(typeof(T).IsSubclassOf(typeof(Inline)));
-#endif
 
             foreach (MarkdownObject descendant in block.Descendants())
             {

@@ -1,6 +1,4 @@
-#if NET35 || UAP
-using System;
-
+#if NET35
 namespace System.Diagnostics.CodeAnalysis
 {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = false)]

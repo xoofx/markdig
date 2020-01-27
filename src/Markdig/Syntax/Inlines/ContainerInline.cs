@@ -107,9 +107,7 @@ namespace Markdig.Syntax.Inlines
         }
         internal IEnumerable<T> FindDescendantsInternal<T>() where T : MarkdownObject
         {
-#if !UAP
             Debug.Assert(typeof(T).IsSubclassOf(typeof(Inline)));
-#endif
 
             Stack<Inline> stack = new Stack<Inline>();
 
