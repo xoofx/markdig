@@ -84,7 +84,7 @@ var result = Markdown.ToHtml("This is a text with some *emphasis*");
 Console.WriteLine(result);   // prints: <p>This is a text with some <em>emphasis</em></p>
 ```
 
-In order to activate most of all advanced extensions (except Emoji, SoftLine as HardLine, JiraLinks and SmartyPants)
+In order to activate most of all advanced extensions (except Emoji, SoftLine as HardLine, Bootstrap, YAML frontmatter, JiraLinks and SmartyPants)
 
 ```csharp
 // Configure the pipeline with all advanced extensions active
