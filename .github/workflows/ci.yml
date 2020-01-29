@@ -1,5 +1,8 @@
 name: ci
 
+env:
+  PROJECT_NAME: Markdig
+
 on:
   push:
     paths-ignore:
@@ -38,13 +41,13 @@ jobs:
       run: dotnet test src -c Debug
 
     - name: Coveralls
-      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[Markdig]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov  /p:CoverletOutput=./coverage.info
+      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov  /p:CoverletOutput=./coverage.info
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: src/Markdig.Tests/coverage.info
+        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.info
 
     - name: Pack
       run: dotnet pack src -c Release
@@ -53,8 +56,8 @@ jobs:
       if: github.event_name == 'push'
       run: |      
           if ( "${{github.ref}}" -match "^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$" ) {
-              dotnet nuget push src/Markdig/bin/Release/*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
-              dotnet nuget push src/Markdig.Signed/bin/Release/*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
+              dotnet nuget push src\${{env.PROJECT_NAME}}\bin\Release\*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
+              dotnet nuget push src\${{env.PROJECT_NAME}}.Signed\bin\Release\*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
           } else {
               echo "publish is only enabled by tagging with a release tag"
           }
