@@ -116,11 +116,11 @@ namespace Markdig.Parsers
                 var lineText = lineReader.ReadLine();
                 
                 // If this is the end of file and the last line is empty
-                if (lineText == null)
+                if (lineText.Text is null)
                 {
                     break;
                 }
-                blockProcessor.ProcessLine(lineText.Value);
+                blockProcessor.ProcessLine(lineText);
             }
             blockProcessor.CloseAll(true);
         }
