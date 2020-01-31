@@ -27,18 +27,14 @@ namespace Markdig.Helpers
         public CharacterMap(IEnumerable<KeyValuePair<char, T>> maps)
         {
             if (maps == null) throw new ArgumentNullException(nameof(maps));
-            var charCounter = new Dictionary<char, int>();
+            var charSet = new HashSet<char>();
             int maxChar = 0;
 
             foreach (var map in maps)
             {
                 var openingChar = map.Key;
 
-                if (!charCounter.ContainsKey(openingChar))
-                {
-                    charCounter[openingChar] = 0;
-                }
-                charCounter[openingChar]++;
+                charSet.Add(openingChar);
 
                 if (openingChar < 127 && openingChar > maxChar)
                 {
@@ -50,7 +46,7 @@ namespace Markdig.Helpers
                     nonAsciiMap = new Dictionary<char, T>();
                 }
             }
-            OpeningCharacters = charCounter.Keys.ToArray();
+            OpeningCharacters = charSet.ToArray();
             Array.Sort(OpeningCharacters);
 
             asciiMap = new T[maxChar + 1];
