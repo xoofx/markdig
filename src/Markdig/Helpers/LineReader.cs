@@ -1,10 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
 using System;
 using System.IO;
-using System.Text;
 
 namespace Markdig.Helpers
 {
@@ -13,17 +12,16 @@ namespace Markdig.Helpers
     /// </summary>
     public struct LineReader
     {
-        private readonly string text;
+        private readonly string _text;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineReader"/> class.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">bufferSize cannot be &lt;= 0</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">bufferSize cannot be &lt;= 0</exception>
         public LineReader(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            this.text = text;
+            _text = text ?? throw new ArgumentNullException(nameof(text));
             SourcePosition = 0;
         }
 
@@ -36,36 +34,31 @@ namespace Markdig.Helpers
         /// Reads a new line from the underlying <see cref="TextReader"/> and update the <see cref="SourcePosition"/> for the next line.
         /// </summary>
         /// <returns>A new line or null if the end of <see cref="TextReader"/> has been reached</returns>
-        public StringSlice? ReadLine()
+        public StringSlice ReadLine()
         {
-            if (SourcePosition >= text.Length)
-            {
-                return null;
-            }
+            string text = _text;
+            int sourcePosition = SourcePosition;
 
-            var startPosition = SourcePosition;
-            var position = SourcePosition;
-            var slice = new StringSlice(text, startPosition, startPosition);
-            for (;position < text.Length; position++)
+            for (int i = sourcePosition; i < text.Length; i++)
             {
-                var c = text[position];
+                char c = text[i];
                 if (c == '\r' || c == '\n')
                 {
-                    slice.End = position - 1;
-                    if (c == '\r' && position + 1 < text.Length && text[position + 1] == '\n')
-                    {
-                        position++;
-                    }
-                    position++;
-                    SourcePosition = position;
+                    var slice = new StringSlice(text, sourcePosition, i - 1);
+
+                    if (c == '\r' && (uint)(i + 1) < (uint)text.Length && text[i + 1] == '\n')
+                        i++;
+
+                    SourcePosition = i + 1;
                     return slice;
                 }
             }
 
-            slice.End = position - 1;
-            SourcePosition = position;
+            if (sourcePosition >= text.Length)
+                return default;
 
-            return slice;
+            SourcePosition = int.MaxValue;
+            return new StringSlice(text, sourcePosition, text.Length - 1);
         }
-   }
+    }
 }
