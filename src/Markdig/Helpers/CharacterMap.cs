@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -17,7 +18,7 @@ namespace Markdig.Helpers
     {
         private readonly T[] asciiMap;
         private readonly Dictionary<char, T> nonAsciiMap;
-        private readonly bool[] isOpeningCharacter;
+        private readonly BitVector128 isOpeningCharacter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterMap{T}"/> class.
@@ -36,11 +37,11 @@ namespace Markdig.Helpers
 
                 charSet.Add(openingChar);
 
-                if (openingChar < 127 && openingChar > maxChar)
+                if (openingChar < 128 && openingChar > maxChar)
                 {
                     maxChar = openingChar;
                 }
-                else if (openingChar >= 127 && nonAsciiMap == null)
+                else if (openingChar >= 128 && nonAsciiMap == null)
                 {
                     // Initialize only if with have an actual non-ASCII opening character
                     nonAsciiMap = new Dictionary<char, T>();
@@ -50,13 +51,13 @@ namespace Markdig.Helpers
             Array.Sort(OpeningCharacters);
 
             asciiMap = new T[maxChar + 1];
-            isOpeningCharacter = new bool[maxChar + 1];
+            var isOpeningCharacter = new BitVector128();
 
             foreach (var state in maps)
             {
                 var openingChar = state.Key;
                 T stateByChar;
-                if (openingChar < 127)
+                if (openingChar < 128)
                 {
                     stateByChar = asciiMap[openingChar];
 
@@ -64,7 +65,7 @@ namespace Markdig.Helpers
                     {
                         asciiMap[openingChar] = state.Value;
                     }
-                    isOpeningCharacter[openingChar] = true;
+                    isOpeningCharacter.Set(openingChar);
                 }
                 else
                 {
@@ -74,6 +75,8 @@ namespace Markdig.Helpers
                     }
                 }
             }
+
+            this.isOpeningCharacter = isOpeningCharacter;
         }
 
         /// <summary>
@@ -113,19 +116,18 @@ namespace Markdig.Helpers
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
-            var maxChar = isOpeningCharacter.Length;
+            var openingChars = isOpeningCharacter;
 
             unsafe
             {
                 fixed (char* pText = text)
-                fixed (bool* openingChars = isOpeningCharacter)
                 {
                     if (nonAsciiMap == null)
                     {
                         for (int i = start; i <= end; i++)
                         {
                             var c = pText[i];
-                            if (c < maxChar && openingChars[c])
+                            if (c < 128 && openingChars[c])
                             {
                                 return i;
                             }
@@ -136,7 +138,7 @@ namespace Markdig.Helpers
                         for (int i = start; i <= end; i++)
                         {
                             var c = pText[i];
-                            if ((c < maxChar && openingChars[c]) || nonAsciiMap.ContainsKey(c))
+                            if (c < 128 ? openingChars[c] : nonAsciiMap.ContainsKey(c))
                             {
                                 return i;
                             }
@@ -145,6 +147,27 @@ namespace Markdig.Helpers
                 }
             }
             return -1;
+        }
+
+        internal unsafe struct BitVector128
+        {
+            fixed ulong values[2];
+
+            public void Set(char c)
+            {
+                Debug.Assert(c < 128);
+                values[c >> 6] |= (ulong)1 << c;
+            }
+
+            public readonly bool this[char c]
+            {
+                [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+                get
+                {
+                    Debug.Assert(c < 128);
+                    return (values[c >> 6] & (ulong)1 << c) != 0;
+                }
+            }
         }
     }
 }
