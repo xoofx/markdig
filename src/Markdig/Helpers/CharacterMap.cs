@@ -151,12 +151,12 @@ namespace Markdig.Helpers
 
         internal unsafe struct BitVector128
         {
-            fixed ulong values[2];
+            fixed uint values[4];
 
             public void Set(char c)
             {
                 Debug.Assert(c < 128);
-                values[c >> 6] |= (ulong)1 << c;
+                values[c >> 5] |= (uint)1 << c;
             }
 
             public readonly bool this[char c]
@@ -165,7 +165,7 @@ namespace Markdig.Helpers
                 get
                 {
                     Debug.Assert(c < 128);
-                    return (values[c >> 6] & (ulong)1 << c) != 0;
+                    return (values[c >> 5] & (uint)1 << c) != 0;
                 }
             }
         }
