@@ -23,9 +23,10 @@ namespace Markdig.Renderers.Html
 
         protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
         {
-            var headingText = obj.Level > 0 && obj.Level <= 6
-                ? HeadingTexts[obj.Level - 1]
-                : "<h" + obj.Level.ToString(CultureInfo.InvariantCulture);
+            int index = obj.Level - 1;
+            string headingText = ((uint)index < (uint)HeadingTexts.Length)
+                ? HeadingTexts[index]
+                : "h" + obj.Level.ToString(CultureInfo.InvariantCulture);
 
             if (renderer.EnableHtmlForBlock)
             {
