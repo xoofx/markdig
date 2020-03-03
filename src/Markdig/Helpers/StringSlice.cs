@@ -315,7 +315,8 @@ namespace Markdig.Helpers
             // Strip leading spaces
             for (; Start <= End; Start++)
             {
-                if (!Text[Start].IsWhitespace())
+                if (Start < Text.Length
+                    && !Text[Start].IsWhitespace())
                 {
                     break;
                 }
@@ -349,7 +350,8 @@ namespace Markdig.Helpers
         {
             for (; Start <= End; End--)
             {
-                if (!Text[End].IsWhitespace())
+                if (End < Text.Length
+                   && !Text[End].IsWhitespace())
                 {
                     break;
                 }
