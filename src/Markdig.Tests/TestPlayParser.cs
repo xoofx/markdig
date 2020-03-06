@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 using System;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace Markdig.Tests
             var link = doc.Descendants<ParagraphBlock>().SelectMany(x => x.Inline.Descendants<LinkInline>()).FirstOrDefault(l => l.IsImage);
             Assert.AreEqual("/yoyo", link?.Url);
         }
-        
+
         [Test]
         public void TestListBug2()
         {
@@ -53,7 +53,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
         [Test]
         public void TestEmptyLiteral()
         {
-            var text = @"> *some text* 
+            var text = @"> *some text*
 > some other text";
             var doc = Markdown.Parse(text);
 
@@ -195,8 +195,8 @@ Paragraph
 ";
 
             var expected = @"<table class=""table"">
-<col style=""width:50%"">
-<col style=""width:50%"">
+<col style=""width:50%"" />
+<col style=""width:50%"" />
 <thead>
 <tr>
 <th>a</th>
@@ -219,7 +219,7 @@ Paragraph
         {
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
-            // Reuse the same pipeline 
+            // Reuse the same pipeline
             var result1 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);
             var result2 = Markdown.ToHtml("This is a \"\"citation\"\"", pipeline);
 
@@ -269,7 +269,7 @@ Paragraph
         //| Yes                               |
         //| ```                               |
         //+===================================+======================================+
-        //| This is a second line             | 
+        //| This is a second line             |
         //+-----------------------------------+--------------------------------------+
 
         //:::spoiler  {#yessss}
