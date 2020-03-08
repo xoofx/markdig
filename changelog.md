@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.18.2 (8 Mar 2020)
+- Optimize LineReader.ReadLine in [PR #393](https://github.com/lunet-io/markdig/pull/393)
+- Use HashSet<T> instead of Dictionary<TKey, TValue> in CharacterMap<T> in [PR #394](https://github.com/lunet-io/markdig/pull/394)
+- Use BitVector128 in CharacterMap<T> in [PR #396](https://github.com/lunet-io/markdig/pull/396)
+- Optimizations in StringLineGroup in [PR #399](https://github.com/lunet-io/markdig/pull/399)
+- Fixed a bug in HeadingRenderer in [PR #402](https://github.com/lunet-io/markdig/pull/402)
+- Fixes issue #303 in [PR #404](https://github.com/lunet-io/markdig/pull/404)
+- Make output of HtmlTableRenderer XML wellformed in [PR #406](https://github.com/lunet-io/markdig/pull/406)
+
 ## 0.18.1 (21 Jan 2020)
 - Re-allow emojis and smileys customization, that was broken in [PR #308](https://github.com/lunet-io/markdig/pull/308) ([PR #386](https://github.com/lunet-io/markdig/pull/386))
 - Add `IHostProvider` for medialink customization (#337), support protocol-less url (#135) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
@@ -11,7 +20,6 @@
 - Fix generic attributes with values of length 1 ([(PR #361)](https://github.com/lunet-io/markdig/pull/361))
 - Fix link text balanced bracket matching ([(PR #375)](https://github.com/lunet-io/markdig/pull/375))
 - Improve overall performance and substantially reduce allocations ([(PR #377)](https://github.com/lunet-io/markdig/pull/377))
-
 
 ## 0.17.1 (04 July 2019)
 - Fix regression when escaping HTML characters ([(PR #340)](https://github.com/lunet-io/markdig/pull/340))
