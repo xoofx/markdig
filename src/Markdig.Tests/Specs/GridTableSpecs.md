@@ -42,8 +42,8 @@ The following is a valid row separator
 | This is | a table |
 .
 <table>
-<col style="width:50%">
-<col style="width:50%">
+<col style="width:50%" />
+<col style="width:50%" />
 <tbody>
 <tr>
 <td>This is</td>
@@ -74,9 +74,9 @@ A regular row can continue a previous regular row when column separator `|` are 
 | Col1c                       |
 .
 <table>
-<col style="width:33.33%">
-<col style="width:33.33%">
-<col style="width:33.33%">
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
 <tbody>
 <tr>
 <td>Col1
@@ -105,8 +105,8 @@ A row header is separated using `+========+` instead of `+---------+`:
 +=========+=========+
 .
 <table>
-<col style="width:50%">
-<col style="width:50%">
+<col style="width:50%" />
+<col style="width:50%" />
 <thead>
 <tr>
 <th>This is</th>
@@ -123,8 +123,8 @@ The last column separator `|` may be omitted:
 | This is | a table with a longer text in the second column
 .
 <table>
-<col style="width:50%">
-<col style="width:50%">
+<col style="width:50%" />
+<col style="width:50%" />
 <tbody>
 <tr>
 <td>This is</td>
@@ -150,9 +150,9 @@ So the width would be 4/16 = 25%, 8/16 = 50%, 4/16 = 25%
 +----+--------+----+
 .
 <table>
-<col style="width:25%">
-<col style="width:50%">
-<col style="width:25%">
+<col style="width:25%" />
+<col style="width:50%" />
+<col style="width:25%" />
 <tbody>
 <tr>
 <td>A</td>
@@ -172,9 +172,9 @@ Alignment might be specified on the first row using the character `:`:
 +-----+-----+-----+
 .
 <table>
-<col style="width:33.33%">
-<col style="width:33.33%">
-<col style="width:33.33%">
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
 <tbody>
 <tr>
 <td>A</td>
@@ -197,9 +197,9 @@ Alignment might be specified on the first row using the character `:`:
 +---+---+---+
 .
 <table>
-<col style="width:33.33%">
-<col style="width:33.33%">
-<col style="width:33.33%">
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
 <tbody>
 <tr>
 <td colspan="2">AAAAA</td>
@@ -232,9 +232,9 @@ A grid table may have cells with both colspan and rowspan:
 +---+---+---+
 .
 <table>
-<col style="width:33.33%">
-<col style="width:33.33%">
-<col style="width:33.33%">
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
 <tbody>
 <tr>
 <td colspan="2" rowspan="2">AAAAA
