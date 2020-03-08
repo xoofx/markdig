@@ -58,6 +58,11 @@ namespace Markdig.Extensions.Tables
                     var rowSpan = cell.RowSpan - 1;
                     while (rowSpan > 0)
                     {
+                        if (i+rowSpan > (rows.Length-1))
+                        {
+                            return false;
+                        }
+
                         rows[i + rowSpan] += cell.ColumnSpan;
                         rowSpan--;
                     }
