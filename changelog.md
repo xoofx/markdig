@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.18.3 (8 Mar 2020)
+- Publish NuGet Symbol packages
+
 ## 0.18.2 (8 Mar 2020)
 - Optimize LineReader.ReadLine in [PR #393](https://github.com/lunet-io/markdig/pull/393)
 - Use HashSet<T> instead of Dictionary<TKey, TValue> in CharacterMap<T> in [PR #394](https://github.com/lunet-io/markdig/pull/394)
