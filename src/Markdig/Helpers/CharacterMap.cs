@@ -51,7 +51,7 @@ namespace Markdig.Helpers
             Array.Sort(OpeningCharacters);
 
             asciiMap = new T[maxChar + 1];
-            var isOpeningCharacter = new BitVector128();
+            isOpeningCharacter = new BitVector128();
 
             foreach (var state in maps)
             {
@@ -75,8 +75,6 @@ namespace Markdig.Helpers
                     }
                 }
             }
-
-            this.isOpeningCharacter = isOpeningCharacter;
         }
 
         /// <summary>
@@ -116,8 +114,6 @@ namespace Markdig.Helpers
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
-            var openingChars = isOpeningCharacter;
-
             unsafe
             {
                 fixed (char* pText = text)
@@ -127,7 +123,7 @@ namespace Markdig.Helpers
                         for (int i = start; i <= end; i++)
                         {
                             var c = pText[i];
-                            if (c < 128 && openingChars[c])
+                            if (c < 128 && isOpeningCharacter[c])
                             {
                                 return i;
                             }
@@ -138,7 +134,7 @@ namespace Markdig.Helpers
                         for (int i = start; i <= end; i++)
                         {
                             var c = pText[i];
-                            if (c < 128 ? openingChars[c] : nonAsciiMap.ContainsKey(c))
+                            if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap.ContainsKey(c))
                             {
                                 return i;
                             }
@@ -149,7 +145,7 @@ namespace Markdig.Helpers
             return -1;
         }
 
-        internal unsafe struct BitVector128
+        private unsafe struct BitVector128
         {
             fixed uint values[4];
 
