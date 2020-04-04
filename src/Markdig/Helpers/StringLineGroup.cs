@@ -82,7 +82,7 @@ namespace Markdig.Helpers
         /// Adds the specified line to this instance.
         /// </summary>
         /// <param name="line">The line.</param>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(ref StringLine line)
         {
             if (Count == Lines.Length) IncreaseCapacity();
@@ -93,7 +93,7 @@ namespace Markdig.Helpers
         /// Adds the specified slice to this instance.
         /// </summary>
         /// <param name="slice">The slice.</param>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(StringSlice slice)
         {
             if (Count == Lines.Length) IncreaseCapacity();

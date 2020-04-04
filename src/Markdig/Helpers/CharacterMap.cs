@@ -91,7 +91,7 @@ namespace Markdig.Helpers
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
         public T this[char openingChar]
         {
-            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 T map = null;
@@ -161,7 +161,7 @@ namespace Markdig.Helpers
 
             public readonly bool this[char c]
             {
-                [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     Debug.Assert(c < 128);

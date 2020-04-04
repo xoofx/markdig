@@ -147,7 +147,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(string content)
         {
             WriteIndent();
@@ -161,7 +161,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="slice">The slice.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(ref StringSlice slice)
         {
             if (slice.Start > slice.End)
@@ -176,7 +176,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="slice">The slice.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(StringSlice slice)
         {
             return Write(ref slice);
@@ -187,7 +187,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(char content)
         {
             WriteIndent();
@@ -241,7 +241,7 @@ namespace Markdig.Renderers
         /// Writes a newline.
         /// </summary>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T WriteLine()
         {
             WriteIndent();
@@ -255,7 +255,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T WriteLine(string content)
         {
             WriteIndent();
@@ -269,7 +269,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="leafBlock">The leaf block.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T WriteLeafInline(LeafBlock leafBlock)
         {
             if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));

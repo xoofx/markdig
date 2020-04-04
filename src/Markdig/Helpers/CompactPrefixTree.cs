@@ -120,7 +120,7 @@ namespace Markdig.Helpers
                 }
             }
         }
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureTreeCapacity(int min)
         {
             if (_tree.Length < min)
@@ -169,7 +169,7 @@ namespace Markdig.Helpers
                 }
             }
         }
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureCapacity(int min)
         {
             // Expansion logic as in System.Collections.Generic.List<T>
@@ -227,7 +227,7 @@ namespace Markdig.Helpers
                 }
             }
         }
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureChildrenCapacity(int min)
         {
             if (_children.Length < min)
@@ -254,7 +254,7 @@ namespace Markdig.Helpers
 
         // Inspired by Markdig's CharacterMap
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool TryGetRoot(char rootChar, out int rootNodeIndex)
         {
             if (rootChar < 128)
@@ -338,7 +338,7 @@ namespace Markdig.Helpers
         /// <returns>The key/value pair of the element at the specified index</returns>
         public KeyValuePair<string, TValue> this[int index]
         {
-            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
