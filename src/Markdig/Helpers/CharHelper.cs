@@ -60,7 +60,10 @@ namespace Markdig.Helpers
         private const int UnicodePlane01Start = 0x10000;
 
         // We don't support LCDM
-        private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 } };
+        private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int>(6) {
+            { 'i', 1 }, { 'v', 5 }, { 'x', 10 },
+            { 'I', 1 }, { 'V', 5 }, { 'X', 10 }
+        };
 
         private static readonly char[] punctuationExceptions = { '−', '-', '†', '‡' };
 
@@ -104,36 +107,35 @@ namespace Markdig.Helpers
             }
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsRomanLetterPartial(char c)
         {
             // We don't support LCDM
             return IsRomanLetterLowerPartial(c) || IsRomanLetterUpperPartial(c);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsRomanLetterLowerPartial(char c)
         {
             // We don't support LCDM
             return c == 'i' || c == 'v' || c == 'x';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsRomanLetterUpperPartial(char c)
         {
             // We don't support LCDM
             return c == 'I' || c == 'V' || c == 'X';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public static int RomanToArabic(string text)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int RomanToArabic(ReadOnlySpan<char> text)
         {
             int result = 0;
             for (int i = 0; i < text.Length; i++)
             {
-                var character = char.ToUpperInvariant(text[i]);
-                var candidate = romanMap[character];
-                if (i + 1 < text.Length && candidate < romanMap[char.ToUpperInvariant(text[i + 1])])
+                var candidate = romanMap[text[i]];
+                if ((uint)(i + 1) < text.Length && candidate < romanMap[text[i + 1]])
                 {
                     result -= candidate;
                 }
@@ -145,7 +147,7 @@ namespace Markdig.Helpers
             return result;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int AddTab(int column)
         {
             // return ((column + TabSize) / TabSize) * TabSize;
@@ -153,13 +155,13 @@ namespace Markdig.Helpers
             return TabSize + (column & ~(TabSize - 1));
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAcrossTab(int column)
         {
             return (column & (TabSize - 1)) != 0;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains(this char[] charList, char c)
         {
             for (int i = 0; i < charList.Length; i++)
@@ -172,7 +174,7 @@ namespace Markdig.Helpers
             return false;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhitespace(this char c)
         {
             // 2.1 Characters and lines 
@@ -180,20 +182,20 @@ namespace Markdig.Helpers
             return c <= ' ' && (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsControl(this char c)
         {
             return c < ' ' || char.IsControl(c);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEscapableSymbol(this char c)
         {
             // char.IsSymbol also works with Unicode symbols that cannot be escaped based on the specification.
             return (c > ' ' && c < '0') || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z' && c < 127) || c == '•';
         }
 
-        //[MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhiteSpaceOrZero(this char c)
         {
             return IsZero(c) || IsWhitespace(c);
@@ -253,19 +255,19 @@ namespace Markdig.Helpers
             }
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNewLine(this char c)
         {
             return c == '\n';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsZero(this char c)
         {
             return c == '\0';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSpace(this char c)
         {
             // 2.1 Characters and lines 
@@ -273,7 +275,7 @@ namespace Markdig.Helpers
             return c == ' ';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsTab(this char c)
         {
             // 2.1 Characters and lines 
@@ -281,13 +283,13 @@ namespace Markdig.Helpers
             return c == '\t';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSpaceOrTab(this char c)
         {
             return IsSpace(c) || IsTab(c);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char EscapeInsecure(this char c)
         {
             // 2.3 Insecure characters
@@ -295,25 +297,25 @@ namespace Markdig.Helpers
             return c == '\0' ? '\ufffd' : c;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAlphaUpper(this char c)
         {
             return (uint)(c - 'A') <= ('Z' - 'A');
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAlpha(this char c)
         {
             return (uint)((c - 'A') & ~0x20) <= ('Z' - 'A');
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAlphaNumeric(this char c)
         {
             return IsAlpha(c) || IsDigit(c);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDigit(this char c)
         {
             return (uint)(c - '0') <= ('9' - '0');
@@ -362,25 +364,25 @@ namespace Markdig.Helpers
             return false;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmailUsernameSpecialChar(char c)
         {
             return ".!#$%&'*+/=?^_`{|}~-+.~".IndexOf(c) >= 0;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHighSurrogate(char c)
         {
             return IsInInclusiveRange(c, HighSurrogateStart, HighSurrogateEnd);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLowSurrogate(char c)
         {
             return IsInInclusiveRange(c, LowSurrogateStart, LowSurrogateEnd);
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsInInclusiveRange(char c, char min, char max)
             => (uint) (c - min) <= (uint) (max - min);
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -54,7 +54,7 @@ namespace Markdig.Extensions.ListExtras
                     c = state.NextChar();
                 }
 
-                result.OrderedStart = CharHelper.RomanToArabic(state.Line.Text.Substring(startChar, endChar - startChar + 1)).ToString();
+                result.OrderedStart = CharHelper.RomanToArabic(state.Line.Text.AsSpan(startChar, endChar - startChar + 1)).ToString();
                 result.BulletType = isRomanLow ? 'i' : 'I';
                 result.DefaultOrderedStart = isRomanLow ? "i" : "I";
             }
