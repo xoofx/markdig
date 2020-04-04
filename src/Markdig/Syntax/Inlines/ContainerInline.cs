@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
-using Markdig.Helpers;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -98,7 +98,7 @@ namespace Markdig.Syntax.Inlines
         {
             if (FirstChild is null)
             {
-                return ArrayHelper<T>.Empty;
+                return Array.Empty<T>();
             }
             else
             {
