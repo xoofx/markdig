@@ -486,8 +486,7 @@ namespace Markdig.Helpers
 
                         if (entityNameLength > 0)
                         {
-                            var namedEntity = new StringSlice(text, entityNameStart, entityNameStart + entityNameLength - 1);
-                            var decoded = EntityHelper.DecodeEntity(namedEntity.ToString());
+                            var decoded = EntityHelper.DecodeEntity(text.AsSpan(entityNameStart, entityNameLength));
                             if (decoded != null)
                             {
                                 sb.Append(text, lastPos, searchPos - match - lastPos);

@@ -381,7 +381,11 @@ namespace Markdig.Helpers
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsInInclusiveRange(char c, char min, char max)
-            => (uint) (c - min) <= (uint) (max - min);
+            => (uint)(c - min) <= (uint)(max - min);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsInInclusiveRange(int value, uint min, uint max)
+            => ((uint)value - min) <= (max - min);
 
         public static IEnumerable<int> ToUtf32(StringSlice text)
         {
