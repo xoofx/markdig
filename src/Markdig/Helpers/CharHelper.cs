@@ -56,9 +56,6 @@ namespace Markdig.Helpers
         private const char LowSurrogateStart = '\udc00';
         private const char LowSurrogateEnd = '\udfff';
 
-        // The starting codepoint for Unicode plane 1.  Plane 1 contains 0x010000 ~ 0x01ffff.
-        private const int UnicodePlane01Start = 0x10000;
-
         // We don't support LCDM
         private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int>(6) {
             { 'i', 1 }, { 'v', 5 }, { 'x', 10 },
@@ -164,9 +161,9 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains(this char[] charList, char c)
         {
-            for (int i = 0; i < charList.Length; i++)
+            foreach (char ch in charList)
             {
-                if (charList[i] == c)
+                if (ch == c)
                 {
                     return true;
                 }
@@ -385,19 +382,6 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsInInclusiveRange(char c, char min, char max)
             => (uint) (c - min) <= (uint) (max - min);
-
-        public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
-        {
-            if (!IsHighSurrogate(highSurrogate))
-            {
-                throw new ArgumentOutOfRangeException(nameof(highSurrogate), "Invalid high surrogate");
-            }
-            if (!IsLowSurrogate(lowSurrogate))
-            {
-                throw new ArgumentOutOfRangeException(nameof(lowSurrogate), "Invalid low surrogate");
-            }
-            return (((highSurrogate - HighSurrogateStart) * 0x400) + (lowSurrogate - LowSurrogateStart) + UnicodePlane01Start);
-        }
 
         public static IEnumerable<int> ToUtf32(StringSlice text)
         {
