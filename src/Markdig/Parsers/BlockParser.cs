@@ -25,9 +25,9 @@ namespace Markdig.Parsers
         {
             if (OpeningCharacters != null)
             {
-                for (int i = 0; i < OpeningCharacters.Length; i++)
+                foreach (char openingChar in OpeningCharacters)
                 {
-                    if (OpeningCharacters[i] == c)
+                    if (openingChar == c)
                     {
                         return true;
                     }
