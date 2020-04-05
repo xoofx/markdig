@@ -42,8 +42,8 @@ namespace Markdig.Parsers
         /// </exception>
         private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
@@ -77,8 +77,8 @@ namespace Markdig.Parsers
         /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
         public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            if (text == null) ThrowHelper.ArgumentNullException_text();
+            pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
             var markdownParser = new MarkdownParser(text, pipeline, context);

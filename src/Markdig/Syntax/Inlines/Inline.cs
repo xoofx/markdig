@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax.Inlines
@@ -42,10 +43,10 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public void InsertAfter(Inline next)
         {
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            if (next == null) ThrowHelper.ArgumentNullException(nameof(next));
             if (next.Parent != null)
             {
-                throw new ArgumentException("Inline has already a parent", nameof(next));
+                ThrowHelper.ArgumentException("Inline has already a parent", nameof(next));
             }
 
             var previousNext = NextSibling;
@@ -73,10 +74,10 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
         public void InsertBefore(Inline previous)
         {
-            if (previous == null) throw new ArgumentNullException(nameof(previous));
+            if (previous == null) ThrowHelper.ArgumentNullException(nameof(previous));
             if (previous.Parent != null)
             {
-                throw new ArgumentException("Inline has already a parent", nameof(previous));
+                ThrowHelper.ArgumentException("Inline has already a parent", nameof(previous));
             }
 
             var previousSibling = PreviousSibling;
@@ -129,7 +130,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentNullException">If inline is null</exception>
         public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
-            if (inline == null) throw new ArgumentNullException(nameof(inline));
+            if (inline == null) ThrowHelper.ArgumentNullException(nameof(inline));
 
             // Save sibling
             var parent = Parent;
@@ -271,7 +272,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentNullException"></exception>
         public void DumpTo(TextWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (writer == null) ThrowHelper.ArgumentNullException_writer();
             DumpTo(writer, 0);
         }
 
@@ -283,7 +284,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentNullException">if writer is null</exception>
         public void DumpTo(TextWriter writer, int level)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (writer == null) ThrowHelper.ArgumentNullException_writer();
             for (int i = 0; i < level; i++)
             {
                 writer.Write(' ');

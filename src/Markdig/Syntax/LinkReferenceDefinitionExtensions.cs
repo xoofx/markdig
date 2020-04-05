@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using Markdig.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +16,7 @@ namespace Markdig.Syntax
 
         public static bool ContainsLinkReferenceDefinition(this MarkdownDocument document, string label)
         {
-            if (label == null) throw new ArgumentNullException(nameof(label));
+            if (label == null) ThrowHelper.ArgumentNullException_label();
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)
             {
@@ -26,14 +27,14 @@ namespace Markdig.Syntax
 
         public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition)
         {
-            if (label == null) throw new ArgumentNullException(nameof(label));
+            if (label == null) ThrowHelper.ArgumentNullException_label();
             var references = document.GetLinkReferenceDefinitions();
             references.Set(label, linkReferenceDefinition);
         }
 
         public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, out LinkReferenceDefinition linkReferenceDefinition)
         {
-            if (label == null) throw new ArgumentNullException(nameof(label));
+            if (label == null) ThrowHelper.ArgumentNullException_label();
             linkReferenceDefinition = null;
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)

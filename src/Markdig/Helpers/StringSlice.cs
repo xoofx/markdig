@@ -38,7 +38,10 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            if (text is null)
+                ThrowHelper.ArgumentNullException_text();
+
+            Text = text;
             Start = start;
             End = end;
         }

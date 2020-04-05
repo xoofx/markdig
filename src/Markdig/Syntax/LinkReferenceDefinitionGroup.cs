@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +29,7 @@ namespace Markdig.Syntax
 
         public void Set(string label, LinkReferenceDefinition link)
         {
-            if (link == null) throw new ArgumentNullException(nameof(link));
+            if (link == null) ThrowHelper.ArgumentNullException(nameof(link));
             if (!Contains(link))
             {
                 Add(link);

@@ -26,7 +26,7 @@ namespace Markdig.Helpers
         /// <param name="capacity"></param>
         public StringLineGroup(int capacity, bool willRelease = false)
         {
-            if (capacity <= 0) throw new ArgumentOutOfRangeException(nameof(capacity));
+            if (capacity <= 0) ThrowHelper.ArgumentOutOfRangeException(nameof(capacity));
             Lines = _pool.Rent(willRelease ? Math.Max(8, capacity) : capacity);
             Count = 0;
         }
@@ -38,7 +38,7 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentNullException"></exception>
         public StringLineGroup(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            if (text == null) ThrowHelper.ArgumentNullException_text();
             Lines = new StringLine[1];
             Count = 0;
             Add(new StringSlice(text));
@@ -283,7 +283,7 @@ namespace Markdig.Helpers
 
             public readonly char PeekChar(int offset = 1)
             {
-                if (offset < 0) throw new ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
+                if (offset < 0) ThrowHelper.ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
 
                 if (Start + offset > End)
                 {

@@ -1747,10 +1747,10 @@ namespace Markdig.Extensions.Emoji
         public EmojiMapping(IDictionary<string, string> shortcodeToUnicode, IDictionary<string, string> smileyToShortcode)
         {
             if (shortcodeToUnicode == null)
-                throw new ArgumentNullException(nameof(shortcodeToUnicode));
+                ThrowHelper.ArgumentNullException(nameof(shortcodeToUnicode));
 
             if (smileyToShortcode == null)
-                throw new ArgumentNullException(nameof(smileyToShortcode));
+                ThrowHelper.ArgumentNullException(nameof(smileyToShortcode));
 
             // Build emojis and smileys CompactPrefixTree
 
@@ -1768,7 +1768,7 @@ namespace Markdig.Extensions.Emoji
             foreach (var shortcode in shortcodeToUnicode)
             {
                 if (string.IsNullOrEmpty(shortcode.Key) || string.IsNullOrEmpty(shortcode.Value))
-                    throw new ArgumentException("The dictionaries cannot contain null or empty keys/values", nameof(shortcodeToUnicode));
+                    ThrowHelper.ArgumentException("The dictionaries cannot contain null or empty keys/values", nameof(shortcodeToUnicode));
 
                 firstChars.Add(shortcode.Key[0]);
                 PrefixTree.Add(shortcode);
@@ -1777,15 +1777,15 @@ namespace Markdig.Extensions.Emoji
             foreach (var smiley in smileyToShortcode)
             {
                 if (string.IsNullOrEmpty(smiley.Key) || string.IsNullOrEmpty(smiley.Value))
-                    throw new ArgumentException("The dictionaries cannot contain null or empty keys/values", nameof(smileyToShortcode));
+                    ThrowHelper.ArgumentException("The dictionaries cannot contain null or empty keys/values", nameof(smileyToShortcode));
 
                 if (!shortcodeToUnicode.TryGetValue(smiley.Value, out string unicode))
-                    throw new ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji shortcodes dictionary", smiley.Value));
+                    ThrowHelper.ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji shortcodes dictionary", smiley.Value));
 
                 firstChars.Add(smiley.Key[0]);
 
                 if (!PrefixTree.TryAdd(smiley.Key, unicode))
-                    throw new ArgumentException(string.Format("Smiley {0} is already present in the emoji mapping", smiley.Key));
+                    ThrowHelper.ArgumentException(string.Format("Smiley {0} is already present in the emoji mapping", smiley.Key));
             }
 
             OpeningCharacters = new List<char>(firstChars).ToArray();

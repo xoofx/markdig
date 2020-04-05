@@ -29,7 +29,7 @@ namespace Markdig.Parsers
                 var parser = this[i];
                 if (parser == null)
                 {
-                    throw new InvalidOperationException("Unexpected null parser found");
+                    ThrowHelper.InvalidOperationException("Unexpected null parser found");
                 }
 
                 parser.Initialize();

@@ -30,8 +30,7 @@ namespace Markdig.Extensions.Tables
         /// <param name="options">The options.</param>
         public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions options = null)
         {
-            if (lineBreakParser == null) throw new ArgumentNullException(nameof(lineBreakParser));
-            this.lineBreakParser = lineBreakParser;
+            this.lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
             OpeningCharacters = new[] { '|', '\n' };
             Options = options ?? new PipeTableOptions();
         }

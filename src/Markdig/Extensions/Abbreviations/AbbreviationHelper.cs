@@ -1,8 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 using System;
 using System.Collections.Generic;
+using Markdig.Helpers;
 using Markdig.Syntax;
 
 namespace Markdig.Extensions.Abbreviations
@@ -21,9 +22,9 @@ namespace Markdig.Extensions.Abbreviations
 
         public static void AddAbbreviation(this MarkdownDocument document, string label, Abbreviation abbr)
         {
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (label == null) throw new ArgumentNullException(nameof(label));
-            if (abbr == null) throw new ArgumentNullException(nameof(abbr));
+            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (label == null) ThrowHelper.ArgumentNullException_label();
+            if (abbr == null) ThrowHelper.ArgumentNullException(nameof(abbr));
 
             var map = document.GetAbbreviations();
             if (map == null)

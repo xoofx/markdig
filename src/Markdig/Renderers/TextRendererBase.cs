@@ -26,7 +26,7 @@ namespace Markdig.Renderers
         /// <exception cref="System.ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (writer == null) ThrowHelper.ArgumentNullException_writer();
             this.Writer = writer;
             // By default we output a newline with '\n' only even on Windows platforms
             Writer.NewLine = "\n";
@@ -43,7 +43,7 @@ namespace Markdig.Renderers
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException(nameof(value));
+                    ThrowHelper.ArgumentNullException(nameof(value));
                 }
 
                 writer = value;
@@ -97,7 +97,7 @@ namespace Markdig.Renderers
             }
             else
             {
-                throw new InvalidOperationException("Cannot reset this TextWriter instance");
+                ThrowHelper.InvalidOperationException("Cannot reset this TextWriter instance");
             }
 
             previousWasLine = true;
@@ -119,7 +119,7 @@ namespace Markdig.Renderers
 
         public void PushIndent(string indent)
         {
-            if (indent == null) throw new ArgumentNullException(nameof(indent));
+            if (indent == null) ThrowHelper.ArgumentNullException(nameof(indent));
             indents.Add(indent);
         }
 
@@ -272,7 +272,7 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T WriteLeafInline(LeafBlock leafBlock)
         {
-            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
+            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
             var inline = (Inline) leafBlock.Inline;
             if (inline != null)
             {

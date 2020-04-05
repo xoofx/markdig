@@ -10,19 +10,39 @@ namespace Markdig.Helpers
     [ExcludeFromCodeCoverage]
     internal static class ThrowHelper
     {
+        public static void ArgumentNullException(string paramName) => throw new ArgumentNullException(paramName);
+        public static void ArgumentNullException_item() => throw new ArgumentNullException("item");
+        public static void ArgumentNullException_text() => throw new ArgumentNullException("text");
+        public static void ArgumentNullException_label() => throw new ArgumentNullException("label");
+        public static void ArgumentNullException_key() => throw new ArgumentNullException("key");
+        public static void ArgumentNullException_name() => throw new ArgumentNullException("name");
+        public static void ArgumentNullException_markdown() => throw new ArgumentNullException("markdown");
+        public static void ArgumentNullException_writer() => throw new ArgumentNullException("writer");
+        public static void ArgumentNullException_leafBlock() => throw new ArgumentNullException("leafBlock");
+        public static void ArgumentNullException_markdownObject() => throw new ArgumentNullException("markdownObject");
+
+        public static void ArgumentException(string message) => throw new ArgumentException(message);
+        public static void ArgumentException(string message, string paramName) => throw new ArgumentException(message, paramName);
+
+        public static void ArgumentOutOfRangeException(string paramName) => throw new ArgumentOutOfRangeException(paramName);
+        public static void ArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(message, paramName);
+        public static void ArgumentOutOfRangeException_index() => throw new ArgumentOutOfRangeException("index");
+
+        public static void InvalidOperationException(string message) => throw new InvalidOperationException(message);
+
         public static void ThrowArgumentNullException(ExceptionArgument argument)
         {
-            throw new ArgumentNullException(GetArgumentName(argument));
+            throw new ArgumentNullException(argument.ToString());
         }
 
         public static void ThrowArgumentException(ExceptionArgument argument, ExceptionReason reason)
         {
-            throw new ArgumentException(GetArgumentName(argument), GetExceptionReason(reason));
+            throw new ArgumentException(argument.ToString(), GetExceptionReason(reason));
         }
 
         public static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionReason reason)
         {
-            throw new ArgumentOutOfRangeException(GetArgumentName(argument), GetExceptionReason(reason));
+            throw new ArgumentOutOfRangeException(argument.ToString(), GetExceptionReason(reason));
         }
 
         public static void ThrowIndexOutOfRangeException()
@@ -30,25 +50,6 @@ namespace Markdig.Helpers
             throw new IndexOutOfRangeException();
         }
 
-        private static string GetArgumentName(ExceptionArgument argument)
-        {
-            switch (argument)
-            {
-                case ExceptionArgument.key:
-                case ExceptionArgument.input:
-                case ExceptionArgument.value:
-                case ExceptionArgument.length:
-                case ExceptionArgument.text:
-                    return argument.ToString();
-
-                case ExceptionArgument.offsetLength:
-                    return "offset and length";
-
-                default:
-                    Debug.Assert(false, "The enum value is not defined, please check the ExceptionArgument Enum.");
-                    return "";
-            }
-        }
         private static string GetExceptionReason(ExceptionReason reason)
         {
             switch (reason)

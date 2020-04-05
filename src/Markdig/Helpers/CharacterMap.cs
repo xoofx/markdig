@@ -27,7 +27,7 @@ namespace Markdig.Helpers
         /// <exception cref="System.ArgumentNullException"></exception>
         public CharacterMap(IEnumerable<KeyValuePair<char, T>> maps)
         {
-            if (maps == null) throw new ArgumentNullException(nameof(maps));
+            if (maps == null) ThrowHelper.ArgumentNullException(nameof(maps));
             var charSet = new HashSet<char>();
             int maxChar = 0;
 
