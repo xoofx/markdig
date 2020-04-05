@@ -45,16 +45,16 @@ namespace Markdig.Extensions.ListExtras
             if ((isRomanLow || isRomanUp) && (pendingBulletType == '\0' || pendingBulletType == 'i' || pendingBulletType == 'I'))
             {
                 int startChar = state.Start;
-                int endChar = 0;
                 // With a roman, we can have multiple characters
                 // Note that we don't validate roman numbers
-                while (isRomanLow ? CharHelper.IsRomanLetterLowerPartial(c) : CharHelper.IsRomanLetterUpperPartial(c))
+                do
                 {
-                    endChar = state.Start;
                     c = state.NextChar();
                 }
+                while (isRomanLow ? CharHelper.IsRomanLetterLowerPartial(c) : CharHelper.IsRomanLetterUpperPartial(c));
 
-                result.OrderedStart = CharHelper.RomanToArabic(state.Line.Text.AsSpan(startChar, endChar - startChar + 1)).ToString();
+                int orderValue = CharHelper.RomanToArabic(state.Line.Text.AsSpan(startChar, state.Start - startChar));
+                result.OrderedStart = CharHelper.SmallNumberToString(orderValue);
                 result.BulletType = isRomanLow ? 'i' : 'I';
                 result.DefaultOrderedStart = isRomanLow ? "i" : "I";
             }
@@ -62,7 +62,7 @@ namespace Markdig.Extensions.ListExtras
             {
                 // otherwise we expect a regular alpha lettered list with a single character.
                 var isUpper = c.IsAlphaUpper();
-                result.OrderedStart = (Char.ToUpperInvariant(c) - 64).ToString();
+                result.OrderedStart = CharHelper.SmallNumberToString((c | 0x20) - 'a' + 1);
                 result.BulletType = isUpper ? 'A' : 'a';
                 result.DefaultOrderedStart = isUpper ? "A" : "a";
                 state.NextChar();

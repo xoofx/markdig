@@ -746,5 +746,23 @@ namespace Markdig.Helpers
                    c == 0x01D4A2 || c == 0x01D4BB ||
                    c == 0x01D546;
         }
+
+        // Used by ListExtraItemParser to format numbers from 1 - 26
+        private static readonly string[] smallNumberStringCache = {
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+            "20", "21", "22", "23", "24", "25", "26",
+        };
+
+        internal static string SmallNumberToString(int number)
+        {
+            string[] cache = smallNumberStringCache;
+            if ((uint)number < (uint)cache.Length)
+            {
+                return cache[number];
+            }
+
+            return number.ToString();
+        }
     }
 }
