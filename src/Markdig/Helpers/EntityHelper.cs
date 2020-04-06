@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Markdig.Helpers
 {
@@ -60,8 +61,8 @@ namespace Markdig.Helpers
         /// <returns>The unicode character set or <c>null</c> if the entity was not recognized.</returns>
         public static string DecodeEntity(int utf32)
         {
-            if (!CharHelper.IsInInclusiveRange(utf32, 0, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
-                return null;
+            if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+                return CharHelper.ReplacementCharString;
 
             if (utf32 < 65536)
                 return char.ToString((char)utf32);
@@ -78,6 +79,24 @@ namespace Markdig.Helpers
                 (char)((uint)utf32 / 1024 + 55296),
                 (char)((uint)utf32 % 1024 + 56320)
             });
+        }
+
+        public static void DecodeEntity(int utf32, StringBuilder sb)
+        {
+            if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+            {
+                sb.Append(CharHelper.ReplacementChar);
+            }
+            else if (utf32 < 65536)
+            {
+                sb.Append((char)utf32);
+            }
+            else
+            {
+                utf32 -= 65536;
+                sb.Append((char)((uint)utf32 / 1024 + 55296));
+                sb.Append((char)((uint)utf32 % 1024 + 56320));
+            }
         }
 
 #region [ EntityMap ]

@@ -450,11 +450,7 @@ namespace Markdig.Helpers
 
             while ((searchPos = text.IndexOfAny(search, searchPos)) != -1)
             {
-                if (sb == null)
-                {
-                    sb = StringBuilderCache.Local();
-                    sb.Length = 0;
-                }
+                sb ??= StringBuilderCache.Local();
                 c = text[searchPos];
                 if (removeBackSlash && c == '\\')
                 {
@@ -472,10 +468,7 @@ namespace Markdig.Helpers
                 }
                 else if (c == '&')
                 {
-                    int entityNameStart;
-                    int entityNameLength;
-                    int numericEntity;
-                    var match = ScanEntity(new StringSlice(text, searchPos, text.Length - 1), out numericEntity, out entityNameStart, out entityNameLength);
+                    var match = ScanEntity(new StringSlice(text, searchPos, text.Length - 1), out int numericEntity, out int entityNameStart, out int entityNameLength);
                     if (match == 0)
                     {
                         searchPos++;
@@ -497,36 +490,18 @@ namespace Markdig.Helpers
                         else if (numericEntity >= 0)
                         {
                             sb.Append(text, lastPos, searchPos - match - lastPos);
-                            if (numericEntity == 0)
-                            {
-                                sb.Append('\0'.EscapeInsecure());
-                            }
-                            else
-                            {
-                                var decoded = EntityHelper.DecodeEntity(numericEntity);
-                                if (decoded != null)
-                                {
-                                    sb.Append(decoded);
-                                }
-                                else
-                                {
-                                    sb.Append('\uFFFD');
-                                }
-                            }
-
+                            EntityHelper.DecodeEntity(numericEntity, sb);
                             lastPos = searchPos;
                         }
                     }
                 }
             }
 
-            if (sb == null)
+            if (sb == null || lastPos == 0)
                 return text;
 
             sb.Append(text, lastPos, text.Length - lastPos);
-            var result = sb.ToString();
-            sb.Length = 0;
-            return result;
+            return sb.GetStringAndReset();
         }
 
         /// <summary>

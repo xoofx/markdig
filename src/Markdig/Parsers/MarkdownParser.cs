@@ -131,7 +131,7 @@ namespace Markdig.Parsers
         /// <param name="text">The text to secure.</param>
         private string FixupZero(string text)
         {
-            return text.Replace('\0', CharHelper.ZeroSafeChar);
+            return text.Replace('\0', CharHelper.ReplacementChar);
         }
 
         private sealed class ContainerItemCache : DefaultObjectCache<ContainerItem>

@@ -17,9 +17,9 @@ namespace Markdig.Helpers
     {
         public const int TabSize = 4;
 
-        public const char ZeroSafeChar = '\uFFFD';
+        public const char ReplacementChar = '\uFFFD';
 
-        public const string ZeroSafeString = "\uFFFD";
+        public const string ReplacementCharString = "\uFFFD";
 
         private const char HighSurrogateStart = '\ud800';
         private const char HighSurrogateEnd = '\udbff';
