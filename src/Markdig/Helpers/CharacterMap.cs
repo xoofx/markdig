@@ -35,16 +35,21 @@ namespace Markdig.Helpers
             {
                 var openingChar = map.Key;
                 charSet.Add(openingChar);
-                maxChar = Math.Max(maxChar, openingChar);
+
+                if (openingChar < 128)
+                {
+                    maxChar = Math.Max(maxChar, openingChar);
+                }
+                else
+                {
+                    nonAsciiMap ??= new Dictionary<uint, T>();
+                }
             }
 
             OpeningCharacters = charSet.ToArray();
             Array.Sort(OpeningCharacters);
 
             asciiMap = new T[maxChar + 1];
-
-            if (maxChar >= 128)
-                nonAsciiMap = new Dictionary<uint, T>();
 
             foreach (var state in maps)
             {
