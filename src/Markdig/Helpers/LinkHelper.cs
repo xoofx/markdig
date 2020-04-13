@@ -425,7 +425,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
@@ -517,7 +516,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             var c = text.CurrentChar;
 

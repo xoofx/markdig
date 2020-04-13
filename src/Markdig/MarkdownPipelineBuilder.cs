@@ -49,8 +49,6 @@ namespace Markdig
             };
 
             Extensions = new OrderedList<IMarkdownExtension>();
-
-            StringBuilderCache = new StringBuilderCache();
         }
 
         /// <summary>
@@ -67,11 +65,6 @@ namespace Markdig
         /// Gets the register extensions.
         /// </summary>
         public OrderedList<IMarkdownExtension> Extensions { get; }
-
-        /// <summary>
-        /// Gets or sets the string builder cache used by the parsers.
-        /// </summary>
-        public StringBuilderCache StringBuilderCache { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to enable precise source location (slower parsing but accurate position for block and inline elements)
@@ -120,7 +113,6 @@ namespace Markdig
                 new OrderedList<IMarkdownExtension>(Extensions),
                 new BlockParserList(BlockParsers),
                 new InlineParserList(InlineParsers),
-                StringBuilderCache,
                 DebugLog,
                 GetDocumentProcessed)
             {
