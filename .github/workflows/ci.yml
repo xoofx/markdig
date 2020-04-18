@@ -42,6 +42,7 @@ jobs:
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
+      if: github.event_name == 'push'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp2.1.info
