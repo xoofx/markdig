@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System;
 
 namespace Markdig.Parsers.Inlines
@@ -20,9 +21,9 @@ namespace Markdig.Parsers.Inlines
         /// <param name="enableWithinWord">if set to <c>true</c> the emphasis can be used inside a word.</param>
         public EmphasisDescriptor(char character, int minimumCount, int maximumCount, bool enableWithinWord)
         {
-            if (minimumCount < 1) throw new ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be >= 1");
-            if (maximumCount < 1) throw new ArgumentOutOfRangeException(nameof(maximumCount), "maximumCount must be >= 1");
-            if (minimumCount > maximumCount) throw new ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be <= maximumCount");
+            if (minimumCount < 1) ThrowHelper.ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be >= 1");
+            if (maximumCount < 1) ThrowHelper.ArgumentOutOfRangeException(nameof(maximumCount), "maximumCount must be >= 1");
+            if (minimumCount > maximumCount) ThrowHelper.ArgumentOutOfRangeException(nameof(minimumCount), "minimumCount must be <= maximumCount");
 
             Character = character;
             MinimumCount = minimumCount;

@@ -77,7 +77,7 @@ namespace Markdig.Parsers.Inlines
                 var emphasis = EmphasisDescriptors[i];
                 if (Array.IndexOf(OpeningCharacters, emphasis.Character) >= 0)
                 {
-                    throw new InvalidOperationException(
+                    ThrowHelper.InvalidOperationException(
                         $"The character `{emphasis.Character}` is already used by another emphasis descriptor");
                 }
 

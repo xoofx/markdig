@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using Markdig.Helpers;
 using System;
 
 namespace Markdig.Syntax
@@ -55,7 +56,7 @@ namespace Markdig.Syntax
         /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public void SetData(object key, object value)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 attachedDatas = new DataEntry[1];
@@ -89,7 +90,7 @@ namespace Markdig.Syntax
         /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public bool ContainsData(object key)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 return false;
@@ -113,7 +114,7 @@ namespace Markdig.Syntax
         /// <exception cref="System.ArgumentNullException">if key is null</exception>
         public object GetData(object key)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 return null;
@@ -136,7 +137,7 @@ namespace Markdig.Syntax
         /// <exception cref="System.ArgumentNullException"></exception>
         public bool RemoveData(object key)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 return true;

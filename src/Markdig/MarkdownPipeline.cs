@@ -22,8 +22,8 @@ namespace Markdig
         /// </summary>
         internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
         {
-            if (blockParsers == null) throw new ArgumentNullException(nameof(blockParsers));
-            if (inlineParsers == null) throw new ArgumentNullException(nameof(inlineParsers));
+            if (blockParsers == null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
+            if (inlineParsers == null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
             // Add all default parsers
             Extensions = extensions;
             BlockParsers = blockParsers;
@@ -54,7 +54,7 @@ namespace Markdig
         /// <param name="renderer">The markdown renderer to setup</param>
         public void Setup(IMarkdownRenderer renderer)
         {
-            if (renderer == null) throw new ArgumentNullException(nameof(renderer));
+            if (renderer == null) ThrowHelper.ArgumentNullException(nameof(renderer));
             foreach (var extension in Extensions)
             {
                 extension.Setup(this, renderer);

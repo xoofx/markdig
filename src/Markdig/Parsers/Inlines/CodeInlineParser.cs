@@ -97,17 +97,22 @@ namespace Markdig.Parsers.Inlines
             bool isMatching = false;
             if (closeSticks == openSticks)
             {
+                string content;
+
                 // Remove one space from front and back if the string is not all spaces
                 if (!allSpace && builder.Length > 2 && builder[0] == ' ' && builder[builder.Length - 1] == ' ')
                 {
-                    builder.Length--;
-                    builder.Remove(0, 1); // More expensive, alternative is to have a double-pass algorithm
+                    content = builder.ToString(1, builder.Length - 2);
+                }
+                else
+                {
+                    content = builder.ToString();
                 }
 
                 processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
-                    Content = builder.ToString(),
+                    Content = content,
                     Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column

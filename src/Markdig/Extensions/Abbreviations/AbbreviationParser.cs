@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -115,7 +116,7 @@ namespace Markdig.Extensions.Abbreviations
 
                 ValidAbbreviationStart:;
 
-                    if (prefixTree.TryMatchLongest(text, i, content.End - i + 1, out KeyValuePair<string, Abbreviation> abbreviationMatch))
+                    if (prefixTree.TryMatchLongest(text.AsSpan(i, content.End - i + 1), out KeyValuePair<string, Abbreviation> abbreviationMatch))
                     {
                         var match = abbreviationMatch.Key;
                         if (!IsValidAbbreviationEnding(match, content, i))
