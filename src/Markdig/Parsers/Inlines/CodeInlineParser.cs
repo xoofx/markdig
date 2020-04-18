@@ -42,7 +42,7 @@ namespace Markdig.Parsers.Inlines
                 c = slice.NextChar();
             }
 
-            var builder = processor.StringBuilders.Get();
+            var builder = StringBuilderCache.Local();
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
             // A code span begins with a backtick string and ends with a backtick string of equal length.
@@ -120,8 +120,6 @@ namespace Markdig.Parsers.Inlines
                 isMatching = true;
             }
 
-            // Release the builder if not used
-            processor.StringBuilders.Release(builder);
             return isMatching;
         }
     }

@@ -20,7 +20,7 @@ namespace Markdig
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
         /// </summary>
-        internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, StringBuilderCache cache, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
+        internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
         {
             if (blockParsers == null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
             if (inlineParsers == null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
@@ -28,7 +28,6 @@ namespace Markdig
             Extensions = extensions;
             BlockParsers = blockParsers;
             InlineParsers = inlineParsers;
-            StringBuilderCache = cache;
             DebugLog = debugLog;
             DocumentProcessed = documentProcessed;
         }
@@ -43,8 +42,6 @@ namespace Markdig
         internal BlockParserList BlockParsers { get; }
 
         internal InlineParserList InlineParsers { get; }
-
-        internal StringBuilderCache StringBuilderCache { get; }
 
         // TODO: Move the log to a better place
         internal TextWriter DebugLog { get; }

@@ -24,7 +24,6 @@ namespace Markdig.Parsers
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
             this.parserStateCache = root.parserStateCache;
-            StringBuilders = root.StringBuilders;
             Document = root.Document;
             Parsers = root.Parsers;
 
@@ -41,13 +40,11 @@ namespace Markdig.Parsers
         /// <param name="parsers">The list of parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
+        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
         {
-            if (stringBuilders == null) ThrowHelper.ArgumentNullException(nameof(stringBuilders));
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
             parserStateCache = new BlockParserStateCache(this);
-            StringBuilders = stringBuilders;
             Document = document;
             document.IsOpen = true;
             Parsers = parsers;
@@ -152,11 +149,6 @@ namespace Markdig.Parsers
         /// Gets the character position before the indent occurred.
         /// </summary>
         public int StartBeforeIndent { get; private set; }
-
-        /// <summary>
-        /// Gets the cache of string builders.
-        /// </summary>
-        public StringBuilderCache StringBuilders { get; }
 
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.

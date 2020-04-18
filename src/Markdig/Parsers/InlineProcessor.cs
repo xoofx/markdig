@@ -36,12 +36,10 @@ namespace Markdig.Parsers
         /// <param name="inlineCreated">The inline created event.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
+        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
         {
-            if (stringBuilders == null) ThrowHelper.ArgumentNullException(nameof(stringBuilders));
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
-            StringBuilders = stringBuilders;
             Document = document;
             Parsers = parsers;
             Context = context;
@@ -90,11 +88,6 @@ namespace Markdig.Parsers
         /// Gets the root document.
         /// </summary>
         public MarkdownDocument Document { get; }
-
-        /// <summary>
-        /// Gets the cache string builders.
-        /// </summary>
-        public StringBuilderCache StringBuilders { get;  }
 
         /// <summary>
         /// Gets or sets the index of the line from the begining of the document being processed.
