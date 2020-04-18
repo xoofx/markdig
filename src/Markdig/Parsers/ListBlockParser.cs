@@ -41,14 +41,14 @@ namespace Markdig.Parsers
             {
                 if (itemParser.OpeningCharacters == null)
                 {
-                    throw new InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
+                    ThrowHelper.InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
                 }
 
                 foreach (var openingCharacter in itemParser.OpeningCharacters)
                 {
                     if (tempMap.ContainsKey(openingCharacter))
                     {
-                        throw new InvalidOperationException(
+                        ThrowHelper.InvalidOperationException(
                             $"A list item parser with the same opening character `{openingCharacter}` is already registered");
                     }
                     tempMap.Add(openingCharacter, itemParser);

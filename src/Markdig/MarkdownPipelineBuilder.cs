@@ -111,7 +111,7 @@ namespace Markdig
             {
                 if (extension == null)
                 {
-                    throw new InvalidOperationException("An extension cannot be null");
+                    ThrowHelper.InvalidOperationException("An extension cannot be null");
                 }
                 extension.Setup(this);
             }

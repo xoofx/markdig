@@ -29,7 +29,7 @@ namespace Markdig.Parsers
                 var parser = this[i];
                 if (parser == null)
                 {
-                    throw new InvalidOperationException("Unexpected null parser found");
+                    ThrowHelper.InvalidOperationException("Unexpected null parser found");
                 }
 
                 parser.Initialize();
@@ -100,8 +100,8 @@ namespace Markdig.Parsers
         /// </summary>
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-        public T[] GetParsersForOpeningCharacter(char openingChar)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T[] GetParsersForOpeningCharacter(uint openingChar)
         {
             return charMap[openingChar];
         }
@@ -113,7 +113,7 @@ namespace Markdig.Parsers
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
             return charMap.IndexOfOpeningCharacter(text, start, end);

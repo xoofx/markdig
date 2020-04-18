@@ -300,19 +300,19 @@ namespace Markdig.Parsers.Inlines
 
         private void MarkParentAsInactive(Inline inline)
         {
-            if (inline == null)
+            while (inline != null)
             {
-                return;
-            }
-
-            foreach (var parent in inline.FindParentOfType<LinkDelimiterInline>())
-            {
-                if (parent.IsImage)
+                if (inline is LinkDelimiterInline linkInline)
                 {
-                    break;
+                    if (linkInline.IsImage)
+                    {
+                        break;
+                    }
+
+                    linkInline.IsActive = false;
                 }
 
-                parent.IsActive = false;
+                inline = inline.Parent;
             }
         }
     }
