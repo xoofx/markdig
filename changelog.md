@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.20.0 (18 Apr 2020)
+- Markdig is now compatible only with `NETStandard 2.0`, `NETStandard 2.1`, `NETCoreApp 2.1` and `NETCoreApp 3.1`.
+- Many performance improvements from [PR #416](https://github.com/lunet-io/markdig/pull/416) 
+[PR #417](https://github.com/lunet-io/markdig/pull/417)
+[PR #418](https://github.com/lunet-io/markdig/pull/418) 
+[PR #421](https://github.com/lunet-io/markdig/pull/421) 
+[PR #422](https://github.com/lunet-io/markdig/pull/422) 
+[PR #410](https://github.com/lunet-io/markdig/pull/410)
+
 ## 0.18.3 (8 Mar 2020)
 - Publish NuGet Symbol packages
 
