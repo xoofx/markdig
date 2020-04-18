@@ -137,7 +137,7 @@ namespace SpecFileGen
 
             if (anyChanged && Environment.GetEnvironmentVariable("CI") != null)
             {
-                EmitError("Run SpecFileGen when changing specification files");
+                EmitError("Error - Specification files have changed. You must run SpecFileGen when changing specification files.");
                 Environment.Exit(1);
             }
 
