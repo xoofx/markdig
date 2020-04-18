@@ -25,9 +25,6 @@ jobs:
       with:
         dotnet-version: 3.0.100
 
-    - name: Add coveralls.net
-      run: dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
-
     - name: Build (Release)
       run: dotnet build src -c Release
 
@@ -40,14 +37,14 @@ jobs:
     - name: Build & Test (Debug)
       run: dotnet test src -c Debug
 
-    - name: Coveralls
-      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov  /p:CoverletOutput=./coverage.info
+    - name: Coverlet
+      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.info
+        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp2.1.info
 
     - name: Pack
       run: dotnet pack src -c Release
