@@ -1,4 +1,4 @@
-// Generated: 2019-04-15 05:54:35
+// Generated: 2020-04-20 07:21:20
 
 // --------------------------------
 //            Pipe Tables
@@ -647,7 +647,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "pipetables|advanced");
         }
 
-        // **Rule #7**
+        // **Rule #8**
         // 
         // A HTML inline has a higher precedence than a column delimiter `|`: 
         [Test]
@@ -681,7 +681,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
 
-        // **Rule #8**
+        // **Rule #9**
         // 
         // Links have a higher precedence than the column delimiter character `|`:
         [Test]
@@ -715,7 +715,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
 
-        // ** Rule #9**
+        // **Rule #10**
         // 
         // It is possible to have a single row header only:
         [Test]
@@ -767,7 +767,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("|a|b|c\n|---|---|---|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th>c</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced");
         }
 
-        // ** Tests **
+        // **Tests**
         // 
         // Tests trailing spaces after pipes
         [Test]
@@ -816,7 +816,7 @@ namespace Markdig.Tests.Specs.PipeTables
             TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
 
-        // ** Normalized columns count **
+        // **Normalized columns count**
         // 
         // The tables are normalized to the maximum number of columns found in a table
         [Test]
