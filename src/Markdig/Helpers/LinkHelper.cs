@@ -110,7 +110,7 @@ namespace Markdig.Helpers
             return headingBuffer.GetStringAndReset();
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsReservedPunctuation(char c)
         {
             return c == '_' || c == '-' || c == '.';
@@ -425,7 +425,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
@@ -517,7 +516,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             var c = text.CurrentChar;
 
@@ -652,14 +650,14 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsTrailingUrlStopCharacter(char c)
         {
             // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not be considered part of the autolink, though they may be included in the interior of the link:
             return c == '?' || c == '!' || c == '.' || c == ',' || c == ':' || c == '*' || c == '*' || c == '_' || c == '~';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsEndOfUri(char c, bool isAutoLink)
         {
             return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)

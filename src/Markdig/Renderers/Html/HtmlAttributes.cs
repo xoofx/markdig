@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Markdig.Helpers;
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Html
@@ -41,7 +42,7 @@ namespace Markdig.Renderers.Html
         /// <param name="name">The css class name.</param>
         public void AddClass(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == null) ThrowHelper.ArgumentNullException_name();
             if (Classes == null)
             {
                 Classes = new List<string>(2);
@@ -61,7 +62,7 @@ namespace Markdig.Renderers.Html
         /// <param name="value">The value.</param>
         public void AddProperty(string name, string value)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == null) ThrowHelper.ArgumentNullException_name();
             if (Properties == null)
             {
                 Properties = new List<KeyValuePair<string, string>>(2); // Use half list compare to default capacity (4), as we don't expect lots of classes
@@ -76,7 +77,7 @@ namespace Markdig.Renderers.Html
         /// <param name="value">The value.</param>
         public void AddPropertyIfNotExist(string name, object value)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == null) ThrowHelper.ArgumentNullException_name();
             if (Properties == null)
             {
                 Properties = new List<KeyValuePair<string, string>>(4);
@@ -104,7 +105,7 @@ namespace Markdig.Renderers.Html
         /// <exception cref="System.ArgumentNullException"></exception>
         public void CopyTo(HtmlAttributes htmlAttributes, bool mergeIdAndProperties = false, bool shared = true)
         {
-            if (htmlAttributes == null) throw new ArgumentNullException(nameof(htmlAttributes));
+            if (htmlAttributes == null) ThrowHelper.ArgumentNullException(nameof(htmlAttributes));
             // Add html htmlAttributes to the object
             if (!mergeIdAndProperties || Id != null)
             {

@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Normalize.Inlines;
+using Markdig.Helpers;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -130,7 +131,7 @@ namespace Markdig.Renderers.Normalize
         /// <returns>This instance</returns>
         public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool indent = false)
         {
-            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
+            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
             if (leafBlock.Lines.Lines != null)
             {
                 var lines = leafBlock.Lines;

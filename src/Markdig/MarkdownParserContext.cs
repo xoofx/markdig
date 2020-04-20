@@ -5,7 +5,7 @@ namespace Markdig
     /// <summary>
     /// Provides a context that can be used as part of parsing Markdown documents.
     /// </summary>
-    public sealed class MarkdownParserContext
+    public class MarkdownParserContext
     {
         /// <summary>
         /// Gets or sets the context property collection.

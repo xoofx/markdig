@@ -1,8 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
 using System;
+using Markdig.Helpers;
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.SelfPipeline
@@ -29,7 +30,7 @@ namespace Markdig.Extensions.SelfPipeline
             tag = string.IsNullOrEmpty(tag) ? DefaultTag : tag;
             if (tag.IndexOfAny(new []{'<', '>'}) >= 0)
             {
-                throw new ArgumentException("Tag cannot contain `<`  or `>` characters", nameof(tag));
+                ThrowHelper.ArgumentException("Tag cannot contain `<`  or `>` characters", nameof(tag));
             }
 
             if (defaultExtensions != null)
@@ -57,7 +58,7 @@ namespace Markdig.Extensions.SelfPipeline
             // Make sure that this pipeline has only one extension (itself)
             if (pipeline.Extensions.Count > 1)
             {
-                throw new InvalidOperationException(
+                ThrowHelper.InvalidOperationException(
                     "The SelfPipeline extension cannot be configured with other extensions");
             }
         }
@@ -74,7 +75,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// <exception cref="System.ArgumentNullException"></exception>
         public MarkdownPipeline CreatePipelineFromInput(string inputText)
         {
-            if (inputText == null) throw new ArgumentNullException(nameof(inputText));
+            if (inputText == null) ThrowHelper.ArgumentNullException(nameof(inputText));
 
             var builder = new MarkdownPipelineBuilder();
             string defaultConfig = DefaultExtensions;

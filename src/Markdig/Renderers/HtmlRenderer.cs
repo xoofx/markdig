@@ -91,7 +91,7 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public HtmlRenderer WriteEscape(string content)
         {
             if (string.IsNullOrEmpty(content))
@@ -107,7 +107,7 @@ namespace Markdig.Renderers
         /// <param name="slice">The slice.</param>
         /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public HtmlRenderer WriteEscape(ref StringSlice slice, bool softEscape = false)
         {
             if (slice.Start > slice.End)
@@ -123,7 +123,7 @@ namespace Markdig.Renderers
         /// <param name="slice">The slice.</param>
         /// <param name="softEscape">Only escape &lt; and &amp;</param>
         /// <returns>This instance</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public HtmlRenderer WriteEscape(StringSlice slice, bool softEscape = false)
         {
             return WriteEscape(ref slice, softEscape);
@@ -318,12 +318,12 @@ namespace Markdig.Renderers
         /// <summary>
         /// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
         /// </summary>
-        /// <param name="obj">The object.</param>
+        /// <param name="markdownObject">The object.</param>
         /// <returns></returns>
-        public HtmlRenderer WriteAttributes(MarkdownObject obj)
+        public HtmlRenderer WriteAttributes(MarkdownObject markdownObject)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return WriteAttributes(obj.TryGetAttributes());
+            if (markdownObject == null) ThrowHelper.ArgumentNullException_markdownObject();
+            return WriteAttributes(markdownObject.TryGetAttributes());
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Markdig.Renderers
         /// <returns>This instance</returns>
         public HtmlRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool escape, bool softEscape = false)
         {
-            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
+            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
             if (leafBlock.Lines.Lines != null)
             {
                 var lines = leafBlock.Lines;

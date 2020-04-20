@@ -4,9 +4,9 @@
     <Description>A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.18.3</VersionPrefix>
+    <VersionPrefix>0.20.0</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
-    <TargetFrameworks>net35;net40;netstandard2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
@@ -20,14 +20,21 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' OR '$(TargetFramework)' == 'net40'">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="jnm2.ReferenceAssemblies.net35" Version="1.0.1" PrivateAssets="All" />
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>$(NoWarn);CS1591</NoWarn>
@@ -37,4 +44,5 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.*" PrivateAssets="All"/>
   </ItemGroup>
+
 </Project>

@@ -42,7 +42,7 @@ namespace Markdig.Parsers.Inlines
                 c = slice.NextChar();
             }
 
-            var builder = processor.StringBuilders.Get();
+            var builder = StringBuilderCache.Local();
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
             // A code span begins with a backtick string and ends with a backtick string of equal length.
@@ -97,17 +97,22 @@ namespace Markdig.Parsers.Inlines
             bool isMatching = false;
             if (closeSticks == openSticks)
             {
+                string content;
+
                 // Remove one space from front and back if the string is not all spaces
                 if (!allSpace && builder.Length > 2 && builder[0] == ' ' && builder[builder.Length - 1] == ' ')
                 {
-                    builder.Length--;
-                    builder.Remove(0, 1); // More expensive, alternative is to have a double-pass algorithm
+                    content = builder.ToString(1, builder.Length - 2);
+                }
+                else
+                {
+                    content = builder.ToString();
                 }
 
                 processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
-                    Content = builder.ToString(),
+                    Content = content,
                     Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column
@@ -115,8 +120,6 @@ namespace Markdig.Parsers.Inlines
                 isMatching = true;
             }
 
-            // Release the builder if not used
-            processor.StringBuilders.Release(builder);
             return isMatching;
         }
     }

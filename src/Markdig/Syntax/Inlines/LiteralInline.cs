@@ -39,7 +39,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="System.ArgumentNullException"></exception>
         public LiteralInline(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            if (text == null) ThrowHelper.ArgumentNullException_text();
             Content = new StringSlice(text);
         }
 

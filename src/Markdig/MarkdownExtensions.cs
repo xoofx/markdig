@@ -34,6 +34,7 @@ using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Extensions.Globalization;
+using Markdig.Helpers;
 
 namespace Markdig
 {
@@ -138,7 +139,7 @@ namespace Markdig
         {
             if (pipeline.Extensions.Count != 0)
             {
-                throw new InvalidOperationException("The SelfPipeline extension cannot be used with other extensions");
+                ThrowHelper.InvalidOperationException("The SelfPipeline extension cannot be used with other extensions");
             }
 
             pipeline.Extensions.Add(new SelfPipelineExtension(defaultTag, defaultExtensions));

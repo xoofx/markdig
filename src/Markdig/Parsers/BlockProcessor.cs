@@ -24,7 +24,6 @@ namespace Markdig.Parsers
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
             this.parserStateCache = root.parserStateCache;
-            StringBuilders = root.StringBuilders;
             Document = root.Document;
             Parsers = root.Parsers;
 
@@ -41,13 +40,11 @@ namespace Markdig.Parsers
         /// <param name="parsers">The list of parsers.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public BlockProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
+        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
         {
-            if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
+            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
             parserStateCache = new BlockParserStateCache(this);
-            StringBuilders = stringBuilders;
             Document = document;
             document.IsOpen = true;
             Parsers = parsers;
@@ -152,11 +149,6 @@ namespace Markdig.Parsers
         /// Gets the character position before the indent occurred.
         /// </summary>
         public int StartBeforeIndent { get; private set; }
-
-        /// <summary>
-        /// Gets the cache of string builders.
-        /// </summary>
-        public StringBuilderCache StringBuilders { get; }
 
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.
@@ -400,8 +392,8 @@ namespace Markdig.Parsers
         /// <exception cref="System.ArgumentException">The block must be opened</exception>
         public void Open(Block block)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (!block.IsOpen) throw new ArgumentException("The block must be opened", nameof(block));
+            if (block == null) ThrowHelper.ArgumentNullException(nameof(block));
+            if (!block.IsOpen) ThrowHelper.ArgumentException("The block must be opened", nameof(block));
             OpenedBlocks.Add(block);
         }
 
@@ -477,7 +469,7 @@ namespace Markdig.Parsers
         {
             if (this == root)
             {
-                throw new InvalidOperationException("Cannot release the root parser state");
+                ThrowHelper.InvalidOperationException("Cannot release the root parser state");
             }
             parserStateCache.Release(this);
         }
@@ -633,7 +625,7 @@ namespace Markdig.Parsers
                 // If a parser is adding a block, it must be the last of the list
                 if ((i + 1) < OpenedBlocks.Count && NewBlocks.Count > 0)
                 {
-                    throw new InvalidOperationException("A pending parser cannot add a new block when it is not the last pending block");
+                    ThrowHelper.InvalidOperationException("A pending parser cannot add a new block when it is not the last pending block");
                 }
 
                 // If we have a leaf block
@@ -680,7 +672,7 @@ namespace Markdig.Parsers
                 // Security check so that the parser can't go into a crazy infinite loop if one extension is messing
                 if (previousStart == Start)
                 {
-                    throw new InvalidOperationException($"The parser is in an invalid infinite loop while trying to parse blocks at line [{LineIndex}] with line [{Line}]");
+                    ThrowHelper.InvalidOperationException($"The parser is in an invalid infinite loop while trying to parse blocks at line [{LineIndex}] with line [{Line}]");
                 }
                 previousStart = Start;
 
@@ -810,7 +802,7 @@ namespace Markdig.Parsers
 
                 if (block.Parser == null)
                 {
-                    throw new InvalidOperationException($"The new block [{block.GetType()}] must have a valid Parser property");
+                    ThrowHelper.InvalidOperationException($"The new block [{block.GetType()}] must have a valid Parser property");
                 }
 
                 block.Line = LineIndex;
@@ -826,7 +818,7 @@ namespace Markdig.Parsers
 
                     if (newBlocks.Count > 0)
                     {
-                        throw new InvalidOperationException(
+                        ThrowHelper.InvalidOperationException(
                             "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                     }
                 }
