@@ -6,7 +6,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// Base interface for all syntax tree inlines.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.IMarkdownObject" />
+    /// <seealso cref="IMarkdownObject" />
     public interface IInline : IMarkdownObject
     {
         /// <summary>

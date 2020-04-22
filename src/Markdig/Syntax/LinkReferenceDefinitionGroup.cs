@@ -11,7 +11,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Contains all the <see cref="LinkReferenceDefinition"/> found in a document.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class LinkReferenceDefinitionGroup : ContainerBlock
     {
         /// <summary>

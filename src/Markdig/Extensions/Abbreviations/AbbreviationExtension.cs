@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Abbreviations
     /// <summary>
     /// Extension to allow abbreviations.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class AbbreviationExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Figures
     /// <summary>
     /// A HTML renderer for a <see cref="FigureCaption"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{FigureCaption}" />
+    /// <seealso cref="HtmlObjectRenderer{FigureCaption}" />
     public class HtmlFigureCaptionRenderer : HtmlObjectRenderer<FigureCaption>
     {
         protected override void Write(HtmlRenderer renderer, FigureCaption obj)

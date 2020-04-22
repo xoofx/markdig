@@ -38,7 +38,7 @@ namespace Markdig.Parsers
         /// <param name="stringBuilders">The string builders cache.</param>
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
         {
@@ -388,8 +388,8 @@ namespace Markdig.Parsers
         /// Opens the specified block.
         /// </summary>
         /// <param name="block">The block.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException">The block must be opened</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">The block must be opened</exception>
         public void Open(Block block)
         {
             if (block == null) ThrowHelper.ArgumentNullException(nameof(block));
@@ -570,7 +570,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Tries to continue matching existing opened <see cref="Block"/>.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         /// A pending parser cannot add a new block when it is not the last pending block
         /// or
         /// The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed
@@ -792,7 +792,7 @@ namespace Markdig.Parsers
         /// </summary>
         /// <param name="result">The last result of matching.</param>
         /// <param name="allowClosing">if set to <c>true</c> the processing of a new block will close existing opened blocks].</param>
-        /// <exception cref="System.InvalidOperationException">The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed</exception>
+        /// <exception cref="InvalidOperationException">The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed</exception>
         private void ProcessNewBlocks(BlockState result, bool allowClosing)
         {
             var newBlocks = NewBlocks;

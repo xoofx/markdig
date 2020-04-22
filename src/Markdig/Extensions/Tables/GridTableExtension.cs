@@ -8,7 +8,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Extension that allows to use grid tables.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class GridTableExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

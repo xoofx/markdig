@@ -55,7 +55,7 @@ namespace Testamina.Markdig.Benchmarks
             //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
             //var writer = new StringWriter();
-            global::CommonMark.CommonMarkConverter.Convert(text);
+            CommonMark.CommonMarkConverter.Convert(text);
             //writer.Flush();
             //writer.ToString();
         }

@@ -10,7 +10,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for <see cref="LinkInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class LinkInlineParser : InlineParser
     {
         /// <summary>

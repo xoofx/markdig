@@ -8,7 +8,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// A list (Section 5.3 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class ListBlock : ContainerBlock
     {
         /// <summary>

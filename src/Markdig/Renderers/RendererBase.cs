@@ -11,7 +11,7 @@ namespace Markdig.Renderers
     /// <summary>
     /// Base class for a <see cref="IMarkdownRenderer"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.IMarkdownRenderer" />
+    /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;

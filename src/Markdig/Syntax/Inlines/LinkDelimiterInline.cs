@@ -8,7 +8,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A delimiter for a link.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.DelimiterInline" />
+    /// <seealso cref="DelimiterInline" />
     public class LinkDelimiterInline : DelimiterInline
     {
         public LinkDelimiterInline(InlineParser parser) : base(parser)

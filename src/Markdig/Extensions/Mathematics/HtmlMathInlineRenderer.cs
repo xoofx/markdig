@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// A HTML renderer for a <see cref="MathInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Figure}" />
+    /// <seealso cref="HtmlObjectRenderer{Figure}" />
     public class HtmlMathInlineRenderer : HtmlObjectRenderer<MathInline>
     {
         protected override void Write(HtmlRenderer renderer, MathInline obj)

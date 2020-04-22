@@ -34,7 +34,7 @@ namespace Markdig.Parsers
         /// <param name="document">The document.</param>
         /// <param name="parsers">The parsers.</param>
         /// <param name="inlineCreated">The inline created event.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
         {

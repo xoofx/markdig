@@ -9,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A List of <see cref="BlockParser"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ParserList{Markdig.Parsers.BlockParser, Markdig.Parsers.BlockParserState}" />
+    /// <seealso cref="Parsers.ParserList{Parsers.BlockParser, Parsers.BlockParserState}" />
     public class BlockParserList : ParserList<BlockParser, BlockProcessor>
     {
         /// <summary>

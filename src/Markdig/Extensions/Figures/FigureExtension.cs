@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Figures
     /// <summary>
     /// Extension to allow usage of figures and figure captions.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class FigureExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

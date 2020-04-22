@@ -8,7 +8,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Represents a group of lines that is treated as raw HTML (and will not be escaped in HTML output).
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     public class HtmlBlock : LeafBlock
     {
         /// <summary>

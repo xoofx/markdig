@@ -102,7 +102,7 @@ namespace Markdig.Renderers.Html
         /// <param name="htmlAttributes">The HTML attributes.</param>
         /// <param name="mergeIdAndProperties">If set to <c>true</c> it will merge properties to the target htmlAttributes. Default is <c>false</c></param>
         /// <param name="shared">If set to <c>true</c> it will try to share Classes and Properties if destination don't have them, otherwise it will make a copy. Default is <c>true</c></param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public void CopyTo(HtmlAttributes htmlAttributes, bool mergeIdAndProperties = false, bool shared = true)
         {
             if (htmlAttributes == null) ThrowHelper.ArgumentNullException(nameof(htmlAttributes));

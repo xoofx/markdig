@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// A math block.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.FencedCodeBlock" />
+    /// <seealso cref="FencedCodeBlock" />
     public class MathBlock : FencedCodeBlock
     {
         /// <summary>

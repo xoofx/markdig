@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// An inline parser for <see cref="MathInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     /// <seealso cref="IPostInlineProcessor" />
     public class MathInlineParser : InlineParser
     {

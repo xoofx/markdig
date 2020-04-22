@@ -36,7 +36,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Base parser for fenced blocks (opened by 3 or more character delimiters on a first line, and closed by at least the same number of delimiters)
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T : Block, IFencedBlock
     {
 

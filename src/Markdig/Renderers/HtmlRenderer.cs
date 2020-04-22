@@ -17,7 +17,7 @@ namespace Markdig.Renderers
     /// <summary>
     /// Default HTML renderer for a Markdown <see cref="MarkdownDocument"/> object.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.TextRendererBase{Markdig.Renderers.HtmlRenderer}" />
+    /// <seealso cref="Renderers.TextRendererBase{Renderers.HtmlRenderer}" />
     public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
         /// <summary>

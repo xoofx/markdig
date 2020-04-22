@@ -10,7 +10,7 @@ namespace Markdig.Extensions.TaskLists
     /// <summary>
     /// A HTML renderer for a <see cref="TaskList"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{TaskList}" />
+    /// <seealso cref="HtmlObjectRenderer{TaskList}" />
     public class HtmlTaskListRenderer : HtmlObjectRenderer<TaskList>
     {
         protected override void Write(HtmlRenderer renderer, TaskList obj)

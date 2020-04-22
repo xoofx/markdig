@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Abbreviations
     /// <summary>
     /// A HTML renderer for a <see cref="AbbreviationInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{CustomContainer}" />
+    /// <seealso cref="HtmlObjectRenderer{CustomContainer}" />
     public class HtmlAbbreviationRenderer : HtmlObjectRenderer<AbbreviationInline>
     {
         protected override void Write(HtmlRenderer renderer, AbbreviationInline obj)

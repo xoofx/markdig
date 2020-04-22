@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A block that contains all the footnotes at the end of a <see cref="MarkdownDocument"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class FootnoteGroup : ContainerBlock
     {
         /// <summary>

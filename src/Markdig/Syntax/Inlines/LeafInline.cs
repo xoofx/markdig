@@ -6,7 +6,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A base class for a leaf inline.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
+    /// <seealso cref="Inline" />
     public abstract class LeafInline : Inline
     {
     }

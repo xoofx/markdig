@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// A Normalize renderer for a <see cref="QuoteBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.QuoteBlock}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.QuoteBlock}" />
     public class QuoteBlockRenderer : NormalizeObjectRenderer<QuoteBlock>
     {
         protected override void Write(NormalizeRenderer renderer, QuoteBlock obj)

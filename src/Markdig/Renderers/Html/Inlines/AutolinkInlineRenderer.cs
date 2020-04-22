@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Html.Inlines
     /// <summary>
     /// A HTML renderer for an <see cref="AutolinkInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.AutolinkInline}" />
+    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.Inlines.AutolinkInline}" />
     public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     {
         /// <summary>

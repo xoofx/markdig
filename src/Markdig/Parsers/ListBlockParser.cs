@@ -11,7 +11,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A parser for a list block and list item block.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class ListBlockParser : BlockParser
     {
         private CharacterMap<ListItemParser> mapItemParsers;

@@ -23,7 +23,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// </summary>
         /// <param name="tag">The matching start tag.</param>
         /// <param name="defaultExtensions">The default extensions.</param>
-        /// <exception cref="System.ArgumentException">Tag cannot contain `<`  or `>` characters</exception>
+        /// <exception cref="ArgumentException">Tag cannot contain `<`  or `>` characters</exception>
         public SelfPipelineExtension(string tag = null, string defaultExtensions = null)
         {
             tag = tag?.Trim();
@@ -72,7 +72,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// </summary>
         /// <param name="inputText">The input text.</param>
         /// <returns>The pipeline configured from the input</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public MarkdownPipeline CreatePipelineFromInput(string inputText)
         {
             if (inputText == null) ThrowHelper.ArgumentNullException(nameof(inputText));

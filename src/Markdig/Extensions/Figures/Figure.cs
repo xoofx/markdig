@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Figures
     /// <summary>
     /// Defines a figure container.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class Figure : ContainerBlock
     {
         /// <summary>

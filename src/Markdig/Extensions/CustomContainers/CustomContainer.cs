@@ -9,8 +9,8 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// A block custom container.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
-    /// <seealso cref="Markdig.Syntax.IFencedBlock" />
+    /// <seealso cref="ContainerBlock" />
+    /// <seealso cref="IFencedBlock" />
     public class CustomContainer : ContainerBlock, IFencedBlock
     {
         /// <summary>

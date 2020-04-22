@@ -15,7 +15,7 @@ namespace Markdig.Extensions.ListExtras
     /// <remarks>
     /// Note that we don't validate roman numbers.
     /// </remarks>
-    /// <seealso cref="Markdig.Parsers.OrderedListItemParser" />
+    /// <seealso cref="OrderedListItemParser" />
     public class ListExtraItemParser : OrderedListItemParser
     {
         /// <summary>

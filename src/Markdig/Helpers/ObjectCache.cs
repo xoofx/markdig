@@ -54,7 +54,7 @@ namespace Markdig.Helpers
         /// Releases the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <exception cref="System.ArgumentNullException">if instance is null</exception>
+        /// <exception cref="ArgumentNullException">if instance is null</exception>
         public void Release(T instance)
         {
             if (instance == null) ThrowHelper.ArgumentNullException(nameof(instance));

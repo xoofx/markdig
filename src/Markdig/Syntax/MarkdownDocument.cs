@@ -8,7 +8,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// The root Markdown document.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class MarkdownDocument : ContainerBlock
     {
         /// <summary>

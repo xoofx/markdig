@@ -9,7 +9,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// <summary>
     /// A definition list contains <see cref="DefinitionItem"/> children.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class DefinitionList : ContainerBlock
     {
         /// <summary>

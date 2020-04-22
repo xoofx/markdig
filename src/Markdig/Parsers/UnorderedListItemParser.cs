@@ -6,7 +6,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// The default parser used to parse unordered list item (-, +, *)
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ListItemParser" />
+    /// <seealso cref="ListItemParser" />
     public class UnorderedListItemParser : ListItemParser
     {
         /// <summary>

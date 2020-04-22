@@ -11,7 +11,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for parsing <see cref="LiteralInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public sealed class LiteralInlineParser : InlineParser
     {
         public delegate void PostMatchDelegate(InlineProcessor processor, ref StringSlice slice);

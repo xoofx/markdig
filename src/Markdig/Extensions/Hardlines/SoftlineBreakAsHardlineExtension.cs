@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Hardlines
     /// <summary>
     /// Extension to generate hardline break for softline breaks.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class SoftlineBreakAsHardlineExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

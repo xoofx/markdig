@@ -10,7 +10,7 @@ namespace Markdig.Helpers
     /// A List that provides methods for inserting/finding before/after. See remarks.
     /// </summary>
     /// <typeparam name="T">Type of the list item</typeparam>
-    /// <seealso cref="System.Collections.Generic.List{T}" />
+    /// <seealso cref="List{T}" />
     /// <remarks>We use a typed list and don't use extension methods because it would pollute all list implements and the top level namespace.</remarks>
     public class OrderedList<T> : List<T>
     {

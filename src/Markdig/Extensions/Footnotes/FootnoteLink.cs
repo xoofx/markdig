@@ -8,7 +8,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A inline link to a <see cref="Footnote"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
+    /// <seealso cref="Inline" />
     public class FootnoteLink : Inline
     {
         /// <summary>

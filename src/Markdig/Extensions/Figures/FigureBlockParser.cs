@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Figures
     /// <summary>
     /// The block parser for a <see cref="Figure"/> block.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class FigureBlockParser : BlockParser
     { 
         /// <summary>

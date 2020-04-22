@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// A Normalize renderer for a <see cref="ParagraphBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.ParagraphBlock}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.ParagraphBlock}" />
     public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
     {
         protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)

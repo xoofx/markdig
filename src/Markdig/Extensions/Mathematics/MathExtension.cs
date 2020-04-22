@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// Extension for adding inline mathematics $...$
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class MathExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

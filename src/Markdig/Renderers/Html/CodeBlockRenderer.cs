@@ -12,7 +12,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// An HTML renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.CodeBlock}" />
+    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.CodeBlock}" />
     public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     {
         /// <summary>

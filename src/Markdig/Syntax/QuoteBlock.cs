@@ -8,7 +8,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// A block quote (Section 5.1 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
         /// <summary>

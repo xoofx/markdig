@@ -14,7 +14,7 @@ namespace Markdig.Extensions.PragmaLines
     /// <summary>
     /// Extension to a span for each line containing the original line id (using id = pragma-line#line_number_zero_based)
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class PragmaLineExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

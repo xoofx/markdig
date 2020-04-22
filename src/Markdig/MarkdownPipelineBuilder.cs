@@ -86,7 +86,7 @@ namespace Markdig
         /// <summary>
         /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
+        /// <exception cref="InvalidOperationException">An extension cannot be null</exception>
         public MarkdownPipeline Build()
         {
             if (pipeline != null)

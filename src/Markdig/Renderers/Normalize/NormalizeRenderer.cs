@@ -13,7 +13,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// Default HTML renderer for a Markdown <see cref="MarkdownDocument"/> object.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.TextRendererBase{Markdig.Renderers.Normalize.NormalizeRenderer}" />
+    /// <seealso cref="Renderers.TextRendererBase{Normalize.NormalizeRenderer}" />
     public class NormalizeRenderer : TextRendererBase<NormalizeRenderer>
     {
         /// <summary>

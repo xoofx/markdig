@@ -12,7 +12,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for HTML entities.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class HtmlEntityParser : InlineParser
     {
         /// <summary>

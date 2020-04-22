@@ -9,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Parser for a <see cref="FencedCodeBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
     {
         public const string DefaultInfoPrefix = "language-";

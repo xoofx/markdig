@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Html.Inlines
     /// <summary>
     /// A HTML renderer for an <see cref="EmphasisInline"/>.
     /// </summary>
-    /// <seealso cref="Html.HtmlObjectRenderer{EmphasisInline}" />
+    /// <seealso cref="HtmlObjectRenderer{EmphasisInline}" />
     public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     {
         /// <summary>

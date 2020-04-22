@@ -14,7 +14,7 @@ namespace Markdig.Renderers
     /// <summary>
     /// A text based <see cref="IMarkdownRenderer"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.RendererBase" />
+    /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase : RendererBase
     {
         private TextWriter writer;
@@ -23,7 +23,7 @@ namespace Markdig.Renderers
         /// Initializes a new instance of the <see cref="TextRendererBase"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
@@ -35,7 +35,7 @@ namespace Markdig.Renderers
         /// <summary>
         /// Gets or sets the writer.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">if the value is null</exception>
+        /// <exception cref="ArgumentNullException">if the value is null</exception>
         public TextWriter Writer
         {
             get { return writer; }
@@ -66,7 +66,7 @@ namespace Markdig.Renderers
     /// Typed <see cref="TextRendererBase"/>.
     /// </summary>
     /// <typeparam name="T">Type of the renderer</typeparam>
-    /// <seealso cref="Markdig.Renderers.RendererBase" />
+    /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
         private bool previousWasLine;

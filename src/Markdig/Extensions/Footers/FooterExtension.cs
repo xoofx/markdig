@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Footers
     /// <summary>
     /// Extension that provides footer.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class FooterExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

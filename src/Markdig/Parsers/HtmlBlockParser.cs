@@ -10,7 +10,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for a <see cref="HtmlBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class HtmlBlockParser : BlockParser
     {
         /// <summary>

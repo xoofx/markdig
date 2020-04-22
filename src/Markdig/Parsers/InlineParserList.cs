@@ -8,7 +8,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A list of <see cref="InlineParser"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ParserList{Markdig.Parsers.InlineParser, Markdig.Parsers.InlineParserState}" />
+    /// <seealso cref="Parsers.ParserList{Parsers.InlineParser, Parsers.InlineParserState}" />
     public class InlineParserList : ParserList<InlineParser, InlineProcessor>
     {
         public InlineParserList(IEnumerable<InlineParser> parsers) : base(parsers)

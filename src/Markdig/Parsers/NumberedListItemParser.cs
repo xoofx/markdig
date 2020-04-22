@@ -8,7 +8,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// The default parser for parsing numbered list item (e.g: 1) or 1.)
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.OrderedListItemParser" />
+    /// <seealso cref="OrderedListItemParser" />
     public class NumberedListItemParser : OrderedListItemParser
     {
         /// <summary>

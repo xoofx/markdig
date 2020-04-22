@@ -14,7 +14,7 @@ namespace Markdig.Extensions.MediaLinks
     /// <summary>
     /// Extension for extending image Markdown links in case a video or an audio file is linked and output proper link.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class MediaLinkExtension : IMarkdownExtension
     {
         public MediaLinkExtension() : this(new MediaOptions())

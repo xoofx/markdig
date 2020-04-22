@@ -9,7 +9,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// <summary>
     /// A definition term contains a single line with the term to define.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     public class DefinitionTerm : LeafBlock
     {
         /// <summary>

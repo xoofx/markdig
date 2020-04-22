@@ -8,7 +8,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for an indented <see cref="CodeBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class IndentedCodeBlockParser : BlockParser
     {
         public override bool CanInterrupt(BlockProcessor processor, Block block)

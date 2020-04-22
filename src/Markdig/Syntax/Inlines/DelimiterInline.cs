@@ -11,7 +11,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// Internal delimiter used by some parsers (e.g emphasis, tables).
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.ContainerInline" />
+    /// <seealso cref="ContainerInline" />
     [DebuggerDisplay("{ToLiteral()} {Type}")]
     public abstract class DelimiterInline : ContainerInline
     {

@@ -17,7 +17,7 @@ namespace Markdig.Extensions.AutoIdentifiers
     /// <summary>
     /// The auto-identifier extension
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class AutoIdentifierExtension : IMarkdownExtension
     {
         private const string AutoIdentifierKey = "AutoIdentifier";

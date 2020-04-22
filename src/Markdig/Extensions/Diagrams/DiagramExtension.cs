@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Diagrams
     /// <summary>
     /// Extension to allow diagrams.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class DiagramExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

@@ -9,7 +9,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.MarkdownObject" />
+    /// <seealso cref="MarkdownObject" />
     public abstract class Block : MarkdownObject, IBlock
     {
         /// <summary>

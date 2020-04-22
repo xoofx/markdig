@@ -8,8 +8,8 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// An inline custom container
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.ContainerInline" />
-    /// <seealso cref="Markdig.Syntax.Inlines.EmphasisInline" />
+    /// <seealso cref="ContainerInline" />
+    /// <seealso cref="EmphasisInline" />
     public class CustomContainerInline : EmphasisInline
     {
     }

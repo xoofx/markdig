@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// The block parser for a <see cref="Footnote"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class FootnoteParser : BlockParser
     {
         /// <summary>

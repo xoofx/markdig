@@ -35,7 +35,7 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringLineGroup(string text)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();

@@ -9,7 +9,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// An entity HTML.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.LeafInline" />
+    /// <seealso cref="LeafInline" />
     [DebuggerDisplay("{Original} -> {Transcoded}")]
     public class HtmlEntityInline : LeafInline
     {

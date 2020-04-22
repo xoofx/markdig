@@ -11,7 +11,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A literal inline.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.LeafInline" />
+    /// <seealso cref="LeafInline" />
     [DebuggerDisplay("{Content}")]
     public class LiteralInline : LeafInline
     {
@@ -36,7 +36,7 @@ namespace Markdig.Syntax.Inlines
         /// Initializes a new instance of the <see cref="LiteralInline"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public LiteralInline(string text)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();

@@ -8,7 +8,7 @@ namespace Markdig.Renderers
     /// <summary>
     /// A collection of <see cref="IMarkdownObjectRenderer"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Helpers.OrderedList{Markdig.Renderers.IMarkdownObjectRenderer}" />
+    /// <seealso cref="Helpers.OrderedList{Renderers.IMarkdownObjectRenderer}" />
     public class ObjectRendererCollection : OrderedList<IMarkdownObjectRenderer>
     {
     }

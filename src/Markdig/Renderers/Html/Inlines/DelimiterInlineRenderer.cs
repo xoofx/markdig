@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Html.Inlines
     /// <summary>
     /// A HTML renderer for a <see cref="DelimiterInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.Inlines.DelimiterInline}" />
+    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.Inlines.DelimiterInline}" />
     public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
     {
         protected override void Write(HtmlRenderer renderer, DelimiterInline obj)

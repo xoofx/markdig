@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// A HTML renderer for a <see cref="ParagraphBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.ParagraphBlock}" />
+    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.ParagraphBlock}" />
     public class ParagraphRenderer : HtmlObjectRenderer<ParagraphBlock>
     {
         protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)

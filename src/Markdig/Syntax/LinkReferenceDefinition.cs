@@ -10,7 +10,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// A link reference definition (Section 4.7 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     public class LinkReferenceDefinition : LeafBlock
     {
         /// <summary>

@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// A Normalize renderer for a <see cref="ThematicBreakBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.ThematicBreakBlock}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.ThematicBreakBlock}" />
     public class ThematicBreakRenderer : NormalizeObjectRenderer<ThematicBreakBlock>
     {
         protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)

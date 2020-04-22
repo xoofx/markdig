@@ -7,7 +7,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// A definition item contains zero to multiple <see cref="DefinitionTerm"/> 
     /// and definitions (any <see cref="Block"/>)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class DefinitionItem : ContainerBlock
     {
         /// <summary>

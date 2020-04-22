@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Emoji
     /// <summary>
     /// Extension to allow emoji shortcodes and smileys replacement.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class EmojiExtension : IMarkdownExtension
     {
         public EmojiExtension(EmojiMapping emojiMapping)

@@ -11,7 +11,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Base class for all leaf blocks.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Block" />
+    /// <seealso cref="Block" />
     [DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines}")]
     public abstract class LeafBlock : Block
     {

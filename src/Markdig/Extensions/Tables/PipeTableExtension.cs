@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Extension that allows to use pipe tables.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class PipeTableExtension : IMarkdownExtension
     {
         /// <summary>

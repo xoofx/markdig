@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// A HTML renderer for a <see cref="MathBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{T}" />
+    /// <seealso cref="HtmlObjectRenderer{T}" />
     public class HtmlMathBlockRenderer : HtmlObjectRenderer<MathBlock>
     {
         protected override void Write(HtmlRenderer renderer, MathBlock obj)

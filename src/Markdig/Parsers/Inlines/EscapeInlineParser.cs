@@ -9,7 +9,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for escape characters.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class EscapeInlineParser : InlineParser
     {
         public EscapeInlineParser()

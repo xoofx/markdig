@@ -4,9 +4,9 @@ namespace Markdig.Extensions.TextRenderer
 {
     /// <summary>
     /// Extension that allows setting line-endings for any IMarkdownRenderer
-    /// that inherits from <see cref="Markdig.Renderers.TextRendererBase"/>
+    /// that inherits from <see cref="TextRendererBase"/>
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class ConfigureNewLineExtension : IMarkdownExtension
     {
         private readonly string newLine;

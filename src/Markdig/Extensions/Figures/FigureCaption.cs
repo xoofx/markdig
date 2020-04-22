@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Figures
     /// <summary>
     /// Defines a figure caption.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     public class FigureCaption : LeafBlock
     {
         /// <summary>

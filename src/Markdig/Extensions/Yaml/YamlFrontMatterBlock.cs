@@ -9,7 +9,7 @@ namespace Markdig.Extensions.Yaml
     /// <summary>
     /// A YAML frontmatter block.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.CodeBlock" />
+    /// <seealso cref="CodeBlock" />
     public class YamlFrontMatterBlock : CodeBlock
     {
         /// <summary>

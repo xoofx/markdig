@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// An Normalize renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.CodeBlock}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.CodeBlock}" />
     public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
     {
         public bool OutputAttributesOnPre { get; set; }

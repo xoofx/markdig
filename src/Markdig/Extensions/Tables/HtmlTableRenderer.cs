@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// A HTML renderer for a <see cref="Table"/>
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Extensions.Tables.TableBlock}" />
+    /// <seealso cref="Renderers.Html.HtmlObjectRenderer{Tables.TableBlock}" />
     public class HtmlTableRenderer : HtmlObjectRenderer<Table>
     {
         protected override void Write(HtmlRenderer renderer, Table table)

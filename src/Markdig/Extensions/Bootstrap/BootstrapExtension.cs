@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Bootstrap
     /// <summary>
     /// Extension for tagging some HTML elements with bootstrap classes.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class BootstrapExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

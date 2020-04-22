@@ -8,7 +8,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Defines a row in a <see cref="Table"/>, contains <see cref="TableCell"/>, parent is <see cref="Table"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class TableRow : ContainerBlock
     {
         /// <summary>

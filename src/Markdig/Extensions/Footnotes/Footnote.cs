@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A block for a footnote.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class Footnote : ContainerBlock
     {
         public Footnote(BlockParser parser) : base(parser)

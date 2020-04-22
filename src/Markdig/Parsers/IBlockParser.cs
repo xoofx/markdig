@@ -9,7 +9,7 @@ namespace Markdig.Parsers
     /// Base interface for a <see cref="BlockParser"/>.
     /// </summary>
     /// <typeparam name="TProcessor"></typeparam>
-    /// <seealso cref="Markdig.Parsers.IMarkdownParser{T}" />
+    /// <seealso cref="IMarkdownParser{T}" />
     public interface IBlockParser<in TProcessor> : IMarkdownParser<TProcessor>
     {
         /// <summary>

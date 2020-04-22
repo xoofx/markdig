@@ -8,7 +8,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="DelimiterInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.Inlines.DelimiterInline}" />
+    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.Inlines.DelimiterInline}" />
     public class DelimiterInlineRenderer : NormalizeObjectRenderer<DelimiterInline>
     {
         protected override void Write(NormalizeRenderer renderer, DelimiterInline obj)

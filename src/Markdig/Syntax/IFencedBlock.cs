@@ -5,7 +5,7 @@
 namespace Markdig.Syntax
 {
     /// <summary>
-    /// A common interface for fenced block (e.g: <see cref="FencedCodeBlock"/> or <see cref="Markdig.Extensions.CustomContainers.CustomContainer"/>)
+    /// A common interface for fenced block (e.g: <see cref="FencedCodeBlock"/> or <see cref="Extensions.CustomContainers.CustomContainer"/>)
     /// </summary>
     public interface IFencedBlock : IBlock
     {

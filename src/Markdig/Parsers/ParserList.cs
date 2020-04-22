@@ -13,7 +13,7 @@ namespace Markdig.Parsers
     /// </summary>
     /// <typeparam name="T">Type of the parser</typeparam>
     /// <typeparam name="TState">The type of the parser state.</typeparam>
-    /// <seealso cref="Markdig.Helpers.OrderedList{T}" />
+    /// <seealso cref="OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
         private readonly CharacterMap<T[]> charMap;
@@ -122,7 +122,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes this instance with specified parser state.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         /// Unexpected null parser found
         /// or
         /// </exception>

@@ -9,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A block parser for a <see cref="ThematicBreakBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class ThematicBreakParser : BlockParser
     {
         /// <summary>

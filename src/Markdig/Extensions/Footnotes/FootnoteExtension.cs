@@ -8,7 +8,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// Extension to allow footnotes.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class FootnoteExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)

@@ -35,7 +35,7 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
             if (text is null)
