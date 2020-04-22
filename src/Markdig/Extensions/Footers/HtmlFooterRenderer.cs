@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Footers
     /// <summary>
     /// A HTML renderer for a <see cref="FooterBlock"/>.
     /// </summary>
-    /// <seealso cref="Renderers.Html.HtmlObjectRenderer{Footers.FooterBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{FooterBlock}" />
     public class HtmlFooterBlockRenderer : HtmlObjectRenderer<FooterBlock>
     {
         protected override void Write(HtmlRenderer renderer, FooterBlock footer)

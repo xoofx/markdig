@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="LineBreakInline"/>.
     /// </summary>
-    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.Inlines.LineBreakInline}" />
+    /// <seealso cref="NormalizeObjectRenderer{LineBreakInline}" />
     public class LineBreakInlineRenderer : NormalizeObjectRenderer<LineBreakInline>
     {
         /// <summary>

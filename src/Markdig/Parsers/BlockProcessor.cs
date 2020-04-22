@@ -36,9 +36,9 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockProcessor" /> class.
         /// </summary>
-        /// <param name="stringBuilders">The string builders cache.</param>
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)

@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// A Normalize renderer for a <see cref="ListBlock"/>.
     /// </summary>
-    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.ListBlock}" />
+    /// <seealso cref="NormalizeObjectRenderer{ListBlock}" />
     public class ListRenderer : NormalizeObjectRenderer<ListBlock>
     {
         protected override void Write(NormalizeRenderer renderer, ListBlock listBlock)

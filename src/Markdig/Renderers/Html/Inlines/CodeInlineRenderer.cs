@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Html.Inlines
     /// <summary>
     /// A HTML renderer for a <see cref="CodeInline"/>.
     /// </summary>
-    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.Inlines.CodeInline}" />
+    /// <seealso cref="HtmlObjectRenderer{CodeInline}" />
     public class CodeInlineRenderer : HtmlObjectRenderer<CodeInline>
     {
         protected override void Write(HtmlRenderer renderer, CodeInline obj)

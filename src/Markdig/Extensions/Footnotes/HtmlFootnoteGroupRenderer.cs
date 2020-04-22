@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A HTML renderer for a <see cref="FootnoteGroup"/>.
     /// </summary>
-    /// <seealso cref="Renderers.Html.HtmlObjectRenderer{Footnotes.FootnoteGroup}" />
+    /// <seealso cref="HtmlObjectRenderer{FootnoteGroup}" />
     public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     {
         /// <summary>

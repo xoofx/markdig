@@ -11,7 +11,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// <summary>
     /// A HTML renderer for <see cref="DefinitionList"/>, <see cref="DefinitionItem"/> and <see cref="DefinitionTerm"/>.
     /// </summary>
-    /// <seealso cref="Renderers.Html.HtmlObjectRenderer{DefinitionLists.DefinitionList}" />
+    /// <seealso cref="HtmlObjectRenderer{DefinitionList}" />
     public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
     {
         protected override void Write(HtmlRenderer renderer, DefinitionList list)

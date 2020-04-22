@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// A HTML renderer for a <see cref="QuoteBlock"/>.
     /// </summary>
-    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.QuoteBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
     public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
     {
         protected override void Write(HtmlRenderer renderer, QuoteBlock obj)

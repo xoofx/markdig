@@ -15,12 +15,12 @@ namespace Markdig.Extensions.SmartyPants
         Quote = 1,
 
         /// <summary>
-        /// This is a left single quote ' -gt; &lsquo;
+        /// This is a left single quote ' -gt; lsquo;
         /// </summary>
         LeftQuote,
 
         /// <summary>
-        /// This is a right single quote ' -gt; &rsquo;
+        /// This is a right single quote ' -gt; rsquo;
         /// </summary>
         RightQuote,
 
@@ -30,37 +30,37 @@ namespace Markdig.Extensions.SmartyPants
         DoubleQuote,
 
         /// <summary>
-        /// This is a left double quote " -gt; &ldquo;
+        /// This is a left double quote " -gt; ldquo;
         /// </summary>
         LeftDoubleQuote,
 
         /// <summary>
-        /// This is a right double quote " -gt; &rdquo;
+        /// This is a right double quote " -gt; rdquo;
         /// </summary>
         RightDoubleQuote,
 
         /// <summary>
-        /// This is a right double quote &lt;&lt; -gt; &laquo;
+        /// This is a right double quote &lt;&lt; -gt; laquo;
         /// </summary>
         LeftAngleQuote,
 
         /// <summary>
-        /// This is a right angle quote >> -gt;  &raquo;
+        /// This is a right angle quote >> -gt;  raquo;
         /// </summary>
         RightAngleQuote,
 
         /// <summary>
-        /// This is an ellipsis ... -gt; &hellip;
+        /// This is an ellipsis ... -gt; hellip;
         /// </summary>
         Ellipsis,
 
         /// <summary>
-        /// This is a ndash -- -gt; &ndash;
+        /// This is a ndash -- -gt; ndash;
         /// </summary>
         Dash2,
 
         /// <summary>
-        /// This is a mdash --- -gt; &mdash;
+        /// This is a mdash --- -gt; mdash;
         /// </summary>
         Dash3,
     }

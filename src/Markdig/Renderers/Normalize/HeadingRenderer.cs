@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// An Normalize renderer for a <see cref="HeadingBlock"/>.
     /// </summary>
-    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.HeadingBlock}" />
+    /// <seealso cref="NormalizeObjectRenderer{HeadingBlock}" />
     public class HeadingRenderer : NormalizeObjectRenderer<HeadingBlock>
     {
         private static readonly string[] HeadingTexts = {

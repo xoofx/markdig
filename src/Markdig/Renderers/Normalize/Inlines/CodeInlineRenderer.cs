@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="CodeInline"/>.
     /// </summary>
-    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.Inlines.CodeInline}" />
+    /// <seealso cref="NormalizeObjectRenderer{CodeInline}" />
     public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
     {
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)

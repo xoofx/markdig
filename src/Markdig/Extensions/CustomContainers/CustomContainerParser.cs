@@ -9,7 +9,7 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// The block parser for a <see cref="CustomContainer"/>.
     /// </summary>
-    /// <seealso cref="Parsers.FencedBlockParserBase{CustomContainers.CustomContainer}" />
+    /// <seealso cref="FencedBlockParserBase{CustomContainer}" />
     public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
     {
         /// <summary>

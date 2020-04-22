@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="LinkInline"/>.
     /// </summary>
-    /// <seealso cref="Normalize.NormalizeObjectRenderer{Syntax.Inlines.LinkInline}" />
+    /// <seealso cref="NormalizeObjectRenderer{LinkInline}" />
     public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
     {
         protected override void Write(NormalizeRenderer renderer, LinkInline link)

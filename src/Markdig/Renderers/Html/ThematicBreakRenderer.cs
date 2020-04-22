@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// A HTML renderer for a <see cref="ThematicBreakBlock"/>.
     /// </summary>
-    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.ThematicBreakBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{ThematicBreakBlock}" />
     public class ThematicBreakRenderer : HtmlObjectRenderer<ThematicBreakBlock>
     {
         protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)

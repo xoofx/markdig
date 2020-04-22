@@ -31,10 +31,10 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
         /// </summary>
-        /// <param name="stringBuilders">The string builders.</param>
         /// <param name="document">The document.</param>
         /// <param name="parsers">The parsers.</param>
-        /// <param name="inlineCreated">The inline created event.</param>
+        /// <param name="preciseSourcelocation">A value indicating whether to provide precise source location.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
         public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
@@ -96,7 +96,7 @@ namespace Markdig.Parsers
         public int LineIndex { get; private set; }
 
         /// <summary>
-        /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="InlineParser.Index"/> property.
+        /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="ParserBase{Inline}.Index"/> property.
         /// </summary>
         public object[] ParserStates { get; }
 
@@ -134,6 +134,8 @@ namespace Markdig.Parsers
         /// Gets the source position for the specified offset within the current slice.
         /// </summary>
         /// <param name="sliceOffset">The slice offset.</param>
+        /// <param name="lineIndex">The line index.</param>
+        /// <param name="column">The column.</param>
         /// <returns>The source position</returns>
         public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
         {

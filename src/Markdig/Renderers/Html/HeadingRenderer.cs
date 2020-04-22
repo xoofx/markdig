@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// An HTML renderer for a <see cref="HeadingBlock"/>.
     /// </summary>
-    /// <seealso cref="Html.HtmlObjectRenderer{Syntax.HeadingBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{HeadingBlock}" />
     public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
     {
         private static readonly string[] HeadingTexts = {
