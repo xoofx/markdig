@@ -24,9 +24,7 @@ namespace Markdig.Renderers.Normalize.Inlines
 
             if (link.Label != null)
             {
-
-                var literal = link.FirstChild as LiteralInline;
-                if (literal != null && literal.Content.Match(link.Label) && literal.Content.Length == link.Label.Length)
+                if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
                 {
                     // collapsed reference and shortcut links
                     if (!link.IsShortcut)

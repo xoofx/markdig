@@ -47,7 +47,7 @@ namespace Markdig.Parsers
         {
             InfoParser = DefaultInfoParser;
             MinimumMatchCount = 3;
-            MaximumMatchCount = Int32.MaxValue;
+            MaximumMatchCount = int.MaxValue;
         }
 
         /// <summary>

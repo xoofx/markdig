@@ -49,8 +49,7 @@ namespace Markdig.Parsers
             }
 
             // Note that ordered list start numbers must be nine digits or less:
-            char orderedDelimiter;
-            if (countDigit > 9 || !TryParseDelimiter(state, out orderedDelimiter))
+            if (countDigit > 9 || !TryParseDelimiter(state, out char orderedDelimiter))
             {
                 return false;
             }

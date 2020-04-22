@@ -39,11 +39,9 @@ namespace Markdig.Parsers.Inlines
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
-            int line;
-            int column;
             processor.Inline = new LineBreakInline
             {
-                Span = { Start = processor.GetSourcePosition(startPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startPosition, out int line, out int column) },
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
                 Column = column

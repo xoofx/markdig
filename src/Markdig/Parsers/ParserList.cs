@@ -64,8 +64,7 @@ namespace Markdig.Parsers
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-                        T[] parsers;
-                        if (!tempCharMap.TryGetValue(openingChar, out parsers))
+                        if (!tempCharMap.TryGetValue(openingChar, out T[] parsers))
                         {
                             parsers = new T[charCounter[openingChar]];
                             tempCharMap[openingChar] = parsers;
@@ -118,17 +117,6 @@ namespace Markdig.Parsers
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
             return charMap.IndexOfOpeningCharacter(text, start, end);
-        }
-
-        /// <summary>
-        /// Initializes this instance with specified parser state.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// Unexpected null parser found
-        /// or
-        /// </exception>
-        private void Initialize()
-        {
         }
     }
 }

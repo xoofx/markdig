@@ -26,13 +26,10 @@ namespace Markdig.Extensions.TextRenderer
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var textRenderer = renderer as TextRendererBase;
-            if (textRenderer == null)
+            if (renderer is TextRendererBase textRenderer)
             {
-                return;
+                textRenderer.Writer.NewLine = newLine;
             }
-
-            textRenderer.Writer.NewLine = newLine;
         }
     }
 }

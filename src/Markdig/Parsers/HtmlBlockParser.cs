@@ -136,7 +136,7 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
-                tag[count] = Char.ToLowerInvariant(c);
+                tag[count] = char.ToLowerInvariant(c);
                 c = line.NextChar();
             }
 

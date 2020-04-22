@@ -16,8 +16,7 @@ namespace Markdig.Renderers.Normalize
 
         protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
         {
-            var fencedCodeBlock = obj as FencedCodeBlock;
-            if (fencedCodeBlock != null)
+            if (obj is FencedCodeBlock fencedCodeBlock)
             {
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.FencedCharCount);
                 renderer.Write(opening);

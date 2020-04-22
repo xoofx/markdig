@@ -113,9 +113,7 @@ namespace Markdig.Parsers
 
         public int GetSourcePosition(int sliceOffset)
         {
-            int column;
-            int lineIndex;
-            return GetSourcePosition(sliceOffset, out lineIndex, out column);
+            return GetSourcePosition(sliceOffset, out int lineIndex, out int column);
         }
 
         public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
@@ -125,9 +123,7 @@ namespace Markdig.Parsers
                 return SourceSpan.Empty;
             }
 
-            int column;
-            int lineIndex;
-            return new SourceSpan(GetSourcePosition(span.Start, out lineIndex, out column), GetSourcePosition(span.End, out lineIndex, out column));
+            return new SourceSpan(GetSourcePosition(span.Start, out int lineIndex, out int column), GetSourcePosition(span.End, out lineIndex, out column));
         }
 
         /// <summary>
@@ -313,8 +309,7 @@ namespace Markdig.Parsers
             var container = Block.Inline;
             while (true)
             {
-                var nextContainer = container.LastChild as ContainerInline;
-                if (nextContainer != null && !nextContainer.IsClosed)
+                if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)
                 {
                     container = nextContainer;
                 }

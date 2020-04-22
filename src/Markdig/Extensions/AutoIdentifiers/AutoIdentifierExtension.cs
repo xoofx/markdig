@@ -62,8 +62,7 @@ namespace Markdig.Extensions.AutoIdentifiers
         private void HeadingBlockParser_Closed(BlockProcessor processor, Block block)
         {
             // We may have a ParagraphBlock here as we have a hook on the ParagraphBlockParser
-            var headingBlock = block as HeadingBlock;
-            if (headingBlock == null)
+            if (!(block is HeadingBlock headingBlock))
             {
                 return;
             }

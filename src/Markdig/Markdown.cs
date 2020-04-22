@@ -47,7 +47,7 @@ namespace Markdig
         /// <returns>A normalized markdown text.</returns>
         public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
-            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            pipeline ??= new MarkdownPipelineBuilder().Build();
             pipeline = CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer

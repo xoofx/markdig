@@ -30,12 +30,10 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            string link;
-            bool isEmail;
             var saved = slice;
             int line;
             int column;
-            if (LinkHelper.TryParseAutolink(ref slice, out link, out isEmail))
+            if (LinkHelper.TryParseAutolink(ref slice, out string link, out bool isEmail))
             {
                 processor.Inline = new AutolinkInline()
                 {
@@ -49,8 +47,7 @@ namespace Markdig.Parsers.Inlines
             else if (EnableHtmlParsing)
             {
                 slice = saved;
-                string htmlTag;
-                if (!HtmlHelper.TryParseHtmlTag(ref slice, out htmlTag))
+                if (!HtmlHelper.TryParseHtmlTag(ref slice, out string htmlTag))
                 {
                     return false;
                 }

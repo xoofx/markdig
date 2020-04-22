@@ -33,8 +33,7 @@ namespace Markdig.Extensions.MediaLinks
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 var inlineRenderer = htmlRenderer.ObjectRenderers.FindExact<LinkInlineRenderer>();
                 if (inlineRenderer != null)
@@ -52,10 +51,9 @@ namespace Markdig.Extensions.MediaLinks
                 return false;
             }
 
-            Uri uri;
             bool isSchemaRelative = false;
             // Only process absolute Uri
-            if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out uri) || !uri.IsAbsoluteUri)
+            if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out Uri uri) || !uri.IsAbsoluteUri)
             {
                 // see https://tools.ietf.org/html/rfc3986#section-4.2
                 // since relative uri doesn't support many properties, "http" is used as a placeholder here.
@@ -98,10 +96,9 @@ namespace Markdig.Extensions.MediaLinks
         {
             var path = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped);
             // Otherwise try to detect if we have an audio/video from the file extension
-            string mimeType;
             var lastDot = path.LastIndexOf('.');
             if (lastDot >= 0 &&
-                Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out mimeType))
+                Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out string mimeType))
             {
                 var htmlAttributes = GetHtmlAttributes(linkInline);
                 var isAudio = mimeType.StartsWith("audio");

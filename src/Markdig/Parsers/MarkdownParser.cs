@@ -175,9 +175,8 @@ namespace Markdig.Parsers
                         }
                         leafBlock.OnProcessInlinesEnd(inlineProcessor);
                     }
-                    else if (block is ContainerBlock)
+                    else if (block is ContainerBlock newContainer)
                     {
-                        var newContainer = (ContainerBlock) block;
                         // If we need to remove it
                         if (newContainer.RemoveAfterProcessInlines)
                         {

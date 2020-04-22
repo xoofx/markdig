@@ -93,16 +93,10 @@ namespace Markdig.Syntax
         public static bool TryParse<T>(ref T text, out LinkReferenceDefinition block) where T : ICharIterator
         {
             block = null;
-            string label;
-            string url;
-            string title;
-            SourceSpan labelSpan;
-            SourceSpan urlSpan;
-            SourceSpan titleSpan;
 
             var startSpan = text.Start;
 
-            if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out labelSpan, out urlSpan, out titleSpan))
+            if (!LinkHelper.TryParseLinkReferenceDefinition(ref text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan))
             {
                 return false;
             }

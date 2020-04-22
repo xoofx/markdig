@@ -21,8 +21,8 @@ namespace Markdig.Helpers
         /// <returns></returns>
         public static StringBuilder Local()
         {
-            var sb = local ?? (local = new StringBuilder());
-            if (sb.Length > 0)
+            var sb = local ??= new StringBuilder();
+            if (sb.Length != 0)
             {
                 sb.Length = 0;
             }

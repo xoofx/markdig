@@ -558,8 +558,7 @@ namespace Markdig.Parsers
                     CurrentBlock = block;
                 }
 
-                var container = block as ContainerBlock;
-                if (container != null)
+                if (block is ContainerBlock container)
                 {
                     CurrentContainer = container;
                     LastBlock = CurrentContainer.LastChild;
@@ -630,8 +629,7 @@ namespace Markdig.Parsers
                 }
 
                 // If we have a leaf block
-                var leaf = block as LeafBlock;
-                if (leaf != null && NewBlocks.Count == 0)
+                if (block is LeafBlock leaf && NewBlocks.Count == 0)
                 {
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
@@ -754,8 +752,7 @@ namespace Markdig.Parsers
                 // Special case for paragraph
                 UpdateLastBlockAndContainer();
 
-                var paragraph = CurrentBlock as ParagraphBlock;
-                if (isLazyParagraph && paragraph != null)
+                if (isLazyParagraph && CurrentBlock is ParagraphBlock paragraph)
                 {
                     Debug.Assert(NewBlocks.Count == 0);
 

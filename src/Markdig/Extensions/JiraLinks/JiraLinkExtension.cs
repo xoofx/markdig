@@ -35,8 +35,7 @@ namespace Markdig.Extensions.JiraLinks
         {
             // No HTML renderer required, since JiraLink type derives from InlineLink (which already has an HTML renderer)
 
-            var normalizeRenderer = renderer as NormalizeRenderer;
-            if (normalizeRenderer != null && !normalizeRenderer.ObjectRenderers.Contains<NormalizeJiraLinksRenderer>())
+            if (renderer is NormalizeRenderer normalizeRenderer && !normalizeRenderer.ObjectRenderers.Contains<NormalizeJiraLinksRenderer>())
             {
                 normalizeRenderer.ObjectRenderers.InsertBefore<LinkInlineRenderer>(new NormalizeJiraLinksRenderer());
             }

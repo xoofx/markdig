@@ -18,8 +18,7 @@ namespace Markdig.Parsers
             var postInlineProcessors = new List<IPostInlineProcessor>();
             foreach (var parser in this)
             {
-                var delimProcessor = parser as IPostInlineProcessor;
-                if (delimProcessor != null)
+                if (parser is IPostInlineProcessor delimProcessor)
                 {
                     postInlineProcessors.Add(delimProcessor);
                 }

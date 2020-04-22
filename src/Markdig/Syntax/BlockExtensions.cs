@@ -14,8 +14,7 @@ namespace Markdig.Syntax
         public static Block FindBlockAtPosition(this Block rootBlock, int position)
         {
             var contains = rootBlock.CompareToPosition(position) == 0;
-            var blocks = rootBlock as ContainerBlock;
-            if (blocks == null || blocks.Count == 0 || !contains)
+            if (!(rootBlock is ContainerBlock blocks) || blocks.Count == 0 || !contains)
             {
                 return contains ? rootBlock : null;
             }
@@ -60,8 +59,7 @@ namespace Markdig.Syntax
 
         public static Block FindClosestBlock(this Block rootBlock, int line)
         {
-            var blocks = rootBlock as ContainerBlock;
-            if (blocks == null || blocks.Count == 0)
+            if (!(rootBlock is ContainerBlock blocks) || blocks.Count == 0)
             {
                 return rootBlock.Line == line ? rootBlock : null;
             }

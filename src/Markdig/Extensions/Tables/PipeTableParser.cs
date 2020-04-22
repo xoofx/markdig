@@ -56,9 +56,7 @@ namespace Markdig.Extensions.Tables
             bool isFirstLineEmpty = false;
 
 
-            int globalLineIndex;
-            int column;
-            var position = processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var position = processor.GetSourcePosition(slice.Start, out int globalLineIndex, out int column);
             var localLineIndex = globalLineIndex - processor.LineIndex;
 
             if (tableState == null)

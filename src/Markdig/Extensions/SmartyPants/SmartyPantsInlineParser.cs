@@ -184,8 +184,7 @@ namespace Markdig.Extensions.SmartyPants
 
         private ListSmartyPants GetOrCreateState(InlineProcessor processor)
         {
-            var quotePants = processor.ParserStates[Index] as ListSmartyPants;
-            if (quotePants == null)
+            if (!(processor.ParserStates[Index] is ListSmartyPants quotePants))
             {
                 processor.ParserStates[Index] = quotePants = new ListSmartyPants();
             }

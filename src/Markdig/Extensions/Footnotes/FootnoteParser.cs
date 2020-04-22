@@ -40,10 +40,8 @@ namespace Markdig.Extensions.Footnotes
             }
 
             var saved = processor.Column;
-            string label;
             int start = processor.Start;
-            SourceSpan labelSpan;
-            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out label, out labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string label, out SourceSpan labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
             {
                 processor.GoToColumn(saved);
                 return BlockState.None;

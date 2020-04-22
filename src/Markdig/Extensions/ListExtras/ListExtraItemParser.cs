@@ -69,8 +69,7 @@ namespace Markdig.Extensions.ListExtras
             }
 
             // Finally we expect to always have a delimiter '.' or ')'
-            char orderedDelimiter;
-            if (!TryParseDelimiter(state, out orderedDelimiter))
+            if (!TryParseDelimiter(state, out char orderedDelimiter))
             {
                 return false;
             }

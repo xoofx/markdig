@@ -41,8 +41,7 @@ namespace Markdig.Extensions.Abbreviations
                 return BlockState.None;
             }
 
-            SourceSpan labelSpan;
-            if (!LinkHelper.TryParseLabel(ref slice, out string label, out labelSpan))
+            if (!LinkHelper.TryParseLabel(ref slice, out string label, out SourceSpan labelSpan))
             {
                 return BlockState.None;
             }

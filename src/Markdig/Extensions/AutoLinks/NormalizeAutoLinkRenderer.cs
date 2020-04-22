@@ -15,10 +15,10 @@ namespace Markdig.Extensions.AutoLinks
         {
             if (base.Accept(renderer, obj))
             {
-                var normalizeRenderer = renderer as NormalizeRenderer;
-                var link = obj as LinkInline;
-
-                return normalizeRenderer != null && link != null && !normalizeRenderer.Options.ExpandAutoLinks && link.IsAutoLink;
+                return renderer is NormalizeRenderer normalizeRenderer
+                    && obj is LinkInline link
+                    && !normalizeRenderer.Options.ExpandAutoLinks
+                    && link.IsAutoLink;
             }
             else
             {

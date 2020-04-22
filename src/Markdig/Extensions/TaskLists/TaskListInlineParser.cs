@@ -40,9 +40,7 @@ namespace Markdig.Extensions.TaskLists
             // [ ]
             // or [x] or [X]
 
-            var listItemBlock = processor.Block.Parent as ListItemBlock;
-
-            if (listItemBlock == null)
+            if (!(processor.Block.Parent is ListItemBlock listItemBlock))
             {
                 return false;
             }
@@ -61,11 +59,9 @@ namespace Markdig.Extensions.TaskLists
             slice.NextChar();
 
             // Create the TaskList
-            int line;
-            int column;
             var taskItem = new TaskList()
             {
-                Span = { Start = processor.GetSourcePosition(startingPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startingPosition, out int line, out int column) },
                 Line = line,
                 Column = column,
                 Checked = !c.IsSpace()

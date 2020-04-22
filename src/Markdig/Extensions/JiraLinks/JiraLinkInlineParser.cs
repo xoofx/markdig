@@ -75,14 +75,11 @@ namespace Markdig.Extensions.JiraLinks
                 return false;
             }
 
-            int line;
-            int column;
-
             var jiraLink = new JiraLink() //create the link at the relevant position
             {
                 Span =
                 {
-                    Start = processor.GetSourcePosition(slice.Start, out line, out column)
+                    Start = processor.GetSourcePosition(slice.Start, out int line, out int column)
                 },
                 Line = line,
                 Column = column,
