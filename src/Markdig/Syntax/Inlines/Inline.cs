@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Markdig.Helpers;
-using Markdig.Parsers;
 
 namespace Markdig.Syntax.Inlines
 {

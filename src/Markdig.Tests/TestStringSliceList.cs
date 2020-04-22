@@ -1,8 +1,6 @@
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Text;
 using Markdig.Helpers;
-using Markdig.Syntax;
 using System;
 
 namespace Markdig.Tests

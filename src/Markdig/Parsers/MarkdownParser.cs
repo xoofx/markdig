@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Markdig.Helpers;
 using Markdig.Syntax;
 

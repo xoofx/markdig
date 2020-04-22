@@ -4,7 +4,6 @@
 using System;
 using System.Diagnostics;
 using Markdig.Helpers;
-using Markdig.Parsers;
 
 namespace Markdig.Syntax.Inlines
 {

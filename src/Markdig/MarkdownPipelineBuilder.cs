@@ -6,7 +6,6 @@ using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
-using Markdig.Renderers;
 
 namespace Markdig
 {
