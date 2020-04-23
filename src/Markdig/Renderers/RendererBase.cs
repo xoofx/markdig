@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using Markdig.Syntax;
@@ -11,7 +12,7 @@ namespace Markdig.Renderers
     /// <summary>
     /// Base class for a <see cref="IMarkdownRenderer"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.IMarkdownRenderer" />
+    /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;

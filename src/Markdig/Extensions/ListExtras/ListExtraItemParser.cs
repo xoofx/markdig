@@ -15,7 +15,7 @@ namespace Markdig.Extensions.ListExtras
     /// <remarks>
     /// Note that we don't validate roman numbers.
     /// </remarks>
-    /// <seealso cref="Markdig.Parsers.OrderedListItemParser" />
+    /// <seealso cref="OrderedListItemParser" />
     public class ListExtraItemParser : OrderedListItemParser
     {
         /// <summary>
@@ -69,8 +69,7 @@ namespace Markdig.Extensions.ListExtras
             }
 
             // Finally we expect to always have a delimiter '.' or ')'
-            char orderedDelimiter;
-            if (!TryParseDelimiter(state, out orderedDelimiter))
+            if (!TryParseDelimiter(state, out char orderedDelimiter))
             {
                 return false;
             }

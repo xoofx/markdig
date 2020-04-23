@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -8,7 +9,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// A block quote (Section 5.1 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
         /// <summary>

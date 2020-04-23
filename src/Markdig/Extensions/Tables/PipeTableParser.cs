@@ -17,7 +17,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="Table"/> at inline parsing time.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     /// <seealso cref="IPostInlineProcessor" />
     public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
@@ -56,9 +56,7 @@ namespace Markdig.Extensions.Tables
             bool isFirstLineEmpty = false;
 
 
-            int globalLineIndex;
-            int column;
-            var position = processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var position = processor.GetSourcePosition(slice.Start, out int globalLineIndex, out int column);
             var localLineIndex = globalLineIndex - processor.LineIndex;
 
             if (tableState == null)

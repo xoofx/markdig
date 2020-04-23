@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
-using System;
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -11,7 +11,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A parser for a list block and list item block.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class ListBlockParser : BlockParser
     {
         private CharacterMap<ListItemParser> mapItemParsers;

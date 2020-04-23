@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -10,7 +11,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for <see cref="LineBreakInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class LineBreakInlineParser : InlineParser
     {
         /// <summary>
@@ -38,11 +39,9 @@ namespace Markdig.Parsers.Inlines
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             slice.NextChar(); // Skip \n
 
-            int line;
-            int column;
             processor.Inline = new LineBreakInline
             {
-                Span = { Start = processor.GetSourcePosition(startPosition, out line, out column)},
+                Span = { Start = processor.GetSourcePosition(startPosition, out int line, out int column) },
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
                 Column = column

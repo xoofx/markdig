@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -13,7 +14,7 @@ namespace Markdig.Parsers
     /// </summary>
     /// <typeparam name="T">Type of the parser</typeparam>
     /// <typeparam name="TState">The type of the parser state.</typeparam>
-    /// <seealso cref="Markdig.Helpers.OrderedList{T}" />
+    /// <seealso cref="OrderedList{T}" />
     public abstract class ParserList<T, TState> : OrderedList<T> where T : ParserBase<TState>
     {
         private readonly CharacterMap<T[]> charMap;
@@ -63,8 +64,7 @@ namespace Markdig.Parsers
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
-                        T[] parsers;
-                        if (!tempCharMap.TryGetValue(openingChar, out parsers))
+                        if (!tempCharMap.TryGetValue(openingChar, out T[] parsers))
                         {
                             parsers = new T[charCounter[openingChar]];
                             tempCharMap[openingChar] = parsers;
@@ -117,17 +117,6 @@ namespace Markdig.Parsers
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
             return charMap.IndexOfOpeningCharacter(text, start, end);
-        }
-
-        /// <summary>
-        /// Initializes this instance with specified parser state.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        /// Unexpected null parser found
-        /// or
-        /// </exception>
-        private void Initialize()
-        {
         }
     }
 }

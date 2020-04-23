@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,10 +36,10 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockProcessor" /> class.
         /// </summary>
-        /// <param name="stringBuilders">The string builders cache.</param>
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <param name="context">A parser context used for the parsing.</param>
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
         {
@@ -388,8 +389,8 @@ namespace Markdig.Parsers
         /// Opens the specified block.
         /// </summary>
         /// <param name="block">The block.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException">The block must be opened</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">The block must be opened</exception>
         public void Open(Block block)
         {
             if (block == null) ThrowHelper.ArgumentNullException(nameof(block));
@@ -557,8 +558,7 @@ namespace Markdig.Parsers
                     CurrentBlock = block;
                 }
 
-                var container = block as ContainerBlock;
-                if (container != null)
+                if (block is ContainerBlock container)
                 {
                     CurrentContainer = container;
                     LastBlock = CurrentContainer.LastChild;
@@ -570,7 +570,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Tries to continue matching existing opened <see cref="Block"/>.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         /// A pending parser cannot add a new block when it is not the last pending block
         /// or
         /// The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed
@@ -629,8 +629,7 @@ namespace Markdig.Parsers
                 }
 
                 // If we have a leaf block
-                var leaf = block as LeafBlock;
-                if (leaf != null && NewBlocks.Count == 0)
+                if (block is LeafBlock leaf && NewBlocks.Count == 0)
                 {
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
@@ -753,8 +752,7 @@ namespace Markdig.Parsers
                 // Special case for paragraph
                 UpdateLastBlockAndContainer();
 
-                var paragraph = CurrentBlock as ParagraphBlock;
-                if (isLazyParagraph && paragraph != null)
+                if (isLazyParagraph && CurrentBlock is ParagraphBlock paragraph)
                 {
                     Debug.Assert(NewBlocks.Count == 0);
 
@@ -792,7 +790,7 @@ namespace Markdig.Parsers
         /// </summary>
         /// <param name="result">The last result of matching.</param>
         /// <param name="allowClosing">if set to <c>true</c> the processing of a new block will close existing opened blocks].</param>
-        /// <exception cref="System.InvalidOperationException">The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed</exception>
+        /// <exception cref="InvalidOperationException">The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed</exception>
         private void ProcessNewBlocks(BlockState result, bool allowClosing)
         {
             var newBlocks = NewBlocks;

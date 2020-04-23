@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Syntax;
 
 namespace Markdig.Parsers
@@ -9,7 +10,7 @@ namespace Markdig.Parsers
     /// Base interface for a <see cref="BlockParser"/>.
     /// </summary>
     /// <typeparam name="TProcessor"></typeparam>
-    /// <seealso cref="Markdig.Parsers.IMarkdownParser{T}" />
+    /// <seealso cref="IMarkdownParser{T}" />
     public interface IBlockParser<in TProcessor> : IMarkdownParser<TProcessor>
     {
         /// <summary>

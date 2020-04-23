@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.DefinitionLists
@@ -8,7 +9,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// <summary>
     /// Extension to allow definition lists
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class DefinitionListExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -22,8 +23,7 @@ namespace Markdig.Extensions.DefinitionLists
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 if (!htmlRenderer.ObjectRenderers.Contains<HtmlDefinitionListRenderer>())
                 {

@@ -24,7 +24,7 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="CharacterMap{T}"/> class.
         /// </summary>
         /// <param name="maps">The states.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public CharacterMap(IEnumerable<KeyValuePair<char, T>> maps)
         {
             if (maps == null) ThrowHelper.ArgumentNullException(nameof(maps));

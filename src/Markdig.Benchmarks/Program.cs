@@ -5,14 +5,9 @@ extern alias newcmark;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Diagnostics;
-using BenchmarkDotNet.Diagnostics.Windows;
-using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
-using newcmark::CommonMark.Extension;
 using Markdig;
 
 
@@ -55,7 +50,7 @@ namespace Testamina.Markdig.Benchmarks
             //CommonMark.CommonMarkConverter.Parse(reader);
             //reader.Dispose();
             //var writer = new StringWriter();
-            global::CommonMark.CommonMarkConverter.Convert(text);
+            CommonMark.CommonMarkConverter.Convert(text);
             //writer.Flush();
             //writer.ToString();
         }

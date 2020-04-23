@@ -24,7 +24,13 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         /// <param name="capacity"></param>
-        public StringLineGroup(int capacity, bool willRelease = false)
+        public StringLineGroup(int capacity)
+        {
+            if (capacity <= 0) ThrowHelper.ArgumentOutOfRangeException(nameof(capacity));
+            Lines = _pool.Rent(capacity);
+            Count = 0;
+        }
+        internal StringLineGroup(int capacity, bool willRelease)
         {
             if (capacity <= 0) ThrowHelper.ArgumentOutOfRangeException(nameof(capacity));
             Lines = _pool.Rent(willRelease ? Math.Max(8, capacity) : capacity);
@@ -35,7 +41,7 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringLineGroup"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringLineGroup(string text)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();

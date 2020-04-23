@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -38,7 +36,7 @@ namespace Markdig.Parsers
         /// <param name="text">The reader.</param>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="context">A parser context used for the parsing.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
         {
@@ -72,7 +70,7 @@ namespace Markdig.Parsers
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
-        /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
+        /// <exception cref="ArgumentNullException">if reader variable is null</exception>
         public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
@@ -177,9 +175,8 @@ namespace Markdig.Parsers
                         }
                         leafBlock.OnProcessInlinesEnd(inlineProcessor);
                     }
-                    else if (block is ContainerBlock)
+                    else if (block is ContainerBlock newContainer)
                     {
-                        var newContainer = (ContainerBlock) block;
                         // If we need to remove it
                         if (newContainer.RemoveAfterProcessInlines)
                         {

@@ -11,7 +11,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Defines a table that contains an optional <see cref="TableRow"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class Table : ContainerBlock
     {
         /// <summary>

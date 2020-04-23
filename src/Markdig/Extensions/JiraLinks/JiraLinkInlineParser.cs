@@ -1,8 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
-using System.Text;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
@@ -75,14 +75,11 @@ namespace Markdig.Extensions.JiraLinks
                 return false;
             }
 
-            int line;
-            int column;
-
             var jiraLink = new JiraLink() //create the link at the relevant position
             {
                 Span =
                 {
-                    Start = processor.GetSourcePosition(slice.Start, out line, out column)
+                    Start = processor.GetSourcePosition(slice.Start, out int line, out int column)
                 },
                 Line = line,
                 Column = column,

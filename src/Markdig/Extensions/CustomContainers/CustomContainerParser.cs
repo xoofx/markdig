@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Parsers;
 
 namespace Markdig.Extensions.CustomContainers
@@ -8,7 +9,7 @@ namespace Markdig.Extensions.CustomContainers
     /// <summary>
     /// The block parser for a <see cref="CustomContainer"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.FencedBlockParserBase{Markdig.Extensions.CustomContainers.CustomContainer}" />
+    /// <seealso cref="FencedBlockParserBase{CustomContainer}" />
     public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
     {
         /// <summary>

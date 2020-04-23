@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Abbreviations
     /// <summary>
     /// An abbreviation object stored at the document level. See extension methods in <see cref="AbbreviationHelper"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     [DebuggerDisplay("Abbr {Label} => {Text}")]
     public class Abbreviation : LeafBlock
     {

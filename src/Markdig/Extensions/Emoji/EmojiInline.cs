@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Emoji
     /// <summary>
     /// An emoji inline.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
+    /// <seealso cref="Inline" />
     public class EmojiInline : LiteralInline
     {
         // Inherit from LiteralInline so that rendering is already handled by default

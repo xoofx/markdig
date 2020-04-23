@@ -12,7 +12,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for HTML entities.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class HtmlEntityParser : InlineParser
     {
         /// <summary>
@@ -46,9 +46,7 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            int match;
-            string literal;
-            if (!TryParse(ref slice, out literal, out match))
+            if (!TryParse(ref slice, out string literal, out int match))
             {
                 return false;
             }
@@ -59,13 +57,11 @@ namespace Markdig.Parsers.Inlines
             {
                 var matched = slice;
                 matched.End = slice.Start + match - 1;
-                int line;
-                int column;
                 processor.Inline = new HtmlEntityInline()
                 {
                     Original = matched,
                     Transcoded = new StringSlice(literal),
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(matched.End)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(matched.End)),
                     Line = line,
                     Column = column
                 };

@@ -99,6 +99,7 @@ namespace Markdig
         /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The options.</param>
         /// <returns>The modified pipeline</returns>
         public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions options = null)
         {

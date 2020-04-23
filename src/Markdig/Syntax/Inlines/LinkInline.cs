@@ -9,7 +9,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A Link inline (Section 6.5 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.ContainerInline" />
+    /// <seealso cref="ContainerInline" />
     [DebuggerDisplay("Url: {Url} Title: {Title} Image: {IsImage}")]
     public class LinkInline : ContainerInline
     {

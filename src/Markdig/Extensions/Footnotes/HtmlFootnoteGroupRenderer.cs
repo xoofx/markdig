@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
@@ -9,7 +10,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A HTML renderer for a <see cref="FootnoteGroup"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Extensions.Footnotes.FootnoteGroup}" />
+    /// <seealso cref="HtmlObjectRenderer{FootnoteGroup}" />
     public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     {
         /// <summary>

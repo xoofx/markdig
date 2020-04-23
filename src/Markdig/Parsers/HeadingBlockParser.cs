@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -10,7 +11,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for a <see cref="HeadingBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class HeadingBlockParser : BlockParser, IAttributesParseable
     {
 
@@ -83,10 +84,7 @@ namespace Markdig.Parsers
                 processor.GoToColumn(column + leadingCount + 1);
 
                 // Gives a chance to parse attributes
-                if (TryParseAttributes != null)
-                {
-                    TryParseAttributes(processor, ref processor.Line, headingBlock);
-                }
+                TryParseAttributes?.Invoke(processor, ref processor.Line, headingBlock);
 
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;

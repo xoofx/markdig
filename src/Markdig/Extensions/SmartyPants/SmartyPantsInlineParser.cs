@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -183,8 +184,7 @@ namespace Markdig.Extensions.SmartyPants
 
         private ListSmartyPants GetOrCreateState(InlineProcessor processor)
         {
-            var quotePants = processor.ParserStates[Index] as ListSmartyPants;
-            if (quotePants == null)
+            if (!(processor.ParserStates[Index] is ListSmartyPants quotePants))
             {
                 processor.ParserStates[Index] = quotePants = new ListSmartyPants();
             }

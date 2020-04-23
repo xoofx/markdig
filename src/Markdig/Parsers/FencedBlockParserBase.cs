@@ -36,7 +36,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Base parser for fenced blocks (opened by 3 or more character delimiters on a first line, and closed by at least the same number of delimiters)
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T : Block, IFencedBlock
     {
 
@@ -47,7 +47,7 @@ namespace Markdig.Parsers
         {
             InfoParser = DefaultInfoParser;
             MinimumMatchCount = 3;
-            MaximumMatchCount = Int32.MaxValue;
+            MaximumMatchCount = int.MaxValue;
         }
 
         /// <summary>
@@ -65,6 +65,7 @@ namespace Markdig.Parsers
         /// <param name="state">The parser processor.</param>
         /// <param name="line">The line.</param>
         /// <param name="fenced">The fenced code block.</param>
+        /// <param name="openingCharacter">The opening character for this fenced code block.</param>
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
         public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {

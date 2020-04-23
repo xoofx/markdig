@@ -1,12 +1,12 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
-using Markdig.Renderers;
 
 namespace Markdig
 {
@@ -77,7 +77,7 @@ namespace Markdig
         public TextWriter DebugLog { get; set; }
 
         /// <summary>
-        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse"/> method.
+        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.
         /// </summary>
         public event ProcessDocumentDelegate DocumentProcessed;
 
@@ -86,7 +86,7 @@ namespace Markdig
         /// <summary>
         /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
+        /// <exception cref="InvalidOperationException">An extension cannot be null</exception>
         public MarkdownPipeline Build()
         {
             if (pipeline != null)

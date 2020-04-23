@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Footers
     /// <summary>
     /// A block element for a footer.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class FooterBlock : ContainerBlock
     {
         /// <summary>

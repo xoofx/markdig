@@ -1,7 +1,7 @@
-
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -44,13 +44,12 @@ namespace Markdig.Extensions.Tables
                 }
 
                 // Parse a column alignment
-                TableColumnAlign? columnAlign;
-                if (!TableHelper.ParseColumnHeader(ref line, '-', out columnAlign))
+                if (!TableHelper.ParseColumnHeader(ref line, '-', out TableColumnAlign? columnAlign))
                 {
                     return BlockState.None;
                 }
 
-                tableState = tableState ?? new GridTableState { Start = processor.Start, ExpectRow = true };
+                tableState ??= new GridTableState { Start = processor.Start, ExpectRow = true };
                 tableState.AddColumn(columnStart - lineStart, line.Start - lineStart, columnAlign);
 
                 c = line.CurrentChar;
@@ -114,9 +113,8 @@ namespace Markdig.Extensions.Tables
 
         private BlockState HandleNewRow(BlockProcessor processor, GridTableState tableState, Table gridTable)
         {
-            bool isHeaderRow, hasRowSpan;
             var columns = tableState.ColumnSlices;
-            SetRowSpanState(columns, processor.Line, out isHeaderRow, out hasRowSpan);
+            SetRowSpanState(columns, processor.Line, out bool isHeaderRow, out bool hasRowSpan);
             SetColumnSpanState(columns, processor.Line);
             TerminateCurrentRow(processor, tableState, gridTable, false);
             if (isHeaderRow)

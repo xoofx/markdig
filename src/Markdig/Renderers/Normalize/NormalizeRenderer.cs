@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System;
 using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Normalize.Inlines;
@@ -13,7 +12,7 @@ namespace Markdig.Renderers.Normalize
     /// <summary>
     /// Default HTML renderer for a Markdown <see cref="MarkdownDocument"/> object.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.TextRendererBase{Markdig.Renderers.Normalize.NormalizeRenderer}" />
+    /// <seealso cref="TextRendererBase{NormalizeRenderer}" />
     public class NormalizeRenderer : TextRendererBase<NormalizeRenderer>
     {
         /// <summary>
@@ -128,6 +127,7 @@ namespace Markdig.Renderers.Normalize
         /// </summary>
         /// <param name="leafBlock">The leaf block.</param>
         /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
+        /// <param name="indent">Whether to write indents.</param>
         /// <returns>This instance</returns>
         public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool indent = false)
         {

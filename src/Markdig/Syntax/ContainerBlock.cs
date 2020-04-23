@@ -15,7 +15,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// A base class for container blocks.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Block" />
+    /// <seealso cref="Block" />
     [DebuggerDisplay("{GetType().Name} Count = {Count}")]
     public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
     {

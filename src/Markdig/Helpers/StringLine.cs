@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 namespace Markdig.Helpers
 {
     /// <summary>
@@ -23,6 +24,7 @@ namespace Markdig.Helpers
         /// <param name="slice">The slice.</param>
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
+        /// <param name="position">The position.</param>
         public StringLine(StringSlice slice, int line, int column, int position)
         {
             Slice = slice;
@@ -37,6 +39,7 @@ namespace Markdig.Helpers
         /// <param name="slice">The slice.</param>
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
+        /// <param name="position">The position.</param>
         public StringLine(ref StringSlice slice, int line, int column, int position)
         {
             Slice = slice;

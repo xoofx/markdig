@@ -11,7 +11,7 @@ namespace Markdig.Extensions.Footers
     /// <summary>
     /// A block parser for a <see cref="FooterBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class FooterBlockParser : BlockParser
     {
         /// <summary>

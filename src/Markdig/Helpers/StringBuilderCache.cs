@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Text;
 
@@ -20,8 +21,8 @@ namespace Markdig.Helpers
         /// <returns></returns>
         public static StringBuilder Local()
         {
-            var sb = local ?? (local = new StringBuilder());
-            if (sb.Length > 0)
+            var sb = local ??= new StringBuilder();
+            if (sb.Length != 0)
             {
                 sb.Length = 0;
             }

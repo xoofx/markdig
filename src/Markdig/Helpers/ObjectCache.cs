@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 
@@ -54,7 +55,7 @@ namespace Markdig.Helpers
         /// Releases the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <exception cref="System.ArgumentNullException">if instance is null</exception>
+        /// <exception cref="ArgumentNullException">if instance is null</exception>
         public void Release(T instance)
         {
             if (instance == null) ThrowHelper.ArgumentNullException(nameof(instance));

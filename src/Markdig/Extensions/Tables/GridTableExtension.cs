@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.Tables
@@ -8,7 +9,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Extension that allows to use grid tables.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class GridTableExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -21,8 +22,7 @@ namespace Markdig.Extensions.Tables
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
+            if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
             {
                 htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
             }

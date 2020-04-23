@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Defines a cell in a <see cref="TableRow"/>
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.LeafBlock" />
+    /// <seealso cref="LeafBlock" />
     public class TableCell : ContainerBlock
     {
         /// <summary>

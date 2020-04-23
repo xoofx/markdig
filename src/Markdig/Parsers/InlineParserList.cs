@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System.Collections.Generic;
 
 namespace Markdig.Parsers
@@ -8,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A list of <see cref="InlineParser"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ParserList{Markdig.Parsers.InlineParser, Markdig.Parsers.InlineParserState}" />
+    /// <seealso cref="ParserList{InlineParser, InlineParserState}" />
     public class InlineParserList : ParserList<InlineParser, InlineProcessor>
     {
         public InlineParserList(IEnumerable<InlineParser> parsers) : base(parsers)
@@ -17,8 +18,7 @@ namespace Markdig.Parsers
             var postInlineProcessors = new List<IPostInlineProcessor>();
             foreach (var parser in this)
             {
-                var delimProcessor = parser as IPostInlineProcessor;
-                if (delimProcessor != null)
+                if (parser is IPostInlineProcessor delimProcessor)
                 {
                     postInlineProcessors.Add(delimProcessor);
                 }

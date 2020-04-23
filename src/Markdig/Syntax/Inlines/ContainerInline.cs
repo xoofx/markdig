@@ -14,7 +14,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// A base class for container for <see cref="Inline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
+    /// <seealso cref="Inline" />
     public class ContainerInline : Inline, IEnumerable<Inline>
     {
         /// <summary>
@@ -47,8 +47,8 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         /// <param name="child">The child to append to this container..</param>
         /// <returns>This instance</returns>
-        /// <exception cref="System.ArgumentNullException">If child is null</exception>
-        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
+        /// <exception cref="ArgumentNullException">If child is null</exception>
+        /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public virtual ContainerInline AppendChild(Inline child)
         {
             if (child == null) ThrowHelper.ArgumentNullException(nameof(child));
@@ -164,7 +164,7 @@ namespace Markdig.Syntax.Inlines
         /// Embraces this instance by the specified container.
         /// </summary>
         /// <param name="container">The container to use to embrace this instance.</param>
-        /// <exception cref="System.ArgumentNullException">If the container is null</exception>
+        /// <exception cref="ArgumentNullException">If the container is null</exception>
         public void EmbraceChildrenBy(ContainerInline container)
         {
             if (container == null) ThrowHelper.ArgumentNullException(nameof(container));

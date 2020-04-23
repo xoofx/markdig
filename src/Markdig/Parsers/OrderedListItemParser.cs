@@ -7,7 +7,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Base class for an ordered list item parser.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ListItemParser" />
+    /// <seealso cref="ListItemParser" />
     public abstract class OrderedListItemParser : ListItemParser
     {
         /// <summary>

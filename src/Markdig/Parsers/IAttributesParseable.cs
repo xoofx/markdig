@@ -18,7 +18,7 @@ namespace Markdig.Parsers
         BlockProcessor processor, ref StringSlice slice, IBlock block);
 
     /// <summary>
-    /// An interface used to tag <see cref="BlockParser"/> that supports parsing <see cref="Markdig.Renderers.Html.HtmlAttributes"/>
+    /// An interface used to tag <see cref="BlockParser"/> that supports parsing <see cref="Renderers.Html.HtmlAttributes"/>
     /// </summary>
     public interface IAttributesParseable
     {

@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Abbreviations
     /// <summary>
     /// The inline abbreviation.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.LeafInline" />
+    /// <seealso cref="LeafInline" />
     [DebuggerDisplay("{Abbreviation}")]
     public class AbbreviationInline : LeafInline
     {
