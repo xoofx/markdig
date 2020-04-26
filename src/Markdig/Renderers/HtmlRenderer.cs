@@ -205,9 +205,12 @@ namespace Markdig.Renderers
             if (content == null)
                 return this;
 
-            if (BaseUrl != null && !Uri.TryCreate(content, UriKind.Absolute, out Uri _))
+            if (BaseUrl != null
+                // According to https://github.com/dotnet/runtime/issues/22718
+                // this is the proper cross-platform way to check whether a uri is absolute or not:
+                && Uri.TryCreate(content, UriKind.RelativeOrAbsolute, out var contentUri) && !contentUri.IsAbsoluteUri)
             {
-                content = new Uri(BaseUrl, content).AbsoluteUri;
+                content = new Uri(BaseUrl, contentUri).AbsoluteUri;
             }
 
             if (LinkRewriter != null)
