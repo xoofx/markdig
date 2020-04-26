@@ -21,7 +21,7 @@ namespace Markdig.Extensions.Mathematics
         /// </summary>
         public MathInlineParser()
         {
-            OpeningCharacters = new[] {'$'};
+            OpeningCharacters = new[] { '$' };
             DefaultClass = "math";
         }
 
@@ -85,7 +85,7 @@ namespace Markdig.Extensions.Mathematics
                 }
 
                 // Don't process sticks if we have a '\' as a previous char
-                if (pc != '\\' )
+                if (pc != '\\')
                 {
                     // Record continuous whitespaces at the end
                     if (c.IsSpaceOrTab())
@@ -100,11 +100,8 @@ namespace Markdig.Extensions.Mathematics
                         bool hasClosingDollars = c == match;
                         if (hasClosingDollars)
                         {
-                            while (c == match)
-                            {
-                                closeDollars++;
-                                c = slice.NextChar();
-                            }
+                            closeDollars += slice.CountAndSkipChar(match);
+                            c = slice.CurrentChar;
                         }
 
                         if (closeDollars >= openDollars)

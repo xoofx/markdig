@@ -86,7 +86,7 @@ namespace Markdig.Extensions.Yaml
                         nc = fullLine.PeekChar();
                         if (nc == '-')
                         {
-                            if (fullLine.NextChar() == '-'  && fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                            if (fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
                             {
                                 hasFullYamlFrontMatter = true;
                                 break;
@@ -130,22 +130,14 @@ namespace Markdig.Extensions.Yaml
         /// <returns>The result of the match. By default, don't expect any newline</returns>
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            char matchChar;
-            int count = 0;
-            var c = processor.CurrentChar;
-
             // Determine if we have a closing fence.
             // It can start or end with either <c>---</c> or <c>...</c>
             var line = processor.Line;
+            var c = line.CurrentChar;
             if (processor.Column == 0 && (c == '-' || c == '.'))
             {
-                matchChar = c;
-
-                while (c == matchChar)
-                {
-                    c = line.NextChar();
-                    count++;
-                }
+                int count = line.CountAndSkipChar(c);
+                c = line.CurrentChar;
 
                 // If we have a closing fence, close it and discard the current line
                 // The line must contain only fence characters and optional following whitespace.
