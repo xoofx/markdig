@@ -116,26 +116,22 @@ namespace Markdig.Parsers
 
         private static char GetHeadingChar(ref StringSlice line)
         {
-            char c = line.CurrentChar;
+            char headingChar = line.CurrentChar;
 
-            if (c == '=' || c == '-')
+            if (headingChar == '=' || headingChar == '-')
             {
-                char headingChar = c;
+                line.CountAndSkipChar(headingChar);
 
-                while ((c = line.NextChar()) == headingChar)
-                {
-                }
-
-                if (c == '\0')
+                if (line.IsEmpty)
                 {
                     return headingChar;
                 }
 
-                while ((c = line.NextChar()).IsSpaceOrTab())
+                while (line.NextChar().IsSpaceOrTab())
                 {
                 }
 
-                if (c == '\0')
+                if (line.IsEmpty)
                 {
                     return headingChar;
                 }

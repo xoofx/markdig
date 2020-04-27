@@ -32,16 +32,11 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
 
-            int openSticks = 0;
+            // Match the opened sticks
+            int openSticks = slice.CountAndSkipChar(match);
             int closeSticks = 0;
 
-            // Match the opened sticks
             char c = slice.CurrentChar;
-            while (c == match)
-            {
-                openSticks++;
-                c = slice.NextChar();
-            }
 
             var builder = StringBuilderCache.Local();
 
@@ -68,12 +63,7 @@ namespace Markdig.Parsers.Inlines
 
                 if (c == match)
                 {
-                    do
-                    {
-                        closeSticks++;
-                        c = slice.NextChar();
-                    }
-                    while (c == match);
+                    closeSticks = slice.CountAndSkipChar(match);
 
                     if (openSticks == closeSticks)
                     {
@@ -82,7 +72,7 @@ namespace Markdig.Parsers.Inlines
 
                     allSpace = false;
                     builder.Append(match, closeSticks);
-                    closeSticks = 0;
+                    c = slice.CurrentChar;
                 }
                 else
                 {

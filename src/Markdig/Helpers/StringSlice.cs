@@ -88,7 +88,7 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
-        /// Gets the <see cref="System.Char"/> at the specified index.
+        /// Gets the <see cref="char"/> at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns>A character in the slice at the specified index (not from <see cref="Start"/> but from the begining of the slice)</returns>
@@ -117,6 +117,23 @@ namespace Markdig.Helpers
             start++;
             Start = start;
             return Text[start];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal int CountAndSkipChar(char matchChar)
+        {
+            string text = Text;
+            int end = End;
+            int current = Start;
+
+            while (current <= end && (uint)current < (uint)text.Length && text[current] == matchChar)
+            {
+                current++;
+            }
+
+            int count = current - Start;
+            Start = current;
+            return count;
         }
 
         /// <summary>

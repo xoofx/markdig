@@ -144,22 +144,10 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
-            var startPosition = processor.Start;
-
             // Match fenced char
-            int count = 0;
             var line = processor.Line;
-            char c = line.CurrentChar;
-            var matchChar = c;
-            while (c != '\0')
-            {
-                if (c != matchChar)
-                {
-                    break;
-                }
-                count++;
-                c = line.NextChar();
-            }
+            char matchChar = line.CurrentChar;
+            int count = line.CountAndSkipChar(matchChar);
 
             // A fenced codeblock requires at least 3 opening chars
             if (count < MinimumMatchCount || count > MaximumMatchCount)
@@ -175,7 +163,7 @@ namespace Markdig.Parsers
                 fenced.Column = processor.Column;
                 fenced.FencedChar = matchChar;
                 fenced.FencedCharCount = count;
-                fenced.Span.Start = startPosition;
+                fenced.Span.Start = processor.Start;
                 fenced.Span.End = line.Start;
             };
 
@@ -191,14 +179,7 @@ namespace Markdig.Parsers
             // Add the language as an attribute by default
             if (!string.IsNullOrEmpty(fenced.Info))
             {
-                if (string.IsNullOrEmpty(InfoPrefix))
-                {
-                    fenced.GetAttributes().AddClass(fenced.Info);
-                }
-                else
-                {
-                    fenced.GetAttributes().AddClass(InfoPrefix + fenced.Info);
-                }
+                fenced.GetAttributes().AddClass(InfoPrefix + fenced.Info);
             }
 
             // Store the number of matched string into the context
@@ -214,16 +195,12 @@ namespace Markdig.Parsers
         {
             var fence = (IFencedBlock)block;
             var count = fence.FencedCharCount;
-            var matchChar = fence.FencedChar;
-            var c = processor.CurrentChar;
 
             // Match if we have a closing fence
             var line = processor.Line;
-            while (c == matchChar)
-            {
-                c = line.NextChar();
-                count--;
-            }
+            count -= line.CountAndSkipChar(fence.FencedChar);
+
+            char c = line.CurrentChar;
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence opening character followed only by whitespaces.
