@@ -218,14 +218,12 @@ namespace Markdig.Renderers
                 content = LinkRewriter(content);
             }
 
-            int previousPosition = 0;
-
             // ab://c.d = 8 chars
             int schemeOffset = content.Length < 8 ? -1 : content.IndexOf("://", 2, StringComparison.Ordinal);
             if (schemeOffset != -1) // This is an absolute URL
             {
                 schemeOffset += 3; // skip ://
-                Write(content, 0, schemeOffset);
+                WriteEscapeUrl(content, 0, schemeOffset);
 
                 bool idnaEncodeDomain = false;
                 int endOfDomain = schemeOffset;
@@ -247,7 +245,7 @@ namespace Markdig.Renderers
                     string domainName = IdnMapping.GetAscii(content, schemeOffset, endOfDomain - schemeOffset);
 
                     // Escape the characters (see Commonmark example 327 and think of it with a non-ascii symbol)
-                    previousPosition = 0;
+                    int previousPosition = 0;
                     for (int i = 0; i < domainName.Length; i++)
                     {
                         var escape = HtmlHelper.EscapeUrlCharacter(domainName[i]);
@@ -259,16 +257,25 @@ namespace Markdig.Renderers
                         }
                     }
                     Write(domainName, previousPosition, domainName.Length - previousPosition);
-
-                    previousPosition = endOfDomain;
+                    WriteEscapeUrl(content, endOfDomain, content.Length);
                 }
                 else
                 {
-                    previousPosition = schemeOffset; // Don't write anything as we might need to escape it
+                    WriteEscapeUrl(content, schemeOffset, content.Length);
                 }
             }
+            else // This is a relative URL
+            {
+                WriteEscapeUrl(content, 0, content.Length);
+            }
 
-            for (var i = previousPosition; i < content.Length; i++)
+            return this;
+        }
+
+        private void WriteEscapeUrl(string content, int start, int length)
+        {
+            int previousPosition = start;
+            for (var i = previousPosition; i < length; i++)
             {
                 var c = content[i];
 
@@ -295,7 +302,7 @@ namespace Markdig.Renderers
                     else
                     {
                         byte[] bytes;
-                        if (c >= '\ud800' && c <= '\udfff' && previousPosition < content.Length)
+                        if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
                         {
                             bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
                             // Skip next char as it is decoded above
@@ -313,9 +320,7 @@ namespace Markdig.Renderers
                     }
                 }
             }
-
-            Write(content, previousPosition, content.Length - previousPosition);
-            return this;
+            Write(content, previousPosition, length - previousPosition);
         }
 
         /// <summary>

@@ -59,6 +59,16 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void IsIssue365Corrected()
+        {
+            // The scheme must be escaped too...
+            string input = "![image](\"onclick=\"alert&amp;#40;'click'&amp;#41;\"://)";
+            string expected = "<p><img src=\"%22onclick=%22alert&amp;#40;%27click%27&amp;#41;%22://\" alt=\"image\" /></p>";
+
+            TestParser.TestSpec(input, expected);
+        }
+
+        [Test]
         public void TestAltTextIsCorrectlyEscaped()
         {
             TestParser.TestSpec(
