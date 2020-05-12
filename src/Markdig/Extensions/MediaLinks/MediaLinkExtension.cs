@@ -154,10 +154,12 @@ namespace Markdig.Extensions.MediaLinks
                 htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
 
             if (!string.IsNullOrEmpty(Options.Class) || !string.IsNullOrEmpty(foundProvider.Class))
-                htmlAttributes.AddPropertyIfNotExist("class",
-                    (!string.IsNullOrEmpty(Options.Class) && !string.IsNullOrEmpty(foundProvider.Class))
-                    ? Options.Class + " " + foundProvider.Class
-                    : Options.Class + foundProvider.Class);
+            {
+                if (!string.IsNullOrEmpty(Options.Class))
+                    htmlAttributes.AddClass(Options.Class);
+                if (!string.IsNullOrEmpty(foundProvider.Class))
+                    htmlAttributes.AddClass(foundProvider.Class);
+            }
 
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)
