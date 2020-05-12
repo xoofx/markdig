@@ -15,6 +15,14 @@ namespace Markdig.Tests
                  .Build();
         }
 
+        private MarkdownPipeline GetPipelineWithBootstrap(MediaOptions options = null)
+        {
+            return new MarkdownPipelineBuilder()
+                .UseBootstrap()
+                .UseMediaLinks(options)
+                .Build();
+        }
+
         [Test]
         [TestCase("![static mp4](https://sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n")]
         [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n")]
@@ -81,6 +89,15 @@ namespace Markdig.Tests
             {
                 Class = klass,
             }));
+            Assert.AreEqual(html, expected);
+        }
+
+        [Test]
+        [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video class=\"img-fluid\" width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n")]
+        [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" class=\"img-fluid youtube\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
+        public void TestWithBootstrap(string markdown, string expected)
+        {
+            string html = Markdown.ToHtml(markdown, GetPipelineWithBootstrap());
             Assert.AreEqual(html, expected);
         }
     }
