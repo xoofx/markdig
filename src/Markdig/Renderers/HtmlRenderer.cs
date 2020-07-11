@@ -242,7 +242,18 @@ namespace Markdig.Renderers
 
                 if (idnaEncodeDomain)
                 {
-                    string domainName = IdnMapping.GetAscii(content, schemeOffset, endOfDomain - schemeOffset);
+                    string domainName;
+
+                    try
+                    {
+                        domainName = IdnMapping.GetAscii(content, schemeOffset, endOfDomain - schemeOffset);
+                    }
+                    catch
+                    {
+                        // Not a valid IDN, fallback to non-punycode encoding
+                        WriteEscapeUrl(content, schemeOffset, content.Length);
+                        return this;
+                    }
 
                     // Escape the characters (see Commonmark example 327 and think of it with a non-ascii symbol)
                     int previousPosition = 0;
