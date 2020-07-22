@@ -50,14 +50,12 @@ namespace Markdig.Extensions.Mathematics
                 c = slice.NextChar();
             }
 
-            bool openNextIsDigit = c.IsDigit();
             pc.CheckUnicodeCategory(out bool openPrevIsWhiteSpace, out bool openPrevIsPunctuation);
             c.CheckUnicodeCategory(out bool openNextIsWhiteSpace, out _);
 
             // Check that opening $/$$ is correct, using the different heuristics than for emphasis delimiters
-            // If a $/$$ is not preceded by a whitespace or punctuation, or followed by a digit
-            // this is a not a math block
-            if ((!openPrevIsWhiteSpace && !openPrevIsPunctuation) || openNextIsDigit)
+            // If a $/$$ is not preceded by a whitespace or punctuation, this is a not a math block
+            if ((!openPrevIsWhiteSpace && !openPrevIsPunctuation))
             {
                 return false;
             }
