@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
@@ -76,10 +76,38 @@ namespace Markdig.Extensions.Tables
         }
 
         /// <summary>
+        /// Normalizes the number of columns of this table by taking the maximum columns and appending empty cells.
+        /// </summary>
+        public void NormalizeUsingMaxWidth()
+        {
+            var maxColumn = 0;
+            for (int i = 0; i < this.Count; i++)
+            {
+                var row = this[i] as TableRow;
+                if (row != null && row.Count > maxColumn)
+                {
+                    maxColumn = row.Count;
+                }
+            }
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                var row = this[i] as TableRow;
+                if (row != null)
+                {
+                    for (int j = row.Count; j < maxColumn; j++)
+                    {
+                        row.Add(new TableCell());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Normalizes the number of columns of this table by taking the amount of columns defined in the header
         /// and appending empty cells or removing extra cells as needed.
         /// </summary>
-        public void Normalize()
+        public void NormalizeUsingHeaderRow()
         {
             if (this.Count == 0)
             {
@@ -87,6 +115,7 @@ namespace Markdig.Extensions.Tables
             }
 
             var maxColumn = 0;
+
             var headerRow = this[0] as TableRow;
             if (headerRow != null)
             {
