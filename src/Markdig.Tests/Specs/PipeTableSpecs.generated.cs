@@ -1,4 +1,4 @@
-// Generated: 2020-04-20 07:21:20
+// Generated: 2020-07-30 12:13:52
 
 // --------------------------------
 //            Pipe Tables
@@ -818,7 +818,8 @@ namespace Markdig.Tests.Specs.PipeTables
 
         // **Normalized columns count**
         // 
-        // The tables are normalized to the maximum number of columns found in a table
+        // The tables are normalized to the number of columns found in the table header.
+        // Extra columns will be ignored, missing columns will be inserted.
         [Test]
         public void ExtensionsPipeTable_Example025()
         {
@@ -829,6 +830,7 @@ namespace Markdig.Tests.Specs.PipeTables
             //     a | b
             //     -- | - 
             //     0 | 1 | 2
+            //     3 |
             //
             // Should be rendered as:
             //     <table>
@@ -836,20 +838,22 @@ namespace Markdig.Tests.Specs.PipeTables
             //     <tr>
             //     <th>a</th>
             //     <th>b</th>
-            //     <th></th>
             //     </tr>
             //     </thead>
             //     <tbody>
             //     <tr>
             //     <td>0</td>
             //     <td>1</td>
-            //     <td>2</td>
+            //     </tr>
+            //     <tr>
+            //     <td>3</td>
+            //     <td></td>
             //     </tr>
             //     </tbody>
             //     </table>
 
             Console.WriteLine("Example 25\nSection Extensions / Pipe Table\n");
-            TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
+            TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2\n3 |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3</td>\n<td></td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced");
         }
     }
 }

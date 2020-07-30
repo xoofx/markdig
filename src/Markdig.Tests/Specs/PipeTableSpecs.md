@@ -588,27 +588,31 @@ Tests trailing spaces after pipes
 
 **Normalized columns count**
 
-The tables are normalized to the maximum number of columns found in a table
+The tables are normalized to the number of columns found in the table header.
+Extra columns will be ignored, missing columns will be inserted.
 
 
 ```````````````````````````````` example
 a | b
 -- | - 
 0 | 1 | 2
+3 |
 .
 <table>
 <thead>
 <tr>
 <th>a</th>
 <th>b</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
 <td>1</td>
-<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
 </tr>
 </tbody>
 </table>
