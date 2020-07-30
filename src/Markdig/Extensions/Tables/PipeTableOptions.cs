@@ -15,7 +15,7 @@ namespace Markdig.Extensions.Tables
         public PipeTableOptions()
         {
             RequireHeaderSeparator = true;
-            UseHeaderForColumnCount = true;
+            UseHeaderForColumnCount = false;
         }
 
         /// <summary>

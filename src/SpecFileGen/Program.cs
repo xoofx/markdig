@@ -58,6 +58,7 @@ namespace SpecFileGen
         {
             new Spec("CommonMark v. 0.29",  "CommonMark.md",                ""),
             new Spec("Pipe Tables",         "PipeTableSpecs.md",            "pipetables|advanced"),
+            new Spec("GFM Pipe Tables",     "PipeTableGfmSpecs.md",         "gfm-pipetables"),
             new Spec("Footnotes",           "FootnotesSpecs.md",            "footnotes|advanced"),
             new Spec("Generic Attributes",  "GenericAttributesSpecs.md",    "attributes|advanced"),
             new Spec("Emphasis Extra",      "EmphasisExtraSpecs.md",        "emphasisextras|advanced"),
