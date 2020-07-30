@@ -122,7 +122,7 @@ c no d
 c no d</p>
 ````````````````````````````````
 
-If a row contains more column than the header row, it will still be added as a column:
+If a row contains more columns than the header row, the extra columns will be ignored:
 
 ```````````````````````````````` example
 a  | b 
@@ -136,23 +136,19 @@ a  | b
 <tr>
 <th>a</th>
 <th>b</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
 <td>1</td>
-<td>2</td>
 </tr>
 <tr>
 <td>3</td>
 <td>4</td>
-<td></td>
 </tr>
 <tr>
 <td>5</td>
-<td></td>
 <td></td>
 </tr>
 </tbody>
