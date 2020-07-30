@@ -457,7 +457,14 @@ namespace Markdig.Extensions.Tables
             cells.Clear();
 
             // Normalize the table
-            table.Normalize();
+            if (Options.UseHeaderForColumnCount)
+            {
+                table.NormalizeUsingHeaderRow();
+            }
+            else
+            {
+                table.NormalizeUsingMaxWidth();
+            }
 
             // We don't want to continue procesing delimiters, as we are already processing them here
             return false;
