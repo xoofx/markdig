@@ -22,7 +22,6 @@ using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
-using Markdig.Extensions.NoRefLinks;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
@@ -35,6 +34,7 @@ using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Extensions.Globalization;
 using Markdig.Helpers;
+using Markdig.Extensions.ReferralLinks;
 
 namespace Markdig
 {
@@ -457,9 +457,29 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline"></param>
         /// <returns></returns>
+        [Obsolete("Call `UseReferralLinks(\"nofollow\")` instead")]
         public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<NoFollowLinksExtension>();
+            return pipeline.UseReferralLinks("nofollow");
+        }
+
+        public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
+        {
+            if (!pipeline.Extensions.Contains<ReferralLinksExtension>())
+            {
+                pipeline.Extensions.Add(new ReferralLinksExtension(rels));
+            }
+            else
+            {
+                var referralLinksExtension = pipeline.Extensions.Find<ReferralLinksExtension>();
+                foreach(string rel in rels)
+                {
+                    if (!referralLinksExtension.Rels.Contains(rel))
+                    {
+                        referralLinksExtension.Rels.Add(rel);
+                    }
+                }
+            }
             return pipeline;
         }
 
@@ -601,7 +621,13 @@ namespace Markdig
                         pipeline.UseDiagrams();
                         break;
                     case "nofollowlinks":
-                        pipeline.UseNoFollowLinks();
+                        pipeline.UseReferralLinks("nofollow");
+                        break;
+                    case "noopenerlinks":
+                        pipeline.UseReferralLinks("noopener");
+                        break;
+                    case "noreferrerlinks":
+                        pipeline.UseReferralLinks("noreferrer");
                         break;
                     case "nohtml":
                         pipeline.DisableHtml();
