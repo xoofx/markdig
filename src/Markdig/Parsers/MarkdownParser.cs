@@ -114,10 +114,14 @@ namespace Markdig.Parsers
                 // If this is the end of file and the last line is empty
                 if (lineText.Text is null)
                 {
-                    var lastBlock = blockProcessor.LastBlock;
-                    if (lastBlock != null)
+                    if (!lineReader.IsEndOfFile())
                     {
-                        lastBlock.LinesAfter = blockProcessor.BeforeLines;
+                        var lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock != null)
+                        {
+                            lastBlock.LinesAfter = blockProcessor.BeforeLines ?? new List<StringSlice>();
+                            lastBlock.LinesAfter.Add(lineText);
+                        }
                     }
                     break;
                 }

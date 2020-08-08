@@ -50,15 +50,11 @@ namespace Markdig.Renderers.Normalize
 
         public bool CompactParagraph { get; set; }
 
-        public void FinishBlock(bool emptyLine)
+        public void FinishBlock(bool derp = false)
         {
             if (!IsLastInContainer)
             {
                 WriteLine();
-                if (emptyLine)
-                {
-                    WriteLine();
-                }
             }
         }
 
@@ -157,6 +153,28 @@ namespace Markdig.Renderers.Normalize
                 }
             }
             return this;
+        }
+
+        public void RenderLinesBefore(Block block)
+        {
+            if (block.LinesBefore != null)
+            {
+                foreach (var line in block.LinesBefore)
+                {
+                    WriteLine(line.ToString());
+                }
+            }
+        }
+
+        public void RenderLinesAfter(Block block)
+        {
+            if (block.LinesAfter != null)
+            {
+                foreach (var line in block.LinesAfter)
+                {
+                    WriteLine(line.ToString());
+                }
+            }
         }
    }
 }

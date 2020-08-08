@@ -24,7 +24,7 @@ namespace Markdig.Renderers.Normalize
 
             renderer.Write(obj.BeforeWhitespace);
             renderer.WriteLeafInline(obj);
-            renderer.WriteLine();
+            renderer.FinishBlock();
 
             if (obj.LinesAfter != null)
             {

@@ -23,14 +23,19 @@ namespace Markdig.Renderers.Normalize
 
         protected override void Write(NormalizeRenderer renderer, HeadingBlock obj)
         {
+            renderer.RenderLinesBefore(obj);
+
             var headingText = obj.Level > 0 && obj.Level <= 6
                 ? HeadingTexts[obj.Level - 1]
                 : new string('#', obj.Level);
 
+            renderer.Write(obj.BeforeWhitespace);
             renderer.Write(headingText).Write(' ');
             renderer.WriteLeafInline(obj);
 
-            renderer.FinishBlock(renderer.Options.EmptyLineAfterHeading);
+            renderer.FinishBlock();
+
+            renderer.RenderLinesAfter(obj);
         }
     }
 }

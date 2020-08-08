@@ -34,6 +34,13 @@ namespace Markdig.Parsers
             NewBlocks = new Stack<Block>();
         }
 
+        internal List<StringSlice> UseLinesBefore()
+        {
+            var beforeLines = BeforeLines;
+            BeforeLines = null;
+            return beforeLines;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockProcessor" /> class.
         /// </summary>

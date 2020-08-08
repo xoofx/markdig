@@ -78,7 +78,9 @@ namespace Markdig.Parsers
                     HeaderChar = matchingChar,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start =  sourcePosition }
+                    Span = { Start =  sourcePosition },
+                    BeforeWhitespace = processor.BeforeWhitespace.ToString(),
+                    LinesBefore = processor.UseLinesBefore()
                 };
                 processor.NewBlocks.Push(headingBlock);
                 processor.GoToColumn(column + leadingCount + 1);

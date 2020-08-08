@@ -47,5 +47,28 @@ namespace Markdig.Tests
 
             Assert.AreEqual(markdown, sw.ToString());
         }
+
+        private void RoundTrip(string markdown)
+        {
+            var pipelineBuilder = new MarkdownPipelineBuilder();
+            MarkdownPipeline pipeline = pipelineBuilder.Build();
+            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
+            var sw = new StringWriter();
+            var nr = new NormalizeRenderer(sw);
+
+            nr.Write(markdownDocument);
+
+            Assert.AreEqual(markdown, sw.ToString());
+        }
+
+        [Test]
+        public void TestNewLinesBeforeAndAfter2()
+        {
+            RoundTrip("\n# H1\n\nLine1");
+            RoundTrip("\n# H1\n\nLine1\n");
+            RoundTrip("\n# H1\n\nLine1\n\n");
+            RoundTrip("\n\n# H1\n\nLine1\n\n");
+            RoundTrip("\n\n# H1\nLine1\n\n");
+        }
     }
 }
