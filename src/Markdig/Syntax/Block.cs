@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
+using System.Collections.Generic;
 
 namespace Markdig.Syntax
 {
@@ -47,6 +49,11 @@ namespace Markdig.Syntax
         /// Gets or sets a value indicating whether this block must be removed from its container after inlines have been processed.
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
+
+        public string BeforeWhitespace { get; set; }
+
+        public List<StringSlice> LinesBefore { get; set; }
+        public List<StringSlice> LinesAfter { get; internal set; }
 
         /// <summary>
         /// Occurs when the process of inlines begin.

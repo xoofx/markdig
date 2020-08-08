@@ -14,8 +14,25 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
         {
+            if (obj.LinesBefore != null)
+            {
+                foreach (var line in obj.LinesBefore)
+                {
+                    renderer.WriteLine(line.ToString());
+                }
+            }
+
+            renderer.Write(obj.BeforeWhitespace);
             renderer.WriteLeafInline(obj);
-            renderer.FinishBlock(!renderer.CompactParagraph);
+            renderer.WriteLine();
+
+            if (obj.LinesAfter != null)
+            {
+                foreach (var line in obj.LinesAfter)
+                {
+                    renderer.WriteLine(line.ToString());
+                }
+            }
         }
     }
 }

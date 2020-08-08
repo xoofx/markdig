@@ -114,6 +114,8 @@ namespace Markdig.Parsers
                 // If this is the end of file and the last line is empty
                 if (lineText.Text is null)
                 {
+                    var lastBlock = blockProcessor.LastBlock;
+                    lastBlock.LinesAfter = blockProcessor.BeforeLines;
                     break;
                 }
                 blockProcessor.ProcessLine(lineText);

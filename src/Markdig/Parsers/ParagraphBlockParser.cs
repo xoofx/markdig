@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.Diagnostics;
 
 namespace Markdig.Parsers
 {
@@ -21,12 +22,15 @@ namespace Markdig.Parsers
             {
                 return BlockState.None;
             }
-
+            var linesBefore = processor.BeforeLines;
+            processor.BeforeLines = null;
             // We continue trying to match by default
             processor.NewBlocks.Push(new ParagraphBlock(this)
             {
                 Column = processor.Column,
-                Span = new SourceSpan(processor.Line.Start, processor.Line.End)
+                Span = new SourceSpan(processor.Line.Start, processor.Line.End),
+                BeforeWhitespace = processor.BeforeWhitespace.ToString(),
+                LinesBefore = linesBefore
             });
             return BlockState.Continue;
         }

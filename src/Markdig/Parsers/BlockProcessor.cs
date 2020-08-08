@@ -19,6 +19,7 @@ namespace Markdig.Parsers
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
+        private List<StringSlice> beforeLines;
 
         private BlockProcessor(BlockProcessor root)
         {
@@ -160,6 +161,17 @@ namespace Markdig.Parsers
         /// Gets or sets a value indicating whether to continue processing the current line.
         /// </summary>
         private bool ContinueProcessingLine { get; set; }
+
+        public StringSlice BeforeWhitespace
+        {
+            get
+            {
+                // TODO: make lazy
+                return new StringSlice(Line.Text, StartBeforeIndent, ColumnBeforeIndent);
+            }
+        }
+
+        public List<StringSlice> BeforeLines { get => beforeLines; set => beforeLines = value; }
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -695,12 +707,18 @@ namespace Markdig.Parsers
                     if (TryOpenBlocks(globalParsers))
                     {
                         RestartIndent();
+                        //RestartBeforeLines();
                         continue;
                     }
                 }
 
                 break;
             }
+        }
+
+        private void RestartBeforeLines()
+        {
+            beforeLines = null;
         }
 
         /// <summary>
@@ -715,6 +733,9 @@ namespace Markdig.Parsers
                 var blockParser = parsers[j];
                 if (Line.IsEmpty)
                 {
+                    BeforeLines ??= new List<StringSlice>();
+                    Line.Start = StartBeforeIndent;
+                    BeforeLines.Add(Line);
                     ContinueProcessingLine = false;
                     break;
                 }
