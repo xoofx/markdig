@@ -64,6 +64,7 @@ namespace Markdig.Tests
         [Test]
         public void TestNewLinesBeforeAndAfter2()
         {
+            RoundTrip("paragraph");
             RoundTrip("\n# H1\n\nLine1");
             RoundTrip("\n# H1\n\nLine1\n");
             RoundTrip("\n# H1\n\nLine1\n\n");
