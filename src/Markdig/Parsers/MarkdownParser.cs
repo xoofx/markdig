@@ -115,7 +115,10 @@ namespace Markdig.Parsers
                 if (lineText.Text is null)
                 {
                     var lastBlock = blockProcessor.LastBlock;
-                    lastBlock.LinesAfter = blockProcessor.BeforeLines;
+                    if (lastBlock != null)
+                    {
+                        lastBlock.LinesAfter = blockProcessor.BeforeLines;
+                    }
                     break;
                 }
                 blockProcessor.ProcessLine(lineText);
