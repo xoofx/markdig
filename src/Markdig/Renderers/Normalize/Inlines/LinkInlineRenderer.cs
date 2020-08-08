@@ -14,14 +14,14 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, LinkInline link)
         {
-            foreach (var child in link)
-            {
-                if (child is LiteralInline li)
-                {
-                    renderer.Write(li.Content.Text);
-                }    
-            }
-            return;
+            //foreach (var child in link)
+            //{
+            //    if (child is LiteralInline li)
+            //    {
+            //        renderer.Write(li.Content.Text);
+            //    }    
+            //}
+            //return;
             if (link.IsImage)
             {
                 renderer.Write('!');
