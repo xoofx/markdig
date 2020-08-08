@@ -35,6 +35,8 @@ namespace Markdig.Syntax
         /// </summary>
         public Block LastChild => Count > 0 ? children[Count - 1] : null;
 
+        public string BeforeWhitespace { get; set; }
+
         /// <summary>
         /// Specialize enumerator.
         /// </summary>

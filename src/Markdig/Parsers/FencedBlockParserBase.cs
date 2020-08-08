@@ -45,7 +45,7 @@ namespace Markdig.Parsers
         /// </summary>
         protected FencedBlockParserBase()
         {
-            InfoParser = DefaultInfoParser;
+            InfoParser = CstInfoParser;
             MinimumMatchCount = 3;
             MaximumMatchCount = int.MaxValue;
         }
@@ -58,6 +58,113 @@ namespace Markdig.Parsers
         public int MinimumMatchCount { get; set; }
 
         public int MaximumMatchCount { get; set; }
+
+        private enum ParseState
+        {
+            AfterFence,
+            Info,
+            AfterInfo,
+            Args,
+            AfterArgs,
+        }
+
+        /// <summary>
+        /// The CST parser for the information after the fenced code block special characters (usually ` or ~)
+        /// </summary>
+        /// <param name="state">The parser processor.</param>
+        /// <param name="line">The line.</param>
+        /// <param name="fenced">The fenced code block.</param>
+        /// <param name="openingCharacter">The opening character for this fenced code block.</param>
+        /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
+        public static bool CstInfoParser(BlockProcessor blockProcessor, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
+        {
+            string afterFence = null;
+            string info = null;
+            string afterInfo = null;
+            string arg = null;
+            string afterArg = null;
+            ParseState state = ParseState.AfterFence;
+
+            // pattern: ``` info? args?
+            // after blockchar?
+            // after info?
+            // after args?
+            // info: between fencedchars and
+
+            // An info string cannot contain any backticks (unless it is a tilde block)
+            for (int i = line.Start; i <= line.End; i++)
+            {
+                char c = line.Text[i];
+                switch (state)
+                {
+                    case ParseState.AfterFence:
+                        if (c.IsSpaceOrTab())
+                        {
+                            afterFence += c;
+                        }
+                        else
+                        {
+                            state = ParseState.Info;
+                            info += c;
+                        }
+                        break;
+                    case ParseState.Info:
+                        if (c.IsSpaceOrTab())
+                        {
+                            state = ParseState.AfterInfo;
+                            afterInfo += c;
+                        }
+                        else
+                        {
+                            info += c;
+                        }
+                        break;
+                    case ParseState.AfterInfo:
+                        if (c.IsSpaceOrTab())
+                        {
+                            afterInfo += c;
+                        }
+                        else
+                        {
+                            arg += c;
+                            state = ParseState.Args;
+                        }
+                        break;
+                    case ParseState.Args:
+                        var start = i - 1;
+                        // walk from end, as rest (including spaces except trailing spaces) is args
+                        for (int j = line.End; j > start; j--)
+                        {
+                            char cc = line[j];
+                            if (cc.IsSpaceOrTab())
+                            {
+                                afterArg = cc + afterArg;
+                            }
+                            else
+                            {
+                                var length = j - start + 1;
+                                arg = line.Text.Substring(start, length);
+                                goto end;
+                            }
+                        }
+                        goto end;
+                    case ParseState.AfterArgs:
+                        {
+                            //throw new Exception("should ot reach this code");
+                            return false;
+                        }
+                }
+            }
+
+            end:
+            fenced.WhitespaceAfterFencedChar = afterFence;
+            fenced.Info = HtmlHelper.Unescape(info);
+            fenced.WhitespaceAfterInfo = afterInfo;
+            fenced.Arguments = HtmlHelper.Unescape(arg);
+            fenced.WhitespaceAfterArguments = afterArg;
+
+            return true;
+        }
 
         /// <summary>
         /// The default parser for the information after the fenced code block special characters (usually ` or ~)
@@ -156,7 +263,7 @@ namespace Markdig.Parsers
             }
 
             // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
-            line.TrimStart();
+            //line.TrimStart();
 
             var fenced = CreateFencedBlock(processor);
             {

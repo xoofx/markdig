@@ -22,12 +22,18 @@ namespace Markdig.Extensions.CustomContainers
         {
         }
 
+        public char FencedChar { get; set; }
+
+        public string WhitespaceAfterFencedChar { get; set; }
+
         public string Info { get; set; }
 
+        public string WhitespaceAfterInfo { get; set; }
+
         public string Arguments { get; set; }
+        public string WhitespaceAfterArguments { get; set; }
 
         public int FencedCharCount { get; set; }
 
-        public char FencedChar { get; set; }
     }
 }

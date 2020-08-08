@@ -27,17 +27,20 @@ namespace Markdig.Syntax
             IsBreakable = false;
         }
 
-        /// <summary>
-        /// Gets or sets the language parsed after the first line of
-        /// the fenced code block. May be null.
-        /// </summary>
+        /// <inheritdoc />
         public string Info { get; set; }
+
+        /// <inheritdoc />
+        public string WhitespaceAfterInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the arguments after the <see cref="Info"/>.
         /// May be null.
         /// </summary>
         public string Arguments { get; set; }
+
+        /// <inheritdoc />
+        public string WhitespaceAfterArguments { get; set; }
 
         /// <summary>
         /// Gets or sets the fenced character count used to open this fenced code block.
@@ -48,6 +51,9 @@ namespace Markdig.Syntax
         /// Gets or sets the fenced character used to open and close this fenced code block.
         /// </summary>
         public char FencedChar { get; set; }
+
+        /// <inheritdoc />
+        public string WhitespaceAfterFencedChar { get; set; }
 
         /// <summary>
         /// Gets or sets the indent count when the fenced code block was indented

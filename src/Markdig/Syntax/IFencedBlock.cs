@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -16,10 +16,28 @@ namespace Markdig.Syntax
         string Info { get; set; }
 
         /// <summary>
+        /// Gets or sets the language parsed after the first line of 
+        /// the fenced code block and includes any whitespace. May be null.
+        /// </summary>
+        string WhitespaceAfterInfo { get; set; }
+
+        /// <summary>
         /// Gets or sets the arguments after the <see cref="Info"/>.
         /// May be null.
         /// </summary>
         string Arguments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arguments after the <see cref="Arguments"/>.
+        /// Includes any whitespace. May be null.
+        /// </summary>
+        string WhitespaceAfterArguments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arguments after the <see cref="FencedChar"/>.
+        /// Includes any whitespace. May be null.
+        /// </summary>
+        string WhitespaceAfterFencedChar { get; set; }
 
         /// <summary>
         /// Gets or sets the fenced character count used to open this fenced code block.

@@ -20,13 +20,27 @@ namespace Markdig.Renderers.Normalize
             {
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.FencedCharCount);
                 renderer.Write(opening);
+
+                if (fencedCodeBlock.WhitespaceAfterFencedChar != null)
+                {
+                    renderer.Write(fencedCodeBlock.WhitespaceAfterFencedChar);
+                }
                 if (fencedCodeBlock.Info != null)
                 {
                     renderer.Write(fencedCodeBlock.Info);
                 }
+                if (fencedCodeBlock.WhitespaceAfterInfo != null)
+                {
+                    renderer.Write(fencedCodeBlock.WhitespaceAfterInfo);
+                }
                 if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
-                    renderer.Write(" ").Write(fencedCodeBlock.Arguments);
+                    renderer
+                        .Write(fencedCodeBlock.Arguments);
+                }
+                if (fencedCodeBlock.WhitespaceAfterArguments != null)
+                {
+                    renderer.Write(fencedCodeBlock.WhitespaceAfterArguments);
                 }
 
                 /* TODO do we need this causes a empty space and would render html attributes to markdown.
