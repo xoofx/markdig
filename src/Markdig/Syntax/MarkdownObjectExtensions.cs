@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Markdig.Helpers;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Syntax
@@ -94,11 +95,7 @@ namespace Markdig.Syntax
                 }
             }
 
-#if NET452
-            return new T[0];
-#else
-            return Array.Empty<T>();
-#endif
+            return ArrayHelper.Empty<T>();
         }
 
         /// <summary>
@@ -128,11 +125,7 @@ namespace Markdig.Syntax
             }
             else
             {
-#if NET452
-                return new T[0];
-#else
-                return Array.Empty<T>();
-#endif
+                return ArrayHelper.Empty<T>();
             }
         }
 
