@@ -94,7 +94,11 @@ namespace Markdig.Syntax
                 }
             }
 
+#if NET452
+            return new T[0];
+#else
             return Array.Empty<T>();
+#endif
         }
 
         /// <summary>
@@ -124,7 +128,11 @@ namespace Markdig.Syntax
             }
             else
             {
+#if NET452
+                return new T[0];
+#else
                 return Array.Empty<T>();
+#endif
             }
         }
 
