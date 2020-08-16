@@ -99,7 +99,7 @@ namespace Markdig.Syntax.Inlines
         {
             if (FirstChild is null)
             {
-                return Array.Empty<T>();
+                return ArrayHelper.Empty<T>();
             }
             else
             {
