@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.21.1 (17 Aug 2020)
+- Fix Markdig.Signed on GitHub Actions
+
 ## 0.21.0 (17 Aug 2020)
 - Restore support for .NET 4.5 (#)
 - Add IReadonlyList interface to ContainerBlock to unify and simplify enumeration (#425)
