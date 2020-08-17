@@ -50,6 +50,9 @@ jobs:
     - name: Pack
       run: dotnet pack src -c Release
 
+    - name: Pack Signed
+      run: dotnet pack -c Release src/${{env.PROJECT_NAME}}.Signed/${{env.PROJECT_NAME}}.Signed.csproj
+
     - name: Publish
       if: github.event_name == 'push'
       run: |      
