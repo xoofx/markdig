@@ -216,6 +216,19 @@ namespace Markdig.Syntax
             set
             {
                 if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
+
+                if (value == null)
+                    ThrowHelper.ArgumentNullException_item();
+
+                if (value.Parent != null)
+                    ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+
+                if (children[index] != null)
+                {
+                    children[index].Parent = null;
+                }
+
+                value.Parent = this;
                 children[index] = value;
             }
         }

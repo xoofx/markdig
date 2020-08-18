@@ -66,5 +66,23 @@ namespace Markdig.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => container.Insert(-1, new ParagraphBlock()));
             Assert.Throws<ArgumentException>(() => container.Insert(0, one)); // one already has a parent
         }
+
+        [Test]
+        public void CanBeSet()
+        {
+            ContainerBlock container = new MockContainerBlock();
+
+            var one = new ParagraphBlock();
+            container.Insert(0, one);
+            Assert.AreEqual(1, container.Count);
+            Assert.AreSame(container[0], one);
+
+            var two = new ParagraphBlock();
+            container[0] = two;
+            Assert.AreSame(container, two.Parent);
+            Assert.Null(one.Parent);
+
+            Assert.Throws<ArgumentException>(() => container[0] = two); // one already has a parent
+        }
     }
 }
