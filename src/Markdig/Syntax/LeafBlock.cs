@@ -16,6 +16,8 @@ namespace Markdig.Syntax
     [DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines}")]
     public abstract class LeafBlock : Block
     {
+        private ContainerInline inline;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LeafBlock"/> class.
         /// </summary>
@@ -33,7 +35,30 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the inline syntax tree (may be null).
         /// </summary>
-        public ContainerInline Inline { get; set; }
+        public ContainerInline Inline
+        {
+            get => inline;
+            set
+            {
+                if (value != null)
+                {
+                    if (value.Parent != null)
+                        ThrowHelper.ArgumentException("Cannot add this inline as it as already attached to another container (inline.Parent != null)");
+
+                    if (value.ParentBlock != null)
+                        ThrowHelper.ArgumentException("Cannot add this inline as it as already attached to another container (inline.ParentBlock != null)");
+
+                    value.ParentBlock = this;
+                }
+
+                if (inline != null)
+                {
+                    inline.ParentBlock = null;
+                }
+
+                inline = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether <see cref="Lines"/> must be processed
