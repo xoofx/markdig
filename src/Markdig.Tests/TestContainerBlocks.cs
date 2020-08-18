@@ -47,12 +47,14 @@ namespace Markdig.Tests
             container.Insert(0, one);
             Assert.AreEqual(1, container.Count);
             Assert.AreSame(container[0], one);
+            Assert.AreSame(container, one.Parent);
 
             var two = new ParagraphBlock();
             container.Insert(1, two);
             Assert.AreEqual(2, container.Count);
             Assert.AreSame(container[0], one);
             Assert.AreSame(container[1], two);
+            Assert.AreSame(container, two.Parent);
 
             var three = new ParagraphBlock();
             container.Insert(0, three);
@@ -60,11 +62,31 @@ namespace Markdig.Tests
             Assert.AreSame(container[0], three);
             Assert.AreSame(container[1], one);
             Assert.AreSame(container[2], two);
+            Assert.AreSame(container, three.Parent);
 
             Assert.Throws<ArgumentNullException>(() => container.Insert(0, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => container.Insert(4, new ParagraphBlock()));
             Assert.Throws<ArgumentOutOfRangeException>(() => container.Insert(-1, new ParagraphBlock()));
             Assert.Throws<ArgumentException>(() => container.Insert(0, one)); // one already has a parent
+        }
+
+        [Test]
+        public void CanBeSet()
+        {
+            ContainerBlock container = new MockContainerBlock();
+
+            var one = new ParagraphBlock();
+            container.Insert(0, one);
+            Assert.AreEqual(1, container.Count);
+            Assert.AreSame(container[0], one);
+            Assert.AreSame(container, one.Parent);
+
+            var two = new ParagraphBlock();
+            container[0] = two;
+            Assert.AreSame(container, two.Parent);
+            Assert.Null(one.Parent);
+
+            Assert.Throws<ArgumentException>(() => container[0] = two); // two already has a parent
         }
     }
 }
