@@ -223,10 +223,9 @@ namespace Markdig.Syntax
                 if (value.Parent != null)
                     ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
 
-                if (children[index] != null)
-                {
-                    children[index].Parent = null;
-                }
+                var existingChild = children[index];
+                if (existingChild != null)
+                    existingChild.Parent = null;
 
                 value.Parent = this;
                 children[index] = value;
