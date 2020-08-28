@@ -1,4 +1,4 @@
-// Generated: 2019-04-12 15:26:42
+// Generated: 2020-08-28 11:05:04
 
 // --------------------------------
 //        CommonMark v. 0.29
@@ -14924,6 +14924,29 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
 
             Console.WriteLine("Example 649\nSection Inlines / Textual content\n");
             TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "");
+        }
+
+        // Within a blockquote a setext heading takes precedence
+        // over a thematic break:
+        [Test]
+        public void InlinesTextualContent_Example650()
+        {
+            // Example 650
+            // Section: Inlines / Textual content
+            //
+            // The following Markdown:
+            //     > Foo
+            //     > ---
+            //     > bar
+            //
+            // Should be rendered as:
+            //     <blockquote>
+            //     <h2>Foo</h2>
+            //     <p>bar</p>
+            //     </blockquote>
+
+            Console.WriteLine("Example 650\nSection Inlines / Textual content\n");
+            TestParser.TestSpec("> Foo\n> ---\n> bar", "<blockquote>\n<h2>Foo</h2>\n<p>bar</p>\n</blockquote>", "");
         }
         // <!-- END TESTS -->
         // 
