@@ -38,7 +38,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            if (ParseSetexHeadings && !processor.IsCodeIndent && !(block.Parent is QuoteBlock))
+            if (ParseSetexHeadings && !processor.IsCodeIndent)
             {
                 return TryParseSetexHeading(processor, block);
             }
