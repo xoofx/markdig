@@ -168,7 +168,7 @@ namespace Markdig.Helpers
             return IsZero(c) || IsWhitespace(c);
         }
 
-        // Check if a char is a pace or a punctuation
+        // Check if a char is a space or a punctuation
         public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
         {
             // Credits: code from CommonMark.NET
