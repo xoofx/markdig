@@ -12,17 +12,19 @@ namespace Markdig.Renderers.Normalize
     /// <seealso cref="NormalizeObjectRenderer{QuoteBlock}" />
     public class QuoteBlockRenderer : NormalizeObjectRenderer<QuoteBlock>
     {
-        protected override void Write(NormalizeRenderer renderer, QuoteBlock obj)
+        protected override void Write(NormalizeRenderer renderer, QuoteBlock quoteBlock)
         {
-            renderer.Write(obj.BeforeWhitespace);
+            renderer.RenderLinesBefore(quoteBlock);
+            renderer.Write(quoteBlock.BeforeWhitespace);
 
-            var quoteIndent = obj.HasSpaceAfterQuoteChar ? obj.QuoteChar + " " : obj.QuoteChar.ToString();
+            var quoteIndent = quoteBlock.HasSpaceAfterQuoteChar ? quoteBlock.QuoteChar + " " : quoteBlock.QuoteChar.ToString();
             //renderer.PushIndent(quoteIndent);
             renderer.Write(quoteIndent);
-            renderer.WriteChildren(obj);
+            renderer.WriteChildren(quoteBlock);
             //renderer.PopIndent();
 
             renderer.FinishBlock();
+            renderer.RenderLinesAfter(quoteBlock);
         }
     }
 }

@@ -103,7 +103,7 @@ namespace Markdig.Parsers
                         Level = level,
                         Lines = paragraph.Lines,
                         BeforeWhitespace = state.PopBeforeWhitespace(state.Column),
-                        LinesBefore = state.UseLinesBefore()
+                        LinesBefore = state.UseLinesBefore(),
                     };
                     //heading.Lines.Trim();
 

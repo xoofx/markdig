@@ -18,6 +18,7 @@ namespace Markdig.Renderers.Normalize
         {
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
+                renderer.RenderLinesBefore(obj);
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.FencedCharCount);
                 renderer.Write(opening);
 
@@ -55,6 +56,7 @@ namespace Markdig.Renderers.Normalize
 
                 renderer.WriteLeafRawLines(obj, true);
                 renderer.Write(opening);
+                renderer.RenderLinesAfter(obj);
             }
             else
             {

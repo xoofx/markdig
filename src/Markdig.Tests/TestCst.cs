@@ -106,6 +106,13 @@ namespace Markdig.Tests
         [TestCase(" p\n\n p ")]
         [TestCase("p \n\n p ")]
         [TestCase(" p \n\n p ")]
+
+        // special cases
+        [TestCase(" p \n\n\n\n p \n\n")]
+        [TestCase("\np")]
+        [TestCase("\n\np")]
+        [TestCase("p\n")]
+        [TestCase("p\n\n")]
         public void TestParagraph(string value)
         {
             RoundTrip(value);
@@ -128,11 +135,19 @@ namespace Markdig.Tests
         [TestCase("- i1\n- i2")]
         [TestCase("- i1\n    - i2")]
         [TestCase("- i1\n    - i1.1\n    - i1.2")]
-        public void TestList(string value)
+        public void TestUnorederedList(string value)
         {
             RoundTrip(value);
         }
 
+        [TestCase("1. i")]
+        [TestCase("1.  i")]
+        [TestCase("1. i ")]
+        [TestCase("1.  i ")]
+        public void TestOrderedList(string value)
+        {
+            RoundTrip(value);
+        }
 
         [Test]
         public void TestImage()
@@ -158,7 +173,7 @@ namespace Markdig.Tests
         [TestCase("  -    > q")]
         [TestCase("   -    > q")]
         [TestCase("   -    > q1\n   -    > q2")]
-        public void TestListItem_BlockQuote(string value)
+        public void TestUnorderedListItem_BlockQuote(string value)
         {
             RoundTrip(value);
         }
@@ -168,6 +183,16 @@ namespace Markdig.Tests
         [TestCase(">  quote")]
         [TestCase("   >  quote")]
         public void TestBlockQuote(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("\n> q")]
+        [TestCase("\n> q\n")]
+        [TestCase("\n> q\n\n")]
+        [TestCase("> q\n\np")]
+        [TestCase("p\n\n> q\n\n# h")]
+        public void TestBlockQuote_Paragraph(string value)
         {
             RoundTrip(value);
         }
@@ -359,6 +384,20 @@ namespace Markdig.Tests
         [TestCase("< http://a > ")]
         [TestCase(" < http://a > ")]
         public void TestAutolinkInline(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("```\nc\n```")]
+        [TestCase("\n```\nc\n```")]
+        [TestCase("\n\n```\nc\n```")]
+        [TestCase("```\nc\n```\n")]
+        [TestCase("```\nc\n```\n\n")]
+        [TestCase("\n```\nc\n```\n")]
+        [TestCase("\n```\nc\n```\n\n")]
+        [TestCase("\n\n```\nc\n```\n")]
+        [TestCase("\n\n```\nc\n```\n\n")]
+        public void TestCodeBlock(string value)
         {
             RoundTrip(value);
         }

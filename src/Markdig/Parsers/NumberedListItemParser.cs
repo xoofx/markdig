@@ -40,6 +40,7 @@ namespace Markdig.Parsers
                 {
                     startChar = endChar;
                 }
+                state.NextChar();
                 c = state.NextChar();
                 countDigit++;
             }

@@ -26,7 +26,11 @@ namespace Markdig.Parsers
 
         protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
         {
-            return new FencedCodeBlock(this) {IndentCount = processor.Indent};
+            return new FencedCodeBlock(this)
+            {
+                IndentCount = processor.Indent,
+                LinesBefore = processor.UseLinesBefore(),
+            };
         }
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)

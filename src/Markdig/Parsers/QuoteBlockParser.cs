@@ -51,6 +51,7 @@ namespace Markdig.Parsers
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
                 BeforeWhitespace = processor.PopBeforeWhitespace(column),
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
+                LinesBefore = processor.UseLinesBefore()
             });
             processor.WhitespaceStart += whitespaceToAdd;
             return BlockState.Continue;

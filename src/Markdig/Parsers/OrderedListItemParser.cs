@@ -38,6 +38,7 @@ namespace Markdig.Parsers
                 if (delimiter == orderedDelimiter)
                 {
                     state.NextChar();
+                    state.NextChar();
                     return true;
                 }
             }
