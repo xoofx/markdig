@@ -91,7 +91,8 @@ namespace Markdig.Parsers
                 Column = processor.Column,
                 Span = new SourceSpan(startPosition, line.End),
                 ThematicChar = breakChar,
-                ThematicCharCount = breakCharCount
+                ThematicCharCount = breakCharCount,
+                LinesBefore = processor.UseLinesBefore(),
             });
             return BlockState.BreakDiscard;
         }

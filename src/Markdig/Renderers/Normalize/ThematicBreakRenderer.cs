@@ -15,7 +15,10 @@ namespace Markdig.Renderers.Normalize
         protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)
         {
             renderer.RenderLinesBefore(obj);
-            renderer.Write(new string(obj.ThematicChar, obj.ThematicCharCount));
+
+            // for now, render always a newline
+            // TODO: only render a newline when not last line
+            renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
             renderer.RenderLinesAfter(obj);
         }
     }
