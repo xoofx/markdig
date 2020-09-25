@@ -15,22 +15,22 @@ namespace Markdig.Renderers.Normalize.Inlines
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)
         {
             var delimiterCount = 0;
-            for (var i = 0; i < obj.Content.Length; i++)
-            {
-                var index = obj.Content.IndexOf(obj.Delimiter, i);
-                if (index == -1) break;
+            //for (var i = 0; i < obj.Content.Length; i++)
+            //{
+            //    var index = obj.Content.IndexOf(obj.Delimiter, i);
+            //    if (index == -1) break;
 
-                var count = 1;
-                for (i = index + 1; i < obj.Content.Length; i++)
-                {
-                    if (obj.Content[i] == obj.Delimiter) count++;
-                    else break;
-                }
+            //    var count = 1;
+            //    for (i = index + 1; i < obj.Content.Length; i++)
+            //    {
+            //        if (obj.Content[i] == obj.Delimiter) count++;
+            //        else break;
+            //    }
 
-                if (delimiterCount < count)
-                    delimiterCount = count;
-            }
-            var delimiterRun = new string(obj.Delimiter, delimiterCount + 1);
+            //    if (delimiterCount < count)
+            //        delimiterCount = count;
+            //}
+            var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
             renderer.Write(delimiterRun);
             if (obj.Content.Length != 0)
             {

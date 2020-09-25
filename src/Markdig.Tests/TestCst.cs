@@ -360,6 +360,16 @@ namespace Markdig.Tests
         [TestCase("`a ` ")]
         [TestCase(" `a ` ")]
 
+        [TestCase("``a``")]
+        [TestCase("- ```a```")]
+        [TestCase("p ```a``` p")]
+
+        // broken
+        //[TestCase("```a```")]
+        [TestCase("```a``` p")]
+        //[TestCase("p\n\n```a``` p")]
+        //[TestCase("```a``` p\n```a``` p")]
+
         /// <see cref="CodeInlineParser"/>: intentionally trimmed. TODO: decide on how to handle
         //[TestCase("` a `")]
         //[TestCase(" ` a `")]

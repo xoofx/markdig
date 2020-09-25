@@ -5,6 +5,7 @@
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using System;
 
 namespace Markdig.Parsers.Inlines
 {
@@ -100,13 +101,15 @@ namespace Markdig.Parsers.Inlines
                     content = builder.ToString();
                 }
 
+                int delimiterCount = Math.Min(openSticks, closeSticks);
                 processor.Inline = new CodeInline()
                 {
                     Delimiter = match,
                     Content = content,
                     Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
-                    Column = column
+                    Column = column,
+                    DelimiterCount = delimiterCount
                 };
                 isMatching = true;
             }

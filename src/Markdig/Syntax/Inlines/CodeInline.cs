@@ -19,8 +19,14 @@ namespace Markdig.Syntax.Inlines
         public char Delimiter { get; set; }
 
         /// <summary>
+        /// Gets or sets the amount of delimiter characters used
+        /// </summary>
+        public int DelimiterCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the content of the span.
         /// </summary>
         public string Content { get; set; }
+
     }
 }
