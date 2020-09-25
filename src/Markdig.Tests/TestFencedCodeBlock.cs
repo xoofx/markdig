@@ -22,7 +22,7 @@ namespace Markdig.Tests
             var fencedCodeBlock = markdownDocument[0] as FencedCodeBlock;
 
             Assert.AreEqual('`', fencedCodeBlock.FencedChar);
-            Assert.AreEqual(3, fencedCodeBlock.FencedCharCount);
+            Assert.AreEqual(3, fencedCodeBlock.OpeningFencedCharCount);
             Assert.AreEqual("  ", fencedCodeBlock.WhitespaceAfterFencedChar);
             Assert.AreEqual("derpy", fencedCodeBlock.Info);
             Assert.AreEqual("   ", fencedCodeBlock.WhitespaceAfterInfo);
@@ -41,7 +41,7 @@ namespace Markdig.Tests
             var fencedCodeBlock = markdownDocument[0] as FencedCodeBlock;
 
             Assert.AreEqual('`', fencedCodeBlock.FencedChar);
-            Assert.AreEqual(3, fencedCodeBlock.FencedCharCount);
+            Assert.AreEqual(3, fencedCodeBlock.OpeningFencedCharCount);
             Assert.AreEqual(" ", fencedCodeBlock.WhitespaceAfterFencedChar);
             Assert.AreEqual("derpy", fencedCodeBlock.Info);
             Assert.AreEqual(" ", fencedCodeBlock.WhitespaceAfterInfo);

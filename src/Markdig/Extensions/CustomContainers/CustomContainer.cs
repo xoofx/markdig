@@ -33,7 +33,9 @@ namespace Markdig.Extensions.CustomContainers
         public string Arguments { get; set; }
         public string WhitespaceAfterArguments { get; set; }
 
-        public int FencedCharCount { get; set; }
+        public int OpeningFencedCharCount { get; set; }
+
+        public int ClosingFencedCharCount { get; set; }
 
     }
 }

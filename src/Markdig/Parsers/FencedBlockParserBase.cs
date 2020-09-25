@@ -269,7 +269,7 @@ namespace Markdig.Parsers
             {
                 fenced.Column = processor.Column;
                 fenced.FencedChar = matchChar;
-                fenced.FencedCharCount = count;
+                fenced.OpeningFencedCharCount = count;
                 fenced.Span.Start = processor.Start;
                 fenced.Span.End = line.Start;
             };
@@ -301,19 +301,21 @@ namespace Markdig.Parsers
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var fence = (IFencedBlock)block;
-            var count = fence.FencedCharCount;
+            var openingCount = fence.OpeningFencedCharCount;
 
             // Match if we have a closing fence
             var line = processor.Line;
-            count -= line.CountAndSkipChar(fence.FencedChar);
+            var closingCount = line.CountAndSkipChar(fence.FencedChar);
+            var diff = openingCount - closingCount;
 
             char c = line.CurrentChar;
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence opening character followed only by whitespaces.
-            if (count <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+            if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 block.UpdateSpanEnd(line.Start - 1);
+                (block as IFencedBlock).ClosingFencedCharCount = closingCount;
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

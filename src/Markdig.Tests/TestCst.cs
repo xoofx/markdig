@@ -457,7 +457,16 @@ namespace Markdig.Tests
         [TestCase("\n```\nc\n```\n\n")]
         [TestCase("\n\n```\nc\n```\n")]
         [TestCase("\n\n```\nc\n```\n\n")]
+
+        [TestCase("```\nc\n````")]
         public void TestCodeBlock(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("p\n\n<div></div>\n")]
+        [TestCase("<div></div>\n\n# h")]
+        public void TestHtml(string value)
         {
             RoundTrip(value);
         }

@@ -275,7 +275,8 @@ namespace Markdig.Parsers
                 Column = startColumn,
                 Type = type,
                 // By default, setup to the end of line
-                Span = new SourceSpan(startPosition, startPosition + state.Line.End)
+                Span = new SourceSpan(startPosition, startPosition + state.Line.End),
+                LinesBefore = state.UseLinesBefore(),
             });
             return BlockState.Continue;
         }
