@@ -197,6 +197,12 @@ namespace Markdig.Tests
             RoundTrip(value);
         }
 
+        [TestCase("> q\n\n# h\n")]
+        public void TestBlockQuote_Header(string value)
+        {
+            RoundTrip(value);
+        }
+
         [Test]
         public void TestBlockQuote()
         {

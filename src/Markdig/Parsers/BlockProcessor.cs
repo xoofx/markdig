@@ -166,7 +166,15 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets a value indicating whether to continue processing the current line.
         /// </summary>
-        private bool ContinueProcessingLine { get; set; }
+        private bool _cpl;
+        private bool ContinueProcessingLine { get => _cpl;
+            set
+            {
+
+
+                _cpl = value;
+            }
+        }
 
         public int WhitespaceStart { get; set; }
 
@@ -663,6 +671,12 @@ namespace Markdig.Parsers
 
                 if (result == BlockState.BreakDiscard)
                 {
+                    if (Line.IsEmpty)
+                    {
+                        BeforeLines ??= new List<StringSlice>();
+                        Line.Start = StartBeforeIndent;
+                        BeforeLines.Add(Line);
+                    }
                     ContinueProcessingLine = false;
                     break;
                 }
