@@ -139,7 +139,7 @@ namespace Markdig.Parsers
         public override bool Close(BlockProcessor processor, Block block)
         {
             var heading = (HeadingBlock)block;
-            heading.Lines.Trim();
+            //heading.Lines.Trim();
             return true;
         }
     }

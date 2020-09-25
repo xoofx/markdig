@@ -48,7 +48,7 @@ namespace Markdig.Renderers.Normalize.Inlines
             }
             else
             {
-                if (!string.IsNullOrEmpty(link.Url))
+                if (link.Url != null)
                 {
                     renderer.Write('(').Write(link.Url);
 

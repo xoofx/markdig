@@ -14,9 +14,9 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)
         {
-            renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
-
-            renderer.FinishBlock(renderer.Options.EmptyLineAfterThematicBreak);
+            renderer.RenderLinesBefore(obj);
+            renderer.Write(new string(obj.ThematicChar, obj.ThematicCharCount));
+            renderer.RenderLinesAfter(obj);
         }
     }
 }

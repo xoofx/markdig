@@ -132,10 +132,18 @@ namespace Markdig.Tests
         // i = item
         [TestCase("- i1")]
         [TestCase("- i1 ")]
+        [TestCase("- i1\n")]
         [TestCase("- i1\n- i2")]
         [TestCase("- i1\n    - i2")]
         [TestCase("- i1\n    - i1.1\n    - i1.2")]
         public void TestUnorederedList(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("-     i1\n\np\n")] // TODO: listblock should render newline, apparently last paragraph of last listitem dont have newline
+        [TestCase("-     i1\n\n\np\n")]
+        public void TestUnorderedList_Paragraph(string value)
         {
             RoundTrip(value);
         }
@@ -149,11 +157,18 @@ namespace Markdig.Tests
             RoundTrip(value);
         }
 
-        [Test]
-        public void TestImage()
+        [TestCase("   ![description](http://example.com)")]
+        [TestCase("paragraph   ![description](http://example.com)")]
+        public void TestImage2(string value)
         {
-            RoundTrip("   ![description](http://example.com)");
-            RoundTrip("paragraph   ![description](http://example.com)");
+            RoundTrip(value);
+        }
+
+        [TestCase("# h")]
+        [TestCase("# h ")]
+        public void TestHeading(string value)
+        {
+            RoundTrip(value);
         }
 
         [TestCase("- > q")]
@@ -182,7 +197,24 @@ namespace Markdig.Tests
         [TestCase("> quote")]
         [TestCase(">  quote")]
         [TestCase("   >  quote")]
+        [TestCase(">q\n>\n>q")]
         public void TestBlockQuote(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("---")]
+        [TestCase(" ---")]
+        [TestCase("  ---")]
+        [TestCase("   ---")]
+        [TestCase("--- ")]
+        [TestCase(" --- ")]
+        [TestCase("  --- ")]
+        [TestCase("   --- ")]
+        [TestCase("---\np")]
+        [TestCase("---\n\np")]
+        [TestCase("p\n---\n\np")]
+        public void TestThematicBreak(string value)
         {
             RoundTrip(value);
         }
@@ -199,6 +231,12 @@ namespace Markdig.Tests
 
         [TestCase("> q\n\n# h\n")]
         public void TestBlockQuote_Header(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase(">- i1\n>- i2\n")]
+        public void TestBlockQuote_ListBlock(string value)
         {
             RoundTrip(value);
         }
@@ -225,6 +263,9 @@ namespace Markdig.Tests
         {
             RoundTrip(value);
         }
+
+        [TestCase("[a]")] // TODO: this is not a link but a paragraph
+        [TestCase("[a]()")]
 
         [TestCase("[](b)")]
         [TestCase(" [](b)")]
@@ -367,6 +408,7 @@ namespace Markdig.Tests
         // broken
         //[TestCase("```a```")]
         [TestCase("```a``` p")]
+        [TestCase("```a`b`c```")]
         //[TestCase("p\n\n```a``` p")]
         //[TestCase("```a``` p\n```a``` p")]
 
