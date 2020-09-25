@@ -136,7 +136,7 @@ namespace Markdig.Tests
         [TestCase("- i1\n- i2")]
         [TestCase("- i1\n    - i2")]
         [TestCase("- i1\n    - i1.1\n    - i1.2")]
-        public void TestUnorederedList(string value)
+        public void TestUnorderedList(string value)
         {
             RoundTrip(value);
         }
@@ -226,6 +226,7 @@ namespace Markdig.Tests
         [TestCase("\n> q\n\n")]
         [TestCase("> q\n\np")]
         [TestCase("p\n\n> q\n\n# h")]
+        [TestCase(">**b**\n>\n>p\n>\np\n")]
         public void TestBlockQuote_Paragraph(string value)
         {
             RoundTrip(value);

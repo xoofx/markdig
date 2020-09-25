@@ -299,6 +299,7 @@ namespace Markdig.Parsers
                     OrderedDelimiter = listInfo.OrderedDelimiter,
                     DefaultOrderedStart = listInfo.DefaultOrderedStart,
                     OrderedStart = listInfo.OrderedStart,
+                    LinesBefore = state.UseLinesBefore(),
                 };
                 state.NewBlocks.Push(newList);
             }
