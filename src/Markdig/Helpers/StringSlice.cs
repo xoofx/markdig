@@ -26,6 +26,7 @@ namespace Markdig.Helpers
         {
             Text = text;
             Start = 0;
+            ActualStart = 0;
             End = (Text?.Length ?? 0) - 1;
         }
 
@@ -43,6 +44,7 @@ namespace Markdig.Helpers
 
             Text = text;
             Start = start;
+            ActualStart = start;
             End = end;
         }
 
@@ -55,6 +57,11 @@ namespace Markdig.Helpers
         /// Gets or sets the start position within <see cref="Text"/>.
         /// </summary>
         public int Start { readonly get; set; }
+
+        /// <summary>
+        /// Gets or sets the start position within <see cref="Text"/>.
+        /// </summary>
+        public int ActualStart { get; }
 
         /// <summary>
         /// Gets or sets the end position (inclusive) within <see cref="Text"/>.

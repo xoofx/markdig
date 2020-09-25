@@ -211,6 +211,7 @@ namespace Markdig.Parsers
 
             // Item starting with a blank line
             int columnWidth;
+            var beforeWhitespace = state.PopBeforeWhitespace(initColumn);
 
             // Do we have a blank line right after the bullet?
             if (c == '\0')
@@ -257,12 +258,14 @@ namespace Markdig.Parsers
                 }
             }
 
+            state.WhitespaceStart += 2;
             int.TryParse(listInfo.OrderedStart, out int order);
             var newListItem = new ListItemBlock(this)
             {
                 Column = initColumn,
                 ColumnWidth = columnWidth,
                 Order = order,
+                BeforeWhitespace = beforeWhitespace,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition)
             };
             state.NewBlocks.Push(newListItem);

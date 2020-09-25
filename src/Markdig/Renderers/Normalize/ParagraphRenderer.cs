@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
+using System.Diagnostics;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -10,29 +11,16 @@ namespace Markdig.Renderers.Normalize
     /// A Normalize renderer for a <see cref="ParagraphBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
+    [DebuggerDisplay("renderer.Writer.ToString()")]
     public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
     {
-        protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
+        protected override void Write(NormalizeRenderer renderer, ParagraphBlock parapgraph)
         {
-            if (obj.LinesBefore != null)
-            {
-                foreach (var line in obj.LinesBefore)
-                {
-                    renderer.WriteLine(line.ToString());
-                }
-            }
-
-            renderer.Write(obj.BeforeWhitespace);
-            renderer.WriteLeafInline(obj);
+            renderer.RenderLinesBefore(parapgraph);
+            renderer.Write(parapgraph.BeforeWhitespace);
+            renderer.WriteLeafInline(parapgraph);
             renderer.FinishBlock();
-
-            if (obj.LinesAfter != null)
-            {
-                foreach (var line in obj.LinesAfter)
-                {
-                    renderer.WriteLine(line.ToString());
-                }
-            }
+            renderer.RenderLinesAfter(parapgraph);
         }
     }
 }

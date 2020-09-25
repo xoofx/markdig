@@ -28,7 +28,7 @@ namespace Markdig.Parsers
             {
                 Column = processor.Column,
                 Span = new SourceSpan(processor.Line.Start, processor.Line.End),
-                BeforeWhitespace = processor.BeforeWhitespace.ToString(),
+                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Column),
                 LinesBefore = processor.UseLinesBefore()
             });
             return BlockState.Continue;
@@ -102,8 +102,10 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
+                        BeforeWhitespace = state.PopBeforeWhitespace(state.Column),
+                        LinesBefore = state.UseLinesBefore()
                     };
-                    heading.Lines.Trim();
+                    //heading.Lines.Trim();
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);

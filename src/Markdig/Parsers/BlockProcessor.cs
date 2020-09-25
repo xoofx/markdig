@@ -168,13 +168,14 @@ namespace Markdig.Parsers
         /// </summary>
         private bool ContinueProcessingLine { get; set; }
 
-        public StringSlice BeforeWhitespace
+        public int WhitespaceStart { get; set; }
+
+        public StringSlice PopBeforeWhitespace(int column)
         {
-            get
-            {
-                // TODO: make lazy
-                return new StringSlice(Line.Text, StartBeforeIndent, ColumnBeforeIndent - 1);
-            }
+            var stringSlice = new StringSlice(Line.Text, WhitespaceStart, column - 1);
+            //var stringSlice = new StringSlice(Line.Text, Line.Start + WhitespaceStart, Line.Start + column - 1);
+            WhitespaceStart = column;
+            return stringSlice;
         }
 
         public List<StringSlice> BeforeLines { get; set; }
@@ -267,13 +268,13 @@ namespace Markdig.Parsers
                 {
                     Column = CharHelper.AddTab(Column);
                 }
-                else if (c == ' ')
-                {
-                    Column++;
-                }
+                //else if (c == ' ')
+                //{
+                //    Column++;
+                //}
                 else
                 {
-                    break;
+                    break; 
                 }
                 c = Line.NextChar();
             }
@@ -883,6 +884,7 @@ namespace Markdig.Parsers
             ColumnBeforeIndent = 0;
             StartBeforeIndent = Start;
             originalLineStart = newLine.Start;
+            WhitespaceStart = 0;
         }
 
         private void Reset()

@@ -35,16 +35,24 @@ namespace Markdig.Parsers
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var quoteChar = processor.CurrentChar;
             var c = processor.NextChar();
+            bool hasSpaceAfterQuoteChar = false;
+            int whitespaceToAdd = 1;
             if (c.IsSpaceOrTab())
             {
                 processor.NextColumn();
+                hasSpaceAfterQuoteChar = true;
+                whitespaceToAdd += 1;
             }
+            //beforeWhitespace.End -= 1 + (hasSpaceAfterQuoteChar ? 1 : 0);
             processor.NewBlocks.Push(new QuoteBlock(this)
             {
                 QuoteChar = quoteChar,
                 Column = column,
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
+                BeforeWhitespace = processor.PopBeforeWhitespace(column),
+                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
             });
+            processor.WhitespaceStart += whitespaceToAdd;
             return BlockState.Continue;
         }
 

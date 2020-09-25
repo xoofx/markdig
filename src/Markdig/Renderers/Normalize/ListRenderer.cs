@@ -15,7 +15,7 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, ListBlock listBlock)
         {
-            renderer.EnsureLine();
+            renderer.RenderLinesBefore(listBlock);
             var compact = renderer.CompactParagraph;
             renderer.CompactParagraph = !listBlock.IsLoose;
             if (listBlock.IsOrdered)
@@ -30,12 +30,17 @@ namespace Markdig.Renderers.Normalize
                             break;
                     }
                 }
+                var writeLine = false;
                 for (var i = 0; i < listBlock.Count; i++)
                 {
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
-                    renderer.EnsureLine();
+                    if (writeLine)
+                    {
+                        renderer.WriteLine();
+                    }
 
+                    renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(index.ToString(CultureInfo.InvariantCulture));
                     renderer.Write(listBlock.OrderedDelimiter);
                     renderer.Write(' ');
@@ -50,18 +55,25 @@ namespace Markdig.Renderers.Normalize
                     }
                     if (i + 1 < listBlock.Count && listBlock.IsLoose)
                     {
-                        renderer.EnsureLine();
+                        //renderer.EnsureLine();
                         renderer.WriteLine();
                     }
+                    writeLine = true;
                 }
             }
             else
             {
+                var writeLine = false;
                 for (var i = 0; i < listBlock.Count; i++)
                 {
+                    if (writeLine)
+                    {
+                        renderer.WriteLine();
+                    }
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
-                    renderer.EnsureLine();
+                    //renderer.EnsureLine();
+                    renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
                     renderer.Write(' ');
                     renderer.PushIndent("  ");
@@ -69,14 +81,15 @@ namespace Markdig.Renderers.Normalize
                     renderer.PopIndent();
                     if (i + 1 < listBlock.Count && listBlock.IsLoose)
                     {
-                        renderer.EnsureLine();
+                        //renderer.EnsureLine();
                         renderer.WriteLine();
                     }
+                    writeLine = true;
                 }
             }
             renderer.CompactParagraph = compact;
 
-            renderer.FinishBlock(true);
+            renderer.RenderLinesAfter(listBlock);
         }
 
 

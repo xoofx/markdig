@@ -14,12 +14,15 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, QuoteBlock obj)
         {
-            var quoteIndent = renderer.Options.SpaceAfterQuoteBlock ? obj.QuoteChar + " " : obj.QuoteChar.ToString();
-            renderer.PushIndent(quoteIndent);
-            renderer.WriteChildren(obj);
-            renderer.PopIndent();
+            renderer.Write(obj.BeforeWhitespace);
 
-            renderer.FinishBlock(true);
+            var quoteIndent = obj.HasSpaceAfterQuoteChar ? obj.QuoteChar + " " : obj.QuoteChar.ToString();
+            //renderer.PushIndent(quoteIndent);
+            renderer.Write(quoteIndent);
+            renderer.WriteChildren(obj);
+            //renderer.PopIndent();
+
+            renderer.FinishBlock();
         }
     }
 }

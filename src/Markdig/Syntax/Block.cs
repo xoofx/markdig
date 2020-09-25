@@ -50,7 +50,8 @@ namespace Markdig.Syntax
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
 
-        public string BeforeWhitespace { get; set; }
+        public StringSlice BeforeWhitespace { get; set; }
+        public StringSlice AfterWhitespace { get; set; }
 
         public List<StringSlice> LinesBefore { get; set; }
         public List<StringSlice> LinesAfter { get; internal set; }

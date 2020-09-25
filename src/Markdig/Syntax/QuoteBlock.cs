@@ -24,5 +24,10 @@ namespace Markdig.Syntax
         /// Gets or sets the quote character (usually `&gt;`)
         /// </summary>
         public char QuoteChar { get; set; }
+
+        /// <summary>
+        /// True if a space is parsed between the > character and the paragraph
+        /// </summary>
+        public bool HasSpaceAfterQuoteChar { get; internal set; }
     }
 }

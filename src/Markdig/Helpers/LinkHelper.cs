@@ -356,7 +356,7 @@ namespace Markdig.Helpers
             if (c == '(')
             {
                 text.NextChar();
-                text.TrimStart();
+                text.TrimStart(); // this breaks whitespace before an uri
 
                 var pos = text.Start;
                 if (TryParseUrl(ref text, out link))
