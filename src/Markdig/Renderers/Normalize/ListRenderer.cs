@@ -73,17 +73,19 @@ namespace Markdig.Renderers.Normalize
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
                     //renderer.EnsureLine();
+                    renderer.RenderLinesBefore(listItem);
                     renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
                     renderer.Write(' ');
                     //renderer.PushIndent("  ");
                     renderer.WriteChildren(listItem);
                     //renderer.PopIndent();
-                    if (i + 1 < listBlock.Count && listBlock.IsLoose)
-                    {
-                        //renderer.EnsureLine();
-                        renderer.WriteLine();
-                    }
+                    //if (i + 1 < listBlock.Count && listBlock.IsLoose)
+                    //{
+                    //    //renderer.EnsureLine();
+                    //    renderer.WriteLine();
+                    //}
+                    renderer.RenderLinesAfter(listItem);
                     writeLine = true;
                 }
             }

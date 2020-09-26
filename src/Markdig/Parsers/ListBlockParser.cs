@@ -268,7 +268,8 @@ namespace Markdig.Parsers
                 ColumnWidth = columnWidth,
                 Order = order,
                 BeforeWhitespace = beforeWhitespace,
-                Span = new SourceSpan(sourcePosition, sourceEndPosition)
+                Span = new SourceSpan(sourcePosition, sourceEndPosition),
+                LinesBefore = state.UseLinesBefore(),
             };
             state.NewBlocks.Push(newListItem);
 
