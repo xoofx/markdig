@@ -76,9 +76,9 @@ namespace Markdig.Renderers.Normalize
                     renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
                     renderer.Write(' ');
-                    renderer.PushIndent("  ");
+                    //renderer.PushIndent("  ");
                     renderer.WriteChildren(listItem);
-                    renderer.PopIndent();
+                    //renderer.PopIndent();
                     if (i + 1 < listBlock.Count && listBlock.IsLoose)
                     {
                         //renderer.EnsureLine();

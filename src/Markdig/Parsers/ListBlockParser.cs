@@ -303,7 +303,7 @@ namespace Markdig.Parsers
                 };
                 state.NewBlocks.Push(newList);
             }
-
+            state.NextChar(); // skip space after list marker
             return BlockState.Continue;
         }
 

@@ -61,10 +61,9 @@ namespace Markdig.Tests
             MarkdownPipeline pipeline = pipelineBuilder.Build();
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
             var sw = new StringWriter();
-            //var nr = new NormalizeRenderer(sw);
-            var hr = new HtmlRenderer(sw);
+            var nr = new NormalizeRenderer(sw);
 
-            hr.Write(markdownDocument);
+            nr.Write(markdownDocument);
 
             Assert.AreEqual(markdown, sw.ToString());
         }
@@ -165,6 +164,9 @@ namespace Markdig.Tests
         [TestCase("1.  i")]
         [TestCase("1. i ")]
         [TestCase("1.  i ")]
+
+        [TestCase("1. i1\n2. i2")]
+        [TestCase("1. i1\n2. i2\n  a. i2.1")]
         public void TestOrderedList(string value)
         {
             RoundTrip(value);

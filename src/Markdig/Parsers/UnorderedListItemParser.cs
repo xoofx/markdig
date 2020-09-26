@@ -22,7 +22,7 @@ namespace Markdig.Parsers
         {
             result = new ListInfo(state.CurrentChar);
             state.NextChar();
-            state.NextChar();
+            //state.NextChar();
             return true;
         }
     }
