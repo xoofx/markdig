@@ -18,10 +18,10 @@ namespace Markdig.Renderers.Normalize
             renderer.Write(quoteBlock.BeforeWhitespace);
 
             var quoteIndent = quoteBlock.HasSpaceAfterQuoteChar ? quoteBlock.QuoteChar + " " : quoteBlock.QuoteChar.ToString();
-            //renderer.PushIndent(quoteIndent);
-            renderer.Write(quoteIndent);
+            renderer.PushIndent(quoteIndent);
+            //renderer.Write(quoteIndent);
             renderer.WriteChildren(quoteBlock);
-            //renderer.PopIndent();
+            renderer.PopIndent();
 
             renderer.FinishBlock();
             renderer.RenderLinesAfter(quoteBlock);

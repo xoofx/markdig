@@ -1,3 +1,4 @@
+using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
 using NUnit.Framework;
@@ -7,6 +8,11 @@ using System.IO;
 /// General notes
 /// - whitespace can occur before, between and after symbols
 /// </summary>
+/// TODO:
+/// - \r\n, \r, \n
+/// - \t and spaces
+/// - html entities i.e. &gt;
+/// 
 namespace Markdig.Tests
 {
     [TestFixture]
@@ -55,9 +61,10 @@ namespace Markdig.Tests
             MarkdownPipeline pipeline = pipelineBuilder.Build();
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
             var sw = new StringWriter();
-            var nr = new NormalizeRenderer(sw);
+            //var nr = new NormalizeRenderer(sw);
+            var hr = new HtmlRenderer(sw);
 
-            nr.Write(markdownDocument);
+            hr.Write(markdownDocument);
 
             Assert.AreEqual(markdown, sw.ToString());
         }
@@ -136,6 +143,12 @@ namespace Markdig.Tests
         [TestCase("- i1\n- i2")]
         [TestCase("- i1\n    - i2")]
         [TestCase("- i1\n    - i1.1\n    - i1.2")]
+        [TestCase("- i1 \n- i2 \n")]
+        [TestCase("- i1  \n- i2  \n")]
+        [TestCase(" - i1")]
+        [TestCase("  - i1")]
+        [TestCase("   - i1")]
+        [TestCase("\t- i1")]
         public void TestUnorderedList(string value)
         {
             RoundTrip(value);
@@ -197,7 +210,13 @@ namespace Markdig.Tests
         [TestCase("> quote")]
         [TestCase(">  quote")]
         [TestCase("   >  quote")]
+        [TestCase(">q\n>q")]
+        [TestCase(">q\n>q\n>q")]
         [TestCase(">q\n>\n>q")]
+        [TestCase(">q\n>\n>\n>q")]
+        [TestCase(">q\n>\n>\n>\n>q")]
+        [TestCase(">q\n>\n>q\n>\n>q")]
+        [TestCase(">**q**\n>p\n")]
         public void TestBlockQuote(string value)
         {
             RoundTrip(value);

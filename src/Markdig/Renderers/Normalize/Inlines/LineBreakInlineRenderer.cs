@@ -19,9 +19,10 @@ namespace Markdig.Renderers.Normalize.Inlines
 
         protected override void Write(NormalizeRenderer renderer, LineBreakInline obj)
         {
-            if (obj.IsHard)
+            if (obj.IsHard && obj.IsBackslash)
             {
-                renderer.Write(obj.IsBackslash ? "\\" : "  ");
+                renderer.Write("\\");
+                //renderer.Write(obj.IsBackslash ? "\\" : "  ");
             }
             renderer.WriteLine();
         }
