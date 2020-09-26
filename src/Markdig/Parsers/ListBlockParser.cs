@@ -92,7 +92,9 @@ namespace Markdig.Parsers
                 if (result.IsBreak())
                 {
                     // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
-                    processor.NewBlocks.Pop();
+                    var thematicBreak = processor.NewBlocks.Pop();
+                    var linesBefore = thematicBreak.LinesBefore;
+                    processor.BeforeLines = linesBefore;
                     return BlockState.None;
                 }
             }

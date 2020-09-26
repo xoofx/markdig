@@ -139,6 +139,7 @@ namespace Markdig.Tests
         [TestCase("- i1")]
         [TestCase("- i1 ")]
         [TestCase("- i1\n")]
+        [TestCase("- i1\n\n")]
         [TestCase("- i1\n- i2")]
         [TestCase("- i1\n    - i2")]
         [TestCase("- i1\n    - i1.1\n    - i1.2")]
@@ -148,6 +149,8 @@ namespace Markdig.Tests
         [TestCase("  - i1")]
         [TestCase("   - i1")]
         [TestCase("\t- i1")]
+        [TestCase("- i1\n\n- i1")]
+        [TestCase("- i1\n\n\n- i1")]
         public void TestUnorderedList(string value)
         {
             RoundTrip(value);
@@ -156,6 +159,13 @@ namespace Markdig.Tests
         [TestCase("-     i1\n\np\n")] // TODO: listblock should render newline, apparently last paragraph of last listitem dont have newline
         [TestCase("-     i1\n\n\np\n")]
         public void TestUnorderedList_Paragraph(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("- i1\n\n---\n")]
+        [TestCase("- i1\n\n\n---\n")]
+        public void TestUnorderedList_ThematicBreak(string value)
         {
             RoundTrip(value);
         }
