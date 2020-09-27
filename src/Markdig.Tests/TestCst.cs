@@ -158,6 +158,8 @@ namespace Markdig.Tests
 
         [TestCase("-     i1\n\np\n")] // TODO: listblock should render newline, apparently last paragraph of last listitem dont have newline
         [TestCase("-     i1\n\n\np\n")]
+        [TestCase("- i1\n\np")]
+        [TestCase("- i1\n\np\n")]
         public void TestUnorderedList_Paragraph(string value)
         {
             RoundTrip(value);

@@ -91,11 +91,11 @@ namespace Markdig.Renderers.Normalize
             }
             renderer.CompactParagraph = compact;
 
-            //// TODO: make reusable method?
-            //if (listBlock.Parent is MarkdownDocument md && md.LastChild != listBlock)
-            //{
-            //    renderer.WriteLine();
-            //}
+            // TODO: make reusable method?
+            if (listBlock.Parent is MarkdownDocument md && md.LastChild != listBlock)
+            {
+                renderer.WriteLine();
+            }
 
             renderer.RenderLinesAfter(listBlock);
         }
