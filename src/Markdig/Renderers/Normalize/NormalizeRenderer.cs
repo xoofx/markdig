@@ -54,7 +54,7 @@ namespace Markdig.Renderers.Normalize
         {
             if (!IsLastInContainer)
             {
-                WriteLine();
+                WriteLine(); // TODO: remove this method?
             }
         }
 
