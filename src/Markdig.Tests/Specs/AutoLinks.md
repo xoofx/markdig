@@ -33,11 +33,13 @@ This is not a http:/www.google.com URL and https:/www.google.com
 This is not a ftp:/test.com
 And not a mailto:emailtoto.com
 And not a plain www. or a www.x 
+And not a tel:
 .
 <p>This is not a http:/www.google.com URL and https:/www.google.com
 This is not a ftp:/test.com
 And not a mailto:emailtoto.com
-And not a plain www. or a www.x</p>
+And not a plain www. or a www.x
+And not a tel:</p>
 ````````````````````````````````
 
 Previous character must be a punctuation or a valid space (tab, space, new line):
