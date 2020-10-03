@@ -91,7 +91,11 @@ namespace Markdig.Parsers
                 Span = new SourceSpan(startPosition, line.End),
                 ThematicChar = breakChar,
                 ThematicCharCount = breakCharCount,
+                // TODO: should we separate whitespace before/after?
+                //BeforeWhitespace = beforeWhitespace,
+                //AfterWhitespace = processor.PopBeforeWhitespace(processor.CurrentLineStartPosition),
                 LinesBefore = processor.UseLinesBefore(),
+                Content = new StringSlice(line.Text, processor.CurrentLineStartPosition, line.End)
             });
             return BlockState.BreakDiscard;
         }

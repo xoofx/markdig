@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Normalize
@@ -18,7 +19,9 @@ namespace Markdig.Renderers.Normalize
 
             // for now, render always a newline
             // TODO: only render a newline when not last line
-            renderer.Write(new string(obj.ThematicChar, obj.ThematicCharCount));
+            //renderer.Write(obj.BeforeWhitespace);
+            renderer.Write(obj.Content);
+            //renderer.Write(obj.AfterWhitespace);
             renderer.RenderLineAfterIfNeeded(obj);
             renderer.RenderLinesAfter(obj);
         }

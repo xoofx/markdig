@@ -207,6 +207,9 @@ namespace Markdig.Parsers
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
+            var bulletLength = 1; // TODO: fix for ordered
+            var whitespaceBefore = state.PopBeforeWhitespace(state.CurrentLineStartPosition, state.Start - 1 - bulletLength); // -1: 
+            int whitespaceAfterStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;
 
@@ -215,7 +218,6 @@ namespace Markdig.Parsers
 
             // Item starting with a blank line
             int columnWidth;
-            var beforeWhitespace = state.PopBeforeWhitespace(initColumn);
 
             // Do we have a blank line right after the bullet?
             if (c == '\0')
@@ -262,14 +264,14 @@ namespace Markdig.Parsers
                 }
             }
 
-            state.WhitespaceStart += 2;
             int.TryParse(listInfo.OrderedStart, out int order);
             var newListItem = new ListItemBlock(this)
             {
                 Column = initColumn,
                 ColumnWidth = columnWidth,
                 Order = order,
-                BeforeWhitespace = beforeWhitespace,
+                BeforeWhitespace = whitespaceBefore,
+                AfterWhitespace = state.PopBeforeWhitespace(whitespaceAfterStart, state.Start - 1),
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
                 LinesBefore = state.UseLinesBefore(),
             };
@@ -308,7 +310,6 @@ namespace Markdig.Parsers
                 };
                 state.NewBlocks.Push(newList);
             }
-            state.NextChar(); // skip space after list marker
             return BlockState.Continue;
         }
 

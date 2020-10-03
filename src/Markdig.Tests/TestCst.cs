@@ -148,12 +148,13 @@ namespace Markdig.Tests
         [TestCase(" - i1")]
         [TestCase("  - i1")]
         [TestCase("   - i1")]
-        [TestCase("\t- i1")]
         [TestCase("- i1\n\n- i1")]
         [TestCase("- i1\n\n\n- i1")]
         [TestCase("- i1\n    - i1.1\n        - i1.1.1\n")]
 
         [TestCase("-\ti1")]
+        [TestCase("-\ti1\n-\ti2")]
+        [TestCase("-\ti1\n-  i2\n-\ti3")]
         public void TestUnorderedList(string value)
         {
             RoundTrip(value);
@@ -396,6 +397,9 @@ namespace Markdig.Tests
 
         [TestCase("> q\np\n> q")] // lazy
         [TestCase("> q\n> q\np")] // lazy
+
+        [TestCase(">>q")]
+        [TestCase(" >  >   q")]
         public void TestBlockQuote(string value)
         {
             RoundTrip(value);
@@ -409,6 +413,10 @@ namespace Markdig.Tests
         [TestCase(" --- ")]
         [TestCase("  --- ")]
         [TestCase("   --- ")]
+        [TestCase("- - -")]
+        [TestCase(" - - -")]
+        [TestCase(" - - - ")]
+        [TestCase("-- -")]
         [TestCase("---\n")]
         [TestCase("---\n\n")]
         [TestCase("---\np")]
@@ -428,8 +436,8 @@ namespace Markdig.Tests
         [TestCase("p\n\n> q\n\n# h")]
 
         //https://github.com/lunet-io/markdig/issues/480
-        [TestCase(">\np")]
-        [TestCase(">**b**\n>\n>p\n>\np\n")]
+        //[TestCase(">\np")]
+        //[TestCase(">**b**\n>\n>p\n>\np\n")]
         public void TestBlockQuote_Paragraph(string value)
         {
             RoundTrip(value);

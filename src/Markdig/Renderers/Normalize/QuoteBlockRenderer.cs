@@ -28,6 +28,7 @@ namespace Markdig.Renderers.Normalize
             }
 
             renderer.PushIndent(indents);
+            // indents are not always written, depending on the childs
             //renderer.Write(quoteIndent);
             renderer.WriteChildren(quoteBlock); 
             renderer.PopIndent();

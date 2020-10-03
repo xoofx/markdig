@@ -53,11 +53,11 @@ namespace Markdig.Parsers
             };
             quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
-                BeforeWhitespace = processor.PopBeforeWhitespace(column),
+                BeforeWhitespace = processor.PopBeforeWhitespace(processor.ColumnBeforeIndent, sourcePosition - 1),
                 QuoteChar = true
             });
             processor.NewBlocks.Push(quoteBlock);
-            processor.WhitespaceStart += 1;
+            processor.WhitespaceStart = sourcePosition + 1;
             return BlockState.Continue;
         }
 
@@ -81,28 +81,22 @@ namespace Markdig.Parsers
                 }
                 else
                 {
-                    var ql = new QuoteBlock.QuoteLine
+                    quote.QuoteLines.Add(new QuoteBlock.QuoteLine
                     {
                         QuoteChar = false,
-                        BeforeWhitespace = processor.PopBeforeWhitespace(processor.Column)
-                    };
-                    quote.QuoteLines.Add(ql);
+                        BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+                    });
                     return BlockState.None;
                 }
             }
-            var quoteLine = new QuoteBlock.QuoteLine
+            quote.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
                 QuoteChar = true,
-                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Column)
-            };
-            quote.QuoteLines.Add(quoteLine);
-            processor.NextChar(); // Skip opening char
-            //if (c.IsSpace())
-            //{
-            //    processor.NextChar(); // Skip following space
-            //}
+                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+            });
 
-            processor.WhitespaceStart = processor.Column;
+            processor.NextChar(); // Skip quote marker char
+            processor.WhitespaceStart = processor.Start;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }
