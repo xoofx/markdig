@@ -147,6 +147,12 @@ namespace Markdig.Extensions.AutoLinks
                             return false;
                         }
                         break;
+                    case 't':
+                        if (string.Equals(link, "tel", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                        break;
                     case 'm':
                         int atIndex = link.IndexOf('@');
                         if (atIndex == -1 ||
