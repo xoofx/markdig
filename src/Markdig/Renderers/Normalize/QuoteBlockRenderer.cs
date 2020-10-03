@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
+using System.Collections.Generic;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -17,10 +18,18 @@ namespace Markdig.Renderers.Normalize
             renderer.RenderLinesBefore(quoteBlock);
             renderer.Write(quoteBlock.BeforeWhitespace);
 
-            var quoteIndent = quoteBlock.HasSpaceAfterQuoteChar ? quoteBlock.QuoteChar + " " : quoteBlock.QuoteChar.ToString();
-            renderer.PushIndent(quoteIndent);
+            //var quoteIndent = quoteBlock.HasSpaceAfterQuoteChar ? quoteBlock.QuoteChar + " " : quoteBlock.QuoteChar.ToString();
+            //var quoteIndent = quoteBlock.QuoteChar.ToString();
+
+            var indents = new List<string>();
+            foreach (var quoteLine in quoteBlock.QuoteLines)
+            {
+                indents.Add(quoteLine.BeforeWhitespace.ToString() + (quoteLine.QuoteChar ? ">" : ""));
+            }
+
+            renderer.PushIndent(indents);
             //renderer.Write(quoteIndent);
-            renderer.WriteChildren(quoteBlock);
+            renderer.WriteChildren(quoteBlock); 
             renderer.PopIndent();
 
             renderer.FinishBlock();

@@ -176,5 +176,15 @@ namespace Markdig.Renderers.Normalize
                 }
             }
         }
+
+        public void RenderLineAfterIfNeeded(Block block)
+        {
+            bool isLast = Equals(block.Parent.LastChild, block);
+            bool hasLinesAfter = block.LinesAfter != null && block.LinesAfter.Count > 0;
+            if (!isLast && !hasLinesAfter)
+            {
+                WriteLine();
+            }
+        }
    }
 }

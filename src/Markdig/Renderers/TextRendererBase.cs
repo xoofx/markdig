@@ -70,11 +70,37 @@ namespace Markdig.Renderers
     /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
+        private class Indent
+        {
+            private readonly string _constant;
+            private readonly Queue<string> _lineSpecific;
+
+            public Indent(string constant)
+            {
+                _constant = constant;
+            }
+            public Indent(IEnumerable<string> lineSpecific)
+            {
+                _lineSpecific = new Queue<string>(lineSpecific);
+            }
+
+            public string Next()
+            {
+                if (_constant != null)
+                {
+                    return _constant;
+                }
+                if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
+                var next = _lineSpecific.Dequeue();
+                return next;
+            }
+        }
+
         private bool previousWasLine;
 #if !NETCORE
         private char[] buffer;
 #endif
-        private readonly List<string> indents;
+        private readonly List<Indent> indents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRendererBase{T}"/> class.
@@ -87,7 +113,7 @@ namespace Markdig.Renderers
 #endif
             // We assume that we are starting as if we had previously a newline
             previousWasLine = true;
-            indents = new List<string>();
+            indents = new List<Indent>();
         }
 
         internal void Reset()
@@ -121,7 +147,13 @@ namespace Markdig.Renderers
         public void PushIndent(string indent)
         {
             if (indent == null) ThrowHelper.ArgumentNullException(nameof(indent));
-            indents.Add(indent);
+            indents.Add(new Indent(indent));
+        }
+
+        public void PushIndent(IEnumerable<string> lineSpecific)
+        {
+            if (indents == null) ThrowHelper.ArgumentNullException(nameof(indents));
+            indents.Add(new Indent(lineSpecific));
         }
 
         public void PopIndent()
@@ -137,7 +169,9 @@ namespace Markdig.Renderers
                 previousWasLine = false;
                 for (int i = 0; i < indents.Count; i++)
                 {
-                    Writer.Write(indents[i]);
+                    var indent = indents[i];
+                    var indentText = indent.Next();
+                    Writer.Write(indentText);
                 }
             }
         }

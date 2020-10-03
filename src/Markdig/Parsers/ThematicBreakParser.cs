@@ -34,7 +34,6 @@ namespace Markdig.Parsers
             }
 
             var startPosition = processor.Start;
-
             var line = processor.Line;
 
             // 4.1 Thematic breaks 

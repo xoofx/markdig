@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.Diagnostics;
 
 namespace Markdig.Parsers
 {
@@ -28,32 +29,35 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
-            var column = processor.Column;
             var sourcePosition = processor.Start;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var quoteChar = processor.CurrentChar;
+            var column = processor.Column;
             var c = processor.NextChar();
-            bool hasSpaceAfterQuoteChar = false;
-            int whitespaceToAdd = 1;
-            if (c.IsSpaceOrTab())
-            {
-                processor.NextColumn();
-                hasSpaceAfterQuoteChar = true;
-                whitespaceToAdd += 1;
-            }
+            //if (c.IsSpaceOrTab())
+            //{
+            //    processor.NextColumn();
+            //    hasSpaceAfterQuoteChar = true;
+            //    whitespaceToAdd += 1;
+            //}
             //beforeWhitespace.End -= 1 + (hasSpaceAfterQuoteChar ? 1 : 0);
-            processor.NewBlocks.Push(new QuoteBlock(this)
+
+            var quoteBlock = new QuoteBlock(this)
             {
                 QuoteChar = quoteChar,
                 Column = column,
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
-                BeforeWhitespace = processor.PopBeforeWhitespace(column),
-                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 LinesBefore = processor.UseLinesBefore()
+            };
+            quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
+            {
+                BeforeWhitespace = processor.PopBeforeWhitespace(column),
+                QuoteChar = true
             });
-            processor.WhitespaceStart += whitespaceToAdd;
+            processor.NewBlocks.Push(quoteBlock);
+            processor.WhitespaceStart += 1;
             return BlockState.Continue;
         }
 
@@ -71,15 +75,34 @@ namespace Markdig.Parsers
             var c = processor.CurrentChar;
             if (c != quote.QuoteChar)
             {
-                return processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
+                if (processor.IsBlankLine)
+                {
+                    return BlockState.BreakDiscard;
+                }
+                else
+                {
+                    var ql = new QuoteBlock.QuoteLine
+                    {
+                        QuoteChar = false,
+                        BeforeWhitespace = processor.PopBeforeWhitespace(processor.Column)
+                    };
+                    quote.QuoteLines.Add(ql);
+                    return BlockState.None;
+                }
             }
-
-            c = processor.NextChar(); // Skip opening char
-            if (c.IsSpace())
+            var quoteLine = new QuoteBlock.QuoteLine
             {
-                processor.NextChar(); // Skip following space
-            }
+                QuoteChar = true,
+                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Column)
+            };
+            quote.QuoteLines.Add(quoteLine);
+            processor.NextChar(); // Skip opening char
+            //if (c.IsSpace())
+            //{
+            //    processor.NextChar(); // Skip following space
+            //}
 
+            processor.WhitespaceStart = processor.Column;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }

@@ -18,7 +18,8 @@ namespace Markdig.Renderers.Normalize
 
             // for now, render always a newline
             // TODO: only render a newline when not last line
-            renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
+            renderer.Write(new string(obj.ThematicChar, obj.ThematicCharCount));
+            renderer.RenderLineAfterIfNeeded(obj);
             renderer.RenderLinesAfter(obj);
         }
     }
