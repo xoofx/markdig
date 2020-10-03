@@ -151,6 +151,7 @@ namespace Markdig.Tests
         [TestCase("\t- i1")]
         [TestCase("- i1\n\n- i1")]
         [TestCase("- i1\n\n\n- i1")]
+        [TestCase("- i1\n    - i1.1\n        - i1.1.1\n")]
 
         [TestCase("-\ti1")]
         public void TestUnorderedList(string value)
@@ -170,6 +171,12 @@ namespace Markdig.Tests
         [TestCase("- i1\n\n---\n")]
         [TestCase("- i1\n\n\n---\n")]
         public void TestUnorderedList_ThematicBreak(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("- i1\n    - i1.1\n    ```\n    code\n    ```")]
+        public void TestUnorderedList_CodeBlock(string value)
         {
             RoundTrip(value);
         }
@@ -419,6 +426,9 @@ namespace Markdig.Tests
         [TestCase("\n> q\n\n")]
         [TestCase("> q\n\np")]
         [TestCase("p\n\n> q\n\n# h")]
+
+        //https://github.com/lunet-io/markdig/issues/480
+        [TestCase(">\np")]
         [TestCase(">**b**\n>\n>p\n>\np\n")]
         public void TestBlockQuote_Paragraph(string value)
         {
@@ -643,7 +653,14 @@ namespace Markdig.Tests
             RoundTrip(value);
         }
 
+        [TestCase("```c```")]
+
+        [TestCase("    l")]
+        [TestCase("\tl")]
+        [TestCase("\tl1\n    l1")]
+
         [TestCase("```\nc\n```")]
+        [TestCase("```\nc\n```\n")]
         [TestCase("\n```\nc\n```")]
         [TestCase("\n\n```\nc\n```")]
         [TestCase("```\nc\n```\n")]
@@ -654,6 +671,7 @@ namespace Markdig.Tests
         [TestCase("\n\n```\nc\n```\n\n")]
 
         [TestCase("```\nc\n````")]
+        [TestCase("p\n\n```\nc\n```")]
         public void TestCodeBlock(string value)
         {
             RoundTrip(value);
@@ -666,6 +684,13 @@ namespace Markdig.Tests
         [TestCase("p\n\n<div></div>\n")]
         [TestCase("<div></div>\n\n# h")]
         public void TestHtml(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("h1===\n")]
+        [TestCase("h2---\n")]
+        public void TestSetextHeading(string value)
         {
             RoundTrip(value);
         }
