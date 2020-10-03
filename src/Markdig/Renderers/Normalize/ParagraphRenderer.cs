@@ -14,13 +14,13 @@ namespace Markdig.Renderers.Normalize
     [DebuggerDisplay("renderer.Writer.ToString()")]
     public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
     {
-        protected override void Write(NormalizeRenderer renderer, ParagraphBlock parapgraph)
+        protected override void Write(NormalizeRenderer renderer, ParagraphBlock paragraph)
         {
-            renderer.RenderLinesBefore(parapgraph);
-            renderer.Write(parapgraph.BeforeWhitespace);
-            renderer.WriteLeafInline(parapgraph);
+            renderer.RenderLinesBefore(paragraph);
+            renderer.Write(paragraph.BeforeWhitespace);
+            renderer.WriteLeafInline(paragraph);
             renderer.FinishBlock();
-            renderer.RenderLinesAfter(parapgraph);
+            renderer.RenderLinesAfter(paragraph);
         }
     }
 }
