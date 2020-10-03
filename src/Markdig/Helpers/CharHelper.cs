@@ -168,9 +168,7 @@ namespace Markdig.Helpers
             return IsZero(c) || IsWhitespace(c);
         }
 
-        // Note that we are not considering the character & as a punctuation in HTML
-        // as it is used for HTML entities, print unicode, so we assume that when we have a `&` 
-        // it is more likely followed by a valid HTML Entity that represents a non punctuation
+        // Check if a char is a space or a punctuation
         public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
         {
             // Credits: code from CommonMark.NET
@@ -179,7 +177,7 @@ namespace Markdig.Helpers
             if (c <= 'ÿ')
             {
                 space = c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085';
-                punctuation = c == '\0' || (c >= 33 && c <= 47 && c != 38) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+                punctuation = c == '\0' || (c >= 33 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
             }
             else
             {
