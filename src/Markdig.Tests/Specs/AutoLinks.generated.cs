@@ -1,4 +1,4 @@
-// Generated: 2020-07-21 22:02:10
+// Generated: 2020-09-30 08:12:16
 
 // --------------------------------
 //            Auto Links
@@ -61,15 +61,17 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     This is not a ftp:/test.com
             //     And not a mailto:emailtoto.com
             //     And not a plain www. or a www.x 
+            //     And not a tel:
             //
             // Should be rendered as:
             //     <p>This is not a http:/www.google.com URL and https:/www.google.com
             //     This is not a ftp:/test.com
             //     And not a mailto:emailtoto.com
-            //     And not a plain www. or a www.x</p>
+            //     And not a plain www. or a www.x
+            //     And not a tel:</p>
 
             Console.WriteLine("Example 2\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x ", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x \nAnd not a tel:", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x\nAnd not a tel:</p>", "autolinks|advanced");
         }
 
         // Previous character must be a punctuation or a valid space (tab, space, new line):
