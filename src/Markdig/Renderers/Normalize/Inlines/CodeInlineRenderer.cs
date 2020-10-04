@@ -32,6 +32,10 @@ namespace Markdig.Renderers.Normalize.Inlines
             //}
             var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
             renderer.Write(delimiterRun);
+            if (obj.FirstAndLastWasSpace)
+            {
+                renderer.Write(' ');
+            }
             if (obj.Content.Length != 0)
             {
                 if (obj.Content[0] == obj.Delimiter)
@@ -45,6 +49,10 @@ namespace Markdig.Renderers.Normalize.Inlines
                 }
             }
             else
+            {
+                renderer.Write(' ');
+            }
+            if (obj.FirstAndLastWasSpace)
             {
                 renderer.Write(' ');
             }

@@ -87,6 +87,7 @@ namespace Markdig.Parsers.Inlines
             }
 
             bool isMatching = false;
+            bool firstAndLastWasSpace = false;
             if (closeSticks == openSticks)
             {
                 string content;
@@ -95,6 +96,7 @@ namespace Markdig.Parsers.Inlines
                 if (!allSpace && builder.Length > 2 && builder[0] == ' ' && builder[builder.Length - 1] == ' ')
                 {
                     content = builder.ToString(1, builder.Length - 2);
+                    firstAndLastWasSpace = true;
                 }
                 else
                 {
@@ -109,7 +111,8 @@ namespace Markdig.Parsers.Inlines
                     Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                     Line = line,
                     Column = column,
-                    DelimiterCount = delimiterCount
+                    DelimiterCount = delimiterCount,
+                    FirstAndLastWasSpace = firstAndLastWasSpace
                 };
                 isMatching = true;
             }

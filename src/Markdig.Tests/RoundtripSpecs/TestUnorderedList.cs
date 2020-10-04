@@ -69,6 +69,7 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase("- ```a```")]
         [TestCase("- i1\n    - i1.1\n    ```\n    code\n    ```")]
         public void TestCodeBlock(string value)
         {

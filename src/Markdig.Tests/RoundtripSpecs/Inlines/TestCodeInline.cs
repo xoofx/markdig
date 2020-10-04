@@ -11,26 +11,28 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         [TestCase("`` ")]
         [TestCase(" `` ")]
 
-        [TestCase("`a`")]
-        [TestCase(" `a`")]
-        [TestCase("`a` ")]
-        [TestCase(" `a` ")]
+        [TestCase("`c`")]
+        [TestCase(" `c`")]
+        [TestCase("`c` ")]
+        [TestCase(" `c` ")]
 
-        [TestCase("` a`")]
-        [TestCase(" ` a`")]
-        [TestCase("` a` ")]
-        [TestCase(" ` a` ")]
+        [TestCase("` c`")]
+        [TestCase(" ` c`")]
+        [TestCase("` c` ")]
+        [TestCase(" ` c` ")]
 
-        [TestCase("`a `")]
-        [TestCase(" `a `")]
-        [TestCase("`a ` ")]
-        [TestCase(" `a ` ")]
+        [TestCase("`c `")]
+        [TestCase(" `c `")]
+        [TestCase("`c ` ")]
+        [TestCase(" `c ` ")]
 
-        [TestCase("``a``")]
-        [TestCase("- ```a```")]
-        [TestCase("p ```a``` p")]
-
+        [TestCase("``c``")]
         [TestCase("```c```")]
+        [TestCase("````c````")]
+
+        [TestCase("p `a` p")]
+        [TestCase("p ``a`` p")]
+        [TestCase("p ```a``` p")]
 
         // broken
         //[TestCase("```a```")]
@@ -41,10 +43,15 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
 
         /// <see cref="CodeInlineParser"/>: intentionally trimmed. TODO: decide on how to handle
         //[TestCase("` a `")]
-        //[TestCase(" ` a `")]
-        //[TestCase("` a ` ")]
-        //[TestCase(" ` a ` ")]
-        public void Test_CodeInline(string value)
+        [TestCase(" ` a `")]
+        [TestCase("` a ` ")]
+        [TestCase(" ` a ` ")]
+        public void Test(string value)
+        {
+            RoundTrip(value);
+        }
+
+        public void TestParagraph(string value)
         {
             RoundTrip(value);
         }

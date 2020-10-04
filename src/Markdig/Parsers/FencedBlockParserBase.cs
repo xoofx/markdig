@@ -95,6 +95,10 @@ namespace Markdig.Parsers
             for (int i = line.Start; i <= line.End; i++)
             {
                 char c = line.Text[i];
+                if (c == '`')
+                {
+                    return false;
+                }
                 switch (state)
                 {
                     case ParseState.AfterFence:
