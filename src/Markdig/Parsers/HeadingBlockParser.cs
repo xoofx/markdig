@@ -79,7 +79,7 @@ namespace Markdig.Parsers
                     Level = leadingCount,
                     Column = column,
                     Span = { Start =  sourcePosition },
-                    BeforeWhitespace = processor.PopBeforeWhitespace(column),
+                    BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
                     LinesBefore = processor.UseLinesBefore()
                 };
                 processor.NewBlocks.Push(headingBlock);

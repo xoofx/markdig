@@ -24,7 +24,7 @@ namespace Markdig.Renderers.Normalize
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
             {
-                indents.Add(quoteLine.BeforeWhitespace.ToString() + (quoteLine.QuoteChar ? ">" : ""));
+                indents.Add(quoteLine.BeforeWhitespace.ToString() + (quoteLine.QuoteChar ? ">" : "") + quoteLine.AfterWhitespace.ToString());
             }
 
             renderer.PushIndent(indents);

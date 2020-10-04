@@ -19,6 +19,8 @@ namespace Markdig.Syntax
         {
             public StringSlice BeforeWhitespace { get; set; }
 
+            public StringSlice AfterWhitespace { get; set; }
+
             // support lazy lines
             public bool QuoteChar { get; set; }
         }

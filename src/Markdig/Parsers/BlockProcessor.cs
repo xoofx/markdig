@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -735,7 +736,6 @@ namespace Markdig.Parsers
                     if (TryOpenBlocks(globalParsers))
                     {
                         RestartIndent();
-                        //RestartBeforeLines();
                         continue;
                     }
                 }
@@ -807,9 +807,16 @@ namespace Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
+                        // TODO: RTP: pass line with whitespace
                         paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
-
+                    // TODO: RTP: delegate this to container parser classes
+                    var qb = paragraph.Parent as QuoteBlock;
+                    if (qb != null)
+                    {
+                        var afterWhitespace = PopBeforeWhitespace(Start - 1);
+                        qb.QuoteLines.Last().AfterWhitespace = afterWhitespace;
+                    }
                     // We have just found a lazy continuation for a paragraph, early exit
                     // Mark all block opened after a lazy continuation
                     OpenAll();

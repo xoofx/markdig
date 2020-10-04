@@ -69,6 +69,7 @@ namespace Markdig.Syntax
             else
             {
                 // We need to expand tabs to spaces
+                // TODO: RTP: also register tabs here
                 var builder = StringBuilderCache.Local();
                 builder.Append(' ', CharHelper.AddTab(column) - column);
                 builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);

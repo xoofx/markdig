@@ -53,7 +53,7 @@ namespace Markdig.Parsers
             };
             quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
-                BeforeWhitespace = processor.PopBeforeWhitespace(processor.ColumnBeforeIndent, sourcePosition - 1),
+                BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
                 QuoteChar = true
             });
             processor.NewBlocks.Push(quoteBlock);

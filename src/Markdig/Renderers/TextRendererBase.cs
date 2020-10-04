@@ -75,16 +75,16 @@ namespace Markdig.Renderers
             private readonly string _constant;
             private readonly Queue<string> _lineSpecific;
 
-            public Indent(string constant)
+            internal Indent(string constant)
             {
                 _constant = constant;
             }
-            public Indent(IEnumerable<string> lineSpecific)
+            internal Indent(IEnumerable<string> lineSpecific)
             {
                 _lineSpecific = new Queue<string>(lineSpecific);
             }
 
-            public string Next()
+            internal string Next()
             {
                 if (_constant != null)
                 {
