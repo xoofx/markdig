@@ -36,14 +36,14 @@ jobs:
       run: dotnet test src -c Debug
 
     - name: Coverlet
-      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+      run: dotnet test src -c Release -f netcoreapp3.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp2.1.info
+        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp3.1.info
 
     - name: Pack
       run: dotnet pack src -c Release
