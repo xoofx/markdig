@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  	<TargetFrameworks>net452;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
-    <OutputType>Library</OutputType>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <StartupObject>Markdig.Tests.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

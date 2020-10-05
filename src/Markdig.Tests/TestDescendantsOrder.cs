@@ -10,10 +10,9 @@ namespace Markdig.Tests
     [TestFixture]
     public class TestDescendantsOrder
     {
-        [Test]
-        public void TestSchemas()
+        public static void TestSchemas(MarkdownDocument[] specsSyntaxTrees)
         {
-            foreach (var syntaxTree in TestParser.SpecsSyntaxTrees)
+            foreach (var syntaxTree in specsSyntaxTrees)
             {
                 AssertIEnumerablesAreEqual(
                     Descendants_Legacy(syntaxTree),
