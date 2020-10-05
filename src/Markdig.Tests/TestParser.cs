@@ -22,7 +22,27 @@ namespace Markdig.Tests
             if (IsContinuousIntegration)
                 return;
 
-            foreach (var specFilePath in SpecsFilePaths)
+            var specsFilePaths = Directory.GetDirectories(TestsDirectory)
+                .Where(dir => dir.EndsWith("Specs"))
+                .SelectMany(dir => Directory.GetFiles(dir)
+                    .Where(file => file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                    .Where(file => file.IndexOf("readme", StringComparison.OrdinalIgnoreCase) == -1))
+                .ToArray();
+
+            var specsMarkdown = new string[specsFilePaths.Length];
+            var specsSyntaxTrees = new MarkdownDocument[specsFilePaths.Length];
+
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .Build();
+
+            for (int i = 0; i < specsFilePaths.Length; i++)
+            {
+                string markdown = specsMarkdown[i] = File.ReadAllText(specsFilePaths[i]);
+                specsSyntaxTrees[i] = Markdown.Parse(markdown, pipeline);
+            }
+
+            foreach (var specFilePath in specsFilePaths)
             {
                 string testFilePath = Path.ChangeExtension(specFilePath, ".generated.cs");
 
@@ -43,6 +63,8 @@ namespace Markdig.Tests
                     $"{Path.GetFileName(specFilePath)} has been modified. Run SpecFileGen to regenerate the tests. " +
                     "If you have modified a specification file, but reverted all changes, ignore this error or revert the 'changed' timestamp metadata on the file.");
             }
+
+            TestDescendantsOrder.TestSchemas(specsSyntaxTrees);
         }
 
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null, bool plainText = false)
@@ -141,21 +163,7 @@ namespace Markdig.Tests
 
         public static readonly bool IsContinuousIntegration = Environment.GetEnvironmentVariable("CI") != null;
 
-        public static readonly string TestsDirectory =
-            Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "../../.."));
-
-        /// <summary>
-        /// Contains absolute paths to specification markdown files (order is the same as in <see cref="SpecsMarkdown"/>)
-        /// </summary>
-        public static readonly string[] SpecsFilePaths;
-        /// <summary>
-        /// Contains the markdown source for specification files (order is the same as in <see cref="SpecsFilePaths"/>)
-        /// </summary>
-        public static readonly string[] SpecsMarkdown;
-        /// <summary>
-        /// Contains the markdown syntax tree for specification files (order is the same as in <see cref="SpecsFilePaths"/>)
-        /// </summary>
-        public static readonly MarkdownDocument[] SpecsSyntaxTrees;
+        public static readonly string TestsDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(TestParser).Assembly.Location), "../../.."));
 
         static TestParser()
         {
@@ -164,26 +172,6 @@ namespace Markdig.Tests
             if (index != -1)
             {
                 TestsDirectory = TestsDirectory.Substring(0, index) + "\\src\\Markdig.Tests";
-            }
-
-            SpecsFilePaths = Directory.GetDirectories(TestsDirectory)
-                .Where(dir => dir.EndsWith("Specs"))
-                .SelectMany(dir => Directory.GetFiles(dir)
-                    .Where(file => file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                    .Where(file => file.IndexOf("readme", StringComparison.OrdinalIgnoreCase) == -1))
-                .ToArray();
-
-            SpecsMarkdown = new string[SpecsFilePaths.Length];
-            SpecsSyntaxTrees = new MarkdownDocument[SpecsFilePaths.Length];
-
-            var pipeline = new MarkdownPipelineBuilder()
-                .UseAdvancedExtensions()
-                .Build();
-
-            for (int i = 0; i < SpecsFilePaths.Length; i++)
-            {
-                string markdown = SpecsMarkdown[i] = File.ReadAllText(SpecsFilePaths[i]);
-                SpecsSyntaxTrees[i] = Markdown.Parse(markdown, pipeline);
             }
         }
     }
