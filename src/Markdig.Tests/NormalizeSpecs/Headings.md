@@ -40,9 +40,9 @@ Text after two newlines
 Heading
 =======
 
-Text after two newlines
+Text after two newlines 1
 .
 # Heading
 
-Text after two newlines
+Text after two newlines 1
 ````````````````````````````````
