@@ -74,7 +74,7 @@ namespace Markdig.Parsers
             if (isSetexHeading)
             {
                 var parent = previousParagraph.Parent;
-                if ((parent is QuoteBlock && processor.CurrentLineStartPosition > parent.Span.End) || (parent is ListItemBlock && previousParagraph.Column != processor.Column))
+                if (previousParagraph.Column != processor.Column && (parent is QuoteBlock || parent is ListItemBlock))
                 {
                     isSetexHeading = false;
                 }

@@ -38,7 +38,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            if (ParseSetexHeadings && !processor.IsCodeIndent)
+            if (!processor.IsCodeIndent && ParseSetexHeadings)
             {
                 return TryParseSetexHeading(processor, block);
             }
@@ -86,7 +86,11 @@ namespace Markdig.Parsers
 
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
                 // lines are empty, we can early exit and remove the paragraph
-                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
+                var parent = block.Parent;
+                
+                bool isSetTextHeading = !state.IsLazy || paragraph.Column == state.Column || !(parent is QuoteBlock || parent is ListItemBlock);
+
+                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0) && isSetTextHeading)
                 {
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);
