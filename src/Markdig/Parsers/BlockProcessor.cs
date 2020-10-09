@@ -183,14 +183,14 @@ namespace Markdig.Parsers
         public StringSlice PopBeforeWhitespace(int end)
         {
             var stringSlice = new StringSlice(Line.Text, WhitespaceStart, end);
-            WhitespaceStart = end;
+            WhitespaceStart = end + 1;
             return stringSlice;
         }
 
         public StringSlice PopBeforeWhitespace(int start, int end)
         {
             var stringSlice = new StringSlice(Line.Text, start, end);
-            WhitespaceStart = end;
+            WhitespaceStart = end + 1;
             return stringSlice;
         }
 

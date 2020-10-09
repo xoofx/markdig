@@ -16,9 +16,9 @@ namespace Markdig.Renderers.Normalize
 
         protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
         {
+            renderer.RenderLinesBefore(obj);
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
-                renderer.RenderLinesBefore(obj);
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
                 renderer.Write(opening);
 
@@ -57,14 +57,14 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLeafRawLines(obj, true);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
-                renderer.RenderLinesAfter(obj);
             }
             else
             {
                 renderer.WriteLeafRawLines(obj, false, true);
+                renderer.RenderLineAfterIfNeeded(obj);
             }
 
-            renderer.FinishBlock(renderer.Options.EmptyLineAfterCodeBlock);
+            renderer.RenderLinesAfter(obj);
         }
     }
 }
