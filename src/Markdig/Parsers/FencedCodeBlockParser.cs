@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.ComponentModel;
 
 namespace Markdig.Parsers
 {
@@ -30,6 +31,7 @@ namespace Markdig.Parsers
             {
                 IndentCount = processor.Indent,
                 LinesBefore = processor.UseLinesBefore(),
+                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1)
             };
         }
 

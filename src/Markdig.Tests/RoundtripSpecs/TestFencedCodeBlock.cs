@@ -17,6 +17,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("\n\n```\nc\n```\n")]
         [TestCase("\n\n```\nc\n```\n\n")]
 
+        [TestCase(" ```\nc\n````")]
         [TestCase("```\nc\n````")]
         [TestCase("p\n\n```\nc\n```")]
         public void Test(string value)

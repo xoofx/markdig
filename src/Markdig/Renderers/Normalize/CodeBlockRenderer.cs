@@ -21,6 +21,7 @@ namespace Markdig.Renderers.Normalize
             renderer.RenderLinesBefore(obj);
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
+                renderer.Write(obj.BeforeWhitespace);
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
                 renderer.Write(opening);
 
@@ -59,6 +60,7 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLeafRawLines(obj, true);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
+                renderer.Write(obj.AfterWhitespace);
             }
             else
             {
