@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Syntax;
+using System.Collections.Generic;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -60,11 +62,35 @@ namespace Markdig.Renderers.Normalize
             }
             else
             {
-                renderer.WriteLeafRawLines(obj, false, true);
+                var indents = new List<string>();
+                foreach (var cbl in obj.CodeBlockLines)
+                {
+                    indents.Add(cbl.BeforeWhitespace.ToString());
+                }
+                renderer.PushIndent(indents);
+                WriteLeafRawLines(renderer, obj);
+                renderer.PopIndent();
                 renderer.RenderLineAfterIfNeeded(obj);
             }
 
             renderer.RenderLinesAfter(obj);
+        }
+
+        public void WriteLeafRawLines(NormalizeRenderer renderer, LeafBlock leafBlock)
+        {
+            if (leafBlock.Lines.Lines != null)
+            {
+                var lines = leafBlock.Lines;
+                var slices = lines.Lines;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        renderer.WriteLine();
+                    }
+                    renderer.Write(ref slices[i].Slice);
+                }
+            }
         }
     }
 }

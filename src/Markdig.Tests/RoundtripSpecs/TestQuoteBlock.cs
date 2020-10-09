@@ -190,7 +190,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase(">     q\n>      q")] // 5, 6
         [TestCase(">      q\n>     q")] // 6, 5
         [TestCase(">      q\n>      q")] // 6, 6
-        public void TestCodeBlock(string value)
+        public void TestIndentedCodeBlock(string value)
         {
             RoundTrip(value);
         }

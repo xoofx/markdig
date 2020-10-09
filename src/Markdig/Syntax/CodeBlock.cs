@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
+using System.Collections.Generic;
 
 namespace Markdig.Syntax
 {
@@ -14,6 +16,13 @@ namespace Markdig.Syntax
     /// </remarks>
     public class CodeBlock : LeafBlock
     {
+        public class CodeBlockLine
+        {
+            public StringSlice BeforeWhitespace { get; set; }
+        }
+
+        public List<CodeBlockLine> CodeBlockLines { get; set; } = new List<CodeBlockLine>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeBlock"/> class.
         /// </summary>

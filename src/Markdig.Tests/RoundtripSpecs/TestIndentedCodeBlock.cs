@@ -4,7 +4,7 @@ using static Markdig.Tests.RoundtripSpecs.TestHelper;
 namespace Markdig.Tests.RoundtripSpecs
 {
     [TestFixture]
-    public class TestCodeBlock
+    public class TestIndentedCodeBlock
     {
         // A codeblock is indented with 4 spaces. After the 4th space, whitespace is interpreted as content.
         // l = line

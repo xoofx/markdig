@@ -5,6 +5,7 @@
 using Markdig.Helpers;
 using Markdig.Syntax;
 using System.Collections.Generic;
+using static Markdig.Syntax.CodeBlock;
 
 namespace Markdig.Parsers
 {
@@ -26,16 +27,23 @@ namespace Markdig.Parsers
             {
                 // Save the column where we need to go back
                 var column = processor.Column;
+                var sourceStartPosition = processor.Start;
 
                 // Unwind all indents all spaces before in order to calculate correct span
                 processor.UnwindAllIndents();
 
-                processor.NewBlocks.Push(new CodeBlock(this)
+                var codeBlock = new CodeBlock(this)
                 {
                     Column = processor.Column,
                     Span = new SourceSpan(processor.Start, processor.Line.End),
-                    LinesBefore = processor.UseLinesBefore()
-                });
+                    LinesBefore = processor.UseLinesBefore(),
+                };
+                var codeBlockLine = new CodeBlockLine
+                {
+                    BeforeWhitespace = processor.PopBeforeWhitespace(sourceStartPosition - 1)
+                };
+                codeBlock.CodeBlockLines.Add(codeBlockLine);
+                processor.NewBlocks.Push(codeBlock);
 
                 // Go back to the correct column
                 processor.GoToColumn(column);
@@ -80,7 +88,17 @@ namespace Markdig.Parsers
             if (block != null)
             {
                 block.UpdateSpanEnd(processor.Line.End);
+
+                // lines
+                var cb = (CodeBlock)block;
+                var codeBlockLine = new CodeBlockLine
+                {
+                    BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1)
+                };
+                cb.CodeBlockLines ??= new List<CodeBlockLine>();
+                cb.CodeBlockLines.Add(codeBlockLine);
             }
+
             return BlockState.Continue;
         }
 
