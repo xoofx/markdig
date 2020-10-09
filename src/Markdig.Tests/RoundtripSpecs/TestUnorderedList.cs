@@ -26,7 +26,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("-\ti1")]
         [TestCase("-\ti1\n-\ti2")]
         [TestCase("-\ti1\n-  i2\n-\ti3")]
-        public void Test_UnorderedList(string value)
+        public void Test(string value)
         {
             RoundTrip(value);
         }
@@ -71,6 +71,8 @@ namespace Markdig.Tests.RoundtripSpecs
 
         [TestCase("- ```a```")]
         [TestCase("- i1\n    - i1.1\n    ```\n    code\n    ```")]
+        [TestCase("-     c")]
+        [TestCase("-     c\n      c")]
         public void TestCodeBlock(string value)
         {
             RoundTrip(value);

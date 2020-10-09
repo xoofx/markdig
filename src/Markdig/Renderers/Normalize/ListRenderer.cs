@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Globalization;
+using Markdig.Helpers;
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Normalize
@@ -73,12 +75,14 @@ namespace Markdig.Renderers.Normalize
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
                     renderer.RenderLinesBefore(listItem);
-                    renderer.Write(listItem.BeforeWhitespace);
-                    renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
-                    renderer.Write(listItem.AfterWhitespace);
 
+                    StringSlice bws = listItem.BeforeWhitespace;
+                    char bullet = renderer.Options.ListItemCharacter ?? listBlock.BulletType;
+                    StringSlice aws = listItem.AfterWhitespace;
 
+                    renderer.PushIndent(new List<string> { $@"{bws}{bullet}{aws}" });
                     renderer.WriteChildren(listItem);
+                    renderer.PopIndent();
 
                     renderer.RenderLinesAfter(listItem);
                     writeLine = true;

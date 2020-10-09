@@ -208,6 +208,11 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase(">- i")]
+        [TestCase("> - i")]
+        [TestCase(">- i\n>- i")]
+        [TestCase(">- >p")]
+        [TestCase("> - >p")]
         [TestCase(">- i1\n>- i2\n")]
         [TestCase("> **p** p\n>- i1\n>- i2\n")]
         public void TestUnorderedList(string value)

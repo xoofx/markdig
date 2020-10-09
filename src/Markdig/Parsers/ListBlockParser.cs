@@ -208,7 +208,9 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
             var bulletLength = 1; // TODO: fix for ordered
-            var whitespaceBefore = state.PopBeforeWhitespace(state.CurrentLineStartPosition, state.Start - 1 - bulletLength); // -1: 
+            var whitespaceBefore = state.PopBeforeWhitespace(state.StartBeforeIndent, state.Start - 1 - bulletLength); // -1: 
+            //var whitespaceBefore = state.PopBeforeWhitespace(state.CurrentLineStartPosition, state.Start - 1 - bulletLength); // -1: 
+            //var whitespaceBefore = state.PopBeforeWhitespace(sourcePosition, state.Start - 1 - bulletLength); // -1: 
             int whitespaceAfterStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;

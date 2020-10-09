@@ -90,7 +90,8 @@ namespace Markdig.Renderers
                 {
                     return _constant;
                 }
-                if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
+                //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
+                if (_lineSpecific.Count == 0) return string.Empty;
                 var next = _lineSpecific.Dequeue();
                 return next;
             }

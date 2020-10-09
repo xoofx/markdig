@@ -18,9 +18,6 @@ namespace Markdig.Renderers.Normalize
             renderer.RenderLinesBefore(quoteBlock);
             renderer.Write(quoteBlock.BeforeWhitespace);
 
-            //var quoteIndent = quoteBlock.HasSpaceAfterQuoteChar ? quoteBlock.QuoteChar + " " : quoteBlock.QuoteChar.ToString();
-            //var quoteIndent = quoteBlock.QuoteChar.ToString();
-
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
             {
@@ -28,8 +25,6 @@ namespace Markdig.Renderers.Normalize
             }
 
             renderer.PushIndent(indents);
-            // indents are not always written, depending on the childs
-            //renderer.Write(quoteIndent);
             renderer.WriteChildren(quoteBlock); 
             renderer.PopIndent();
 
