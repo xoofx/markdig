@@ -12,7 +12,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("<div></div>\n\n# h")]
         [TestCase("p\n\n<div></div>\n")]
         [TestCase("<div></div>\n\n# h")]
-        public void TestHtml(string value)
+        public void Test(string value)
         {
             RoundTrip(value);
         }

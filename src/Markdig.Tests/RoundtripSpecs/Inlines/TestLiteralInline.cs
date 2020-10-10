@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Markdig.Tests.RoundtripSpecs.Inlines
 {
-    class TestBackslashEscape
+    class TestLiteralInline
     {
     }
 }

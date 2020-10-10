@@ -10,8 +10,8 @@ namespace Markdig.Tests.RoundtripSpecs
         // l = line
         [TestCase("    l")]
         [TestCase("     l")]
-        //[TestCase("\tl")]
-        //[TestCase("\tl1\n    l1")]
+        [TestCase("\tl")]
+        [TestCase("\tl1\n    l1")]
 
         [TestCase("\n    l")]
         [TestCase("\n\n    l")]

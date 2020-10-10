@@ -69,16 +69,22 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
-        [TestCase("-     c")]
-        [TestCase("-     c\n      c")]
-        [TestCase(" -     c\n       c")]
+        [TestCase("-     c")] // 5
+        [TestCase("-     c\n      c")] // 5, 6
+        [TestCase(" -     c\n      c")] // 5, 6
+        [TestCase(" -     c\n       c")] // 5, 7
+        [TestCase("-      c\n      c")] // 6, 6
+        [TestCase(" -      c\n      c")] // 6, 6
+        [TestCase(" -      c\n       c")] // 6, 7
         public void TestIndentedCodeBlock(string value)
         {
             RoundTrip(value);
         }
 
         [TestCase("- ```a```")]
-        [TestCase("- i1\n    - i1.1\n    ```\n    code\n    ```")]
+        [TestCase("- i1\n    - i1.1\n    ```\n    c\n    ```")]
+        [TestCase("- i1\n    - i1.1\n    ```\nc\n```")]
+        [TestCase("- i1\n    - i1.1\n    ```\nc\n```\n")]
         public void TestFencedCodeBlock(string value)
         {
             RoundTrip(value);

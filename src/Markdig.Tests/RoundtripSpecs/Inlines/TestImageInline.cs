@@ -4,7 +4,7 @@ using static Markdig.Tests.RoundtripSpecs.TestHelper;
 namespace Markdig.Tests.RoundtripSpecs.Inlines
 {
     [TestFixture]
-    public class TestImage
+    public class TestImageInline
     {
         [TestCase("![](a)")]
         [TestCase(" ![](a)")]

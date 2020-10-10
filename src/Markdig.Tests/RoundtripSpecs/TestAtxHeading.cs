@@ -24,7 +24,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("\n\n# h\n\np\n\n")]
         [TestCase("\n\n# h\np\n\n")]
         [TestCase("\n\n# h\np\n\n")]
-        public void TestParagrph(string value)
+        public void TestParagraph(string value)
         {
             RoundTrip(value);
         }

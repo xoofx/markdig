@@ -96,6 +96,12 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("\np \n\n p ")]
         [TestCase("\n p \n\n p ")]
 
+        [TestCase("p  p")]
+        [TestCase("p\tp")]
+        [TestCase("p \tp")]
+        [TestCase("p \t p")]
+        [TestCase("p \tp")]
+
         // special cases
         [TestCase(" p \n\n\n\n p \n\n")]
         [TestCase("\n\np")]

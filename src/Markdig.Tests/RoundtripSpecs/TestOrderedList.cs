@@ -10,9 +10,101 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("1.  i")]
         [TestCase("1. i ")]
         [TestCase("1.  i ")]
+        [TestCase("1.  i  ")]
 
-        [TestCase("1. i1\n2. i2")]
-        [TestCase("1. i1\n2. i2\n  a. i2.1")]
+        [TestCase(" 1. i")]
+        [TestCase(" 1.  i")]
+        [TestCase(" 1. i ")]
+        [TestCase(" 1.  i ")]
+        [TestCase(" 1.  i  ")]
+
+        [TestCase("  1. i")]
+        [TestCase("  1.  i")]
+        [TestCase("  1. i ")]
+        [TestCase("  1.  i ")]
+        [TestCase("  1.  i  ")]
+
+        [TestCase("   1. i")]
+        [TestCase("   1.  i")]
+        [TestCase("   1. i ")]
+        [TestCase("   1.  i ")]
+        [TestCase("   1.  i  ")]
+
+        [TestCase("1. i\n")]
+        [TestCase("1.  i\n")]
+        [TestCase("1. i \n")]
+        [TestCase("1.  i \n")]
+        [TestCase("1.  i  \n")]
+
+        [TestCase(" 1. i\n")]
+        [TestCase(" 1.  i\n")]
+        [TestCase(" 1. i \n")]
+        [TestCase(" 1.  i \n")]
+        [TestCase(" 1.  i  \n")]
+
+        [TestCase("  1. i\n")]
+        [TestCase("  1.  i\n")]
+        [TestCase("  1. i \n")]
+        [TestCase("  1.  i \n")]
+        [TestCase("  1.  i  \n")]
+
+        [TestCase("   1. i\n")]
+        [TestCase("   1.  i\n")]
+        [TestCase("   1. i \n")]
+        [TestCase("   1.  i \n")]
+        [TestCase("   1.  i  \n")]
+
+        [TestCase("1. i\n2. j")]
+        [TestCase("1.  i\n2. j")]
+        [TestCase("1. i \n2. j")]
+        [TestCase("1.  i \n2. j")]
+        [TestCase("1.  i  \n2. j")]
+
+        [TestCase(" 1. i\n2. j")]
+        [TestCase(" 1.  i\n2. j")]
+        [TestCase(" 1. i \n2. j")]
+        [TestCase(" 1.  i \n2. j")]
+        [TestCase(" 1.  i  \n2. j")]
+
+        [TestCase("  1. i\n2. j")]
+        [TestCase("  1.  i\n2. j")]
+        [TestCase("  1. i \n2. j")]
+        [TestCase("  1.  i \n2. j")]
+        [TestCase("  1.  i  \n2. j")]
+
+        [TestCase("   1. i\n2. j")]
+        [TestCase("   1.  i\n2. j")]
+        [TestCase("   1. i \n2. j")]
+        [TestCase("   1.  i \n2. j")]
+        [TestCase("   1.  i  \n2. j")]
+
+        [TestCase("1. i\n2. j\n")]
+        [TestCase("1.  i\n2. j\n")]
+        [TestCase("1. i \n2. j\n")]
+        [TestCase("1.  i \n2. j\n")]
+        [TestCase("1.  i  \n2. j\n")]
+
+        [TestCase(" 1. i\n2. j\n")]
+        [TestCase(" 1.  i\n2. j\n")]
+        [TestCase(" 1. i \n2. j\n")]
+        [TestCase(" 1.  i \n2. j\n")]
+        [TestCase(" 1.  i  \n2. j\n")]
+
+        [TestCase("  1. i\n2. j\n")]
+        [TestCase("  1.  i\n2. j\n")]
+        [TestCase("  1. i \n2. j\n")]
+        [TestCase("  1.  i \n2. j\n")]
+        [TestCase("  1.  i  \n2. j\n")]
+
+        [TestCase("   1. i\n2. j\n")]
+        [TestCase("   1.  i\n2. j\n")]
+        [TestCase("   1. i \n2. j\n")]
+        [TestCase("   1.  i \n2. j\n")]
+        [TestCase("   1.  i  \n2. j\n")]
+
+        [TestCase("1. i\n2. j\n3. k")]
+        [TestCase("1. i\n2. j\n3. k\n")]
+
         public void Test(string value)
         {
             RoundTrip(value);

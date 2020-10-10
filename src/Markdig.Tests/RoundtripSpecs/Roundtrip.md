@@ -10,4 +10,20 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 
 ## Lists
 - beforewhitespace on list item
-- 
+
+# TODO
+In order:
+- `p\n p`: affects many tests
+- `\r\n` and `\r` support
+- `\0`
+- support link parsing
+- support LinkReferenceDefinition
+- fix broken pre-existing tests
+- fix `TODO: RTP: `
+- generate spec examples as tests for roundtrip
+- run pull request feedback
+- extract MarkdownRenderer
+- deduplicate MarkdownRenderer and NormalizeRenderer code
+- support extensions
+- write tree comparison tests?
+- write tree visualization tool?
