@@ -208,8 +208,8 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
             var bulletLength = 1; // TODO: RTP: fix for ordered
-            var whitespaceBefore = state.PopBeforeWhitespace(state.Start - 1 - bulletLength); // -1: 
-            int whitespaceAfterStart = state.Start;
+            var whitespaceBefore = state.PopBeforeWhitespace(state.Start - bulletLength - 1);
+            state.WhitespaceStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;
 
@@ -271,7 +271,6 @@ namespace Markdig.Parsers
                 ColumnWidth = columnWidth,
                 Order = order,
                 BeforeWhitespace = whitespaceBefore,
-                AfterWhitespace = state.PopBeforeWhitespace(whitespaceAfterStart, state.Start - 1),
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
                 LinesBefore = state.UseLinesBefore(),
             };

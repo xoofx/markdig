@@ -168,7 +168,6 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase(">q\n>\n>\n>q")]
         [TestCase(">q\n>\n>\n>\n>q")]
         [TestCase(">q\n>\n>q\n>\n>q")]
-        [TestCase("> **q**\n>p\n")]
         [TestCase("p\n\n> **q**\n>p\n")]
 
         [TestCase("> q\np\n> q")] // lazy
@@ -176,6 +175,9 @@ namespace Markdig.Tests.RoundtripSpecs
 
         [TestCase(">>q")]
         [TestCase(" >  >   q")]
+
+        [TestCase("> **q**\n>p\n")]
+        [TestCase("> **q**")]
         public void Test(string value)
         {
             RoundTrip(value);
@@ -226,5 +228,20 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("> *q*\n>p\n")]
+        [TestCase("> *q*")]
+        public void TestEmphasis(string value)
+        {
+            RoundTrip(value);
+        }
+
+        [TestCase("> **q**\n>p\n")]
+        [TestCase("> **q**")]
+        public void TestStrongEmphasis(string value)
+        {
+            RoundTrip(value);
+        }
+
     }
 }

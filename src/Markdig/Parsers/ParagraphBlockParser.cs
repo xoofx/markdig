@@ -28,7 +28,6 @@ namespace Markdig.Parsers
             {
                 Column = processor.Column,
                 Span = new SourceSpan(processor.Line.Start, processor.Line.End),
-                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
                 LinesBefore = processor.UseLinesBefore()
             });
             return BlockState.Continue;

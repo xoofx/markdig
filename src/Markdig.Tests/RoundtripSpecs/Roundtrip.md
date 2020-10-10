@@ -15,6 +15,7 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 In order:
 - `p\n p`: affects many tests
 - `\r\n` and `\r` support
+- support SetextHeading
 - support link parsing
 - support LinkReferenceDefinition
 - fix broken pre-existing tests

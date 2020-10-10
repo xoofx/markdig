@@ -20,6 +20,7 @@ namespace Markdig.Parsers
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
+        private bool trackTrivia = true;
 
         private BlockProcessor(BlockProcessor root)
         {
@@ -669,6 +670,10 @@ namespace Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
+                        if (trackTrivia)
+                        {
+                            //UnwindAllIndents();
+                        }
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
                 }
@@ -808,6 +813,10 @@ namespace Markdig.Parsers
                     if (!result.IsDiscard())
                     {
                         // TODO: RTP: pass line with whitespace
+                        if (trackTrivia)
+                        {
+                            UnwindAllIndents();
+                        }
                         paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
                     // TODO: RTP: delegate this to container parser classes
@@ -867,6 +876,11 @@ namespace Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
+                        bool isParagraph = block is ParagraphBlock;
+                        if (trackTrivia && isParagraph)
+                        {
+                            UnwindAllIndents();
+                        }
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
                     }
 
