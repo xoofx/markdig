@@ -6,6 +6,7 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
     [TestFixture]
     public class TestNullCharacterInline
     {
+        [TestCase("\0")]
         [TestCase("\0p")]
         [TestCase("p\0")]
         [TestCase("p\0p")]

@@ -15,15 +15,20 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 In order:
 - `p\n p`: affects many tests
 - `\r\n` and `\r` support
-- `\0`
 - support link parsing
 - support LinkReferenceDefinition
 - fix broken pre-existing tests
 - fix `TODO: RTP: `
 - generate spec examples as tests for roundtrip
 - run pull request feedback
+- introduce feature flag
 - extract MarkdownRenderer
 - deduplicate MarkdownRenderer and NormalizeRenderer code
+- `\0`
 - support extensions
+- review complete PR and follow conventions
+- run perf test
+- document how trivia are handled generically and specifically
+- create todo list with perf optimization focus points
 - write tree comparison tests?
 - write tree visualization tool?
