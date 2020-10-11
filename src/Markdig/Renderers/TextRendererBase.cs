@@ -287,6 +287,20 @@ namespace Markdig.Renderers
         }
 
         /// <summary>
+        /// Writes a newline.
+        /// </summary>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T WriteLine(Newline newline)
+        {
+            WriteIndent();
+            Writer.NewLine = newline;
+            Writer.WriteLine();
+            previousWasLine = true;
+            return (T)this;
+        }
+
+        /// <summary>
         /// Writes a content followed by a newline.
         /// </summary>
         /// <param name="content">The content.</param>

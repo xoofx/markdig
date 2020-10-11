@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
+
 namespace Markdig.Syntax
 {
     /// <summary>
@@ -53,5 +55,8 @@ namespace Markdig.Syntax
         /// Gets or sets the fenced character used to open and close this fenced code block.
         /// </summary>
         char FencedChar { get; set; }
+
+        Newline Newline { get; set; }
+        Newline InfoNewline { get; set; }
     }
 }

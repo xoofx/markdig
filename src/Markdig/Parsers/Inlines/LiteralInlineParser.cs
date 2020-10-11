@@ -77,7 +77,7 @@ namespace Markdig.Parsers.Inlines
                 var newSlice = length > 0 ? new StringSlice(slice.Text, slice.Start, endPosition) : StringSlice.Empty;
                 if (!newSlice.IsEmpty)
                 {
-                    processor.Inline = new LiteralInline()
+                    processor.Inline = new LiteralInline
                     {
                         Content = length > 0 ? newSlice : StringSlice.Empty,
                         Span = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),

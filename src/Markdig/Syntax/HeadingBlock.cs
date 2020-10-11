@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics;
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -31,5 +32,11 @@ namespace Markdig.Syntax
         /// Gets or sets the level of heading (starting at 1 for the lowest level).
         /// </summary>
         public int Level { get; set; }
+
+        public bool IsSetext { get; set; }
+
+        public int HeaderCharCount { get; set; }
+
+        public Newline SetextNewline { get; set; }
     }
 }

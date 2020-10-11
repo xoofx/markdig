@@ -28,7 +28,8 @@ namespace Markdig.Parsers
             {
                 Column = processor.Column,
                 Span = new SourceSpan(processor.Line.Start, processor.Line.End),
-                LinesBefore = processor.UseLinesBefore()
+                LinesBefore = processor.UseLinesBefore(),
+                Newline = processor.Line.Newline,
             });
             return BlockState.Continue;
         }
@@ -44,7 +45,7 @@ namespace Markdig.Parsers
             {
                 return TryParseSetexHeading(processor, block);
             }
-
+            block.Newline = processor.Line.Newline;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }
@@ -79,8 +80,9 @@ namespace Markdig.Parsers
         private BlockState TryParseSetexHeading(BlockProcessor state, Block block)
         {
             var line = state.Line;
-
-            char headingChar = GetHeadingChar(ref line);
+            var sourcePosition = line.Start;
+            int count = 0;
+            char headingChar = GetHeadingChar(ref line, ref count);
 
             if (headingChar != 0)
             {
@@ -93,6 +95,11 @@ namespace Markdig.Parsers
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);
 
+                    while (state.CurrentChar == headingChar)
+                    {
+                        state.NextChar();
+                    }
+
                     int level = headingChar == '=' ? 1 : 2;
 
                     var heading = new HeadingBlock(this)
@@ -101,8 +108,13 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        BeforeWhitespace = state.PopBeforeWhitespace(state.Column),
+                        BeforeWhitespace = state.PopBeforeWhitespace(sourcePosition - 1),
+                        AfterWhitespace = new StringSlice(state.Line.Text, state.Start, line.End),
                         LinesBefore = state.UseLinesBefore(),
+                        Newline = state.Line.Newline,
+                        IsSetext = true,
+                        HeaderCharCount = count,
+                        SetextNewline = paragraph.Newline,
                     };
                     //heading.Lines.Trim();
 
@@ -118,13 +130,13 @@ namespace Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private static char GetHeadingChar(ref StringSlice line)
+        private static char GetHeadingChar(ref StringSlice line, ref int count)
         {
             char headingChar = line.CurrentChar;
 
             if (headingChar == '=' || headingChar == '-')
             {
-                line.CountAndSkipChar(headingChar);
+                count = line.CountAndSkipChar(headingChar);
 
                 if (line.IsEmpty)
                 {

@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-using System;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -166,6 +165,7 @@ namespace Markdig.Parsers
             fenced.WhitespaceAfterInfo = afterInfo;
             fenced.Arguments = HtmlHelper.Unescape(arg);
             fenced.WhitespaceAfterArguments = afterArg;
+            fenced.InfoNewline = line.Newline;
 
             return true;
         }
@@ -319,7 +319,10 @@ namespace Markdig.Parsers
             if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
             {
                 block.UpdateSpanEnd(line.Start - 1);
-                (block as IFencedBlock).ClosingFencedCharCount = closingCount;
+
+                var fencedBlock = block as IFencedBlock;
+                fencedBlock.ClosingFencedCharCount = closingCount;
+                fencedBlock.Newline = processor.Line.Newline;
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

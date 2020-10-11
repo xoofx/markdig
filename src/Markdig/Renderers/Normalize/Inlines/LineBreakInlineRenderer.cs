@@ -24,7 +24,7 @@ namespace Markdig.Renderers.Normalize.Inlines
                 renderer.Write("\\");
                 //renderer.Write(obj.IsBackslash ? "\\" : "  ");
             }
-            renderer.WriteLine();
+            renderer.WriteLine(obj.Newline);
         }
     }
 }

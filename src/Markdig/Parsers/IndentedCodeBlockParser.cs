@@ -37,6 +37,7 @@ namespace Markdig.Parsers
                     Column = processor.Column,
                     Span = new SourceSpan(processor.Start, processor.Line.End),
                     LinesBefore = processor.UseLinesBefore(),
+                    Newline = processor.Line.Newline,
                 };
                 var codeBlockLine = new CodeBlockLine
                 {
@@ -97,6 +98,7 @@ namespace Markdig.Parsers
                 };
                 cb.CodeBlockLines ??= new List<CodeBlockLine>();
                 cb.CodeBlockLines.Add(codeBlockLine);
+                cb.Newline = processor.Line.Newline; // ensure block newline is last newline
             }
 
             return BlockState.Continue;

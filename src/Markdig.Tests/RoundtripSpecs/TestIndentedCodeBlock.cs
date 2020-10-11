@@ -38,5 +38,28 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("    l\n")]
+        [TestCase("    l\r")]
+        [TestCase("    l\r\n")]
+
+        [TestCase("    l\n    l")]
+        [TestCase("    l\n    l\n")]
+        [TestCase("    l\n    l\r")]
+        [TestCase("    l\n    l\r\n")]
+
+        [TestCase("    l\r    l")]
+        [TestCase("    l\r    l\n")]
+        [TestCase("    l\r    l\r")]
+        [TestCase("    l\r    l\r\n")]
+
+        [TestCase("    l\r\n    l")]
+        [TestCase("    l\r\n    l\n")]
+        [TestCase("    l\r\n    l\r")]
+        [TestCase("    l\r\n    l\r\n")]
+        public void TestNewline(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

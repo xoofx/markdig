@@ -134,22 +134,15 @@ namespace Markdig.Renderers.Normalize
                 var slices = lines.Lines;
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    if (!writeEndOfLines && i > 0)
-                    {
-                        WriteLine();
-                    }
 
                     if (indent)
                     {
                         Write("    ");
                     }
 
-                    Write(ref slices[i].Slice);
-
-                    if (writeEndOfLines)
-                    {
-                        WriteLine();
-                    }
+                    var slice = slices[i].Slice;
+                    Write(ref slice);
+                    WriteLine(slice.Newline);
                 }
             }
             return this;
@@ -161,7 +154,7 @@ namespace Markdig.Renderers.Normalize
             {
                 foreach (var line in block.LinesBefore)
                 {
-                    WriteLine(line.ToString());
+                    WriteLine(line.Newline);
                 }
             }
         }
@@ -172,18 +165,8 @@ namespace Markdig.Renderers.Normalize
             {
                 foreach (var line in block.LinesAfter)
                 {
-                    WriteLine(line.ToString());
+                    WriteLine(line.Newline);
                 }
-            }
-        }
-
-        public void RenderLineAfterIfNeeded(Block block)
-        {
-            bool isLast = Equals(block.Parent.LastChild, block);
-            bool hasLinesAfter = block.LinesAfter != null && block.LinesAfter.Count > 0;
-            if (!isLast && !hasLinesAfter)
-            {
-                WriteLine();
             }
         }
    }

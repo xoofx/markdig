@@ -60,7 +60,7 @@ namespace Markdig.Syntax
                 // if not first line, preserve whitespace
                 c = 0;
             }
-            var stringLine = new StringLine(ref slice, line, c, sourceLinePosition);
+            var stringLine = new StringLine(ref slice, line, c, sourceLinePosition, slice.Newline);
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {
@@ -76,6 +76,7 @@ namespace Markdig.Syntax
                 stringLine.Slice = new StringSlice(builder.GetStringAndReset());
                 Lines.Add(ref stringLine);
             }
+            Newline = slice.Newline; // update newline, as it should be the last newline of the block
         }
     }
 }

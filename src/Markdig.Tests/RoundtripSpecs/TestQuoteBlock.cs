@@ -243,5 +243,28 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase(">p\n")]
+        [TestCase(">p\r")]
+        [TestCase(">p\r\n")]
+
+        [TestCase(">p\n>p")]
+        [TestCase(">p\r>p")]
+        [TestCase(">p\r\n>p")]
+
+        [TestCase(">p\n>p\n")]
+        [TestCase(">p\r>p\n")]
+        [TestCase(">p\r\n>p\n")]
+
+        [TestCase(">p\n>p\r")]
+        [TestCase(">p\r>p\r")]
+        [TestCase(">p\r\n>p\r")]
+
+        [TestCase(">p\n>p\r\n")]
+        [TestCase(">p\r>p\r\n")]
+        [TestCase(">p\r\n>p\r\n")]
+        public void TestNewline(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

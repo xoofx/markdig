@@ -22,7 +22,7 @@ namespace Markdig.Renderers.Normalize
             //renderer.Write(obj.BeforeWhitespace);
             renderer.Write(obj.Content);
             //renderer.Write(obj.AfterWhitespace);
-            renderer.RenderLineAfterIfNeeded(obj);
+            renderer.WriteLine(obj.Newline);
             renderer.RenderLinesAfter(obj);
         }
     }

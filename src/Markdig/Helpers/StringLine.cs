@@ -25,12 +25,13 @@ namespace Markdig.Helpers
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
         /// <param name="position">The position.</param>
-        public StringLine(StringSlice slice, int line, int column, int position)
+        public StringLine(StringSlice slice, int line, int column, int position, Newline newline)
         {
             Slice = slice;
             Line = line;
             Column = column;
             Position = position;
+            Newline = newline;
         }
 
         /// <summary>
@@ -40,12 +41,13 @@ namespace Markdig.Helpers
         /// <param name="line">The line.</param>
         /// <param name="column">The column.</param>
         /// <param name="position">The position.</param>
-        public StringLine(ref StringSlice slice, int line, int column, int position)
+        public StringLine(ref StringSlice slice, int line, int column, int position, Newline newline)
         {
             Slice = slice;
             Line = line;
             Column = column;
             Position = position;
+            Newline = newline;
         }
 
         /// <summary>
@@ -67,6 +69,8 @@ namespace Markdig.Helpers
         /// The column position.
         /// </summary>
         public int Column;
+
+        public Newline Newline;
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="StringLine"/> to <see cref="StringSlice"/>.

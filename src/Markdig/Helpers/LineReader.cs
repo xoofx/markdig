@@ -50,13 +50,25 @@ namespace Markdig.Helpers
             for (int i = sourcePosition; i < text.Length; i++)
             {
                 char c = text[i];
-                if (c == '\r' || c == '\n')
+                if (c == '\r')
                 {
-                    var slice = new StringSlice(text, sourcePosition, i - 1);
-
+                    int length = 1;
+                    var newline = Newline.CarriageReturn;
                     if (c == '\r' && (uint)(i + 1) < (uint)text.Length && text[i + 1] == '\n')
+                    {
                         i++;
+                        length = 2;
+                        newline = Newline.CarriageReturnLineFeed;
+                    }
 
+                    var slice = new StringSlice(text, sourcePosition, i - length, newline);
+                    SourcePosition = i + 1;
+                    return slice;
+                }
+
+                if (c == '\n')
+                {
+                    var slice = new StringSlice(text, sourcePosition, i - 1, Newline.LineFeed);
                     SourcePosition = i + 1;
                     return slice;
                 }

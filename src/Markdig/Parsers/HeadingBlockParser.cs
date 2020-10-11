@@ -80,7 +80,8 @@ namespace Markdig.Parsers
                     Column = column,
                     Span = { Start =  sourcePosition },
                     BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
-                    LinesBefore = processor.UseLinesBefore()
+                    LinesBefore = processor.UseLinesBefore(),
+                    Newline = processor.Line.Newline,
                 };
                 processor.NewBlocks.Push(headingBlock);
                 processor.GoToColumn(column + leadingCount + 1);

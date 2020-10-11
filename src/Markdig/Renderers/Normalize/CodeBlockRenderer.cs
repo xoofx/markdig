@@ -55,11 +55,12 @@ namespace Markdig.Renderers.Normalize
                     renderer.Write(attributes);
                 }
                 */
-                renderer.WriteLine();
+                renderer.WriteLine(fencedCodeBlock.InfoNewline);
 
                 renderer.WriteLeafRawLines(obj, true);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
+                renderer.WriteLine(obj.Newline);
                 renderer.Write(obj.AfterWhitespace);
             }
             else
@@ -72,7 +73,8 @@ namespace Markdig.Renderers.Normalize
                 renderer.PushIndent(indents);
                 WriteLeafRawLines(renderer, obj);
                 renderer.PopIndent();
-                renderer.RenderLineAfterIfNeeded(obj);
+                
+                // ignore block newline, as last line references it
             }
 
             renderer.RenderLinesAfter(obj);
@@ -86,11 +88,9 @@ namespace Markdig.Renderers.Normalize
                 var slices = lines.Lines;
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    if (i > 0)
-                    {
-                        renderer.WriteLine();
-                    }
+                    var slice = slices[i].Slice;
                     renderer.Write(ref slices[i].Slice);
+                    renderer.WriteLine(slice.Newline);
                 }
             }
         }

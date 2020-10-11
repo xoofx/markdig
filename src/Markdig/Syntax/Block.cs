@@ -46,6 +46,11 @@ namespace Markdig.Syntax
         public bool IsBreakable { get; set; }
 
         /// <summary>
+        /// The last newline of this block
+        /// </summary>
+        public Newline Newline { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this block must be removed from its container after inlines have been processed.
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }

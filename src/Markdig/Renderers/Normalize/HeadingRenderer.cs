@@ -23,19 +23,36 @@ namespace Markdig.Renderers.Normalize
 
         protected override void Write(NormalizeRenderer renderer, HeadingBlock obj)
         {
-            renderer.RenderLinesBefore(obj);
+            if (obj.IsSetext)
+            {
+                renderer.RenderLinesBefore(obj);
 
-            var headingText = obj.Level > 0 && obj.Level <= 6
-                ? HeadingTexts[obj.Level - 1]
-                : new string('#', obj.Level);
+                var headingChar = obj.Level == 1 ? '=' : '-';
+                var line = new string(headingChar, obj.HeaderCharCount);
 
-            renderer.Write(obj.BeforeWhitespace);
-            renderer.Write(headingText).Write(' ');
-            renderer.WriteLeafInline(obj);
+                renderer.WriteLeafInline(obj);
+                renderer.WriteLine(obj.SetextNewline);
+                renderer.Write(obj.BeforeWhitespace);
+                renderer.Write(line);
+                renderer.WriteLine(obj.Newline);
+                renderer.Write(obj.AfterWhitespace);
 
-            renderer.FinishBlock();
+                renderer.RenderLinesAfter(obj);
+            }
+            else
+            {
+                renderer.RenderLinesBefore(obj);
 
-            renderer.RenderLinesAfter(obj);
+                var headingText = obj.Level > 0 && obj.Level <= 6
+                    ? HeadingTexts[obj.Level - 1]
+                    : new string('#', obj.Level);
+
+                renderer.Write(obj.BeforeWhitespace);
+                renderer.Write(headingText).Write(' ');
+                renderer.WriteLeafInline(obj);
+
+                renderer.RenderLinesAfter(obj);
+            }
         }
     }
 }

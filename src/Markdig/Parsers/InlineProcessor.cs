@@ -48,6 +48,7 @@ namespace Markdig.Parsers
             lineOffsets = new List<StringLineGroup.LineOffset>();
             ParserStates = new object[Parsers.Count];
             LiteralInlineParser = new LiteralInlineParser();
+            LineBreakInlineParser = new LineBreakInlineParser();
         }
 
         /// <summary>
@@ -109,6 +110,8 @@ namespace Markdig.Parsers
         /// Gets the literal inline parser.
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; }
+
+        public LineBreakInlineParser LineBreakInlineParser { get; }
 
 
         public int GetSourcePosition(int sliceOffset)
@@ -185,6 +188,7 @@ namespace Markdig.Parsers
             lineOffsets.Clear();
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines.Release();
+            ContainerInline container = null;
 
             int previousStart = -1;
 
@@ -236,7 +240,7 @@ namespace Markdig.Parsers
                     if (nextInline.Parent == null)
                     {
                         // Get deepest container
-                        var container = FindLastContainer();
+                        container = FindLastContainer();
                         if (!ReferenceEquals(container, nextInline))
                         {
                             container.AppendChild(nextInline);
@@ -256,7 +260,7 @@ namespace Markdig.Parsers
                 else
                 {
                     // Get deepest container
-                    var container = FindLastContainer();
+                    container = FindLastContainer();
 
                     Inline = container.LastChild is LeafInline ? container.LastChild : container;
                     if (Inline == Root)
@@ -270,6 +274,16 @@ namespace Markdig.Parsers
                 //    DebugLog.WriteLine($"** Dump: char '{c}");
                 //    leafBlock.Inline.DumpTo(DebugLog);
                 //}
+            }
+
+            if (leafBlock is HeadingBlock heading && heading.IsSetext)
+            {
+                // TODO: RTP: delegate to block?
+            }
+            else
+            {
+                var newline = leafBlock.Newline;
+                container.AppendChild(new LineBreakInline { Newline = newline });
             }
 
             Inline = null;

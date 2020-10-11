@@ -65,13 +65,8 @@ namespace Markdig.Renderers.Normalize
             }
             else
             {
-                var writeLine = false;
                 for (var i = 0; i < listBlock.Count; i++)
                 {
-                    if (writeLine)
-                    {
-                        renderer.WriteLine();
-                    }
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
                     renderer.RenderLinesBefore(listItem);
@@ -85,16 +80,10 @@ namespace Markdig.Renderers.Normalize
                     renderer.PopIndent();
 
                     renderer.RenderLinesAfter(listItem);
-                    writeLine = true;
                 }
             }
             renderer.CompactParagraph = compact;
 
-            // TODO: make reusable method?
-            if (listBlock.Parent is MarkdownDocument md && md.LastChild != listBlock)
-            {
-                renderer.WriteLine();
-            }
 
             renderer.RenderLinesAfter(listBlock);
         }

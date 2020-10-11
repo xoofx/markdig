@@ -120,7 +120,6 @@ namespace Markdig.Parsers
                         if (lastBlock != null)
                         {
                             lastBlock.LinesAfter = blockProcessor.BeforeLines ?? new List<StringSlice>();
-                            lastBlock.LinesAfter.Add(lineText);
                         }
                     }
                     break;

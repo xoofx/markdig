@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
+
 namespace Markdig.Syntax.Inlines
 {
     /// <summary>
@@ -13,5 +15,7 @@ namespace Markdig.Syntax.Inlines
         public bool IsHard { get; set; }
 
         public bool IsBackslash { get; set; }
+
+        public Newline Newline { get; set; }
     }
 }

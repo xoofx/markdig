@@ -263,6 +263,7 @@ namespace Markdig.Parsers
             if (result != BlockState.BreakDiscard)
             {
                 htmlBlock.Span.End = line.End;
+                htmlBlock.Newline = state.Line.Newline;
             }
 
             return result;
@@ -277,6 +278,7 @@ namespace Markdig.Parsers
                 // By default, setup to the end of line
                 Span = new SourceSpan(startPosition, startPosition + state.Line.End),
                 LinesBefore = state.UseLinesBefore(),
+                Newline = state.Line.Newline,
             });
             return BlockState.Continue;
         }

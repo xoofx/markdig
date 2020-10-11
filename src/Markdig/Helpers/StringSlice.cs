@@ -8,6 +8,43 @@ using System.Runtime.CompilerServices;
 namespace Markdig.Helpers
 {
     /// <summary>
+    /// Wrap newline so we have type-safety and static accessibility
+    /// </summary>
+    public struct Newline
+    {
+        private readonly bool carriageReturn;
+        private readonly bool lineFeed;
+
+        private Newline(bool carriageReturn, bool lineFeed)
+        {
+            this.carriageReturn = carriageReturn;
+            this.lineFeed = lineFeed;
+        }
+
+        public static Newline None = new Newline(false, false);
+        public static Newline CarriageReturn = new Newline(true, false);
+        public static Newline LineFeed = new Newline(false, true);
+        public static Newline CarriageReturnLineFeed = new Newline(true, true);
+
+        public static implicit operator string (Newline newline)
+        {
+            if (newline.carriageReturn && newline.lineFeed)
+            {
+                return "\r\n";
+            }
+            if (newline.lineFeed)
+            {
+                return "\n";
+            }
+            if (newline.carriageReturn)
+            {
+                return "\r";
+            }
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
     /// A lightweight struct that represents a slice of a string.
     /// </summary>
     /// <seealso cref="ICharIterator" />
@@ -27,6 +64,7 @@ namespace Markdig.Helpers
             Text = text;
             Start = 0;
             End = (Text?.Length ?? 0) - 1;
+            Newline = Newline.None;
         }
 
         /// <summary>
@@ -44,6 +82,25 @@ namespace Markdig.Helpers
             Text = text;
             Start = start;
             End = end;
+            Newline = Newline.None;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public StringSlice(string text, int start, int end, Newline newline)
+        {
+            if (text is null)
+                ThrowHelper.ArgumentNullException_text();
+
+            Text = text;
+            Start = start;
+            End = end;
+            Newline = newline;
         }
 
         /// <summary>
@@ -65,6 +122,8 @@ namespace Markdig.Helpers
         /// Gets the length.
         /// </summary>
         public readonly int Length => End - Start + 1;
+
+        public Newline Newline;
 
         /// <summary>
         /// Gets the current character.

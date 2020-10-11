@@ -19,7 +19,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         public LineBreakInlineParser()
         {
-            OpeningCharacters = new[] {'\n'};
+            OpeningCharacters = new[] {'\n', '\r'};
         }
 
         /// <summary>
@@ -37,14 +37,28 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
-            slice.NextChar(); // Skip \n
+            var newline = Newline.LineFeed;
+            if (slice.CurrentChar == '\r')
+            {
+                if (slice.PeekChar() == '\n')
+                {
+                    newline = Newline.CarriageReturnLineFeed;
+                    slice.NextChar(); // Skip \n
+                }
+                else
+                {
+                    newline = Newline.CarriageReturn;
+                }
+            }
+            slice.NextChar(); // Skip \r or \n
 
             processor.Inline = new LineBreakInline
             {
                 Span = { Start = processor.GetSourcePosition(startPosition, out int line, out int column) },
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
-                Column = column
+                Column = column,
+                Newline = newline
             };
             processor.Inline.Span.End = processor.Inline.Span.Start;
             return true;

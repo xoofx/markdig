@@ -121,14 +121,15 @@ namespace Markdig.Helpers
             // Optimization case for a single line.
             if (Count == 1)
             {
-                lineOffsets?.Add(new LineOffset(Lines[0].Position, Lines[0].Column, Lines[0].Slice.Start - Lines[0].Position, Lines[0].Slice.Start, Lines[0].Slice.End + 1));
+                var l = Lines[0];
+                lineOffsets?.Add(new LineOffset(l.Position, l.Column, l.Slice.Start - l.Position, l.Slice.Start, l.Slice.End + 1));
                 return Lines[0];
             }
 
             // Optimization case when no lines
             if (Count == 0)
             {
-                return new StringSlice(string.Empty);
+                return StringSlice.Empty;
             }
 
             if (lineOffsets != null && lineOffsets.Capacity < lineOffsets.Count + Count)
@@ -139,18 +140,20 @@ namespace Markdig.Helpers
             // Else use a builder
             var builder = StringBuilderCache.Local();
             int previousStartOfLine = 0;
+            var newline = Newline.None;
             for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
-                    builder.Append('\n');
-                    previousStartOfLine = builder.Length;
+                    builder.Append(newline);
+                        previousStartOfLine = builder.Length;
                 }
                 ref var line = ref Lines[i];
                 if (!line.Slice.IsEmpty)
                 {
                     builder.Append(line.Slice.Text, line.Slice.Start, line.Slice.Length);
                 }
+                newline = line.Newline;
 
                 lineOffsets?.Add(new LineOffset(line.Position, line.Column, line.Slice.Start - line.Position, previousStartOfLine, builder.Length));
             }

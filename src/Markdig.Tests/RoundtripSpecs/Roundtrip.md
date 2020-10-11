@@ -13,7 +13,7 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 
 # TODO
 In order:
-- `p\n p`: affects many tests
+- ~~`p\n p`: affects many tests~~
 - `\r\n` and `\r` support
 - support SetextHeading
 - support link parsing

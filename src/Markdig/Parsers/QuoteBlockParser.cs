@@ -54,7 +54,8 @@ namespace Markdig.Parsers
             quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
                 BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
-                QuoteChar = true
+                QuoteChar = true,
+                Newline = processor.Line.Newline,
             });
             processor.NewBlocks.Push(quoteBlock);
             processor.WhitespaceStart = sourcePosition + 1;
@@ -85,6 +86,7 @@ namespace Markdig.Parsers
                     {
                         QuoteChar = false,
                         BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+                        Newline = processor.Line.Newline,
                     });
                     return BlockState.None;
                 }
@@ -93,6 +95,7 @@ namespace Markdig.Parsers
             {
                 QuoteChar = true,
                 BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+                Newline = processor.Line.Newline,
             });
 
             processor.NextChar(); // Skip quote marker char

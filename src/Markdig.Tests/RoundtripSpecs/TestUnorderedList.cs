@@ -89,5 +89,89 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("\n- i")]
+        [TestCase("\r- i")]
+        [TestCase("\r\n- i")]
+
+        [TestCase("\n- i\n")]
+        [TestCase("\r- i\n")]
+        [TestCase("\r\n- i\n")]
+
+        [TestCase("\n- i\r")]
+        [TestCase("\r- i\r")]
+        [TestCase("\r\n- i\r")]
+
+        [TestCase("\n- i\r\n")]
+        [TestCase("\r- i\r\n")]
+        [TestCase("\r\n- i\r\n")]
+
+        [TestCase("- i\n- j")]
+        [TestCase("- i\r- j")]
+        [TestCase("- i\r\n- j")]
+
+        [TestCase("\n- i\n- j")]
+        [TestCase("\n- i\r- j")]
+        [TestCase("\n- i\r\n- j")]
+
+        [TestCase("\r- i\n- j")]
+        [TestCase("\r- i\r- j")]
+        [TestCase("\r- i\r\n- j")]
+
+        [TestCase("\r\n- i\n- j")]
+        [TestCase("\r\n- i\r- j")]
+        [TestCase("\r\n- i\r\n- j")]
+
+        [TestCase("- i\n- j\n")]
+        [TestCase("- i\r- j\n")]
+        [TestCase("- i\r\n- j\n")]
+
+        [TestCase("\n- i\n- j\n")]
+        [TestCase("\n- i\r- j\n")]
+        [TestCase("\n- i\r\n- j\n")]
+
+        [TestCase("\r- i\n- j\n")]
+        [TestCase("\r- i\r- j\n")]
+        [TestCase("\r- i\r\n- j\n")]
+
+        [TestCase("\r\n- i\n- j\n")]
+        [TestCase("\r\n- i\r- j\n")]
+        [TestCase("\r\n- i\r\n- j\n")]
+
+        [TestCase("- i\n- j\r")]
+        [TestCase("- i\r- j\r")]
+        [TestCase("- i\r\n- j\r")]
+
+        [TestCase("\n- i\n- j\r")]
+        [TestCase("\n- i\r- j\r")]
+        [TestCase("\n- i\r\n- j\r")]
+
+        [TestCase("\r- i\n- j\r")]
+        [TestCase("\r- i\r- j\r")]
+        [TestCase("\r- i\r\n- j\r")]
+
+        [TestCase("\r\n- i\n- j\r")]
+        [TestCase("\r\n- i\r- j\r")]
+        [TestCase("\r\n- i\r\n- j\r")]
+
+        [TestCase("- i\n- j\r\n")]
+        [TestCase("- i\r- j\r\n")]
+        [TestCase("- i\r\n- j\r\n")]
+
+        [TestCase("\n- i\n- j\r\n")]
+        [TestCase("\n- i\r- j\r\n")]
+        [TestCase("\n- i\r\n- j\r\n")]
+
+        [TestCase("\r- i\n- j\r\n")]
+        [TestCase("\r- i\r- j\r\n")]
+        [TestCase("\r- i\r\n- j\r\n")]
+
+        [TestCase("\r\n- i\n- j\r\n")]
+        [TestCase("\r\n- i\r- j\r\n")]
+        [TestCase("\r\n- i\r\n- j\r\n")]
+        public void TestNewline(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

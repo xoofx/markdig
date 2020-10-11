@@ -19,7 +19,6 @@ namespace Markdig.Renderers.Normalize
             renderer.RenderLinesBefore(paragraph);
             renderer.Write(paragraph.BeforeWhitespace);
             renderer.WriteLeafInline(paragraph);
-            renderer.RenderLineAfterIfNeeded(paragraph);
             renderer.RenderLinesAfter(paragraph);
         }
     }

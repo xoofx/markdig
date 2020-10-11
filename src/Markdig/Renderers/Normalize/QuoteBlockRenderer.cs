@@ -25,10 +25,9 @@ namespace Markdig.Renderers.Normalize
             }
 
             renderer.PushIndent(indents);
-            renderer.WriteChildren(quoteBlock); 
+            renderer.WriteChildren(quoteBlock);
             renderer.PopIndent();
 
-            renderer.FinishBlock();
             renderer.RenderLinesAfter(quoteBlock);
         }
     }

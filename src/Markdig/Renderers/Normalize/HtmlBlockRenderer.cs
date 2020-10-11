@@ -12,7 +12,7 @@ namespace Markdig.Renderers.Normalize
         {
             renderer.RenderLinesBefore(obj);
             renderer.WriteLeafRawLines(obj, false, false);
-            renderer.RenderLineAfterIfNeeded(obj);
+            renderer.WriteLine(obj.Newline);
             renderer.RenderLinesAfter(obj);
         }
     }
