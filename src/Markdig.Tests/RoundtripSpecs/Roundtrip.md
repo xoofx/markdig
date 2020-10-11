@@ -14,22 +14,25 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 # TODO
 In order:
 - ~~`p\n p`: affects many tests~~
-- `\r\n` and `\r` support
-- support SetextHeading
-- support link parsing
+- ~~`\r\n` and `\r` support~~
+- ~~support SetextHeading~~
 - support LinkReferenceDefinition
-- fix broken pre-existing tests
-- fix `TODO: RTP: `
+- support link parsing
+- `\0`
 - generate spec examples as tests for roundtrip
-- run pull request feedback
+- fix `TODO: RTP: `
 - introduce feature flag
 - extract MarkdownRenderer
+- cleanup NormalizeRenderer (MarkdownRenderer)
 - deduplicate MarkdownRenderer and NormalizeRenderer code
-- `\0`
+- do pull request feedback
+- split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
+- fix broken pre-existing tests
 - support extensions
 - review complete PR and follow conventions
 - run perf test
-- document how trivia are handled generically and specifically
 - create todo list with perf optimization focus points
+- optimize perf
+- document how trivia are handled generically and specifically
 - write tree comparison tests?
 - write tree visualization tool?
