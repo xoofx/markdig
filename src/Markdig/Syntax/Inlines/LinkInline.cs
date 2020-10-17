@@ -61,7 +61,7 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Title { get; set; }
 
-        public char TitleEnclosingCharacter { get; set; } // TODO: RTP: implement
+        public char TitleEnclosingCharacter { get; set; }
 
         public StringSlice WhitespaceAfterTitle { get; set; }
 

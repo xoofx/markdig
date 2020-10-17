@@ -10,21 +10,10 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         [TestCase(" <http://a>")]
         [TestCase("<http://a> ")]
         [TestCase(" <http://a> ")]
-
-        [TestCase("< http://a>")]
-        [TestCase(" < http://a>")]
-        [TestCase("< http://a> ")]
-        [TestCase(" < http://a> ")]
-
-        [TestCase("<http://a >")]
-        [TestCase(" <http://a >")]
-        [TestCase("<http://a > ")]
-        [TestCase(" <http://a > ")]
-
-        [TestCase("< http://a >")]
-        [TestCase(" < http://a >")]
-        [TestCase("< http://a > ")]
-        [TestCase(" < http://a > ")]
+        [TestCase("<example@example.com>")]
+        [TestCase(" <example@example.com>")]
+        [TestCase("<example@example.com> ")]
+        [TestCase(" <example@example.com> ")]
         public void Test(string value)
         {
             RoundTrip(value);
