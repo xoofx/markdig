@@ -32,7 +32,9 @@ namespace Markdig.Renderers.Normalize.Inlines
 
             if (link.Label != null)
             {
-                if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
+                if (link.FirstChild is LiteralInline literal &&
+                    literal.Content.Length == link.Label.Length &&
+                    literal.Content.Match(link.Label))
                 {
                     // collapsed reference and shortcut links
                     if (!link.IsShortcut)
@@ -43,20 +45,38 @@ namespace Markdig.Renderers.Normalize.Inlines
                 else
                 {
                     // full link
-                    renderer.Write('[').Write(link.Label).Write(']');
+                    renderer.Write('[').Write(link.LabelWithWhitespace).Write(']');
                 }
             }
             else
             {
                 if (link.Url != null)
                 {
-                    renderer.Write('(').Write(link.Url);
+                    renderer.Write('(');
+                    renderer.Write(link.WhitespaceBeforeUrl);
+                    if (link.UrlHasPointyBrackets)
+                    {
+                        renderer.Write('<');
+                    }
+                    renderer.Write(link.Url);
+                    if (link.UrlHasPointyBrackets)
+                    {
+                        renderer.Write('>');
+                    }
+                    renderer.Write(link.WhitespaceAfterUrl);
 
                     if (!string.IsNullOrEmpty(link.Title))
                     {
-                        renderer.Write(" \"");
-                        renderer.Write(link.Title.Replace(@"""", @"\"""));
-                        renderer.Write("\"");
+                        var open = link.TitleEnclosingCharacter;
+                        var close = link.TitleEnclosingCharacter;
+                        if (link.TitleEnclosingCharacter == '(')
+                        {
+                            close = ')';
+                        }
+                        renderer.Write(open);
+                        renderer.Write(link.Title.Replace(@"""", @"\""")); // TODO: RTP: should this always be done?
+                        renderer.Write(close);
+                        renderer.Write(link.WhitespaceAfterTitle);
                     }
 
                     renderer.Write(')');

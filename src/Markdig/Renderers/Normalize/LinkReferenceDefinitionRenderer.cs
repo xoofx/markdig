@@ -23,9 +23,15 @@ namespace Markdig.Renderers.Normalize
             renderer.Write(linkDef.WhitespaceBeforeTitle);
             if (linkDef.Title != null)
             {
-                renderer.Write("\"");
-                renderer.Write(linkDef.Title.Replace("\"", "\\\""));
-                renderer.Write('"');
+                var open = linkDef.TitleEnclosingCharacter;
+                var close = linkDef.TitleEnclosingCharacter;
+                if (linkDef.TitleEnclosingCharacter == '(')
+                {
+                    close = ')';
+                }
+                renderer.Write(open);
+                renderer.Write(linkDef.Title.Replace("\"", "\\\"")); // TODO: RTP: should this always be done?
+                renderer.Write(close);
             }
             renderer.Write(linkDef.AfterWhitespace);
 

@@ -106,6 +106,8 @@ namespace Markdig.Parsers
         /// </summary>
         public TextWriter DebugLog { get; set; }
 
+        public bool TrackTrivia { get; } = true;
+
         /// <summary>
         /// Gets the literal inline parser.
         /// </summary>

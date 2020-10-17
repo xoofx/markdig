@@ -360,7 +360,7 @@ namespace Markdig.Helpers
                 text.TrimStart(); // this breaks whitespace before an uri
 
                 var pos = text.Start;
-                if (TryParseUrl(ref text, out link))
+                if (TryParseUrl(ref text, out link, out _))
                 {
                     linkSpan.Start = pos;
                     linkSpan.End = text.Start - 1;
@@ -385,7 +385,7 @@ namespace Markdig.Helpers
                         {
                             isValid = true;
                         }
-                        else if (TryParseTitle(ref text, out title))
+                        else if (TryParseTitle(ref text, out title, out char enclosingCharacter))
                         {
                             titleSpan.Start = pos;
                             titleSpan.End = text.Start - 1;
@@ -415,21 +415,121 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
+        public static bool TryParseInlineLinkWhitespace(
+            ref StringSlice text,
+            out string link,
+            out string title,
+            out char titleEnclosingCharacter,
+            out SourceSpan linkSpan,
+            out SourceSpan titleSpan,
+            out SourceSpan whitespaceBeforeLink,
+            out SourceSpan whitespaceAfterLink,
+            out SourceSpan whitespaceAfterTitle,
+            out bool urlHasPointyBrackets)
         {
-            return TryParseTitle(ref text, out title);
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 3. an optional link destination, 
+            // 4. an optional link title separated from the link destination by whitespace, 
+            // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 6. and a right parenthesis )
+            bool isValid = false;
+            var c = text.CurrentChar;
+            link = null;
+            title = null;
+
+            linkSpan = SourceSpan.Empty;
+            titleSpan = SourceSpan.Empty;
+            whitespaceBeforeLink = SourceSpan.Empty;
+            whitespaceAfterLink = SourceSpan.Empty;
+            whitespaceAfterTitle = SourceSpan.Empty;
+            urlHasPointyBrackets = false;
+            titleEnclosingCharacter = '\0';
+
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            if (c == '(')
+            {
+                text.NextChar();
+                var sourcePosition = text.Start;
+                text.TrimStart();
+                whitespaceBeforeLink = new SourceSpan(sourcePosition, text.Start - 1);
+                var pos = text.Start;
+                if (TryParseUrl(ref text, out link, out urlHasPointyBrackets))
+                {
+                    linkSpan.Start = pos;
+                    linkSpan.End = text.Start - 1;
+                    if (linkSpan.End < linkSpan.Start)
+                    {
+                        linkSpan = SourceSpan.Empty;
+                    }
+
+                    int whitespaceStart = text.Start;
+                    text.TrimStart(out int spaceCount);
+
+                    whitespaceAfterLink = new SourceSpan(whitespaceStart, text.Start - 1);
+                    var hasWhiteSpaces = spaceCount > 0;
+
+                    c = text.CurrentChar;
+                    if (c == ')')
+                    {
+                        isValid = true;
+                    }
+                    else if (hasWhiteSpaces)
+                    {
+                        c = text.CurrentChar;
+                        pos = text.Start;
+                        if (c == ')')
+                        {
+                            isValid = true;
+                        }
+                        else if (TryParseTitle(ref text, out title, out titleEnclosingCharacter))
+                        {
+                            titleSpan.Start = pos;
+                            titleSpan.End = text.Start - 1;
+                            if (titleSpan.End < titleSpan.Start)
+                            {
+                                titleSpan = SourceSpan.Empty;
+                            }
+                            var startWhitespace = text.Start;
+                            text.TrimStart();
+                            whitespaceAfterTitle = new SourceSpan(startWhitespace, text.Start - 1);
+                            c = text.CurrentChar;
+
+                            if (c == ')')
+                            {
+                                isValid = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (isValid)
+            {
+                // Skip ')'
+                text.NextChar();
+                title ??= string.Empty;
+            }
+            return isValid;
         }
 
-        public static bool TryParseTitle<T>(ref T text, out string title) where T : ICharIterator
+        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
+        {
+            return TryParseTitle(ref text, out title, out _);
+        }
+
+        public static bool TryParseTitle<T>(ref T text, out string title, out char enclosingCharacter) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
+            enclosingCharacter = '\0';
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
+                enclosingCharacter = c;
                 var closingQuote = c == '(' ? ')' : c;
                 bool hasEscape = false;
                 // -1: undefined
@@ -514,12 +614,13 @@ namespace Markdig.Helpers
 
         public static bool TryParseUrl<T>(T text, out string link) where T : ICharIterator
         {
-            return TryParseUrl(ref text, out link);
+            return TryParseUrl(ref text, out link, out _);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string link, bool isAutoLink = false) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, out string link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
+            hasPointyBrackets = false;
             var buffer = StringBuilderCache.Local();
 
             var c = text.CurrentChar;
@@ -535,6 +636,7 @@ namespace Markdig.Helpers
                     if (!hasEscape && c == '>')
                     {
                         text.NextChar();
+                        hasPointyBrackets = true;
                         isValid = true;
                         break;
                     }
@@ -758,7 +860,7 @@ namespace Markdig.Helpers
 
             urlSpan.Start = text.Start;
             bool isAngleBracketsUrl = text.CurrentChar == '<';
-            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            if (!TryParseUrl(ref text, out url, out _) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }
@@ -770,7 +872,7 @@ namespace Markdig.Helpers
             if (c == '\'' || c == '"' || c == '(')
             {
                 titleSpan.Start = text.Start;
-                if (TryParseTitle(ref text, out title))
+                if (TryParseTitle(ref text, out title, out _))
                 {
                     titleSpan.End = text.Start - 1;
                     // If we have a title, it requires a whitespace after the url
@@ -826,8 +928,10 @@ namespace Markdig.Helpers
             out string labelWithWhitespace,
             out SourceSpan whitespaceBeforeUrl, // can contain newline
             out string url,
+            out bool urlHasPointyBrackets,
             out SourceSpan whitespaceBeforeTitle, // can contain newline
             out string title, // can contain non-consecutive newlines
+            out char titleEnclosingCharacter,
             out SourceSpan whitespaceAfterTitle,
             out SourceSpan labelSpan,
             out SourceSpan urlSpan,
@@ -844,6 +948,8 @@ namespace Markdig.Helpers
             text.TrimStart();
             whitespaceBeforeLabel = new SourceSpan(0, text.Start - 1);
             whitespaceAfterTitle = SourceSpan.Empty;
+            urlHasPointyBrackets = false;
+            titleEnclosingCharacter = '\0';
 
             if (!TryParseLabelWhitespace(ref text, out label, out labelWithWhitespace, out labelSpan))
             {
@@ -864,7 +970,7 @@ namespace Markdig.Helpers
 
             urlSpan.Start = text.Start;
             bool isAngleBracketsUrl = text.CurrentChar == '<';
-            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            if (!TryParseUrl(ref text, out url, out urlHasPointyBrackets) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }
@@ -879,7 +985,7 @@ namespace Markdig.Helpers
             if (c == '\'' || c == '"' || c == '(')
             {
                 titleSpan.Start = text.Start;
-                if (TryParseTitle(ref text, out title))
+                if (TryParseTitle(ref text, out title, out titleEnclosingCharacter))
                 {
                     titleSpan.End = text.Start - 1;
                     // If we have a title, it requires a whitespace after the url

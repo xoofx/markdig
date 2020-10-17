@@ -62,12 +62,16 @@ namespace Markdig.Syntax
         /// </summary>
         public string Url { get; set; }
 
+        public bool UrlHasPointyBrackets { get; set; }
+
         public StringSlice WhitespaceBeforeTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+
+        public char TitleEnclosingCharacter { get; set; }
 
         /// <summary>
         /// The label span
@@ -147,8 +151,10 @@ namespace Markdig.Syntax
                 out string labelWithWhitespace,
                 out whitespaceBeforeUrl,
                 out string url,
+                out bool urlHasPointyBrackets,
                 out whitespaceBeforeTitle,
                 out string title,
+                out char titleEnclosingCharacter,
                 out whitespaceAfterTitle,
                 out SourceSpan labelSpan,
                 out SourceSpan urlSpan,
@@ -159,6 +165,8 @@ namespace Markdig.Syntax
 
             block = new LinkReferenceDefinition(label, url, title)
             {
+                UrlHasPointyBrackets = urlHasPointyBrackets,
+                TitleEnclosingCharacter = titleEnclosingCharacter,
                 LabelWithWhitespace = labelWithWhitespace,
                 LabelSpan = labelSpan,
                 UrlSpan = urlSpan,

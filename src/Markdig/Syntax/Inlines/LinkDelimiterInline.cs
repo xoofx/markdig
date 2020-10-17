@@ -26,6 +26,8 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Label { get; set; }
 
+        public string LabelWithWhitespace { get; set; }
+
         /// <summary>
         /// The label span
         /// </summary>

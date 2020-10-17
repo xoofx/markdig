@@ -181,6 +181,22 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase("[a]: /r ()")]
+        [TestCase("[a]: /r (t)")]
+        [TestCase("[a]: /r ( t)")]
+        [TestCase("[a]: /r (t )")]
+        [TestCase("[a]: /r ( t )")]
+
+        [TestCase("[a]: /r ''")]
+        [TestCase("[a]: /r 't'")]
+        [TestCase("[a]: /r ' t'")]
+        [TestCase("[a]: /r 't '")]
+        [TestCase("[a]: /r ' t '")]
+        public void Test_Title(string value)
+        {
+            RoundTrip(value);
+        }
+
         [TestCase("[a]: /r\n===\n[a]")]
         public void TestSetextHeader(string value)
         {

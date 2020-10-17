@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines
@@ -38,10 +39,16 @@ namespace Markdig.Syntax.Inlines
             Title = title;
         }
 
+        public StringSlice WhitespaceBeforeUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
+
+        public bool UrlHasPointyBrackets { get; set; }
+
+        public StringSlice WhitespaceAfterUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the GetDynamicUrl delegate. If this property is set, 
@@ -54,10 +61,16 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Title { get; set; }
 
+        public char TitleEnclosingCharacter { get; set; } // TODO: RTP: implement
+
+        public StringSlice WhitespaceAfterTitle { get; set; }
+
         /// <summary>
         /// Gets or sets the label.
         /// </summary>
         public string Label { get; set; }
+
+        public string LabelWithWhitespace { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is an image link.

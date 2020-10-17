@@ -99,7 +99,7 @@ namespace Markdig.Extensions.AutoLinks
                 }
 
                 // Parse URL
-                if (!LinkHelper.TryParseUrl(ref slice, out string link, true))
+                if (!LinkHelper.TryParseUrl(ref slice, out string link, out _)) // TODO: RTP: store pointy brackets
                 {
                     return false;
                 }
