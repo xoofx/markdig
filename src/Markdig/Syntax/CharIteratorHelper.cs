@@ -18,7 +18,8 @@ namespace Markdig.Syntax
             bool hasWhitespaces = false;
             while (c.IsWhitespace())
             {
-                if (c == '\n')
+                // TODO: RTP: fix newline check here for \r\n
+                if (c == '\n' || c == '\r')
                 {
                     countNewLines++;
                 }

@@ -45,14 +45,24 @@ namespace Markdig.Syntax
         }
 
         /// <summary>
-        /// Gets or sets the label.
+        /// Gets or sets the label. Text is normalized according to spec.
         /// </summary>
+        /// <see cref="https://spec.commonmark.org/0.29/#matches"/>
         public string Label { get; set; }
+
+        /// <summary>
+        /// Non-normalized Label (includes whitespace)
+        /// </summary>
+        public string LabelWithWhitespace { get; set; }
+
+        public StringSlice WhitespaceBeforeUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
+
+        public StringSlice WhitespaceBeforeTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -107,6 +117,53 @@ namespace Markdig.Syntax
                 UrlSpan = urlSpan,
                 TitleSpan = titleSpan,
                 Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End: urlSpan.End)
+            };
+            return true;
+        }
+
+        /// <summary>
+        /// Tries to the parse the specified text into a definition.
+        /// </summary>
+        /// <typeparam name="T">Type of the text</typeparam>
+        /// <param name="text">The text.</param>
+        /// <param name="block">The block.</param>
+        /// <returns><c>true</c> if parsing is successful; <c>false</c> otherwise</returns>
+        public static bool TryParseWhitespace<T>(
+            ref T text,
+            out LinkReferenceDefinition block,
+            out SourceSpan whitespaceBeforeLabel,
+            out SourceSpan whitespaceBeforeUrl,
+            out SourceSpan whitespaceBeforeTitle,
+            out SourceSpan whitespaceAfterTitle) where T : ICharIterator
+        {
+            block = null;
+
+            var startSpan = text.Start;
+
+            if (!LinkHelper.TryParseLinkReferenceDefinitionWhitespace(
+                ref text,
+                out whitespaceBeforeLabel,
+                out string label,
+                out string labelWithWhitespace,
+                out whitespaceBeforeUrl,
+                out string url,
+                out whitespaceBeforeTitle,
+                out string title,
+                out whitespaceAfterTitle,
+                out SourceSpan labelSpan,
+                out SourceSpan urlSpan,
+                out SourceSpan titleSpan))
+            {
+                return false;
+            }
+
+            block = new LinkReferenceDefinition(label, url, title)
+            {
+                LabelWithWhitespace = labelWithWhitespace,
+                LabelSpan = labelSpan,
+                UrlSpan = urlSpan,
+                TitleSpan = titleSpan,
+                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End)
             };
             return true;
         }

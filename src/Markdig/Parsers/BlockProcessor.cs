@@ -196,6 +196,7 @@ namespace Markdig.Parsers
         }
 
         public List<StringSlice> BeforeLines { get; set; }
+        public bool TrackTrivia { get => trackTrivia; set => trackTrivia = value; }
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -670,7 +671,7 @@ namespace Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
-                        if (trackTrivia)
+                        if (TrackTrivia)
                         {
                             //UnwindAllIndents();
                         }
@@ -813,7 +814,7 @@ namespace Markdig.Parsers
                     if (!result.IsDiscard())
                     {
                         // TODO: RTP: pass line with whitespace
-                        if (trackTrivia)
+                        if (TrackTrivia)
                         {
                             UnwindAllIndents();
                         }
@@ -877,7 +878,7 @@ namespace Markdig.Parsers
                     if (!result.IsDiscard())
                     {
                         bool isParagraph = block is ParagraphBlock;
-                        if (trackTrivia && isParagraph)
+                        if (TrackTrivia && isParagraph)
                         {
                             UnwindAllIndents();
                         }

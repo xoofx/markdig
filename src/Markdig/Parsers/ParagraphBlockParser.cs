@@ -56,7 +56,14 @@ namespace Markdig.Parsers
             {
                 ref var lines = ref paragraph.Lines;
 
-                TryMatchLinkReferenceDefinition(ref lines, processor);
+                if (processor.TrackTrivia)
+                {
+                    TryMatchLinkReferenceDefinitionWhitespace(ref lines, processor);
+                }
+                else
+                {
+                    TryMatchLinkReferenceDefinition(ref lines, processor);
+                }
 
                 int lineCount = lines.Count;
 
@@ -177,6 +184,50 @@ namespace Markdig.Parsers
                     linkReferenceDefinition.LabelSpan   = linkReferenceDefinition.LabelSpan .MoveForward(startPosition);
                     linkReferenceDefinition.UrlSpan     = linkReferenceDefinition.UrlSpan   .MoveForward(startPosition);
                     linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(startPosition);
+
+                    lines = iterator.Remaining();
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return atLeastOneFound;
+        }
+
+        private static bool TryMatchLinkReferenceDefinitionWhitespace(ref StringLineGroup lines, BlockProcessor state)
+        {
+            bool atLeastOneFound = false;
+
+            while (true)
+            {
+                // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                var iterator = lines.ToCharIterator();
+                if (LinkReferenceDefinition.TryParseWhitespace(
+                    ref iterator,
+                    out LinkReferenceDefinition lrd,
+                    out SourceSpan whitespaceBeforeLabel,
+                    out SourceSpan whitespaceBeforeUrl,
+                    out SourceSpan whitespaceBeforeTitle,
+                    out SourceSpan whitespaceAfterTitle))
+                {
+                    state.Document.SetLinkReferenceDefinition(lrd.Label, lrd);
+                    atLeastOneFound = true;
+
+                    // Correct the locations of each field
+                    lrd.Line = lines.Lines[0].Line;
+                    var text = lines.ToString();
+                    int startPosition = lines.Lines[0].Slice.Start;
+
+                    lrd.Span = lrd.Span.MoveForward(startPosition);
+                    lrd.BeforeWhitespace = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
+                    lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
+                    lrd.WhitespaceBeforeUrl = new StringSlice(text, whitespaceBeforeUrl.Start, whitespaceBeforeUrl.End);
+                    lrd.UrlSpan = lrd.UrlSpan.MoveForward(startPosition);
+                    lrd.WhitespaceBeforeTitle = new StringSlice(text, whitespaceBeforeTitle.Start, whitespaceBeforeTitle.End);
+                    lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
+                    lrd.AfterWhitespace = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
 
                     lines = iterator.Remaining();
                 }

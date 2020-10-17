@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -439,7 +440,7 @@ namespace Markdig.Helpers
                 {
                     c = text.NextChar();
 
-                    if (c == '\n')
+                    if (c == '\r' || c == '\n')
                     {
                         if (hasOnlyWhiteSpacesSinceLastLine >= 0)
                         {
@@ -449,6 +450,12 @@ namespace Markdig.Helpers
                             }
                             hasOnlyWhiteSpacesSinceLastLine = -1;
                         }
+                        buffer.Append(c);
+                        if (c == '\r' && text.PeekChar() == '\n')
+                        {
+                            buffer.Append('\n');
+                        }
+                        continue;
                     }
 
                     if (c == '\0')
@@ -491,7 +498,7 @@ namespace Markdig.Helpers
                             hasOnlyWhiteSpacesSinceLastLine = 1;
                         }
                     }
-                    else if (c != '\n')
+                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
                     {
                         hasOnlyWhiteSpacesSinceLastLine = 0;
                     }
@@ -712,18 +719,19 @@ namespace Markdig.Helpers
                 segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
         }
 
-        public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
-            out string title) where T : ICharIterator
-        {
-            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
-        }
+        // apparently, below code is dead code (except for public api?)
+        //public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
+        //    out string title) where T : ICharIterator
+        //{
+        //    return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
+        //}
 
-        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title)
-            where T : ICharIterator
-        {
-            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out SourceSpan labelSpan, out SourceSpan urlSpan,
-                out SourceSpan titleSpan);
-        }
+        //public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title)
+        //    where T : ICharIterator
+        //{
+        //    return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out SourceSpan labelSpan, out SourceSpan urlSpan,
+        //        out SourceSpan titleSpan);
+        //}
 
         public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
         {
@@ -811,6 +819,116 @@ namespace Markdig.Helpers
             return true;
         }
 
+        public static bool TryParseLinkReferenceDefinitionWhitespace<T>(
+            ref T text,
+            out SourceSpan whitespaceBeforeLabel,
+            out string label,
+            out string labelWithWhitespace,
+            out SourceSpan whitespaceBeforeUrl, // can contain newline
+            out string url,
+            out SourceSpan whitespaceBeforeTitle, // can contain newline
+            out string title, // can contain non-consecutive newlines
+            out SourceSpan whitespaceAfterTitle,
+            out SourceSpan labelSpan,
+            out SourceSpan urlSpan,
+            out SourceSpan titleSpan) where T : ICharIterator
+        {
+            whitespaceBeforeUrl = SourceSpan.Empty;
+            url = null;
+            whitespaceBeforeTitle = SourceSpan.Empty;
+            title = null;
+
+            urlSpan = SourceSpan.Empty;
+            titleSpan = SourceSpan.Empty;
+
+            text.TrimStart();
+            whitespaceBeforeLabel = new SourceSpan(0, text.Start - 1);
+            whitespaceAfterTitle = SourceSpan.Empty;
+
+            if (!TryParseLabelWhitespace(ref text, out label, out labelWithWhitespace, out labelSpan))
+            {
+                return false;
+            }
+
+            if (text.CurrentChar != ':')
+            {
+                label = null;
+                return false;
+            }
+            text.NextChar(); // Skip ':'
+            var beforeWhitespaceUrlStart = text.Start;
+
+            // Skip any whitespace before the url
+            text.TrimStart();
+            whitespaceBeforeUrl = new SourceSpan(beforeWhitespaceUrlStart, text.Start - 1);
+
+            urlSpan.Start = text.Start;
+            bool isAngleBracketsUrl = text.CurrentChar == '<';
+            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            {
+                return false;
+            }
+            urlSpan.End = text.Start - 1;
+            int whitespaceBeforeTitleStart = text.Start;
+
+            var saved = text;
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount);
+
+            whitespaceBeforeTitle = new SourceSpan(whitespaceBeforeTitleStart, text.Start - 1);
+            var c = text.CurrentChar;
+            if (c == '\'' || c == '"' || c == '(')
+            {
+                titleSpan.Start = text.Start;
+                if (TryParseTitle(ref text, out title))
+                {
+                    titleSpan.End = text.Start - 1;
+                    // If we have a title, it requires a whitespace after the url
+                    if (!hasWhiteSpaces)
+                    {
+                        return false;
+                    }
+                    whitespaceAfterTitle = new SourceSpan(text.Start, text.End);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (text.CurrentChar == '\0' || newLineCount > 0)
+                {
+                    return true;
+                }
+            }
+
+            // Check that the current line has only trailing spaces
+            c = text.CurrentChar;
+            while (c.IsSpaceOrTab())
+            {
+                c = text.NextChar();
+            }
+
+            if (c != '\0' && c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+            {
+                // If we were able to parse the url but the title doesn't end with space, 
+                // we are still returning a valid definition
+                if (newLineCount > 0 && title != null)
+                {
+                    text = saved;
+                    title = null;
+                    return true;
+                }
+
+                label = null;
+                url = null;
+                title = null;
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool TryParseLabel<T>(T lines, out string label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
@@ -829,6 +947,11 @@ namespace Markdig.Helpers
         public static bool TryParseLabel<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
+        }
+
+        public static bool TryParseLabelWhitespace<T>(ref T lines, out string label, out string labelWithWhitespace, out SourceSpan labelSpan) where T : ICharIterator
+        {
+            return TryParseLabelWhitespace(ref lines, false, out label, out labelWithWhitespace, out labelSpan);
         }
 
         public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string label, out SourceSpan labelSpan) where T : ICharIterator
@@ -945,5 +1068,130 @@ namespace Markdig.Helpers
 
             return isValid;
         }
+
+        public static bool TryParseLabelWhitespace<T>(ref T lines, bool allowEmpty, out string label, out string labelWithWhitespace, out SourceSpan labelSpan) where T : ICharIterator
+        {
+            label = null;
+            labelWithWhitespace = null;
+            char c = lines.CurrentChar;
+            labelSpan = SourceSpan.Empty;
+            if (c != '[')
+            {
+                return false;
+            }
+            var buffer = StringBuilderCache.Local();
+            var bufferWhitespace = new StringBuilder();
+
+            var startLabel = -1;
+            var endLabel = -1;
+
+            bool hasEscape = false;
+            bool previousWhitespace = true;
+            bool hasNonWhiteSpace = false;
+            bool isValid = false;
+            while (true)
+            {
+                c = lines.NextChar();
+                if (c == '\0')
+                {
+                    break;
+                }
+
+                if (hasEscape)
+                {
+                    if (c != '[' && c != ']' && c != '\\')
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (c == '[')
+                    {
+                        break;
+                    }
+
+                    if (c == ']')
+                    {
+                        lines.NextChar(); // Skip ]
+                        if (allowEmpty || hasNonWhiteSpace)
+                        {
+                            // Remove trailing spaces
+                            for (int i = buffer.Length - 1; i >= 0; i--)
+                            {
+                                if (!buffer[i].IsWhitespace())
+                                {
+                                    break;
+                                }
+                                buffer.Length = i;
+                                endLabel--;
+                            }
+
+                            // Only valid if buffer is less than 1000 characters
+                            if (buffer.Length <= 999)
+                            {
+                                labelSpan.Start = startLabel;
+                                labelSpan.End = endLabel;
+                                if (labelSpan.Start > labelSpan.End)
+                                {
+                                    labelSpan = SourceSpan.Empty;
+                                }
+
+                                label = buffer.ToString();
+                                labelWithWhitespace = bufferWhitespace.ToString();
+                                isValid = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                var isWhitespace = c.IsWhitespace();
+
+
+                if (!hasEscape && c == '\\')
+                {
+                    if (startLabel < 0)
+                    {
+                        startLabel = lines.Start;
+                    }
+                    hasEscape = true;
+                    bufferWhitespace.Append(c);
+                }
+                else
+                {
+                    hasEscape = false;
+
+                    if (!previousWhitespace || !isWhitespace)
+                    {
+                        if (startLabel < 0)
+                        {
+                            startLabel = lines.Start;
+                        }
+                        endLabel = lines.Start;
+                        if (isWhitespace)
+                        {
+                            // Replace any whitespace by a single ' '
+                            buffer.Append(' ');
+                        }
+                        else
+                        {
+                            buffer.Append(c);
+                        }
+                        if (!isWhitespace)
+                        {
+                            hasNonWhiteSpace = true;
+                        }
+                    }
+                    bufferWhitespace.Append(c);
+                }
+                previousWhitespace = isWhitespace;
+            }
+
+            buffer.Length = 0;
+
+            return isValid;
+        }
+
     }
 }

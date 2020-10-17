@@ -221,10 +221,11 @@ namespace Markdig.Helpers
                 _offset = -1;
                 SliceIndex = 0;
                 CurrentChar = '\0';
-                End = -2;
+                End = -1;
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    End += lines.Lines[i].Slice.Length + 1; // Add chars
+                    var line = lines.Lines[i];
+                    End += line.Slice.Length + line.Newline.Length; // Add chars
                 }
                 NextChar();
             }
@@ -276,9 +277,16 @@ namespace Markdig.Helpers
                     }
                     else
                     {
-                        CurrentChar = '\n';
-                        SliceIndex++;
-                        _offset = -1;
+                        CurrentChar = slice[slice.Start + _offset];
+                        if (CurrentChar == '\r' && slice[slice.Start + _offset + 1] == '\n')
+                        {
+
+                        }
+                        else
+                        {
+                            SliceIndex++;
+                            _offset = -1;
+                        }
                     }
                 }
                 else

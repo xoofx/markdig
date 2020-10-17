@@ -10,20 +10,26 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, LinkReferenceDefinition linkDef)
         {
-            renderer.EnsureLine();
-            renderer.Write('[');            
-            renderer.Write(linkDef.Label);
-            renderer.Write("]: ");
+            renderer.RenderLinesBefore(linkDef);
 
+            renderer.Write(linkDef.BeforeWhitespace);
+            renderer.Write('[');            
+            renderer.Write(linkDef.LabelWithWhitespace);
+            renderer.Write("]:");
+
+            renderer.Write(linkDef.WhitespaceBeforeUrl);
             renderer.Write(linkDef.Url);
 
+            renderer.Write(linkDef.WhitespaceBeforeTitle);
             if (linkDef.Title != null)
             {
-                renderer.Write(" \"");
+                renderer.Write("\"");
                 renderer.Write(linkDef.Title.Replace("\"", "\\\""));
                 renderer.Write('"');
             }
-            renderer.FinishBlock(false);
+            renderer.Write(linkDef.AfterWhitespace);
+
+            renderer.RenderLinesAfter(linkDef);
         }
     }
 }

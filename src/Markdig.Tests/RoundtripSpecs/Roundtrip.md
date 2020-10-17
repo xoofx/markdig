@@ -16,6 +16,8 @@ In order:
 - ~~`p\n p`: affects many tests~~
 - ~~`\r\n` and `\r` support~~
 - ~~support SetextHeading~~
+- check char.IsWhitespace() calls
+- check char.IsNewline() calls
 - support LinkReferenceDefinition
 - support link parsing
 - `\0`
@@ -33,6 +35,7 @@ In order:
 - run perf test
 - create todo list with perf optimization focus points
 - optimize perf
+- merge from main
 - document how trivia are handled generically and specifically
 - write tree comparison tests?
 - write tree visualization tool?

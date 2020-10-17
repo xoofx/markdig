@@ -42,6 +42,7 @@ namespace Markdig.Helpers
             }
             return string.Empty;
         }
+        public int Length => (carriageReturn ? 1 : 0) + (lineFeed ? 1 : 0);
     }
 
     /// <summary>

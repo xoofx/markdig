@@ -55,6 +55,7 @@ namespace Markdig.Syntax
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
 
+        // TODO: RTP: rename to WhitespaceBefore
         public StringSlice BeforeWhitespace { get; set; }
         public StringSlice AfterWhitespace { get; set; }
 
