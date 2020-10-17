@@ -19,9 +19,8 @@ In order:
 - ~~support SetextHeading~~
 - ~~support LinkReferenceDefinition~~
 - ~~support link parsing~~
-- support AutolinkInline
-- `\0`
-- generate spec examples as tests for roundtrip
+- ~~support AutolinkInline~~
+- ~~generate spec examples as tests for roundtrip~~
 - fix `TODO: RTP: `
 - check char.IsWhitespace() calls
 - check char.IsNewline() calls
@@ -37,6 +36,7 @@ In order:
 - run perf test
 - create todo list with perf optimization focus points
 - optimize perf
+- `\0`
 - merge from main
 - document how trivia are handled generically and specifically
 - write tree comparison tests?

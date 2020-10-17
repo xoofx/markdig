@@ -17,7 +17,8 @@ namespace SpecFileGen
         {
             Html,
             Normalize,
-            PlainText
+            PlainText,
+            Roundtrip
         }
 
         class Spec
@@ -36,6 +37,7 @@ namespace SpecFileGen
                 if (rendererType == RendererType.Html) Path += "Specs";
                 else if (rendererType == RendererType.Normalize) Path += "NormalizeSpecs";
                 else if (rendererType == RendererType.PlainText) Path += "PlainTextSpecs";
+                else if (rendererType == RendererType.Roundtrip) Path += "RoundtripSpecs";
                 Path += "/" + fileName;
                 OutputPath = System.IO.Path.ChangeExtension(Path, "generated.cs");
                 Extensions = extensions;
@@ -51,6 +53,11 @@ namespace SpecFileGen
         {
             public PlainTextSpec(string name, string fileName, string extensions)
                 : base(name, fileName, extensions, rendererType: RendererType.PlainText) { }
+        }
+        class RoundtripSpec : Spec
+        {
+            public RoundtripSpec(string name, string fileName, string extensions)
+                : base(name, fileName, extensions, rendererType: RendererType.Roundtrip) { }
         }
 
         // NOTE: Beware of Copy/Pasting spec files - some characters may change (non-breaking space into space)!
@@ -85,6 +92,8 @@ namespace SpecFileGen
             new NormalizeSpec("Headings", "Headings.md", ""),
 
             new PlainTextSpec("Sample", "SamplePlainText.md", ""),
+
+            new RoundtripSpec("Roundtrip", "CommonMark.md", ""),
         };
 
         static void Main()
@@ -183,6 +192,7 @@ namespace SpecFileGen
             Write("namespace Markdig.Tests.Specs.");
             if      (spec.RendererType == RendererType.Normalize) Write("Normalize.");
             else if (spec.RendererType == RendererType.PlainText) Write("PlainText.");
+            else if (spec.RendererType == RendererType.Roundtrip) Write("Roundtrip.");
             Line(CompressedName(spec.Name).Replace('.', '_'));
             Line("{");
 
@@ -333,6 +343,7 @@ namespace SpecFileGen
             if      (rendererType == RendererType.Html)      Write("TestParser");
             else if (rendererType == RendererType.Normalize) Write("TestNormalize");
             else if (rendererType == RendererType.PlainText) Write("TestPlainText");
+            else if (rendererType == RendererType.Roundtrip) Write("TestRoundtrip");
             Write(".TestSpec(\"");
             for (int i = markdownOffset; i < markdownEnd; i++)
             {

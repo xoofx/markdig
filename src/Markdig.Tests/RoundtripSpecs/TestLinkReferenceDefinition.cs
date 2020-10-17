@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using static Markdig.Tests.RoundtripSpecs.TestHelper;
+using static Markdig.Tests.TestRoundtrip;
 
 namespace Markdig.Tests.RoundtripSpecs
 {
