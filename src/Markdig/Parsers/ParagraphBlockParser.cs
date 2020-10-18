@@ -58,7 +58,7 @@ namespace Markdig.Parsers
 
                 if (processor.TrackTrivia)
                 {
-                    TryMatchLinkReferenceDefinitionWhitespace(ref lines, processor);
+                    TryMatchLinkReferenceDefinitionWhitespace(ref lines, processor, paragraph);
                 }
                 else
                 {
@@ -196,7 +196,7 @@ namespace Markdig.Parsers
             return atLeastOneFound;
         }
 
-        private static bool TryMatchLinkReferenceDefinitionWhitespace(ref StringLineGroup lines, BlockProcessor state)
+        private static bool TryMatchLinkReferenceDefinitionWhitespace(ref StringLineGroup lines, BlockProcessor state, ParagraphBlock paragraph)
         {
             bool atLeastOneFound = false;
 
@@ -217,9 +217,13 @@ namespace Markdig.Parsers
 
                     // Correct the locations of each field
                     lrd.Line = lines.Lines[0].Line;
-                    var text = lines.ToString();
+                    var text = lines.Lines[0].Slice.Text;
                     int startPosition = lines.Lines[0].Slice.Start;
 
+                    whitespaceBeforeLabel = whitespaceBeforeLabel.MoveForward(startPosition);
+                    whitespaceBeforeUrl = whitespaceBeforeUrl.MoveForward(startPosition);
+                    whitespaceBeforeTitle = whitespaceBeforeTitle.MoveForward(startPosition);
+                    whitespaceAfterTitle = whitespaceAfterTitle.MoveForward(startPosition);
                     lrd.Span = lrd.Span.MoveForward(startPosition);
                     lrd.BeforeWhitespace = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
                     lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
@@ -228,6 +232,7 @@ namespace Markdig.Parsers
                     lrd.WhitespaceBeforeTitle = new StringSlice(text, whitespaceBeforeTitle.Start, whitespaceBeforeTitle.End);
                     lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
                     lrd.AfterWhitespace = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
+                    lrd.LinesBefore = paragraph.LinesBefore;
 
                     lines = iterator.Remaining();
                 }

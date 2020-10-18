@@ -225,7 +225,7 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNewLine(this char c)
         {
-            return c == '\n';
+            return c == '\n'; // TODO: RTP: check
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

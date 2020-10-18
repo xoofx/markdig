@@ -18,7 +18,15 @@ namespace Markdig.Renderers.Normalize
             renderer.Write("]:");
 
             renderer.Write(linkDef.WhitespaceBeforeUrl);
+            if (linkDef.UrlHasPointyBrackets)
+            {
+                renderer.Write('<');
+            }
             renderer.Write(linkDef.Url);
+            if (linkDef.UrlHasPointyBrackets)
+            {
+                renderer.Write('>');
+            }
 
             renderer.Write(linkDef.WhitespaceBeforeTitle);
             if (linkDef.Title != null)

@@ -323,7 +323,7 @@ namespace Markdig.Helpers
 
                 if (offset == slice.Length)
                 {
-                    return '\n';
+                    return '\n'; // TODO: RTP: fix
                 }
 
                 Debug.Assert(offset < slice.Length);

@@ -10,9 +10,7 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, LinkReferenceDefinitionGroup obj)
         {
-            renderer.EnsureLine();
             renderer.WriteChildren(obj);
-            //renderer.FinishBlock(false);
         }
     }
 }
