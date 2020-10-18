@@ -14,6 +14,16 @@ Quoteblocks may have different syntactical characters applied per line. That is,
 ## Lists
 - beforewhitespace on list item
 
+## Trivia
+- whitespace
+  - ` ` (space)
+  - `\t`
+  - `\f`
+  - `\v`
+- trailing `#`
+- TODO: ThematicBreak
+- TODO: link url `>`, link title `(`, `'`, `"`
+
 # TODO
 In order:
 - ~~`p\n p`: affects many tests~~

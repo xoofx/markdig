@@ -285,7 +285,7 @@ namespace Markdig.Parsers
             else
             {
                 var newline = leafBlock.Newline;
-                container.AppendChild(new LineBreakInline { Newline = newline });
+                leafBlock.Inline.AppendChild(new LineBreakInline { Newline = newline });
             }
 
             Inline = null;
