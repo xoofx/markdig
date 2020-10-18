@@ -50,14 +50,6 @@ namespace Markdig.Renderers.Normalize
 
         public bool CompactParagraph { get; set; }
 
-        public void FinishBlock(bool derp = false)
-        {
-            if (!IsLastInContainer)
-            {
-                WriteLine(); // TODO: remove this method?
-            }
-        }
-
         ///// <summary>
         ///// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
         ///// </summary>
@@ -125,7 +117,7 @@ namespace Markdig.Renderers.Normalize
         /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
         /// <param name="indent">Whether to write indents.</param>
         /// <returns>This instance</returns>
-        public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool indent = false)
+        public void WriteLeafRawLines(LeafBlock leafBlock)
         {
             if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
             if (leafBlock.Lines.Lines != null)
@@ -134,39 +126,34 @@ namespace Markdig.Renderers.Normalize
                 var slices = lines.Lines;
                 for (int i = 0; i < lines.Count; i++)
                 {
-
-                    if (indent)
-                    {
-                        Write("    ");
-                    }
-
                     var slice = slices[i].Slice;
                     Write(ref slice);
                     WriteLine(slice.Newline);
                 }
             }
-            return this;
         }
 
         public void RenderLinesBefore(Block block)
         {
-            if (block.LinesBefore != null)
+            if (block.LinesBefore == null)
             {
-                foreach (var line in block.LinesBefore)
-                {
-                    WriteLine(line.Newline);
-                }
+                return;
+            }
+            foreach (var line in block.LinesBefore)
+            {
+                WriteLine(line.Newline);
             }
         }
 
         public void RenderLinesAfter(Block block)
         {
-            if (block.LinesAfter != null)
+            if (block.LinesAfter == null)
             {
-                foreach (var line in block.LinesAfter)
-                {
-                    WriteLine(line.Newline);
-                }
+                return;
+            }
+            foreach (var line in block.LinesAfter)
+            {
+                WriteLine(line.Newline);
             }
         }
    }

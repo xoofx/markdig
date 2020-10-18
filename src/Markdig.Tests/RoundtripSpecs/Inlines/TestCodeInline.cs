@@ -59,5 +59,19 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         {
             RoundTrip(value);
         }
+
+        [TestCase("`\na\n`")]
+        [TestCase("`\na\r`")]
+        [TestCase("`\na\r\n`")]
+        [TestCase("`\ra\r`")]
+        [TestCase("`\ra\n`")]
+        [TestCase("`\ra\r\n`")]
+        [TestCase("`\r\na\n`")]
+        [TestCase("`\r\na\r`")]
+        [TestCase("`\r\na\r\n`")]
+        public void Test_Newlines(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

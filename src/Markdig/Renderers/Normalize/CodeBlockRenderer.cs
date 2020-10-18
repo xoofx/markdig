@@ -57,7 +57,7 @@ namespace Markdig.Renderers.Normalize
                 */
                 renderer.WriteLine(fencedCodeBlock.InfoNewline);
 
-                renderer.WriteLeafRawLines(obj, true);
+                renderer.WriteLeafRawLines(obj);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
                 renderer.WriteLine(obj.Newline);

@@ -12,7 +12,7 @@ namespace Markdig.Renderers.Normalize
         {
             renderer.EnsureLine();
             renderer.WriteChildren(obj);
-            renderer.FinishBlock(false);
+            //renderer.FinishBlock(false);
         }
     }
 }
