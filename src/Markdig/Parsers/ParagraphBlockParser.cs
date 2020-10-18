@@ -115,15 +115,15 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        BeforeWhitespace = state.PopBeforeWhitespace(sourcePosition - 1),
+                        BeforeWhitespace = state.PopBeforeWhitespace(sourcePosition - 1), // remove dashes
                         AfterWhitespace = new StringSlice(state.Line.Text, state.Start, line.End),
-                        LinesBefore = state.UseLinesBefore(),
+                        LinesBefore = paragraph.LinesBefore,
                         Newline = state.Line.Newline,
                         IsSetext = true,
                         HeaderCharCount = count,
                         SetextNewline = paragraph.Newline,
                     };
-                    //heading.Lines.Trim();
+                    //heading.Lines.Trim(); // TODO: RTP: fix
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);

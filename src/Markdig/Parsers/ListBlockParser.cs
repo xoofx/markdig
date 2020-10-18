@@ -209,6 +209,7 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
             var bulletLength = 1; // TODO: RTP: fix for ordered
+            var savedWhitespaceStart = state.WhitespaceStart;
             var whitespaceBefore = state.PopBeforeWhitespace(state.Start - bulletLength - 1);
             state.WhitespaceStart = state.Start;
 
@@ -231,6 +232,7 @@ namespace Markdig.Parsers
                 if (!c.IsSpaceOrTab())
                 {
                     state.GoToColumn(initColumn);
+                    state.WhitespaceStart = savedWhitespaceStart; // restore changed WhitespaceStart state
                     return BlockState.None;
                 }
 
@@ -261,6 +263,7 @@ namespace Markdig.Parsers
                     state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart != "1")
                 {
                     state.GoToColumn(initColumn);
+                    state.WhitespaceStart = savedWhitespaceStart; // restore changed WhitespaceStart state
                     return BlockState.None;
                 }
             }

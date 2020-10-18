@@ -41,6 +41,10 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("h1\r===\r\n")]
         [TestCase("h1\n===\r\n")]
         [TestCase("h1\r\n===\r\n")]
+
+        [TestCase("h1\n===\n\n\nh2---\n\n")]
+        [TestCase("h1\r===\r\r\rh2---\r\r")]
+        [TestCase("h1\r\n===\r\n\r\n\r\nh2---\r\n\r\n")]
         public void TestNewline(string value)
         {
             RoundTrip(value);
