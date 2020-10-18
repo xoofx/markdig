@@ -16,17 +16,9 @@ namespace Markdig.Renderers.Normalize.Inlines
         {
             var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
             renderer.Write(delimiterRun);
-            if (obj.FirstAndLastWasSpace)
-            {
-                renderer.Write(' ');
-            }
             if (obj.Content.Length != 0)
             {
-                renderer.Write(obj.Content);
-            }
-            if (obj.FirstAndLastWasSpace)
-            {
-                renderer.Write(' ');
+                renderer.Write(obj.ContentWithTrivia);
             }
             renderer.Write(delimiterRun);
         }

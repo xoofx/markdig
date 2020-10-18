@@ -29,6 +29,8 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Content { get; set; }
 
+        public StringSlice ContentWithTrivia { get; set; }
+
         public bool FirstAndLastWasSpace { get; set; }
     }
 }
