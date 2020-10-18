@@ -141,6 +141,7 @@ namespace Markdig.Renderers.Normalize
             }
             foreach (var line in block.LinesBefore)
             {
+                Write(line);
                 WriteLine(line.Newline);
             }
         }
@@ -153,6 +154,7 @@ namespace Markdig.Renderers.Normalize
             }
             foreach (var line in block.LinesAfter)
             {
+                Write(line);
                 WriteLine(line.Newline);
             }
         }

@@ -202,5 +202,17 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase(" \n")]
+        [TestCase(" \r")]
+        [TestCase(" \r\n")]
+
+        [TestCase(" \np")]
+        [TestCase(" \rp")]
+        [TestCase(" \r\np")]
+        public void Test_WhitespaceWithNewline(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

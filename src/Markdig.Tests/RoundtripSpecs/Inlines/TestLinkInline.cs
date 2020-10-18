@@ -201,6 +201,14 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
             RoundTrip(value);
         }
 
+        [TestCase("[*a*][a]")]
+        [TestCase("[a][b]")]
+        [TestCase("[a][]")]
+        public void Test_Inlines(string value)
+        {
+            RoundTrip(value);
+        }
+
         // | [ a ]( b " t " ) |
         [TestCase(" [ a ]( b \" t \" ) ")]
         [TestCase("\v[\va\v](\vb\v\"\vt\v\"\v)\v")]

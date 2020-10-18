@@ -743,11 +743,6 @@ namespace Markdig.Parsers
             }
         }
 
-        private void RestartBeforeLines()
-        {
-            BeforeLines = null;
-        }
-
         /// <summary>
         /// Tries to open new blocks using the specified list of <see cref="BlockParser"/>
         /// </summary>
@@ -762,7 +757,8 @@ namespace Markdig.Parsers
                 {
                     BeforeLines ??= new List<StringSlice>();
                     Line.Start = StartBeforeIndent;
-                    BeforeLines.Add(Line);
+                    var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
+                    BeforeLines.Add(line);
                     ContinueProcessingLine = false;
                     break;
                 }
