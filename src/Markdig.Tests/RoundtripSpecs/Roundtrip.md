@@ -5,6 +5,8 @@ Roundtrip support allows parsing of Markdown to subsequently render it back to M
 - newlines before blocks are assigned to that block
 - whitespace starting on a line is assigned to the block on that line
 - assigning whitespace *before* a node has precedence over asigning whitespace *after* a node
+- whitespace vs trivia
+  - AtxHeading can have #s after the title, white are including as trivia
 
 ## Quoteblock
 Quoteblocks may have different syntactical characters applied per line. That is, some lines belonging to a Quoteblock may and others **may not** contain the quote marker character `>`. Each line of a Quoteblock therefore stores the quote marker character and its surrounding whitespace.

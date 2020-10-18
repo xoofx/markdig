@@ -50,6 +50,8 @@ namespace Markdig.Renderers.Normalize
                 renderer.Write(obj.BeforeWhitespace);
                 renderer.Write(headingText).Write(' ');
                 renderer.WriteLeafInline(obj);
+                renderer.Write(obj.AfterWhitespace);
+                renderer.WriteLine(obj.Newline);
 
                 renderer.RenderLinesAfter(obj);
             }

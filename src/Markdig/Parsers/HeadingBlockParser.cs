@@ -92,6 +92,7 @@ namespace Markdig.Parsers
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;
                 int countClosingTags = 0;
+                int sourceEnd = processor.Line.End;
                 for (int i = processor.Line.End; i >= processor.Line.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
                 {
                     c = processor.Line.Text[i];
@@ -128,6 +129,7 @@ namespace Markdig.Parsers
 
                 // Setup the source end position of this element
                 headingBlock.Span.End = processor.Line.End;
+                headingBlock.AfterWhitespace = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
 
                 // We expect a single line, so don't continue
                 return BlockState.Break;

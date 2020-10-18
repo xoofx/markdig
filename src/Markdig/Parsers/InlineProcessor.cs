@@ -278,7 +278,7 @@ namespace Markdig.Parsers
                 //}
             }
 
-            if (leafBlock is HeadingBlock heading && heading.IsSetext)
+            if (leafBlock is HeadingBlock)
             {
                 // TODO: RTP: delegate to block?
             }
