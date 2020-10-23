@@ -25,6 +25,11 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("```\n c\n```")]
         [TestCase("```\nc \n```")]
         [TestCase("```\n c \n```")]
+
+        [TestCase(" ``` \n c \n ``` ")]
+        [TestCase("\t```\t\n\tc\t\n\t```\t")]
+        [TestCase("\v```\v\n\vc\v\n\v```\v")]
+        [TestCase("\f```\f\n\fc\f\n\f```\f")]
         public void Test(string value)
         {
             RoundTrip(value);

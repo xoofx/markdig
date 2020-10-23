@@ -50,6 +50,8 @@ namespace Markdig.Syntax
         /// Gets or sets the fenced character count used to open this fenced code block.
         /// </summary>
         public int ClosingFencedCharCount { get; set; }
+        public StringSlice WhitespaceBeforeClosingFence { get; set; }
+        public StringSlice AfterWhitespace { get; set; }
 
         /// <summary>
         /// Gets or sets the fenced character used to open and close this fenced code block.

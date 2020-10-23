@@ -53,6 +53,8 @@ namespace Markdig.Syntax
         /// </summary>
         public int ClosingFencedCharCount { get; set; }
 
+        public StringSlice WhitespaceBeforeClosingFence { get; set; }
+
         /// <summary>
         /// Gets or sets the fenced character used to open and close this fenced code block.
         /// </summary>
@@ -60,6 +62,7 @@ namespace Markdig.Syntax
 
         /// <inheritdoc />
         public string WhitespaceAfterFencedChar { get; set; }
+
         public Newline InfoNewline { get; set; }
 
         /// <summary>

@@ -309,20 +309,24 @@ namespace Markdig.Parsers
 
             // Match if we have a closing fence
             var line = processor.Line;
+            var sourcePosition = processor.Start;
             var closingCount = line.CountAndSkipChar(fence.FencedChar);
             var diff = openingCount - closingCount;
 
             char c = line.CurrentChar;
+            var lastFenceCharPosition = processor.Start + closingCount;
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence opening character followed only by whitespaces.
-            if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+            if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace())) // && line.TrimEnd()) TODO: RTP
             {
                 block.UpdateSpanEnd(line.Start - 1);
 
                 var fencedBlock = block as IFencedBlock;
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.Newline = processor.Line.Newline;
+                fencedBlock.WhitespaceBeforeClosingFence = processor.PopBeforeWhitespace(sourcePosition - 1);
+                fencedBlock.AfterWhitespace = new StringSlice(processor.Line.Text, lastFenceCharPosition, line.End);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

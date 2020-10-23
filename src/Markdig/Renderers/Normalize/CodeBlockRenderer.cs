@@ -58,6 +58,8 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLine(fencedCodeBlock.InfoNewline);
 
                 renderer.WriteLeafRawLines(obj);
+
+                renderer.Write(fencedCodeBlock.WhitespaceBeforeClosingFence);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
                 if (!string.IsNullOrEmpty(closing))
@@ -65,7 +67,9 @@ namespace Markdig.Renderers.Normalize
                     // See example 207: "> ```\nfoo\n```"
                     renderer.WriteLine(obj.Newline);
                 }
-                //renderer.Write(obj.AfterWhitespace); // TODO: RTP: the spec is unclear about whitespace after closing fence
+                // TODO: RTP: the spec is unclear about whitespace after closing fence
+                // imlementations seem to accept it though
+                renderer.Write(obj.AfterWhitespace);
             }
             else
             {

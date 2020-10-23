@@ -39,5 +39,6 @@ namespace Markdig.Extensions.CustomContainers
         public int ClosingFencedCharCount { get; set; }
 
         public Newline InfoNewline { get; set; }
+        public StringSlice WhitespaceBeforeClosingFence { get; set; }
     }
 }

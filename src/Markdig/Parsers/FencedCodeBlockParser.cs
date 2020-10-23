@@ -41,14 +41,17 @@ namespace Markdig.Parsers
             var result = base.TryContinue(processor, block);
             if (result == BlockState.Continue)
             {
-                var fence = (FencedCodeBlock)block;
-                // Remove any indent spaces
-                var c = processor.CurrentChar;
-                var indentCount = fence.IndentCount;
-                while (indentCount > 0 && c.IsSpace())
+                if (!processor.TrackTrivia)
                 {
-                    indentCount--;
-                    c = processor.NextChar();
+                    var fence = (FencedCodeBlock)block;
+                    // Remove any indent spaces
+                    var c = processor.CurrentChar;
+                    var indentCount = fence.IndentCount;
+                    while (indentCount > 0 && c.IsSpace())
+                    {
+                        indentCount--;
+                        c = processor.NextChar();
+                    }
                 }
             }
 
