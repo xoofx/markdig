@@ -60,8 +60,12 @@ namespace Markdig.Renderers.Normalize
                 renderer.WriteLeafRawLines(obj);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
-                renderer.WriteLine(obj.Newline);
-                renderer.Write(obj.AfterWhitespace);
+                if (!string.IsNullOrEmpty(closing))
+                {
+                    // See example 207: "> ```\nfoo\n```"
+                    renderer.WriteLine(obj.Newline);
+                }
+                //renderer.Write(obj.AfterWhitespace); // TODO: RTP: the spec is unclear about whitespace after closing fence
             }
             else
             {
