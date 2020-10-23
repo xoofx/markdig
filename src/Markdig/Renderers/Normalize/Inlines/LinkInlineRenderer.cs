@@ -58,14 +58,14 @@ namespace Markdig.Renderers.Normalize.Inlines
                     {
                         renderer.Write('<');
                     }
-                    renderer.Write(link.Url);
+                    renderer.Write(link.UnescapedUrl);
                     if (link.UrlHasPointyBrackets)
                     {
                         renderer.Write('>');
                     }
                     renderer.Write(link.WhitespaceAfterUrl);
 
-                    if (!string.IsNullOrEmpty(link.Title))
+                    if (!string.IsNullOrEmpty(link.UnescapedTitle))
                     {
                         var open = link.TitleEnclosingCharacter;
                         var close = link.TitleEnclosingCharacter;
@@ -74,7 +74,8 @@ namespace Markdig.Renderers.Normalize.Inlines
                             close = ')';
                         }
                         renderer.Write(open);
-                        renderer.Write(link.Title.Replace(@"""", @"\""")); // TODO: RTP: should this always be done?
+                        //renderer.Write(link.Title.Replace(@"""", @"\""")); // TODO: RTP: should this always be done?
+                        renderer.Write(link.UnescapedTitle);
                         renderer.Write(close);
                         renderer.Write(link.WhitespaceAfterTitle);
                     }

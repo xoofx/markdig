@@ -418,7 +418,9 @@ namespace Markdig.Helpers
         public static bool TryParseInlineLinkWhitespace(
             ref StringSlice text,
             out string link,
+            out string unescapedLink,
             out string title,
+            out string unescapedTitle,
             out char titleEnclosingCharacter,
             out SourceSpan linkSpan,
             out SourceSpan titleSpan,
@@ -436,7 +438,9 @@ namespace Markdig.Helpers
             bool isValid = false;
             var c = text.CurrentChar;
             link = null;
+            unescapedLink = null;
             title = null;
+            unescapedTitle = null;
 
             linkSpan = SourceSpan.Empty;
             titleSpan = SourceSpan.Empty;
@@ -454,7 +458,7 @@ namespace Markdig.Helpers
                 text.TrimStart();
                 whitespaceBeforeLink = new SourceSpan(sourcePosition, text.Start - 1);
                 var pos = text.Start;
-                if (TryParseUrl(ref text, out link, out urlHasPointyBrackets))
+                if (TryParseUrlWhitespace(ref text, out link, out unescapedLink,  out urlHasPointyBrackets))
                 {
                     linkSpan.Start = pos;
                     linkSpan.End = text.Start - 1;
@@ -482,7 +486,7 @@ namespace Markdig.Helpers
                         {
                             isValid = true;
                         }
-                        else if (TryParseTitle(ref text, out title, out titleEnclosingCharacter))
+                        else if (TryParseTitleWhitespace(ref text, out title, out unescapedTitle, out titleEnclosingCharacter))
                         {
                             titleSpan.Start = pos;
                             titleSpan.End = text.Start - 1;
@@ -608,6 +612,108 @@ namespace Markdig.Helpers
             }
 
             title = isValid ? buffer.ToString() : null;
+            buffer.Length = 0;
+            return isValid;
+        }
+
+        public static bool TryParseTitleWhitespace<T>(ref T text, out string title, out string unescapedTitle, out char enclosingCharacter) where T : ICharIterator
+        {
+            bool isValid = false;
+            var buffer = StringBuilderCache.Local();
+            var unescaped = new StringBuilder();
+            enclosingCharacter = '\0';
+
+            // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
+            // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
+            var c = text.CurrentChar;
+            if (c == '\'' || c == '"' || c == '(')
+            {
+                enclosingCharacter = c;
+                var closingQuote = c == '(' ? ')' : c;
+                bool hasEscape = false;
+                // -1: undefined
+                //  0: has only spaces
+                //  1: has other characters
+                int hasOnlyWhiteSpacesSinceLastLine = -1;
+                while (true)
+                {
+                    c = text.NextChar();
+
+                    if (c == '\r' || c == '\n')
+                    {
+                        if (hasOnlyWhiteSpacesSinceLastLine >= 0)
+                        {
+                            if (hasOnlyWhiteSpacesSinceLastLine == 1)
+                            {
+                                break;
+                            }
+                            hasOnlyWhiteSpacesSinceLastLine = -1;
+                        }
+                        buffer.Append(c);
+                        unescaped.Append(c);
+                        if (c == '\r' && text.PeekChar() == '\n')
+                        {
+                            buffer.Append('\n');
+                            unescaped.Append(c);
+                        }
+                        continue;
+                    }
+
+                    if (c == '\0')
+                    {
+                        break;
+                    }
+
+                    if (c == closingQuote)
+                    {
+                        if (hasEscape)
+                        {
+                            buffer.Append(closingQuote);
+                            unescaped.Append(closingQuote);
+                            hasEscape = false;
+                            continue;
+                        }
+
+                        // Skip last quote
+                        text.NextChar();
+                        isValid = true;
+                        break;
+                    }
+
+                    if (hasEscape && !c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                        unescaped.Append('\\');
+                    }
+
+                    if (c == '\\')
+                    {
+                        hasEscape = true;
+                        unescaped.Append('\\');
+                        continue;
+                    }
+
+                    hasEscape = false;
+
+                    if (c.IsSpaceOrTab())
+                    {
+                        if (hasOnlyWhiteSpacesSinceLastLine < 0)
+                        {
+                            hasOnlyWhiteSpacesSinceLastLine = 1;
+                        }
+                    }
+                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+                    {
+                        hasOnlyWhiteSpacesSinceLastLine = 0;
+                    }
+
+                    buffer.Append(c);
+                    unescaped.Append(c);
+                }
+            }
+
+            title = isValid ? buffer.ToString() : null;
+            unescapedTitle = isValid ? unescaped.ToString() : null;
             buffer.Length = 0;
             return isValid;
         }
@@ -753,6 +859,155 @@ namespace Markdig.Helpers
             }
 
             link = isValid ? buffer.ToString() : null;
+            buffer.Length = 0;
+            return isValid;
+        }
+
+        public static bool TryParseUrlWhitespace<T>(ref T text, out string link, out string unescapedLink, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
+        {
+            bool isValid = false;
+            hasPointyBrackets = false;
+            var buffer = StringBuilderCache.Local();
+            var unescaped = new StringBuilder();
+            unescapedLink = null;
+
+            var c = text.CurrentChar;
+
+            // a sequence of zero or more characters between an opening < and a closing > 
+            // that contains no line breaks, or unescaped < or > characters, or
+            if (c == '<')
+            {
+                bool hasEscape = false;
+                do
+                {
+                    c = text.NextChar();
+                    if (!hasEscape && c == '>')
+                    {
+                        text.NextChar();
+                        hasPointyBrackets = true;
+                        isValid = true;
+                        break;
+                    }
+
+                    if (!hasEscape && c == '<')
+                    {
+                        break;
+                    }
+
+                    if (hasEscape && !c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                        unescaped.Append('\\');
+                    }
+
+                    if (c == '\\')
+                    {
+                        hasEscape = true;
+                        unescaped.Append('\\');
+                        continue;
+                    }
+
+                    if (c.IsNewLine())
+                    {
+                        break;
+                    }
+
+                    hasEscape = false;
+
+                    buffer.Append(c);
+                    unescaped.Append(c);
+
+                } while (c != '\0');
+            }
+            else
+            {
+                // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
+                // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
+                // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
+                // parentheses. 
+                bool hasEscape = false;
+                int openedParent = 0;
+                while (true)
+                {
+                    // Match opening and closing parenthesis
+                    if (c == '(')
+                    {
+                        if (!hasEscape)
+                        {
+                            openedParent++;
+                        }
+                    }
+
+                    if (c == ')')
+                    {
+                        if (!hasEscape)
+                        {
+                            openedParent--;
+                            if (openedParent < 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isAutoLink)
+                    {
+                        if (hasEscape && !c.IsAsciiPunctuation())
+                        {
+                            buffer.Append('\\');
+                            unescaped.Append('\\');
+                        }
+
+                        // If we have an escape
+                        if (c == '\\')
+                        {
+                            hasEscape = true;
+                            c = text.NextChar();
+                            unescaped.Append('\\');
+                            continue;
+                        }
+
+                        hasEscape = false;
+                    }
+
+                    if (IsEndOfUri(c, isAutoLink))
+                    {
+                        isValid = true;
+                        break;
+                    }
+
+                    if (isAutoLink)
+                    {
+                        if (c == '&')
+                        {
+                            if (HtmlHelper.ScanEntity(text, out _, out _, out _) > 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                        if (IsTrailingUrlStopCharacter(c) && IsEndOfUri(text.PeekChar(), true))
+                        {
+                            isValid = true;
+                            break;
+                        }
+                    }
+
+                    buffer.Append(c);
+                    unescaped.Append(c);
+
+                    c = text.NextChar();
+                }
+
+                if (openedParent > 0)
+                {
+                    isValid = false;
+                }
+            }
+
+            link = isValid ? buffer.ToString() : null;
+            unescapedLink = isValid ? unescaped.ToString() : null;
             buffer.Length = 0;
             return isValid;
         }

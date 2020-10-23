@@ -223,7 +223,9 @@ namespace Markdig.Parsers.Inlines
                     if (LinkHelper.TryParseInlineLinkWhitespace(
                         ref text,
                         out string url,
+                        out string unescapedUrl,
                         out string title,
+                        out string unescapedTitle,
                         out char titleEnclosingCharacter,
                         out SourceSpan linkSpan,
                         out SourceSpan titleSpan,
@@ -240,9 +242,11 @@ namespace Markdig.Parsers.Inlines
                         {
                             WhitespaceBeforeUrl = wsBeforeLink,
                             Url = HtmlHelper.Unescape(url), // TODO: RTP: unescape
+                            UnescapedUrl = unescapedUrl, // TODO: RTP: unescape
                             UrlHasPointyBrackets = urlHasPointyBrackets,
                             WhitespaceAfterUrl = wsAfterLink,
                             Title = HtmlHelper.Unescape(title), // TODO: RTP: unescape
+                            UnescapedTitle = unescapedTitle,
                             TitleEnclosingCharacter = titleEnclosingCharacter,
                             WhitespaceAfterTitle = wsAfterTitle,
                             IsImage = openParent.IsImage,

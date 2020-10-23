@@ -45,6 +45,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
+        public string UnescapedUrl { get; internal set; }
 
         public bool UrlHasPointyBrackets { get; set; }
 
@@ -60,6 +61,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+        public string UnescapedTitle { get; internal set; }
 
         public char TitleEnclosingCharacter { get; set; }
 
