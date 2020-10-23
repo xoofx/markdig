@@ -38,5 +38,8 @@ namespace Markdig.Syntax
         public int HeaderCharCount { get; set; }
 
         public Newline SetextNewline { get; set; }
+
+        // space is mandatory after # only when there is heading content. I.e. "#" is valid
+        public StringSlice WhitespaceAfterAtxHeaderChar { get; set; }
     }
 }

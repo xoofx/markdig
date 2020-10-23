@@ -48,7 +48,8 @@ namespace Markdig.Renderers.Normalize
                     : new string('#', obj.Level);
 
                 renderer.Write(obj.BeforeWhitespace);
-                renderer.Write(headingText).Write(' ');
+                renderer.Write(headingText);
+                renderer.Write(obj.WhitespaceAfterAtxHeaderChar);
                 renderer.WriteLeafInline(obj);
                 renderer.Write(obj.AfterWhitespace);
                 renderer.WriteLine(obj.Newline);

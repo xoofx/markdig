@@ -482,5 +482,22 @@ namespace Markdig.Helpers
             }
             return true;
         }
+
+        public bool Overlaps(StringSlice other)
+        {
+            if (Length == 0 || other.Length == 0)
+            {
+                return false;
+            }
+            if (other.End >= Start)
+            {
+                return true;
+            }
+            if (other.Start <= End)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

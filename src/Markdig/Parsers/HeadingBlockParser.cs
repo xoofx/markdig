@@ -72,10 +72,16 @@ namespace Markdig.Parsers
             // A space is required after leading #
             if (leadingCount > 0 && leadingCount <= MaxLeadingCount && (c.IsSpaceOrTab() || c == '\0'))
             {
+                StringSlice whitespace = StringSlice.Empty;
+                if (c.IsSpaceOrTab())
+                {
+                    whitespace = new StringSlice(processor.Line.Text, processor.Start + leadingCount, processor.Start + leadingCount);
+                }
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
+                    WhitespaceAfterAtxHeaderChar = whitespace,
                     Level = leadingCount,
                     Column = column,
                     Span = { Start =  sourcePosition },
@@ -129,7 +135,14 @@ namespace Markdig.Parsers
 
                 // Setup the source end position of this element
                 headingBlock.Span.End = processor.Line.End;
-                headingBlock.AfterWhitespace = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
+
+                var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
+                headingBlock.AfterWhitespace = wsa;
+                if (wsa.Overlaps(headingBlock.WhitespaceAfterAtxHeaderChar))
+                {
+                    // prevent double whitespace allocation in case of closing # i.e. "# #"
+                    headingBlock.WhitespaceAfterAtxHeaderChar = StringSlice.Empty;
+                }
 
                 // We expect a single line, so don't continue
                 return BlockState.Break;
