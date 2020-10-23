@@ -95,7 +95,7 @@ namespace Markdig.Parsers
                 //BeforeWhitespace = beforeWhitespace,
                 //AfterWhitespace = processor.PopBeforeWhitespace(processor.CurrentLineStartPosition),
                 LinesBefore = processor.UseLinesBefore(),
-                Content = new StringSlice(line.Text, processor.CurrentLineStartPosition, line.End, line.Newline),
+                Content = new StringSlice(line.Text, processor.WhitespaceStart, line.End, line.Newline), //include whitespace for now
                 Newline = processor.Line.Newline,
             });
             return BlockState.BreakDiscard;
