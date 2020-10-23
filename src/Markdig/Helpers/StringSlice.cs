@@ -489,11 +489,11 @@ namespace Markdig.Helpers
             {
                 return false;
             }
-            if (other.End >= Start)
+            if (Start <= other.End)
             {
                 return true;
             }
-            if (other.Start <= End)
+            if (End <= other.Start)
             {
                 return true;
             }
