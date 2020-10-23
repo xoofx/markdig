@@ -672,7 +672,7 @@ namespace Markdig.Parsers
                         {
                             //UnwindAllIndents();
                         }
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                 }
 
@@ -811,7 +811,7 @@ namespace Markdig.Parsers
                         {
                             UnwindAllIndents();
                         }
-                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                     // TODO: RTP: delegate this to container parser classes
                     var qb = paragraph.Parent as QuoteBlock;
@@ -875,7 +875,7 @@ namespace Markdig.Parsers
                         {
                             UnwindAllIndents();
                         }
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
 
                     if (newBlocks.Count > 0)

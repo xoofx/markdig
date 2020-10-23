@@ -48,7 +48,7 @@ namespace Markdig.Syntax
         /// <param name="column">The column.</param>
         /// <param name="line">The line.</param>
         /// <param name="sourceLinePosition"></param>
-        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition)
+        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool preserveTrivia)
         {
             if (Lines.Lines == null)
             {
@@ -68,11 +68,17 @@ namespace Markdig.Syntax
             }
             else
             {
-                // We need to expand tabs to spaces
-                // TODO: RTP: also register tabs here
                 var builder = StringBuilderCache.Local();
-                builder.Append(' ', CharHelper.AddTab(column) - column);
-                builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
+                if (preserveTrivia)
+                {
+                    builder.Append(slice.Text, slice.Start, slice.Length);
+                }
+                else
+                {
+                    // We need to expand tabs to spaces
+                    builder.Append(' ', CharHelper.AddTab(column) - column);
+                    builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
+                }
                 stringLine.Slice = new StringSlice(builder.GetStringAndReset());
                 Lines.Add(ref stringLine);
             }

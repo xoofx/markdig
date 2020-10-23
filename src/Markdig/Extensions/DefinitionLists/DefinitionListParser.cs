@@ -90,7 +90,7 @@ namespace Markdig.Extensions.DefinitionLists
                     Span = new SourceSpan(paragraphBlock.Span.Start, paragraphBlock.Span.End),
                     IsOpen = false
                 };
-                term.AppendLine(ref line.Slice, line.Column, line.Line, line.Position);
+                term.AppendLine(ref line.Slice, line.Column, line.Line, line.Position, false);
                 definitionItem.Add(term);
             }
             currentDefinitionList.Add(definitionItem);
