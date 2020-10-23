@@ -61,6 +61,7 @@ namespace Markdig.Syntax
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
+        public string UnescapedUrl { get; set; }
 
         public bool UrlHasPointyBrackets { get; set; }
 
@@ -70,6 +71,7 @@ namespace Markdig.Syntax
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+        public string UnescapedTitle { get; set; }
 
         public char TitleEnclosingCharacter { get; set; }
 
@@ -151,9 +153,11 @@ namespace Markdig.Syntax
                 out string labelWithWhitespace,
                 out whitespaceBeforeUrl,
                 out string url,
+                out string unescapedUrl,
                 out bool urlHasPointyBrackets,
                 out whitespaceBeforeTitle,
                 out string title,
+                out string unescapedTitle,
                 out char titleEnclosingCharacter,
                 out whitespaceAfterTitle,
                 out SourceSpan labelSpan,
@@ -170,6 +174,8 @@ namespace Markdig.Syntax
                 LabelWithWhitespace = labelWithWhitespace,
                 LabelSpan = labelSpan,
                 UrlSpan = urlSpan,
+                UnescapedUrl = unescapedUrl,
+                UnescapedTitle = unescapedTitle,
                 TitleSpan = titleSpan,
                 Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End)
             };

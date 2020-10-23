@@ -1183,9 +1183,11 @@ namespace Markdig.Helpers
             out string labelWithWhitespace,
             out SourceSpan whitespaceBeforeUrl, // can contain newline
             out string url,
+            out string unescapedUrl,
             out bool urlHasPointyBrackets,
             out SourceSpan whitespaceBeforeTitle, // can contain newline
             out string title, // can contain non-consecutive newlines
+            out string unescapedTitle,
             out char titleEnclosingCharacter,
             out SourceSpan whitespaceAfterTitle,
             out SourceSpan labelSpan,
@@ -1194,8 +1196,10 @@ namespace Markdig.Helpers
         {
             whitespaceBeforeUrl = SourceSpan.Empty;
             url = null;
+            unescapedUrl = null;
             whitespaceBeforeTitle = SourceSpan.Empty;
             title = null;
+            unescapedTitle = null;
 
             urlSpan = SourceSpan.Empty;
             titleSpan = SourceSpan.Empty;
@@ -1225,7 +1229,7 @@ namespace Markdig.Helpers
 
             urlSpan.Start = text.Start;
             bool isAngleBracketsUrl = text.CurrentChar == '<';
-            if (!TryParseUrl(ref text, out url, out urlHasPointyBrackets) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            if (!TryParseUrlWhitespace(ref text, out url, out unescapedUrl, out urlHasPointyBrackets) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }
@@ -1240,7 +1244,7 @@ namespace Markdig.Helpers
             if (c == '\'' || c == '"' || c == '(')
             {
                 titleSpan.Start = text.Start;
-                if (TryParseTitle(ref text, out title, out titleEnclosingCharacter))
+                if (TryParseTitleWhitespace(ref text, out title, out unescapedTitle, out titleEnclosingCharacter))
                 {
                     titleSpan.End = text.Start - 1;
                     // If we have a title, it requires a whitespace after the url

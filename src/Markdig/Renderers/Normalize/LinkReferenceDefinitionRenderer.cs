@@ -22,7 +22,7 @@ namespace Markdig.Renderers.Normalize
             {
                 renderer.Write('<');
             }
-            renderer.Write(linkDef.Url);
+            renderer.Write(linkDef.UnescapedUrl);
             if (linkDef.UrlHasPointyBrackets)
             {
                 renderer.Write('>');
@@ -38,7 +38,7 @@ namespace Markdig.Renderers.Normalize
                     close = ')';
                 }
                 renderer.Write(open);
-                renderer.Write(linkDef.Title.Replace("\"", "\\\"")); // TODO: RTP: should this always be done?
+                renderer.Write(linkDef.UnescapedTitle);
                 renderer.Write(close);
             }
             renderer.Write(linkDef.AfterWhitespace);
