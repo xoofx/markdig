@@ -760,10 +760,10 @@ namespace Markdig.Parsers
                 if (Line.IsEmpty)
                 {
                     BeforeLines ??= new List<StringSlice>();
-                    Line.Start = StartBeforeIndent;
                     var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
                     BeforeLines.Add(line);
                     ContinueProcessingLine = false;
+                    Line.Start = StartBeforeIndent;
                     break;
                 }
 
