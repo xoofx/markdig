@@ -11,6 +11,7 @@ namespace Markdig.Renderers.Normalize
         protected override void Write(NormalizeRenderer renderer, HtmlBlock obj)
         {
             renderer.RenderLinesBefore(obj);
+            renderer.Write(obj.BeforeWhitespace);
             renderer.WriteLeafRawLines(obj);
             renderer.RenderLinesAfter(obj);
         }

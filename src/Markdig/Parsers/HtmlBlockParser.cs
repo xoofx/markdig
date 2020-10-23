@@ -277,6 +277,7 @@ namespace Markdig.Parsers
                 Type = type,
                 // By default, setup to the end of line
                 Span = new SourceSpan(startPosition, startPosition + state.Line.End),
+                BeforeWhitespace = state.PopBeforeWhitespace(startPosition - 1),
                 LinesBefore = state.UseLinesBefore(),
                 Newline = state.Line.Newline,
             });
