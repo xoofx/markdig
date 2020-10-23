@@ -76,7 +76,14 @@ namespace Markdig.Renderers.Normalize
                     StringSlice aws = listItem.AfterWhitespace;
 
                     renderer.PushIndent(new List<string> { $@"{bws}{bullet}{aws}" });
-                    renderer.WriteChildren(listItem);
+                    if (listItem.Count == 0)
+                    {
+                        renderer.Write(""); // trigger writing of indent
+                    }
+                    else
+                    {
+                        renderer.WriteChildren(listItem);
+                    }
                     renderer.PopIndent();
 
                     renderer.RenderLinesAfter(listItem);
