@@ -266,5 +266,20 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase(">\n>q")]
+        [TestCase(">\n>\n>q")]
+        [TestCase(">q\n>\n>q")]
+        [TestCase(">q\n>\n>\n>q")]
+        [TestCase(">q\n> \n>q")]
+        [TestCase(">q\n>  \n>q")]
+        [TestCase(">q\n>   \n>q")]
+        [TestCase(">q\n>\t\n>q")]
+        [TestCase(">q\n>\v\n>q")]
+        [TestCase(">q\n>\f\n>q")]
+        public void TestEmptyLines(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

@@ -117,7 +117,7 @@ namespace Markdig.Parsers
                     if (!lineReader.IsEndOfFile())
                     {
                         var lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock != null)
+                        if (lastBlock != null && blockProcessor.BeforeLines != null)
                         {
                             lastBlock.LinesAfter = blockProcessor.BeforeLines ?? new List<StringSlice>();
                         }

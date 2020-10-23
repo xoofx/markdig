@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using System.Collections.Generic;
 
 namespace Markdig.Renderers.Normalize
@@ -21,14 +22,44 @@ namespace Markdig.Renderers.Normalize
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
             {
-                indents.Add(quoteLine.BeforeWhitespace.ToString() + (quoteLine.QuoteChar ? ">" : "") + quoteLine.AfterWhitespace.ToString());
+                var wsb = quoteLine.BeforeWhitespace.ToString();
+                var quoteChar = quoteLine.QuoteChar ? ">" : "";
+                var wsa = quoteLine.AfterWhitespace.ToString();
+                indents.Add(wsb + quoteChar + wsa);
+            }
+            bool noChildren = false;
+            if (quoteBlock.Count == 0)
+            {
+                noChildren = true;
+                // since this QuoteBlock instance has no children, indents will not be rendered. We
+                // work around this by adding empty LineBreakInlines to a ParagraphBlock.
+                // Wanted: a more elegant/better solution (although this is not *that* bad).
+                foreach (var quoteLine in quoteBlock.QuoteLines)
+                {
+                    // TODO: RTP: introduce EmptyQuoteLine class deriving from LeafBlock?
+                    var emptyLeafBlock = new ParagraphBlock
+                    {
+                        Newline = quoteLine.Newline
+                    };
+                    var newline = new LineBreakInline
+                    {
+                        Newline = quoteLine.Newline
+                    };
+                    var container = new ContainerInline();
+                    container.AppendChild(newline);
+                    emptyLeafBlock.Inline = container;
+                    quoteBlock.Add(emptyLeafBlock);
+                }
             }
 
             renderer.PushIndent(indents);
             renderer.WriteChildren(quoteBlock);
             renderer.PopIndent();
 
-            renderer.RenderLinesAfter(quoteBlock);
+            if (!noChildren)
+            {
+                renderer.RenderLinesAfter(quoteBlock);
+            }
         }
     }
 }

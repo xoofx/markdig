@@ -555,6 +555,10 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
+                if (BeforeLines != null && BeforeLines.Count > 0)
+                {
+                    block.LinesAfter = UseLinesBefore();
+                }
                 Close(i);
             }
             UpdateLastBlockAndContainer();

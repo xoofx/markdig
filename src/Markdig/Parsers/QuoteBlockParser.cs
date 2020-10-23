@@ -36,13 +36,6 @@ namespace Markdig.Parsers
             var quoteChar = processor.CurrentChar;
             var column = processor.Column;
             var c = processor.NextChar();
-            //if (c.IsSpaceOrTab())
-            //{
-            //    processor.NextColumn();
-            //    hasSpaceAfterQuoteChar = true;
-            //    whitespaceToAdd += 1;
-            //}
-            //beforeWhitespace.End -= 1 + (hasSpaceAfterQuoteChar ? 1 : 0);
 
             var quoteBlock = new QuoteBlock(this)
             {
@@ -51,9 +44,16 @@ namespace Markdig.Parsers
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
                 LinesBefore = processor.UseLinesBefore()
             };
+            StringSlice afterWhitespace = StringSlice.Empty;
+            if (processor.Line.IsEmptyOrWhitespace())
+            {
+                processor.Line.TrimStart();
+                afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
+            }
             quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
                 BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
+                AfterWhitespace = afterWhitespace,
                 QuoteChar = true,
                 Newline = processor.Line.Newline,
             });
@@ -70,6 +70,7 @@ namespace Markdig.Parsers
             }
 
             var quote = (QuoteBlock) block;
+            var sourcePosition = processor.Start;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
@@ -85,20 +86,27 @@ namespace Markdig.Parsers
                     quote.QuoteLines.Add(new QuoteBlock.QuoteLine
                     {
                         QuoteChar = false,
-                        BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+                        BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
                         Newline = processor.Line.Newline,
                     });
                     return BlockState.None;
                 }
             }
+            processor.NextChar(); // Skip quote marker char
+            StringSlice afterWhitespace = StringSlice.Empty;
+            if (processor.Line.IsEmptyOrWhitespace())
+            {
+                processor.Line.TrimStart();
+                afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
+            }
             quote.QuoteLines.Add(new QuoteBlock.QuoteLine
             {
                 QuoteChar = true,
-                BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1),
+                BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
+                AfterWhitespace = afterWhitespace,
                 Newline = processor.Line.Newline,
             });
 
-            processor.NextChar(); // Skip quote marker char
             processor.WhitespaceStart = processor.Start;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;

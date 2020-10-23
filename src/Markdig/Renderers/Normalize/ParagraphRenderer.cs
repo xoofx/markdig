@@ -19,7 +19,7 @@ namespace Markdig.Renderers.Normalize
             renderer.RenderLinesBefore(paragraph);
             renderer.Write(paragraph.BeforeWhitespace);
             renderer.WriteLeafInline(paragraph);
-            //renderer.Write(paragraph.Newline);
+            //renderer.Write(paragraph.Newline); // paragraph typically has LineBreakInlines as closing inline nodes
             renderer.RenderLinesAfter(paragraph);
         }
     }
