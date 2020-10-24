@@ -14,38 +14,25 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, LinkInline link)
         {
-            //foreach (var child in link)
-            //{
-            //    if (child is LiteralInline li)
-            //    {
-            //        renderer.Write(li.Content.Text);
-            //    }    
-            //}
-            //return;
             if (link.IsImage)
             {
                 renderer.Write('!');
             }
+            // link text
             renderer.Write('[');
             renderer.WriteChildren(link);
             renderer.Write(']');
 
             if (link.Label != null)
             {
-                if (link.FirstChild is LiteralInline literal &&
-                    literal.Content.Length == link.Label.Length &&
-                    literal.Content.Match(link.Label))
+                if (link.LocalLabel == LocalLabel.Empty || link.LocalLabel == LocalLabel.Empty)
                 {
-                    // collapsed reference and shortcut links
-                    if (!link.IsShortcut)
+                    renderer.Write('[');
+                    if (link.LocalLabel == LocalLabel.Local)
                     {
-                        renderer.Write("[]");
+                        renderer.Write(link.Label);
                     }
-                }
-                else
-                {
-                    // full link
-                    renderer.Write('[').Write(link.LabelWithWhitespace).Write(']');
+                    renderer.Write(']');
                 }
             }
             else

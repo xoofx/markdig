@@ -11,6 +11,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("    l")]
         [TestCase("     l")]
         [TestCase("\tl")]
+        [TestCase("\t\tl")]
         [TestCase("\tl1\n    l1")]
 
         [TestCase("\n    l")]

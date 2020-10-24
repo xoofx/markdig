@@ -7,6 +7,12 @@ using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines
 {
+    public enum LocalLabel
+    {
+        Local, // [foo][bar]
+        Empty, // [foo][]
+        None, // [foo]
+    }
     /// <summary>
     /// A Link inline (Section 6.5 CommonMark specs)
     /// </summary>
@@ -72,6 +78,8 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Label { get; set; }
 
+        public string LinkRefDefLabel { get; set; }
+
         public string LabelWithWhitespace { get; set; }
 
         /// <summary>
@@ -93,6 +101,8 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the reference this link is attached to. May be null.
         /// </summary>
         public LinkReferenceDefinition Reference { get; set; }
+        public string LinkRefDefLabelWithWhitespace { get; internal set; }
+        public LocalLabel LocalLabel { get; internal set; }
 
         /// <summary>
         /// The URL source span.

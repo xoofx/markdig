@@ -109,7 +109,14 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineProcessor state, string label, bool isShortcut, SourceSpan labelSpan, LinkDelimiterInline parent, int endPosition)
+        private bool ProcessLinkReference(
+            InlineProcessor state,
+            string label,
+            bool isShortcut,
+            SourceSpan labelSpan,
+            LinkDelimiterInline parent,
+            int endPosition,
+            LocalLabel localLabel)
         {
             if (!state.Document.TryGetLinkReferenceDefinition(label, out LinkReferenceDefinition linkRef))
             {
@@ -133,7 +140,10 @@ namespace Markdig.Parsers.Inlines
                     Title = HtmlHelper.Unescape(linkRef.Title),
                     Label = label,
                     LabelSpan = labelSpan,
-                    LabelWithWhitespace = linkRef.LabelWithWhitespace,
+                    LabelWithWhitespace = linkRef.LabelWithWhitespace, // TODO
+                    LinkRefDefLabel = linkRef.Label,
+                    LinkRefDefLabelWithWhitespace = linkRef.LabelWithWhitespace,
+                    LocalLabel = localLabel,
                     UrlSpan = linkRef.UrlSpan,
                     IsImage = parent.IsImage,
                     IsShortcut = isShortcut,
@@ -325,6 +335,7 @@ namespace Markdig.Parsers.Inlines
             bool isLabelSpanLocal = true;
 
             bool isShortcut = false;
+            LocalLabel localLabel = LocalLabel.Local;
             // Handle Collapsed links
             if (text.CurrentChar == '[')
             {
@@ -333,12 +344,14 @@ namespace Markdig.Parsers.Inlines
                     label = openParent.Label;
                     labelSpan = openParent.LabelSpan;
                     isLabelSpanLocal = false;
+                    localLabel = LocalLabel.Empty;
                     text.NextChar(); // Skip [
                     text.NextChar(); // Skip ]
                 }
             }
             else
             {
+                localLabel = LocalLabel.None;
                 label = openParent.Label;
                 isShortcut = true;
             }
@@ -350,7 +363,7 @@ namespace Markdig.Parsers.Inlines
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, label, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1)))
+                if (ProcessLinkReference(inlineState, label, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();
