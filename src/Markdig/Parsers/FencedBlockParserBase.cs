@@ -90,6 +90,8 @@ namespace Markdig.Parsers
             // after args?
             // info: between fencedchars and
 
+            var wsb = blockProcessor.PopBeforeWhitespace(blockProcessor.Start - 1);
+
             // An info string cannot contain any backticks (unless it is a tilde block)
             for (int i = line.Start; i <= line.End; i++)
             {
@@ -166,6 +168,7 @@ namespace Markdig.Parsers
             fenced.Arguments = HtmlHelper.Unescape(arg);
             fenced.WhitespaceAfterArguments = afterArg;
             fenced.InfoNewline = line.Newline;
+            fenced.BeforeWhitespace = wsb;
 
             return true;
         }

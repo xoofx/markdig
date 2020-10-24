@@ -44,6 +44,7 @@ namespace Markdig.Renderers.Normalize
 
                     renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(index.ToString(CultureInfo.InvariantCulture));
+                    //renderer.Write(listItem.Order.ToString(CultureInfo.InvariantCulture));
                     renderer.Write(listBlock.OrderedDelimiter);
                     renderer.Write(' ');
                     renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));

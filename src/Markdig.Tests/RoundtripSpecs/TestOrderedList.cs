@@ -104,11 +104,19 @@ namespace Markdig.Tests.RoundtripSpecs
 
         [TestCase("1. i\n2. j\n3. k")]
         [TestCase("1. i\n2. j\n3. k\n")]
-
         public void Test(string value)
         {
             RoundTrip(value);
         }
+
+        [TestCase("10. i")]
+        [TestCase("11. i")]
+        [TestCase("10. i\n12. i")]
+        public void Test_MoreThenOneStart(string value)
+        {
+            RoundTrip(value);
+        }
+
 
         [TestCase("\n1. i")]
         [TestCase("\r1. i")]
