@@ -25,7 +25,7 @@ namespace Markdig.Renderers.Normalize.Inlines
 
             if (link.Label != null)
             {
-                if (link.LocalLabel == LocalLabel.Empty || link.LocalLabel == LocalLabel.Empty)
+                if (link.LocalLabel == LocalLabel.Local || link.LocalLabel == LocalLabel.Empty)
                 {
                     renderer.Write('[');
                     if (link.LocalLabel == LocalLabel.Local)
