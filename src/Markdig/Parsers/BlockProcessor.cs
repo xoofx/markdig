@@ -670,7 +670,12 @@ namespace Markdig.Parsers
                     {
                         if (TrackTrivia)
                         {
-                            //UnwindAllIndents();
+                            if (block is FencedCodeBlock && block.Parent is ListItemBlock)
+                            {
+                                // the line was already given to the parent, rendering will ignore that parent line.
+                                // The child FencedCodeBlock should get the eaten whitespace at start of the line.
+                                UnwindAllIndents();
+                            }
                         }
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
