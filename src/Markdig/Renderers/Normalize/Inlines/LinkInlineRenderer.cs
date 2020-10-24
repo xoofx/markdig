@@ -30,7 +30,7 @@ namespace Markdig.Renderers.Normalize.Inlines
                     renderer.Write('[');
                     if (link.LocalLabel == LocalLabel.Local)
                     {
-                        renderer.Write(link.Label);
+                        renderer.Write(link.LabelWithWhitespace);
                     }
                     renderer.Write(']');
                 }

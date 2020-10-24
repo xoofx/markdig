@@ -112,6 +112,7 @@ namespace Markdig.Parsers.Inlines
         private bool ProcessLinkReference(
             InlineProcessor state,
             string label,
+            string labelWithWhitespace,
             bool isShortcut,
             SourceSpan labelSpan,
             LinkDelimiterInline parent,
@@ -140,7 +141,7 @@ namespace Markdig.Parsers.Inlines
                     Title = HtmlHelper.Unescape(linkRef.Title),
                     Label = label,
                     LabelSpan = labelSpan,
-                    LabelWithWhitespace = linkRef.LabelWithWhitespace, // TODO
+                    LabelWithWhitespace = labelWithWhitespace,
                     LinkRefDefLabel = linkRef.Label,
                     LinkRefDefLabelWithWhitespace = linkRef.LabelWithWhitespace,
                     LocalLabel = localLabel,
@@ -332,6 +333,7 @@ namespace Markdig.Parsers.Inlines
 
             var labelSpan = SourceSpan.Empty;
             string label = null;
+            string labelWithWhitespace = null;
             bool isLabelSpanLocal = true;
 
             bool isShortcut = false;
@@ -355,15 +357,14 @@ namespace Markdig.Parsers.Inlines
                 label = openParent.Label;
                 isShortcut = true;
             }
-
-            if (label != null || LinkHelper.TryParseLabel(ref text, true, out label, out labelSpan))
+            if (label != null || LinkHelper.TryParseLabelWhitespace(ref text, true, out label, out labelWithWhitespace, out labelSpan))
             {
                 if (isLabelSpanLocal)
                 {
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, label, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
+                if (ProcessLinkReference(inlineState, label, labelWithWhitespace, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();
