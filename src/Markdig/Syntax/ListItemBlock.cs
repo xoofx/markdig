@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -26,5 +27,7 @@ namespace Markdig.Syntax
         /// The number defined for this <see cref="ListItemBlock"/> in an ordered list
         /// </summary>
         public int Order { get; set; }
+
+        public StringSlice SourceBullet { get; set; }
     }
 }

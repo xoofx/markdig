@@ -112,6 +112,7 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("10. i")]
         [TestCase("11. i")]
         [TestCase("10. i\n12. i")]
+        [TestCase("2. i\n3. i")]
         public void Test_MoreThenOneStart(string value)
         {
             RoundTrip(value);

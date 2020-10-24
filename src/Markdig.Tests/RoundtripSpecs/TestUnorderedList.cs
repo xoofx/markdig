@@ -82,6 +82,7 @@ namespace Markdig.Tests.RoundtripSpecs
         }
 
         [TestCase("- ```a```")]
+        [TestCase("- ```\n  a\n```")]
         [TestCase("- i1\n    - i1.1\n    ```\n    c\n    ```")]
         [TestCase("- i1\n    - i1.1\n    ```\nc\n```")]
         [TestCase("- i1\n    - i1.1\n    ```\nc\n```\n")]

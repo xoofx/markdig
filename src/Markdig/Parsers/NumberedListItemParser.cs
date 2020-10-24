@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using System.Text;
 
 namespace Markdig.Parsers
 {
@@ -28,6 +29,7 @@ namespace Markdig.Parsers
         {
             result = new ListInfo();
             var c = state.CurrentChar;
+            var sourcePosition = state.Start;
 
             int countDigit = 0;
             int startChar = -1;
@@ -44,6 +46,7 @@ namespace Markdig.Parsers
                 c = state.NextChar();
                 countDigit++;
             }
+            var sourceBullet = new StringSlice(state.Line.Text, sourcePosition, state.Start - 1);
             if (startChar < 0)
             {
                 startChar = endChar;
@@ -59,6 +62,7 @@ namespace Markdig.Parsers
             result.OrderedDelimiter = orderedDelimiter;
             result.BulletType = '1';
             result.DefaultOrderedStart = "1";
+            result.SourceBullet = sourceBullet;
             return true;
         }
     }
