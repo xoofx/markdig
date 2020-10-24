@@ -876,10 +876,13 @@ namespace Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
-                        bool isParagraph = block is ParagraphBlock;
-                        if (TrackTrivia && isParagraph)
+                        if (TrackTrivia)
                         {
-                            UnwindAllIndents();
+                            if (block is ParagraphBlock ||
+                                block is HtmlBlock)
+                            {
+                                UnwindAllIndents();
+                            }
                         }
                         leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
