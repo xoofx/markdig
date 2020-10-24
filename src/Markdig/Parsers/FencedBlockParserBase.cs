@@ -162,8 +162,10 @@ namespace Markdig.Parsers
             end:
             fenced.WhitespaceAfterFencedChar = afterFence;
             fenced.Info = HtmlHelper.Unescape(info);
+            fenced.UnescapedInfo = info;
             fenced.WhitespaceAfterInfo = afterInfo;
             fenced.Arguments = HtmlHelper.Unescape(arg);
+            fenced.UnescapedArguments = arg;
             fenced.WhitespaceAfterArguments = afterArg;
             fenced.InfoNewline = line.Newline;
 

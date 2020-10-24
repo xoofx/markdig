@@ -31,7 +31,7 @@ namespace Markdig.Renderers.Normalize
                 }
                 if (fencedCodeBlock.Info != null)
                 {
-                    renderer.Write(fencedCodeBlock.Info);
+                    renderer.Write(fencedCodeBlock.UnescapedInfo);
                 }
                 if (fencedCodeBlock.WhitespaceAfterInfo != null)
                 {
@@ -39,8 +39,7 @@ namespace Markdig.Renderers.Normalize
                 }
                 if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
-                    renderer
-                        .Write(fencedCodeBlock.Arguments);
+                    renderer.Write(fencedCodeBlock.UnescapedArguments);
                 }
                 if (fencedCodeBlock.WhitespaceAfterArguments != null)
                 {

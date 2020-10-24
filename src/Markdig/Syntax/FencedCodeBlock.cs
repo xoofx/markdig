@@ -30,6 +30,7 @@ namespace Markdig.Syntax
 
         /// <inheritdoc />
         public string Info { get; set; }
+        public string UnescapedInfo { get; set; }
 
         /// <inheritdoc />
         public string WhitespaceAfterInfo { get; set; }
@@ -39,6 +40,7 @@ namespace Markdig.Syntax
         /// May be null.
         /// </summary>
         public string Arguments { get; set; }
+        public string UnescapedArguments { get; set; }
 
         /// <inheritdoc />
         public string WhitespaceAfterArguments { get; set; }

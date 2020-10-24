@@ -16,6 +16,7 @@ namespace Markdig.Syntax
         /// the fenced code block. May be null.
         /// </summary>
         string Info { get; set; }
+        public string UnescapedInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the language parsed after the first line of 
@@ -28,6 +29,7 @@ namespace Markdig.Syntax
         /// May be null.
         /// </summary>
         string Arguments { get; set; }
+        public string UnescapedArguments { get; set; }
 
         /// <summary>
         /// Gets or sets the arguments after the <see cref="Arguments"/>.

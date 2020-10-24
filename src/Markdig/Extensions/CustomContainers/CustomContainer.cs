@@ -28,10 +28,12 @@ namespace Markdig.Extensions.CustomContainers
         public string WhitespaceAfterFencedChar { get; set; }
 
         public string Info { get; set; }
+        public string UnescapedInfo { get; set; }
 
         public string WhitespaceAfterInfo { get; set; }
 
         public string Arguments { get; set; }
+        public string UnescapedArguments { get; set; }
         public string WhitespaceAfterArguments { get; set; }
 
         public int OpeningFencedCharCount { get; set; }
