@@ -683,7 +683,6 @@ namespace Markdig.Helpers
                     if (hasEscape && !c.IsAsciiPunctuation())
                     {
                         buffer.Append('\\');
-                        unescaped.Append('\\');
                     }
 
                     if (c == '\\')
@@ -869,7 +868,6 @@ namespace Markdig.Helpers
             hasPointyBrackets = false;
             var buffer = StringBuilderCache.Local();
             var unescaped = new StringBuilder();
-            unescapedLink = null;
 
             var c = text.CurrentChar;
 
@@ -956,7 +954,6 @@ namespace Markdig.Helpers
                         if (hasEscape && !c.IsAsciiPunctuation())
                         {
                             buffer.Append('\\');
-                            unescaped.Append('\\');
                         }
 
                         // If we have an escape
