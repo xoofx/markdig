@@ -173,7 +173,7 @@ namespace Markdig.Parsers
                 var iterator = lines.ToCharIterator();
                 if (LinkReferenceDefinition.TryParse(ref iterator, out LinkReferenceDefinition linkReferenceDefinition))
                 {
-                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition);
+                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition, true);
                     atLeastOneFound = true;
 
                     // Correct the locations of each field
@@ -212,7 +212,8 @@ namespace Markdig.Parsers
                     out SourceSpan whitespaceBeforeTitle,
                     out SourceSpan whitespaceAfterTitle))
                 {
-                    state.Document.SetLinkReferenceDefinition(lrd.Label, lrd);
+                    state.Document.SetLinkReferenceDefinition(lrd.Label, lrd, false);
+                    lrd.Parent = null; // remove LRDG parent from lrd
                     atLeastOneFound = true;
 
                     // Correct the locations of each field
@@ -237,6 +238,8 @@ namespace Markdig.Parsers
                     state.BeforeLines = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack
 
                     lines = iterator.Remaining();
+                    var index = paragraph.Parent.IndexOf(paragraph);
+                    paragraph.Parent.Insert(index, lrd);
                 }
                 else
                 {

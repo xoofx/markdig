@@ -24,10 +24,10 @@ namespace Markdig.Syntax
             return references.Links.ContainsKey(label);
         }
 
-        public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition)
+        public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition, bool addGroup)
         {
             if (label == null) ThrowHelper.ArgumentNullException_label();
-            var references = document.GetLinkReferenceDefinitions();
+            var references = document.GetLinkReferenceDefinitions(addGroup);
             references.Set(label, linkReferenceDefinition);
         }
 
@@ -43,14 +43,18 @@ namespace Markdig.Syntax
             return references.TryGet(label, out linkReferenceDefinition);
         }
 
-        public static LinkReferenceDefinitionGroup GetLinkReferenceDefinitions(this MarkdownDocument document)
+        public static LinkReferenceDefinitionGroup GetLinkReferenceDefinitions(this MarkdownDocument document, bool addGroup)
         {
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
             if (references == null)
             {
                 references = new LinkReferenceDefinitionGroup();
                 document.SetData(DocumentKey, references);
-                document.Add(references);
+                // don't add the LinkReferenceDefinitionGroup when tracking trivia
+                if (addGroup)
+                {
+                    document.Add(references);
+                }
             }
             return references;
         }
