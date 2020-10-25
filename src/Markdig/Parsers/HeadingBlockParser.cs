@@ -76,6 +76,7 @@ namespace Markdig.Parsers
                 if (c.IsSpaceOrTab())
                 {
                     whitespace = new StringSlice(processor.Line.Text, processor.Start + leadingCount, processor.Start + leadingCount);
+                    line.NextChar();
                 }
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
@@ -84,7 +85,7 @@ namespace Markdig.Parsers
                     WhitespaceAfterAtxHeaderChar = whitespace,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start = sourcePosition },
+                    Span = { Start = line.Start },
                     BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
                     LinesBefore = processor.UseLinesBefore(),
                     Newline = processor.Line.Newline,
@@ -135,6 +136,8 @@ namespace Markdig.Parsers
 
                 // Setup the source end position of this element
                 headingBlock.Span.End = processor.Line.End;
+                // feed the line to the BlockProcessor without whitespace
+                processor.Line.Start = headingBlock.Span.Start;
 
                 var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
                 headingBlock.AfterWhitespace = wsa;
