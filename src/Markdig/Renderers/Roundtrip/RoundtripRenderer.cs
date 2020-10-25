@@ -44,68 +44,6 @@ namespace Markdig.Renderers.Roundtrip
             ObjectRenderers.Add(new LiteralInlineRenderer());
         }
 
-        public bool CompactParagraph { get; set; }
-
-        ///// <summary>
-        ///// Writes the attached <see cref="HtmlAttributes"/> on the specified <see cref="MarkdownObject"/>.
-        ///// </summary>
-        ///// <param name="obj">The object.</param>
-        ///// <returns></returns>
-        //public NormalizeRenderer WriteAttributes(MarkdownObject obj)
-        //{
-        //    if (obj == null) throw new ArgumentNullException(nameof(obj));
-        //    return WriteAttributes(obj.TryGetAttributes());
-        //}
-
-        ///// <summary>
-        ///// Writes the specified <see cref="HtmlAttributes"/>.
-        ///// </summary>
-        ///// <param name="attributes">The attributes to render.</param>
-        ///// <returns>This instance</returns>
-        //public NormalizeRenderer WriteAttributes(HtmlAttributes attributes)
-        //{
-        //    if (attributes == null)
-        //    {
-        //        return this;
-        //    }
-
-        //    if (attributes.Id != null)
-        //    {
-        //        Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
-        //    }
-
-        //    if (attributes.Classes != null && attributes.Classes.Count > 0)
-        //    {
-        //        Write(" class=\"");
-        //        for (int i = 0; i < attributes.Classes.Count; i++)
-        //        {
-        //            var cssClass = attributes.Classes[i];
-        //            if (i > 0)
-        //            {
-        //                Write(" ");
-        //            }
-        //            WriteEscape(cssClass);
-        //        }
-        //        Write("\"");
-        //    }
-
-        //    if (attributes.Properties != null && attributes.Properties.Count > 0)
-        //    {
-        //        foreach (var property in attributes.Properties)
-        //        {
-        //            Write(" ").Write(property.Key);
-        //            if (property.Value != null)
-        //            {
-        //                Write("=").Write("\"");
-        //                WriteEscape(property.Value);
-        //                Write("\"");
-        //            }
-        //        }
-        //    }
-
-        //    return this;
-        //}
-
         /// <summary>
         /// Writes the lines of a <see cref="LeafBlock"/>
         /// </summary>

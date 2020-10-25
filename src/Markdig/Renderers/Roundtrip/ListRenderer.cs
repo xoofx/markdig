@@ -17,8 +17,6 @@ namespace Markdig.Renderers.Roundtrip
         protected override void Write(RoundtripRenderer renderer, ListBlock listBlock)
         {
             renderer.RenderLinesBefore(listBlock);
-            var compact = renderer.CompactParagraph;
-            renderer.CompactParagraph = !listBlock.IsLoose;
             if (listBlock.IsOrdered)
             {
                 int index = 0;
@@ -89,8 +87,6 @@ namespace Markdig.Renderers.Roundtrip
                     renderer.RenderLinesAfter(listItem);
                 }
             }
-            renderer.CompactParagraph = compact;
-
 
             renderer.RenderLinesAfter(listBlock);
         }

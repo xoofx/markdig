@@ -38,8 +38,8 @@ In order:
 - ~~check char.IsNewline() calls~~
 - ~~introduce feature flag~~
 - ~~extract MarkdownRenderer~~
-- cleanup NormalizeRenderer (MarkdownRenderer)
-- deduplicate MarkdownRenderer and NormalizeRenderer code
+- ~~cleanup NormalizeRenderer (MarkdownRenderer)~~
+- ~~deduplicate MarkdownRenderer and NormalizeRenderer code~~
 - do pull request feedback
 - split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
 - fix broken pre-existing tests

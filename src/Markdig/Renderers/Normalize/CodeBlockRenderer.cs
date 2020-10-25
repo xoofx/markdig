@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
+using System;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -18,7 +19,8 @@ namespace Markdig.Renderers.Normalize
         {
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
-                var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.FencedCharCount);
+                var fencedCharCount = Math.Min(fencedCodeBlock.OpeningFencedCharCount, fencedCodeBlock.ClosingFencedCharCount);
+                var opening = new string(fencedCodeBlock.FencedChar, fencedCharCount);
                 renderer.Write(opening);
                 if (fencedCodeBlock.Info != null)
                 {
