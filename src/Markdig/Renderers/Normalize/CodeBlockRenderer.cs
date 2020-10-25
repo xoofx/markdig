@@ -2,9 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using Markdig.Helpers;
 using Markdig.Syntax;
-using System.Collections.Generic;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -18,32 +16,17 @@ namespace Markdig.Renderers.Normalize
 
         protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
         {
-            renderer.RenderLinesBefore(obj);
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
-                renderer.Write(obj.BeforeWhitespace);
-                var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
+                var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.FencedCharCount);
                 renderer.Write(opening);
-
-                if (fencedCodeBlock.WhitespaceAfterFencedChar != null)
-                {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterFencedChar);
-                }
                 if (fencedCodeBlock.Info != null)
                 {
-                    renderer.Write(fencedCodeBlock.UnescapedInfo);
-                }
-                if (fencedCodeBlock.WhitespaceAfterInfo != null)
-                {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterInfo);
+                    renderer.Write(fencedCodeBlock.Info);
                 }
                 if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
-                    renderer.Write(fencedCodeBlock.UnescapedArguments);
-                }
-                if (fencedCodeBlock.WhitespaceAfterArguments != null)
-                {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterArguments);
+                    renderer.Write(" ").Write(fencedCodeBlock.Arguments);
                 }
 
                 /* TODO do we need this causes a empty space and would render html attributes to markdown.
@@ -54,50 +37,17 @@ namespace Markdig.Renderers.Normalize
                     renderer.Write(attributes);
                 }
                 */
-                renderer.WriteLine(fencedCodeBlock.InfoNewline);
+                renderer.WriteLine();
 
-                renderer.WriteLeafRawLines(obj);
-
-                renderer.Write(fencedCodeBlock.WhitespaceBeforeClosingFence);
-                var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
-                renderer.Write(closing);
-                if (!string.IsNullOrEmpty(closing))
-                {
-                    // See example 207: "> ```\nfoo\n```"
-                    renderer.WriteLine(obj.Newline);
-                }
-                renderer.Write(obj.AfterWhitespace);
+                renderer.WriteLeafRawLines(obj, true);
+                renderer.Write(opening);
             }
             else
             {
-                var indents = new List<string>();
-                foreach (var cbl in obj.CodeBlockLines)
-                {
-                    indents.Add(cbl.BeforeWhitespace.ToString());
-                }
-                renderer.PushIndent(indents);
-                WriteLeafRawLines(renderer, obj);
-                renderer.PopIndent();
-                
-                // ignore block newline, as last line references it
+                renderer.WriteLeafRawLines(obj, false, true);
             }
 
-            renderer.RenderLinesAfter(obj);
-        }
-
-        public void WriteLeafRawLines(NormalizeRenderer renderer, LeafBlock leafBlock)
-        {
-            if (leafBlock.Lines.Lines != null)
-            {
-                var lines = leafBlock.Lines;
-                var slices = lines.Lines;
-                for (int i = 0; i < lines.Count; i++)
-                {
-                    var slice = slices[i].Slice;
-                    renderer.Write(ref slices[i].Slice);
-                    renderer.WriteLine(slice.Newline);
-                }
-            }
+            renderer.FinishBlock(renderer.Options.EmptyLineAfterCodeBlock);
         }
     }
 }

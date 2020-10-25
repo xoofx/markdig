@@ -1,10 +1,12 @@
 using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 using NUnit.Framework;
 using System.IO;
 
 namespace Markdig.Tests
 {
+    // TODO: RTP: integrate with roundtrip synthetic tests
     [TestFixture]
     public partial class TestFencedCodeBlock
     {
@@ -58,7 +60,7 @@ namespace Markdig.Tests
 
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
             var sw = new StringWriter();
-            var nr = new NormalizeRenderer(sw);
+            var nr = new RoundtripRenderer(sw);
             nr.Write(markdownDocument);
 
             Assert.AreEqual(markdown, sw.ToString());

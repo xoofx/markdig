@@ -1,4 +1,4 @@
-using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 using NUnit.Framework;
 using System.IO;
@@ -18,7 +18,7 @@ namespace Markdig.Tests
             MarkdownPipeline pipeline = pipelineBuilder.Build();
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline, trackTrivia: true);
             var sw = new StringWriter();
-            var nr = new NormalizeRenderer(sw);
+            var nr = new RoundtripRenderer(sw);
 
             nr.Write(markdownDocument);
 

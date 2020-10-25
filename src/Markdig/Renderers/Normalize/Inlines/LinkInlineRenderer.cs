@@ -18,52 +18,37 @@ namespace Markdig.Renderers.Normalize.Inlines
             {
                 renderer.Write('!');
             }
-            // link text
             renderer.Write('[');
             renderer.WriteChildren(link);
             renderer.Write(']');
 
             if (link.Label != null)
             {
-                if (link.LocalLabel == LocalLabel.Local || link.LocalLabel == LocalLabel.Empty)
+                if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
                 {
-                    renderer.Write('[');
-                    if (link.LocalLabel == LocalLabel.Local)
+                    // collapsed reference and shortcut links
+                    if (!link.IsShortcut)
                     {
-                        renderer.Write(link.LabelWithWhitespace);
+                        renderer.Write("[]");
                     }
-                    renderer.Write(']');
+                }
+                else
+                {
+                    // full link
+                    renderer.Write('[').Write(link.Label).Write(']');
                 }
             }
             else
             {
-                if (link.Url != null)
+                if (!string.IsNullOrEmpty(link.Url))
                 {
-                    renderer.Write('(');
-                    renderer.Write(link.WhitespaceBeforeUrl);
-                    if (link.UrlHasPointyBrackets)
-                    {
-                        renderer.Write('<');
-                    }
-                    renderer.Write(link.UnescapedUrl);
-                    if (link.UrlHasPointyBrackets)
-                    {
-                        renderer.Write('>');
-                    }
-                    renderer.Write(link.WhitespaceAfterUrl);
+                    renderer.Write('(').Write(link.Url);
 
-                    if (!string.IsNullOrEmpty(link.UnescapedTitle))
+                    if (!string.IsNullOrEmpty(link.Title))
                     {
-                        var open = link.TitleEnclosingCharacter;
-                        var close = link.TitleEnclosingCharacter;
-                        if (link.TitleEnclosingCharacter == '(')
-                        {
-                            close = ')';
-                        }
-                        renderer.Write(open);
-                        renderer.Write(link.UnescapedTitle);
-                        renderer.Write(close);
-                        renderer.Write(link.WhitespaceAfterTitle);
+                        renderer.Write(" \"");
+                        renderer.Write(link.Title.Replace(@"""", @"\"""));
+                        renderer.Write("\"");
                     }
 
                     renderer.Write(')');

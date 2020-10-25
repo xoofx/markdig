@@ -37,7 +37,7 @@ In order:
 - ~~check char.IsWhitespace() calls~~
 - ~~check char.IsNewline() calls~~
 - ~~introduce feature flag~~
-- extract MarkdownRenderer
+- ~~extract MarkdownRenderer~~
 - cleanup NormalizeRenderer (MarkdownRenderer)
 - deduplicate MarkdownRenderer and NormalizeRenderer code
 - do pull request feedback

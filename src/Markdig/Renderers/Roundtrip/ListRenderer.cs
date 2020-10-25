@@ -2,20 +2,21 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System.Globalization;
+using System.Collections.Generic;
+using Markdig.Helpers;
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Normalize
+namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
     /// A Normalize renderer for a <see cref="ListBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{ListBlock}" />
-    public class ListRenderer : NormalizeObjectRenderer<ListBlock>
+    public class ListRenderer : RoundtripObjectRenderer<ListBlock>
     {
-        protected override void Write(NormalizeRenderer renderer, ListBlock listBlock)
+        protected override void Write(RoundtripRenderer renderer, ListBlock listBlock)
         {
-            renderer.EnsureLine();
+            renderer.RenderLinesBefore(listBlock);
             var compact = renderer.CompactParagraph;
             renderer.CompactParagraph = !listBlock.IsLoose;
             if (listBlock.IsOrdered)
@@ -30,13 +31,19 @@ namespace Markdig.Renderers.Normalize
                             break;
                     }
                 }
+                var writeLine = false;
                 for (var i = 0; i < listBlock.Count; i++)
                 {
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
-                    renderer.EnsureLine();
+                    if (writeLine)
+                    {
+                        renderer.WriteLine();
+                    }
 
-                    renderer.Write(index.ToString(CultureInfo.InvariantCulture));
+                    renderer.Write(listItem.BeforeWhitespace);
+                    //renderer.Write(index.ToString(CultureInfo.InvariantCulture));
+                    renderer.Write(listItem.SourceBullet);
                     renderer.Write(listBlock.OrderedDelimiter);
                     renderer.Write(' ');
                     renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
@@ -50,9 +57,10 @@ namespace Markdig.Renderers.Normalize
                     }
                     if (i + 1 < listBlock.Count && listBlock.IsLoose)
                     {
-                        renderer.EnsureLine();
+                        //renderer.EnsureLine();
                         renderer.WriteLine();
                     }
+                    writeLine = true;
                 }
             }
             else
@@ -61,22 +69,30 @@ namespace Markdig.Renderers.Normalize
                 {
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
-                    renderer.EnsureLine();
-                    renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
-                    renderer.Write(' ');
-                    renderer.PushIndent("  ");
-                    renderer.WriteChildren(listItem);
-                    renderer.PopIndent();
-                    if (i + 1 < listBlock.Count && listBlock.IsLoose)
+                    renderer.RenderLinesBefore(listItem);
+
+                    StringSlice bws = listItem.BeforeWhitespace;
+                    char bullet = listBlock.BulletType;
+                    StringSlice aws = listItem.AfterWhitespace;
+
+                    renderer.PushIndent(new List<string> { $@"{bws}{bullet}{aws}" });
+                    if (listItem.Count == 0)
                     {
-                        renderer.EnsureLine();
-                        renderer.WriteLine();
+                        renderer.Write(""); // trigger writing of indent
                     }
+                    else
+                    {
+                        renderer.WriteChildren(listItem);
+                    }
+                    renderer.PopIndent();
+
+                    renderer.RenderLinesAfter(listItem);
                 }
             }
             renderer.CompactParagraph = compact;
 
-            renderer.FinishBlock(true);
+
+            renderer.RenderLinesAfter(listBlock);
         }
 
 

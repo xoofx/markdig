@@ -10,41 +10,20 @@ namespace Markdig.Renderers.Normalize
     {
         protected override void Write(NormalizeRenderer renderer, LinkReferenceDefinition linkDef)
         {
-            renderer.RenderLinesBefore(linkDef);
-
-            renderer.Write(linkDef.BeforeWhitespace);
+            renderer.EnsureLine();
             renderer.Write('[');            
-            renderer.Write(linkDef.LabelWithWhitespace);
-            renderer.Write("]:");
+            renderer.Write(linkDef.Label);
+            renderer.Write("]: ");
 
-            renderer.Write(linkDef.WhitespaceBeforeUrl);
-            if (linkDef.UrlHasPointyBrackets)
-            {
-                renderer.Write('<');
-            }
-            renderer.Write(linkDef.UnescapedUrl);
-            if (linkDef.UrlHasPointyBrackets)
-            {
-                renderer.Write('>');
-            }
+            renderer.Write(linkDef.Url);
 
-            renderer.Write(linkDef.WhitespaceBeforeTitle);
-            if (linkDef.UnescapedTitle != null)
+            if (linkDef.Title != null)
             {
-                var open = linkDef.TitleEnclosingCharacter;
-                var close = linkDef.TitleEnclosingCharacter;
-                if (linkDef.TitleEnclosingCharacter == '(')
-                {
-                    close = ')';
-                }
-                renderer.Write(open);
-                renderer.Write(linkDef.UnescapedTitle);
-                renderer.Write(close);
+                renderer.Write(" \"");
+                renderer.Write(linkDef.Title.Replace("\"", "\\\""));
+                renderer.Write('"');
             }
-            renderer.Write(linkDef.AfterWhitespace);
-            renderer.Write(linkDef.Newline);
-
-            renderer.RenderLinesAfter(linkDef);
+            renderer.FinishBlock(false);
         }
     }
 }
