@@ -36,7 +36,6 @@ namespace Markdig.Renderers.Normalize
                 // Wanted: a more elegant/better solution (although this is not *that* bad).
                 foreach (var quoteLine in quoteBlock.QuoteLines)
                 {
-                    // TODO: RTP: introduce EmptyQuoteLine class deriving from LeafBlock?
                     var emptyLeafBlock = new ParagraphBlock
                     {
                         Newline = quoteLine.Newline

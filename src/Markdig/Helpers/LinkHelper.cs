@@ -1119,7 +1119,7 @@ namespace Markdig.Helpers
             urlSpan.End = text.Start - 1;
 
             var saved = text;
-            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out _);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {

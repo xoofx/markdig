@@ -11,6 +11,23 @@ namespace Markdig.Syntax
     /// </summary>
     public static class CharIteratorHelper
     {
+        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
+        {
+            countNewLines = 0;
+            var c = iterator.CurrentChar;
+            bool hasWhitespaces = false;
+            while (c.IsWhitespace())
+            {
+                if (c == '\n')
+                {
+                    countNewLines++;
+                }
+                hasWhitespaces = true;
+                c = iterator.NextChar();
+            }
+            return hasWhitespaces;
+        }
+
         public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out Newline firstNewline) where T : ICharIterator
         {
             countNewLines = 0;
@@ -19,7 +36,6 @@ namespace Markdig.Syntax
             firstNewline = Newline.None;
             while (c.IsWhitespace())
             {
-                // TODO: RTP: fix newline check here for \r\n
                 if (c == '\n' || c == '\r')
                 {
                     if (c == '\r' && iterator.PeekChar() == '\n' && firstNewline != Newline.None)

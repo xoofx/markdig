@@ -66,8 +66,6 @@ namespace Markdig.Renderers.Normalize
                     // See example 207: "> ```\nfoo\n```"
                     renderer.WriteLine(obj.Newline);
                 }
-                // TODO: RTP: the spec is unclear about whitespace after closing fence
-                // imlementations seem to accept it though
                 renderer.Write(obj.AfterWhitespace);
             }
             else

@@ -133,7 +133,10 @@ namespace Markdig.Parsers
                         HeaderCharCount = count,
                         SetextNewline = paragraph.Newline,
                     };
-                    //heading.Lines.Trim(); // TODO: RTP: fix
+                    if (!state.TrackTrivia)
+                    {
+                        heading.Lines.Trim();
+                    }
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);

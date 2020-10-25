@@ -252,11 +252,11 @@ namespace Markdig.Parsers.Inlines
                         var link = new LinkInline()
                         {
                             WhitespaceBeforeUrl = wsBeforeLink,
-                            Url = HtmlHelper.Unescape(url), // TODO: RTP: unescape
-                            UnescapedUrl = unescapedUrl, // TODO: RTP: unescape
+                            Url = HtmlHelper.Unescape(url),
+                            UnescapedUrl = unescapedUrl,
                             UrlHasPointyBrackets = urlHasPointyBrackets,
                             WhitespaceAfterUrl = wsAfterLink,
-                            Title = HtmlHelper.Unescape(title), // TODO: RTP: unescape
+                            Title = HtmlHelper.Unescape(title),
                             UnescapedTitle = unescapedTitle,
                             TitleEnclosingCharacter = titleEnclosingCharacter,
                             WhitespaceAfterTitle = wsAfterTitle,

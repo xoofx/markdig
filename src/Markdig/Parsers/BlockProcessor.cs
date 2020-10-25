@@ -812,7 +812,6 @@ namespace Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
-                        // TODO: RTP: pass line with whitespace
                         if (TrackTrivia)
                         {
                             UnwindAllIndents();

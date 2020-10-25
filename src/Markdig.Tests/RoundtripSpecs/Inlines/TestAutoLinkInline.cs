@@ -14,6 +14,7 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         [TestCase(" <example@example.com>")]
         [TestCase("<example@example.com> ")]
         [TestCase(" <example@example.com> ")]
+        [TestCase("p http://a p")]
         public void Test(string value)
         {
             RoundTrip(value);

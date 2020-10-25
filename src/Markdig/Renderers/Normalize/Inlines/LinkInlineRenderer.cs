@@ -61,7 +61,6 @@ namespace Markdig.Renderers.Normalize.Inlines
                             close = ')';
                         }
                         renderer.Write(open);
-                        //renderer.Write(link.Title.Replace(@"""", @"\""")); // TODO: RTP: should this always be done?
                         renderer.Write(link.UnescapedTitle);
                         renderer.Write(close);
                         renderer.Write(link.WhitespaceAfterTitle);
