@@ -11,16 +11,29 @@ namespace Markdig.Syntax
     /// </summary>
     public static class CharIteratorHelper
     {
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
+        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out Newline firstNewline) where T : ICharIterator
         {
             countNewLines = 0;
             var c = iterator.CurrentChar;
             bool hasWhitespaces = false;
+            firstNewline = Newline.None;
             while (c.IsWhitespace())
             {
                 // TODO: RTP: fix newline check here for \r\n
                 if (c == '\n' || c == '\r')
                 {
+                    if (c == '\r' && iterator.PeekChar() == '\n' && firstNewline != Newline.None)
+                    {
+                        firstNewline = Newline.CarriageReturnLineFeed;
+                    }
+                    else if (c == '\n' && firstNewline != Newline.None)
+                    {
+                        firstNewline = Newline.LineFeed;
+                    }
+                    else if (c == '\r' && firstNewline != Newline.None)
+                    {
+                        firstNewline = Newline.CarriageReturn;
+                    }
                     countNewLines++;
                 }
                 hasWhitespaces = true;

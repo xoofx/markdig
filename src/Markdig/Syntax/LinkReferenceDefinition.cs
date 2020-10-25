@@ -159,6 +159,7 @@ namespace Markdig.Syntax
                 out string title,
                 out string unescapedTitle,
                 out char titleEnclosingCharacter,
+                out Newline newline,
                 out whitespaceAfterTitle,
                 out SourceSpan labelSpan,
                 out SourceSpan urlSpan,
@@ -177,7 +178,8 @@ namespace Markdig.Syntax
                 UnescapedUrl = unescapedUrl,
                 UnescapedTitle = unescapedTitle,
                 TitleSpan = titleSpan,
-                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End)
+                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End),
+                Newline = newline,
             };
             return true;
         }

@@ -131,6 +131,13 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase("[a]: /r\n[b]: /r\n")]
+        [TestCase("[a]: /r\n[b]: /r\n[c] /r\n")]
+        public void TestMultiple(string value)
+        {
+            RoundTrip(value);
+        }
+
         [TestCase("[a]:\f/r\f\"l\"")]
         [TestCase("[a]:\v/r\v\"l\"")]
         public void TestUncommonWhitespace(string value)

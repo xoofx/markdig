@@ -1119,7 +1119,7 @@ namespace Markdig.Helpers
             urlSpan.End = text.Start - 1;
 
             var saved = text;
-            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out _);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
@@ -1186,6 +1186,7 @@ namespace Markdig.Helpers
             out string title, // can contain non-consecutive newlines
             out string unescapedTitle,
             out char titleEnclosingCharacter,
+            out Newline newline,
             out SourceSpan whitespaceAfterTitle,
             out SourceSpan labelSpan,
             out SourceSpan urlSpan,
@@ -1197,6 +1198,7 @@ namespace Markdig.Helpers
             whitespaceBeforeTitle = SourceSpan.Empty;
             title = null;
             unescapedTitle = null;
+            newline = Newline.None;
 
             urlSpan = SourceSpan.Empty;
             titleSpan = SourceSpan.Empty;
@@ -1234,7 +1236,7 @@ namespace Markdig.Helpers
             int whitespaceBeforeTitleStart = text.Start;
 
             var saved = text;
-            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out newline);
 
             whitespaceBeforeTitle = new SourceSpan(whitespaceBeforeTitleStart, text.Start - 1);
             var c = text.CurrentChar;
@@ -1249,7 +1251,6 @@ namespace Markdig.Helpers
                     {
                         return false;
                     }
-                    whitespaceAfterTitle = new SourceSpan(text.Start, text.End);
                 }
                 else
                 {
@@ -1260,12 +1261,14 @@ namespace Markdig.Helpers
             {
                 if (text.CurrentChar == '\0' || newLineCount > 0)
                 {
+                    whitespaceAfterTitle = new SourceSpan(text.Start, text.Start - 1);
                     return true;
                 }
             }
 
             // Check that the current line has only trailing spaces
             c = text.CurrentChar;
+            int whitespaceAfterTitleStart = text.Start;
             while (c.IsSpaceOrTab())
             {
                 c = text.NextChar();
@@ -1290,6 +1293,22 @@ namespace Markdig.Helpers
                 title = null;
                 unescapedTitle = null;
                 return false;
+            }
+            whitespaceAfterTitle = new SourceSpan(whitespaceAfterTitleStart, text.Start - 1);
+            if (c != '\0')
+            {
+                if (c == '\n')
+                {
+                    newline = Newline.LineFeed;
+                }
+                else if (c == '\r' && text.PeekChar() == '\n')
+                {
+                    newline = Newline.CarriageReturnLineFeed;
+                }
+                else if (c == '\r')
+                {
+                    newline = Newline.CarriageReturn;
+                }
             }
 
             return true;

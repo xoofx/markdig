@@ -42,6 +42,7 @@ namespace Markdig.Renderers.Normalize
                 renderer.Write(close);
             }
             renderer.Write(linkDef.AfterWhitespace);
+            renderer.Write(linkDef.Newline);
 
             renderer.RenderLinesAfter(linkDef);
         }
