@@ -45,7 +45,7 @@ namespace Markdig.Extensions.Tables
                     if (countPipe > 0)
                     {
                         // Mark the paragraph as open (important, otherwise we would have an infinite loop)
-                        paragraph.AppendLine(ref processor.Line, processor.Column, processor.LineIndex, processor.Line.Start, false);
+                        paragraph.AppendLine(ref processor.Line, processor.Column, processor.LineIndex, processor.Line.Start, processor.TrackTrivia);
                         paragraph.IsOpen = true;
                         return BlockState.BreakDiscard;
                     }

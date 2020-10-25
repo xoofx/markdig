@@ -40,6 +40,7 @@ In order:
 - ~~extract MarkdownRenderer~~
 - ~~cleanup NormalizeRenderer (MarkdownRenderer)~~
 - ~~deduplicate MarkdownRenderer and NormalizeRenderer code~~
+- use StringSlice where possible instead of String
 - do pull request feedback
 - split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
 - fix broken pre-existing tests

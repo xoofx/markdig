@@ -48,7 +48,7 @@ namespace Markdig.Syntax
         /// <param name="column">The column.</param>
         /// <param name="line">The line.</param>
         /// <param name="sourceLinePosition"></param>
-        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool preserveTrivia)
+        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool trackTrivia)
         {
             if (Lines.Lines == null)
             {
@@ -69,7 +69,7 @@ namespace Markdig.Syntax
             else
             {
                 var builder = StringBuilderCache.Local();
-                if (preserveTrivia)
+                if (trackTrivia)
                 {
                     builder.Append(slice.Text, slice.Start, slice.Length);
                 }
