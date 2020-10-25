@@ -155,6 +155,8 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("[a]:\n/r\n\"t\r\nt\"")]
 
         [TestCase("[a]:\r\n  /r\t \n \t \"t\r\nt\"   ")]
+        [TestCase("[a]:\n/r\n\n[a],")]
+        [TestCase("[a]: /r\n[b]: /r\n\n[a],")]
         public void TestNewlines(string value)
         {
             RoundTrip(value);

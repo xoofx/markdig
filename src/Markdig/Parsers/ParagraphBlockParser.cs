@@ -95,9 +95,19 @@ namespace Markdig.Parsers
             {
                 var paragraph = (ParagraphBlock)block;
 
+                bool foundLrd;
+                if (state.TrackTrivia)
+                {
+                    foundLrd = TryMatchLinkReferenceDefinitionWhitespace(ref paragraph.Lines, state, paragraph);
+                }
+                else
+                {
+                    foundLrd = TryMatchLinkReferenceDefinition(ref paragraph.Lines, state);
+                }
+
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
                 // lines are empty, we can early exit and remove the paragraph
-                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
+                if (!foundLrd && paragraph.Lines.Count == 0)
                 {
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);

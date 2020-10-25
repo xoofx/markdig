@@ -1279,12 +1279,16 @@ namespace Markdig.Helpers
                 {
                     text = saved;
                     title = null;
+                    unescapedTitle = null;
+                    whitespaceAfterTitle = SourceSpan.Empty;
                     return true;
                 }
 
                 label = null;
                 url = null;
+                unescapedUrl = null;
                 title = null;
+                unescapedTitle = null;
                 return false;
             }
 

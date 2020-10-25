@@ -148,6 +148,7 @@ namespace Markdig.Renderers.Normalize
 
         public void RenderLinesAfter(Block block)
         {
+            previousWasLine = true;
             if (block.LinesAfter == null)
             {
                 return;

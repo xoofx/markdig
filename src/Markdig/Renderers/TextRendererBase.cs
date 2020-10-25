@@ -97,7 +97,7 @@ namespace Markdig.Renderers
             }
         }
 
-        private bool previousWasLine;
+        protected bool previousWasLine;
 #if !NETCORE
         private char[] buffer;
 #endif

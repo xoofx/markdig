@@ -29,7 +29,7 @@ namespace Markdig.Renderers.Normalize
             }
 
             renderer.Write(linkDef.WhitespaceBeforeTitle);
-            if (linkDef.Title != null)
+            if (linkDef.UnescapedTitle != null)
             {
                 var open = linkDef.TitleEnclosingCharacter;
                 var close = linkDef.TitleEnclosingCharacter;
