@@ -34,8 +34,8 @@ In order:
 - ~~support AutolinkInline~~
 - ~~generate spec examples as tests for roundtrip~~
 - fix `TODO: RTP: `
-- check char.IsWhitespace() calls
-- check char.IsNewline() calls
+- ~~check char.IsWhitespace() calls~~
+- ~~check char.IsNewline() calls~~
 - introduce feature flag
 - extract MarkdownRenderer
 - cleanup NormalizeRenderer (MarkdownRenderer)

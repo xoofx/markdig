@@ -762,7 +762,7 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    if (c.IsNewLine())
+                    if (c.IsNewLineLineFeed())
                     {
                         break;
                     }

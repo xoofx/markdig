@@ -223,6 +223,12 @@ namespace Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNewLineLineFeed(this char c)
+        {
+            return c == '\n' || c == '\r';
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNewLine(this char c)
         {
             return c == '\n' || c == '\r';
