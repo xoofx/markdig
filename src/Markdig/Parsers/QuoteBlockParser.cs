@@ -86,7 +86,6 @@ namespace Markdig.Parsers
                     quote.QuoteLines.Add(new QuoteBlock.QuoteLine
                     {
                         QuoteChar = false,
-                        BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
                         Newline = processor.Line.Newline,
                     });
                     return BlockState.None;
