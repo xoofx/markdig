@@ -60,7 +60,7 @@ namespace Markdig.Syntax
         public StringSlice AfterWhitespace { get; set; }
 
         public List<StringSlice> LinesBefore { get; set; }
-        public List<StringSlice> LinesAfter { get; internal set; }
+        public List<StringSlice> LinesAfter { get; set; }
 
         /// <summary>
         /// Occurs when the process of inlines begin.

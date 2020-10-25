@@ -210,7 +210,7 @@ namespace Markdig.Parsers
             }
             var bulletLength = 1; // TODO: RTP: fix for ordered
             var savedWhitespaceStart = state.WhitespaceStart;
-            var whitespaceBefore = state.PopBeforeWhitespace(state.Start - bulletLength - 1);
+            var whitespaceBefore = state.UseWhitespace(state.Start - bulletLength - 1);
             state.WhitespaceStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;

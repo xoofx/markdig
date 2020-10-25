@@ -34,7 +34,7 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         [TestCase("[ a ](b) ")]
         [TestCase(" [ a ](b) ")]
 
-        // below cases are required for a full CST but not have low prio for impl
+        // below cases are required for a full roundtrip but not have low prio for impl
         [TestCase("[]( b)")]
         [TestCase(" []( b)")]
         [TestCase("[]( b) ")]

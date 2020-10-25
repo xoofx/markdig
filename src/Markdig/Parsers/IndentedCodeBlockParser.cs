@@ -41,7 +41,7 @@ namespace Markdig.Parsers
                 };
                 var codeBlockLine = new CodeBlockLine
                 {
-                    BeforeWhitespace = processor.PopBeforeWhitespace(sourceStartPosition - 1)
+                    BeforeWhitespace = processor.UseWhitespace(sourceStartPosition - 1)
                 };
                 codeBlock.CodeBlockLines.Add(codeBlockLine);
                 processor.NewBlocks.Push(codeBlock);
@@ -94,7 +94,7 @@ namespace Markdig.Parsers
                 var cb = (CodeBlock)block;
                 var codeBlockLine = new CodeBlockLine
                 {
-                    BeforeWhitespace = processor.PopBeforeWhitespace(processor.Start - 1)
+                    BeforeWhitespace = processor.UseWhitespace(processor.Start - 1)
                 };
                 cb.CodeBlockLines ??= new List<CodeBlockLine>();
                 cb.CodeBlockLines.Add(codeBlockLine);

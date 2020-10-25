@@ -33,11 +33,6 @@ namespace Markdig.Helpers
         /// </summary>
         public int SourcePosition { get; private set; }
 
-        public bool IsEndOfFile()
-        {
-            return SourcePosition > _text.Length;
-        }
-
         /// <summary>
         /// Reads a new line from the underlying <see cref="TextReader"/> and update the <see cref="SourcePosition"/> for the next line.
         /// </summary>

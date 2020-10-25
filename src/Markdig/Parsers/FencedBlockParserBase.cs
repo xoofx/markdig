@@ -44,7 +44,7 @@ namespace Markdig.Parsers
         /// </summary>
         protected FencedBlockParserBase()
         {
-            InfoParser = CstInfoParser;
+            InfoParser = RoundtripInfoParser;
             MinimumMatchCount = 3;
             MaximumMatchCount = int.MaxValue;
         }
@@ -68,14 +68,14 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
-        /// The CST parser for the information after the fenced code block special characters (usually ` or ~)
+        /// The roundtrip parser for the information after the fenced code block special characters (usually ` or ~)
         /// </summary>
         /// <param name="state">The parser processor.</param>
         /// <param name="line">The line.</param>
         /// <param name="fenced">The fenced code block.</param>
         /// <param name="openingCharacter">The opening character for this fenced code block.</param>
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
-        public static bool CstInfoParser(BlockProcessor blockProcessor, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
+        public static bool RoundtripInfoParser(BlockProcessor blockProcessor, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
             string afterFence = null;
             string info = null;
@@ -327,7 +327,7 @@ namespace Markdig.Parsers
                 var fencedBlock = block as IFencedBlock;
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.Newline = processor.Line.Newline;
-                fencedBlock.WhitespaceBeforeClosingFence = processor.PopBeforeWhitespace(sourcePosition - 1);
+                fencedBlock.WhitespaceBeforeClosingFence = processor.UseWhitespace(sourcePosition - 1);
                 fencedBlock.AfterWhitespace = new StringSlice(processor.Line.Text, lastFenceCharPosition, line.End);
 
                 // Don't keep the last line

@@ -43,6 +43,7 @@ In order:
 - do pull request feedback
 - split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
 - fix broken pre-existing tests
+- document newly added syntax properties
 - support extensions
 - review complete PR and follow conventions
 - run perf test

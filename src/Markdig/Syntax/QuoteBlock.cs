@@ -14,18 +14,6 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
-        // ws? >? ws? block|inline
-        public class QuoteLine
-        {
-            public StringSlice BeforeWhitespace { get; set; }
-
-            public StringSlice AfterWhitespace { get; set; }
-
-            public Newline Newline { get; set; }
-
-            // support lazy lines
-            public bool QuoteChar { get; set; }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
@@ -35,11 +23,23 @@ namespace Markdig.Syntax
         {
         }
 
-        public List<QuoteLine> QuoteLines { get; set; } = new List<QuoteLine>();
+        public List<QuoteBlockLine> QuoteLines { get; set; } = new List<QuoteBlockLine>();
 
         /// <summary>
         /// Gets or sets the quote character (usually `&gt;`)
         /// </summary>
         public char QuoteChar { get; set; }
+    }
+
+    public class QuoteBlockLine
+    {
+        public StringSlice BeforeWhitespace { get; set; }
+
+        public StringSlice AfterWhitespace { get; set; }
+
+        public Newline Newline { get; set; }
+
+        // support lazy lines
+        public bool QuoteChar { get; set; }
     }
 }

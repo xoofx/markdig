@@ -125,7 +125,7 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        BeforeWhitespace = state.PopBeforeWhitespace(sourcePosition - 1), // remove dashes
+                        BeforeWhitespace = state.UseWhitespace(sourcePosition - 1), // remove dashes
                         AfterWhitespace = new StringSlice(state.Line.Text, state.Start, line.End),
                         LinesBefore = paragraph.LinesBefore,
                         Newline = state.Line.Newline,

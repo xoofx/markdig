@@ -170,7 +170,13 @@ namespace Markdig.Parsers
 
         public int WhitespaceStart { get; set; }
 
-        public StringSlice PopBeforeWhitespace(int end)
+        /// <summary>
+        /// Returns trivia that has not yet been assigned to any node and
+        /// advances the position of trivia to the ending position
+        /// </summary>
+        /// <param name="end">End position of the trivia</param>
+        /// <returns></returns>
+        public StringSlice UseWhitespace(int end)
         {
             // NOTE: Line.Text is full source, not the line (!)
             var stringSlice = new StringSlice(Line.Text, WhitespaceStart, end);
@@ -818,10 +824,9 @@ namespace Markdig.Parsers
                     if (TrackTrivia)
                     {
                         // TODO: RTP: delegate this to container parser classes
-                        var qb = paragraph.Parent as QuoteBlock;
-                        if (qb != null)
+                        if (paragraph.Parent is QuoteBlock qb)
                         {
-                            var afterWhitespace = PopBeforeWhitespace(Start - 1);
+                            var afterWhitespace = UseWhitespace(Start - 1);
                             qb.QuoteLines.Last().AfterWhitespace = afterWhitespace;
                         }
                     }

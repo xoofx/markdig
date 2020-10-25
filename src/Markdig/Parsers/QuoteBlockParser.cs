@@ -50,9 +50,9 @@ namespace Markdig.Parsers
                 processor.Line.TrimStart();
                 afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
             }
-            quoteBlock.QuoteLines.Add(new QuoteBlock.QuoteLine
+            quoteBlock.QuoteLines.Add(new QuoteBlockLine
             {
-                BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
+                BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
                 AfterWhitespace = afterWhitespace,
                 QuoteChar = true,
                 Newline = processor.Line.Newline,
@@ -83,7 +83,7 @@ namespace Markdig.Parsers
                 }
                 else
                 {
-                    quote.QuoteLines.Add(new QuoteBlock.QuoteLine
+                    quote.QuoteLines.Add(new QuoteBlockLine
                     {
                         QuoteChar = false,
                         Newline = processor.Line.Newline,
@@ -98,10 +98,10 @@ namespace Markdig.Parsers
                 processor.Line.TrimStart();
                 afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
             }
-            quote.QuoteLines.Add(new QuoteBlock.QuoteLine
+            quote.QuoteLines.Add(new QuoteBlockLine
             {
                 QuoteChar = true,
-                BeforeWhitespace = processor.PopBeforeWhitespace(sourcePosition - 1),
+                BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
                 AfterWhitespace = afterWhitespace,
                 Newline = processor.Line.Newline,
             });

@@ -78,5 +78,24 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("```\ni a\n```")]
+        [TestCase("```\ni a a2\n```")]
+        [TestCase("```\ni a a2 a3\n```")]
+        [TestCase("```\ni a a2 a3 a4\n```")]
+
+        [TestCase("```\ni\ta\n```")]
+        [TestCase("```\ni\ta a2\n```")]
+        [TestCase("```\ni\ta a2 a3\n```")]
+        [TestCase("```\ni\ta a2 a3 a4\n```")]
+
+        [TestCase("```\ni\ta \n```")]
+        [TestCase("```\ni\ta a2 \n```")]
+        [TestCase("```\ni\ta a2 a3 \n```")]
+        [TestCase("```\ni\ta a2 a3 a4 \n```")]
+        public void TestInfoArguments(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }
