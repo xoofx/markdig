@@ -26,6 +26,8 @@ namespace Markdig.Parsers
         private readonly ProcessDocumentDelegate documentProcessed;
         private readonly bool preciseSourceLocation;
 
+        public bool TrackTrivia { get; }
+
         private readonly int roughLineCountEstimate;
 
         private LineReader lineReader;
@@ -38,11 +40,12 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
+        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context, bool trackTrivia = false)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
+            TrackTrivia = trackTrivia;
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
             lineReader = new LineReader(text);
@@ -52,10 +55,10 @@ namespace Markdig.Parsers
             document = new MarkdownDocument();
 
             // Initialize the block parsers
-            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context);
+            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context, trackTrivia);
 
             // Initialize the inline parsers
-            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context)
+            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, trackTrivia)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -71,13 +74,13 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
-        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
+        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null, bool trackTrivia = false)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
-            var markdownParser = new MarkdownParser(text, pipeline, context);
+            var markdownParser = new MarkdownParser(text, pipeline, context, trackTrivia);
             return markdownParser.Parse();
         }
 

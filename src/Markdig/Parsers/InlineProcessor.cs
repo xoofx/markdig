@@ -37,18 +37,18 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
+        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context, bool trackTrivia = false)
         {
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
             Document = document;
             Parsers = parsers;
             Context = context;
+            TrackTrivia = trackTrivia;
             PreciseSourceLocation = preciseSourcelocation;
             lineOffsets = new List<StringLineGroup.LineOffset>();
             ParserStates = new object[Parsers.Count];
             LiteralInlineParser = new LiteralInlineParser();
-            LineBreakInlineParser = new LineBreakInlineParser();
         }
 
         /// <summary>
@@ -112,8 +112,6 @@ namespace Markdig.Parsers
         /// Gets the literal inline parser.
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; }
-
-        public LineBreakInlineParser LineBreakInlineParser { get; }
 
 
         public int GetSourcePosition(int sliceOffset)
@@ -190,8 +188,6 @@ namespace Markdig.Parsers
             lineOffsets.Clear();
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines.Release();
-            ContainerInline container = null;
-
             int previousStart = -1;
 
             while (!text.IsEmpty)
@@ -242,7 +238,7 @@ namespace Markdig.Parsers
                     if (nextInline.Parent == null)
                     {
                         // Get deepest container
-                        container = FindLastContainer();
+                        var container = FindLastContainer();
                         if (!ReferenceEquals(container, nextInline))
                         {
                             container.AppendChild(nextInline);
@@ -262,7 +258,7 @@ namespace Markdig.Parsers
                 else
                 {
                     // Get deepest container
-                    container = FindLastContainer();
+                    var container = FindLastContainer();
 
                     Inline = container.LastChild is LeafInline ? container.LastChild : container;
                     if (Inline == Root)

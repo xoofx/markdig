@@ -20,13 +20,13 @@ namespace Markdig.Parsers
         private int currentStackIndex;
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
-        private bool trackTrivia = true;
 
-        private BlockProcessor(BlockProcessor root)
+        private BlockProcessor(BlockProcessor root, bool trackTrivia = false)
         {
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
             this.parserStateCache = root.parserStateCache;
+            TrackTrivia = trackTrivia;
             Document = root.Document;
             Parsers = root.Parsers;
 
@@ -50,10 +50,11 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
+        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context, bool trackTrivia = false)
         {
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
+            TrackTrivia = trackTrivia;
             parserStateCache = new BlockParserStateCache(this);
             Document = document;
             document.IsOpen = true;
@@ -165,18 +166,7 @@ namespace Markdig.Parsers
         /// </summary>
         private List<Block> OpenedBlocks { get; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to continue processing the current line.
-        /// </summary>
-        private bool _cpl;
-        private bool ContinueProcessingLine { get => _cpl;
-            set
-            {
-
-
-                _cpl = value;
-            }
-        }
+        private bool ContinueProcessingLine { get; set; }
 
         public int WhitespaceStart { get; set; }
 
@@ -189,7 +179,8 @@ namespace Markdig.Parsers
         }
 
         public List<StringSlice> BeforeLines { get; set; }
-        public bool TrackTrivia { get => trackTrivia; set => trackTrivia = value; }
+
+        public bool TrackTrivia { get; set; } = true;
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -689,10 +680,13 @@ namespace Markdig.Parsers
                 {
                     if (Line.IsEmpty)
                     {
-                        BeforeLines ??= new List<StringSlice>();
-                        var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
-                        BeforeLines.Add(line);
-                        Line.Start = StartBeforeIndent;
+                        if (TrackTrivia)
+                        {
+                            BeforeLines ??= new List<StringSlice>();
+                            var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
+                            BeforeLines.Add(line);
+                            Line.Start = StartBeforeIndent;
+                        }
                     }
                     ContinueProcessingLine = false;
                     break;
@@ -765,11 +759,14 @@ namespace Markdig.Parsers
                 var blockParser = parsers[j];
                 if (Line.IsEmpty)
                 {
-                    BeforeLines ??= new List<StringSlice>();
-                    var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
-                    BeforeLines.Add(line);
+                    if (TrackTrivia)
+                    {
+                        BeforeLines ??= new List<StringSlice>();
+                        var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
+                        BeforeLines.Add(line);
+                        Line.Start = StartBeforeIndent;
+                    }
                     ContinueProcessingLine = false;
-                    Line.Start = StartBeforeIndent;
                     break;
                 }
 
@@ -818,12 +815,15 @@ namespace Markdig.Parsers
                         }
                         paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
-                    // TODO: RTP: delegate this to container parser classes
-                    var qb = paragraph.Parent as QuoteBlock;
-                    if (qb != null)
+                    if (TrackTrivia)
                     {
-                        var afterWhitespace = PopBeforeWhitespace(Start - 1);
-                        qb.QuoteLines.Last().AfterWhitespace = afterWhitespace;
+                        // TODO: RTP: delegate this to container parser classes
+                        var qb = paragraph.Parent as QuoteBlock;
+                        if (qb != null)
+                        {
+                            var afterWhitespace = PopBeforeWhitespace(Start - 1);
+                            qb.QuoteLines.Last().AfterWhitespace = afterWhitespace;
+                        }
                     }
                     // We have just found a lazy continuation for a paragraph, early exit
                     // Mark all block opened after a lazy continuation

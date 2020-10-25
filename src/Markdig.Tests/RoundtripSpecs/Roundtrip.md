@@ -36,7 +36,7 @@ In order:
 - fix `TODO: RTP: `
 - ~~check char.IsWhitespace() calls~~
 - ~~check char.IsNewline() calls~~
-- introduce feature flag
+- ~~introduce feature flag~~
 - extract MarkdownRenderer
 - cleanup NormalizeRenderer (MarkdownRenderer)
 - deduplicate MarkdownRenderer and NormalizeRenderer code

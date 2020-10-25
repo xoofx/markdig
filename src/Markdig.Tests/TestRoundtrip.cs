@@ -16,7 +16,7 @@ namespace Markdig.Tests
         {
             var pipelineBuilder = new MarkdownPipelineBuilder();
             MarkdownPipeline pipeline = pipelineBuilder.Build();
-            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
+            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline, trackTrivia: true);
             var sw = new StringWriter();
             var nr = new NormalizeRenderer(sw);
 
