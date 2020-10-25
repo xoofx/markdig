@@ -274,14 +274,17 @@ namespace Markdig.Parsers
                 //}
             }
 
-            if (leafBlock is HeadingBlock)
+            if (TrackTrivia)
             {
-                // TODO: RTP: delegate to block?
-            }
-            else
-            {
-                var newline = leafBlock.Newline;
-                leafBlock.Inline.AppendChild(new LineBreakInline { Newline = newline });
+                if (leafBlock is HeadingBlock)
+                {
+                    // TODO: RTP: delegate to block?
+                }
+                else
+                {
+                    var newline = leafBlock.Newline;
+                    leafBlock.Inline.AppendChild(new LineBreakInline { Newline = newline });
+                }
             }
 
             Inline = null;

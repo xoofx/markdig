@@ -50,15 +50,18 @@ namespace Markdig.Parsers.Inlines
             {
                 // Remove line endings if the next char is a new line
                 length = nextStart - slice.Start;
-                //if (text[nextStart] == '\n')
-                //{
-                //    int end = nextStart - 1;
-                //    while (length > 0 && text[end].IsSpace())
-                //    {
-                //        length--;
-                //        end--;
-                //    }
-                //}
+                if (!processor.TrackTrivia)
+                {
+                    if (text[nextStart] == '\n')
+                    {
+                        int end = nextStart - 1;
+                        while (length > 0 && text[end].IsSpace())
+                        {
+                            length--;
+                            end--;
+                        }
+                    }
+                }
             }
 
             // The LiteralInlineParser is always matching (at least an empty string)

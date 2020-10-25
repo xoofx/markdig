@@ -73,12 +73,14 @@ namespace Markdig.Parsers
                     return false;
                 }
 
-                for (int i = 0; i < lineCount; i++)
+                if (!processor.TrackTrivia)
                 {
-                    //lines.Lines[i].Slice.TrimStart();
+                    for (int i = 0; i < lineCount; i++)
+                    {
+                        lines.Lines[i].Slice.TrimStart();
+                    }
+                    lines.Lines[lineCount - 1].Slice.TrimEnd();
                 }
-
-                //lines.Lines[lineCount - 1].Slice.TrimEnd();
             }
 
             return true;

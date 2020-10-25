@@ -41,26 +41,47 @@ namespace Markdig.Parsers.Inlines
             }
 
             // A backslash at the end of the line is a [hard line break]:
-            if (c == '\n' || c == '\r')
+            if (processor.TrackTrivia)
             {
-                var newline = c == '\n' ? Newline.LineFeed : Newline.CarriageReturn;
-                if (c == '\r' && slice.PeekChar() == '\n')
+                if (c == '\n' || c == '\r')
                 {
-                    newline = Newline.CarriageReturnLineFeed;
+                    var newline = c == '\n' ? Newline.LineFeed : Newline.CarriageReturn;
+                    if (c == '\r' && slice.PeekChar() == '\n')
+                    {
+                        newline = Newline.CarriageReturnLineFeed;
+                    }
+                    processor.Inline = new LineBreakInline()
+                    {
+                        IsHard = true,
+                        IsBackslash = true,
+                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
+                        Line = line,
+                        Column = column,
+                        Newline = newline
+                    };
+                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
+                    slice.NextChar();
+                    return true;
                 }
-                processor.Inline = new LineBreakInline()
-                {
-                    IsHard = true,
-                    IsBackslash = true,
-                    Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
-                    Line = line,
-                    Column = column,
-                    Newline = newline
-                };
-                processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                slice.NextChar();
-                return true;
             }
+            else
+            {
+                if (c == '\n')
+                {
+                    processor.Inline = new LineBreakInline()
+                    {
+                        IsHard = true,
+                        IsBackslash = true,
+                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
+                        Line = line,
+                        Column = column
+                    };
+                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
+                    slice.NextChar();
+                    return true;
+                }
+            }
+
             return false;
         }
     }

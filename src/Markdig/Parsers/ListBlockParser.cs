@@ -131,9 +131,10 @@ namespace Markdig.Parsers
                     if (!(state.NextContinue is ListBlock))
                     {
                         list.CountAllBlankLines++;
-                        //listItem.Add(new BlankLineBlock());
-                        //state.BeforeLines ??= new List<StringSlice>();
-                        //state.BeforeLines.Add(state.Line);
+                        if (!state.TrackTrivia)
+                        {
+                            listItem.Add(new BlankLineBlock());
+                        }
                     }
                     list.CountBlankLinesReset++;
                 }
@@ -320,49 +321,53 @@ namespace Markdig.Parsers
 
         public override bool Close(BlockProcessor processor, Block blockToClose)
         {
+            if (processor.TrackTrivia)
+            {
+                return true;
+            }
+
+            // Process only if we have blank lines
+            if (blockToClose is ListBlock listBlock && listBlock.CountAllBlankLines > 0)
+            {
+                if (listBlock.Parent is ListItemBlock parentListItemBlock &&
+                    listBlock.LastChild is ListItemBlock lastListItem &&
+                    lastListItem.LastChild is BlankLineBlock)
+                {
+                    // Inform the outer list that we have a blank line
+                    var parentList = (ListBlock)parentListItemBlock.Parent;
+
+                    parentList.CountAllBlankLines++;
+                    parentListItemBlock.Add(new BlankLineBlock());
+                }
+
+                for (int listIndex = listBlock.Count - 1; listIndex >= 0; listIndex--)
+                {
+                    var listItem = (ListItemBlock)listBlock[listIndex];
+
+                    for (int i = listItem.Count - 1; i >= 0; i--)
+                    {
+                        if (listItem[i] is BlankLineBlock)
+                        {
+                            if (i == listItem.Count - 1 ? listIndex < listBlock.Count - 1 : i > 0)
+                            {
+                                listBlock.IsLoose = true;
+                            }
+
+                            listItem.RemoveAt(i);
+
+                            //If we have removed all blank lines, we can exit
+                            listBlock.CountAllBlankLines--;
+                            if (listBlock.CountAllBlankLines == 0)
+                            {
+                                goto done;
+                            }
+                        }
+                    }
+                }
+            }
+
+            done:
             return true;
-            //    // Process only if we have blank lines
-            //    if (blockToClose is ListBlock listBlock && listBlock.CountAllBlankLines > 0)
-            //    {
-            //        if (listBlock.Parent is ListItemBlock parentListItemBlock &&
-            //            listBlock.LastChild is ListItemBlock lastListItem &&
-            //            lastListItem.LastChild is BlankLineBlock)
-            //        {
-            //            // Inform the outer list that we have a blank line
-            //            var parentList = (ListBlock)parentListItemBlock.Parent;
-
-            //            parentList.CountAllBlankLines++;
-            //            parentListItemBlock.Add(new BlankLineBlock());
-            //        }
-
-            //        for (int listIndex = listBlock.Count - 1; listIndex >= 0; listIndex--)
-            //        {
-            //            var listItem = (ListItemBlock)listBlock[listIndex];
-
-            //            for (int i = listItem.Count - 1; i >= 0; i--)
-            //            {
-            //                if (listItem[i] is BlankLineBlock)
-            //                {
-            //                    if (i == listItem.Count - 1 ? listIndex < listBlock.Count - 1 : i > 0)
-            //                    {
-            //                        listBlock.IsLoose = true;
-            //                    }
-
-            //                    //listItem.RemoveAt(i);
-
-            //                    // If we have removed all blank lines, we can exit
-            //                    //listBlock.CountAllBlankLines--;
-            //                    //if (listBlock.CountAllBlankLines == 0)
-            //                    //{
-            //                    //    goto done;
-            //                    //}
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //done:
-            //    return true;
         }
     }
 }

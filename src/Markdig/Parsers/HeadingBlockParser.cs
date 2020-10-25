@@ -73,7 +73,7 @@ namespace Markdig.Parsers
             if (leadingCount > 0 && leadingCount <= MaxLeadingCount && (c.IsSpaceOrTab() || c == '\0'))
             {
                 StringSlice whitespace = StringSlice.Empty;
-                if (c.IsSpaceOrTab())
+                if (processor.TrackTrivia && c.IsSpaceOrTab())
                 {
                     whitespace = new StringSlice(processor.Line.Text, processor.Start + leadingCount, processor.Start + leadingCount);
                     line.NextChar();
@@ -136,15 +136,19 @@ namespace Markdig.Parsers
 
                 // Setup the source end position of this element
                 headingBlock.Span.End = processor.Line.End;
-                // feed the line to the BlockProcessor without whitespace
-                processor.Line.Start = headingBlock.Span.Start;
 
-                var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
-                headingBlock.AfterWhitespace = wsa;
-                if (wsa.Overlaps(headingBlock.WhitespaceAfterAtxHeaderChar))
+                if (processor.TrackTrivia)
                 {
-                    // prevent double whitespace allocation in case of closing # i.e. "# #"
-                    headingBlock.WhitespaceAfterAtxHeaderChar = StringSlice.Empty;
+                    // feed the line to the BlockProcessor without whitespace
+                    processor.Line.Start = headingBlock.Span.Start;
+
+                    var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
+                    headingBlock.AfterWhitespace = wsa;
+                    if (wsa.Overlaps(headingBlock.WhitespaceAfterAtxHeaderChar))
+                    {
+                        // prevent double whitespace allocation in case of closing # i.e. "# #"
+                        headingBlock.WhitespaceAfterAtxHeaderChar = StringSlice.Empty;
+                    }
                 }
 
                 // We expect a single line, so don't continue
@@ -157,8 +161,11 @@ namespace Markdig.Parsers
 
         public override bool Close(BlockProcessor processor, Block block)
         {
-            var heading = (HeadingBlock)block;
-            //heading.Lines.Trim();
+            if (!processor.TrackTrivia)
+            {
+                var heading = (HeadingBlock)block;
+                heading.Lines.Trim();
+            }
             return true;
         }
     }

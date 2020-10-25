@@ -38,7 +38,7 @@ namespace Markdig.Parsers
                 if (delimiter == orderedDelimiter)
                 {
                     state.NextChar();
-                    state.NextChar();
+                    state.NextChar(); // TODO: RTP: this is probably a bug
                     return true;
                 }
             }

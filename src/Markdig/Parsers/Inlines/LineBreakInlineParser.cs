@@ -38,16 +38,23 @@ namespace Markdig.Parsers.Inlines
             var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
             var newline = Newline.LineFeed;
-            if (slice.CurrentChar == '\r')
+            if (processor.TrackTrivia)
             {
-                if (slice.PeekChar() == '\n')
+                if (slice.CurrentChar == '\r')
                 {
-                    newline = Newline.CarriageReturnLineFeed;
-                    slice.NextChar(); // Skip \n
+                    if (slice.PeekChar() == '\n')
+                    {
+                        newline = Newline.CarriageReturnLineFeed;
+                        slice.NextChar(); // Skip \n
+                    }
+                    else
+                    {
+                        newline = Newline.CarriageReturn;
+                    }
                 }
                 else
                 {
-                    newline = Newline.CarriageReturn;
+                    newline = Newline.LineFeed;
                 }
             }
             slice.NextChar(); // Skip \r or \n
