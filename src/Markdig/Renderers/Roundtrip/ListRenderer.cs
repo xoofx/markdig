@@ -19,46 +19,18 @@ namespace Markdig.Renderers.Roundtrip
             renderer.RenderLinesBefore(listBlock);
             if (listBlock.IsOrdered)
             {
-                int index = 0;
-                if (listBlock.OrderedStart != null)
-                {
-                    switch (listBlock.BulletType)
-                    {
-                        case '1':
-                            int.TryParse(listBlock.OrderedStart, out index);
-                            break;
-                    }
-                }
-                var writeLine = false;
                 for (var i = 0; i < listBlock.Count; i++)
                 {
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
-                    if (writeLine)
-                    {
-                        renderer.WriteLine();
-                    }
-
+                    renderer.RenderLinesBefore(listItem);
                     renderer.Write(listItem.BeforeWhitespace);
-                    //renderer.Write(index.ToString(CultureInfo.InvariantCulture));
                     renderer.Write(listItem.SourceBullet);
                     renderer.Write(listBlock.OrderedDelimiter);
-                    renderer.Write(' ');
-                    renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
+                    //renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
                     renderer.WriteChildren(listItem);
-                    renderer.PopIndent();
-                    switch (listBlock.BulletType)
-                    {
-                        case '1':
-                            index++;
-                            break;
-                    }
-                    if (i + 1 < listBlock.Count && listBlock.IsLoose)
-                    {
-                        //renderer.EnsureLine();
-                        renderer.WriteLine();
-                    }
-                    writeLine = true;
+                    //renderer.PopIndent();
+                    renderer.RenderLinesAfter(listItem);
                 }
             }
             else

@@ -269,7 +269,10 @@ namespace Markdig.Parsers
             }
 
             // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
-            //line.TrimStart();
+            if (!processor.TrackTrivia)
+            {
+                line.TrimStart();
+            }
 
             var fenced = CreateFencedBlock(processor);
             {

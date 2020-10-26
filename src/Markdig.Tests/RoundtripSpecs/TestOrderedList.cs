@@ -168,5 +168,17 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("1. i\n  1. i")]
+        [TestCase("1. i\n  1. i\n")]
+        [TestCase("1. i\n  1. i\n  2. i")]
+        [TestCase("1. i\n  2. i\n  3. i")]
+
+        [TestCase("1. i\n\t1. i")]
+        [TestCase("1. i\n\t1. i\n2. i")]
+        public void TestMultipleLevels(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

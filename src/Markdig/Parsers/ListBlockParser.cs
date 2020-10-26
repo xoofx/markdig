@@ -209,9 +209,10 @@ namespace Markdig.Parsers
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
-            var bulletLength = 1; // TODO: RTP: fix for ordered
             var savedWhitespaceStart = state.WhitespaceStart;
-            var whitespaceBefore = state.UseWhitespace(state.Start - bulletLength - 1);
+            var whitespaceBefore = state.UseWhitespace(sourcePosition - 1);
+
+            // set whitespace to the mandatory whitespace after the bullet
             state.WhitespaceStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;
