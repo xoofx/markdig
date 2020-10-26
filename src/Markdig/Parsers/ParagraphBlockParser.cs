@@ -109,7 +109,7 @@ namespace Markdig.Parsers
 
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
                 // lines are empty, we can early exit and remove the paragraph
-                if (!foundLrd && paragraph.Lines.Count == 0)
+                if (!(foundLrd && paragraph.Lines.Count == 0))
                 {
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);
