@@ -155,6 +155,10 @@ namespace Markdig.Renderers
         {
             if (indents == null) ThrowHelper.ArgumentNullException(nameof(indents));
             indents.Add(new Indent(lineSpecific));
+
+            // ensure that indents are written to the output stream
+            // this assumes that calls after PushIndent wil write children content
+            previousWasLine = true;
         }
 
         public void PopIndent()

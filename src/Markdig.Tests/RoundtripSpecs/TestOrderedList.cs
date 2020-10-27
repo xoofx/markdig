@@ -180,5 +180,12 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("1.     c")]
+        [TestCase("1.      c")]
+        public void Test_IndentedCodeBlock(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }
