@@ -124,6 +124,7 @@ namespace Markdig.Tests
         [TestCase(",,foo,,",        "<extra-comma>foo</extra-comma>")]
         [TestCase(",foo,,",         "<comma>foo</comma>,")]
         [TestCase(",,,foo,,,",      "<comma><extra-comma>foo</extra-comma></comma>")]
+        [TestCase("*foo*&_foo_",     "<em>foo</em>&amp;<em>foo</em>")]
         [TestCase("!1!",            "!1!")]
         [TestCase("!!2!!",          "<warning>2</warning>")]
         [TestCase("!!!3!!!",        "<error>3</error>")]

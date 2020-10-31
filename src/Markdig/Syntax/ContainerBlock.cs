@@ -27,7 +27,7 @@ namespace Markdig.Syntax
         /// <param name="parser">The parser used to create this block.</param>
         protected ContainerBlock(BlockParser parser) : base(parser)
         {
-            children = Array.Empty<Block>();
+            children = ArrayHelper.Empty<Block>();
         }
 
         /// <summary>
@@ -216,6 +216,18 @@ namespace Markdig.Syntax
             set
             {
                 if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
+
+                if (value == null)
+                    ThrowHelper.ArgumentNullException_item();
+
+                if (value.Parent != null)
+                    ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+
+                var existingChild = children[index];
+                if (existingChild != null)
+                    existingChild.Parent = null;
+
+                value.Parent = this;
                 children[index] = value;
             }
         }

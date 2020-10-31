@@ -94,6 +94,8 @@ var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 var result = Markdown.ToHtml("This is a text with some *emphasis*", pipeline);
 ```
 
+[Try it online!](https://dotnetfiddle.net/GoZXyI)
+
 You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/markdig/blob/master/src/Markdig/MarkdownExtensions.cs) that describes all actionable extensions (by modifying the MarkdownPipeline)
 
 ## Build

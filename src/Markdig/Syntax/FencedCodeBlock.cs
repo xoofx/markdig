@@ -71,6 +71,6 @@ namespace Markdig.Syntax
         /// Gets or sets the indent count when the fenced code block was indented
         /// and we need to remove up to indent count chars spaces from the begining of a line.
         /// </summary>
-        internal int IndentCount { get; set; }
+        public int IndentCount { get; set; }
     }
 }

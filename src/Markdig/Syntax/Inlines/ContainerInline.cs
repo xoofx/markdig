@@ -18,6 +18,11 @@ namespace Markdig.Syntax.Inlines
     public class ContainerInline : Inline, IEnumerable<Inline>
     {
         /// <summary>
+        /// Gets the parent block of this inline.
+        /// </summary>
+        public LeafBlock ParentBlock { get; internal set; }
+
+        /// <summary>
         /// Gets the first child.
         /// </summary>
         public Inline FirstChild { get; private set; }
@@ -99,7 +104,7 @@ namespace Markdig.Syntax.Inlines
         {
             if (FirstChild is null)
             {
-                return Array.Empty<T>();
+                return ArrayHelper.Empty<T>();
             }
             else
             {

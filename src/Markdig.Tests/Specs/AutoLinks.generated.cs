@@ -1,4 +1,4 @@
-// Generated: 2019-04-05 16:06:14
+// Generated: 2020-09-30 08:12:16
 
 // --------------------------------
 //            Auto Links
@@ -23,6 +23,7 @@ namespace Markdig.Tests.Specs.AutoLinks
         // - `http://` or `https://` 
         // - `ftp://`
         // - `mailto:`
+        // - `tel:`
         // - `www.` 
         [Test]
         public void ExtensionsAutoLinks_Example001()
@@ -34,16 +35,18 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     This is a http://www.google.com URL and https://www.google.com
             //     This is a ftp://test.com
             //     And a mailto:email@toto.com
+            //     And a tel:+1555123456
             //     And a plain www.google.com
             //
             // Should be rendered as:
             //     <p>This is a <a href="http://www.google.com">http://www.google.com</a> URL and <a href="https://www.google.com">https://www.google.com</a>
             //     This is a <a href="ftp://test.com">ftp://test.com</a>
             //     And a <a href="mailto:email@toto.com">email@toto.com</a>
+            //     And a <a href="tel:+1555123456">+1555123456</a>
             //     And a plain <a href="http://www.google.com">www.google.com</a></p>
 
             Console.WriteLine("Example 1\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">email@toto.com</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a tel:+1555123456\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">email@toto.com</a>\nAnd a <a href=\"tel:+1555123456\">+1555123456</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
         }
 
         // But incomplete links will not be matched:
@@ -58,15 +61,17 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     This is not a ftp:/test.com
             //     And not a mailto:emailtoto.com
             //     And not a plain www. or a www.x 
+            //     And not a tel:
             //
             // Should be rendered as:
             //     <p>This is not a http:/www.google.com URL and https:/www.google.com
             //     This is not a ftp:/test.com
             //     And not a mailto:emailtoto.com
-            //     And not a plain www. or a www.x</p>
+            //     And not a plain www. or a www.x
+            //     And not a tel:</p>
 
             Console.WriteLine("Example 2\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x ", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x \nAnd not a tel:", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x\nAnd not a tel:</p>", "autolinks|advanced");
         }
 
         // Previous character must be a punctuation or a valid space (tab, space, new line):

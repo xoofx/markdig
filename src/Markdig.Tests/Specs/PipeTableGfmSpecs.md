@@ -2,7 +2,9 @@
 
 This section describes the different extensions supported:
 
-## Pipe Table
+## Gfm Pipe Table
+
+This groups a certain set of behaviors that makes pipe tables adhere more strictly to the GitHub-flavored Markdown specification.
 
 A pipe table is detected when:
 
@@ -122,7 +124,7 @@ c no d
 c no d</p>
 ````````````````````````````````
 
-If a row contains more column than the header row, it will still be added as a column:
+If a row contains more columns than the header row, the extra columns will be ignored:
 
 ```````````````````````````````` example
 a  | b 
@@ -136,23 +138,19 @@ a  | b
 <tr>
 <th>a</th>
 <th>b</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
 <td>1</td>
-<td>2</td>
 </tr>
 <tr>
 <td>3</td>
 <td>4</td>
-<td></td>
 </tr>
 <tr>
 <td>5</td>
-<td></td>
 <td></td>
 </tr>
 </tbody>
@@ -588,27 +586,31 @@ Tests trailing spaces after pipes
 
 **Normalized columns count**
 
-The tables are normalized to the maximum number of columns found in a table
+The tables are normalized to the number of columns found in the table header.
+Extra columns will be ignored, missing columns will be inserted.
 
 
 ```````````````````````````````` example
 a | b
 -- | - 
 0 | 1 | 2
+3 |
 .
 <table>
 <thead>
 <tr>
 <th>a</th>
 <th>b</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
 <td>1</td>
-<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
 </tr>
 </tbody>
 </table>

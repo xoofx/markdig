@@ -22,8 +22,6 @@ jobs:
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.0.100
 
     - name: Build (Release)
       run: dotnet build src -c Release
@@ -49,6 +47,9 @@ jobs:
 
     - name: Pack
       run: dotnet pack src -c Release
+
+    - name: Pack Signed
+      run: dotnet pack -c Release src/${{env.PROJECT_NAME}}.Signed/${{env.PROJECT_NAME}}.Signed.csproj
 
     - name: Publish
       if: github.event_name == 'push'

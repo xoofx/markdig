@@ -224,7 +224,7 @@ namespace Markdig.Syntax.Inlines
             }
         }
 
-        internal T FirstParentOfType<T>() where T : Inline
+        public T FirstParentOfType<T>() where T : Inline
         {
             var inline = this;
             while (inline != null)

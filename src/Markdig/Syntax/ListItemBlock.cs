@@ -21,7 +21,7 @@ namespace Markdig.Syntax
         {
         }
 
-        internal int ColumnWidth { get; set; }
+        public int ColumnWidth { get; set; }
 
         /// <summary>
         /// The number defined for this <see cref="ListItemBlock"/> in an ordered list
