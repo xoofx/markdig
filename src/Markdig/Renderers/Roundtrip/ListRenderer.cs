@@ -27,9 +27,7 @@ namespace Markdig.Renderers.Roundtrip
                     renderer.Write(listItem.BeforeWhitespace);
                     renderer.Write(listItem.SourceBullet);
                     renderer.Write(listBlock.OrderedDelimiter);
-                    //renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
                     renderer.WriteChildren(listItem);
-                    //renderer.PopIndent();
                     renderer.RenderLinesAfter(listItem);
                 }
             }
@@ -62,17 +60,5 @@ namespace Markdig.Renderers.Roundtrip
 
             renderer.RenderLinesAfter(listBlock);
         }
-
-
-        private static int IntLog10Fast(int input) =>
-            (input < 10) ? 0 :
-            (input < 100) ? 1 :
-            (input < 1000) ? 2 :
-            (input < 10000) ? 3 :
-            (input < 100000) ? 4 :
-            (input < 1000000) ? 5 :
-            (input < 10000000) ? 6 :
-            (input < 100000000) ? 7 :
-            (input < 1000000000) ? 8 : 9;
     }
 }

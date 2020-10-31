@@ -22,6 +22,7 @@ namespace Markdig.Tests
             {
                 FencedChar = '`',
                 OpeningFencedCharCount = 4,
+                ClosingFencedCharCount = 4,
                 Info = "csharp",
                 Lines = new StringLineGroup(4)
                 {

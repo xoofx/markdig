@@ -39,19 +39,16 @@ namespace Markdig.Parsers
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var result = base.TryContinue(processor, block);
-            if (result == BlockState.Continue)
+            if (result == BlockState.Continue && !processor.TrackTrivia)
             {
-                if (!processor.TrackTrivia)
+                var fence = (FencedCodeBlock)block;
+                // Remove any indent spaces
+                var c = processor.CurrentChar;
+                var indentCount = fence.IndentCount;
+                while (indentCount > 0 && c.IsSpace())
                 {
-                    var fence = (FencedCodeBlock)block;
-                    // Remove any indent spaces
-                    var c = processor.CurrentChar;
-                    var indentCount = fence.IndentCount;
-                    while (indentCount > 0 && c.IsSpace())
-                    {
-                        indentCount--;
-                        c = processor.NextChar();
-                    }
+                    indentCount--;
+                    c = processor.NextChar();
                 }
             }
 

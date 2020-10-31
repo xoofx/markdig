@@ -84,6 +84,7 @@ namespace Markdig.Parsers
             string afterArg = null;
             ParseState state = ParseState.AfterFence;
 
+            // TODO: RTP: use StringSlices for all
             // pattern: ``` info? args?
             // after blockchar?
             // after info?

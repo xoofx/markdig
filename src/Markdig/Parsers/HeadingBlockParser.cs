@@ -85,7 +85,7 @@ namespace Markdig.Parsers
                     WhitespaceAfterAtxHeaderChar = whitespace,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start = line.Start },
+                    Span = { Start = sourcePosition },
                     BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
                     LinesBefore = processor.UseLinesBefore(),
                     Newline = processor.Line.Newline,
@@ -140,7 +140,7 @@ namespace Markdig.Parsers
                 if (processor.TrackTrivia)
                 {
                     // feed the line to the BlockProcessor without whitespace
-                    processor.Line.Start = headingBlock.Span.Start;
+                    //processor.Line.Start = headingBlock.Span.Start;
 
                     var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
                     headingBlock.AfterWhitespace = wsa;
