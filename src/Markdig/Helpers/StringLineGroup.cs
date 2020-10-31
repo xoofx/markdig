@@ -295,7 +295,6 @@ namespace Markdig.Helpers
                             else if (newline == Newline.CarriageReturnLineFeed)
                             {
                                 CurrentChar = '\r';
-                                SliceIndex++;
                             }
                         }
                         else if (_offset + 1 == slice.Length)
@@ -330,20 +329,41 @@ namespace Markdig.Helpers
                 offset += _offset;
 
                 int sliceIndex = SliceIndex;
-                var slice = _lines.Lines[sliceIndex].Slice;
-
-                while (offset > slice.Length)
+                var line = _lines.Lines[sliceIndex];
+                var slice = line.Slice;
+                if (!(line.Newline == Newline.CarriageReturnLineFeed && offset + 1 == slice.Length))
                 {
-                    // We are not peeking at the same line
-                    offset -= slice.Length + 1; // + 1 for new line
+                    while (offset > slice.Length)
+                    {
+                        // We are not peeking at the same line
+                        offset -= slice.Length + 1; // + 1 for new line
 
-                    Debug.Assert(sliceIndex + 1 < _lines.Lines.Length, "'Start + offset > End' check above should prevent us from indexing out of range");
-                    slice = _lines.Lines[++sliceIndex].Slice;
+                        Debug.Assert(sliceIndex + 1 < _lines.Lines.Length, "'Start + offset > End' check above should prevent us from indexing out of range");
+                        slice = _lines.Lines[++sliceIndex].Slice;
+                    }
+                }
+                else
+                {
+                    if (slice.Newline == Newline.CarriageReturnLineFeed)
+                    {
+                        return '\n'; // /n of /r/n (second character)
+                    }
                 }
 
                 if (offset == slice.Length)
                 {
-                    return '\n'; // TODO: RTP: fix
+                    if (line.Newline == Newline.LineFeed)
+                    {
+                        return '\n';
+                    }
+                    if (line.Newline == Newline.CarriageReturn)
+                    {
+                        return '\r';
+                    }
+                    if (line.Newline == Newline.CarriageReturnLineFeed)
+                    {
+                        return '\r'; // /r of /r/n (first character)
+                    }
                 }
 
                 Debug.Assert(offset < slice.Length);
