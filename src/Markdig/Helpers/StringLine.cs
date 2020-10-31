@@ -16,6 +16,7 @@ namespace Markdig.Helpers
         public StringLine(ref StringSlice slice) : this()
         {
             Slice = slice;
+            Newline = slice.Newline;
         }
 
         /// <summary>

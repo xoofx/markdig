@@ -277,15 +277,35 @@ namespace Markdig.Helpers
                     }
                     else
                     {
-                        CurrentChar = slice[slice.Start + _offset];
-                        if (CurrentChar == '\r' && slice[slice.Start + _offset + 1] == '\n')
+                        var newline = slice.Newline;
+                        if (_offset == slice.Length)
                         {
-
+                            if (newline == Newline.LineFeed)
+                            {
+                                CurrentChar = '\n';
+                                SliceIndex++;
+                                _offset = -1;
+                            }
+                            else if (newline == Newline.CarriageReturn)
+                            {
+                                CurrentChar = '\r';
+                                SliceIndex++;
+                                _offset = -1;
+                            }
+                            else if (newline == Newline.CarriageReturnLineFeed)
+                            {
+                                CurrentChar = '\r';
+                                SliceIndex++;
+                            }
                         }
-                        else
+                        else if (_offset + 1 == slice.Length)
                         {
-                            SliceIndex++;
-                            _offset = -1;
+                            if (newline == Newline.CarriageReturnLineFeed)
+                            {
+                                CurrentChar = '\n';
+                                SliceIndex++;
+                                _offset = -1;
+                            }
                         }
                     }
                 }

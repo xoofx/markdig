@@ -72,6 +72,18 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringSlice"/> struct.
         /// </summary>
         /// <param name="text">The text.</param>
+        public StringSlice(string text, Newline newline)
+        {
+            Text = text;
+            Start = 0;
+            End = (Text?.Length ?? 0) - 1;
+            Newline = newline;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <exception cref="ArgumentNullException"></exception>

@@ -16,8 +16,8 @@ namespace Markdig.Tests
         {
             var text = new StringLineGroup(4)
             {
-                new StringSlice("ABC"),
-                new StringSlice("E"),
+                new StringSlice("ABC", Newline.LineFeed),
+                new StringSlice("E", Newline.LineFeed),
                 new StringSlice("F")
             };
 
@@ -35,8 +35,8 @@ namespace Markdig.Tests
         {
             var text = new StringLineGroup(4)
             {
-                new StringSlice("XABC") { Start = 1},
-                new StringSlice("YYE") { Start = 2},
+                new StringSlice("XABC", Newline.LineFeed) { Start = 1},
+                new StringSlice("YYE", Newline.LineFeed) { Start = 2},
                 new StringSlice("ZZZF") { Start = 3 }
             };
 
@@ -61,7 +61,7 @@ namespace Markdig.Tests
         {
             var text = new StringLineGroup(4)
             {
-                new StringSlice("ABCD"),
+                new StringSlice("ABCD", Newline.LineFeed),
                 new StringSlice("EF"),
             }.ToCharIterator();
 
@@ -99,7 +99,7 @@ namespace Markdig.Tests
         [Test]
         public void TestStringLineGroupWithModifiedStart()
         {
-            var line1 = new StringSlice("  ABC");
+            var line1 = new StringSlice("  ABC", Newline.LineFeed);
             line1.NextChar();
             line1.NextChar();
 
@@ -115,7 +115,7 @@ namespace Markdig.Tests
         [Test]
         public void TestStringLineGroupWithTrim()
         {
-            var line1 = new StringSlice("  ABC  ");
+            var line1 = new StringSlice("  ABC  ", Newline.LineFeed);
             line1.NextChar();
             line1.NextChar();
 
@@ -133,8 +133,8 @@ namespace Markdig.Tests
         {
             var iterator = new StringLineGroup(4)
             {
-                new StringSlice("ABC"),
-                new StringSlice("E"),
+                new StringSlice("ABC", Newline.LineFeed),
+                new StringSlice("E", Newline.LineFeed),
                 new StringSlice("F")
             }.ToCharIterator();
 
