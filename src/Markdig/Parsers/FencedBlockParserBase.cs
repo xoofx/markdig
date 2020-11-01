@@ -95,7 +95,7 @@ namespace Markdig.Parsers
             for (int i = line.Start; i <= line.End; i++)
             {
                 char c = line.Text[i];
-                if (c == '`')
+                if (c == '`' && openingCharacter == '`')
                 {
                     return false;
                 }
@@ -160,7 +160,7 @@ namespace Markdig.Parsers
                 }
             }
 
-            end:
+        end:
             fenced.WhitespaceAfterFencedChar = afterFence;
             fenced.Info = HtmlHelper.Unescape(info);
             fenced.UnescapedInfo = info;
@@ -324,15 +324,18 @@ namespace Markdig.Parsers
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence opening character followed only by whitespaces.
-            if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace())) // && line.TrimEnd()) TODO: RTP
+            var startBeforeTrim = line.Start;
+            var endBeforeTrim = line.End;
+            var trimmed = line.TrimEnd();
+            if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && trimmed)
             {
-                block.UpdateSpanEnd(line.Start - 1);
+                block.UpdateSpanEnd(startBeforeTrim - 1);
 
                 var fencedBlock = block as IFencedBlock;
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.Newline = processor.Line.Newline;
                 fencedBlock.WhitespaceBeforeClosingFence = processor.UseWhitespace(sourcePosition - 1);
-                fencedBlock.AfterWhitespace = new StringSlice(processor.Line.Text, lastFenceCharPosition, line.End);
+                fencedBlock.AfterWhitespace = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

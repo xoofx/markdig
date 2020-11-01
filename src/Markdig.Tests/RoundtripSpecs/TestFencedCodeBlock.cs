@@ -35,6 +35,13 @@ namespace Markdig.Tests.RoundtripSpecs
             RoundTrip(value);
         }
 
+        [TestCase("~~~ aa ``` ~~~\nfoo\n~~~")]
+        [TestCase("~~~ aa ``` ~~~\nfoo\n~~~ ")]
+        public void TestTilde(string value)
+        {
+            RoundTrip(value);
+        }
+
         [TestCase("```\n c \n```")]
         [TestCase("```\n c \r```")]
         [TestCase("```\n c \r\n```")]
