@@ -24,9 +24,11 @@ namespace Markdig.Renderers.Roundtrip
                     var item = listBlock[i];
                     var listItem = (ListItemBlock) item;
                     renderer.RenderLinesBefore(listItem);
-                    renderer.Write(listItem.BeforeWhitespace);
-                    renderer.Write(listItem.SourceBullet);
-                    renderer.Write(listBlock.OrderedDelimiter);
+
+                    var bws = listItem.BeforeWhitespace.ToString();
+                    var bullet = listItem.SourceBullet.ToString();
+                    var delimiter = listBlock.OrderedDelimiter;
+                    renderer.PushIndent(new List<string> { $@"{bws}{bullet}{delimiter}" });
                     renderer.WriteChildren(listItem);
                     renderer.RenderLinesAfter(listItem);
                 }
