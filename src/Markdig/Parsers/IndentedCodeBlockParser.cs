@@ -54,10 +54,9 @@ namespace Markdig.Parsers
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
-            bool isLastLine = processor.Line.Start == processor.Line.End + 1; // TODO: RTP: meh. Does this also work for \r\n?
             if (!processor.IsCodeIndent || processor.IsBlankLine)
             {
-                if (block == null || !processor.IsBlankLine || (processor.IsBlankLine && isLastLine))
+                if (block == null || !processor.IsBlankLine)
                 {
                     if (block != null)
                     {
@@ -65,9 +64,10 @@ namespace Markdig.Parsers
                         // add trailing blank lines to blank lines stack of processor
                         for (int i = codeBlock.Lines.Count - 1; i >= 0; i--)
                         {
-                            if (codeBlock.Lines.Lines[i].Slice.IsEmpty)
+                            var line = codeBlock.Lines.Lines[i];
+                            if (line.Slice.IsEmpty)
                             {
-                                StringLine line = codeBlock.Lines.Lines[i];
+                                codeBlock.Lines.RemoveAt(i);
                                 processor.BeforeLines ??= new List<StringSlice>();
                                 processor.BeforeLines.Add(line.Slice);
                             }
@@ -107,19 +107,33 @@ namespace Markdig.Parsers
         public override bool Close(BlockProcessor processor, Block block)
         {
             var codeBlock = (CodeBlock)block;
-            if (codeBlock != null)
+            if (codeBlock == null)
             {
-                // Remove any trailing blankline
-                for (int i = codeBlock.Lines.Count - 1; i >= 0; i--)
+                return true;
+            }
+
+            // Remove any trailing blankline
+            for (int i = codeBlock.Lines.Count - 1; i >= 0; i--)
+            {
+                var line = codeBlock.Lines.Lines[i];
+                if (line.Slice.IsEmpty)
                 {
-                    if (codeBlock.Lines.Lines[i].Slice.IsEmpty)
+                    codeBlock.Lines.RemoveAt(i);
+
+                    // if there are newlines after an indented codeblock, we must transform them
+                    // into empty lines after the block. as whitespace is stripped from the Line
+                    // we get that back from the beforeWhitespace on the CodeBlockLine.
+                    if (processor.TrackTrivia)
                     {
-                        codeBlock.Lines.RemoveAt(i);
+                        var quoteLine = codeBlock.CodeBlockLines[i];
+                        var emptyLine = new StringSlice(line.Slice.Text, quoteLine.BeforeWhitespace.Start, line.Slice.End, line.Newline);
+                        block.LinesAfter ??= new List<StringSlice>();
+                        block.LinesAfter.Add(emptyLine);
                     }
-                    else
-                    {
-                        break;
-                    }
+                }
+                else
+                {
+                    break;
                 }
             }
             return true;

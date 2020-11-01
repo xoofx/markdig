@@ -62,5 +62,24 @@ namespace Markdig.Tests.RoundtripSpecs
         {
             RoundTrip(value);
         }
+
+        [TestCase("    l\n\n    l\n")]
+        [TestCase("    l\n\n\n    l\n")]
+        public void TestNewlinesInBetweenResultInOneCodeBlock(string value)
+        {
+            var pipelineBuilder = new MarkdownPipelineBuilder();
+            MarkdownPipeline pipeline = pipelineBuilder.Build();
+            var markdownDocument = Markdown.Parse(value, pipeline, trackTrivia: true);
+
+            Assert.AreEqual(1, markdownDocument.Count);
+        }
+
+        [TestCase("    l\n\np")]
+        [TestCase("    l\n\n\np")]
+        [TestCase("    l\n\n\n\np")]
+        public void TestParagraph(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }
