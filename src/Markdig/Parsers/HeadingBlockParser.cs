@@ -65,7 +65,7 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
-                c = line.NextChar();
+                c = processor.NextChar();
                 leadingCount++;
             }
 
@@ -75,8 +75,8 @@ namespace Markdig.Parsers
                 StringSlice whitespace = StringSlice.Empty;
                 if (processor.TrackTrivia && c.IsSpaceOrTab())
                 {
-                    whitespace = new StringSlice(processor.Line.Text, processor.Start + leadingCount, processor.Start + leadingCount);
-                    line.NextChar();
+                    whitespace = new StringSlice(processor.Line.Text, processor.Start, processor.Start);
+                    processor.NextChar();
                 }
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
@@ -91,7 +91,10 @@ namespace Markdig.Parsers
                     Newline = processor.Line.Newline,
                 };
                 processor.NewBlocks.Push(headingBlock);
-                processor.GoToColumn(column + leadingCount + 1);
+                if (!processor.TrackTrivia)
+                {
+                    processor.GoToColumn(column + leadingCount + 1);
+                }
 
                 // Gives a chance to parse attributes
                 TryParseAttributes?.Invoke(processor, ref processor.Line, headingBlock);
@@ -139,9 +142,6 @@ namespace Markdig.Parsers
 
                 if (processor.TrackTrivia)
                 {
-                    // feed the line to the BlockProcessor without whitespace
-                    //processor.Line.Start = headingBlock.Span.Start;
-
                     var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
                     headingBlock.AfterWhitespace = wsa;
                     if (wsa.Overlaps(headingBlock.WhitespaceAfterAtxHeaderChar))
@@ -156,6 +156,8 @@ namespace Markdig.Parsers
             }
 
             // Else we don't have an header
+            processor.Line.Start = sourcePosition;
+            processor.Column = column;
             return BlockState.None;
         }
 
