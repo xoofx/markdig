@@ -44,21 +44,41 @@ namespace Markdig.Parsers
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
                 LinesBefore = processor.UseLinesBefore()
             };
+
+            bool hasSpaceAfterQuoteChar = false;
+            if (c == ' ')
+            {
+                processor.NextColumn();
+                hasSpaceAfterQuoteChar = true;
+                processor.SkipFirstUnwindSpace = true;
+            }
+            else if (c == '\t')
+            {
+                processor.NextColumn();
+            }
+
+            var beforeWhitespace = processor.UseWhitespace(sourcePosition - 1);
             StringSlice afterWhitespace = StringSlice.Empty;
+            bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.Line.TrimStart();
-                afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
+                processor.WhitespaceStart = processor.Start;
+                afterWhitespace = processor.UseWhitespace(processor.Line.End);
+                wasEmptyLine = true;
             }
             quoteBlock.QuoteLines.Add(new QuoteBlockLine
             {
-                BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
+                BeforeWhitespace = beforeWhitespace,
                 AfterWhitespace = afterWhitespace,
                 QuoteChar = true,
+                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 Newline = processor.Line.Newline,
             });
             processor.NewBlocks.Push(quoteBlock);
-            processor.WhitespaceStart = sourcePosition + 1;
+            if (!wasEmptyLine)
+            {
+                processor.WhitespaceStart = processor.Start;
+            }
             return BlockState.Continue;
         }
 
@@ -75,6 +95,7 @@ namespace Markdig.Parsers
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var c = processor.CurrentChar;
+            bool hasSpaceAfterQuoteChar = false;
             if (c != quote.QuoteChar)
             {
                 if (processor.IsBlankLine)
@@ -91,22 +112,40 @@ namespace Markdig.Parsers
                     return BlockState.None;
                 }
             }
-            processor.NextChar(); // Skip quote marker char
+            c = processor.NextChar(); // Skip quote marker char
+            if (c == ' ')
+            {
+                //processor.NextChar();
+                processor.NextColumn();
+                hasSpaceAfterQuoteChar = true;
+                processor.SkipFirstUnwindSpace = true;
+            }
+            else if (c == '\t')
+            {
+                processor.NextColumn();
+            }
+            var beforeWhiteSpace = processor.UseWhitespace(sourcePosition - 1);
             StringSlice afterWhitespace = StringSlice.Empty;
+            bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.Line.TrimStart();
-                afterWhitespace = new StringSlice(processor.Line.Text, sourcePosition + 1, processor.Line.End);
+                processor.WhitespaceStart = processor.Start;
+                afterWhitespace = processor.UseWhitespace(processor.Line.End);
+                wasEmptyLine = true;
             }
             quote.QuoteLines.Add(new QuoteBlockLine
             {
                 QuoteChar = true,
-                BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
+                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
+                BeforeWhitespace = beforeWhiteSpace,
                 AfterWhitespace = afterWhitespace,
                 Newline = processor.Line.Newline,
             });
 
-            processor.WhitespaceStart = processor.Start;
+            if (!wasEmptyLine)
+            {
+                processor.WhitespaceStart = processor.Start;
+            }
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }

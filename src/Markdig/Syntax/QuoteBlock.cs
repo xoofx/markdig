@@ -41,5 +41,7 @@ namespace Markdig.Syntax
 
         // support lazy lines
         public bool QuoteChar { get; set; }
+
+        public bool HasSpaceAfterQuoteChar { get; set; }
     }
 }

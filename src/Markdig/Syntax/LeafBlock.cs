@@ -79,13 +79,7 @@ namespace Markdig.Syntax
             {
                 Lines = new StringLineGroup(4, ProcessInlines);
             }
-            int c = column;
-            if (Lines.Count != 0)
-            {
-                // if not first line, preserve whitespace
-                c = 0;
-            }
-            var stringLine = new StringLine(ref slice, line, c, sourceLinePosition, slice.Newline);
+            var stringLine = new StringLine(ref slice, line, column, sourceLinePosition, slice.Newline);
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {

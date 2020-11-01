@@ -24,8 +24,9 @@ namespace Markdig.Renderers.Roundtrip
             {
                 var wsb = quoteLine.BeforeWhitespace.ToString();
                 var quoteChar = quoteLine.QuoteChar ? ">" : "";
+                var spaceAfterQuoteChar = quoteLine.HasSpaceAfterQuoteChar ? " " : "";
                 var wsa = quoteLine.AfterWhitespace.ToString();
-                indents.Add(wsb + quoteChar + wsa);
+                indents.Add(wsb + quoteChar + spaceAfterQuoteChar + wsa);
             }
             bool noChildren = false;
             if (quoteBlock.Count == 0)

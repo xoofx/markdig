@@ -66,6 +66,8 @@ namespace Markdig.Parsers
             Open(document);
         }
 
+        public bool SkipFirstUnwindSpace { get; set; }
+
         /// <summary>
         /// Gets the new blocks to push. A <see cref="BlockParser"/> is required to push new blocks that it creates to this property.
         /// </summary>
@@ -355,6 +357,12 @@ namespace Markdig.Parsers
             for (; Line.Start > originalLineStart; Line.Start--)
             {
                 var c = Line.PeekCharAbsolute(Line.Start - 1);
+
+                // don't unwind all the way next to a '>', but one space right of the '>' if there is a space
+                if (TrackTrivia && SkipFirstUnwindSpace && Line.Start == WhitespaceStart)
+                {
+                    break;
+                }
                 if (c == 0)
                 {
                     break;
