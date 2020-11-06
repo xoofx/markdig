@@ -31,7 +31,7 @@ namespace Markdig.Extensions.Tables
         public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions options = null)
         {
             this.lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
-            OpeningCharacters = new[] { '|', '\n' };
+            OpeningCharacters = new[] { '|', '\n', '\r' };
             Options = options ?? new PipeTableOptions();
         }
 
@@ -67,7 +67,7 @@ namespace Markdig.Extensions.Tables
                 // start for a table. Typically, with this, we can have an attributes {...}
                 // starting on the first line of a pipe table, even if the first line
                 // doesn't have a pipe
-                if (processor.Inline != null && (localLineIndex > 0 || c == '\n'))
+                if (processor.Inline != null && (localLineIndex > 0 || c == '\n' || c == '\r'))
                 {
                     return false;
                 }
@@ -81,7 +81,7 @@ namespace Markdig.Extensions.Tables
                 processor.ParserStates[Index] = tableState;
             }
 
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
             {
                 if (!isFirstLineEmpty && !tableState.LineHasPipe)
                 {

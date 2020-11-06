@@ -19,7 +19,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         public LineBreakInlineParser()
         {
-            OpeningCharacters = new[] {'\n', '\r'}; // TODO: RTP: this causes LineBreakInline to be parsed for non-trivia parser
+            OpeningCharacters = new[] { '\n', '\r' }; // TODO: RTP: this causes LineBreakInline to be parsed for non-trivia parser
         }
 
         /// <summary>
@@ -57,6 +57,13 @@ namespace Markdig.Parsers.Inlines
                     newline = Newline.LineFeed;
                 }
             }
+            else
+            {
+                if (slice.CurrentChar == '\r' && slice.PeekChar() == '\n')
+                {
+                    slice.NextChar(); // Skip \n
+                }
+            }
             slice.NextChar(); // Skip \r or \n
 
             processor.Inline = new LineBreakInline
@@ -67,7 +74,7 @@ namespace Markdig.Parsers.Inlines
                 Column = column,
                 Newline = newline
             };
-            processor.Inline.Span.End = processor.Inline.Span.Start;
+            processor.Inline.Span.End = processor.Inline.Span.Start + (newline == Newline.CarriageReturnLineFeed ? 1 : 0);
             return true;
         }
     }
