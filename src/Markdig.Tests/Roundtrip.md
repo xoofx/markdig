@@ -33,17 +33,18 @@ In order:
 - ~~support link parsing~~
 - ~~support AutolinkInline~~
 - ~~generate spec examples as tests for roundtrip~~
-- fix `TODO: RTP: `
 - ~~check char.IsWhitespace() calls~~
 - ~~check char.IsNewline() calls~~
 - ~~introduce feature flag~~
 - ~~extract MarkdownRenderer~~
 - ~~cleanup NormalizeRenderer (MarkdownRenderer)~~
 - ~~deduplicate MarkdownRenderer and NormalizeRenderer code~~
+- ~~merge from main~~
+- fix `TODO: RTP: `
 - use StringSlice where possible instead of String
 - do pull request feedback
 - split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
-- fix broken pre-existing tests
+- ~~fix broken pre-existing tests~~
 - document newly added syntax properties
 - support extensions
 - review complete PR and follow conventions
@@ -51,7 +52,6 @@ In order:
 - create todo list with perf optimization focus points
 - optimize perf
 - `\0`
-- merge from main
 - document how trivia are handled generically and specifically
 - write tree comparison tests?
 - write tree visualization tool?

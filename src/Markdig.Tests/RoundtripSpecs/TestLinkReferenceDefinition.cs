@@ -3,7 +3,6 @@ using static Markdig.Tests.TestRoundtrip;
 
 namespace Markdig.Tests.RoundtripSpecs
 {
-    // TODO: RTP: ".[a] /r" dont seem to be parsed into LRD!
     [TestFixture]
     public class TestLinkReferenceDefinition
     {

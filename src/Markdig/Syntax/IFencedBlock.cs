@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Parsers;
 
 namespace Markdig.Syntax
 {
@@ -12,36 +13,9 @@ namespace Markdig.Syntax
     public interface IFencedBlock : IBlock
     {
         /// <summary>
-        /// Gets or sets the language parsed after the first line of 
-        /// the fenced code block. May be null.
+        /// Gets or sets the fenced character used to open and close this fenced code block.
         /// </summary>
-        string Info { get; set; }
-        public string UnescapedInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language parsed after the first line of 
-        /// the fenced code block and includes any whitespace. May be null.
-        /// </summary>
-        string WhitespaceAfterInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arguments after the <see cref="Info"/>.
-        /// May be null.
-        /// </summary>
-        string Arguments { get; set; }
-        public string UnescapedArguments { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arguments after the <see cref="Arguments"/>.
-        /// Includes any whitespace. May be null.
-        /// </summary>
-        string WhitespaceAfterArguments { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arguments after the <see cref="FencedChar"/>.
-        /// Includes any whitespace. May be null.
-        /// </summary>
-        string WhitespaceAfterFencedChar { get; set; }
+        char FencedChar { get; set; }
 
         /// <summary>
         /// Gets or sets the fenced character count used to open this fenced code block.
@@ -49,17 +23,77 @@ namespace Markdig.Syntax
         public int OpeningFencedCharCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the fenced character count used to open this fenced code block.
+        /// Gets or sets the whitespace after the <see cref="FencedChar"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public int ClosingFencedCharCount { get; set; }
-        public StringSlice WhitespaceBeforeClosingFence { get; set; }
+        StringSlice WhitespaceAfterFencedChar { get; set; }
 
         /// <summary>
-        /// Gets or sets the fenced character used to open and close this fenced code block.
+        /// Gets or sets the language parsed after the first line of 
+        /// the fenced code block. May be null.
         /// </summary>
-        char FencedChar { get; set; }
+        string Info { get; set; }
 
-        Newline Newline { get; set; }
+        /// <summary>
+        /// Non-escaped <see cref="Info"/> exactly as in source markdown.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        StringSlice UnescapedInfo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whitespace after the <see cref="Info"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        StringSlice WhitespaceAfterInfo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arguments after the <see cref="Info"/>.
+        /// May be null.
+        /// </summary>
+        string Arguments { get; set; }
+
+        /// <summary>
+        /// Non-escaped <see cref="Arguments"/> exactly as in source markdown.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        StringSlice UnescapedArguments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whitespace after the <see cref="Arguments"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        StringSlice WhitespaceAfterArguments { get; set; }
+
+        /// <summary>
+        /// Newline of the line with the opening fenced chars.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
         Newline InfoNewline { get; set; }
+
+        /// <summary>
+        /// Whitespace before the closing fenced chars
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        StringSlice WhitespaceBeforeClosingFence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fenced character count used to close this fenced code block.
+        /// </summary>
+        int ClosingFencedCharCount { get; set; }
+
+        /// <summary>
+        /// Newline after the last line, which is always the line containing the closing fence chars.
+        /// "Inherited" from <see cref="Block.Newline"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        Newline Newline { get; set; }
     }
 }

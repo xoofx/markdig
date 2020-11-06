@@ -77,24 +77,19 @@ namespace Markdig.Parsers
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
         public static bool RoundtripInfoParser(BlockProcessor blockProcessor, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
-            string afterFence = null;
-            string info = null;
-            string afterInfo = null;
-            string arg = null;
-            string afterArg = null;
+            var start = line.Start;
+            var end = start - 1;
+            StringSlice afterFence = new StringSlice(line.Text, start, end);
+            StringSlice info = new StringSlice(line.Text, start, end);
+            StringSlice afterInfo = new StringSlice(line.Text, start, end);
+            StringSlice arg = new StringSlice(line.Text, start, end);
+            StringSlice afterArg = new StringSlice(line.Text, start, end);
             ParseState state = ParseState.AfterFence;
 
-            // TODO: RTP: use StringSlices for all
-            // pattern: ``` info? args?
-            // after blockchar?
-            // after info?
-            // after args?
-            // info: between fencedchars and
-
-            // An info string cannot contain any backticks (unless it is a tilde block)
             for (int i = line.Start; i <= line.End; i++)
             {
                 char c = line.Text[i];
+                // An info string cannot contain any backticks (unless it is a tilde block)
                 if (c == '`' && openingCharacter == '`')
                 {
                     return false;
@@ -104,57 +99,60 @@ namespace Markdig.Parsers
                     case ParseState.AfterFence:
                         if (c.IsSpaceOrTab())
                         {
-                            afterFence += c;
+                            afterFence.End += 1;
                         }
                         else
                         {
                             state = ParseState.Info;
-                            info += c;
+                            info.Start = i;
+                            info.End = i;
+                            afterFence.End = i - 1;
                         }
                         break;
                     case ParseState.Info:
                         if (c.IsSpaceOrTab())
                         {
                             state = ParseState.AfterInfo;
-                            afterInfo += c;
+                            afterInfo.Start = i;
+                            afterInfo.End = i;
                         }
                         else
                         {
-                            info += c;
+                            info.End += 1;
                         }
                         break;
                     case ParseState.AfterInfo:
                         if (c.IsSpaceOrTab())
                         {
-                            afterInfo += c;
+                            afterInfo.End += 1;
                         }
                         else
                         {
-                            arg += c;
+                            arg.Start = i;
+                            arg.End = i;
                             state = ParseState.Args;
                         }
                         break;
                     case ParseState.Args:
-                        var start = i - 1;
-                        // walk from end, as rest (including spaces except trailing spaces) is args
+                        // walk from end, as rest (except trailing spaces) is args
                         for (int j = line.End; j > start; j--)
                         {
-                            char cc = line[j];
-                            if (cc.IsSpaceOrTab())
+                            c = line[j];
+                            if (c.IsSpaceOrTab())
                             {
-                                afterArg = cc + afterArg;
+                                afterArg.Start = i;
                             }
                             else
                             {
-                                var length = j - start + 1;
-                                arg = line.Text.Substring(start, length);
+                                arg.End = j;
+                                afterArg.Start = j + 1;
+                                afterArg.End = line.End;
                                 goto end;
                             }
                         }
                         goto end;
                     case ParseState.AfterArgs:
                         {
-                            //throw new Exception("should ot reach this code");
                             return false;
                         }
                 }
@@ -162,10 +160,10 @@ namespace Markdig.Parsers
 
         end:
             fenced.WhitespaceAfterFencedChar = afterFence;
-            fenced.Info = HtmlHelper.Unescape(info);
+            fenced.Info = HtmlHelper.Unescape(info.ToString());
             fenced.UnescapedInfo = info;
             fenced.WhitespaceAfterInfo = afterInfo;
-            fenced.Arguments = HtmlHelper.Unescape(arg);
+            fenced.Arguments = HtmlHelper.Unescape(arg.ToString());
             fenced.UnescapedArguments = arg;
             fenced.WhitespaceAfterArguments = afterArg;
             fenced.InfoNewline = line.Newline;

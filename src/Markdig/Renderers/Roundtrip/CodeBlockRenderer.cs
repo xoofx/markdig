@@ -24,7 +24,7 @@ namespace Markdig.Renderers.Roundtrip
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
                 renderer.Write(opening);
 
-                if (fencedCodeBlock.WhitespaceAfterFencedChar != null)
+                if (!fencedCodeBlock.WhitespaceAfterFencedChar.IsEmpty)
                 {
                     renderer.Write(fencedCodeBlock.WhitespaceAfterFencedChar);
                 }
@@ -32,7 +32,7 @@ namespace Markdig.Renderers.Roundtrip
                 {
                     renderer.Write(fencedCodeBlock.UnescapedInfo);
                 }
-                if (fencedCodeBlock.WhitespaceAfterInfo != null)
+                if (!fencedCodeBlock.WhitespaceAfterInfo.IsEmpty)
                 {
                     renderer.Write(fencedCodeBlock.WhitespaceAfterInfo);
                 }
@@ -40,7 +40,7 @@ namespace Markdig.Renderers.Roundtrip
                 {
                     renderer.Write(fencedCodeBlock.UnescapedArguments);
                 }
-                if (fencedCodeBlock.WhitespaceAfterArguments != null)
+                if (!fencedCodeBlock.WhitespaceAfterArguments.IsEmpty)
                 {
                     renderer.Write(fencedCodeBlock.WhitespaceAfterArguments);
                 }

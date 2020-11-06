@@ -28,49 +28,46 @@ namespace Markdig.Syntax
             IsBreakable = false;
         }
 
-        /// <inheritdoc />
-        public string Info { get; set; }
-        public string UnescapedInfo { get; set; }
-
-        /// <inheritdoc />
-        public string WhitespaceAfterInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arguments after the <see cref="Info"/>.
-        /// May be null.
-        /// </summary>
-        public string Arguments { get; set; }
-        public string UnescapedArguments { get; set; }
-
-        /// <inheritdoc />
-        public string WhitespaceAfterArguments { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fenced character count used to open this fenced code block.
-        /// </summary>
-        public int OpeningFencedCharCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fenced character count used to open this fenced code block.
-        /// </summary>
-        public int ClosingFencedCharCount { get; set; }
-
-        public StringSlice WhitespaceBeforeClosingFence { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fenced character used to open and close this fenced code block.
-        /// </summary>
-        public char FencedChar { get; set; }
-
-        /// <inheritdoc />
-        public string WhitespaceAfterFencedChar { get; set; }
-
-        public Newline InfoNewline { get; set; }
-
         /// <summary>
         /// Gets or sets the indent count when the fenced code block was indented
         /// and we need to remove up to indent count chars spaces from the begining of a line.
         /// </summary>
         public int IndentCount { get; set; }
+
+        /// <inheritdoc />
+        public char FencedChar { get; set; }
+
+        /// <inheritdoc />
+        public int OpeningFencedCharCount { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterFencedChar { get; set; }
+
+        /// <inheritdoc />
+        public string Info { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedInfo { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterInfo { get; set; }
+
+        /// <inheritdoc />
+        public string Arguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedArguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterArguments { get; set; }
+
+        /// <inheritdoc />
+        public Newline InfoNewline { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceBeforeClosingFence { get; set; }
+
+        /// <inheritdoc />
+        public int ClosingFencedCharCount { get; set; }
     }
 }

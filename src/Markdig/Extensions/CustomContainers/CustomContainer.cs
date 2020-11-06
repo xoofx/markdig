@@ -23,24 +23,40 @@ namespace Markdig.Extensions.CustomContainers
         {
         }
 
+        /// <inheritdoc />
         public char FencedChar { get; set; }
 
-        public string WhitespaceAfterFencedChar { get; set; }
-
-        public string Info { get; set; }
-        public string UnescapedInfo { get; set; }
-
-        public string WhitespaceAfterInfo { get; set; }
-
-        public string Arguments { get; set; }
-        public string UnescapedArguments { get; set; }
-        public string WhitespaceAfterArguments { get; set; }
-
+        /// <inheritdoc />
         public int OpeningFencedCharCount { get; set; }
 
-        public int ClosingFencedCharCount { get; set; }
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterFencedChar { get; set; }
 
+        /// <inheritdoc />
+        public string Info { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedInfo { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterInfo { get; set; }
+
+        /// <inheritdoc />
+        public string Arguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedArguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice WhitespaceAfterArguments { get; set; }
+
+        /// <inheritdoc />
         public Newline InfoNewline { get; set; }
+
+        /// <inheritdoc />
         public StringSlice WhitespaceBeforeClosingFence { get; set; }
+
+        /// <inheritdoc />
+        public int ClosingFencedCharCount { get; set; }
     }
 }

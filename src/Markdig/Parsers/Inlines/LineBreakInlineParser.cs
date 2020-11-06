@@ -19,7 +19,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         public LineBreakInlineParser()
         {
-            OpeningCharacters = new[] { '\n', '\r' }; // TODO: RTP: this causes LineBreakInline to be parsed for non-trivia parser
+            OpeningCharacters = new[] { '\n', '\r' };
         }
 
         /// <summary>
