@@ -40,18 +40,18 @@ In order:
 - ~~cleanup NormalizeRenderer (MarkdownRenderer)~~
 - ~~deduplicate MarkdownRenderer and NormalizeRenderer code~~
 - ~~merge from main~~
-- fix `TODO: RTP: `
-- use StringSlice where possible instead of String
-- do pull request feedback
-- split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
 - ~~fix broken pre-existing tests~~
-- document newly added syntax properties
+- ~~use StringSlice where possible instead of String~~
+- ~~document newly added syntax properties~~
+- ~~review complete PR and follow conventions~~
+- fix `TODO: RTP: `
+- do pull request feedback
 - support extensions
-- review complete PR and follow conventions
 - run perf test
 - create todo list with perf optimization focus points
 - optimize perf
 - `\0`
+- split HeadingBlock into AtxHeadingBlock and SetextHeadingBlock?
 - document how trivia are handled generically and specifically
 - write tree comparison tests?
 - write tree visualization tool?

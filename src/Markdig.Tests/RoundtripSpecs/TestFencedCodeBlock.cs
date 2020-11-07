@@ -3,7 +3,6 @@ using static Markdig.Tests.TestRoundtrip;
 
 namespace Markdig.Tests.RoundtripSpecs
 {
-    // TODO: RTP: test info strings
     [TestFixture]
     public class TestFencedCodeBlock
     {
