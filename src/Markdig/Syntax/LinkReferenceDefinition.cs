@@ -53,7 +53,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Non-normalized Label (includes whitespace)
         /// </summary>
-        public string LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithWhitespace { get; set; }
 
         public StringSlice WhitespaceBeforeUrl { get; set; }
 
@@ -61,7 +61,7 @@ namespace Markdig.Syntax
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
-        public string UnescapedUrl { get; set; }
+        public StringSlice UnescapedUrl { get; set; }
 
         public bool UrlHasPointyBrackets { get; set; }
 
@@ -71,7 +71,7 @@ namespace Markdig.Syntax
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
-        public string UnescapedTitle { get; set; }
+        public StringSlice UnescapedTitle { get; set; }
 
         public char TitleEnclosingCharacter { get; set; }
 
@@ -138,8 +138,11 @@ namespace Markdig.Syntax
             ref T text,
             out LinkReferenceDefinition block,
             out SourceSpan whitespaceBeforeLabel,
+            out SourceSpan labelWithWhitespace,
             out SourceSpan whitespaceBeforeUrl,
+            out SourceSpan unescapedUrl,
             out SourceSpan whitespaceBeforeTitle,
+            out SourceSpan unescapedTitle,
             out SourceSpan whitespaceAfterTitle) where T : ICharIterator
         {
             block = null;
@@ -150,14 +153,14 @@ namespace Markdig.Syntax
                 ref text,
                 out whitespaceBeforeLabel,
                 out string label,
-                out string labelWithWhitespace,
+                out labelWithWhitespace,
                 out whitespaceBeforeUrl,
                 out string url,
-                out string unescapedUrl,
+                out unescapedUrl,
                 out bool urlHasPointyBrackets,
                 out whitespaceBeforeTitle,
                 out string title,
-                out string unescapedTitle,
+                out unescapedTitle,
                 out char titleEnclosingCharacter,
                 out Newline newline,
                 out whitespaceAfterTitle,
@@ -172,11 +175,11 @@ namespace Markdig.Syntax
             {
                 UrlHasPointyBrackets = urlHasPointyBrackets,
                 TitleEnclosingCharacter = titleEnclosingCharacter,
-                LabelWithWhitespace = labelWithWhitespace,
+                //LabelWithWhitespace = labelWithWhitespace,
                 LabelSpan = labelSpan,
                 UrlSpan = urlSpan,
-                UnescapedUrl = unescapedUrl,
-                UnescapedTitle = unescapedTitle,
+                //UnescapedUrl = unescapedUrl,
+                //UnescapedTitle = unescapedTitle,
                 TitleSpan = titleSpan,
                 Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End),
                 Newline = newline,

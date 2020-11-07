@@ -29,7 +29,7 @@ namespace Markdig.Renderers.Roundtrip
             }
 
             renderer.Write(linkDef.WhitespaceBeforeTitle);
-            if (linkDef.UnescapedTitle != null)
+            if (linkDef.Title != null)
             {
                 var open = linkDef.TitleEnclosingCharacter;
                 var close = linkDef.TitleEnclosingCharacter;

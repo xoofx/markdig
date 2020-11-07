@@ -42,9 +42,7 @@ namespace Markdig.Parsers.Inlines
                 }
             }
             string label;
-            string labelWithWhitespace = null;
-            SourceSpan labelSpan = SourceSpan.Empty;
-
+            SourceSpan labelWithWhitespaceSpan = SourceSpan.Empty;
             switch (c)
             {
                 case '[':
@@ -52,11 +50,14 @@ namespace Markdig.Parsers.Inlines
                     // so we try to resolve it here
                     var saved = slice;
 
+                    SourceSpan labelSpan;
                     // If the label is followed by either a ( or a [, this is not a shortcut
                     if (processor.TrackTrivia)
                     {
-                        if (LinkHelper.TryParseLabelWhitespace(ref slice, out label, out labelWithWhitespace, out labelSpan))
+                        if (LinkHelper.TryParseLabelWhitespace(ref slice, out label, out labelSpan))
                         {
+                            labelWithWhitespaceSpan.Start = labelSpan.Start; // skip opening [
+                            labelWithWhitespaceSpan.End = labelSpan.End; // skip closing ]
                             if (!processor.Document.ContainsLinkReferenceDefinition(label))
                             {
                                 label = null;
@@ -77,6 +78,8 @@ namespace Markdig.Parsers.Inlines
 
                     // Else we insert a LinkDelimiter
                     slice.NextChar();
+                    //labelWithWhitespaceSpan = processor.GetSourcePositionFromLocalSpan(labelWithWhitespaceSpan);
+                    var labelWithWhitespace = new StringSlice(slice.Text, labelWithWhitespaceSpan.Start, labelWithWhitespaceSpan.End);
                     processor.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
@@ -111,8 +114,9 @@ namespace Markdig.Parsers.Inlines
 
         private bool ProcessLinkReference(
             InlineProcessor state,
+            StringSlice text,
             string label,
-            string labelWithWhitespace,
+            SourceSpan labelWithWhitespaceSpan,
             bool isShortcut,
             SourceSpan labelSpan,
             LinkDelimiterInline parent,
@@ -134,6 +138,7 @@ namespace Markdig.Parsers.Inlines
             // Create a default link if the callback was not found
             if (link == null)
             {
+                var labelWithWhitespace = new StringSlice(text.Text, labelWithWhitespaceSpan.Start, labelWithWhitespaceSpan.End);
                 // Inline Link
                 link = new LinkInline()
                 {
@@ -234,9 +239,9 @@ namespace Markdig.Parsers.Inlines
                     if (LinkHelper.TryParseInlineLinkWhitespace(
                         ref text,
                         out string url,
-                        out string unescapedUrl,
+                        out SourceSpan unescapedUrlSpan,
                         out string title,
-                        out string unescapedTitle,
+                        out SourceSpan unescapedTitleSpan,
                         out char titleEnclosingCharacter,
                         out SourceSpan linkSpan,
                         out SourceSpan titleSpan,
@@ -248,6 +253,8 @@ namespace Markdig.Parsers.Inlines
                         var wsBeforeLink = new StringSlice(text.Text, whitespaceBeforeLink.Start, whitespaceBeforeLink.End);
                         var wsAfterLink = new StringSlice(text.Text, whitespaceAfterLink.Start, whitespaceAfterLink.End);
                         var wsAfterTitle = new StringSlice(text.Text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
+                        var unescapedUrl = new StringSlice(text.Text, unescapedUrlSpan.Start, unescapedUrlSpan.End);
+                        var unescapedTitle = new StringSlice(text.Text, unescapedTitleSpan.Start, unescapedTitleSpan.End);
                         // Inline Link
                         var link = new LinkInline()
                         {
@@ -333,7 +340,7 @@ namespace Markdig.Parsers.Inlines
 
             var labelSpan = SourceSpan.Empty;
             string label = null;
-            string labelWithWhitespace = null;
+            SourceSpan labelWithWhitespace = SourceSpan.Empty;
             bool isLabelSpanLocal = true;
 
             bool isShortcut = false;
@@ -357,14 +364,15 @@ namespace Markdig.Parsers.Inlines
                 label = openParent.Label;
                 isShortcut = true;
             }
-            if (label != null || LinkHelper.TryParseLabelWhitespace(ref text, true, out label, out labelWithWhitespace, out labelSpan))
+            if (label != null || LinkHelper.TryParseLabelWhitespace(ref text, true, out label, out labelSpan))
             {
+                labelWithWhitespace = new SourceSpan(labelSpan.Start, labelSpan.End);
                 if (isLabelSpanLocal)
                 {
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, label, labelWithWhitespace, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
+                if (ProcessLinkReference(inlineState, text, label, labelWithWhitespace, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();

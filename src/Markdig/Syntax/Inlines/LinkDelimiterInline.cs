@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax.Inlines
@@ -26,7 +27,7 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Label { get; set; }
 
-        public string LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithWhitespace { get; set; }
 
         /// <summary>
         /// The label span

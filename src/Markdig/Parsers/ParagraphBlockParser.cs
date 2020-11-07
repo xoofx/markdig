@@ -223,8 +223,11 @@ namespace Markdig.Parsers
                     ref iterator,
                     out LinkReferenceDefinition lrd,
                     out SourceSpan whitespaceBeforeLabel,
+                    out SourceSpan labelWithWhitespace,
                     out SourceSpan whitespaceBeforeUrl,
+                    out SourceSpan unescapedUrl,
                     out SourceSpan whitespaceBeforeTitle,
+                    out SourceSpan unescapedTitle,
                     out SourceSpan whitespaceAfterTitle))
                 {
                     state.Document.SetLinkReferenceDefinition(lrd.Label, lrd, false);
@@ -237,16 +240,22 @@ namespace Markdig.Parsers
                     int startPosition = lines.Lines[0].Slice.Start;
 
                     whitespaceBeforeLabel = whitespaceBeforeLabel.MoveForward(startPosition);
+                    labelWithWhitespace = labelWithWhitespace.MoveForward(startPosition);
                     whitespaceBeforeUrl = whitespaceBeforeUrl.MoveForward(startPosition);
+                    unescapedUrl = unescapedUrl.MoveForward(startPosition);
                     whitespaceBeforeTitle = whitespaceBeforeTitle.MoveForward(startPosition);
+                    unescapedTitle = unescapedTitle.MoveForward(startPosition);
                     whitespaceAfterTitle = whitespaceAfterTitle.MoveForward(startPosition);
                     lrd.Span = lrd.Span.MoveForward(startPosition);
                     lrd.BeforeWhitespace = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
                     lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
+                    lrd.LabelWithWhitespace = new StringSlice(text, labelWithWhitespace.Start, labelWithWhitespace.End);
                     lrd.WhitespaceBeforeUrl = new StringSlice(text, whitespaceBeforeUrl.Start, whitespaceBeforeUrl.End);
                     lrd.UrlSpan = lrd.UrlSpan.MoveForward(startPosition);
+                    lrd.UnescapedUrl = new StringSlice(text, unescapedUrl.Start, unescapedUrl.End);
                     lrd.WhitespaceBeforeTitle = new StringSlice(text, whitespaceBeforeTitle.Start, whitespaceBeforeTitle.End);
                     lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
+                    lrd.UnescapedTitle = new StringSlice(text, unescapedTitle.Start, unescapedTitle.End);
                     lrd.AfterWhitespace = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
                     lrd.LinesBefore = paragraph.LinesBefore;
 

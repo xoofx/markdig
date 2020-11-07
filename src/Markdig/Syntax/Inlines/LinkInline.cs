@@ -51,7 +51,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the URL.
         /// </summary>
         public string Url { get; set; }
-        public string UnescapedUrl { get; internal set; }
+        public StringSlice UnescapedUrl { get; internal set; }
 
         public bool UrlHasPointyBrackets { get; set; }
 
@@ -67,7 +67,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
-        public string UnescapedTitle { get; internal set; }
+        public StringSlice UnescapedTitle { get; internal set; }
 
         public char TitleEnclosingCharacter { get; set; }
 
@@ -80,7 +80,7 @@ namespace Markdig.Syntax.Inlines
 
         public string LinkRefDefLabel { get; set; }
 
-        public string LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithWhitespace { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is an image link.
@@ -101,7 +101,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the reference this link is attached to. May be null.
         /// </summary>
         public LinkReferenceDefinition Reference { get; set; }
-        public string LinkRefDefLabelWithWhitespace { get; internal set; }
+        public StringSlice LinkRefDefLabelWithWhitespace { get; internal set; }
         public LocalLabel LocalLabel { get; internal set; }
 
         /// <summary>

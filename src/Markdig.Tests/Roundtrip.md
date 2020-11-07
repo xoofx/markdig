@@ -58,11 +58,21 @@ In order:
 
 # Pull request discussion
 - LinkHelper duplication
+  - keep current?
+  - if not, how to deduplicate?
 - StringSlice vs String
+  - StringSlice is preferred
 - amount of tests
   - should we create even more permutations using `\v`, `\f`?
 - newlines
   - Newline struct itself
   - handling newlines
   - should newlines be supported?
+  - LineBreakInline now also parses /r and /r/n: this effectively removes an optimization
 - Example 207, 209, 291: Special-casing certain edgecases
+- TrackTrivia flag trickling down into 5-6 classes
+  - InlineProcessor
+  - BlockProcessor
+  - MarkdownParser
+  - Markdown static class
+  - LinkReferenceDefinitionHelper

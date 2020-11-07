@@ -52,7 +52,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                     }
                     renderer.Write(link.WhitespaceAfterUrl);
 
-                    if (!string.IsNullOrEmpty(link.UnescapedTitle))
+                    if (!string.IsNullOrEmpty(link.Title))
                     {
                         var open = link.TitleEnclosingCharacter;
                         var close = link.TitleEnclosingCharacter;
