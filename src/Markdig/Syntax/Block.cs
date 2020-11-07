@@ -55,11 +55,30 @@ namespace Markdig.Syntax
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
 
-        // TODO: RTP: rename to WhitespaceBefore
-        public StringSlice BeforeWhitespace { get; set; }
-        public StringSlice AfterWhitespace { get; set; }
+        /// <summary>
+        /// Gets or sets the whitespace right before this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice WhitespaceBefore { get; set; }
 
+        /// <summary>
+        /// Gets or sets whitespace occurring after this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice WhitespaceAfter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the empty lines occurring before this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// </summary>
         public List<StringSlice> LinesBefore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the empty lines occurring after this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// </summary>
         public List<StringSlice> LinesAfter { get; set; }
 
         /// <summary>

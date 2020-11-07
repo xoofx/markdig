@@ -29,8 +29,19 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Content { get; set; }
 
+        /// <summary>
+        /// Gets or sets the content with trivia and whitespace.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
         public StringSlice ContentWithTrivia { get; set; }
 
+        /// <summary>
+        /// True if the first and last character of the content enclosed in a backtick `
+        /// is a space.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// false.
+        /// </summary>
         public bool FirstAndLastWasSpace { get; set; }
     }
 }

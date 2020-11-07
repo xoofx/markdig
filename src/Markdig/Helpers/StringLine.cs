@@ -71,6 +71,9 @@ namespace Markdig.Helpers
         /// </summary>
         public int Column;
 
+        /// <summary>
+        /// The newline.
+        /// </summary>
         public Newline Newline;
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace Markdig.Renderers.Roundtrip
         protected override void Write(RoundtripRenderer renderer, QuoteBlock quoteBlock)
         {
             renderer.RenderLinesBefore(quoteBlock);
-            renderer.Write(quoteBlock.BeforeWhitespace);
+            renderer.Write(quoteBlock.WhitespaceBefore);
 
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
@@ -25,7 +25,7 @@ namespace Markdig.Renderers.Roundtrip
                 var wsb = quoteLine.BeforeWhitespace.ToString();
                 var quoteChar = quoteLine.QuoteChar ? ">" : "";
                 var spaceAfterQuoteChar = quoteLine.HasSpaceAfterQuoteChar ? " " : "";
-                var wsa = quoteLine.AfterWhitespace.ToString();
+                var wsa = quoteLine.WhitespaceAfter.ToString();
                 indents.Add(wsb + quoteChar + spaceAfterQuoteChar + wsa);
             }
             bool noChildren = false;

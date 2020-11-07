@@ -58,8 +58,8 @@ namespace Markdig.Syntax
         /// </summary>
         event ProcessInlineDelegate ProcessInlinesEnd;
 
-        public StringSlice BeforeWhitespace { get; set; }
-        public StringSlice AfterWhitespace { get; set; }
+        public StringSlice WhitespaceBefore { get; set; }
+        public StringSlice WhitespaceAfter { get; set; }
 
     }
 }

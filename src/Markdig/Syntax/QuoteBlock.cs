@@ -14,7 +14,6 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
         /// </summary>
@@ -23,6 +22,11 @@ namespace Markdig.Syntax
         {
         }
 
+        /// <summary>
+        /// Gets or sets the trivia per line of this QuoteBlock.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
         public List<QuoteBlockLine> QuoteLines { get; set; } = new List<QuoteBlockLine>();
 
         /// <summary>
@@ -31,17 +35,49 @@ namespace Markdig.Syntax
         public char QuoteChar { get; set; }
     }
 
+    /// <summary>
+    /// Represents trivia per line part of a QuoteBlock.
+    /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+    /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+    /// </summary>
     public class QuoteBlockLine
     {
+        /// <summary>
+        /// Gets or sets whitespace occuring before the first quote character.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+        /// </summary>
         public StringSlice BeforeWhitespace { get; set; }
 
-        public StringSlice AfterWhitespace { get; set; }
-
-        public Newline Newline { get; set; }
-
-        // support lazy lines
+        /// <summary>
+        /// True when this QuoteBlock line has a quote character. False when
+        /// this line is a "lazy line".
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+        /// </summary>
         public bool QuoteChar { get; set; }
 
+        /// <summary>
+        /// True if a space is parsed right after the quote character.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+        /// </summary>
         public bool HasSpaceAfterQuoteChar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whitespace after the the space after the quote character.
+        /// The first space is assigned to <see cref="HasSpaceAfterQuoteChar"/>, subsequent
+        /// whitespace is assigned to this property.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+        /// </summary>
+        public StringSlice WhitespaceAfter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the newline of this QuoeBlockLine.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+        /// </summary>
+        public Newline Newline { get; set; }
     }
 }

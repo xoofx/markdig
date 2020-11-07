@@ -127,8 +127,8 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        BeforeWhitespace = state.UseWhitespace(sourcePosition - 1), // remove dashes
-                        AfterWhitespace = new StringSlice(state.Line.Text, state.Start, line.End),
+                        WhitespaceBefore = state.UseWhitespace(sourcePosition - 1), // remove dashes
+                        WhitespaceAfter = new StringSlice(state.Line.Text, state.Start, line.End),
                         LinesBefore = paragraph.LinesBefore,
                         Newline = state.Line.Newline,
                         IsSetext = true,
@@ -247,7 +247,7 @@ namespace Markdig.Parsers
                     unescapedTitle = unescapedTitle.MoveForward(startPosition);
                     whitespaceAfterTitle = whitespaceAfterTitle.MoveForward(startPosition);
                     lrd.Span = lrd.Span.MoveForward(startPosition);
-                    lrd.BeforeWhitespace = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
+                    lrd.WhitespaceBefore = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
                     lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
                     lrd.LabelWithWhitespace = new StringSlice(text, labelWithWhitespace.Start, labelWithWhitespace.End);
                     lrd.WhitespaceBeforeUrl = new StringSlice(text, whitespaceBeforeUrl.Start, whitespaceBeforeUrl.End);
@@ -256,7 +256,7 @@ namespace Markdig.Parsers
                     lrd.WhitespaceBeforeTitle = new StringSlice(text, whitespaceBeforeTitle.Start, whitespaceBeforeTitle.End);
                     lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
                     lrd.UnescapedTitle = new StringSlice(text, unescapedTitle.Start, unescapedTitle.End);
-                    lrd.AfterWhitespace = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
+                    lrd.WhitespaceAfter = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
                     lrd.LinesBefore = paragraph.LinesBefore;
 
                     state.BeforeLines = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack

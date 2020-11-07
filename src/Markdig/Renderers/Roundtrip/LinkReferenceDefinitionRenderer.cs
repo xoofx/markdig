@@ -12,7 +12,7 @@ namespace Markdig.Renderers.Roundtrip
         {
             renderer.RenderLinesBefore(linkDef);
 
-            renderer.Write(linkDef.BeforeWhitespace);
+            renderer.Write(linkDef.WhitespaceBefore);
             renderer.Write('[');            
             renderer.Write(linkDef.LabelWithWhitespace);
             renderer.Write("]:");
@@ -41,7 +41,7 @@ namespace Markdig.Renderers.Roundtrip
                 renderer.Write(linkDef.UnescapedTitle);
                 renderer.Write(close);
             }
-            renderer.Write(linkDef.AfterWhitespace);
+            renderer.Write(linkDef.WhitespaceAfter);
             renderer.Write(linkDef.Newline);
 
             renderer.RenderLinesAfter(linkDef);

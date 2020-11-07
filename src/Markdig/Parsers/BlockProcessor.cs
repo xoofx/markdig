@@ -35,13 +35,6 @@ namespace Markdig.Parsers
             NewBlocks = new Stack<Block>();
         }
 
-        internal List<StringSlice> UseLinesBefore()
-        {
-            var beforeLines = BeforeLines;
-            BeforeLines = null;
-            return beforeLines;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockProcessor" /> class.
         /// </summary>
@@ -170,25 +163,50 @@ namespace Markdig.Parsers
 
         private bool ContinueProcessingLine { get; set; }
 
+        /// <summary>
+        /// Gets or sets the position of the first character whitespace is encountered
+        /// and not yet assigned to a syntax node.
+        /// Trivia: only used when <see cref="TrackTrivia"/> is enabled, otherwise 0.
+        /// </summary>
         public int WhitespaceStart { get; set; }
 
         /// <summary>
         /// Returns trivia that has not yet been assigned to any node and
-        /// advances the position of trivia to the ending position
+        /// advances the position of trivia to the ending position.
         /// </summary>
         /// <param name="end">End position of the trivia</param>
         /// <returns></returns>
         public StringSlice UseWhitespace(int end)
         {
-            // NOTE: Line.Text is full source, not the line (!)
             var stringSlice = new StringSlice(Line.Text, WhitespaceStart, end);
             WhitespaceStart = end + 1;
             return stringSlice;
         }
 
+        /// <summary>
+        /// Returns the current stack of <see cref="BeforeLines"/> to assign it to a <see cref="Block"/>.
+        /// Afterwards, the <see cref="BeforeLines"/> is set to null.
+        /// </summary>
+        internal List<StringSlice> UseLinesBefore()
+        {
+            var beforeLines = BeforeLines;
+            BeforeLines = null;
+            return beforeLines;
+        }
+
+        /// <summary>
+        /// Gets or sets the stack of empty lines not yet assigned to any <see cref="Block"/>.
+        /// An entry may contain an empty <see cref="StringSlice"/>. In that case the
+        /// <see cref="StringSlice.Newline"/> is relevant. Otherwise, the <see cref="StringSlice"/>
+        /// entry will contain whitespace.
+        /// </summary>
         public List<StringSlice> BeforeLines { get; set; }
 
-        public bool TrackTrivia { get; set; } = true;
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; }
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -837,8 +855,8 @@ namespace Markdig.Parsers
                         // TODO: RTP: delegate this to container parser classes?
                         if (paragraph.Parent is QuoteBlock qb)
                         {
-                            var afterWhitespace = UseWhitespace(Start - 1);
-                            qb.QuoteLines.Last().AfterWhitespace = afterWhitespace;
+                            var whitespaceAfter = UseWhitespace(Start - 1);
+                            qb.QuoteLines.Last().WhitespaceAfter = whitespaceAfter;
                         }
                     }
                     // We have just found a lazy continuation for a paragraph, early exit

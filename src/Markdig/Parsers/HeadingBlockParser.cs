@@ -86,7 +86,7 @@ namespace Markdig.Parsers
                     Level = leadingCount,
                     Column = column,
                     Span = { Start = sourcePosition },
-                    BeforeWhitespace = processor.UseWhitespace(sourcePosition - 1),
+                    WhitespaceBefore = processor.UseWhitespace(sourcePosition - 1),
                     LinesBefore = processor.UseLinesBefore(),
                     Newline = processor.Line.Newline,
                 };
@@ -143,7 +143,7 @@ namespace Markdig.Parsers
                 if (processor.TrackTrivia)
                 {
                     var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
-                    headingBlock.AfterWhitespace = wsa;
+                    headingBlock.WhitespaceAfter = wsa;
                     if (wsa.Overlaps(headingBlock.WhitespaceAfterAtxHeaderChar))
                     {
                         // prevent double whitespace allocation in case of closing # i.e. "# #"

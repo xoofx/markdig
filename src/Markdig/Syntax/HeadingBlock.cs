@@ -33,13 +33,26 @@ namespace Markdig.Syntax
         /// </summary>
         public int Level { get; set; }
 
+        /// <summary>
+        /// True if this heading is a Setext heading.
+        /// </summary>
         public bool IsSetext { get; set; }
 
+        /// <summary>
+        /// Gets or sets the amount of - or = characters when <see cref="IsSetext"/> is true.
+        /// </summary>
         public int HeaderCharCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the newline of the first line when <see cref="IsSetext"/> is true.
+        /// </summary>
         public Newline SetextNewline { get; set; }
 
-        // space is mandatory after # only when there is heading content. I.e. "#" is valid
+        /// <summary>
+        /// Gets or sets the whitespace after the # character when <see cref="IsSetext"/> is false.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
         public StringSlice WhitespaceAfterAtxHeaderChar { get; set; }
     }
 }

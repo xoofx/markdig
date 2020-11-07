@@ -25,7 +25,7 @@ namespace Markdig.Renderers.Roundtrip
                     var listItem = (ListItemBlock) item;
                     renderer.RenderLinesBefore(listItem);
 
-                    var bws = listItem.BeforeWhitespace.ToString();
+                    var bws = listItem.WhitespaceBefore.ToString();
                     var bullet = listItem.SourceBullet.ToString();
                     var delimiter = listBlock.OrderedDelimiter;
                     renderer.PushIndent(new List<string> { $@"{bws}{bullet}{delimiter}" });
@@ -41,9 +41,9 @@ namespace Markdig.Renderers.Roundtrip
                     var listItem = (ListItemBlock) item;
                     renderer.RenderLinesBefore(listItem);
 
-                    StringSlice bws = listItem.BeforeWhitespace;
+                    StringSlice bws = listItem.WhitespaceBefore;
                     char bullet = listBlock.BulletType;
-                    StringSlice aws = listItem.AfterWhitespace;
+                    StringSlice aws = listItem.WhitespaceAfter;
 
                     renderer.PushIndent(new List<string> { $@"{bws}{bullet}{aws}" });
                     if (listItem.Count == 0)

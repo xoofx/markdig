@@ -17,7 +17,7 @@ namespace Markdig.Renderers.Roundtrip
         protected override void Write(RoundtripRenderer renderer, ParagraphBlock paragraph)
         {
             renderer.RenderLinesBefore(paragraph);
-            renderer.Write(paragraph.BeforeWhitespace);
+            renderer.Write(paragraph.WhitespaceBefore);
             renderer.WriteLeafInline(paragraph);
             //renderer.Write(paragraph.Newline); // paragraph typically has LineBreakInlines as closing inline nodes
             renderer.RenderLinesAfter(paragraph);

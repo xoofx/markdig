@@ -333,7 +333,7 @@ namespace Markdig.Parsers
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.Newline = processor.Line.Newline;
                 fencedBlock.WhitespaceBeforeClosingFence = processor.UseWhitespace(sourcePosition - 1);
-                fencedBlock.AfterWhitespace = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
+                fencedBlock.WhitespaceAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

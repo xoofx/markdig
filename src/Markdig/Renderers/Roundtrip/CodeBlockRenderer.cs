@@ -20,7 +20,7 @@ namespace Markdig.Renderers.Roundtrip
             renderer.RenderLinesBefore(obj);
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
-                renderer.Write(obj.BeforeWhitespace);
+                renderer.Write(obj.WhitespaceBefore);
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
                 renderer.Write(opening);
 
@@ -65,7 +65,7 @@ namespace Markdig.Renderers.Roundtrip
                     // See example 207: "> ```\nfoo\n```"
                     renderer.WriteLine(obj.Newline);
                 }
-                renderer.Write(obj.AfterWhitespace);
+                renderer.Write(obj.WhitespaceAfter);
             }
             else
             {

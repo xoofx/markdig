@@ -28,6 +28,11 @@ namespace Markdig.Syntax
         /// </summary>
         public int Order { get; set; }
 
+        /// <summary>
+        /// Gets or sets the bullet as parsed in the source document.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
         public StringSlice SourceBullet { get; set; }
     }
 }

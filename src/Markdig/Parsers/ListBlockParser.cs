@@ -277,7 +277,7 @@ namespace Markdig.Parsers
                 ColumnWidth = columnWidth,
                 Order = order,
                 SourceBullet = listInfo.SourceBullet,
-                BeforeWhitespace = whitespaceBefore,
+                WhitespaceBefore = whitespaceBefore,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
                 LinesBefore = state.UseLinesBefore(),
                 Newline = state.Line.Newline,

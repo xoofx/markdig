@@ -58,18 +58,18 @@ namespace Markdig.Parsers
             }
 
             var beforeWhitespace = processor.UseWhitespace(sourcePosition - 1);
-            StringSlice afterWhitespace = StringSlice.Empty;
+            StringSlice whitespaceAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
                 processor.WhitespaceStart = processor.Start;
-                afterWhitespace = processor.UseWhitespace(processor.Line.End);
+                whitespaceAfter = processor.UseWhitespace(processor.Line.End);
                 wasEmptyLine = true;
             }
             quoteBlock.QuoteLines.Add(new QuoteBlockLine
             {
                 BeforeWhitespace = beforeWhitespace,
-                AfterWhitespace = afterWhitespace,
+                WhitespaceAfter = whitespaceAfter,
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 Newline = processor.Line.Newline,
@@ -125,12 +125,12 @@ namespace Markdig.Parsers
                 processor.NextColumn();
             }
             var beforeWhiteSpace = processor.UseWhitespace(sourcePosition - 1);
-            StringSlice afterWhitespace = StringSlice.Empty;
+            StringSlice whitespaceAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
                 processor.WhitespaceStart = processor.Start;
-                afterWhitespace = processor.UseWhitespace(processor.Line.End);
+                whitespaceAfter = processor.UseWhitespace(processor.Line.End);
                 wasEmptyLine = true;
             }
             quote.QuoteLines.Add(new QuoteBlockLine
@@ -138,7 +138,7 @@ namespace Markdig.Parsers
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 BeforeWhitespace = beforeWhiteSpace,
-                AfterWhitespace = afterWhitespace,
+                WhitespaceAfter = whitespaceAfter,
                 Newline = processor.Line.Newline,
             });
 

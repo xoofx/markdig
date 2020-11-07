@@ -27,12 +27,17 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public string Label { get; set; }
 
-        public StringSlice LabelWithWhitespace { get; set; }
-
         /// <summary>
         /// The label span
         /// </summary>
         public SourceSpan LabelSpan;
+
+        /// <summary>
+        /// Gets or sets the <see cref="Label"/> with whitespace.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice LabelWithWhitespace { get; set; }
 
         public override string ToLiteral()
         {

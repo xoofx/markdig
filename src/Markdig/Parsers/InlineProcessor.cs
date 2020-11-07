@@ -106,7 +106,11 @@ namespace Markdig.Parsers
         /// </summary>
         public TextWriter DebugLog { get; set; }
 
-        public bool TrackTrivia { get; } = true;
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; }
 
         /// <summary>
         /// Gets the literal inline parser.
