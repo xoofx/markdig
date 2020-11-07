@@ -198,6 +198,11 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("\r\np\np\r\n")]
         [TestCase("\r\np\rp\r\n")]
         [TestCase("\r\np\r\np\r\n")]
+
+        [TestCase("p\n")]
+        [TestCase("p\n\n")]
+        [TestCase("p\n\n\n")]
+        [TestCase("p\n\n\n\n")]
         public void TestNewline(string value)
         {
             RoundTrip(value);

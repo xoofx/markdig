@@ -125,7 +125,8 @@ namespace Markdig.Parsers
                         // of the document.
                         if (lastBlock != null && blockProcessor.BeforeLines != null)
                         {
-                            lastBlock.LinesAfter = blockProcessor.BeforeLines ?? new List<StringSlice>();
+                            lastBlock.LinesAfter ??= new List<StringSlice>();
+                            lastBlock.LinesAfter.AddRange(blockProcessor.BeforeLines);
                         }
                     }
                     break;
