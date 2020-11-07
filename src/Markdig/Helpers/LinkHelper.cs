@@ -1219,11 +1219,11 @@ namespace Markdig.Helpers
                 return false;
             }
             text.NextChar(); // Skip ':'
-            var beforeWhitespaceUrlStart = text.Start;
+            var whitespaceBeforeUrlStart = text.Start;
 
             // Skip any whitespace before the url
             text.TrimStart();
-            whitespaceBeforeUrl = new SourceSpan(beforeWhitespaceUrlStart, text.Start - 1);
+            whitespaceBeforeUrl = new SourceSpan(whitespaceBeforeUrlStart, text.Start - 1);
 
             urlSpan.Start = text.Start;
             bool isAngleBracketsUrl = text.CurrentChar == '<';

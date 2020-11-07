@@ -184,14 +184,14 @@ namespace Markdig.Parsers
         }
 
         /// <summary>
-        /// Returns the current stack of <see cref="BeforeLines"/> to assign it to a <see cref="Block"/>.
-        /// Afterwards, the <see cref="BeforeLines"/> is set to null.
+        /// Returns the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
+        /// Afterwards, the <see cref="LinesBefore"/> is set to null.
         /// </summary>
         internal List<StringSlice> UseLinesBefore()
         {
-            var beforeLines = BeforeLines;
-            BeforeLines = null;
-            return beforeLines;
+            var linesBefore = LinesBefore;
+            LinesBefore = null;
+            return linesBefore;
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Markdig.Parsers
         /// <see cref="StringSlice.Newline"/> is relevant. Otherwise, the <see cref="StringSlice"/>
         /// entry will contain whitespace.
         /// </summary>
-        public List<StringSlice> BeforeLines { get; set; }
+        public List<StringSlice> LinesBefore { get; set; }
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -580,9 +580,24 @@ namespace Markdig.Parsers
                 }
                 if (TrackTrivia)
                 {
-                    if (BeforeLines != null && BeforeLines.Count > 0)
+                    if (LinesBefore != null && LinesBefore.Count > 0)
                     {
-                        block.LinesAfter = UseLinesBefore();
+                        // single emptylines are significant for the syntax tree, attach
+                        // them to the block
+                        if (LinesBefore.Count == 1)
+                        {
+                            block.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = UseLinesBefore();
+                            block.LinesAfter.AddRange(linesBefore);
+                        }
+                        else
+                        {
+                            // attach multiple lines after to the root most parent ContainerBlock
+                            var rootMostContainerBlock = Block.FindRootMostContainerParent(block);
+                            rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = UseLinesBefore();
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        }
                     }
                 }
                 Close(i);
@@ -717,9 +732,9 @@ namespace Markdig.Parsers
                     {
                         if (TrackTrivia)
                         {
-                            BeforeLines ??= new List<StringSlice>();
+                            LinesBefore ??= new List<StringSlice>();
                             var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
-                            BeforeLines.Add(line);
+                            LinesBefore.Add(line);
                             Line.Start = StartBeforeIndent;
                         }
                     }
@@ -796,9 +811,9 @@ namespace Markdig.Parsers
                 {
                     if (TrackTrivia)
                     {
-                        BeforeLines ??= new List<StringSlice>();
+                        LinesBefore ??= new List<StringSlice>();
                         var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
-                        BeforeLines.Add(line);
+                        LinesBefore.Add(line);
                         Line.Start = StartBeforeIndent;
                     }
                     ContinueProcessingLine = false;

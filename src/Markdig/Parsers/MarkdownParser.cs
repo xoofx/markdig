@@ -123,10 +123,12 @@ namespace Markdig.Parsers
                         // this means we're out of lines, but still have unassigned empty lines.
                         // thus, we'll assign the empty unsassigned lines to the last block
                         // of the document.
-                        if (lastBlock != null && blockProcessor.BeforeLines != null)
+                        if (lastBlock != null && blockProcessor.LinesBefore != null)
                         {
-                            lastBlock.LinesAfter ??= new List<StringSlice>();
-                            lastBlock.LinesAfter.AddRange(blockProcessor.BeforeLines);
+                            var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
+                            rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = blockProcessor.UseLinesBefore();
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
                         }
                     }
                     break;

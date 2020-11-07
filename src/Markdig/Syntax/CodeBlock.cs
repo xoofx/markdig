@@ -18,7 +18,7 @@ namespace Markdig.Syntax
     {
         public class CodeBlockLine
         {
-            public StringSlice BeforeWhitespace { get; set; }
+            public StringSlice WhitespaceBefore { get; set; }
         }
 
         public List<CodeBlockLine> CodeBlockLines { get; set; } = new List<CodeBlockLine>();

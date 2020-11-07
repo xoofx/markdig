@@ -170,6 +170,11 @@ namespace Markdig.Tests.RoundtripSpecs
         [TestCase("\r\n- i\n- j\r\n")]
         [TestCase("\r\n- i\r- j\r\n")]
         [TestCase("\r\n- i\r\n- j\r\n")]
+
+        [TestCase("- i\n")]
+        [TestCase("- i\n\n")]
+        [TestCase("- i\n\n\n")]
+        [TestCase("- i\n\n\n\n")]
         public void TestNewline(string value)
         {
             RoundTrip(value);

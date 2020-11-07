@@ -72,7 +72,7 @@ namespace Markdig.Renderers.Roundtrip
                 var indents = new List<string>();
                 foreach (var cbl in obj.CodeBlockLines)
                 {
-                    indents.Add(cbl.BeforeWhitespace.ToString());
+                    indents.Add(cbl.WhitespaceBefore.ToString());
                 }
                 renderer.PushIndent(indents);
                 WriteLeafRawLines(renderer, obj);

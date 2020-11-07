@@ -57,7 +57,7 @@ namespace Markdig.Parsers
                 processor.NextColumn();
             }
 
-            var beforeWhitespace = processor.UseWhitespace(sourcePosition - 1);
+            var whitespaceBefore = processor.UseWhitespace(sourcePosition - 1);
             StringSlice whitespaceAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
@@ -68,7 +68,7 @@ namespace Markdig.Parsers
             }
             quoteBlock.QuoteLines.Add(new QuoteBlockLine
             {
-                BeforeWhitespace = beforeWhitespace,
+                WhitespaceBefore = whitespaceBefore,
                 WhitespaceAfter = whitespaceAfter,
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
@@ -124,7 +124,7 @@ namespace Markdig.Parsers
             {
                 processor.NextColumn();
             }
-            var beforeWhiteSpace = processor.UseWhitespace(sourcePosition - 1);
+            var whiteSpaceBefore = processor.UseWhitespace(sourcePosition - 1);
             StringSlice whitespaceAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
@@ -137,7 +137,7 @@ namespace Markdig.Parsers
             {
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
-                BeforeWhitespace = beforeWhiteSpace,
+                WhitespaceBefore = whiteSpaceBefore,
                 WhitespaceAfter = whitespaceAfter,
                 Newline = processor.Line.Newline,
             });

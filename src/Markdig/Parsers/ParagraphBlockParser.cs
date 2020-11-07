@@ -259,7 +259,7 @@ namespace Markdig.Parsers
                     lrd.WhitespaceAfter = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
                     lrd.LinesBefore = paragraph.LinesBefore;
 
-                    state.BeforeLines = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack
+                    state.LinesBefore = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack
 
                     lines = iterator.Remaining();
                     var index = paragraph.Parent.IndexOf(paragraph);

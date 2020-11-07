@@ -47,7 +47,7 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
-        public StringSlice BeforeWhitespace { get; set; }
+        public StringSlice WhitespaceBefore { get; set; }
 
         /// <summary>
         /// True when this QuoteBlock line has a quote character. False when

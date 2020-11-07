@@ -22,7 +22,7 @@ namespace Markdig.Renderers.Roundtrip
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
             {
-                var wsb = quoteLine.BeforeWhitespace.ToString();
+                var wsb = quoteLine.WhitespaceBefore.ToString();
                 var quoteChar = quoteLine.QuoteChar ? ">" : "";
                 var spaceAfterQuoteChar = quoteLine.HasSpaceAfterQuoteChar ? " " : "";
                 var wsa = quoteLine.WhitespaceAfter.ToString();

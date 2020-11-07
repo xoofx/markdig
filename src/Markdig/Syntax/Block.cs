@@ -122,5 +122,14 @@ namespace Markdig.Syntax
                 parent = parent.Parent;
             }
         }
+
+        internal static Block FindRootMostContainerParent(Block block)
+        {
+            if (block.Parent is ContainerBlock && !(block.Parent is MarkdownDocument))
+            {
+                return FindRootMostContainerParent(block.Parent);
+            }
+            return block;
+        }
     }
 }
