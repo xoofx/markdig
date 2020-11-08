@@ -29,7 +29,7 @@ jobs:
       run: dotnet build src -c Release
 
     - name: SpecFileGen
-      run: dotnet src/SpecFileGen/bin/Release/netcoreapp2.1/SpecFileGen.dll
+      run: dotnet src/SpecFileGen/bin/Release/netcoreapp3.1/SpecFileGen.dll
 
     - name: Test (Release)
       run: dotnet test src -c Release
