@@ -114,8 +114,8 @@ namespace Markdig.Parsers.Inlines
                 {
                     Url = HtmlHelper.Unescape(linkRef.Url),
                     Title = HtmlHelper.Unescape(linkRef.Title),
-                    Label = parent.Label ?? label,
-                    LabelSpan = parent.LabelSpan.IsEmpty ? labelSpan : parent.LabelSpan,
+                    Label = label,
+                    LabelSpan = labelSpan,
                     UrlSpan = linkRef.UrlSpan,
                     IsImage = parent.IsImage,
                     IsShortcut = isShortcut,
