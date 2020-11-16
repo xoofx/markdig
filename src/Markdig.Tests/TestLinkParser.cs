@@ -20,18 +20,18 @@ namespace Markdig.Tests
         [Test]
         public void TestReferenceLink()
         {
-            var doc = Markdown.Parse("There is a [link][foo]\n\n[foo]: /toto");
+            var doc = Markdown.Parse("There is a [ref][foo]\n\n[foo]: /toto");
             var link = doc.Descendants<LinkInline>().First();
-            Assert.AreEqual("link", link.Label);
+            Assert.AreEqual("ref", link.Label);
             Assert.AreEqual("/toto", link.Url);
         }
 
         [Test]
-        public void TestReferenceLinkSimple()
+        public void TestShortcutLink()
         {
-            var doc = Markdown.Parse("There is a [link]\n\n[link]: /tutu");
+            var doc = Markdown.Parse("There is a [def]\n\n[def]: /tutu");
             var link = doc.Descendants<LinkInline>().First();
-            Assert.AreEqual("link", link.Label);
+            Assert.AreEqual("def", link.Label);
             Assert.AreEqual("/tutu", link.Url);
         }
     }
