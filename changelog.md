@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.22.1 (2 Dec 2020)
+- Update logo for NuGet package
+
 ## 0.22.0 (05 Oct 2020)
 - Fix Setext headings in block quotes.
 - Fix tel: treated as autolink ([PR #478](https://github.com/lunet-io/markdig/pull/478)

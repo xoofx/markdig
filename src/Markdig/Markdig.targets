@@ -4,13 +4,13 @@
     <Description>A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.22.0</VersionPrefix>
+    <VersionPrefix>0.22.1</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <TargetFrameworks>net452;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
-    <PackageIconUrl>https://raw.githubusercontent.com/lunet-io/markdig/master/img/markdig.png</PackageIconUrl>
+    <PackageIcon>markdig.png</PackageIcon>
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
@@ -46,6 +46,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="../../img/markdig.png" Pack="true" PackagePath="" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.*" PrivateAssets="All"/>
   </ItemGroup>
 
