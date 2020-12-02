@@ -59,6 +59,7 @@ If you are looking for support for an old .NET Framework 3.5 or 4.0, you can dow
 - [**WPF/XAML Markdown Renderer**: `markdig.wpf`](https://github.com/Kryptos-FR/markdig.wpf)
 - [**WPF/XAML Markdown Renderer**: `Neo.Markdig.Xaml`](https://github.com/neolithos/NeoMarkdigXaml)
 - [**Syntax highlighting**: `Markdig.SyntaxHighlighting`](https://github.com/RichardSlater/Markdig.SyntaxHighlighting)
+- [**Syntax highlighting using Prism.js**: `WebStoating.Markdig.Prism`](https://github.com/ilich/Markdig.Prism)
 - [**Embedded C# scripting**: `Markdig.Extensions.ScriptCs`](https://github.com/macaba/Markdig.Extensions.ScriptCs)
 
 ## Documentation
