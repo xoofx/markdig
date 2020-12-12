@@ -22,12 +22,14 @@ jobs:
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
 
     - name: Build (Release)
       run: dotnet build src -c Release
 
     - name: SpecFileGen
-      run: dotnet src/SpecFileGen/bin/Release/netcoreapp2.1/SpecFileGen.dll
+      run: dotnet src/SpecFileGen/bin/Release/netcoreapp3.1/SpecFileGen.dll
 
     - name: Test (Release)
       run: dotnet test src -c Release
@@ -36,14 +38,14 @@ jobs:
       run: dotnet test src -c Debug
 
     - name: Coverlet
-      run: dotnet test src -c Release -f netcoreapp2.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+      run: dotnet test src -c Release -f netcoreapp3.1 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp2.1.info
+        path-to-lcov: src/${{env.PROJECT_NAME}}.Tests/coverage.netcoreapp3.1.info
 
     - name: Pack
       run: dotnet pack src -c Release

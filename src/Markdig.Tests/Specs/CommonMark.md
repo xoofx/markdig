@@ -9368,6 +9368,20 @@ Multiple     spaces
 <p>Multiple     spaces</p>
 ````````````````````````````````
 
+Within a blockquote a setext heading takes precedence
+over a thematic break:
+
+```````````````````````````````` example
+> Foo
+> ---
+> bar
+.
+<blockquote>
+<h2>Foo</h2>
+<p>bar</p>
+</blockquote>
+````````````````````````````````
+
 
 <!-- END TESTS -->
 

@@ -155,6 +155,11 @@ namespace Markdig.Parsers
         /// Gets the character position before the indent occurred.
         /// </summary>
         public int StartBeforeIndent { get; private set; }
+        
+        /// <summary>
+        /// Gets a boolean indicating whether the current line being parsed is lazy continuation.
+        /// </summary>
+        public bool IsLazy { get; private set; }
 
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.
@@ -652,6 +657,8 @@ namespace Markdig.Parsers
         /// </exception>
         private void TryContinueBlocks()
         {
+            IsLazy = false;
+
             // Set all blocks non opened.
             // They will be marked as open in the following loop
             for (int i = 1; i < OpenedBlocks.Count; i++)
@@ -806,6 +813,7 @@ namespace Markdig.Parsers
         {
             for (int j = 0; j < parsers.Length; j++)
             {
+                IsLazy = false;
                 var blockParser = parsers[j];
                 if (Line.IsEmpty)
                 {
@@ -832,9 +840,9 @@ namespace Markdig.Parsers
                     continue;
                 }
 
-                bool isLazyParagraph = blockParser is ParagraphBlockParser && lastBlock is ParagraphBlock;
+                IsLazy = blockParser is ParagraphBlockParser && lastBlock is ParagraphBlock;
 
-                var result = isLazyParagraph
+                var result = IsLazy
                     ? blockParser.TryContinue(this, lastBlock)
                     : blockParser.TryOpen(this);
 
@@ -842,7 +850,7 @@ namespace Markdig.Parsers
                 {
                     // If we have reached a blank line after trying to parse a paragraph
                     // we can ignore it
-                    if (isLazyParagraph && IsBlankLine)
+                    if (IsLazy && IsBlankLine)
                     {
                         ContinueProcessingLine = false;
                         break;
@@ -853,7 +861,7 @@ namespace Markdig.Parsers
                 // Special case for paragraph
                 UpdateLastBlockAndContainer();
 
-                if (isLazyParagraph && CurrentBlock is ParagraphBlock paragraph)
+                if (IsLazy && CurrentBlock is ParagraphBlock paragraph)
                 {
                     Debug.Assert(NewBlocks.Count == 0);
 
@@ -895,6 +903,8 @@ namespace Markdig.Parsers
 
                 // We have a leaf node, we can stop
             }
+
+            IsLazy = false;
             return false;
         }
 

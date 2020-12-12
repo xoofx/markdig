@@ -1,4 +1,3 @@
-// Generated: 2019-04-05 16:06:14
 
 // --------------------------------
 //             Headings
@@ -79,15 +78,15 @@ namespace Markdig.Tests.Specs.Normalize.Headings
             //     Heading
             //     =======
             //     
-            //     Text after two newlines
+            //     Text after two newlines 1
             //
             // Should be rendered as:
             //     # Heading
             //     
-            //     Text after two newlines
+            //     Text after two newlines 1
 
             Console.WriteLine("Example 3\nSection Headings\n");
-            TestNormalize.TestSpec("Heading\n=======\n\nText after two newlines", "# Heading\n\nText after two newlines", "");
+            TestNormalize.TestSpec("Heading\n=======\n\nText after two newlines 1", "# Heading\n\nText after two newlines 1", "");
         }
     }
 }

@@ -5,13 +5,14 @@ VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{061866E2-005C-4D13-A338-EA464BBEC60F}"
 	ProjectSection(SolutionItems) = preProject
-		..\changelog.md = ..\changelog.md
-		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
-		..\license.txt = ..\license.txt
-		..\readme.md = ..\readme.md
 		..\.editorconfig = ..\.editorconfig
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
+		..\changelog.md = ..\changelog.md
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		global.json = global.json
+		..\license.txt = ..\license.txt
+		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdig", "Markdig\Markdig.csproj", "{8A58A7E2-627C-4F41-933F-5AC92ADFAB48}"

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.22.1 (2 Dec 2020)
+- Update logo for NuGet package
+
+## 0.22.0 (05 Oct 2020)
+- Fix Setext headings in block quotes.
+- Fix tel: treated as autolink ([PR #478](https://github.com/lunet-io/markdig/pull/478)
+- Make Inline.FirstParentOfType public ([PR #474](https://github.com/lunet-io/markdig/pull/474)
+- Fix `&` to be parsed as a punctuation while it was detected as a html entity in certain cases ([PR #471](https://github.com/lunet-io/markdig/pull/471)
+- Add ParentBlock property to ContainerInline ([PR #468](https://github.com/lunet-io/markdig/pull/468)
+
 ## 0.21.1 (17 Aug 2020)
 - Fix Markdig.Signed on GitHub Actions
 
