@@ -19,7 +19,9 @@ namespace Markdig
     /// </summary>
     public static partial class Markdown
     {
-        public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
+        public static readonly string Version = ((AssemblyFileVersionAttribute)typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
+
+        private static readonly MarkdownPipeline _defaultPipeline = new MarkdownPipelineBuilder().Build();
 
         /// <summary>
         /// Normalizes the specified markdown to a normalized markdown text.
@@ -47,8 +49,9 @@ namespace Markdig
         /// <returns>A normalized markdown text.</returns>
         public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
-            pipeline ??= new MarkdownPipelineBuilder().Build();
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer
             var renderer = new NormalizeRenderer(writer, options);
@@ -71,8 +74,10 @@ namespace Markdig
         public static string ToHtml(string markdown, MarkdownPipeline pipeline = null)
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
-            pipeline ??= new MarkdownPipelineBuilder().Build();
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
 
             var renderer = pipeline.GetCacheableHtmlRenderer();
 
@@ -98,8 +103,10 @@ namespace Markdig
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
-            pipeline ??= new MarkdownPipelineBuilder().Build();
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer
             var renderer = new HtmlRenderer(writer);
@@ -124,9 +131,11 @@ namespace Markdig
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (renderer == null) ThrowHelper.ArgumentNullException(nameof(renderer));
-            pipeline ??= new MarkdownPipelineBuilder().Build();
 
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
+
             var document = Parse(markdown, pipeline, context);
             pipeline.Setup(renderer);
             return renderer.Render(document);
@@ -155,9 +164,11 @@ namespace Markdig
         public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline, MarkdownParserContext context = null)
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
-            pipeline ??= new MarkdownPipelineBuilder().Build();
 
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
+
             return MarkdownParser.Parse(markdown, pipeline, context);
         }
 
@@ -184,8 +195,10 @@ namespace Markdig
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
-            pipeline ??= new MarkdownPipelineBuilder().Build();
-            pipeline = CheckForSelfPipeline(pipeline, markdown);
+
+            pipeline = pipeline is null
+                ? _defaultPipeline
+                : CheckForSelfPipeline(pipeline, markdown);
 
             // We override the renderer with our own writer
             var renderer = new HtmlRenderer(writer)
