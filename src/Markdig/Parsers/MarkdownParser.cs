@@ -26,8 +26,6 @@ namespace Markdig.Parsers
         private readonly ProcessDocumentDelegate documentProcessed;
         private readonly bool preciseSourceLocation;
 
-        private readonly int roughLineCountEstimate;
-
         private LineReader lineReader;
 
         /// <summary>
@@ -43,7 +41,6 @@ namespace Markdig.Parsers
             if (text == null) ThrowHelper.ArgumentNullException_text();
             if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
-            roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
             lineReader = new LineReader(text);
             preciseSourceLocation = pipeline.PreciseSourceLocation;
@@ -61,6 +58,12 @@ namespace Markdig.Parsers
             };
 
             documentProcessed = pipeline.DocumentProcessed;
+
+            if (preciseSourceLocation)
+            {
+                int roughLineCountEstimate = text.Length / 40;
+                document.LineStartIndexes = new List<int>(Math.Min(512, roughLineCountEstimate));
+            }
         }
 
         /// <summary>
@@ -87,12 +90,6 @@ namespace Markdig.Parsers
         /// <returns>A document instance</returns>
         private MarkdownDocument Parse()
         {
-            if (preciseSourceLocation)
-            {
-                // Save some List resizing allocations
-                document.LineStartIndexes = new List<int>(Math.Min(512, roughLineCountEstimate));
-            }
-
             ProcessBlocks();
             ProcessInlines();
 
