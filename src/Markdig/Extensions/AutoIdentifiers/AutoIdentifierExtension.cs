@@ -20,8 +20,15 @@ namespace Markdig.Extensions.AutoIdentifiers
     public class AutoIdentifierExtension : IMarkdownExtension
     {
         private const string AutoIdentifierKey = "AutoIdentifier";
-        private readonly AutoIdentifierOptions options;
-        private readonly StripRendererCache rendererCache = new StripRendererCache();
+        private const string HeadingReferencesKey = "HeadingReferences";
+
+        private static readonly StripRendererCache _rendererCache = new StripRendererCache();
+        private static readonly ProcessInlineDelegate _document_ProcessInlinesBegin = DocumentProcessInlinesBegin;
+        private static readonly LinkReferenceDefinition.CreateLinkInlineDelegate _createLinkInlineForHeadingDelegate = CreateLinkInlineForHeading;
+
+        private readonly AutoIdentifierOptions _options;
+        private readonly ProcessInlineDelegate _headingBlock_ProcessInlinesEndDelegate;
+        private readonly ProcessBlockDelegate _headingBlockParser_ClosedDelegate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoIdentifierExtension"/> class.
@@ -29,7 +36,9 @@ namespace Markdig.Extensions.AutoIdentifiers
         /// <param name="options">The options.</param>
         public AutoIdentifierExtension(AutoIdentifierOptions options)
         {
-            this.options = options;
+            _options = options;
+            _headingBlock_ProcessInlinesEndDelegate = HeadingBlock_ProcessInlinesEnd;
+            _headingBlockParser_ClosedDelegate = HeadingBlockParser_Closed;
         }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -38,15 +47,15 @@ namespace Markdig.Extensions.AutoIdentifiers
             if (headingBlockParser != null)
             {
                 // Install a hook on the HeadingBlockParser when a HeadingBlock is actually processed
-                headingBlockParser.Closed -= HeadingBlockParser_Closed;
-                headingBlockParser.Closed += HeadingBlockParser_Closed;
+                headingBlockParser.Closed -= _headingBlockParser_ClosedDelegate;
+                headingBlockParser.Closed += _headingBlockParser_ClosedDelegate;
             }
             var paragraphBlockParser = pipeline.BlockParsers.FindExact<ParagraphBlockParser>();
             if (paragraphBlockParser != null)
             {
                 // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a Setex heading
-                paragraphBlockParser.Closed -= HeadingBlockParser_Closed;
-                paragraphBlockParser.Closed += HeadingBlockParser_Closed;
+                paragraphBlockParser.Closed -= _headingBlockParser_ClosedDelegate;
+                paragraphBlockParser.Closed += _headingBlockParser_ClosedDelegate;
             }
         }
 
@@ -68,7 +77,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
 
             // If the AutoLink options is set, we register a LinkReferenceDefinition at the document level
-            if ((options & AutoIdentifierOptions.AutoLink) != 0)
+            if ((_options & AutoIdentifierOptions.AutoLink) != 0)
             {
                 var headingLine = headingBlock.Lines.Lines[0];
 
@@ -77,48 +86,48 @@ namespace Markdig.Extensions.AutoIdentifiers
                 var linkRef = new HeadingLinkReferenceDefinition()
                 {
                     Heading = headingBlock,
-                    CreateLinkInline = CreateLinkInlineForHeading
+                    CreateLinkInline = _createLinkInlineForHeadingDelegate
                 };
 
                 var doc = processor.Document;
-                var dictionary = doc.GetData(this) as Dictionary<string, HeadingLinkReferenceDefinition>;
+                var dictionary = doc.GetData(HeadingReferencesKey) as Dictionary<string, HeadingLinkReferenceDefinition>;
                 if (dictionary == null)
                 {
                     dictionary = new Dictionary<string, HeadingLinkReferenceDefinition>();
-                    doc.SetData(this, dictionary);
-                    doc.ProcessInlinesBegin += DocumentOnProcessInlinesBegin;
+                    doc.SetData(HeadingReferencesKey, dictionary);
+                    doc.ProcessInlinesBegin += _document_ProcessInlinesBegin;
                 }
                 dictionary[text] = linkRef;
             }
 
             // Then we register after inline have been processed to actually generate the proper #id
-            headingBlock.ProcessInlinesEnd += HeadingBlock_ProcessInlinesEnd;
+            headingBlock.ProcessInlinesEnd += _headingBlock_ProcessInlinesEndDelegate;
         }
 
-        private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline inline)
+        private static void DocumentProcessInlinesBegin(InlineProcessor processor, Inline inline)
         {
             var doc = processor.Document;
-            doc.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
-            var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this);
+            doc.ProcessInlinesBegin -= _document_ProcessInlinesBegin;
+            var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(HeadingReferencesKey);
             foreach (var keyPair in dictionary)
             {
                 // Here we make sure that auto-identifiers will not override an existing link definition
                 // defined in the document
                 // If it is the case, we skip the auto identifier for the Heading
-                if (!doc.TryGetLinkReferenceDefinition(keyPair.Key, out var linkDef))
+                if (!doc.TryGetLinkReferenceDefinition(keyPair.Key, out _))
                 {
                     doc.SetLinkReferenceDefinition(keyPair.Key, keyPair.Value);
                 }
             }
             // Once we are done, we don't need to keep the intermediate dictionary around
-            doc.RemoveData(this);
+            doc.RemoveData(HeadingReferencesKey);
         }
 
         /// <summary>
         /// Callback when there is a reference to found to a heading.
         /// Note that reference are only working if they are declared after.
         /// </summary>
-        private Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline child)
+        private static Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline child)
         {
             var headingRef = (HeadingLinkReferenceDefinition) linkRef;
             return new LinkInline()
@@ -150,6 +159,8 @@ namespace Markdig.Extensions.AutoIdentifiers
                 return;
             }
 
+            headingBlock.ProcessInlinesEnd -= _headingBlock_ProcessInlinesEndDelegate;
+
             // If id is already set, don't try to modify it
             var attributes = processor.Block.GetAttributes();
             if (attributes.Id != null)
@@ -158,16 +169,16 @@ namespace Markdig.Extensions.AutoIdentifiers
             }
 
             // Use internally a HtmlRenderer to strip links from a heading
-            var stripRenderer = rendererCache.Get();
+            var stripRenderer = _rendererCache.Get();
 
             stripRenderer.Render(headingBlock.Inline);
             var headingText = stripRenderer.Writer.ToString();
-            rendererCache.Release(stripRenderer);
+            _rendererCache.Release(stripRenderer);
 
             // Urilize the link
-            headingText = (options & AutoIdentifierOptions.GitHub) != 0
+            headingText = (_options & AutoIdentifierOptions.GitHub) != 0
                 ? LinkHelper.UrilizeAsGfm(headingText)
-                : LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
+                : LinkHelper.Urilize(headingText, (_options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
 
             // If the heading is empty, use the word "section" instead
             var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
