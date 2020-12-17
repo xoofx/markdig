@@ -127,7 +127,7 @@ namespace Markdig.Helpers
                     case '\0':
                         return false;
                     case '>':
-                        text.NextChar();
+                        text.SkipChar();
                         builder.Append(c);
                         return true;
                     case '/':
@@ -137,7 +137,7 @@ namespace Markdig.Helpers
                         {
                             return false;
                         }
-                        text.NextChar();
+                        text.SkipChar();
                         builder.Append('>');
                         return true;
                     case '=':
@@ -269,7 +269,7 @@ namespace Markdig.Helpers
 
                 if (c == '>')
                 {
-                    text.NextChar();
+                    text.SkipChar();
                     builder.Append('>');
                     return true;
                 }
@@ -304,7 +304,7 @@ namespace Markdig.Helpers
                         if (c == '>')
                         {
                             builder.Append('>');
-                            text.NextChar();
+                            text.SkipChar();
                             return true;
                         }
 
@@ -337,7 +337,7 @@ namespace Markdig.Helpers
                 c = text.NextChar();
                 if (c == '>')
                 {
-                    text.NextChar();
+                    text.SkipChar();
                     builder.Append('>');
                     return true;
                 }
@@ -392,7 +392,7 @@ namespace Markdig.Helpers
                     if (c == '>')
                     {
                         builder.Append('>');
-                        text.NextChar();
+                        text.SkipChar();
                         return true;
                     }
                     return false;
@@ -417,7 +417,7 @@ namespace Markdig.Helpers
                 if (c == '>' && prevChar == '?')
                 {
                     builder.Append('>');
-                    text.NextChar();
+                    text.SkipChar();
                     return true;
                 }
                 prevChar = c;
@@ -532,7 +532,7 @@ namespace Markdig.Helpers
                 c = slice.PeekChar();
                 if (c == 'x' || c == 'X')
                 {
-                    c = slice.NextChar(); // skip #
+                    slice.SkipChar(); // skip #
                     // expect 1-6 hex digits starting from pos+3
                     while (c != '\0')
                     {

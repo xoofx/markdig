@@ -15,7 +15,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, LiteralInline obj)
         {
-            if (obj.IsFirstCharacterEscaped && obj.Content.Length > 0 && obj.Content[obj.Content.Start].IsAsciiPunctuation())
+            if (obj.IsFirstCharacterEscaped && !obj.Content.IsEmpty && obj.Content[obj.Content.Start].IsAsciiPunctuation())
             {
                 renderer.Write('\\');
             }

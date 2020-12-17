@@ -49,7 +49,7 @@ namespace Markdig.Parsers
 
             var line = state.Line;
             var startPosition = line.Start;
-            line.NextChar();
+            line.SkipChar();
             var result = TryParseTagType16(state, line, state.ColumnBeforeIndent, startPosition);
 
             // HTML blocks of type 7 cannot interrupt a paragraph:

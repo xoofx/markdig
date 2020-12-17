@@ -56,7 +56,7 @@ namespace Markdig.Extensions.TaskLists
                 return false;
             }
             // Skip last ]
-            slice.NextChar();
+            slice.SkipChar();
 
             // Create the TaskList
             var taskItem = new TaskList()

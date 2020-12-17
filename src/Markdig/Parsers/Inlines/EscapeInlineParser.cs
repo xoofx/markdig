@@ -36,7 +36,7 @@ namespace Markdig.Parsers.Inlines
                     IsFirstCharacterEscaped = true,
                 };
                 processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                slice.NextChar();
+                slice.SkipChar();
                 return true;
             }
 
@@ -52,7 +52,7 @@ namespace Markdig.Parsers.Inlines
                     Column = column
                 };
                 processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                slice.NextChar();
+                slice.SkipChar();
                 return true;
             }
             return false;

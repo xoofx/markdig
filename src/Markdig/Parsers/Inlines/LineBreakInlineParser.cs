@@ -37,7 +37,7 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
-            slice.NextChar(); // Skip \n
+            slice.SkipChar(); // Skip \n
 
             processor.Inline = new LineBreakInline
             {

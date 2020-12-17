@@ -246,7 +246,7 @@ namespace Markdig.Helpers
                             break;
                         }
 
-                        text.NextChar();
+                        text.SkipChar();
                         link = builder.ToString();
                         builder.Length = 0;
                         return true;
@@ -294,7 +294,7 @@ namespace Markdig.Helpers
 
                     if (c == '>')
                     {
-                        text.NextChar();
+                        text.SkipChar();
                         link = builder.ToString();
                         builder.Length = 0;
                         return true;
@@ -355,7 +355,7 @@ namespace Markdig.Helpers
             // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
             if (c == '(')
             {
-                text.NextChar();
+                text.SkipChar();
                 text.TrimStart();
 
                 var pos = text.Start;
@@ -407,7 +407,7 @@ namespace Markdig.Helpers
             if (isValid)
             {
                 // Skip ')'
-                text.NextChar();
+                text.SkipChar();
                 title ??= string.Empty;
             }
 
@@ -466,7 +466,7 @@ namespace Markdig.Helpers
                         }
 
                         // Skip last quote
-                        text.NextChar();
+                        text.SkipChar();
                         isValid = true;
                         break;
                     }
@@ -527,7 +527,7 @@ namespace Markdig.Helpers
                     c = text.NextChar();
                     if (!hasEscape && c == '>')
                     {
-                        text.NextChar();
+                        text.SkipChar();
                         isValid = true;
                         break;
                     }
@@ -743,7 +743,7 @@ namespace Markdig.Helpers
                 label = null;
                 return false;
             }
-            text.NextChar(); // Skip ':'
+            text.SkipChar(); // Skip ':'
 
             // Skip any whitespace before the url
             text.TrimStart();
@@ -873,7 +873,7 @@ namespace Markdig.Helpers
 
                     if (c == ']')
                     {
-                        lines.NextChar(); // Skip ]
+                        lines.SkipChar(); // Skip ]
                         if (allowEmpty || hasNonWhiteSpace)
                         {
                             // Remove trailing spaces

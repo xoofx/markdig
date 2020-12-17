@@ -60,7 +60,7 @@ namespace Markdig.Parsers.Inlines
                     slice = saved;
 
                     // Else we insert a LinkDelimiter
-                    slice.NextChar();
+                    slice.SkipChar();
                     processor.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
@@ -74,7 +74,7 @@ namespace Markdig.Parsers.Inlines
                     return true;
 
                 case ']':
-                    slice.NextChar();
+                    slice.SkipChar();
                     if (processor.Inline != null)
                     {
                         if (TryProcessLinkOrImage(processor, ref slice))
@@ -252,8 +252,8 @@ namespace Markdig.Parsers.Inlines
                     label = openParent.Label;
                     labelSpan = openParent.LabelSpan;
                     isLabelSpanLocal = false;
-                    text.NextChar(); // Skip [
-                    text.NextChar(); // Skip ]
+                    text.SkipChar(); // Skip [
+                    text.SkipChar(); // Skip ]
                 }
             }
             else

@@ -107,7 +107,7 @@ namespace Markdig.Extensions.GenericAttributes
                 if (c == '}')
                 {
                     isValid = true;
-                    line.NextChar(); // skip }
+                    line.SkipChar(); // skip }
                     break;
                 }
 
@@ -191,7 +191,7 @@ namespace Markdig.Extensions.GenericAttributes
                     }
 
                     // Go to next char, skip any spaces
-                    line.NextChar();
+                    line.SkipChar();
                     line.TrimStart();
 
                     int startValue = -1;

@@ -60,7 +60,7 @@ namespace Markdig.Extensions.Tables
             if (c == ':')
             {
                 hasLeft = true;
-                slice.NextChar();
+                slice.SkipChar();
             }
 
             slice.TrimStart();
@@ -91,7 +91,7 @@ namespace Markdig.Extensions.Tables
             if (c == ':')
             {
                 hasRight = true;
-                slice.NextChar();
+                slice.SkipChar();
             }
             slice.TrimStart();
 

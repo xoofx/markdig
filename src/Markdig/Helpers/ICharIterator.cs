@@ -32,11 +32,22 @@ namespace Markdig.Helpers
         char NextChar();
 
         /// <summary>
+        /// Goes to the next character, incrementing the <see cref="Start" /> position.
+        /// </summary>
+        void SkipChar();
+
+        /// <summary>
+        /// Peeks at the next character, without incrementing the <see cref="Start"/> position.
+        /// </summary>
+        /// <returns>The next character. `\0` is end of the iteration.</returns>
+        char PeekChar();
+
+        /// <summary>
         /// Peeks at the next character, without incrementing the <see cref="Start"/> position.
         /// </summary>
         /// <param name="offset"></param>
         /// <returns>The next character. `\0` is end of the iteration.</returns>
-        char PeekChar(int offset = 1);
+        char PeekChar(int offset);
 
         /// <summary>
         /// Gets a value indicating whether this instance is empty.

@@ -212,7 +212,7 @@ namespace Markdig.Parsers
             }
             else
             {
-                Line.NextChar();
+                Line.SkipChar();
                 Column++;
             }
         }

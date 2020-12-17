@@ -144,7 +144,7 @@ namespace Markdig.Parsers.Inlines
             char pc = (char)0;
             if (processor.Inline is HtmlEntityInline htmlEntityInline)
             {
-                if (htmlEntityInline.Transcoded.Length > 0)
+                if (!htmlEntityInline.Transcoded.IsEmpty)
                 {
                     pc = htmlEntityInline.Transcoded[htmlEntityInline.Transcoded.End];
                 }
