@@ -23,6 +23,21 @@ namespace Markdig
 
         private static readonly MarkdownPipeline _defaultPipeline = new MarkdownPipelineBuilder().Build();
 
+        private static MarkdownPipeline GetPipeline(MarkdownPipeline pipeline, string markdown)
+        {
+            if (pipeline is null)
+            {
+                return _defaultPipeline;
+            }
+
+            var selfPipeline = pipeline.Extensions.Find<SelfPipelineExtension>();
+            if (selfPipeline != null)
+            {
+                return selfPipeline.CreatePipelineFromInput(markdown);
+            }
+            return pipeline;
+        }
+
         /// <summary>
         /// Normalizes the specified markdown to a normalized markdown text.
         /// </summary>
@@ -49,15 +64,15 @@ namespace Markdig
         /// <returns>A normalized markdown text.</returns>
         public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions options = null, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
 
-            // We override the renderer with our own writer
+            pipeline = GetPipeline(pipeline, markdown);
+
+            var document = MarkdownParser.Parse(markdown, pipeline, context);
+
             var renderer = new NormalizeRenderer(writer, options);
             pipeline.Setup(renderer);
 
-            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             writer.Flush();
 
@@ -75,19 +90,17 @@ namespace Markdig
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
 
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            pipeline = GetPipeline(pipeline, markdown);
 
-            var renderer = pipeline.GetCacheableHtmlRenderer();
+            var document = MarkdownParser.Parse(markdown, pipeline);
 
-            var document = Parse(markdown, pipeline);
+            using var rentedRenderer = pipeline.RentHtmlRenderer();
+            HtmlRenderer renderer = rentedRenderer.Instance;
+
             renderer.Render(document);
             renderer.Writer.Flush();
 
-            string html = renderer.Writer.ToString();
-            pipeline.ReleaseCacheableHtmlRenderer(renderer);
-            return html;
+            return renderer.Writer.ToString();
         }
 
         /// <summary>
@@ -104,15 +117,13 @@ namespace Markdig
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
 
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            pipeline = GetPipeline(pipeline, markdown);
 
-            // We override the renderer with our own writer
-            var renderer = new HtmlRenderer(writer);
-            pipeline.Setup(renderer);
+            var document = MarkdownParser.Parse(markdown, pipeline, context);
 
-            var document = Parse(markdown, pipeline, context);
+            using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
+            HtmlRenderer renderer = rentedRenderer.Instance;
+
             renderer.Render(document);
             writer.Flush();
 
@@ -132,11 +143,10 @@ namespace Markdig
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (renderer == null) ThrowHelper.ArgumentNullException(nameof(renderer));
 
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            pipeline = GetPipeline(pipeline, markdown);
 
-            var document = Parse(markdown, pipeline, context);
+            var document = MarkdownParser.Parse(markdown, pipeline, context);
+
             pipeline.Setup(renderer);
             return renderer.Render(document);
         }
@@ -149,7 +159,6 @@ namespace Markdig
         /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
         public static MarkdownDocument Parse(string markdown)
         {
-            if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             return Parse(markdown, null);
         }
 
@@ -165,21 +174,9 @@ namespace Markdig
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
 
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            pipeline = GetPipeline(pipeline, markdown);
 
             return MarkdownParser.Parse(markdown, pipeline, context);
-        }
-
-        private static MarkdownPipeline CheckForSelfPipeline(MarkdownPipeline pipeline, string markdown)
-        {
-            var selfPipeline = pipeline.Extensions.Find<SelfPipelineExtension>();
-            if (selfPipeline != null)
-            {
-                return selfPipeline.CreatePipelineFromInput(markdown);
-            }
-            return pipeline;
         }
 
         /// <summary>
@@ -196,11 +193,10 @@ namespace Markdig
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
 
-            pipeline = pipeline is null
-                ? _defaultPipeline
-                : CheckForSelfPipeline(pipeline, markdown);
+            pipeline = GetPipeline(pipeline, markdown);
 
-            // We override the renderer with our own writer
+            var document = MarkdownParser.Parse(markdown, pipeline, context);
+
             var renderer = new HtmlRenderer(writer)
             {
                 EnableHtmlForBlock = false,
@@ -209,7 +205,6 @@ namespace Markdig
             };
             pipeline.Setup(renderer);
 
-            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             writer.Flush();
 

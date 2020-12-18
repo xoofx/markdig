@@ -28,9 +28,7 @@ namespace Markdig.Renderers
         protected TextRendererBase(TextWriter writer)
         {
             if (writer == null) ThrowHelper.ArgumentNullException_writer();
-            this.Writer = writer;
-            // By default we output a newline with '\n' only even on Windows platforms
-            Writer.NewLine = "\n";
+            Writer = writer;
         }
 
         /// <summary>
@@ -47,6 +45,8 @@ namespace Markdig.Renderers
                     ThrowHelper.ArgumentNullException(nameof(value));
                 }
 
+                // By default we output a newline with '\n' only even on Windows platforms
+                value.NewLine = "\n";
                 writer = value;
             }
         }
@@ -92,15 +92,6 @@ namespace Markdig.Renderers
 
         internal void Reset()
         {
-            if (Writer is StringWriter stringWriter)
-            {
-                stringWriter.GetStringBuilder().Length = 0;
-            }
-            else
-            {
-                ThrowHelper.InvalidOperationException("Cannot reset this TextWriter instance");
-            }
-
             previousWasLine = true;
             indents.Clear();
         }

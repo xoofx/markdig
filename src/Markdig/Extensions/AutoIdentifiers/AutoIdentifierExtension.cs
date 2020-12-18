@@ -217,6 +217,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             protected override void Reset(HtmlRenderer instance)
             {
                 instance.Reset();
+                ((StringWriter)instance.Writer).GetStringBuilder().Length = 0;
             }
         }
     }
