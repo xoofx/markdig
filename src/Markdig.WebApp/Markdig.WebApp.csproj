@@ -9,6 +9,7 @@
     <ApplicationInsightsResourceId>/subscriptions/b6745039-70e7-4641-994b-5457cb220e2a/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Markdig.WebApp</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/b6745039-70e7-4641-994b-5457cb220e2a/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Markdig.WebApp</ApplicationInsightsAnnotationResourceId>
     <IsPackable>false</IsPackable>
+    <UserSecretsId>683145f2-53a7-4938-bd96-35e60ac55d95</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
