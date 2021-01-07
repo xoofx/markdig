@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
@@ -33,6 +34,28 @@ namespace Markdig.Helpers
         public static void ArgumentOutOfRangeException_index() => throw new ArgumentOutOfRangeException("index");
 
         public static void InvalidOperationException(string message) => throw new InvalidOperationException(message);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CheckDepthLimit(int depth, bool useLargeLimit = false)
+        {
+            // Very conservative limit used to limit nesting in the final AST
+            // Used to avoid a StackOverflow in the recursive rendering process
+            const int DepthLimit = 128;
+
+            // Limit used for reducing the maximum execution time for pathological-case inputs
+            // Applies to:
+            // a) inputs that would fail depth checks in the future (for example "[[[[[..." or ">>>>>>...")
+            // b) very large pipe tables
+            const int LargeDepthLimit = 10 * 1024;
+
+            int limit = useLargeLimit ? LargeDepthLimit : DepthLimit;
+
+            if (depth > limit)
+                DepthLimitExceeded();
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void DepthLimitExceeded() => throw new ArgumentException("Markdown elements in the input are too deeply nested - depth limit exceeded. Input is most likely not sensible or is a very large table.");
+        }
 
         public static void ThrowArgumentNullException(ExceptionArgument argument)
         {

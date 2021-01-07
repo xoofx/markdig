@@ -101,6 +101,7 @@ namespace Markdig.Renderers
                 ThrowHelper.InvalidOperationException("Cannot reset this TextWriter instance");
             }
 
+            childrenDepth = 0;
             previousWasLine = true;
             indents.Clear();
         }

@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -79,6 +80,7 @@ namespace Markdig.Syntax
         public void UpdateSpanEnd(int spanEnd)
         {
             // Update parent spans
+            int depth = 0;
             var parent = this;
             while (parent != null)
             {
@@ -87,7 +89,9 @@ namespace Markdig.Syntax
                     parent.Span.End = spanEnd;
                 }
                 parent = parent.Parent;
+                depth++;
             }
+            ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
         }
     }
 }
