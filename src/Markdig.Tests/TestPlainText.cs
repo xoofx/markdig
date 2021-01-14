@@ -21,6 +21,7 @@ namespace Markdig.Tests
         [TestCase(/* markdownText: */ "- foo\n- bar\n- baz", /* expected: */ "foo\nbar\nbaz\n")]
         [TestCase(/* markdownText: */ "- foo<baz", /* expected: */ "foo<baz\n")]
         [TestCase(/* markdownText: */ "- foo&lt;baz", /* expected: */ "foo<baz\n")]
+        [TestCase(/* markdownText: */ "## foo `bar::baz >`", /* expected: */ "foo bar::baz >\n")]
         public void TestPlainEnsureNewLine(string markdownText, string expected)
         {            
             var actual = Markdown.ToPlainText(markdownText);
