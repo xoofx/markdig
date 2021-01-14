@@ -191,6 +191,7 @@ namespace Markdig.Parsers
                         newItem.Container = (ContainerBlock)block;
                         block.OnProcessInlinesBegin(inlineProcessor);
                         newItem.Index = 0;
+                        ThrowHelper.CheckDepthLimit(blocks.Count);
                         blocks.Push(newItem);
                         goto process_new_block;
                     }

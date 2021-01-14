@@ -307,7 +307,7 @@ namespace Markdig.Parsers
         private ContainerInline FindLastContainer()
         {
             var container = Block.Inline;
-            while (true)
+            for (int depth = 0; ; depth++)
             {
                 if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)
                 {
@@ -315,10 +315,10 @@ namespace Markdig.Parsers
                 }
                 else
                 {
-                    break;
+                    ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
+                    return container;
                 }
             }
-            return container;
         }
     }
 }
