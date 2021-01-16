@@ -12,12 +12,12 @@ namespace Markdig.Parsers.Inlines
     /// An inline parser for parsing <see cref="AutolinkInline"/>.
     /// </summary>
     /// <seealso cref="InlineParser" />
-    public class AutolineInlineParser : InlineParser
+    public class AutolinkInlineParser : InlineParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AutolineInlineParser"/> class.
+        /// Initializes a new instance of the <see cref="AutolinkInlineParser"/> class.
         /// </summary>
-        public AutolineInlineParser()
+        public AutolinkInlineParser()
         {
             OpeningCharacters = new[] {'<'};
             EnableHtmlParsing = true;
