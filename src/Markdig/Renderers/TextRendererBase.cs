@@ -90,7 +90,7 @@ namespace Markdig.Renderers
             indents = new List<string>();
         }
 
-        internal void Reset()
+        protected internal void Reset()
         {
             if (Writer is StringWriter stringWriter)
             {
