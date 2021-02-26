@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -34,7 +35,7 @@ namespace Markdig.Extensions.Emoji
             }
 
             // Try to match an emoji shortcode or smiley
-            if (!_emojiMapping.PrefixTree.TryMatchLongest(slice.Text, slice.Start, slice.Length, out KeyValuePair<string, string> match))
+            if (!_emojiMapping.PrefixTree.TryMatchLongest(slice.Text.AsSpan(slice.Start, slice.Length), out KeyValuePair<string, string> match))
             {
                 return false;
             }

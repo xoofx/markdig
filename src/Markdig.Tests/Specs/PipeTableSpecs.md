@@ -463,7 +463,7 @@ a | b `
 <p>a | b <code>0 |</code></p> 
 ````````````````````````````````
 
-**Rule #7**
+**Rule #8**
 
 A HTML inline has a higher precedence than a column delimiter `|`: 
  
@@ -488,7 +488,7 @@ a <a href="" title="|"></a> | b
 </table>
 ````````````````````````````````
 
-**Rule #8**
+**Rule #9**
 
 Links have a higher precedence than the column delimiter character `|`:
 
@@ -513,7 +513,7 @@ a  | b
 </table>
 ````````````````````````````````
 
-** Rule #9**
+**Rule #10**
 
 It is possible to have a single row header only:
 
@@ -546,7 +546,7 @@ a  | b
 </table>
 ````````````````````````````````
 
-** Tests **
+**Tests**
 
 Tests trailing spaces after pipes
 
@@ -586,7 +586,7 @@ Tests trailing spaces after pipes
 </table>
 ````````````````````````````````
 
-** Normalized columns count **
+**Normalized columns count**
 
 The tables are normalized to the maximum number of columns found in a table
 

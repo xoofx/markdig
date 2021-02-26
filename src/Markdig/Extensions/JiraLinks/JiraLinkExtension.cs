@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize.Inlines;
@@ -34,8 +35,7 @@ namespace Markdig.Extensions.JiraLinks
         {
             // No HTML renderer required, since JiraLink type derives from InlineLink (which already has an HTML renderer)
 
-            var normalizeRenderer = renderer as NormalizeRenderer;
-            if (normalizeRenderer != null && !normalizeRenderer.ObjectRenderers.Contains<NormalizeJiraLinksRenderer>())
+            if (renderer is NormalizeRenderer normalizeRenderer && !normalizeRenderer.ObjectRenderers.Contains<NormalizeJiraLinksRenderer>())
             {
                 normalizeRenderer.ObjectRenderers.InsertBefore<LinkInlineRenderer>(new NormalizeJiraLinksRenderer());
             }

@@ -2,7 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Markdig.Helpers;
@@ -17,7 +16,7 @@ namespace Markdig.Extensions.AutoIdentifiers
     /// <summary>
     /// The auto-identifier extension
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class AutoIdentifierExtension : IMarkdownExtension
     {
         private const string AutoIdentifierKey = "AutoIdentifier";
@@ -63,8 +62,7 @@ namespace Markdig.Extensions.AutoIdentifiers
         private void HeadingBlockParser_Closed(BlockProcessor processor, Block block)
         {
             // We may have a ParagraphBlock here as we have a hook on the ParagraphBlockParser
-            var headingBlock = block as HeadingBlock;
-            if (headingBlock == null)
+            if (!(block is HeadingBlock headingBlock))
             {
                 return;
             }

@@ -1,12 +1,12 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
-using Markdig.Renderers;
 
 namespace Markdig
 {
@@ -44,13 +44,11 @@ namespace Markdig
                 new EscapeInlineParser(),
                 new EmphasisInlineParser(),
                 new CodeInlineParser(),
-                new AutolineInlineParser(),
+                new AutolinkInlineParser(),
                 new LineBreakInlineParser(),
             };
 
             Extensions = new OrderedList<IMarkdownExtension>();
-
-            StringBuilderCache = new StringBuilderCache();
         }
 
         /// <summary>
@@ -69,11 +67,6 @@ namespace Markdig
         public OrderedList<IMarkdownExtension> Extensions { get; }
 
         /// <summary>
-        /// Gets or sets the string builder cache used by the parsers.
-        /// </summary>
-        public StringBuilderCache StringBuilderCache { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to enable precise source location (slower parsing but accurate position for block and inline elements)
         /// </summary>
         public bool PreciseSourceLocation { get; set; }
@@ -84,7 +77,7 @@ namespace Markdig
         public TextWriter DebugLog { get; set; }
 
         /// <summary>
-        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse"/> method.
+        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.
         /// </summary>
         public event ProcessDocumentDelegate DocumentProcessed;
 
@@ -93,7 +86,7 @@ namespace Markdig
         /// <summary>
         /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">An extension cannot be null</exception>
+        /// <exception cref="InvalidOperationException">An extension cannot be null</exception>
         public MarkdownPipeline Build()
         {
             if (pipeline != null)
@@ -111,7 +104,7 @@ namespace Markdig
             {
                 if (extension == null)
                 {
-                    throw new InvalidOperationException("An extension cannot be null");
+                    ThrowHelper.InvalidOperationException("An extension cannot be null");
                 }
                 extension.Setup(this);
             }
@@ -120,7 +113,6 @@ namespace Markdig
                 new OrderedList<IMarkdownExtension>(Extensions),
                 new BlockParserList(BlockParsers),
                 new InlineParserList(InlineParsers),
-                StringBuilderCache,
                 DebugLog,
                 GetDocumentProcessed)
             {

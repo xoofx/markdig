@@ -9,6 +9,20 @@ namespace Markdig.Tests
 {
     public class MiscTests
     {
+        [Test]
+        public void LinkWithInvalidNonAsciiDomainNameIsIgnored()
+        {
+            // Url from https://github.com/lunet-io/markdig/issues/438
+            _ = Markdown.ToHtml("[minulém díle](http://V%20minulém%20díle%20jsme%20nainstalovali%20SQL%20Server,%20který%20je%20nutný%20pro%20běh%20Configuration%20Manageru.%20Dnes%20nás%20čeká%20instalace%20WSUS,%20což%20je%20produkt,%20jež%20je%20možné%20používat%20i%20jako%20samostatnou%20funkci%20ve%20Windows%20Serveru,%20který%20se%20stará%20o%20stažení%20a%20instalaci%20aktualizací%20z%20Microsoft%20Update%20na%20klientské%20počítače.%20Stejně%20jako%20v%20předchozích%20dílech,%20tak%20i%20v%20tomto%20si%20ukážeme%20obě%20varianty%20instalace%20–%20a%20to%20jak%20instalaci%20z%20PowerShellu,%20tak%20instalaci%20pomocí%20GUI.) ");
+
+            // Valid IDN
+            TestParser.TestSpec("[foo](http://ünicode.com)", "<p><a href=\"http://xn--nicode-2ya.com\">foo</a></p>");
+            TestParser.TestSpec("[foo](http://ünicode.ünicode.com)", "<p><a href=\"http://xn--nicode-2ya.xn--nicode-2ya.com\">foo</a></p>");
+
+            // Invalid IDN
+            TestParser.TestSpec("[foo](http://ünicode..com)", "<p><a href=\"http://%C3%BCnicode..com\">foo</a></p>");
+        }
+
         [TestCase("link [foo [bar]]")] // https://spec.commonmark.org/0.29/#example-508
         [TestCase("link [foo][bar]")]
         [TestCase("link [][foo][bar][]")]
@@ -48,6 +62,29 @@ namespace Markdig.Tests
             }
         }
 
+        [Theory]
+        [TestCase('[', 9 * 1024, true, false)]
+        [TestCase('[', 11 * 1024, true, true)]
+        [TestCase('[', 100, false, false)]
+        [TestCase('[', 150, false, true)]
+        [TestCase('>', 100, true, false)]
+        [TestCase('>', 150, true, true)]
+        public void GuardsAgainstHighlyNestedNodes(char c, int count, bool parseOnly, bool shouldThrow)
+        {
+            var markdown = new string(c, count);
+            TestDelegate test = parseOnly ? () => Markdown.Parse(markdown) : () => Markdown.ToHtml(markdown);
+
+            if (shouldThrow)
+            {
+                Exception e = Assert.Throws<ArgumentException>(test);
+                Assert.True(e.Message.Contains("depth limit"));
+            }
+            else
+            {
+                test();
+            }
+        }
+
         [Test]
         public void IsIssue356Corrected()
         {
@@ -56,6 +93,16 @@ namespace Markdig.Tests
 
             TestParser.TestSpec($"<{input}>", expected);
             TestParser.TestSpec(input, expected, "autolinks|advanced");
+        }
+
+        [Test]
+        public void IsIssue365Corrected()
+        {
+            // The scheme must be escaped too...
+            string input = "![image](\"onclick=\"alert&amp;#40;'click'&amp;#41;\"://)";
+            string expected = "<p><img src=\"%22onclick=%22alert&amp;#40;%27click%27&amp;#41;%22://\" alt=\"image\" /></p>";
+
+            TestParser.TestSpec(input, expected);
         }
 
         [Test]

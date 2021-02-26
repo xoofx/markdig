@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.Footnotes
@@ -8,7 +9,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// A inline link to a <see cref="Footnote"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.Inline" />
+    /// <seealso cref="Inline" />
     public class FootnoteLink : Inline
     {
         /// <summary>

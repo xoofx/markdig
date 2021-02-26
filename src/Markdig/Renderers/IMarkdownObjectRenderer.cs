@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -20,7 +20,7 @@ namespace Markdig.Renderers
         bool Accept(RendererBase renderer, MarkdownObject obj);
 
         /// <summary>
-        /// Writes the specified <see cref="MarkdownObject"/> to the <see cref="renderer"/>.
+        /// Writes the specified <see cref="MarkdownObject"/> to the <paramref name="renderer"/>.
         /// </summary>
         /// <param name="renderer">The renderer.</param>
         /// <param name="objectToRender">The object to render.</param>

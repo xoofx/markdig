@@ -23,7 +23,10 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException"></exception>
         public EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor) : base(parser)
         {
-            Descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
+            if (descriptor is null)
+                ThrowHelper.ArgumentNullException(nameof(descriptor));
+
+            Descriptor = descriptor;
             DelimiterChar = descriptor.Character;
         }
 

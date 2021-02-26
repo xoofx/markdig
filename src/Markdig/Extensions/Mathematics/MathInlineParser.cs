@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// An inline parser for <see cref="MathInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     /// <seealso cref="IPostInlineProcessor" />
     public class MathInlineParser : InlineParser
     {
@@ -21,7 +21,7 @@ namespace Markdig.Extensions.Mathematics
         /// </summary>
         public MathInlineParser()
         {
-            OpeningCharacters = new[] {'$'};
+            OpeningCharacters = new[] { '$' };
             DefaultClass = "math";
         }
 
@@ -50,18 +50,12 @@ namespace Markdig.Extensions.Mathematics
                 c = slice.NextChar();
             }
 
-            bool openPrevIsPunctuation;
-            bool openPrevIsWhiteSpace;
-            bool openNextIsPunctuation;
-            bool openNextIsWhiteSpace;
-            bool openNextIsDigit = c.IsDigit();
-            pc.CheckUnicodeCategory(out openPrevIsWhiteSpace, out openPrevIsPunctuation);
-            c.CheckUnicodeCategory(out openNextIsWhiteSpace, out openNextIsPunctuation);
+            pc.CheckUnicodeCategory(out bool openPrevIsWhiteSpace, out bool openPrevIsPunctuation);
+            c.CheckUnicodeCategory(out bool openNextIsWhiteSpace, out _);
 
             // Check that opening $/$$ is correct, using the different heuristics than for emphasis delimiters
-            // If a $/$$ is not preceded by a whitespace or punctuation, or followed by a digit
-            // this is a not a math block
-            if ((!openPrevIsWhiteSpace && !openPrevIsPunctuation) || openNextIsDigit)
+            // If a $/$$ is not preceded by a whitespace or punctuation, this is a not a math block
+            if ((!openPrevIsWhiteSpace && !openPrevIsPunctuation))
             {
                 return false;
             }
@@ -89,7 +83,7 @@ namespace Markdig.Extensions.Mathematics
                 }
 
                 // Don't process sticks if we have a '\' as a previous char
-                if (pc != '\\' )
+                if (pc != '\\')
                 {
                     // Record continuous whitespaces at the end
                     if (c.IsSpaceOrTab())
@@ -104,11 +98,8 @@ namespace Markdig.Extensions.Mathematics
                         bool hasClosingDollars = c == match;
                         if (hasClosingDollars)
                         {
-                            while (c == match)
-                            {
-                                closeDollars++;
-                                c = slice.NextChar();
-                            }
+                            closeDollars += slice.CountAndSkipChar(match);
+                            c = slice.CurrentChar;
                         }
 
                         if (closeDollars >= openDollars)
@@ -138,12 +129,8 @@ namespace Markdig.Extensions.Mathematics
 
             if (closeDollars >= openDollars)
             {
-                bool closePrevIsPunctuation;
-                bool closePrevIsWhiteSpace;
-                bool closeNextIsPunctuation;
-                bool closeNextIsWhiteSpace;
-                pc.CheckUnicodeCategory(out closePrevIsWhiteSpace, out closePrevIsPunctuation);
-                c.CheckUnicodeCategory(out closeNextIsWhiteSpace, out closeNextIsPunctuation);
+                pc.CheckUnicodeCategory(out bool closePrevIsWhiteSpace, out _);
+                c.CheckUnicodeCategory(out bool closeNextIsWhiteSpace, out bool closeNextIsPunctuation);
 
                 // A closing $/$$ should be followed by at least a punctuation or a whitespace
                 // and if the character after an opening $/$$ was a whitespace, it should be
@@ -163,11 +150,9 @@ namespace Markdig.Extensions.Mathematics
                 }
 
                 // Create a new MathInline
-                int line;
-                int column;
                 var inline = new MathInline()
                 {
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(slice.End)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.End)),
                     Line = line,
                     Column = column,
                     Delimiter = match,

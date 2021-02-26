@@ -11,7 +11,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// <summary>
     /// The block parser for a <see cref="DefinitionList"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class DefinitionListParser : BlockParser
     {
         /// <summary>

@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
@@ -9,7 +10,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Extension that allows to use pipe tables.
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class PipeTableExtension : IMarkdownExtension
     {
         /// <summary>
@@ -43,8 +44,7 @@ namespace Markdig.Extensions.Tables
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
+            if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
             {
                 htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
             }

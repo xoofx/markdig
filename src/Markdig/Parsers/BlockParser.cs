@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Syntax;
 
 namespace Markdig.Parsers
@@ -25,9 +26,9 @@ namespace Markdig.Parsers
         {
             if (OpeningCharacters != null)
             {
-                for (int i = 0; i < OpeningCharacters.Length; i++)
+                foreach (char openingChar in OpeningCharacters)
                 {
-                    if (OpeningCharacters[i] == c)
+                    if (openingChar == c)
                     {
                         return true;
                     }

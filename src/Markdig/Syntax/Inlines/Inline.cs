@@ -1,17 +1,18 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Markdig.Parsers;
+using Markdig.Helpers;
 
 namespace Markdig.Syntax.Inlines
 {
     /// <summary>
     /// Base class for all syntax tree inlines.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.MarkdownObject" />
+    /// <seealso cref="MarkdownObject" />
     public abstract class Inline : MarkdownObject, IInline
     {
         /// <summary>
@@ -38,14 +39,14 @@ namespace Markdig.Syntax.Inlines
         /// Inserts the specified inline after this instance.
         /// </summary>
         /// <param name="next">The inline to insert after this instance.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public void InsertAfter(Inline next)
         {
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            if (next == null) ThrowHelper.ArgumentNullException(nameof(next));
             if (next.Parent != null)
             {
-                throw new ArgumentException("Inline has already a parent", nameof(next));
+                ThrowHelper.ArgumentException("Inline has already a parent", nameof(next));
             }
 
             var previousNext = NextSibling;
@@ -69,14 +70,14 @@ namespace Markdig.Syntax.Inlines
         /// Inserts the specified inline before this instance.
         /// </summary>
         /// <param name="previous">The inline previous to insert before this instance.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException">Inline has already a parent</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public void InsertBefore(Inline previous)
         {
-            if (previous == null) throw new ArgumentNullException(nameof(previous));
+            if (previous == null) ThrowHelper.ArgumentNullException(nameof(previous));
             if (previous.Parent != null)
             {
-                throw new ArgumentException("Inline has already a parent", nameof(previous));
+                ThrowHelper.ArgumentException("Inline has already a parent", nameof(previous));
             }
 
             var previousSibling = PreviousSibling;
@@ -126,10 +127,10 @@ namespace Markdig.Syntax.Inlines
         /// <param name="inline">The inline.</param>
         /// <param name="copyChildren">if set to <c>true</c> the children of this instance are copied to the specified inline.</param>
         /// <returns>The last children</returns>
-        /// <exception cref="System.ArgumentNullException">If inline is null</exception>
+        /// <exception cref="ArgumentNullException">If inline is null</exception>
         public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
-            if (inline == null) throw new ArgumentNullException(nameof(inline));
+            if (inline == null) ThrowHelper.ArgumentNullException(nameof(inline));
 
             // Save sibling
             var parent = Parent;
@@ -223,7 +224,7 @@ namespace Markdig.Syntax.Inlines
             }
         }
 
-        internal T FirstParentOfType<T>() where T : Inline
+        public T FirstParentOfType<T>() where T : Inline
         {
             var inline = this;
             while (inline != null)
@@ -268,10 +269,10 @@ namespace Markdig.Syntax.Inlines
         /// Dumps this instance to <see cref="TextWriter"/>.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public void DumpTo(TextWriter writer)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (writer == null) ThrowHelper.ArgumentNullException_writer();
             DumpTo(writer, 0);
         }
 
@@ -280,10 +281,10 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="level">The level of indent.</param>
-        /// <exception cref="System.ArgumentNullException">if writer is null</exception>
+        /// <exception cref="ArgumentNullException">if writer is null</exception>
         public void DumpTo(TextWriter writer, int level)
         {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (writer == null) ThrowHelper.ArgumentNullException_writer();
             for (int i = 0; i < level; i++)
             {
                 writer.Write(' ');

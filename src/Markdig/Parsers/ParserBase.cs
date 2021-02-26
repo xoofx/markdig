@@ -8,7 +8,7 @@ namespace Markdig.Parsers
     /// Base class for a <see cref="BlockParser"/> or <see cref="InlineParser"/>.
     /// </summary>
     /// <typeparam name="TProcessor">Type of the parser processor</typeparam>
-    /// <seealso cref="Markdig.Parsers.IMarkdownParser{TParserState}" />
+    /// <seealso cref="IMarkdownParser{TParserState}" />
     public abstract class ParserBase<TProcessor> : IMarkdownParser<TProcessor>
     {
         /// <summary>

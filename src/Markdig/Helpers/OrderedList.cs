@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
-using System;
+
 using System.Collections.Generic;
 
 namespace Markdig.Helpers
@@ -10,7 +10,7 @@ namespace Markdig.Helpers
     /// A List that provides methods for inserting/finding before/after. See remarks.
     /// </summary>
     /// <typeparam name="T">Type of the list item</typeparam>
-    /// <seealso cref="System.Collections.Generic.List{T}" />
+    /// <seealso cref="List{T}" />
     /// <remarks>We use a typed list and don't use extension methods because it would pollute all list implements and the top level namespace.</remarks>
     public class OrderedList<T> : List<T>
     {
@@ -22,85 +22,85 @@ namespace Markdig.Helpers
         {
         }
 
-        public bool InsertBefore<TElement>(T element) where TElement : T
+        public bool InsertBefore<TItem>(T item) where TItem : T
         {
-            if (element == null) throw new ArgumentNullException(nameof(element));
+            if (item == null) ThrowHelper.ArgumentNullException_item();
             for (int i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
-                    Insert(i, element);
+                    Insert(i, item);
                     return true;
                 }
             }
             return false;
         }
 
-        public TElement Find<TElement>() where TElement : T
+        public TItem Find<TItem>() where TItem : T
         {
             for (int i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
-                    return (TElement)this[i];
+                    return (TItem)this[i];
                 }
             }
             return default;
         }
 
-        public bool TryFind<TElement>(out TElement element) where TElement : T
+        public bool TryFind<TItem>(out TItem item) where TItem : T
         {
-            element = Find<TElement>();
-            return element != null;
+            item = Find<TItem>();
+            return item != null;
         }
 
-        public TElement FindExact<TElement>() where TElement : T
+        public TItem FindExact<TItem>() where TItem : T
         {
             for (int i = 0; i < Count; i++)
             {
-                if (this[i].GetType() == typeof(TElement))
+                if (this[i].GetType() == typeof(TItem))
                 {
-                    return (TElement)this[i];
+                    return (TItem)this[i];
                 }
             }
             return default;
         }
 
-        public void AddIfNotAlready<TElement>() where TElement : class, T, new()
+        public void AddIfNotAlready<TItem>() where TItem : class, T, new()
         {
-            if (!Contains<TElement>())
+            if (!Contains<TItem>())
             {
-                Add(new TElement());
+                Add(new TItem());
             }
         }
 
-        public void AddIfNotAlready<TElement>(TElement telement) where TElement : T
+        public void AddIfNotAlready<TItem>(TItem item) where TItem : T
         {
-            if (!Contains<TElement>())
+            if (!Contains<TItem>())
             {
-                Add(telement);
+                Add(item);
             }
         }
 
-        public bool InsertAfter<TElement>(T element) where TElement : T
+        public bool InsertAfter<TItem>(T item) where TItem : T
         {
-            if (element == null) throw new ArgumentNullException(nameof(element));
+            if (item == null) ThrowHelper.ArgumentNullException_item();
             for (int i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
-                    Insert(i + 1, element);
+                    Insert(i + 1, item);
                     return true;
                 }
             }
             return false;
         }
 
-        public bool Contains<TElement>() where TElement : T
+        public bool Contains<TItem>() where TItem : T
         {
             for (int i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
                     return true;
                 }
@@ -109,16 +109,16 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
-        /// Replaces <typeparamref name="TElement"/> with <paramref name="replacement"/>.
+        /// Replaces <typeparamref name="TItem"/> with <paramref name="replacement"/>.
         /// </summary>
-        /// <typeparam name="TElement">Element type to find in the list</typeparam>
-        /// <param name="replacement">Object to replace this element with</param>
+        /// <typeparam name="TItem">Item type to find in the list</typeparam>
+        /// <param name="replacement">Object to replace this item with</param>
         /// <returns><c>true</c> if a replacement was made; otherwise <c>false</c>.</returns>
-        public bool Replace<TElement>(T replacement) where TElement : T
+        public bool Replace<TItem>(T replacement) where TItem : T
         {
             for (var i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
                     RemoveAt(i);
                     Insert(i, replacement);
@@ -129,28 +129,28 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
-        /// Replaces <typeparamref name="TElement"/> with <paramref name="newElement"/> or adds <paramref name="newElement"/>.
+        /// Replaces <typeparamref name="TItem"/> with <paramref name="newItem"/> or adds <paramref name="newItem"/>.
         /// </summary>
-        /// <typeparam name="TElement">Element type to find in the list</typeparam>
-        /// <param name="newElement">Object to add/replace the found element with</param>
+        /// <typeparam name="TItem">Item type to find in the list</typeparam>
+        /// <param name="newItem">Object to add/replace the found item with</param>
         /// <returns><c>true</c> if a replacement was made; otherwise <c>false</c>.</returns>
-        public bool ReplaceOrAdd<TElement>(T newElement) where TElement : T
+        public bool ReplaceOrAdd<TItem>(T newItem) where TItem : T
         {
-            if (Replace<TElement>(newElement))
+            if (Replace<TItem>(newItem))
                 return true;
 
-            Add(newElement);
+            Add(newItem);
             return false;
         }
 
         /// <summary>
-        /// Removes the first occurrence of <typeparamref name="TElement"/>
+        /// Removes the first occurrence of <typeparamref name="TItem"/>
         /// </summary>
-        public bool TryRemove<TElement>() where TElement : T
+        public bool TryRemove<TItem>() where TItem : T
         {
             for (int i = 0; i < Count; i++)
             {
-                if (this[i] is TElement)
+                if (this[i] is TItem)
                 {
                     RemoveAt(i);
                     return true;

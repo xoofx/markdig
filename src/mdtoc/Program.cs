@@ -37,8 +37,7 @@ namespace mdtoc
             string markdown = null;
             if (path.StartsWith("https:"))
             {
-                Uri uri;
-                if (!Uri.TryCreate(path, UriKind.Absolute, out uri))
+                if (!Uri.TryCreate(path, UriKind.Absolute, out Uri uri))
                 {
                     Error($"Unable to parse Uri `{path}`");
                     return;

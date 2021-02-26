@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Runtime.CompilerServices;
 using Markdig.Syntax;
@@ -110,7 +111,7 @@ namespace Markdig.Helpers
             return headingBuffer.GetStringAndReset();
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsReservedPunctuation(char c)
         {
             return c == '_' || c == '-' || c == '.';
@@ -332,9 +333,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseInlineLink(ref StringSlice text, out string link, out string title)
         {
-            SourceSpan linkSpan;
-            SourceSpan titleSpan;
-            return TryParseInlineLink(ref text, out link, out title, out linkSpan, out titleSpan);
+            return TryParseInlineLink(ref text, out link, out title, out SourceSpan linkSpan, out SourceSpan titleSpan);
         }
 
         public static bool TryParseInlineLink(ref StringSlice text, out string link, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan)
@@ -369,8 +368,7 @@ namespace Markdig.Helpers
                         linkSpan = SourceSpan.Empty;
                     }
 
-                    int spaceCount;
-                    text.TrimStart(out spaceCount);
+                    text.TrimStart(out int spaceCount);
                     var hasWhiteSpaces = spaceCount > 0;
 
                     c = text.CurrentChar;
@@ -410,7 +408,7 @@ namespace Markdig.Helpers
             {
                 // Skip ')'
                 text.NextChar();
-                title = title ?? String.Empty;
+                title ??= string.Empty;
             }
 
             return isValid;
@@ -425,7 +423,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
@@ -517,7 +514,6 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
-            buffer.Length = 0;
 
             var c = text.CurrentChar;
 
@@ -652,14 +648,14 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsTrailingUrlStopCharacter(char c)
         {
             // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not be considered part of the autolink, though they may be included in the interior of the link:
             return c == '?' || c == '!' || c == '.' || c == ',' || c == ':' || c == '*' || c == '*' || c == '_' || c == '~';
         }
 
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsEndOfUri(char c, bool isAutoLink)
         {
             return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
@@ -725,11 +721,8 @@ namespace Markdig.Helpers
         public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title)
             where T : ICharIterator
         {
-            SourceSpan labelSpan;
-            SourceSpan urlSpan;
-            SourceSpan titleSpan;
-            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out labelSpan, out urlSpan,
-                out titleSpan);
+            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out SourceSpan labelSpan, out SourceSpan urlSpan,
+                out SourceSpan titleSpan);
         }
 
         public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
@@ -764,8 +757,7 @@ namespace Markdig.Helpers
             urlSpan.End = text.Start - 1;
 
             var saved = text;
-            int newLineCount;
-            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out newLineCount);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
@@ -821,8 +813,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseLabel<T>(T lines, out string label) where T : ICharIterator
         {
-            SourceSpan labelSpan;
-            return TryParseLabel(ref lines, false, out label, out labelSpan);
+            return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
         public static bool TryParseLabel<T>(T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
@@ -832,8 +823,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseLabel<T>(ref T lines, out string label) where T : ICharIterator
         {
-            SourceSpan labelSpan;
-            return TryParseLabel(ref lines, false, out label, out labelSpan);
+            return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
         public static bool TryParseLabel<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator

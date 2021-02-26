@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -38,12 +36,12 @@ namespace Markdig.Parsers
         /// <param name="text">The reader.</param>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="context">A parser context used for the parsing.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
@@ -51,15 +49,13 @@ namespace Markdig.Parsers
             preciseSourceLocation = pipeline.PreciseSourceLocation;
 
             // Initialize the pipeline
-            var stringBuilderCache = pipeline.StringBuilderCache ?? new StringBuilderCache();
-
             document = new MarkdownDocument();
 
             // Initialize the block parsers
-            blockProcessor = new BlockProcessor(stringBuilderCache, document, pipeline.BlockParsers, context);
+            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context);
 
             // Initialize the inline parsers
-            inlineProcessor = new InlineProcessor(stringBuilderCache, document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context)
+            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -74,11 +70,11 @@ namespace Markdig.Parsers
         /// <param name="pipeline">The pipeline used for the parsing.</param>
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
-        /// <exception cref="System.ArgumentNullException">if reader variable is null</exception>
+        /// <exception cref="ArgumentNullException">if reader variable is null</exception>
         public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
+            if (text == null) ThrowHelper.ArgumentNullException_text();
+            pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
             var markdownParser = new MarkdownParser(text, pipeline, context);
@@ -131,7 +127,7 @@ namespace Markdig.Parsers
         /// <param name="text">The text to secure.</param>
         private string FixupZero(string text)
         {
-            return text.Replace('\0', CharHelper.ZeroSafeChar);
+            return text.Replace('\0', CharHelper.ReplacementChar);
         }
 
         private sealed class ContainerItemCache : DefaultObjectCache<ContainerItem>
@@ -179,9 +175,8 @@ namespace Markdig.Parsers
                         }
                         leafBlock.OnProcessInlinesEnd(inlineProcessor);
                     }
-                    else if (block is ContainerBlock)
+                    else if (block is ContainerBlock newContainer)
                     {
-                        var newContainer = (ContainerBlock) block;
                         // If we need to remove it
                         if (newContainer.RemoveAfterProcessInlines)
                         {
@@ -196,6 +191,7 @@ namespace Markdig.Parsers
                         newItem.Container = (ContainerBlock)block;
                         block.OnProcessInlinesBegin(inlineProcessor);
                         newItem.Index = 0;
+                        ThrowHelper.CheckDepthLimit(blocks.Count);
                         blocks.Push(newItem);
                         goto process_new_block;
                     }

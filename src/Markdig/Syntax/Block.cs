@@ -1,7 +1,8 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System;
+
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -9,7 +10,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.MarkdownObject" />
+    /// <seealso cref="MarkdownObject" />
     public abstract class Block : MarkdownObject, IBlock
     {
         /// <summary>
@@ -79,6 +80,7 @@ namespace Markdig.Syntax
         public void UpdateSpanEnd(int spanEnd)
         {
             // Update parent spans
+            int depth = 0;
             var parent = this;
             while (parent != null)
             {
@@ -87,7 +89,9 @@ namespace Markdig.Syntax
                     parent.Span.End = spanEnd;
                 }
                 parent = parent.Parent;
+                depth++;
             }
+            ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
         }
     }
 }

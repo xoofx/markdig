@@ -17,7 +17,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// The inline parser used to transform a <see cref="ParagraphBlock"/> into a <see cref="Table"/> at inline parsing time.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     /// <seealso cref="IPostInlineProcessor" />
     public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
@@ -30,8 +30,7 @@ namespace Markdig.Extensions.Tables
         /// <param name="options">The options.</param>
         public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions options = null)
         {
-            if (lineBreakParser == null) throw new ArgumentNullException(nameof(lineBreakParser));
-            this.lineBreakParser = lineBreakParser;
+            this.lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
             OpeningCharacters = new[] { '|', '\n' };
             Options = options ?? new PipeTableOptions();
         }
@@ -57,9 +56,7 @@ namespace Markdig.Extensions.Tables
             bool isFirstLineEmpty = false;
 
 
-            int globalLineIndex;
-            int column;
-            var position = processor.GetSourcePosition(slice.Start, out globalLineIndex, out column);
+            var position = processor.GetSourcePosition(slice.Start, out int globalLineIndex, out int column);
             var localLineIndex = globalLineIndex - processor.LineIndex;
 
             if (tableState == null)
@@ -460,7 +457,14 @@ namespace Markdig.Extensions.Tables
             cells.Clear();
 
             // Normalize the table
-            table.Normalize();
+            if (Options.UseHeaderForColumnCount)
+            {
+                table.NormalizeUsingHeaderRow();
+            }
+            else
+            {
+                table.NormalizeUsingMaxWidth();
+            }
 
             // We don't want to continue procesing delimiters, as we are already processing them here
             return false;

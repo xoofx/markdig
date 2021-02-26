@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -37,7 +38,7 @@ namespace Markdig.Parsers
                 return BlockState.BreakDiscard;
             }
 
-            if (ParseSetexHeadings && !processor.IsCodeIndent && !(block.Parent is QuoteBlock))
+            if (!processor.IsCodeIndent && ParseSetexHeadings)
             {
                 return TryParseSetexHeading(processor, block);
             }
@@ -50,23 +51,24 @@ namespace Markdig.Parsers
         {
             if (block is ParagraphBlock paragraph)
             {
-                TryMatchLinkReferenceDefinition(ref paragraph.Lines, processor);
+                ref var lines = ref paragraph.Lines;
+
+                TryMatchLinkReferenceDefinition(ref lines, processor);
+
+                int lineCount = lines.Count;
 
                 // If Paragraph is empty, we can discard it
-                if (paragraph.Lines.Count == 0)
+                if (lineCount == 0)
                 {
                     return false;
                 }
 
-                var lineCount = paragraph.Lines.Count;
                 for (int i = 0; i < lineCount; i++)
                 {
-                    paragraph.Lines.Lines[i].Slice.TrimStart();
+                    lines.Lines[i].Slice.TrimStart();
                 }
-                if (lineCount > 0)
-                {
-                    paragraph.Lines.Lines[lineCount - 1].Slice.TrimEnd();
-                }
+
+                lines.Lines[lineCount - 1].Slice.TrimEnd();
             }
 
             return true;
@@ -74,56 +76,26 @@ namespace Markdig.Parsers
 
         private BlockState TryParseSetexHeading(BlockProcessor state, Block block)
         {
-            var paragraph = (ParagraphBlock) block;
-            var headingChar = (char)0;
-            bool checkForSpaces = false;
             var line = state.Line;
-            var c = line.CurrentChar;
-            while (c != '\0')
-            {
-                if (headingChar == 0)
-                {
-                    if (c == '=' || c == '-')
-                    {
-                        headingChar = c;
-                        continue;
-                    }
-                    break;
-                }
 
-                if (checkForSpaces)
-                {
-                    if (!c.IsSpaceOrTab())
-                    {
-                        headingChar = (char)0;
-                        break;
-                    }
-                }
-                else if (c != headingChar)
-                {
-                    if (c.IsSpaceOrTab())
-                    {
-                        checkForSpaces = true;
-                    }
-                    else
-                    {
-                        headingChar = (char)0;
-                        break;
-                    }
-                }
-                c = line.NextChar();
-            }
+            char headingChar = GetHeadingChar(ref line);
 
             if (headingChar != 0)
             {
+                var paragraph = (ParagraphBlock)block;
+
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
                 // lines are empty, we can early exit and remove the paragraph
-                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0))
+                var parent = block.Parent;
+                
+                bool isSetTextHeading = !state.IsLazy || paragraph.Column == state.Column || !(parent is QuoteBlock || parent is ListItemBlock);
+
+                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0) && isSetTextHeading)
                 {
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);
 
-                    var level = headingChar == '=' ? 1 : 2;
+                    int level = headingChar == '=' ? 1 : 2;
 
                     var heading = new HeadingBlock(this)
                     {
@@ -146,7 +118,33 @@ namespace Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private bool TryMatchLinkReferenceDefinition(ref StringLineGroup lines, BlockProcessor state)
+        private static char GetHeadingChar(ref StringSlice line)
+        {
+            char headingChar = line.CurrentChar;
+
+            if (headingChar == '=' || headingChar == '-')
+            {
+                line.CountAndSkipChar(headingChar);
+
+                if (line.IsEmpty)
+                {
+                    return headingChar;
+                }
+
+                while (line.NextChar().IsSpaceOrTab())
+                {
+                }
+
+                if (line.IsEmpty)
+                {
+                    return headingChar;
+                }
+            }
+
+            return (char)0;
+        }
+
+        private static bool TryMatchLinkReferenceDefinition(ref StringLineGroup lines, BlockProcessor state)
         {
             bool atLeastOneFound = false;
 

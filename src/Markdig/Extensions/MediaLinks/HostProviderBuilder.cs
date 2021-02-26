@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +41,10 @@ namespace Markdig.Extensions.MediaLinks
         public static IHostProvider Create(string hostPrefix, Func<Uri, string> handler, bool allowFullScreen = true, string iframeClass = null)
         {
             if (string.IsNullOrEmpty(hostPrefix))
-                throw new ArgumentException("hostPrefix is null or empty.", nameof(hostPrefix));
+                ThrowHelper.ArgumentException("hostPrefix is null or empty.", nameof(hostPrefix));
             if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+                ThrowHelper.ArgumentNullException(nameof(handler));
+
             return new DelegateProvider { HostPrefix = hostPrefix, Delegate = handler, AllowFullScreen = allowFullScreen, Class = iframeClass };
         }
 

@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using System;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -10,7 +11,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for a <see cref="HtmlBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class HtmlBlockParser : BlockParser
     {
         /// <summary>
@@ -135,7 +136,7 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
-                tag[count] = Char.ToLowerInvariant(c);
+                tag[count] = char.ToLowerInvariant(c);
                 c = line.NextChar();
             }
 

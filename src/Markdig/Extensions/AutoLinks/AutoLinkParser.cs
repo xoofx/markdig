@@ -29,6 +29,7 @@ namespace Markdig.Extensions.AutoLinks
                 'h', // for http:// and https://
                 'f', // for ftp://
                 'm', // for mailto:
+                't', // for tel:
                 'w', // for www.
             };
 
@@ -88,7 +89,13 @@ namespace Markdig.Extensions.AutoLinks
                             return false;
                         }
                         break;
-
+                    case 't':
+                        if (!slice.MatchLowercase("el:", 1))
+                        {
+                            return false;
+                        }
+                        domainOffset = 4;
+                        break;
                     case 'w':
                         if (!slice.MatchLowercase("ww.", 1)) // We won't match http:/www. or /www.xxx
                         {
@@ -98,7 +105,6 @@ namespace Markdig.Extensions.AutoLinks
                         break;
                 }
 
-                // Parse URL
                 if (!LinkHelper.TryParseUrl(ref slice, out string link, true))
                 {
                     return false;
@@ -141,6 +147,12 @@ namespace Markdig.Extensions.AutoLinks
                             return false;
                         }
                         break;
+                    case 't':
+                        if (string.Equals(link, "tel", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                        break;
                     case 'm':
                         int atIndex = link.IndexOf('@');
                         if (atIndex == -1 ||
@@ -152,7 +164,8 @@ namespace Markdig.Extensions.AutoLinks
                         break;
                 }
 
-                if (!LinkHelper.IsValidDomain(link, domainOffset))
+                // Do not need to check if a telephone number is a valid domain
+                if (c != 't' && !LinkHelper.IsValidDomain(link, domainOffset))
                 {
                     return false;
                 }
@@ -171,6 +184,7 @@ namespace Markdig.Extensions.AutoLinks
                 };
 
                 var skipFromBeginning = c == 'm' ? 7 : 0; // For mailto: skip "mailto:" for content
+                skipFromBeginning = c == 't' ? 4 : skipFromBeginning; // See above but for tel:
 
                 inline.Span.End = inline.Span.Start + link.Length - 1;
                 inline.UrlSpan = inline.Span;

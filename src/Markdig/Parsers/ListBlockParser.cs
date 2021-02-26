@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
-using System;
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -11,7 +11,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// A parser for a list block and list item block.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class ListBlockParser : BlockParser
     {
         private CharacterMap<ListItemParser> mapItemParsers;
@@ -41,14 +41,14 @@ namespace Markdig.Parsers
             {
                 if (itemParser.OpeningCharacters == null)
                 {
-                    throw new InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
+                    ThrowHelper.InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
                 }
 
                 foreach (var openingCharacter in itemParser.OpeningCharacters)
                 {
                     if (tempMap.ContainsKey(openingCharacter))
                     {
-                        throw new InvalidOperationException(
+                        ThrowHelper.InvalidOperationException(
                             $"A list item parser with the same opening character `{openingCharacter}` is already registered");
                     }
                     tempMap.Add(openingCharacter, itemParser);
@@ -101,9 +101,8 @@ namespace Markdig.Parsers
             // TODO: Check with specs, it is not clear that list marker or bullet marker must be followed by at least 1 space
 
             // If we have already a ListItemBlock, we are going to try to append to it
-            var listItem = block as ListItemBlock;
             result = BlockState.None;
-            if (listItem != null)
+            if (block is ListItemBlock listItem)
             {
                 result = TryContinueListItem(processor, listItem);
             }
@@ -123,12 +122,9 @@ namespace Markdig.Parsers
             // Allow all blanks lines if the last block is a fenced code block
             // Allow 1 blank line inside a list
             // If > 1 blank line, terminate this list
-            var isBlankLine = state.IsBlankLine;
-
-            var isCurrentBlockBreakable = state.CurrentBlock != null && state.CurrentBlock.IsBreakable;
-            if (isBlankLine)
+            if (state.IsBlankLine)
             {
-                if (isCurrentBlockBreakable)
+                if (state.CurrentBlock != null && state.CurrentBlock.IsBreakable)
                 {
                     if (!(state.NextContinue is ListBlock))
                     {
@@ -195,20 +191,20 @@ namespace Markdig.Parsers
 
             var c = state.CurrentChar;
             var itemParser = mapItemParsers[c];
-            bool isOrdered = itemParser is OrderedListItemParser;
             if (itemParser == null)
             {
                 return BlockState.None;
             }
 
             // Try to parse the list item
-            ListInfo listInfo;
-            if (!itemParser.TryParse(state, currentParent?.BulletType ?? '\0', out listInfo))
+            if (!itemParser.TryParse(state, currentParent?.BulletType ?? '\0', out ListInfo listInfo))
             {
                 // Reset to an a start position
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
+
+            bool isOrdered = itemParser is OrderedListItemParser;
 
             // Gets the current character after a successful parsing of the list information
             c = state.CurrentChar;
@@ -251,11 +247,10 @@ namespace Markdig.Parsers
             // Starts/continue the list unless:
             // - an empty list item follows a paragraph
             // - an ordered list is not starting by '1'
-            var isPreviousParagraph = (block ?? state.LastBlock) is ParagraphBlock;
-            if (isPreviousParagraph)
+            if ((block ?? state.LastBlock) is ParagraphBlock previousParagraph)
             {
-                var isOpen = state.IsOpen(block ?? state.LastBlock);
-                if (state.IsBlankLine || (isOpen && listInfo.BulletType == '1' && listInfo.OrderedStart != "1"))
+                if (state.IsBlankLine ||
+                    state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart != "1")
                 {
                     state.GoToColumn(initColumn);
                     return BlockState.None;
@@ -310,64 +305,47 @@ namespace Markdig.Parsers
 
         public override bool Close(BlockProcessor processor, Block blockToClose)
         {
-            var listBlock = blockToClose as ListBlock;
-
             // Process only if we have blank lines
-            if (listBlock == null || listBlock.CountAllBlankLines <= 0)
+            if (blockToClose is ListBlock listBlock && listBlock.CountAllBlankLines > 0)
             {
-                return true;
-            }
-
-            // TODO: This code is UGLY and WAY TOO LONG, simplify!
-            bool isLastListItem = true;
-            for (int listIndex = listBlock.Count - 1; listIndex >= 0; listIndex--)
-            {
-                var block = listBlock[listIndex];
-                var listItem = (ListItemBlock) block;
-                bool isLastElement = true;
-                for (int i = listItem.Count - 1; i >= 0; i--)
+                if (listBlock.Parent is ListItemBlock parentListItemBlock &&
+                    listBlock.LastChild is ListItemBlock lastListItem &&
+                    lastListItem.LastChild is BlankLineBlock)
                 {
-                    var item = listItem[i];
-                    if (item is BlankLineBlock)
+                    // Inform the outer list that we have a blank line
+                    var parentList = (ListBlock)parentListItemBlock.Parent;
+
+                    parentList.CountAllBlankLines++;
+                    parentListItemBlock.Add(new BlankLineBlock());
+                }
+
+                for (int listIndex = listBlock.Count - 1; listIndex >= 0; listIndex--)
+                {
+                    var listItem = (ListItemBlock)listBlock[listIndex];
+
+                    for (int i = listItem.Count - 1; i >= 0; i--)
                     {
-                        if ((isLastElement &&  listIndex < listBlock.Count - 1) || (listItem.Count > 2 && (i > 0 && i < (listItem.Count - 1))))
+                        if (listItem[i] is BlankLineBlock)
                         {
-                            listBlock.IsLoose = true;
-                        }
-
-                        if (isLastElement && isLastListItem)
-                        {
-                            // Inform the outer list that we have a blank line
-                            var parentListItemBlock = listBlock.Parent as ListItemBlock;
-                            if (parentListItemBlock != null)
+                            if (i == listItem.Count - 1 ? listIndex < listBlock.Count - 1 : i > 0)
                             {
-                                var parentList = (ListBlock) parentListItemBlock.Parent;
+                                listBlock.IsLoose = true;
+                            }
 
-                                parentList.CountAllBlankLines++;
-                                parentListItemBlock.Add(new BlankLineBlock());
+                            listItem.RemoveAt(i);
+
+                            // If we have removed all blank lines, we can exit
+                            listBlock.CountAllBlankLines--;
+                            if (listBlock.CountAllBlankLines == 0)
+                            {
+                                goto done;
                             }
                         }
-
-                        listItem.RemoveAt(i);
-
-                        // If we have remove all blank lines, we can exit
-                        listBlock.CountAllBlankLines--;
-                        if (listBlock.CountAllBlankLines == 0)
-                        {
-                            break;
-                        }
                     }
-                    isLastElement = false;
                 }
-                isLastListItem = false;
             }
 
-            //// Update end-position for the list
-            //if (listBlock.Count > 0)
-            //{
-            //    listBlock.Span.End = listBlock[listBlock.Count - 1].Span.End;
-            //}
-
+        done:
             return true;
         }
     }

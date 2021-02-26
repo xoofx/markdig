@@ -1,7 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System;
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -9,7 +9,7 @@ namespace Markdig.Syntax
     /// <summary>
     /// Base interface for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.IMarkdownObject" />
+    /// <seealso cref="IMarkdownObject" />
     public interface IBlock : IMarkdownObject
     {
         /// <summary>

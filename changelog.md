@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.23.0 (16 Jan 2021)
+- Add depth limits to avoid pathological-case parsing times/StackOverflows (#500)
+- Breaking change: rename AutolineInlineParser to AutolinkInlineParser
+
+## 0.22.1 (2 Dec 2020)
+- Update logo for NuGet package
+
+## 0.22.0 (05 Oct 2020)
+- Fix Setext headings in block quotes.
+- Fix tel: treated as autolink ([PR #478](https://github.com/lunet-io/markdig/pull/478)
+- Make Inline.FirstParentOfType public ([PR #474](https://github.com/lunet-io/markdig/pull/474)
+- Fix `&` to be parsed as a punctuation while it was detected as a html entity in certain cases ([PR #471](https://github.com/lunet-io/markdig/pull/471)
+- Add ParentBlock property to ContainerInline ([PR #468](https://github.com/lunet-io/markdig/pull/468)
+
+## 0.21.1 (17 Aug 2020)
+- Fix Markdig.Signed on GitHub Actions
+
+## 0.21.0 (17 Aug 2020)
+- Restore support for .NET 4.5 (#)
+- Add IReadonlyList interface to ContainerBlock to unify and simplify enumeration (#425)
+- Fix relative uri detection to be cross-platform compatible (#430)
+- Escape URLs scheme (#431)
+- Fix media links (#435)
+- Fix parsing math blocks with no leading or trailing whitespace (#452)
+- Add support for autolink `tel:` uri (#453)
+- Fallback to non-punycode encoding for invalid IDN urls (#449)
+- Pipe Tables: Normalize using header column count (#455)
+- Expose IndentCount of FencedCodeBlock (#464)
+
+## 0.20.0 (18 Apr 2020)
+- Markdig is now compatible only with `NETStandard 2.0`, `NETStandard 2.1`, `NETCoreApp 2.1` and `NETCoreApp 3.1`.
+- Many performance improvements from [PR #416](https://github.com/lunet-io/markdig/pull/416) 
+[PR #417](https://github.com/lunet-io/markdig/pull/417)
+[PR #418](https://github.com/lunet-io/markdig/pull/418) 
+[PR #421](https://github.com/lunet-io/markdig/pull/421) 
+[PR #422](https://github.com/lunet-io/markdig/pull/422) 
+[PR #410](https://github.com/lunet-io/markdig/pull/410)
+
+## 0.18.3 (8 Mar 2020)
+- Publish NuGet Symbol packages
+
+## 0.18.2 (8 Mar 2020)
+- Optimize LineReader.ReadLine in [PR #393](https://github.com/lunet-io/markdig/pull/393)
+- Use HashSet<T> instead of Dictionary<TKey, TValue> in CharacterMap<T> in [PR #394](https://github.com/lunet-io/markdig/pull/394)
+- Use BitVector128 in CharacterMap<T> in [PR #396](https://github.com/lunet-io/markdig/pull/396)
+- Optimizations in StringLineGroup in [PR #399](https://github.com/lunet-io/markdig/pull/399)
+- Fixed a bug in HeadingRenderer in [PR #402](https://github.com/lunet-io/markdig/pull/402)
+- Fixes issue #303 in [PR #404](https://github.com/lunet-io/markdig/pull/404)
+- Make output of HtmlTableRenderer XML wellformed in [PR #406](https://github.com/lunet-io/markdig/pull/406)
+
 ## 0.18.1 (21 Jan 2020)
 - Re-allow emojis and smileys customization, that was broken in [PR #308](https://github.com/lunet-io/markdig/pull/308) ([PR #386](https://github.com/lunet-io/markdig/pull/386))
 - Add `IHostProvider` for medialink customization (#337), support protocol-less url (#135) ([(PR #341)](https://github.com/lunet-io/markdig/pull/341))
@@ -11,7 +61,6 @@
 - Fix generic attributes with values of length 1 ([(PR #361)](https://github.com/lunet-io/markdig/pull/361))
 - Fix link text balanced bracket matching ([(PR #375)](https://github.com/lunet-io/markdig/pull/375))
 - Improve overall performance and substantially reduce allocations ([(PR #377)](https://github.com/lunet-io/markdig/pull/377))
-
 
 ## 0.17.1 (04 July 2019)
 - Fix regression when escaping HTML characters ([(PR #340)](https://github.com/lunet-io/markdig/pull/340))

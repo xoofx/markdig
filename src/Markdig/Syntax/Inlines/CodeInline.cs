@@ -9,7 +9,7 @@ namespace Markdig.Syntax.Inlines
     /// <summary>
     /// Represents a code span (Section 6.3 CommonMark specs)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.LeafInline" />
+    /// <seealso cref="LeafInline" />
     [DebuggerDisplay("`{Content}`")]
     public class CodeInline : LeafInline
     {

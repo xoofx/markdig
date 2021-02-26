@@ -1,7 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System.Globalization;
+
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Html
@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Html
     /// <summary>
     /// A HTML renderer for a <see cref="ListBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Syntax.ListBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{ListBlock}" />
     public class ListRenderer : HtmlObjectRenderer<ListBlock>
     {
         protected override void Write(HtmlRenderer renderer, ListBlock listBlock)

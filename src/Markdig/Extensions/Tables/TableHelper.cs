@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -79,15 +79,8 @@ namespace Markdig.Extensions.Tables
                 }
             }
 
-            int count = 0;
-            while (c == delimiterChar)
-            {
-                c = slice.NextChar();
-                count++;
-            }
-
             // We expect at least one `-` delimiter char
-            if (count == 0)
+            if (slice.CountAndSkipChar(delimiterChar) == 0)
             {
                 return false;
             }

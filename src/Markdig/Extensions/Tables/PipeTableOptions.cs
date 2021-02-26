@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 namespace Markdig.Extensions.Tables
 {
     /// <summary>
@@ -14,11 +15,23 @@ namespace Markdig.Extensions.Tables
         public PipeTableOptions()
         {
             RequireHeaderSeparator = true;
+            UseHeaderForColumnCount = false;
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to require header separator. <c>true</c> by default (Kramdown is using <c>false</c>)
         /// </summary>
         public bool RequireHeaderSeparator { get; set; }
+
+        /// <summary>
+        /// Defines whether table should be normalized to the amount of columns as defined in the table header.
+        /// <c>false</c> by default
+        ///
+        /// If <c>true</c>, this will insert empty cells in rows with fewer tables than the header row and remove cells
+        /// that are exceeding the header column count.
+        /// If <c>false</c>, this will use the row with the most columns to determine how many cells should be inserted
+        /// in all other rows (default behavior).
+        /// </summary>
+        public bool UseHeaderForColumnCount { get; set; }
     }
 }

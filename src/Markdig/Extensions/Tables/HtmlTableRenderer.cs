@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// A HTML renderer for a <see cref="Table"/>
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Html.HtmlObjectRenderer{Markdig.Extensions.Tables.TableBlock}" />
+    /// <seealso cref="HtmlObjectRenderer{TableBlock}" />
     public class HtmlTableRenderer : HtmlObjectRenderer<Table>
     {
         protected override void Write(HtmlRenderer renderer, Table table)
@@ -41,7 +41,7 @@ namespace Markdig.Extensions.Tables
                 {
                     var width = Math.Round(tableColumnDefinition.Width*100)/100;
                     var widthValue = string.Format(CultureInfo.InvariantCulture, "{0:0.##}", width);
-                    renderer.WriteLine($"<col style=\"width:{widthValue}%\">");
+                    renderer.WriteLine($"<col style=\"width:{widthValue}%\" />");
                 }
             }
 

@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Helpers;
 
 namespace Markdig.Parsers
@@ -8,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// The default parser for parsing numbered list item (e.g: 1) or 1.)
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.OrderedListItemParser" />
+    /// <seealso cref="OrderedListItemParser" />
     public class NumberedListItemParser : OrderedListItemParser
     {
         /// <summary>
@@ -48,8 +49,7 @@ namespace Markdig.Parsers
             }
 
             // Note that ordered list start numbers must be nine digits or less:
-            char orderedDelimiter;
-            if (countDigit > 9 || !TryParseDelimiter(state, out orderedDelimiter))
+            if (countDigit > 9 || !TryParseDelimiter(state, out char orderedDelimiter))
             {
                 return false;
             }

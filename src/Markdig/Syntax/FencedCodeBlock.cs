@@ -1,6 +1,7 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -52,6 +53,6 @@ namespace Markdig.Syntax
         /// Gets or sets the indent count when the fenced code block was indented
         /// and we need to remove up to indent count chars spaces from the begining of a line.
         /// </summary>
-        internal int IndentCount { get; set; }
+        public int IndentCount { get; set; }
     }
 }

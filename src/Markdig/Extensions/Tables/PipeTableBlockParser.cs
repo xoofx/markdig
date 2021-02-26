@@ -14,7 +14,7 @@ namespace Markdig.Extensions.Tables
     /// that starts by a '-' and have at least a '|' (and have optional spaces) and is a continuation of a
     /// paragraph.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class PipeTableBlockParser : BlockParser
     {
         /// <summary>

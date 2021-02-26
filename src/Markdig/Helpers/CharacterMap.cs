@@ -17,66 +17,53 @@ namespace Markdig.Helpers
     public class CharacterMap<T> where T : class
     {
         private readonly T[] asciiMap;
-        private readonly Dictionary<char, T> nonAsciiMap;
-        private readonly BitVector128 isOpeningCharacter;
+        private readonly Dictionary<uint, T> nonAsciiMap;
+        private readonly BoolVector128 isOpeningCharacter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterMap{T}"/> class.
         /// </summary>
         /// <param name="maps">The states.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public CharacterMap(IEnumerable<KeyValuePair<char, T>> maps)
         {
-            if (maps == null) throw new ArgumentNullException(nameof(maps));
+            if (maps == null) ThrowHelper.ArgumentNullException(nameof(maps));
             var charSet = new HashSet<char>();
             int maxChar = 0;
 
             foreach (var map in maps)
             {
                 var openingChar = map.Key;
-
                 charSet.Add(openingChar);
 
-                if (openingChar < 128 && openingChar > maxChar)
+                if (openingChar < 128)
                 {
-                    maxChar = openingChar;
+                    maxChar = Math.Max(maxChar, openingChar);
                 }
-                else if (openingChar >= 128 && nonAsciiMap == null)
+                else
                 {
-                    // Initialize only if with have an actual non-ASCII opening character
-                    nonAsciiMap = new Dictionary<char, T>();
+                    nonAsciiMap ??= new Dictionary<uint, T>();
                 }
             }
+
             OpeningCharacters = charSet.ToArray();
             Array.Sort(OpeningCharacters);
 
             asciiMap = new T[maxChar + 1];
-            var isOpeningCharacter = new BitVector128();
 
             foreach (var state in maps)
             {
-                var openingChar = state.Key;
-                T stateByChar;
+                char openingChar = state.Key;
                 if (openingChar < 128)
                 {
-                    stateByChar = asciiMap[openingChar];
-
-                    if (stateByChar == null)
-                    {
-                        asciiMap[openingChar] = state.Value;
-                    }
+                    asciiMap[openingChar] ??= state.Value;
                     isOpeningCharacter.Set(openingChar);
                 }
-                else
+                else if (!nonAsciiMap.ContainsKey(openingChar))
                 {
-                    if (!nonAsciiMap.TryGetValue(openingChar, out stateByChar))
-                    {
-                        nonAsciiMap[openingChar] = state.Value;
-                    }
+                    nonAsciiMap[openingChar] = state.Value;
                 }
             }
-
-            this.isOpeningCharacter = isOpeningCharacter;
         }
 
         /// <summary>
@@ -89,23 +76,25 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
-        public T this[char openingChar]
+        public T this[uint openingChar]
         {
-            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                T map = null;
-                if (openingChar < asciiMap.Length)
+                T[] asciiMap = this.asciiMap;
+                if (openingChar < (uint)asciiMap.Length)
                 {
-                    map = asciiMap[openingChar];
+                    return asciiMap[openingChar];
                 }
-                else if (nonAsciiMap != null)
+                else
                 {
-                    nonAsciiMap.TryGetValue(openingChar, out map);
+                    T map = null;
+                    nonAsciiMap?.TryGetValue(openingChar, out map);
+                    return map;
                 }
-                return map;
             }
         }
+
 
         /// <summary>
         /// Searches for an opening character from a registered parser in the specified string.
@@ -116,57 +105,111 @@ namespace Markdig.Helpers
         /// <returns>Index position within the string of the first opening character found in the specified text; if not found, returns -1</returns>
         public int IndexOfOpeningCharacter(string text, int start, int end)
         {
-            var openingChars = isOpeningCharacter;
-
-            unsafe
+            if (nonAsciiMap is null)
             {
-                fixed (char* pText = text)
+#if NETCOREAPP3_1
+                ref char textRef = ref Unsafe.AsRef(in text.GetPinnableReference());
+                for (; start <= end; start++)
                 {
-                    if (nonAsciiMap == null)
+                    if (IntPtr.Size == 4)
                     {
-                        for (int i = start; i <= end; i++)
+                        uint c = Unsafe.Add(ref textRef, start);
+                        if (c < 128 && isOpeningCharacter[c])
                         {
-                            var c = pText[i];
-                            if (c < 128 && openingChars[c])
-                            {
-                                return i;
-                            }
+                            return start;
                         }
                     }
                     else
                     {
+                        ulong c = Unsafe.Add(ref textRef, start);
+                        if (c < 128 && isOpeningCharacter[c])
+                        {
+                            return start;
+                        }
+                    }
+                }
+#else
+                unsafe
+                {
+                    fixed (char* pText = text)
+                    {
                         for (int i = start; i <= end; i++)
                         {
-                            var c = pText[i];
-                            if (c < 128 ? openingChars[c] : nonAsciiMap.ContainsKey(c))
+                            char c = pText[i];
+                            if (c < 128 && isOpeningCharacter[c])
                             {
                                 return i;
                             }
                         }
                     }
                 }
+#endif
+                return -1;
             }
-            return -1;
+            else
+            {
+                return IndexOfOpeningCharacterNonAscii(text, start, end);
+            }
         }
 
-        internal unsafe struct BitVector128
+        private int IndexOfOpeningCharacterNonAscii(string text, int start, int end)
         {
-            fixed uint values[4];
+#if NETCOREAPP3_1
+            ref char textRef = ref Unsafe.AsRef(in text.GetPinnableReference());
+            for (int i = start; i <= end; i++)
+            {
+                char c = Unsafe.Add(ref textRef, i);
+                if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap.ContainsKey(c))
+                {
+                    return i;
+                }
+            }
+#else
+            unsafe
+            {
+                fixed (char* pText = text)
+                {
+                    for (int i = start; i <= end; i++)
+                    {
+                        char c = pText[i];
+                        if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap.ContainsKey(c))
+                        {
+                            return i;
+                        }
+                    }
+                }
+            }
+#endif
+            return -1;
+        }
+    }
 
-            public void Set(char c)
+    internal unsafe struct BoolVector128
+    {
+        private fixed bool values[128];
+
+        public void Set(char c)
+        {
+            Debug.Assert(c < 128);
+            values[c] = true;
+        }
+
+        public readonly bool this[uint c]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
             {
                 Debug.Assert(c < 128);
-                values[c >> 5] |= (uint)1 << c;
+                return values[c];
             }
-
-            public readonly bool this[char c]
+        }
+        public readonly bool this[ulong c]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
             {
-                [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
-                get
-                {
-                    Debug.Assert(c < 128);
-                    return (values[c >> 5] & (uint)1 << c) != 0;
-                }
+                Debug.Assert(c < 128 && IntPtr.Size == 8);
+                return values[c];
             }
         }
     }

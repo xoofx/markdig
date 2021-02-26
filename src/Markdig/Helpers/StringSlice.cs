@@ -35,10 +35,13 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            if (text is null)
+                ThrowHelper.ArgumentNullException_text();
+
+            Text = text;
             Start = start;
             End = end;
         }
@@ -51,12 +54,12 @@ namespace Markdig.Helpers
         /// <summary>
         /// Gets or sets the start position within <see cref="Text"/>.
         /// </summary>
-        public int Start { get; set; }
+        public int Start { readonly get; set; }
 
         /// <summary>
         /// Gets or sets the end position (inclusive) within <see cref="Text"/>.
         /// </summary>
-        public int End { get; set; }
+        public int End { readonly get; set; }
 
         /// <summary>
         /// Gets the length.
@@ -80,18 +83,18 @@ namespace Markdig.Helpers
         /// </summary>
         public readonly bool IsEmpty
         {
-            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Start > End;
         }
 
         /// <summary>
-        /// Gets the <see cref="System.Char"/> at the specified index.
+        /// Gets the <see cref="char"/> at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns>A character in the slice at the specified index (not from <see cref="Start"/> but from the begining of the slice)</returns>
         public readonly char this[int index]
         {
-            [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Text[index];
         }
 
@@ -102,7 +105,7 @@ namespace Markdig.Helpers
         /// <returns>
         /// The next character. `\0` is end of the iteration.
         /// </returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char NextChar()
         {
             int start = Start;
@@ -116,12 +119,29 @@ namespace Markdig.Helpers
             return Text[start];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal int CountAndSkipChar(char matchChar)
+        {
+            string text = Text;
+            int end = End;
+            int current = Start;
+
+            while (current <= end && (uint)current < (uint)text.Length && text[current] == matchChar)
+            {
+                current++;
+            }
+
+            int count = current - Start;
+            Start = current;
+            return count;
+        }
+
         /// <summary>
         /// Peeks a character at the offset of 1 from the current <see cref="Start"/> position
         /// inside the range <see cref="Start"/> and <see cref="End"/>, returns `\0` if outside this range.
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly char PeekChar()
         {
             int index = Start + 1;
@@ -134,7 +154,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly char PeekChar(int offset)
         {
             var index = Start + offset;
@@ -145,7 +165,7 @@ namespace Markdig.Helpers
         /// Peeks a character at the specified offset from the current beginning of the string, without taking into account <see cref="Start"/> and <see cref="End"/>
         /// </summary>
         /// <returns>The character at offset, returns `\0` if none.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly char PeekCharAbsolute(int index)
         {
             string text = Text;
@@ -158,7 +178,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="offset">The offset.</param>
         /// <returns>The character at offset, returns `\0` if none.</returns>
-        [MethodImpl(MethodImplOptionPortable.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly char PeekCharExtra(int offset)
         {
             var index = Start + offset;
@@ -275,13 +295,7 @@ namespace Markdig.Helpers
             if (length <= 0)
                 return -1;
 
-#if NETCORE
-            var span = Text.AsSpan(offset, length);
-            int index = ignoreCase ? span.IndexOf(text, StringComparison.OrdinalIgnoreCase) : span.IndexOf(text);
-            return index == -1 ? index : index + offset;
-#else
             return Text.IndexOf(text, offset, length, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
-#endif
         }
 
         /// <summary>
@@ -296,12 +310,7 @@ namespace Markdig.Helpers
             if (length <= 0)
                 return -1;
 
-#if NETCORE
-            int index = Text.AsSpan(start, length).IndexOf(c);
-            return index == -1 ? index : index + start;
-#else
             return Text.IndexOf(c, start, length);
-#endif
         }
 
         /// <summary>
@@ -312,15 +321,15 @@ namespace Markdig.Helpers
         /// </returns>
         public bool TrimStart()
         {
-            // Strip leading spaces
-            for (; Start <= End; Start++)
-            {
-                if (!Text[Start].IsWhitespace())
-                {
-                    break;
-                }
-            }
-            return IsEmpty;
+            string text = Text;
+            int end = End;
+            int i = Start;
+
+            while (i <= end && (uint)i < (uint)text.Length && text[i].IsWhitespace())
+                i++;
+
+            Start = i;
+            return i > end;
         }
 
         /// <summary>
@@ -329,16 +338,15 @@ namespace Markdig.Helpers
         /// <param name="spaceCount">The number of spaces trimmed.</param>
         public void TrimStart(out int spaceCount)
         {
-            spaceCount = 0;
-            // Strip leading spaces
-            for (; Start <= End; Start++)
-            {
-                if (!Text[Start].IsWhitespace())
-                {
-                    break;
-                }
-                spaceCount++;
-            }
+            string text = Text;
+            int end = End;
+            int i = Start;
+
+            while (i <= end && (uint)i < (uint)text.Length && text[i].IsWhitespace())
+                i++;
+
+            spaceCount = i - Start;
+            Start = i;
         }
 
         /// <summary>
@@ -347,14 +355,15 @@ namespace Markdig.Helpers
         /// <returns></returns>
         public bool TrimEnd()
         {
-            for (; Start <= End; End--)
-            {
-                if (!Text[End].IsWhitespace())
-                {
-                    break;
-                }
-            }
-            return IsEmpty;
+            string text = Text;
+            int start = Start;
+            int i = End;
+
+            while (start <= i && (uint)i < (uint)text.Length && text[i].IsWhitespace())
+                i--;
+
+            End = i;
+            return start > i;
         }
 
         /// <summary>
@@ -362,8 +371,18 @@ namespace Markdig.Helpers
         /// </summary>
         public void Trim()
         {
-            TrimStart();
-            TrimEnd();
+            string text = Text;
+            int start = Start;
+            int end = End;
+
+            while (start <= end && (uint)start < (uint)text.Length && text[start].IsWhitespace())
+                start++;
+
+            while (start <= end && (uint)end < (uint)text.Length && text[end].IsWhitespace())
+                end--;
+
+            Start = start;
+            End = end;
         }
 
         /// <summary>
@@ -391,9 +410,12 @@ namespace Markdig.Helpers
         /// <returns><c>true</c> if this slice is empty or made only of whitespaces; <c>false</c> otherwise</returns>
         public readonly bool IsEmptyOrWhitespace()
         {
-            for (int i = Start; i <= End; i++)
+            string text = Text;
+            int end = End;
+
+            for (int i = Start; i <= end && (uint)i < (uint)text.Length; i++)
             {
-                if (!Text[i].IsWhitespace())
+                if (!text[i].IsWhitespace())
                 {
                     return false;
                 }

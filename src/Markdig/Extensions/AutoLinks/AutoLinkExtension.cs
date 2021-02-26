@@ -5,6 +5,7 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
 using Markdig.Renderers.Normalize.Inlines;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.AutoLinks
 {

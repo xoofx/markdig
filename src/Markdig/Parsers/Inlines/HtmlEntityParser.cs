@@ -2,7 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System.Text;
+using System;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -12,7 +12,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// An inline parser for HTML entities.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.InlineParser" />
+    /// <seealso cref="InlineParser" />
     public class HtmlEntityParser : InlineParser
     {
         /// <summary>
@@ -27,10 +27,7 @@ namespace Markdig.Parsers.Inlines
         public static bool TryParse(ref StringSlice slice, out string literal, out int match)
         {
             literal = null;
-            int entityNameStart;
-            int entityNameLength;
-            int entityValue;
-            match = HtmlHelper.ScanEntity(slice, out entityValue, out entityNameStart, out entityNameLength);
+            match = HtmlHelper.ScanEntity(slice, out int entityValue, out int entityNameStart, out int entityNameLength);
             if (match == 0)
             {
                 return false;
@@ -38,20 +35,18 @@ namespace Markdig.Parsers.Inlines
 
             if (entityNameLength > 0)
             {
-                literal = EntityHelper.DecodeEntity(new StringSlice(slice.Text, entityNameStart, entityNameStart + entityNameLength - 1).ToString());
+                literal = EntityHelper.DecodeEntity(slice.Text.AsSpan(entityNameStart, entityNameLength));
             }
             else if (entityValue >= 0)
             {
-                literal = (entityValue == 0 ? null : EntityHelper.DecodeEntity(entityValue)) ?? CharHelper.ZeroSafeString;
+                literal = EntityHelper.DecodeEntity(entityValue);
             }
             return literal != null;
         }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            int match;
-            string literal;
-            if (!TryParse(ref slice, out literal, out match))
+            if (!TryParse(ref slice, out string literal, out int match))
             {
                 return false;
             }
@@ -62,13 +57,11 @@ namespace Markdig.Parsers.Inlines
             {
                 var matched = slice;
                 matched.End = slice.Start + match - 1;
-                int line;
-                int column;
                 processor.Inline = new HtmlEntityInline()
                 {
                     Original = matched,
                     Transcoded = new StringSlice(literal),
-                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out line, out column), processor.GetSourcePosition(matched.End)),
+                    Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(matched.End)),
                     Line = line,
                     Column = column
                 };

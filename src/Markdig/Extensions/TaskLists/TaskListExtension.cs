@@ -24,14 +24,12 @@ namespace Markdig.Extensions.TaskLists
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var htmlRenderer = renderer as HtmlRenderer;
-            if (htmlRenderer != null)
+            if (renderer is HtmlRenderer htmlRenderer)
             {
                 htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlTaskListRenderer>();
             }
 
-            var normalizeRenderer = renderer as NormalizeRenderer;
-            if (normalizeRenderer != null)
+            if (renderer is NormalizeRenderer normalizeRenderer)
             {
                 normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeTaskListRenderer>();
             }

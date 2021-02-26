@@ -7,7 +7,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Base class for an ordered list item parser.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.ListItemParser" />
+    /// <seealso cref="ListItemParser" />
     public abstract class OrderedListItemParser : ListItemParser
     {
         /// <summary>
@@ -33,9 +33,9 @@ namespace Markdig.Parsers
         {
             // Check if we have an ordered delimiter
             orderedDelimiter = state.CurrentChar;
-            for (int i = 0; i < OrderedDelimiters.Length; i++)
+            foreach (char delimiter in OrderedDelimiters)
             {
-                if (OrderedDelimiters[i] == orderedDelimiter)
+                if (delimiter == orderedDelimiter)
                 {
                     state.NextChar();
                     return true;

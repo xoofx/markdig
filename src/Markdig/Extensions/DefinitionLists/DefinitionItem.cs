@@ -1,3 +1,7 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+
 using Markdig.Parsers;
 using Markdig.Syntax;
 
@@ -7,7 +11,7 @@ namespace Markdig.Extensions.DefinitionLists
     /// A definition item contains zero to multiple <see cref="DefinitionTerm"/> 
     /// and definitions (any <see cref="Block"/>)
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class DefinitionItem : ContainerBlock
     {
         /// <summary>

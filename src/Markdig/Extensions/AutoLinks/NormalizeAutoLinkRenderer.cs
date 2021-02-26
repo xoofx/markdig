@@ -1,3 +1,7 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
@@ -11,10 +15,10 @@ namespace Markdig.Extensions.AutoLinks
         {
             if (base.Accept(renderer, obj))
             {
-                var normalizeRenderer = renderer as NormalizeRenderer;
-                var link = obj as LinkInline;
-
-                return normalizeRenderer != null && link != null && !normalizeRenderer.Options.ExpandAutoLinks && link.IsAutoLink;
+                return renderer is NormalizeRenderer normalizeRenderer
+                    && obj is LinkInline link
+                    && !normalizeRenderer.Options.ExpandAutoLinks
+                    && link.IsAutoLink;
             }
             else
             {

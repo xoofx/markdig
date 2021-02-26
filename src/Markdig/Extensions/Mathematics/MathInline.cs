@@ -10,7 +10,7 @@ namespace Markdig.Extensions.Mathematics
     /// <summary>
     /// A math inline element.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Inlines.EmphasisInline" />
+    /// <seealso cref="EmphasisInline" />
     public class MathInline : LeafInline
     {
         /// <summary>

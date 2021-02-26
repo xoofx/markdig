@@ -1,12 +1,16 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license. 
+// See the license.txt file in the project root for more information.
+
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.TextRenderer
 {
     /// <summary>
     /// Extension that allows setting line-endings for any IMarkdownRenderer
-    /// that inherits from <see cref="Markdig.Renderers.TextRendererBase"/>
+    /// that inherits from <see cref="TextRendererBase"/>
     /// </summary>
-    /// <seealso cref="Markdig.IMarkdownExtension" />
+    /// <seealso cref="IMarkdownExtension" />
     public class ConfigureNewLineExtension : IMarkdownExtension
     {
         private readonly string newLine;
@@ -22,13 +26,10 @@ namespace Markdig.Extensions.TextRenderer
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            var textRenderer = renderer as TextRendererBase;
-            if (textRenderer == null)
+            if (renderer is TextRendererBase textRenderer)
             {
-                return;
+                textRenderer.Writer.NewLine = newLine;
             }
-
-            textRenderer.Writer.NewLine = newLine;
         }
     }
 }

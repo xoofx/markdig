@@ -15,9 +15,9 @@ namespace Markdig.Syntax
     /// <summary>
     /// A base class for container blocks.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.Block" />
+    /// <seealso cref="Block" />
     [DebuggerDisplay("{GetType().Name} Count = {Count}")]
-    public abstract class ContainerBlock : Block, IList<Block>
+    public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
     {
         private Block[] children;
 
@@ -27,7 +27,7 @@ namespace Markdig.Syntax
         /// <param name="parser">The parser used to create this block.</param>
         protected ContainerBlock(BlockParser parser) : base(parser)
         {
-            children = ArrayHelper<Block>.Empty;
+            children = ArrayHelper.Empty<Block>();
         }
 
         /// <summary>
@@ -56,10 +56,12 @@ namespace Markdig.Syntax
 
         public void Add(Block item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item == null)
+                ThrowHelper.ArgumentNullException_item();
+
             if (item.Parent != null)
             {
-                throw new ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+                ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
             }
 
             if (Count == children.Length)
@@ -104,7 +106,9 @@ namespace Markdig.Syntax
 
         public bool Contains(Block item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item == null)
+                ThrowHelper.ArgumentNullException_item();
+
             for (int i = 0; i < Count; i++)
             {
                 if (children[i] == item)
@@ -122,7 +126,9 @@ namespace Markdig.Syntax
 
         public bool Remove(Block item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item == null)
+                ThrowHelper.ArgumentNullException_item();
+
             for (int i = Count - 1; i >= 0; i--)
             {
                 if (children[i] == item)
@@ -140,7 +146,9 @@ namespace Markdig.Syntax
 
         public int IndexOf(Block item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item == null)
+                ThrowHelper.ArgumentNullException_item();
+
             for (int i = 0; i < Count; i++)
             {
                 if (children[i] == item)
@@ -153,14 +161,16 @@ namespace Markdig.Syntax
 
         public void Insert(int index, Block item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item == null)
+                ThrowHelper.ArgumentNullException_item();
+
             if (item.Parent != null)
             {
-                throw new ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+                ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
             }
-            if (index < 0 || index > Count)
+            if ((uint)index > (uint)Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                ThrowHelper.ArgumentOutOfRangeException_index();
             }
             if (Count == children.Length)
             {
@@ -177,7 +187,9 @@ namespace Markdig.Syntax
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if ((uint)index > (uint)Count)
+                ThrowHelper.ArgumentOutOfRangeException_index();
+
             Count--;
             // previous children
             var item = children[index];
@@ -204,19 +216,31 @@ namespace Markdig.Syntax
             set
             {
                 if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
+
+                if (value == null)
+                    ThrowHelper.ArgumentNullException_item();
+
+                if (value.Parent != null)
+                    ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+
+                var existingChild = children[index];
+                if (existingChild != null)
+                    existingChild.Parent = null;
+
+                value.Parent = this;
                 children[index] = value;
             }
         }
 
         public void Sort(IComparer<Block> comparer)
         {
-            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
+            if (comparer == null) ThrowHelper.ArgumentNullException(nameof(comparer));
             Array.Sort(children, 0, Count, comparer);
         }
 
         public void Sort(Comparison<Block> comparison)
         {
-            if (comparison == null) throw new ArgumentNullException(nameof(comparison));
+            if (comparison == null) ThrowHelper.ArgumentNullException(nameof(comparison));
             Array.Sort(children, 0, Count, new BlockComparer(comparison));
         }
 

@@ -77,7 +77,7 @@ namespace Markdig.Parsers.Inlines
                 var emphasis = EmphasisDescriptors[i];
                 if (Array.IndexOf(OpeningCharacters, emphasis.Character) >= 0)
                 {
-                    throw new InvalidOperationException(
+                    ThrowHelper.InvalidOperationException(
                         $"The character `{emphasis.Character}` is already used by another emphasis descriptor");
                 }
 
@@ -162,20 +162,15 @@ namespace Markdig.Parsers.Inlines
             }
             var startPosition = slice.Start;
 
-            int delimiterCount = 0;
-            char c;
-            do
-            {
-                delimiterCount++;
-                c = slice.NextChar();
-            } while (c == delimiterChar);
-
+            int delimiterCount = slice.CountAndSkipChar(delimiterChar);
 
             // If the emphasis doesn't have the minimum required character
             if (delimiterCount < emphasisDesc.MinimumCount)
             {
                 return false;
             }
+
+            char c = slice.CurrentChar;
 
             // The following character is actually an entity, we need to decode it
             if (HtmlEntityParser.TryParse(ref slice, out string htmlString, out int htmlLength))

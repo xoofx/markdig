@@ -119,6 +119,7 @@ namespace Markdig.Tests
             Assert.AreEqual("# Heading", normalized);
         }
 
+        [Test]
         public void TestNormalizeWithWriter()
         {
             StringWriter writer = new StringWriter();

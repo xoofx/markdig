@@ -12,7 +12,7 @@ namespace Markdig.Extensions.Footnotes
     /// <summary>
     /// The block parser for a <see cref="Footnote"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class FootnoteParser : BlockParser
     {
         /// <summary>
@@ -40,10 +40,8 @@ namespace Markdig.Extensions.Footnotes
             }
 
             var saved = processor.Column;
-            string label;
             int start = processor.Start;
-            SourceSpan labelSpan;
-            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out label, out labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string label, out SourceSpan labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
             {
                 processor.GoToColumn(saved);
                 return BlockState.None;

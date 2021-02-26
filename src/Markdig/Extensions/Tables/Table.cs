@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Markdig.Extensions.Tables
     /// <summary>
     /// Defines a table that contains an optional <see cref="TableRow"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Syntax.ContainerBlock" />
+    /// <seealso cref="ContainerBlock" />
     public class Table : ContainerBlock
     {
         /// <summary>
@@ -58,6 +58,11 @@ namespace Markdig.Extensions.Tables
                     var rowSpan = cell.RowSpan - 1;
                     while (rowSpan > 0)
                     {
+                        if (i+rowSpan > (rows.Length-1))
+                        {
+                            return false;
+                        }
+
                         rows[i + rowSpan] += cell.ColumnSpan;
                         rowSpan--;
                     }
@@ -73,7 +78,7 @@ namespace Markdig.Extensions.Tables
         /// <summary>
         /// Normalizes the number of columns of this table by taking the maximum columns and appending empty cells.
         /// </summary>
-        public void Normalize()
+        public void NormalizeUsingMaxWidth()
         {
             var maxColumn = 0;
             for (int i = 0; i < this.Count; i++)
@@ -93,6 +98,43 @@ namespace Markdig.Extensions.Tables
                     for (int j = row.Count; j < maxColumn; j++)
                     {
                         row.Add(new TableCell());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Normalizes the number of columns of this table by taking the amount of columns defined in the header
+        /// and appending empty cells or removing extra cells as needed.
+        /// </summary>
+        public void NormalizeUsingHeaderRow()
+        {
+            if (this.Count == 0)
+            {
+                return;
+            }
+
+            var maxColumn = 0;
+
+            var headerRow = this[0] as TableRow;
+            if (headerRow != null)
+            {
+                maxColumn = headerRow.Count;
+            }
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                var row = this[i] as TableRow;
+                if (row != null)
+                {
+                    for (int j = row.Count; j < maxColumn; j++)
+                    {
+                        row.Add(new TableCell());
+                    }
+
+                    for (int j = maxColumn; j < row.Count; j++)
+                    {
+                        row.RemoveAt(j);
                     }
                 }
             }

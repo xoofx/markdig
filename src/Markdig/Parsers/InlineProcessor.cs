@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,18 +31,16 @@ namespace Markdig.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
         /// </summary>
-        /// <param name="stringBuilders">The string builders.</param>
         /// <param name="document">The document.</param>
         /// <param name="parsers">The parsers.</param>
-        /// <param name="inlineCreated">The inline created event.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <param name="preciseSourcelocation">A value indicating whether to provide precise source location.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
+        /// <exception cref="ArgumentNullException">
         /// </exception>
-        public InlineProcessor(StringBuilderCache stringBuilders, MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
+        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
         {
-            if (stringBuilders == null) throw new ArgumentNullException(nameof(stringBuilders));
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            if (parsers == null) throw new ArgumentNullException(nameof(parsers));
-            StringBuilders = stringBuilders;
+            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
             Document = document;
             Parsers = parsers;
             Context = context;
@@ -92,17 +91,12 @@ namespace Markdig.Parsers
         public MarkdownDocument Document { get; }
 
         /// <summary>
-        /// Gets the cache string builders.
-        /// </summary>
-        public StringBuilderCache StringBuilders { get;  }
-
-        /// <summary>
         /// Gets or sets the index of the line from the begining of the document being processed.
         /// </summary>
         public int LineIndex { get; private set; }
 
         /// <summary>
-        /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="InlineParser.Index"/> property.
+        /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="ParserBase{Inline}.Index"/> property.
         /// </summary>
         public object[] ParserStates { get; }
 
@@ -119,9 +113,7 @@ namespace Markdig.Parsers
 
         public int GetSourcePosition(int sliceOffset)
         {
-            int column;
-            int lineIndex;
-            return GetSourcePosition(sliceOffset, out lineIndex, out column);
+            return GetSourcePosition(sliceOffset, out int lineIndex, out int column);
         }
 
         public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
@@ -131,15 +123,15 @@ namespace Markdig.Parsers
                 return SourceSpan.Empty;
             }
 
-            int column;
-            int lineIndex;
-            return new SourceSpan(GetSourcePosition(span.Start, out lineIndex, out column), GetSourcePosition(span.End, out lineIndex, out column));
+            return new SourceSpan(GetSourcePosition(span.Start, out int lineIndex, out int column), GetSourcePosition(span.End, out lineIndex, out column));
         }
 
         /// <summary>
         /// Gets the source position for the specified offset within the current slice.
         /// </summary>
         /// <param name="sliceOffset">The slice offset.</param>
+        /// <param name="lineIndex">The line index.</param>
+        /// <param name="column">The column.</param>
         /// <returns>The source position</returns>
         public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
         {
@@ -176,7 +168,7 @@ namespace Markdig.Parsers
         /// <param name="leafBlock">The leaf block.</param>
         public void ProcessInlineLeaf(LeafBlock leafBlock)
         {
-            if (leafBlock == null) throw new ArgumentNullException(nameof(leafBlock));
+            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
 
             // clear parser states
             Array.Clear(ParserStates, 0, ParserStates.Length);
@@ -201,7 +193,7 @@ namespace Markdig.Parsers
                 // Security check so that the parser can't go into a crazy infinite loop if one extension is messing
                 if (previousStart == text.Start)
                 {
-                    throw new InvalidOperationException($"The parser is in an invalid infinite loop while trying to parse inlines for block [{leafBlock.GetType().Name}] at position ({leafBlock.ToPositionText()}");
+                    ThrowHelper.InvalidOperationException($"The parser is in an invalid infinite loop while trying to parse inlines for block [{leafBlock.GetType().Name}] at position ({leafBlock.ToPositionText()}");
                 }
                 previousStart = text.Start;
 
@@ -315,19 +307,18 @@ namespace Markdig.Parsers
         private ContainerInline FindLastContainer()
         {
             var container = Block.Inline;
-            while (true)
+            for (int depth = 0; ; depth++)
             {
-                var nextContainer = container.LastChild as ContainerInline;
-                if (nextContainer != null && !nextContainer.IsClosed)
+                if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)
                 {
                     container = nextContainer;
                 }
                 else
                 {
-                    break;
+                    ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
+                    return container;
                 }
             }
-            return container;
         }
     }
 }

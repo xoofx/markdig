@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Renderers.Normalize.Inlines
@@ -8,7 +9,7 @@ namespace Markdig.Renderers.Normalize.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="LinkInline"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Renderers.Normalize.NormalizeObjectRenderer{Markdig.Syntax.Inlines.LinkInline}" />
+    /// <seealso cref="NormalizeObjectRenderer{LinkInline}" />
     public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
     {
         protected override void Write(NormalizeRenderer renderer, LinkInline link)
@@ -23,9 +24,7 @@ namespace Markdig.Renderers.Normalize.Inlines
 
             if (link.Label != null)
             {
-
-                var literal = link.FirstChild as LiteralInline;
-                if (literal != null && literal.Content.Match(link.Label) && literal.Content.Length == link.Label.Length)
+                if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
                 {
                     // collapsed reference and shortcut links
                     if (!link.IsShortcut)

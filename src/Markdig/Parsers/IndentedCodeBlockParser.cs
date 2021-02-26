@@ -1,6 +1,7 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
 using Markdig.Syntax;
 
 namespace Markdig.Parsers
@@ -8,7 +9,7 @@ namespace Markdig.Parsers
     /// <summary>
     /// Block parser for an indented <see cref="CodeBlock"/>.
     /// </summary>
-    /// <seealso cref="Markdig.Parsers.BlockParser" />
+    /// <seealso cref="BlockParser" />
     public class IndentedCodeBlockParser : BlockParser
     {
         public override bool CanInterrupt(BlockProcessor processor, Block block)

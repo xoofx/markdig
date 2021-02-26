@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Markdig.Helpers
 {
@@ -46,11 +47,10 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="entity">The entity without <c>&amp;</c> and <c>;</c> symbols, for example, <c>copy</c>.</param>
         /// <returns>The unicode character set or <c>null</c> if the entity was not recognized.</returns>
-        public static string DecodeEntity(string entity)
+        public static string DecodeEntity(ReadOnlySpan<char> entity)
         {
-            string result;
-            if (EntityMap.TryGetValue(entity, out result))
-                return result;
+            if (EntityMap.TryMatchExact(entity, out KeyValuePair<string, string> result))
+                return result.Value;
 
             return null;
         }
@@ -61,25 +61,49 @@ namespace Markdig.Helpers
         /// <returns>The unicode character set or <c>null</c> if the entity was not recognized.</returns>
         public static string DecodeEntity(int utf32)
         {
-            if (utf32 < 0 || utf32 > 1114111 || (utf32 >= 55296 && utf32 <= 57343))
-                return null;
+            if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+                return CharHelper.ReplacementCharString;
 
             if (utf32 < 65536)
                 return char.ToString((char)utf32);
 
             utf32 -= 65536;
-            return new string(new char[]
+            return new string(
+#if NETCORE
+                stackalloc
+#else
+                new
+#endif
+                char[]
             {
-                (char)(utf32 / 1024 + 55296),
-                (char)(utf32 % 1024 + 56320)
+                (char)((uint)utf32 / 1024 + 55296),
+                (char)((uint)utf32 % 1024 + 56320)
             });
         }
 
-        #region [ EntityMap ]
+        public static void DecodeEntity(int utf32, StringBuilder sb)
+        {
+            if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+            {
+                sb.Append(CharHelper.ReplacementChar);
+            }
+            else if (utf32 < 65536)
+            {
+                sb.Append((char)utf32);
+            }
+            else
+            {
+                utf32 -= 65536;
+                sb.Append((char)((uint)utf32 / 1024 + 55296));
+                sb.Append((char)((uint)utf32 % 1024 + 56320));
+            }
+        }
+
+#region [ EntityMap ]
         /// <summary>
         /// Source: http://www.w3.org/html/wg/drafts/html/master/syntax.html#named-character-references
         /// </summary>
-        private static readonly Dictionary<string, string> EntityMap = new Dictionary<string, string>(2125, StringComparer.Ordinal)
+        private static readonly CompactPrefixTree<string> EntityMap = new CompactPrefixTree<string>(2125, 3385, 3510)
         {
             { "Aacute", "\u00C1" },
             { "aacute", "\u00E1" },
@@ -2207,6 +2231,6 @@ namespace Markdig.Helpers
             { "zwj", "\u200D" },
             { "zwnj", "\u200C" }
         };
-        #endregion
+#endregion
     }
 }

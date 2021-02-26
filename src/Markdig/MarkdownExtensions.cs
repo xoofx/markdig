@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -22,7 +22,6 @@ using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.MediaLinks;
-using Markdig.Extensions.NoRefLinks;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
@@ -34,6 +33,8 @@ using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Extensions.Globalization;
+using Markdig.Helpers;
+using Markdig.Extensions.ReferralLinks;
 
 namespace Markdig
 {
@@ -98,6 +99,7 @@ namespace Markdig
         /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The options.</param>
         /// <returns>The modified pipeline</returns>
         public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions options = null)
         {
@@ -138,7 +140,7 @@ namespace Markdig
         {
             if (pipeline.Extensions.Count != 0)
             {
-                throw new InvalidOperationException("The SelfPipeline extension cannot be used with other extensions");
+                ThrowHelper.InvalidOperationException("The SelfPipeline extension cannot be used with other extensions");
             }
 
             pipeline.Extensions.Add(new SelfPipelineExtension(defaultTag, defaultExtensions));
@@ -455,9 +457,29 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline"></param>
         /// <returns></returns>
+        [Obsolete("Call `UseReferralLinks(\"nofollow\")` instead")]
         public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<NoFollowLinksExtension>();
+            return pipeline.UseReferralLinks("nofollow");
+        }
+
+        public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
+        {
+            if (!pipeline.Extensions.Contains<ReferralLinksExtension>())
+            {
+                pipeline.Extensions.Add(new ReferralLinksExtension(rels));
+            }
+            else
+            {
+                var referralLinksExtension = pipeline.Extensions.Find<ReferralLinksExtension>();
+                foreach(string rel in rels)
+                {
+                    if (!referralLinksExtension.Rels.Contains(rel))
+                    {
+                        referralLinksExtension.Rels.Add(rel);
+                    }
+                }
+            }
             return pipeline;
         }
 
@@ -500,7 +522,7 @@ namespace Markdig
                 pipeline.BlockParsers.Remove(parser);
             }
 
-            var inlineParser = pipeline.InlineParsers.Find<AutolineInlineParser>();
+            var inlineParser = pipeline.InlineParsers.Find<AutolinkInlineParser>();
             if (inlineParser != null)
             {
                 inlineParser.EnableHtmlParsing = false;
@@ -534,6 +556,9 @@ namespace Markdig
                         break;
                     case "pipetables":
                         pipeline.UsePipeTables();
+                        break;
+                    case "gfm-pipetables":
+                        pipeline.UsePipeTables(new PipeTableOptions { UseHeaderForColumnCount = true });
                         break;
                     case "emphasisextras":
                         pipeline.UseEmphasisExtras();
@@ -596,7 +621,13 @@ namespace Markdig
                         pipeline.UseDiagrams();
                         break;
                     case "nofollowlinks":
-                        pipeline.UseNoFollowLinks();
+                        pipeline.UseReferralLinks("nofollow");
+                        break;
+                    case "noopenerlinks":
+                        pipeline.UseReferralLinks("noopener");
+                        break;
+                    case "noreferrerlinks":
+                        pipeline.UseReferralLinks("noreferrer");
                         break;
                     case "nohtml":
                         pipeline.DisableHtml();

@@ -13,7 +13,7 @@ namespace Markdig.WebApp
             return string.Empty;
         }
 
-        // GET api/to_html?text=xxx&extensions=advanced
+        // GET api/to_html?text=xxx&extension=advanced
         [Route("api/to_html")]
         [HttpGet()]
         public object Get([FromQuery] string text, [FromQuery] string extension)

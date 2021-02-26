@@ -47,11 +47,9 @@ namespace Markdig.Extensions.Mathematics
 
         private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
-            var c = line.CurrentChar;
             for (int i = line.Start; i <= line.End; i++)
             {
-                c = line.Text[i];
-                if (!c.IsSpaceOrTab())
+                if (!line.Text[i].IsSpaceOrTab())
                 {
                     return false;
                 }
