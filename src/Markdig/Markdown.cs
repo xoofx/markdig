@@ -66,7 +66,7 @@ namespace Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
-        public static string ToHtml(string markdown, MarkdownPipeline pipeline = null)
+        public static string ToHtml(string markdown, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (markdown == null) throw new ArgumentNullException(nameof(markdown));
             pipeline = pipeline ?? new MarkdownPipelineBuilder().Build();
@@ -74,7 +74,7 @@ namespace Markdig
 
             var renderer = pipeline.GetCacheableHtmlRenderer();
 
-            var document = Parse(markdown, pipeline);
+            var document = Parse(markdown, pipeline, context);
             renderer.Render(document);
             renderer.Writer.Flush();
 
