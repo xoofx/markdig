@@ -64,6 +64,7 @@ namespace Markdig
         /// </summary>
         /// <param name="markdown">A Markdown text.</param>
         /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="System.ArgumentNullException">if markdown variable is null</exception>
         public static string ToHtml(string markdown, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
