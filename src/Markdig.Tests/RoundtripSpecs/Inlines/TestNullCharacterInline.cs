@@ -8,11 +8,11 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
     [TestFixture]
     public class TestNullCharacterInline
     {
-        [TestCase("\0", "")]
-        [TestCase("\0p", "p")]
-        [TestCase("p\0", "p")]
-        [TestCase("p\0p", "pp")]
-        [TestCase("p\0\0p", "pp")] // I promise you, this was not intentional
+        [TestCase("\0", "\uFFFD")]
+        [TestCase("\0p", "\uFFFDp")]
+        [TestCase("p\0", "p\uFFFD")]
+        [TestCase("p\0p", "p\uFFFDp")]
+        [TestCase("p\0\0p", "p\uFFFD\uFFFDp")] // I promise you, this was not intentional
         public void Test(string value, string expected)
         {
             RoundTrip(value, expected);

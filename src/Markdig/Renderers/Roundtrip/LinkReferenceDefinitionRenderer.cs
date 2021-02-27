@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Roundtrip
@@ -42,7 +43,7 @@ namespace Markdig.Renderers.Roundtrip
                 renderer.Write(close);
             }
             renderer.Write(linkDef.WhitespaceAfter);
-            renderer.Write(linkDef.Newline);
+            renderer.Write(linkDef.Newline.AsString());
 
             renderer.RenderLinesAfter(linkDef);
         }

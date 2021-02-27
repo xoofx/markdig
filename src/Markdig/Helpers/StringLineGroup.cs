@@ -145,8 +145,8 @@ namespace Markdig.Helpers
             {
                 if (i > 0)
                 {
-                    builder.Append(newline);
-                        previousStartOfLine = builder.Length;
+                    builder.Append(newline.AsString());
+                    previousStartOfLine = builder.Length;
                 }
                 ref var line = ref Lines[i];
                 if (!line.Slice.IsEmpty)
@@ -225,7 +225,7 @@ namespace Markdig.Helpers
                 for (int i = 0; i < lines.Count; i++)
                 {
                     var line = lines.Lines[i];
-                    End += line.Slice.Length + line.Newline.Length; // Add chars
+                    End += line.Slice.Length + line.Newline.Length(); // Add chars
                 }
                 NextChar();
             }

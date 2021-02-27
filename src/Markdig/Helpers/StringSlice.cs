@@ -10,40 +10,46 @@ namespace Markdig.Helpers
     /// <summary>
     /// Wrap newline so we have type-safety and static accessibility
     /// </summary>
-    public struct Newline
+    public enum Newline
     {
-        private readonly bool carriageReturn;
-        private readonly bool lineFeed;
+        None,
+        CarriageReturn,
+        LineFeed,
+        CarriageReturnLineFeed
+    }
 
-        private Newline(bool carriageReturn, bool lineFeed)
+    public static class NewlineExtensions
+    {
+        public static string AsString(this Newline newline)
         {
-            this.carriageReturn = carriageReturn;
-            this.lineFeed = lineFeed;
-        }
-
-        public static Newline None = new Newline(false, false);
-        public static Newline CarriageReturn = new Newline(true, false);
-        public static Newline LineFeed = new Newline(false, true);
-        public static Newline CarriageReturnLineFeed = new Newline(true, true);
-
-        public static implicit operator string (Newline newline)
-        {
-            if (newline.carriageReturn && newline.lineFeed)
+            if (newline == Newline.CarriageReturnLineFeed)
             {
                 return "\r\n";
             }
-            if (newline.lineFeed)
+            if (newline == Newline.LineFeed)
             {
                 return "\n";
             }
-            if (newline.carriageReturn)
+            if (newline == Newline.CarriageReturn)
             {
                 return "\r";
             }
             return string.Empty;
         }
-        public int Length => (carriageReturn ? 1 : 0) + (lineFeed ? 1 : 0);
+        public static int Length(this Newline newline) => newline switch
+        {
+            Newline.None => 0,
+            Newline.CarriageReturn => 1,
+            Newline.LineFeed => 1,
+            Newline.CarriageReturnLineFeed => 2,
+            _ => throw new NotSupportedException(),
+        };
     }
+    //    public static implicit operator string (Newline newline)
+    //    {
+    //    }
+    //    public int Length => 
+    //}
 
     /// <summary>
     /// A lightweight struct that represents a slice of a string.
