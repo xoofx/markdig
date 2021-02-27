@@ -1,19 +1,36 @@
+using Markdig.Renderers.Roundtrip;
+using Markdig.Syntax;
 using NUnit.Framework;
-using static Markdig.Tests.TestRoundtrip;
+using System.IO;
 
 namespace Markdig.Tests.RoundtripSpecs.Inlines
 {
     [TestFixture]
     public class TestNullCharacterInline
     {
-        [TestCase("\0")]
-        [TestCase("\0p")]
-        [TestCase("p\0")]
-        [TestCase("p\0p")]
-        [TestCase("p\0\0p")] // I promise you, this was not intentional
-        public void Test(string value)
+        [TestCase("\0", "")]
+        [TestCase("\0p", "p")]
+        [TestCase("p\0", "p")]
+        [TestCase("p\0p", "pp")]
+        [TestCase("p\0\0p", "pp")] // I promise you, this was not intentional
+        public void Test(string value, string expected)
         {
-            RoundTrip(value);
+            RoundTrip(value, expected);
+        }
+
+        // this method is copied intentionally to ensure all other tests
+        // do not unintentionally use the expected parameter
+        private static void RoundTrip(string markdown, string expected)
+        {
+            var pipelineBuilder = new MarkdownPipelineBuilder();
+            MarkdownPipeline pipeline = pipelineBuilder.Build();
+            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline, trackTrivia: true);
+            var sw = new StringWriter();
+            var rr = new RoundtripRenderer(sw);
+
+            rr.Write(markdownDocument);
+
+            Assert.AreEqual(expected, sw.ToString());
         }
     }
 }

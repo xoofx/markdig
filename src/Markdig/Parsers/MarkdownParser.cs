@@ -119,12 +119,21 @@ namespace Markdig.Parsers
                 {
                     if (TrackTrivia)
                     {
-                        var lastBlock = blockProcessor.LastBlock;
-                        // this means we're out of lines, but still have unassigned empty lines.
-                        // thus, we'll assign the empty unsassigned lines to the last block
-                        // of the document.
-                        if (lastBlock != null && blockProcessor.LinesBefore != null)
+                        Block lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock == null)
                         {
+                            // this means we have unassigned characters
+                            var noBlocksFoundBlock = new NoBlocksFoundBlock(null);
+                            List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
+                            noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
+                            noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+                            document.Add(noBlocksFoundBlock);
+                        }
+                        else if (blockProcessor.LinesBefore != null)
+                        {
+                            // this means we're out of lines, but still have unassigned empty lines.
+                            // thus, we'll assign the empty unsassigned lines to the last block
+                            // of the document.
                             var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
                             rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
                             var linesBefore = blockProcessor.UseLinesBefore();
