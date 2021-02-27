@@ -44,7 +44,6 @@ In order:
 - ~~use StringSlice where possible instead of String~~
 - ~~document newly added syntax properties~~
 - ~~review complete PR and follow conventions~~
-- fix `TODO: RTP: `
 - do pull request feedback
 - support extensions
 - run perf test

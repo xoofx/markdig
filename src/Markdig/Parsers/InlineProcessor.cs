@@ -280,11 +280,7 @@ namespace Markdig.Parsers
 
             if (TrackTrivia)
             {
-                if (leafBlock is HeadingBlock)
-                {
-                    // TODO: RTP: delegate to block?
-                }
-                else
+                if (!(leafBlock is HeadingBlock))
                 {
                     var newline = leafBlock.Newline;
                     leafBlock.Inline.AppendChild(new LineBreakInline { Newline = newline });

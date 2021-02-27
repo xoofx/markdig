@@ -875,7 +875,7 @@ namespace Markdig.Parsers
                     }
                     if (TrackTrivia)
                     {
-                        // TODO: RTP: delegate this to container parser classes?
+                        // special case: take care when refactoring this
                         if (paragraph.Parent is QuoteBlock qb)
                         {
                             var whitespaceAfter = UseWhitespace(Start - 1);
