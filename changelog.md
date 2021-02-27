@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0 (16 Jan 2021)
+- Add depth limits to avoid pathological-case parsing times/StackOverflows (#500)
+- Breaking change: rename AutolineInlineParser to AutolinkInlineParser
+
 ## 0.22.1 (2 Dec 2020)
 - Update logo for NuGet package
 

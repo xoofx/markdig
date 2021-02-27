@@ -112,6 +112,7 @@ namespace Markdig.Syntax
         public void UpdateSpanEnd(int spanEnd)
         {
             // Update parent spans
+            int depth = 0;
             var parent = this;
             while (parent != null)
             {
@@ -120,7 +121,9 @@ namespace Markdig.Syntax
                     parent.Span.End = spanEnd;
                 }
                 parent = parent.Parent;
+                depth++;
             }
+            ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
         }
 
         internal static Block FindRootMostContainerParent(Block block)

@@ -522,7 +522,7 @@ namespace Markdig
                 pipeline.BlockParsers.Remove(parser);
             }
 
-            var inlineParser = pipeline.InlineParsers.Find<AutolineInlineParser>();
+            var inlineParser = pipeline.InlineParsers.Find<AutolinkInlineParser>();
             if (inlineParser != null)
             {
                 inlineParser.EnableHtmlParsing = false;

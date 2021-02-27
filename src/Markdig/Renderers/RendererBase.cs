@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
@@ -18,6 +19,7 @@ namespace Markdig.Renderers
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
         private IMarkdownObjectRenderer previousRenderer;
         private Type previousObjectType;
+        internal int childrenDepth = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RendererBase"/> class.
@@ -57,6 +59,8 @@ namespace Markdig.Renderers
                 return;
             }
 
+            ThrowHelper.CheckDepthLimit(childrenDepth++);
+
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
 
@@ -70,6 +74,8 @@ namespace Markdig.Renderers
 
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
+
+            childrenDepth--;
         }
 
         /// <summary>
@@ -82,6 +88,8 @@ namespace Markdig.Renderers
             {
                 return;
             }
+
+            ThrowHelper.CheckDepthLimit(childrenDepth++);
 
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
@@ -101,6 +109,8 @@ namespace Markdig.Renderers
 
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
+
+            childrenDepth--;
         }
 
         /// <summary>

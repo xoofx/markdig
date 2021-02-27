@@ -1,6 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Markdig</PackageId>
   </PropertyGroup>
   <Import Project="Markdig.targets" />
+  <ItemGroup>
+    <None Remove="readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="readme.md" LunetApiDotNet="true"/>
+  </ItemGroup>
 </Project>

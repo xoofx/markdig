@@ -44,7 +44,7 @@ namespace Markdig
                 new EscapeInlineParser(),
                 new EmphasisInlineParser(),
                 new CodeInlineParser(),
-                new AutolineInlineParser(),
+                new AutolinkInlineParser(),
                 new LineBreakInlineParser(),
             };
 

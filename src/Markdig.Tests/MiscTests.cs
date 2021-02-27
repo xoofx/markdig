@@ -62,6 +62,29 @@ namespace Markdig.Tests
             }
         }
 
+        [Theory]
+        [TestCase('[', 9 * 1024, true, false)]
+        [TestCase('[', 11 * 1024, true, true)]
+        [TestCase('[', 100, false, false)]
+        [TestCase('[', 150, false, true)]
+        [TestCase('>', 100, true, false)]
+        [TestCase('>', 150, true, true)]
+        public void GuardsAgainstHighlyNestedNodes(char c, int count, bool parseOnly, bool shouldThrow)
+        {
+            var markdown = new string(c, count);
+            TestDelegate test = parseOnly ? () => Markdown.Parse(markdown) : () => Markdown.ToHtml(markdown);
+
+            if (shouldThrow)
+            {
+                Exception e = Assert.Throws<ArgumentException>(test);
+                Assert.True(e.Message.Contains("depth limit"));
+            }
+            else
+            {
+                test();
+            }
+        }
+
         [Test]
         public void IsIssue356Corrected()
         {

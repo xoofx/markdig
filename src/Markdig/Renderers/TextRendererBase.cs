@@ -117,7 +117,7 @@ namespace Markdig.Renderers
             indents = new List<Indent>();
         }
 
-        internal void Reset()
+        protected internal void Reset()
         {
             if (Writer is StringWriter stringWriter)
             {
@@ -128,6 +128,7 @@ namespace Markdig.Renderers
                 ThrowHelper.InvalidOperationException("Cannot reset this TextWriter instance");
             }
 
+            childrenDepth = 0;
             previousWasLine = true;
             indents.Clear();
         }

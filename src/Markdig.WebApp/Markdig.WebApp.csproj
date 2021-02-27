@@ -1,42 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>Markdig.WebApp</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Markdig.WebApp</PackageId>
-    <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
     <ApplicationInsightsResourceId>/subscriptions/b6745039-70e7-4641-994b-5457cb220e2a/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Markdig.WebApp</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/b6745039-70e7-4641-994b-5457cb220e2a/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Markdig.WebApp</ApplicationInsightsAnnotationResourceId>
     <IsPackable>false</IsPackable>
+    <UserSecretsId>683145f2-53a7-4938-bd96-35e60ac55d95</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Views">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services" />
-  </ItemGroup>
-
 </Project>
