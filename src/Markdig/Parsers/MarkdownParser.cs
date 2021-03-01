@@ -120,7 +120,7 @@ namespace Markdig.Parsers
                     if (TrackTrivia)
                     {
                         Block lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock == null)
+                        if (lastBlock == null && document.Count == 0)
                         {
                             // this means we have unassigned characters
                             var noBlocksFoundBlock = new NoBlocksFoundBlock(null);
@@ -129,7 +129,7 @@ namespace Markdig.Parsers
                             noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
                             document.Add(noBlocksFoundBlock);
                         }
-                        else if (blockProcessor.LinesBefore != null)
+                        else if (lastBlock != null && blockProcessor.LinesBefore != null)
                         {
                             // this means we're out of lines, but still have unassigned empty lines.
                             // thus, we'll assign the empty unsassigned lines to the last block
