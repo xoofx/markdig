@@ -19,6 +19,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - including **GFM fenced code blocks**.  
 - **Extensible** architecture
   - Even the core Markdown/CommonMark parsing is pluggable, so it allows to disable builtin Markdown/Commonmark parsing (e.g [Disable HTML parsing](https://github.com/lunet-io/markdig/blob/7964bd0160d4c18e4155127a4c863d61ebd8944a/src/Markdig/MarkdownExtensions.cs#L306)) or change behaviour (e.g change matching `#` of a headers with `@`)   
+- [**Roundtrip support**](./src/Markdig/Roundtrip.md): Parses trivia (whitespace, newlines and other characters) to support lossless parse ⭢ render roundtrip. This enables changing markdown documents without introducing undesired trivia changes.
 - Built-in with **20+ extensions**, including:
   - 2 kind of tables:
     - [**Pipe tables**](src/Markdig.Tests/Specs/PipeTableSpecs.md) (inspired from GitHub tables and [PanDoc - Pipe Tables](http://pandoc.org/README.html#extension-pipe_tables))
