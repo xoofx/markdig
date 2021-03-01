@@ -56,18 +56,18 @@ namespace Markdig.Syntax
         public bool RemoveAfterProcessInlines { get; set; }
 
         /// <summary>
-        /// Gets or sets the whitespace right before this block.
+        /// Gets or sets the trivia right before this block.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceBefore { get; set; }
+        public StringSlice TriviaBefore { get; set; }
 
         /// <summary>
-        /// Gets or sets whitespace occurring after this block.
+        /// Gets or sets trivia occurring after this block.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceAfter { get; set; }
+        public StringSlice TriviaAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring before this block.

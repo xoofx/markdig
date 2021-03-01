@@ -159,13 +159,13 @@ namespace Markdig.Parsers
             }
 
         end:
-            fenced.WhitespaceAfterFencedChar = afterFence;
+            fenced.TriviaAfterFencedChar = afterFence;
             fenced.Info = HtmlHelper.Unescape(info.ToString());
             fenced.UnescapedInfo = info;
-            fenced.WhitespaceAfterInfo = afterInfo;
+            fenced.TriviaAfterInfo = afterInfo;
             fenced.Arguments = HtmlHelper.Unescape(arg.ToString());
             fenced.UnescapedArguments = arg;
-            fenced.WhitespaceAfterArguments = afterArg;
+            fenced.TriviaAfterArguments = afterArg;
             fenced.InfoNewline = line.Newline;
 
             return true;
@@ -332,8 +332,8 @@ namespace Markdig.Parsers
                 var fencedBlock = block as IFencedBlock;
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.Newline = processor.Line.Newline;
-                fencedBlock.WhitespaceBeforeClosingFence = processor.UseWhitespace(sourcePosition - 1);
-                fencedBlock.WhitespaceAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
+                fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
+                fencedBlock.TriviaAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

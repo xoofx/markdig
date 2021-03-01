@@ -32,10 +32,10 @@ namespace Markdig.Renderers.Roundtrip
 
                 renderer.WriteLeafInline(obj);
                 renderer.WriteLine(obj.SetextNewline);
-                renderer.Write(obj.WhitespaceBefore);
+                renderer.Write(obj.TriviaBefore);
                 renderer.Write(line);
                 renderer.WriteLine(obj.Newline);
-                renderer.Write(obj.WhitespaceAfter);
+                renderer.Write(obj.TriviaAfter);
 
                 renderer.RenderLinesAfter(obj);
             }
@@ -47,11 +47,11 @@ namespace Markdig.Renderers.Roundtrip
                     ? HeadingTexts[obj.Level - 1]
                     : new string('#', obj.Level);
 
-                renderer.Write(obj.WhitespaceBefore);
+                renderer.Write(obj.TriviaBefore);
                 renderer.Write(headingText);
-                renderer.Write(obj.WhitespaceAfterAtxHeaderChar);
+                renderer.Write(obj.TriviaAfterAtxHeaderChar);
                 renderer.WriteLeafInline(obj);
-                renderer.Write(obj.WhitespaceAfter);
+                renderer.Write(obj.TriviaAfter);
                 renderer.WriteLine(obj.Newline);
 
                 renderer.RenderLinesAfter(obj);

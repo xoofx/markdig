@@ -169,11 +169,11 @@ namespace Markdig.Parsers
         private bool ContinueProcessingLine { get; set; }
 
         /// <summary>
-        /// Gets or sets the position of the first character whitespace is encountered
+        /// Gets or sets the position of the first character trivia is encountered
         /// and not yet assigned to a syntax node.
         /// Trivia: only used when <see cref="TrackTrivia"/> is enabled, otherwise 0.
         /// </summary>
-        public int WhitespaceStart { get; set; }
+        public int TriviaStart { get; set; }
 
         /// <summary>
         /// Returns trivia that has not yet been assigned to any node and
@@ -181,10 +181,10 @@ namespace Markdig.Parsers
         /// </summary>
         /// <param name="end">End position of the trivia</param>
         /// <returns></returns>
-        public StringSlice UseWhitespace(int end)
+        public StringSlice UseTrivia(int end)
         {
-            var stringSlice = new StringSlice(Line.Text, WhitespaceStart, end);
-            WhitespaceStart = end + 1;
+            var stringSlice = new StringSlice(Line.Text, TriviaStart, end);
+            TriviaStart = end + 1;
             return stringSlice;
         }
 
@@ -203,7 +203,7 @@ namespace Markdig.Parsers
         /// Gets or sets the stack of empty lines not yet assigned to any <see cref="Block"/>.
         /// An entry may contain an empty <see cref="StringSlice"/>. In that case the
         /// <see cref="StringSlice.Newline"/> is relevant. Otherwise, the <see cref="StringSlice"/>
-        /// entry will contain whitespace.
+        /// entry will contain trivia.
         /// </summary>
         public List<StringSlice> LinesBefore { get; set; }
 
@@ -382,7 +382,7 @@ namespace Markdig.Parsers
                 var c = Line.PeekCharAbsolute(Line.Start - 1);
 
                 // don't unwind all the way next to a '>', but one space right of the '>' if there is a space
-                if (TrackTrivia && SkipFirstUnwindSpace && Line.Start == WhitespaceStart)
+                if (TrackTrivia && SkipFirstUnwindSpace && Line.Start == TriviaStart)
                 {
                     break;
                 }
@@ -740,7 +740,7 @@ namespace Markdig.Parsers
                         if (TrackTrivia)
                         {
                             LinesBefore ??= new List<StringSlice>();
-                            var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
+                            var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.Newline);
                             LinesBefore.Add(line);
                             Line.Start = StartBeforeIndent;
                         }
@@ -820,7 +820,7 @@ namespace Markdig.Parsers
                     if (TrackTrivia)
                     {
                         LinesBefore ??= new List<StringSlice>();
-                        var line = new StringSlice(Line.Text, WhitespaceStart, Line.Start - 1, Line.Newline);
+                        var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.Newline);
                         LinesBefore.Add(line);
                         Line.Start = StartBeforeIndent;
                     }
@@ -878,8 +878,8 @@ namespace Markdig.Parsers
                         // special case: take care when refactoring this
                         if (paragraph.Parent is QuoteBlock qb)
                         {
-                            var whitespaceAfter = UseWhitespace(Start - 1);
-                            qb.QuoteLines.Last().WhitespaceAfter = whitespaceAfter;
+                            var triviaAfter = UseTrivia(Start - 1);
+                            qb.QuoteLines.Last().TriviaAfter = triviaAfter;
                         }
                     }
                     // We have just found a lazy continuation for a paragraph, early exit
@@ -987,7 +987,7 @@ namespace Markdig.Parsers
             ColumnBeforeIndent = 0;
             StartBeforeIndent = Start;
             originalLineStart = newLine.Start;
-            WhitespaceStart = newLine.Start;
+            TriviaStart = newLine.Start;
         }
 
         private void Reset()

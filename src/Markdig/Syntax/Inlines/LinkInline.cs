@@ -61,11 +61,11 @@ namespace Markdig.Syntax.Inlines
         public SourceSpan? LabelSpan;
 
         /// <summary>
-        /// Gets or sets the <see cref="Label"/> with whitespace.
+        /// Gets or sets the <see cref="Label"/> with trivia.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithTrivia { get; set; }
 
         /// <summary>
         /// Gets or sets the type of label parsed
@@ -85,17 +85,17 @@ namespace Markdig.Syntax.Inlines
         public string LinkRefDefLabel { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="LinkRefDefLabel"/> with whitespace as matched against
+        /// Gets or sets the <see cref="LinkRefDefLabel"/> with trivia as matched against
         /// the <see cref="LinkReferenceDefinition"/>
         /// </summary>
-        public StringSlice LinkRefDefLabelWithWhitespace { get; set; }
+        public StringSlice LinkRefDefLabelWithTrivia { get; set; }
 
         /// <summary>
-        /// Gets or sets the whitespace before the <see cref="Url"/>.
+        /// Gets or sets the trivia before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceBeforeUrl { get; set; }
+        public StringSlice TriviaBeforeUrl { get; set; }
 
         /// <summary>
         /// True if the <see cref="Url"/> in the source document is enclosed
@@ -116,18 +116,18 @@ namespace Markdig.Syntax.Inlines
         public SourceSpan? UrlSpan;
 
         /// <summary>
-        /// The <see cref="Url"/> but with whitespace and unescaped characters
+        /// The <see cref="Url"/> but with trivia and unescaped characters
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice UnescapedUrl { get; set; }
 
         /// <summary>
-        /// Any whitespace after the <see cref="Url"/>.
+        /// Any trivia after the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceAfterUrl { get; set; }
+        public StringSlice TriviaAfterUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the GetDynamicUrl delegate. If this property is set, 
@@ -161,11 +161,11 @@ namespace Markdig.Syntax.Inlines
         public StringSlice UnescapedTitle { get; set; }
 
         /// <summary>
-        /// Gets or sets the whitespace after the <see cref="Title"/>.
+        /// Gets or sets the trivia after the <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceAfterTitle { get; set; }
+        public StringSlice TriviaAfterTitle { get; set; }
 
         /// <summary>
         /// Gets or sets a boolean indicating if this link is a shortcut link to a <see cref="LinkReferenceDefinition"/>

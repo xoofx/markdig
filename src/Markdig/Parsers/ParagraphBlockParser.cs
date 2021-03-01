@@ -58,7 +58,7 @@ namespace Markdig.Parsers
 
                 if (processor.TrackTrivia)
                 {
-                    TryMatchLinkReferenceDefinitionWhitespace(ref lines, processor, paragraph);
+                    TryMatchLinkReferenceDefinitionTrivia(ref lines, processor, paragraph);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace Markdig.Parsers
                 bool foundLrd;
                 if (state.TrackTrivia)
                 {
-                    foundLrd = TryMatchLinkReferenceDefinitionWhitespace(ref paragraph.Lines, state, paragraph);
+                    foundLrd = TryMatchLinkReferenceDefinitionTrivia(ref paragraph.Lines, state, paragraph);
                 }
                 else
                 {
@@ -129,8 +129,8 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        WhitespaceBefore = state.UseWhitespace(sourcePosition - 1), // remove dashes
-                        WhitespaceAfter = new StringSlice(state.Line.Text, state.Start, line.End),
+                        TriviaBefore = state.UseTrivia(sourcePosition - 1), // remove dashes
+                        TriviaAfter = new StringSlice(state.Line.Text, state.Start, line.End),
                         LinesBefore = paragraph.LinesBefore,
                         Newline = state.Line.Newline,
                         IsSetext = true,
@@ -213,7 +213,7 @@ namespace Markdig.Parsers
             return atLeastOneFound;
         }
 
-        private static bool TryMatchLinkReferenceDefinitionWhitespace(ref StringLineGroup lines, BlockProcessor state, ParagraphBlock paragraph)
+        private static bool TryMatchLinkReferenceDefinitionTrivia(ref StringLineGroup lines, BlockProcessor state, ParagraphBlock paragraph)
         {
             bool atLeastOneFound = false;
 
@@ -221,16 +221,16 @@ namespace Markdig.Parsers
             {
                 // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
                 var iterator = lines.ToCharIterator();
-                if (LinkReferenceDefinition.TryParseWhitespace(
+                if (LinkReferenceDefinition.TryParseTrivia(
                     ref iterator,
                     out LinkReferenceDefinition lrd,
-                    out SourceSpan whitespaceBeforeLabel,
-                    out SourceSpan labelWithWhitespace,
-                    out SourceSpan whitespaceBeforeUrl,
+                    out SourceSpan triviaBeforeLabel,
+                    out SourceSpan labelWithTrivia,
+                    out SourceSpan triviaBeforeUrl,
                     out SourceSpan unescapedUrl,
-                    out SourceSpan whitespaceBeforeTitle,
+                    out SourceSpan triviaBeforeTitle,
                     out SourceSpan unescapedTitle,
-                    out SourceSpan whitespaceAfterTitle))
+                    out SourceSpan triviaAfterTitle))
                 {
                     state.Document.SetLinkReferenceDefinition(lrd.Label, lrd, false);
                     lrd.Parent = null; // remove LRDG parent from lrd
@@ -241,24 +241,24 @@ namespace Markdig.Parsers
                     var text = lines.Lines[0].Slice.Text;
                     int startPosition = lines.Lines[0].Slice.Start;
 
-                    whitespaceBeforeLabel = whitespaceBeforeLabel.MoveForward(startPosition);
-                    labelWithWhitespace = labelWithWhitespace.MoveForward(startPosition);
-                    whitespaceBeforeUrl = whitespaceBeforeUrl.MoveForward(startPosition);
+                    triviaBeforeLabel = triviaBeforeLabel.MoveForward(startPosition);
+                    labelWithTrivia = labelWithTrivia.MoveForward(startPosition);
+                    triviaBeforeUrl = triviaBeforeUrl.MoveForward(startPosition);
                     unescapedUrl = unescapedUrl.MoveForward(startPosition);
-                    whitespaceBeforeTitle = whitespaceBeforeTitle.MoveForward(startPosition);
+                    triviaBeforeTitle = triviaBeforeTitle.MoveForward(startPosition);
                     unescapedTitle = unescapedTitle.MoveForward(startPosition);
-                    whitespaceAfterTitle = whitespaceAfterTitle.MoveForward(startPosition);
+                    triviaAfterTitle = triviaAfterTitle.MoveForward(startPosition);
                     lrd.Span = lrd.Span.MoveForward(startPosition);
-                    lrd.WhitespaceBefore = new StringSlice(text, whitespaceBeforeLabel.Start, whitespaceBeforeLabel.End);
+                    lrd.TriviaBefore = new StringSlice(text, triviaBeforeLabel.Start, triviaBeforeLabel.End);
                     lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
-                    lrd.LabelWithWhitespace = new StringSlice(text, labelWithWhitespace.Start, labelWithWhitespace.End);
-                    lrd.WhitespaceBeforeUrl = new StringSlice(text, whitespaceBeforeUrl.Start, whitespaceBeforeUrl.End);
+                    lrd.LabelWithTrivia = new StringSlice(text, labelWithTrivia.Start, labelWithTrivia.End);
+                    lrd.TriviaBeforeUrl = new StringSlice(text, triviaBeforeUrl.Start, triviaBeforeUrl.End);
                     lrd.UrlSpan = lrd.UrlSpan.MoveForward(startPosition);
                     lrd.UnescapedUrl = new StringSlice(text, unescapedUrl.Start, unescapedUrl.End);
-                    lrd.WhitespaceBeforeTitle = new StringSlice(text, whitespaceBeforeTitle.Start, whitespaceBeforeTitle.End);
+                    lrd.TriviaBeforeTitle = new StringSlice(text, triviaBeforeTitle.Start, triviaBeforeTitle.End);
                     lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
                     lrd.UnescapedTitle = new StringSlice(text, unescapedTitle.Start, unescapedTitle.End);
-                    lrd.WhitespaceAfter = new StringSlice(text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
+                    lrd.TriviaAfter = new StringSlice(text, triviaAfterTitle.Start, triviaAfterTitle.End);
                     lrd.LinesBefore = paragraph.LinesBefore;
 
                     state.LinesBefore = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack

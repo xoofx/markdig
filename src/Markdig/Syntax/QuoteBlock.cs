@@ -43,11 +43,11 @@ namespace Markdig.Syntax
     public class QuoteBlockLine
     {
         /// <summary>
-        /// Gets or sets whitespace occuring before the first quote character.
+        /// Gets or sets trivia occuring before the first quote character.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
-        public StringSlice WhitespaceBefore { get; set; }
+        public StringSlice TriviaBefore { get; set; }
 
         /// <summary>
         /// True when this QuoteBlock line has a quote character. False when
@@ -65,13 +65,13 @@ namespace Markdig.Syntax
         public bool HasSpaceAfterQuoteChar { get; set; }
 
         /// <summary>
-        /// Gets or sets the whitespace after the the space after the quote character.
+        /// Gets or sets the trivia after the the space after the quote character.
         /// The first space is assigned to <see cref="HasSpaceAfterQuoteChar"/>, subsequent
-        /// whitespace is assigned to this property.
+        /// trivia is assigned to this property.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
-        public StringSlice WhitespaceAfter { get; set; }
+        public StringSlice TriviaAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the newline of this QuoeBlockLine.

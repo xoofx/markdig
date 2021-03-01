@@ -41,7 +41,7 @@ namespace Markdig.Parsers
                 };
                 var codeBlockLine = new CodeBlockLine
                 {
-                    WhitespaceBefore = processor.UseWhitespace(sourceStartPosition - 1)
+                    TriviaBefore = processor.UseTrivia(sourceStartPosition - 1)
                 };
                 codeBlock.CodeBlockLines.Add(codeBlockLine);
                 processor.NewBlocks.Push(codeBlock);
@@ -94,7 +94,7 @@ namespace Markdig.Parsers
                 var cb = (CodeBlock)block;
                 var codeBlockLine = new CodeBlockLine
                 {
-                    WhitespaceBefore = processor.UseWhitespace(processor.Start - 1)
+                    TriviaBefore = processor.UseTrivia(processor.Start - 1)
                 };
                 cb.CodeBlockLines ??= new List<CodeBlockLine>();
                 cb.CodeBlockLines.Add(codeBlockLine);
@@ -126,7 +126,7 @@ namespace Markdig.Parsers
                     if (processor.TrackTrivia)
                     {
                         var quoteLine = codeBlock.CodeBlockLines[i];
-                        var emptyLine = new StringSlice(line.Slice.Text, quoteLine.WhitespaceBefore.Start, line.Slice.End, line.Newline);
+                        var emptyLine = new StringSlice(line.Slice.Text, quoteLine.TriviaBefore.Start, line.Slice.End, line.Newline);
                         block.LinesAfter ??= new List<StringSlice>();
                         block.LinesAfter.Add(emptyLine);
                     }

@@ -31,7 +31,7 @@ namespace Markdig.Parsers
             {
                 IndentCount = processor.Indent,
                 LinesBefore = processor.UseLinesBefore(),
-                WhitespaceBefore = processor.UseWhitespace(processor.Start - 1),
+                TriviaBefore = processor.UseTrivia(processor.Start - 1),
                 Newline = processor.Line.Newline,
             };
         }

@@ -53,6 +53,6 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceAfterAtxHeaderChar { get; set; }
+        public StringSlice TriviaAfterAtxHeaderChar { get; set; }
     }
 }

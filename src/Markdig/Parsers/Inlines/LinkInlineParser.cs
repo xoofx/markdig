@@ -42,7 +42,7 @@ namespace Markdig.Parsers.Inlines
                 }
             }
             string label;
-            SourceSpan labelWithWhitespaceSpan = SourceSpan.Empty;
+            SourceSpan labelWithTriviaSpan = SourceSpan.Empty;
             switch (c)
             {
                 case '[':
@@ -54,10 +54,10 @@ namespace Markdig.Parsers.Inlines
                     // If the label is followed by either a ( or a [, this is not a shortcut
                     if (processor.TrackTrivia)
                     {
-                        if (LinkHelper.TryParseLabelWhitespace(ref slice, out label, out labelSpan))
+                        if (LinkHelper.TryParseLabelTrivia(ref slice, out label, out labelSpan))
                         {
-                            labelWithWhitespaceSpan.Start = labelSpan.Start; // skip opening [
-                            labelWithWhitespaceSpan.End = labelSpan.End; // skip closing ]
+                            labelWithTriviaSpan.Start = labelSpan.Start; // skip opening [
+                            labelWithTriviaSpan.End = labelSpan.End; // skip closing ]
                             if (!processor.Document.ContainsLinkReferenceDefinition(label))
                             {
                                 label = null;
@@ -78,13 +78,12 @@ namespace Markdig.Parsers.Inlines
 
                     // Else we insert a LinkDelimiter
                     slice.NextChar();
-                    //labelWithWhitespaceSpan = processor.GetSourcePositionFromLocalSpan(labelWithWhitespaceSpan);
-                    var labelWithWhitespace = new StringSlice(slice.Text, labelWithWhitespaceSpan.Start, labelWithWhitespaceSpan.End);
+                    var labelWithTrivia = new StringSlice(slice.Text, labelWithTriviaSpan.Start, labelWithTriviaSpan.End);
                     processor.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
                         Label = label,
-                        LabelWithWhitespace = labelWithWhitespace,
+                        LabelWithTrivia = labelWithTrivia,
                         LabelSpan = processor.GetSourcePositionFromLocalSpan(labelSpan),
                         IsImage = isImage,
                         Span = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
@@ -116,7 +115,7 @@ namespace Markdig.Parsers.Inlines
             InlineProcessor state,
             StringSlice text,
             string label,
-            SourceSpan labelWithWhitespaceSpan,
+            SourceSpan labelWithriviaSpan,
             bool isShortcut,
             SourceSpan labelSpan,
             LinkDelimiterInline parent,
@@ -138,7 +137,7 @@ namespace Markdig.Parsers.Inlines
             // Create a default link if the callback was not found
             if (link == null)
             {
-                var labelWithWhitespace = new StringSlice(text.Text, labelWithWhitespaceSpan.Start, labelWithWhitespaceSpan.End);
+                var labelWithTrivia = new StringSlice(text.Text, labelWithriviaSpan.Start, labelWithriviaSpan.End);
                 // Inline Link
                 link = new LinkInline()
                 {
@@ -146,9 +145,9 @@ namespace Markdig.Parsers.Inlines
                     Title = HtmlHelper.Unescape(linkRef.Title),
                     Label = label,
                     LabelSpan = labelSpan,
-                    LabelWithWhitespace = labelWithWhitespace,
+                    LabelWithTrivia = labelWithTrivia,
                     LinkRefDefLabel = linkRef.Label,
-                    LinkRefDefLabelWithWhitespace = linkRef.LabelWithWhitespace,
+                    LinkRefDefLabelWithTrivia = linkRef.LabelWithTrivia,
                     LocalLabel = localLabel,
                     UrlSpan = linkRef.UrlSpan,
                     IsImage = parent.IsImage,
@@ -236,7 +235,7 @@ namespace Markdig.Parsers.Inlines
             {
                 if (inlineState.TrackTrivia)
                 {
-                    if (LinkHelper.TryParseInlineLinkWhitespace(
+                    if (LinkHelper.TryParseInlineLinkTrivia(
                         ref text,
                         out string url,
                         out SourceSpan unescapedUrlSpan,
@@ -245,28 +244,28 @@ namespace Markdig.Parsers.Inlines
                         out char titleEnclosingCharacter,
                         out SourceSpan linkSpan,
                         out SourceSpan titleSpan,
-                        out SourceSpan whitespaceBeforeLink,
-                        out SourceSpan whitespaceAfterLink,
-                        out SourceSpan whitespaceAfterTitle,
+                        out SourceSpan triviaBeforeLink,
+                        out SourceSpan triviaAfterLink,
+                        out SourceSpan triviaAfterTitle,
                         out bool urlHasPointyBrackets))
                     {
-                        var wsBeforeLink = new StringSlice(text.Text, whitespaceBeforeLink.Start, whitespaceBeforeLink.End);
-                        var wsAfterLink = new StringSlice(text.Text, whitespaceAfterLink.Start, whitespaceAfterLink.End);
-                        var wsAfterTitle = new StringSlice(text.Text, whitespaceAfterTitle.Start, whitespaceAfterTitle.End);
+                        var wsBeforeLink = new StringSlice(text.Text, triviaBeforeLink.Start, triviaBeforeLink.End);
+                        var wsAfterLink = new StringSlice(text.Text, triviaAfterLink.Start, triviaAfterLink.End);
+                        var wsAfterTitle = new StringSlice(text.Text, triviaAfterTitle.Start, triviaAfterTitle.End);
                         var unescapedUrl = new StringSlice(text.Text, unescapedUrlSpan.Start, unescapedUrlSpan.End);
                         var unescapedTitle = new StringSlice(text.Text, unescapedTitleSpan.Start, unescapedTitleSpan.End);
                         // Inline Link
                         var link = new LinkInline()
                         {
-                            WhitespaceBeforeUrl = wsBeforeLink,
+                            TriviaBeforeUrl = wsBeforeLink,
                             Url = HtmlHelper.Unescape(url),
                             UnescapedUrl = unescapedUrl,
                             UrlHasPointyBrackets = urlHasPointyBrackets,
-                            WhitespaceAfterUrl = wsAfterLink,
+                            TriviaAfterUrl = wsAfterLink,
                             Title = HtmlHelper.Unescape(title),
                             UnescapedTitle = unescapedTitle,
                             TitleEnclosingCharacter = titleEnclosingCharacter,
-                            WhitespaceAfterTitle = wsAfterTitle,
+                            TriviaAfterTitle = wsAfterTitle,
                             IsImage = openParent.IsImage,
                             LabelSpan = openParent.LabelSpan,
                             UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
@@ -340,7 +339,7 @@ namespace Markdig.Parsers.Inlines
 
             var labelSpan = SourceSpan.Empty;
             string label = null;
-            SourceSpan labelWithWhitespace = SourceSpan.Empty;
+            SourceSpan labelWithTrivia = SourceSpan.Empty;
             bool isLabelSpanLocal = true;
 
             bool isShortcut = false;
@@ -364,15 +363,15 @@ namespace Markdig.Parsers.Inlines
                 label = openParent.Label;
                 isShortcut = true;
             }
-            if (label != null || LinkHelper.TryParseLabelWhitespace(ref text, true, out label, out labelSpan))
+            if (label != null || LinkHelper.TryParseLabelTrivia(ref text, true, out label, out labelSpan))
             {
-                labelWithWhitespace = new SourceSpan(labelSpan.Start, labelSpan.End);
+                labelWithTrivia = new SourceSpan(labelSpan.Start, labelSpan.End);
                 if (isLabelSpanLocal)
                 {
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, text, label, labelWithWhitespace, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
+                if (ProcessLinkReference(inlineState, text, label, labelWithTrivia, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();

@@ -20,29 +20,29 @@ namespace Markdig.Renderers.Roundtrip
             renderer.RenderLinesBefore(obj);
             if (obj is FencedCodeBlock fencedCodeBlock)
             {
-                renderer.Write(obj.WhitespaceBefore);
+                renderer.Write(obj.TriviaBefore);
                 var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
                 renderer.Write(opening);
 
-                if (!fencedCodeBlock.WhitespaceAfterFencedChar.IsEmpty)
+                if (!fencedCodeBlock.TriviaAfterFencedChar.IsEmpty)
                 {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterFencedChar);
+                    renderer.Write(fencedCodeBlock.TriviaAfterFencedChar);
                 }
                 if (fencedCodeBlock.Info != null)
                 {
                     renderer.Write(fencedCodeBlock.UnescapedInfo);
                 }
-                if (!fencedCodeBlock.WhitespaceAfterInfo.IsEmpty)
+                if (!fencedCodeBlock.TriviaAfterInfo.IsEmpty)
                 {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterInfo);
+                    renderer.Write(fencedCodeBlock.TriviaAfterInfo);
                 }
                 if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
                     renderer.Write(fencedCodeBlock.UnescapedArguments);
                 }
-                if (!fencedCodeBlock.WhitespaceAfterArguments.IsEmpty)
+                if (!fencedCodeBlock.TriviaAfterArguments.IsEmpty)
                 {
-                    renderer.Write(fencedCodeBlock.WhitespaceAfterArguments);
+                    renderer.Write(fencedCodeBlock.TriviaAfterArguments);
                 }
 
                 /* TODO do we need this causes a empty space and would render html attributes to markdown.
@@ -57,7 +57,7 @@ namespace Markdig.Renderers.Roundtrip
 
                 renderer.WriteLeafRawLines(obj);
 
-                renderer.Write(fencedCodeBlock.WhitespaceBeforeClosingFence);
+                renderer.Write(fencedCodeBlock.TriviaBeforeClosingFence);
                 var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
                 renderer.Write(closing);
                 if (!string.IsNullOrEmpty(closing))
@@ -65,14 +65,14 @@ namespace Markdig.Renderers.Roundtrip
                     // See example 207: "> ```\nfoo\n```"
                     renderer.WriteLine(obj.Newline);
                 }
-                renderer.Write(obj.WhitespaceAfter);
+                renderer.Write(obj.TriviaAfter);
             }
             else
             {
                 var indents = new List<string>();
                 foreach (var cbl in obj.CodeBlockLines)
                 {
-                    indents.Add(cbl.WhitespaceBefore.ToString());
+                    indents.Add(cbl.TriviaBefore.ToString());
                 }
                 renderer.PushIndent(indents);
                 WriteLeafRawLines(renderer, obj);

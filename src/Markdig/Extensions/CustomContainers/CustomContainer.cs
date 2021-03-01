@@ -30,7 +30,7 @@ namespace Markdig.Extensions.CustomContainers
         public int OpeningFencedCharCount { get; set; }
 
         /// <inheritdoc />
-        public StringSlice WhitespaceAfterFencedChar { get; set; }
+        public StringSlice TriviaAfterFencedChar { get; set; }
 
         /// <inheritdoc />
         public string Info { get; set; }
@@ -39,7 +39,7 @@ namespace Markdig.Extensions.CustomContainers
         public StringSlice UnescapedInfo { get; set; }
 
         /// <inheritdoc />
-        public StringSlice WhitespaceAfterInfo { get; set; }
+        public StringSlice TriviaAfterInfo { get; set; }
 
         /// <inheritdoc />
         public string Arguments { get; set; }
@@ -48,13 +48,13 @@ namespace Markdig.Extensions.CustomContainers
         public StringSlice UnescapedArguments { get; set; }
 
         /// <inheritdoc />
-        public StringSlice WhitespaceAfterArguments { get; set; }
+        public StringSlice TriviaAfterArguments { get; set; }
 
         /// <inheritdoc />
         public Newline InfoNewline { get; set; }
 
         /// <inheritdoc />
-        public StringSlice WhitespaceBeforeClosingFence { get; set; }
+        public StringSlice TriviaBeforeClosingFence { get; set; }
 
         /// <inheritdoc />
         public int ClosingFencedCharCount { get; set; }

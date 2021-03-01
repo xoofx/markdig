@@ -33,11 +33,11 @@ namespace Markdig.Syntax.Inlines
         public SourceSpan LabelSpan;
 
         /// <summary>
-        /// Gets or sets the <see cref="Label"/> with whitespace.
+        /// Gets or sets the <see cref="Label"/> with trivia.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithTrivia { get; set; }
 
         public override string ToLiteral()
         {

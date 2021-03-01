@@ -17,15 +17,15 @@ namespace Markdig.Renderers.Roundtrip
         protected override void Write(RoundtripRenderer renderer, QuoteBlock quoteBlock)
         {
             renderer.RenderLinesBefore(quoteBlock);
-            renderer.Write(quoteBlock.WhitespaceBefore);
+            renderer.Write(quoteBlock.TriviaBefore);
 
             var indents = new List<string>();
             foreach (var quoteLine in quoteBlock.QuoteLines)
             {
-                var wsb = quoteLine.WhitespaceBefore.ToString();
+                var wsb = quoteLine.TriviaBefore.ToString();
                 var quoteChar = quoteLine.QuoteChar ? ">" : "";
                 var spaceAfterQuoteChar = quoteLine.HasSpaceAfterQuoteChar ? " " : "";
-                var wsa = quoteLine.WhitespaceAfter.ToString();
+                var wsa = quoteLine.TriviaAfter.ToString();
                 indents.Add(wsb + quoteChar + spaceAfterQuoteChar + wsa);
             }
             bool noChildren = false;

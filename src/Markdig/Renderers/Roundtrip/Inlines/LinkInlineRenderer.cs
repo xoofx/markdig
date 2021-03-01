@@ -30,7 +30,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                     renderer.Write('[');
                     if (link.LocalLabel == LocalLabel.Local)
                     {
-                        renderer.Write(link.LabelWithWhitespace);
+                        renderer.Write(link.LabelWithTrivia);
                     }
                     renderer.Write(']');
                 }
@@ -40,7 +40,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                 if (link.Url != null)
                 {
                     renderer.Write('(');
-                    renderer.Write(link.WhitespaceBeforeUrl);
+                    renderer.Write(link.TriviaBeforeUrl);
                     if (link.UrlHasPointyBrackets)
                     {
                         renderer.Write('<');
@@ -50,7 +50,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                     {
                         renderer.Write('>');
                     }
-                    renderer.Write(link.WhitespaceAfterUrl);
+                    renderer.Write(link.TriviaAfterUrl);
 
                     if (!string.IsNullOrEmpty(link.Title))
                     {
@@ -63,7 +63,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                         renderer.Write(open);
                         renderer.Write(link.UnescapedTitle);
                         renderer.Write(close);
-                        renderer.Write(link.WhitespaceAfterTitle);
+                        renderer.Write(link.TriviaAfterTitle);
                     }
 
                     renderer.Write(')');

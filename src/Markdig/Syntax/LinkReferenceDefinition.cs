@@ -56,18 +56,18 @@ namespace Markdig.Syntax
         public SourceSpan LabelSpan;
 
         /// <summary>
-        /// Non-normalized Label (includes whitespace)
+        /// Non-normalized Label (includes trivia)
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice LabelWithWhitespace { get; set; }
+        public StringSlice LabelWithTrivia { get; set; }
 
         /// <summary>
         /// Whitespace before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceBeforeUrl { get; set; }
+        public StringSlice TriviaBeforeUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the URL.
@@ -98,7 +98,7 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice WhitespaceBeforeTitle { get; set; }
+        public StringSlice TriviaBeforeTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -166,36 +166,36 @@ namespace Markdig.Syntax
         /// <param name="text">The text.</param>
         /// <param name="block">The block.</param>
         /// <returns><c>true</c> if parsing is successful; <c>false</c> otherwise</returns>
-        public static bool TryParseWhitespace<T>(
+        public static bool TryParseTrivia<T>(
             ref T text,
             out LinkReferenceDefinition block,
-            out SourceSpan whitespaceBeforeLabel,
-            out SourceSpan labelWithWhitespace,
-            out SourceSpan whitespaceBeforeUrl,
+            out SourceSpan triviaBeforeLabel,
+            out SourceSpan labelWithTrivia,
+            out SourceSpan triviaBeforeUrl,
             out SourceSpan unescapedUrl,
-            out SourceSpan whitespaceBeforeTitle,
+            out SourceSpan triviaBeforeTitle,
             out SourceSpan unescapedTitle,
-            out SourceSpan whitespaceAfterTitle) where T : ICharIterator
+            out SourceSpan triviaAfterTitle) where T : ICharIterator
         {
             block = null;
 
             var startSpan = text.Start;
 
-            if (!LinkHelper.TryParseLinkReferenceDefinitionWhitespace(
+            if (!LinkHelper.TryParseLinkReferenceDefinitionTrivia(
                 ref text,
-                out whitespaceBeforeLabel,
+                out triviaBeforeLabel,
                 out string label,
-                out labelWithWhitespace,
-                out whitespaceBeforeUrl,
+                out labelWithTrivia,
+                out triviaBeforeUrl,
                 out string url,
                 out unescapedUrl,
                 out bool urlHasPointyBrackets,
-                out whitespaceBeforeTitle,
+                out triviaBeforeTitle,
                 out string title,
                 out unescapedTitle,
                 out char titleEnclosingCharacter,
                 out Newline newline,
-                out whitespaceAfterTitle,
+                out triviaAfterTitle,
                 out SourceSpan labelSpan,
                 out SourceSpan urlSpan,
                 out SourceSpan titleSpan))

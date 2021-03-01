@@ -209,11 +209,11 @@ namespace Markdig.Parsers
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
-            var savedWhitespaceStart = state.WhitespaceStart;
-            var whitespaceBefore = state.UseWhitespace(sourcePosition - 1);
+            var savedTriviaStart = state.TriviaStart;
+            var triviaBefore = state.UseTrivia(sourcePosition - 1);
 
-            // set whitespace to the mandatory whitespace after the bullet
-            state.WhitespaceStart = state.Start;
+            // set trivia to the mandatory whitespace after the bullet
+            state.TriviaStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;
 
@@ -234,7 +234,7 @@ namespace Markdig.Parsers
                 if (!c.IsSpaceOrTab())
                 {
                     state.GoToColumn(initColumn);
-                    state.WhitespaceStart = savedWhitespaceStart; // restore changed WhitespaceStart state
+                    state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
                     return BlockState.None;
                 }
 
@@ -265,7 +265,7 @@ namespace Markdig.Parsers
                     state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart != "1")
                 {
                     state.GoToColumn(initColumn);
-                    state.WhitespaceStart = savedWhitespaceStart; // restore changed WhitespaceStart state
+                    state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
                     return BlockState.None;
                 }
             }
@@ -277,7 +277,7 @@ namespace Markdig.Parsers
                 ColumnWidth = columnWidth,
                 Order = order,
                 SourceBullet = listInfo.SourceBullet,
-                WhitespaceBefore = whitespaceBefore,
+                TriviaBefore = triviaBefore,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
                 LinesBefore = state.UseLinesBefore(),
                 Newline = state.Line.Newline,

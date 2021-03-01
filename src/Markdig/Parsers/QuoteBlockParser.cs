@@ -57,19 +57,19 @@ namespace Markdig.Parsers
                 processor.NextColumn();
             }
 
-            var whitespaceBefore = processor.UseWhitespace(sourcePosition - 1);
-            StringSlice whitespaceAfter = StringSlice.Empty;
+            var triviaBefore = processor.UseTrivia(sourcePosition - 1);
+            StringSlice triviaAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.WhitespaceStart = processor.Start;
-                whitespaceAfter = processor.UseWhitespace(processor.Line.End);
+                processor.TriviaStart = processor.Start;
+                triviaAfter = processor.UseTrivia(processor.Line.End);
                 wasEmptyLine = true;
             }
             quoteBlock.QuoteLines.Add(new QuoteBlockLine
             {
-                WhitespaceBefore = whitespaceBefore,
-                WhitespaceAfter = whitespaceAfter,
+                TriviaBefore = triviaBefore,
+                TriviaAfter = triviaAfter,
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 Newline = processor.Line.Newline,
@@ -77,7 +77,7 @@ namespace Markdig.Parsers
             processor.NewBlocks.Push(quoteBlock);
             if (!wasEmptyLine)
             {
-                processor.WhitespaceStart = processor.Start;
+                processor.TriviaStart = processor.Start;
             }
             return BlockState.Continue;
         }
@@ -124,27 +124,27 @@ namespace Markdig.Parsers
             {
                 processor.NextColumn();
             }
-            var whiteSpaceBefore = processor.UseWhitespace(sourcePosition - 1);
-            StringSlice whitespaceAfter = StringSlice.Empty;
+            var TriviaSpaceBefore = processor.UseTrivia(sourcePosition - 1);
+            StringSlice triviaAfter = StringSlice.Empty;
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.WhitespaceStart = processor.Start;
-                whitespaceAfter = processor.UseWhitespace(processor.Line.End);
+                processor.TriviaStart = processor.Start;
+                triviaAfter = processor.UseTrivia(processor.Line.End);
                 wasEmptyLine = true;
             }
             quote.QuoteLines.Add(new QuoteBlockLine
             {
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
-                WhitespaceBefore = whiteSpaceBefore,
-                WhitespaceAfter = whitespaceAfter,
+                TriviaBefore = TriviaSpaceBefore,
+                TriviaAfter = triviaAfter,
                 Newline = processor.Line.Newline,
             });
 
             if (!wasEmptyLine)
             {
-                processor.WhitespaceStart = processor.Start;
+                processor.TriviaStart = processor.Start;
             }
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
