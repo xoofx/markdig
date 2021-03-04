@@ -24,7 +24,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
                 renderer.Write("\\");
                 //renderer.Write(obj.IsBackslash ? "\\" : "  ");
             }
-            renderer.WriteLine(obj.Newline);
+            renderer.WriteLine(obj.NewLine);
         }
     }
 }

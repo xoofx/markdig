@@ -46,7 +46,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the newline of the first line when <see cref="IsSetext"/> is true.
         /// </summary>
-        public Newline SetextNewline { get; set; }
+        public NewLine SetextNewline { get; set; }
 
         /// <summary>
         /// Gets or sets the whitespace after the # character when <see cref="IsSetext"/> is false.

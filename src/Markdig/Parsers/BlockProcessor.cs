@@ -202,7 +202,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the stack of empty lines not yet assigned to any <see cref="Block"/>.
         /// An entry may contain an empty <see cref="StringSlice"/>. In that case the
-        /// <see cref="StringSlice.Newline"/> is relevant. Otherwise, the <see cref="StringSlice"/>
+        /// <see cref="StringSlice.NewLine"/> is relevant. Otherwise, the <see cref="StringSlice"/>
         /// entry will contain trivia.
         /// </summary>
         public List<StringSlice> LinesBefore { get; set; }
@@ -740,7 +740,7 @@ namespace Markdig.Parsers
                         if (TrackTrivia)
                         {
                             LinesBefore ??= new List<StringSlice>();
-                            var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.Newline);
+                            var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.NewLine);
                             LinesBefore.Add(line);
                             Line.Start = StartBeforeIndent;
                         }
@@ -820,7 +820,7 @@ namespace Markdig.Parsers
                     if (TrackTrivia)
                     {
                         LinesBefore ??= new List<StringSlice>();
-                        var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.Newline);
+                        var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.NewLine);
                         LinesBefore.Add(line);
                         Line.Start = StartBeforeIndent;
                     }

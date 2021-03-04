@@ -37,7 +37,7 @@ namespace Markdig.Parsers
                     Column = processor.Column,
                     Span = new SourceSpan(processor.Start, processor.Line.End),
                     LinesBefore = processor.UseLinesBefore(),
-                    Newline = processor.Line.Newline,
+                    NewLine = processor.Line.NewLine,
                 };
                 var codeBlockLine = new CodeBlockLine
                 {
@@ -98,7 +98,7 @@ namespace Markdig.Parsers
                 };
                 cb.CodeBlockLines ??= new List<CodeBlockLine>();
                 cb.CodeBlockLines.Add(codeBlockLine);
-                cb.Newline = processor.Line.Newline; // ensure block newline is last newline
+                cb.NewLine = processor.Line.NewLine; // ensure block newline is last newline
             }
 
             return BlockState.Continue;
@@ -126,7 +126,7 @@ namespace Markdig.Parsers
                     if (processor.TrackTrivia)
                     {
                         var quoteLine = codeBlock.CodeBlockLines[i];
-                        var emptyLine = new StringSlice(line.Slice.Text, quoteLine.TriviaBefore.Start, line.Slice.End, line.Newline);
+                        var emptyLine = new StringSlice(line.Slice.Text, quoteLine.TriviaBefore.Start, line.Slice.End, line.NewLine);
                         block.LinesAfter ??= new List<StringSlice>();
                         block.LinesAfter.Add(emptyLine);
                     }

@@ -72,7 +72,7 @@ namespace Markdig.Parsers
                 TriviaAfter = triviaAfter,
                 QuoteChar = true,
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
-                Newline = processor.Line.Newline,
+                NewLine = processor.Line.NewLine,
             });
             processor.NewBlocks.Push(quoteBlock);
             if (!wasEmptyLine)
@@ -107,7 +107,7 @@ namespace Markdig.Parsers
                     quote.QuoteLines.Add(new QuoteBlockLine
                     {
                         QuoteChar = false,
-                        Newline = processor.Line.Newline,
+                        NewLine = processor.Line.NewLine,
                     });
                     return BlockState.None;
                 }
@@ -139,7 +139,7 @@ namespace Markdig.Parsers
                 HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
                 TriviaBefore = TriviaSpaceBefore,
                 TriviaAfter = triviaAfter,
-                Newline = processor.Line.Newline,
+                NewLine = processor.Line.NewLine,
             });
 
             if (!wasEmptyLine)

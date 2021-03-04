@@ -30,7 +30,7 @@ resulting output file.
             var paragraph = listItem[0] as ParagraphBlock;
             var containerInline = new ContainerInline();
             containerInline.AppendChild(new LiteralInline(" my own text!"));
-            containerInline.AppendChild(new LineBreakInline { Newline = Newline.CarriageReturnLineFeed });
+            containerInline.AppendChild(new LineBreakInline { NewLine = NewLine.CarriageReturnLineFeed });
             paragraph.Inline = containerInline;
 
             var sw = new StringWriter();

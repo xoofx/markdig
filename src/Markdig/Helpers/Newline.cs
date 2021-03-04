@@ -6,7 +6,7 @@ namespace Markdig.Helpers
     /// Represents a character or set of characters that represent a separation
     /// between two lines of text
     /// </summary>
-    public enum Newline
+    public enum NewLine
     {
         None,
         CarriageReturn,
@@ -14,32 +14,33 @@ namespace Markdig.Helpers
         CarriageReturnLineFeed
     }
 
-    public static class NewlineExtensions
+    public static class NewLineExtensions
     {
-        public static string AsString(this Newline newline)
+        public static string AsString(this NewLine newLine)
         {
-            if (newline == Newline.CarriageReturnLineFeed)
+            if (newLine == NewLine.CarriageReturnLineFeed)
             {
                 return "\r\n";
             }
-            if (newline == Newline.LineFeed)
+            if (newLine == NewLine.LineFeed)
             {
                 return "\n";
             }
-            if (newline == Newline.CarriageReturn)
+            if (newLine == NewLine.CarriageReturn)
             {
                 return "\r";
             }
             return string.Empty;
         }
 
-        public static int Length(this Newline newline) => newline switch
+        public static int Length(this NewLine newline) => newline switch
         {
-            Newline.None => 0,
-            Newline.CarriageReturn => 1,
-            Newline.LineFeed => 1,
-            Newline.CarriageReturnLineFeed => 2,
+            NewLine.None => 0,
+            NewLine.CarriageReturn => 1,
+            NewLine.LineFeed => 1,
+            NewLine.CarriageReturnLineFeed => 2,
             _ => throw new NotSupportedException(),
         };
     }
 }
+

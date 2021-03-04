@@ -78,6 +78,6 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
-        public Newline Newline { get; set; }
+        public NewLine NewLine { get; set; }
     }
 }

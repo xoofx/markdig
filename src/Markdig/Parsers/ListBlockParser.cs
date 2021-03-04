@@ -171,7 +171,7 @@ namespace Markdig.Parsers
 
                 // Update list-item source end position
                 listItem.UpdateSpanEnd(state.Line.End);
-                listItem.Newline = state.Line.Newline;
+                listItem.NewLine = state.Line.NewLine;
 
                 return BlockState.Continue;
             }
@@ -280,7 +280,7 @@ namespace Markdig.Parsers
                 TriviaBefore = triviaBefore,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
                 LinesBefore = state.UseLinesBefore(),
-                Newline = state.Line.Newline,
+                NewLine = state.Line.NewLine,
             };
             state.NewBlocks.Push(newListItem);
 

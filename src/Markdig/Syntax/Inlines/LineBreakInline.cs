@@ -16,6 +16,6 @@ namespace Markdig.Syntax.Inlines
 
         public bool IsBackslash { get; set; }
 
-        public Newline Newline { get; set; }
+        public NewLine NewLine { get; set; }
     }
 }

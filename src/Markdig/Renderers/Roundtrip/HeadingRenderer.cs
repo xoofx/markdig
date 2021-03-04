@@ -34,7 +34,7 @@ namespace Markdig.Renderers.Roundtrip
                 renderer.WriteLine(obj.SetextNewline);
                 renderer.Write(obj.TriviaBefore);
                 renderer.Write(line);
-                renderer.WriteLine(obj.Newline);
+                renderer.WriteLine(obj.NewLine);
                 renderer.Write(obj.TriviaAfter);
 
                 renderer.RenderLinesAfter(obj);
@@ -52,7 +52,7 @@ namespace Markdig.Renderers.Roundtrip
                 renderer.Write(obj.TriviaAfterAtxHeaderChar);
                 renderer.WriteLeafInline(obj);
                 renderer.Write(obj.TriviaAfter);
-                renderer.WriteLine(obj.Newline);
+                renderer.WriteLine(obj.NewLine);
 
                 renderer.RenderLinesAfter(obj);
             }

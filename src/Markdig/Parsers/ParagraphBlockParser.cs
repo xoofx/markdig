@@ -29,7 +29,7 @@ namespace Markdig.Parsers
                 Column = processor.Column,
                 Span = new SourceSpan(processor.Line.Start, processor.Line.End),
                 LinesBefore = processor.UseLinesBefore(),
-                Newline = processor.Line.Newline,
+                NewLine = processor.Line.NewLine,
             });
             return BlockState.Continue;
         }
@@ -45,7 +45,7 @@ namespace Markdig.Parsers
             {
                 return TryParseSetexHeading(processor, block);
             }
-            block.Newline = processor.Line.Newline;
+            block.NewLine = processor.Line.NewLine;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }
@@ -132,10 +132,10 @@ namespace Markdig.Parsers
                         TriviaBefore = state.UseTrivia(sourcePosition - 1), // remove dashes
                         TriviaAfter = new StringSlice(state.Line.Text, state.Start, line.End),
                         LinesBefore = paragraph.LinesBefore,
-                        Newline = state.Line.Newline,
+                        NewLine = state.Line.NewLine,
                         IsSetext = true,
                         HeaderCharCount = count,
-                        SetextNewline = paragraph.Newline,
+                        SetextNewline = paragraph.NewLine,
                     };
                     if (!state.TrackTrivia)
                     {

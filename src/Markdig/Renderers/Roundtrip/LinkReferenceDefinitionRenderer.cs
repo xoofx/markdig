@@ -43,7 +43,7 @@ namespace Markdig.Renderers.Roundtrip
                 renderer.Write(close);
             }
             renderer.Write(linkDef.TriviaAfter);
-            renderer.Write(linkDef.Newline.AsString());
+            renderer.Write(linkDef.NewLine.AsString());
 
             renderer.RenderLinesAfter(linkDef);
         }

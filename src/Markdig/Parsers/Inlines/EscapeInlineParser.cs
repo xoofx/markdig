@@ -45,10 +45,10 @@ namespace Markdig.Parsers.Inlines
             {
                 if (c == '\n' || c == '\r')
                 {
-                    var newline = c == '\n' ? Newline.LineFeed : Newline.CarriageReturn;
+                    var newline = c == '\n' ? NewLine.LineFeed : NewLine.CarriageReturn;
                     if (c == '\r' && slice.PeekChar() == '\n')
                     {
-                        newline = Newline.CarriageReturnLineFeed;
+                        newline = NewLine.CarriageReturnLineFeed;
                     }
                     processor.Inline = new LineBreakInline()
                     {
@@ -57,7 +57,7 @@ namespace Markdig.Parsers.Inlines
                         Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
                         Line = line,
                         Column = column,
-                        Newline = newline
+                        NewLine = newline
                     };
                     processor.Inline.Span.End = processor.Inline.Span.Start + 1;
                     slice.NextChar();

@@ -37,24 +37,24 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
-            var newline = Newline.LineFeed;
+            var newLine = NewLine.LineFeed;
             if (processor.TrackTrivia)
             {
                 if (slice.CurrentChar == '\r')
                 {
                     if (slice.PeekChar() == '\n')
                     {
-                        newline = Newline.CarriageReturnLineFeed;
+                        newLine = NewLine.CarriageReturnLineFeed;
                         slice.NextChar(); // Skip \n
                     }
                     else
                     {
-                        newline = Newline.CarriageReturn;
+                        newLine = NewLine.CarriageReturn;
                     }
                 }
                 else
                 {
-                    newline = Newline.LineFeed;
+                    newLine = NewLine.LineFeed;
                 }
             }
             else
@@ -72,9 +72,9 @@ namespace Markdig.Parsers.Inlines
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
                 Column = column,
-                Newline = newline
+                NewLine = newLine
             };
-            processor.Inline.Span.End = processor.Inline.Span.Start + (newline == Newline.CarriageReturnLineFeed ? 1 : 0);
+            processor.Inline.Span.End = processor.Inline.Span.Start + (newLine == NewLine.CarriageReturnLineFeed ? 1 : 0);
             return true;
         }
     }

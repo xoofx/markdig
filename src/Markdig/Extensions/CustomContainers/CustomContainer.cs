@@ -51,7 +51,7 @@ namespace Markdig.Extensions.CustomContainers
         public StringSlice TriviaAfterArguments { get; set; }
 
         /// <inheritdoc />
-        public Newline InfoNewline { get; set; }
+        public NewLine InfoNewLine { get; set; }
 
         /// <inheritdoc />
         public StringSlice TriviaBeforeClosingFence { get; set; }

@@ -27,19 +27,19 @@ namespace Markdig.Helpers
             Text = text;
             Start = 0;
             End = (Text?.Length ?? 0) - 1;
-            Newline = Newline.None;
+            NewLine = NewLine.None;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StringSlice"/> struct.
         /// </summary>
         /// <param name="text">The text.</param>
-        public StringSlice(string text, Newline newline)
+        public StringSlice(string text, NewLine newline)
         {
             Text = text;
             Start = 0;
             End = (Text?.Length ?? 0) - 1;
-            Newline = newline;
+            NewLine = newline;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Markdig.Helpers
             Text = text;
             Start = start;
             End = end;
-            Newline = Newline.None;
+            NewLine = NewLine.None;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Markdig.Helpers
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StringSlice(string text, int start, int end, Newline newline)
+        public StringSlice(string text, int start, int end, NewLine newline)
         {
             if (text is null)
                 ThrowHelper.ArgumentNullException_text();
@@ -75,7 +75,7 @@ namespace Markdig.Helpers
             Text = text;
             Start = start;
             End = end;
-            Newline = newline;
+            NewLine = newline;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Markdig.Helpers
         /// </summary>
         public readonly int Length => End - Start + 1;
 
-        public Newline Newline;
+        public NewLine NewLine;
 
         /// <summary>
         /// Gets the current character.

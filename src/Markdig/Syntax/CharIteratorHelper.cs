@@ -28,27 +28,27 @@ namespace Markdig.Syntax
             return hasWhitespaces;
         }
 
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out Newline firstNewline) where T : ICharIterator
+        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine firstNewline) where T : ICharIterator
         {
             countNewLines = 0;
             var c = iterator.CurrentChar;
             bool hasWhitespaces = false;
-            firstNewline = Newline.None;
+            firstNewline = NewLine.None;
             while (c.IsWhitespace())
             {
                 if (c == '\n' || c == '\r')
                 {
-                    if (c == '\r' && iterator.PeekChar() == '\n' && firstNewline != Newline.None)
+                    if (c == '\r' && iterator.PeekChar() == '\n' && firstNewline != NewLine.None)
                     {
-                        firstNewline = Newline.CarriageReturnLineFeed;
+                        firstNewline = NewLine.CarriageReturnLineFeed;
                     }
-                    else if (c == '\n' && firstNewline != Newline.None)
+                    else if (c == '\n' && firstNewline != NewLine.None)
                     {
-                        firstNewline = Newline.LineFeed;
+                        firstNewline = NewLine.LineFeed;
                     }
-                    else if (c == '\r' && firstNewline != Newline.None)
+                    else if (c == '\r' && firstNewline != NewLine.None)
                     {
-                        firstNewline = Newline.CarriageReturn;
+                        firstNewline = NewLine.CarriageReturn;
                     }
                     countNewLines++;
                 }

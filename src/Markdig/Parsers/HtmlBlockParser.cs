@@ -263,7 +263,7 @@ namespace Markdig.Parsers
             if (result != BlockState.BreakDiscard)
             {
                 htmlBlock.Span.End = line.End;
-                htmlBlock.Newline = state.Line.Newline;
+                htmlBlock.NewLine = state.Line.NewLine;
             }
 
             return result;
@@ -279,7 +279,7 @@ namespace Markdig.Parsers
                 Span = new SourceSpan(startPosition, startPosition + state.Line.End),
                 //BeforeWhitespace = state.PopBeforeWhitespace(startPosition - 1),
                 LinesBefore = state.UseLinesBefore(),
-                Newline = state.Line.Newline,
+                NewLine = state.Line.NewLine,
             });
             return BlockState.Continue;
         }

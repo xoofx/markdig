@@ -1168,7 +1168,7 @@ namespace Markdig.Helpers
             out string title, // can contain non-consecutive newlines
             out SourceSpan unescapedTitle,
             out char titleEnclosingCharacter,
-            out Newline newline,
+            out NewLine newLine,
             out SourceSpan triviaAfterTitle,
             out SourceSpan labelSpan,
             out SourceSpan urlSpan,
@@ -1181,7 +1181,7 @@ namespace Markdig.Helpers
             triviaBeforeTitle = SourceSpan.Empty;
             title = null;
             unescapedTitle = SourceSpan.Empty;
-            newline = Newline.None;
+            newLine = NewLine.None;
 
             urlSpan = SourceSpan.Empty;
             titleSpan = SourceSpan.Empty;
@@ -1223,7 +1223,7 @@ namespace Markdig.Helpers
             int triviaBeforeTitleStart = text.Start;
 
             var saved = text;
-            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out newline);
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out newLine);
 
             triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, text.Start - 1);
             var c = text.CurrentChar;
@@ -1288,15 +1288,15 @@ namespace Markdig.Helpers
             {
                 if (c == '\n')
                 {
-                    newline = Newline.LineFeed;
+                    newLine = NewLine.LineFeed;
                 }
                 else if (c == '\r' && text.PeekChar() == '\n')
                 {
-                    newline = Newline.CarriageReturnLineFeed;
+                    newLine = NewLine.CarriageReturnLineFeed;
                 }
                 else if (c == '\r')
                 {
-                    newline = Newline.CarriageReturn;
+                    newLine = NewLine.CarriageReturn;
                 }
             }
 

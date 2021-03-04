@@ -296,10 +296,10 @@ namespace Markdig.Renderers
         /// </summary>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T WriteLine(Newline newline)
+        public T WriteLine(NewLine newLine)
         {
             WriteIndent();
-            Writer.NewLine = newline.AsString();
+            Writer.NewLine = newLine.AsString();
             Writer.WriteLine();
             previousWasLine = true;
             return (T)this;

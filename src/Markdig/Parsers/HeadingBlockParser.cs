@@ -88,7 +88,7 @@ namespace Markdig.Parsers
                     Span = { Start = sourcePosition },
                     TriviaBefore = processor.UseTrivia(sourcePosition - 1),
                     LinesBefore = processor.UseLinesBefore(),
-                    Newline = processor.Line.Newline,
+                    NewLine = processor.Line.NewLine,
                 };
                 processor.NewBlocks.Push(headingBlock);
                 if (!processor.TrackTrivia)

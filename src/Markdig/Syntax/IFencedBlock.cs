@@ -74,7 +74,7 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        Newline InfoNewline { get; set; }
+        NewLine InfoNewLine { get; set; }
 
         /// <summary>
         /// Trivia before the closing fenced chars
@@ -90,10 +90,10 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Newline after the last line, which is always the line containing the closing fence chars.
-        /// "Inherited" from <see cref="Block.Newline"/>.
+        /// "Inherited" from <see cref="Block.NewLine"/>.
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        Newline Newline { get; set; }
+        NewLine NewLine { get; set; }
     }
 }

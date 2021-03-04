@@ -140,12 +140,12 @@ namespace Markdig.Helpers
             // Else use a builder
             var builder = StringBuilderCache.Local();
             int previousStartOfLine = 0;
-            var newline = Newline.None;
+            var newLine = NewLine.None;
             for (int i = 0; i < Count; i++)
             {
                 if (i > 0)
                 {
-                    builder.Append(newline.AsString());
+                    builder.Append(newLine.AsString());
                     previousStartOfLine = builder.Length;
                 }
                 ref var line = ref Lines[i];
@@ -153,7 +153,7 @@ namespace Markdig.Helpers
                 {
                     builder.Append(line.Slice.Text, line.Slice.Start, line.Slice.Length);
                 }
-                newline = line.Newline;
+                newLine = line.NewLine;
 
                 lineOffsets?.Add(new LineOffset(line.Position, line.Column, line.Slice.Start - line.Position, previousStartOfLine, builder.Length));
             }
@@ -225,7 +225,7 @@ namespace Markdig.Helpers
                 for (int i = 0; i < lines.Count; i++)
                 {
                     var line = lines.Lines[i];
-                    End += line.Slice.Length + line.Newline.Length(); // Add chars
+                    End += line.Slice.Length + line.NewLine.Length(); // Add chars
                 }
                 NextChar();
             }
@@ -277,29 +277,29 @@ namespace Markdig.Helpers
                     }
                     else
                     {
-                        var newline = slice.Newline;
+                        var newLine = slice.NewLine;
                         if (_offset == slice.Length)
                         {
-                            if (newline == Newline.LineFeed)
+                            if (newLine == NewLine.LineFeed)
                             {
                                 CurrentChar = '\n';
                                 SliceIndex++;
                                 _offset = -1;
                             }
-                            else if (newline == Newline.CarriageReturn)
+                            else if (newLine == NewLine.CarriageReturn)
                             {
                                 CurrentChar = '\r';
                                 SliceIndex++;
                                 _offset = -1;
                             }
-                            else if (newline == Newline.CarriageReturnLineFeed)
+                            else if (newLine == NewLine.CarriageReturnLineFeed)
                             {
                                 CurrentChar = '\r';
                             }
                         }
                         else if (_offset + 1 == slice.Length)
                         {
-                            if (newline == Newline.CarriageReturnLineFeed)
+                            if (newLine == NewLine.CarriageReturnLineFeed)
                             {
                                 CurrentChar = '\n';
                                 SliceIndex++;
@@ -331,7 +331,7 @@ namespace Markdig.Helpers
                 int sliceIndex = SliceIndex;
                 var line = _lines.Lines[sliceIndex];
                 var slice = line.Slice;
-                if (!(line.Newline == Newline.CarriageReturnLineFeed && offset + 1 == slice.Length))
+                if (!(line.NewLine == NewLine.CarriageReturnLineFeed && offset + 1 == slice.Length))
                 {
                     while (offset > slice.Length)
                     {
@@ -344,7 +344,7 @@ namespace Markdig.Helpers
                 }
                 else
                 {
-                    if (slice.Newline == Newline.CarriageReturnLineFeed)
+                    if (slice.NewLine == NewLine.CarriageReturnLineFeed)
                     {
                         return '\n'; // /n of /r/n (second character)
                     }
@@ -352,15 +352,15 @@ namespace Markdig.Helpers
 
                 if (offset == slice.Length)
                 {
-                    if (line.Newline == Newline.LineFeed)
+                    if (line.NewLine == NewLine.LineFeed)
                     {
                         return '\n';
                     }
-                    if (line.Newline == Newline.CarriageReturn)
+                    if (line.NewLine == NewLine.CarriageReturn)
                     {
                         return '\r';
                     }
-                    if (line.Newline == Newline.CarriageReturnLineFeed)
+                    if (line.NewLine == NewLine.CarriageReturnLineFeed)
                     {
                         return '\r'; // /r of /r/n (first character)
                     }

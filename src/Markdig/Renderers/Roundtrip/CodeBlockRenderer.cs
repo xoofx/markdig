@@ -53,7 +53,7 @@ namespace Markdig.Renderers.Roundtrip
                     renderer.Write(attributes);
                 }
                 */
-                renderer.WriteLine(fencedCodeBlock.InfoNewline);
+                renderer.WriteLine(fencedCodeBlock.InfoNewLine);
 
                 renderer.WriteLeafRawLines(obj);
 
@@ -63,7 +63,7 @@ namespace Markdig.Renderers.Roundtrip
                 if (!string.IsNullOrEmpty(closing))
                 {
                     // See example 207: "> ```\nfoo\n```"
-                    renderer.WriteLine(obj.Newline);
+                    renderer.WriteLine(obj.NewLine);
                 }
                 renderer.Write(obj.TriviaAfter);
             }
@@ -94,7 +94,7 @@ namespace Markdig.Renderers.Roundtrip
                 {
                     var slice = slices[i].Slice;
                     renderer.Write(ref slices[i].Slice);
-                    renderer.WriteLine(slice.Newline);
+                    renderer.WriteLine(slice.NewLine);
                 }
             }
         }

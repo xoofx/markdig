@@ -21,7 +21,7 @@ namespace Markdig.Renderers.Roundtrip
             //renderer.Write(obj.BeforeWhitespace);
             renderer.Write(obj.Content);
             //renderer.Write(obj.AfterWhitespace);
-            renderer.WriteLine(obj.Newline);
+            renderer.WriteLine(obj.NewLine);
             renderer.RenderLinesAfter(obj);
         }
     }

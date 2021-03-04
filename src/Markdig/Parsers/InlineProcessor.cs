@@ -282,8 +282,8 @@ namespace Markdig.Parsers
             {
                 if (!(leafBlock is HeadingBlock))
                 {
-                    var newline = leafBlock.Newline;
-                    leafBlock.Inline.AppendChild(new LineBreakInline { Newline = newline });
+                    var newLine = leafBlock.NewLine;
+                    leafBlock.Inline.AppendChild(new LineBreakInline { NewLine = newLine });
                 }
             }
 

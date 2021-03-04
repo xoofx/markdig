@@ -166,7 +166,7 @@ namespace Markdig.Parsers
             fenced.Arguments = HtmlHelper.Unescape(arg.ToString());
             fenced.UnescapedArguments = arg;
             fenced.TriviaAfterArguments = afterArg;
-            fenced.InfoNewline = line.Newline;
+            fenced.InfoNewLine = line.NewLine;
 
             return true;
         }
@@ -331,7 +331,7 @@ namespace Markdig.Parsers
 
                 var fencedBlock = block as IFencedBlock;
                 fencedBlock.ClosingFencedCharCount = closingCount;
-                fencedBlock.Newline = processor.Line.Newline;
+                fencedBlock.NewLine = processor.Line.NewLine;
                 fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
                 fencedBlock.TriviaAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
 

@@ -63,7 +63,7 @@ namespace Markdig.Renderers.Roundtrip
                 {
                     var slice = slices[i].Slice;
                     Write(ref slice);
-                    WriteLine(slice.Newline);
+                    WriteLine(slice.NewLine);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace Markdig.Renderers.Roundtrip
             foreach (var line in block.LinesBefore)
             {
                 Write(line);
-                WriteLine(line.Newline);
+                WriteLine(line.NewLine);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Markdig.Renderers.Roundtrip
             foreach (var line in block.LinesAfter)
             {
                 Write(line);
-                WriteLine(line.Newline);
+                WriteLine(line.NewLine);
             }
         }
    }
