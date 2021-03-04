@@ -49,6 +49,12 @@ namespace Markdig
         internal ProcessDocumentDelegate DocumentProcessed;
 
         /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; set; }
+
+        /// <summary>
         /// Allows to setup a <see cref="IMarkdownRenderer"/>.
         /// </summary>
         /// <param name="renderer">The markdown renderer to setup</param>

@@ -26,6 +26,10 @@ namespace Markdig.Parsers
         private readonly ProcessDocumentDelegate documentProcessed;
         private readonly bool preciseSourceLocation;
 
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
         public bool TrackTrivia { get; }
 
         private readonly int roughLineCountEstimate;
@@ -40,12 +44,12 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context, bool trackTrivia = false)
+        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
-            TrackTrivia = trackTrivia;
+            TrackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
             lineReader = new LineReader(text);
@@ -55,10 +59,10 @@ namespace Markdig.Parsers
             document = new MarkdownDocument();
 
             // Initialize the block parsers
-            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context, trackTrivia);
+            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context, pipeline.TrackTrivia);
 
             // Initialize the inline parsers
-            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, trackTrivia)
+            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, pipeline.TrackTrivia)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -74,13 +78,13 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
-        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null, bool trackTrivia = false)
+        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing
-            var markdownParser = new MarkdownParser(text, pipeline, context, trackTrivia);
+            var markdownParser = new MarkdownParser(text, pipeline, context);
             return markdownParser.Parse();
         }
 

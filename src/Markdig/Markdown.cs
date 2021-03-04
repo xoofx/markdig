@@ -142,7 +142,12 @@ namespace Markdig
         public static MarkdownDocument Parse(string markdown, bool trackTrivia = false)
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
-            return Parse(markdown, null, trackTrivia: trackTrivia);
+
+            MarkdownPipeline pipeline = trackTrivia ? new MarkdownPipelineBuilder()
+                .EnableTrackTrivia()
+                .Build() : null;
+
+            return Parse(markdown, pipeline);
         }
 
         /// <summary>
@@ -153,13 +158,13 @@ namespace Markdig
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
-        public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline, MarkdownParserContext context = null, bool trackTrivia = false)
+        public static MarkdownDocument Parse(string markdown, MarkdownPipeline pipeline, MarkdownParserContext context = null)
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             pipeline = CheckForSelfPipeline(pipeline, markdown);
-            return MarkdownParser.Parse(markdown, pipeline, context, trackTrivia);
+            return MarkdownParser.Parse(markdown, pipeline, context);
         }
 
         private static MarkdownPipeline CheckForSelfPipeline(MarkdownPipeline pipeline, string markdown)

@@ -68,8 +68,9 @@ namespace Markdig.Tests.RoundtripSpecs
         public void TestNewlinesInBetweenResultInOneCodeBlock(string value)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder();
+            pipelineBuilder.EnableTrackTrivia();
             MarkdownPipeline pipeline = pipelineBuilder.Build();
-            var markdownDocument = Markdown.Parse(value, pipeline, trackTrivia: true);
+            var markdownDocument = Markdown.Parse(value, pipeline);
 
             Assert.AreEqual(1, markdownDocument.Count);
         }

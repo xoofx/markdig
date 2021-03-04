@@ -23,8 +23,9 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         private static void RoundTrip(string markdown, string expected)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder();
+            pipelineBuilder.EnableTrackTrivia();
             MarkdownPipeline pipeline = pipelineBuilder.Build();
-            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline, trackTrivia: true);
+            MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
             var sw = new StringWriter();
             var rr = new RoundtripRenderer(sw);
 
