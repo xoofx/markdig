@@ -219,5 +219,11 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         {
             RoundTrip(value);
         }
+
+        [TestCase("[x]: https://example.com\r\n")]
+        public void Test_LinkReferenceDefinitionWithCarriageReturnLineFeed(string value)
+        {
+            RoundTrip(value);
+        }
     }
 }

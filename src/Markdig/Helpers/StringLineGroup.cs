@@ -331,7 +331,7 @@ namespace Markdig.Helpers
                 int sliceIndex = SliceIndex;
                 var line = _lines.Lines[sliceIndex];
                 var slice = line.Slice;
-                if (!(line.NewLine == NewLine.CarriageReturnLineFeed && offset + 1 == slice.Length))
+                if (!(line.NewLine == NewLine.CarriageReturnLineFeed && offset == slice.Length + 1))
                 {
                     while (offset > slice.Length)
                     {
