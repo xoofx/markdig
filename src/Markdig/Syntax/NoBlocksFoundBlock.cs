@@ -6,9 +6,9 @@ namespace Markdig.Syntax
     /// Block representing a document with characters but no blocks. This can
     /// happen when an input document consists solely of trivia.
     /// </summary>
-    public sealed class NoBlocksFoundBlock : LeafBlock
+    public sealed class EmptyBlock  : LeafBlock
     {
-        public NoBlocksFoundBlock(BlockParser parser) : base(parser)
+        public EmptyBlock (BlockParser parser) : base(parser)
         {
         }
     }

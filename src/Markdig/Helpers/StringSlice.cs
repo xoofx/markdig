@@ -8,50 +8,6 @@ using System.Runtime.CompilerServices;
 namespace Markdig.Helpers
 {
     /// <summary>
-    /// Wrap newline so we have type-safety and static accessibility
-    /// </summary>
-    public enum Newline
-    {
-        None,
-        CarriageReturn,
-        LineFeed,
-        CarriageReturnLineFeed
-    }
-
-    public static class NewlineExtensions
-    {
-        public static string AsString(this Newline newline)
-        {
-            if (newline == Newline.CarriageReturnLineFeed)
-            {
-                return "\r\n";
-            }
-            if (newline == Newline.LineFeed)
-            {
-                return "\n";
-            }
-            if (newline == Newline.CarriageReturn)
-            {
-                return "\r";
-            }
-            return string.Empty;
-        }
-        public static int Length(this Newline newline) => newline switch
-        {
-            Newline.None => 0,
-            Newline.CarriageReturn => 1,
-            Newline.LineFeed => 1,
-            Newline.CarriageReturnLineFeed => 2,
-            _ => throw new NotSupportedException(),
-        };
-    }
-    //    public static implicit operator string (Newline newline)
-    //    {
-    //    }
-    //    public int Length => 
-    //}
-
-    /// <summary>
     /// A lightweight struct that represents a slice of a string.
     /// </summary>
     /// <seealso cref="ICharIterator" />

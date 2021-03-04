@@ -123,7 +123,7 @@ namespace Markdig.Parsers
                         if (lastBlock == null && document.Count == 0)
                         {
                             // this means we have unassigned characters
-                            var noBlocksFoundBlock = new NoBlocksFoundBlock(null);
+                            var noBlocksFoundBlock = new EmptyBlock (null);
                             List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
                             noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
                             noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);

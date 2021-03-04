@@ -902,7 +902,7 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    if (c.IsNewLine())
+                    if (c.IsNewLineLineFeed())
                     {
                         break;
                     }
@@ -1068,20 +1068,6 @@ namespace Markdig.Helpers
                 segmentHasCharacters && // Last segment has valid characters
                 segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
         }
-
-        // apparently, below code is dead code (except for public api?)
-        //public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
-        //    out string title) where T : ICharIterator
-        //{
-        //    return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
-        //}
-
-        //public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title)
-        //    where T : ICharIterator
-        //{
-        //    return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out SourceSpan labelSpan, out SourceSpan urlSpan,
-        //        out SourceSpan titleSpan);
-        //}
 
         public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
         {
