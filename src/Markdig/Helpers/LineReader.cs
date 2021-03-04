@@ -48,15 +48,15 @@ namespace Markdig.Helpers
                 if (c == '\r')
                 {
                     int length = 1;
-                    var newline = NewLine.CarriageReturn;
+                    var newLine = NewLine.CarriageReturn;
                     if (c == '\r' && (uint)(i + 1) < (uint)text.Length && text[i + 1] == '\n')
                     {
                         i++;
                         length = 2;
-                        newline = NewLine.CarriageReturnLineFeed;
+                        newLine = NewLine.CarriageReturnLineFeed;
                     }
 
-                    var slice = new StringSlice(text, sourcePosition, i - length, newline);
+                    var slice = new StringSlice(text, sourcePosition, i - length, newLine);
                     SourcePosition = i + 1;
                     return slice;
                 }

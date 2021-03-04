@@ -33,7 +33,7 @@ namespace Markdig.Helpers
             return string.Empty;
         }
 
-        public static int Length(this NewLine newline) => newline switch
+        public static int Length(this NewLine newLine) => newLine switch
         {
             NewLine.None => 0,
             NewLine.CarriageReturn => 1,

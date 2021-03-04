@@ -34,12 +34,12 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringSlice"/> struct.
         /// </summary>
         /// <param name="text">The text.</param>
-        public StringSlice(string text, NewLine newline)
+        public StringSlice(string text, NewLine newLine)
         {
             Text = text;
             Start = 0;
             End = (Text?.Length ?? 0) - 1;
-            NewLine = newline;
+            NewLine = newLine;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Markdig.Helpers
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public StringSlice(string text, int start, int end, NewLine newline)
+        public StringSlice(string text, int start, int end, NewLine newLine)
         {
             if (text is null)
                 ThrowHelper.ArgumentNullException_text();
@@ -75,7 +75,7 @@ namespace Markdig.Helpers
             Text = text;
             Start = start;
             End = end;
-            NewLine = newline;
+            NewLine = newLine;
         }
 
         /// <summary>

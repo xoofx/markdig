@@ -41,12 +41,12 @@ namespace Markdig.Renderers.Roundtrip
                     {
                         NewLine = quoteLine.NewLine
                     };
-                    var newline = new LineBreakInline
+                    var newLine = new LineBreakInline
                     {
                         NewLine = quoteLine.NewLine
                     };
                     var container = new ContainerInline();
-                    container.AppendChild(newline);
+                    container.AppendChild(newLine);
                     emptyLeafBlock.Inline = container;
                     quoteBlock.Add(emptyLeafBlock);
                 }
