@@ -463,15 +463,8 @@ namespace Markdig.Helpers
             {
                 return false;
             }
-            if (Start <= other.End)
-            {
-                return true;
-            }
-            if (End <= other.Start)
-            {
-                return true;
-            }
-            return false;
+
+            return Start <= other.End && End >= other.Start;
         }
     }
 }
