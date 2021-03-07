@@ -87,6 +87,28 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Converts a Markdown document to HTML.
+        /// </summary>
+        /// <param name="document">A Markdown document.</param>
+        /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <returns>The result of the conversion</returns>
+        /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
+        public static string ToHtml(MarkdownDocument document, MarkdownPipeline pipeline = null)
+        {
+            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
+            pipeline ??= new MarkdownPipelineBuilder().Build();
+
+            var renderer = pipeline.GetCacheableHtmlRenderer();
+
+            renderer.Render(document);
+            renderer.Writer.Flush();
+
+            string html = renderer.Writer.ToString();
+            pipeline.ReleaseCacheableHtmlRenderer(renderer);
+            return html;
+        }
+
+        /// <summary>
         /// Converts a Markdown string to HTML and output to the specified writer.
         /// </summary>
         /// <param name="markdown">A Markdown text.</param>
