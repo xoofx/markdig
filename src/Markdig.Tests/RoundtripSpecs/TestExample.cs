@@ -48,6 +48,10 @@ resulting output file.
 >look, ma:
 > my space is not normalized!
 ";
+
+            expected = expected.Replace("\r\n", "\n").Replace("\r", "\n");
+            outputMarkdown = outputMarkdown.Replace("\r\n", "\n").Replace("\r", "\n");
+
             Assert.AreEqual(expected, outputMarkdown);
         }
     }
