@@ -299,8 +299,7 @@ namespace Markdig.Renderers
         public T WriteLine(NewLine newLine)
         {
             WriteIndent();
-            Writer.NewLine = newLine.AsString();
-            Writer.WriteLine();
+            Writer.Write(newLine.AsString());
             previousWasLine = true;
             return (T)this;
         }
