@@ -6,19 +6,21 @@ using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Roundtrip.Inlines;
 using Markdig.Helpers;
+using Markdig.Parsers;
 
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// Default HTML renderer for a Markdown <see cref="MarkdownDocument"/> object.
+    /// Markdown renderer honoring trivia for a  <see cref="MarkdownDocument"/> object.
     /// </summary>
+    /// Ensure to enable the <see cref="MarkdownParser.TrackTrivia"/> property when
+    /// parsing markdown to have trivia available for rendering.
     public class RoundtripRenderer : TextRendererBase<RoundtripRenderer>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NormalizeRenderer"/> class.
+        /// Initializes a new instance of the <see cref="RoundtripRenderer"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        /// <param name="options">The normalize options</param>
         public RoundtripRenderer(TextWriter writer) : base(writer)
         {
             // Default block renderers

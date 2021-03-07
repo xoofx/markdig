@@ -6,7 +6,7 @@ namespace Markdig.Helpers
     /// Represents a character or set of characters that represent a separation
     /// between two lines of text
     /// </summary>
-    public enum NewLine
+    public enum NewLine : byte
     {
         None,
         CarriageReturn,

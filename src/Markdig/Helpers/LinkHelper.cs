@@ -759,7 +759,7 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    if (c.IsNewLineLineFeed())
+                    if (c.IsNewLineOrLineFeed())
                     {
                         break;
                     }
@@ -902,7 +902,7 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    if (c.IsNewLineLineFeed())
+                    if (c.IsNewLineOrLineFeed())
                     {
                         break;
                     }

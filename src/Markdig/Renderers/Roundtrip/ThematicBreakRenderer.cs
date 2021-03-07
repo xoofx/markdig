@@ -7,7 +7,7 @@ using Markdig.Syntax;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// A Normalize renderer for a <see cref="ThematicBreakBlock"/>.
+    /// A Roundtrip renderer for a <see cref="ThematicBreakBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{ThematicBreakBlock}" />
     public class ThematicBreakRenderer : RoundtripObjectRenderer<ThematicBreakBlock>
@@ -16,11 +16,7 @@ namespace Markdig.Renderers.Roundtrip
         {
             renderer.RenderLinesBefore(obj);
 
-            // for now, render always a newline
-            // TODO: only render a newline when not last line
-            //renderer.Write(obj.BeforeWhitespace);
             renderer.Write(obj.Content);
-            //renderer.Write(obj.AfterWhitespace);
             renderer.WriteLine(obj.NewLine);
             renderer.RenderLinesAfter(obj);
         }

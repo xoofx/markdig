@@ -12,17 +12,11 @@ namespace Markdig.Renderers.Roundtrip.Inlines
     /// <seealso cref="NormalizeObjectRenderer{LineBreakInline}" />
     public class LineBreakInlineRenderer : RoundtripObjectRenderer<LineBreakInline>
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether to render this softline break as a Normalize hardline break tag (&lt;br /&gt;)
-        /// </summary>
-        public bool RenderAsHardlineBreak { get; set; }
-
         protected override void Write(RoundtripRenderer renderer, LineBreakInline obj)
         {
             if (obj.IsHard && obj.IsBackslash)
             {
                 renderer.Write("\\");
-                //renderer.Write(obj.IsBackslash ? "\\" : "  ");
             }
             renderer.WriteLine(obj.NewLine);
         }

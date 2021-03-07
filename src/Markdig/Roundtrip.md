@@ -4,10 +4,10 @@ Markdig supports parsing trivia characters and tracks the source position of the
 To use this functionality, set the optional `trackTrivia` parameter to true when using the static `Markdown` class:
 ```csharp
 MarkdownDocument markdownDocument = Markdown.Parse(inputMarkdown, trackTrivia = true);
-MarkdownDocument markdownDocument = Markdown.Parse(inputMarkdown, pipeline, trackTrivia = true);
+true);
 ```
 You will get a parse tree where various `Trivia*` properties of `Block` and `Inline` instances now have instances. To write a document to Markdown using this tree, use the `RoundtripRenderer`:
-```csharp
+```csharpTestLiteralInline
 var sw = new StringWriter();
 var rr = new RoundtripRenderer(sw);
 rr.Write(markdownDocument);

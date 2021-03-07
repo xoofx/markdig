@@ -58,8 +58,16 @@ namespace Markdig.Syntax
         /// </summary>
         event ProcessInlineDelegate ProcessInlinesEnd;
 
-        public StringSlice TriviaBefore { get; set; }
-        public StringSlice TriviaAfter { get; set; }
+        /// <summary>
+        /// Trivia occurring before this block
+        /// </summary>
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        StringSlice TriviaBefore { get; set; }
 
+        /// <summary>
+        /// Trivia occurring after this block
+        /// </summary>
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        StringSlice TriviaAfter { get; set; }
     }
 }

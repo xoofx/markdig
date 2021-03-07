@@ -9,9 +9,8 @@ using System.Collections.Generic;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// A Normalize renderer for a <see cref="QuoteBlock"/>.
+    /// A Roundtrip renderer for a <see cref="QuoteBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{QuoteBlock}" />
     public class QuoteBlockRenderer : RoundtripObjectRenderer<QuoteBlock>
     {
         protected override void Write(RoundtripRenderer renderer, QuoteBlock quoteBlock)

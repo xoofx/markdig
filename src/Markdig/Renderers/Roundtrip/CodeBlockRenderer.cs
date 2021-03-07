@@ -8,13 +8,11 @@ using System.Collections.Generic;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// An Normalize renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
+    /// An Roundtrip renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{CodeBlock}" />
     public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
     {
-        public bool OutputAttributesOnPre { get; set; }
-
         protected override void Write(RoundtripRenderer renderer, CodeBlock obj)
         {
             renderer.RenderLinesBefore(obj);

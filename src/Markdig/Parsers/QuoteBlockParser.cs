@@ -115,7 +115,6 @@ namespace Markdig.Parsers
             c = processor.NextChar(); // Skip quote marker char
             if (c == ' ')
             {
-                //processor.NextChar();
                 processor.NextColumn();
                 hasSpaceAfterQuoteChar = true;
                 processor.SkipFirstUnwindSpace = true;

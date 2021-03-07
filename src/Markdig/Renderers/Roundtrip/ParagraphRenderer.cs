@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// A Normalize renderer for a <see cref="ParagraphBlock"/>.
+    /// A Roundtrip renderer for a <see cref="ParagraphBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
     [DebuggerDisplay("renderer.Writer.ToString()")]

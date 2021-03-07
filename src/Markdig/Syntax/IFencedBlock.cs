@@ -20,7 +20,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the fenced character count used to open this fenced code block.
         /// </summary>
-        public int OpeningFencedCharCount { get; set; }
+        int OpeningFencedCharCount { get; set; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="FencedChar"/>.

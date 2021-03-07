@@ -9,7 +9,7 @@ using Markdig.Syntax;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// A Normalize renderer for a <see cref="ListBlock"/>.
+    /// A Roundtrip renderer for a <see cref="ListBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{ListBlock}" />
     public class ListRenderer : RoundtripObjectRenderer<ListBlock>

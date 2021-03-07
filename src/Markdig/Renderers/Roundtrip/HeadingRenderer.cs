@@ -7,7 +7,7 @@ using Markdig.Syntax;
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
-    /// An Normalize renderer for a <see cref="HeadingBlock"/>.
+    /// An Roundtrip renderer for a <see cref="HeadingBlock"/>.
     /// </summary>
     /// <seealso cref="NormalizeObjectRenderer{HeadingBlock}" />
     public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
