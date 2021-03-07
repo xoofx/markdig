@@ -221,9 +221,9 @@ namespace Markdig.Helpers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNewLine(this char c)
+        public static bool IsNewLineOrLineFeed(this char c)
         {
-            return c == '\n';
+            return c == '\n' || c == '\r';
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -70,11 +70,38 @@ namespace Markdig.Renderers
     /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
-        private bool previousWasLine;
+        private class Indent
+        {
+            private readonly string _constant;
+            private readonly Queue<string> _lineSpecific;
+
+            internal Indent(string constant)
+            {
+                _constant = constant;
+            }
+            internal Indent(IEnumerable<string> lineSpecific)
+            {
+                _lineSpecific = new Queue<string>(lineSpecific);
+            }
+
+            internal string Next()
+            {
+                if (_constant != null)
+                {
+                    return _constant;
+                }
+                //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
+                if (_lineSpecific.Count == 0) return string.Empty;
+                var next = _lineSpecific.Dequeue();
+                return next;
+            }
+        }
+
+        protected bool previousWasLine;
 #if !NETCORE
         private char[] buffer;
 #endif
-        private readonly List<string> indents;
+        private readonly List<Indent> indents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRendererBase{T}"/> class.
@@ -87,7 +114,7 @@ namespace Markdig.Renderers
 #endif
             // We assume that we are starting as if we had previously a newline
             previousWasLine = true;
-            indents = new List<string>();
+            indents = new List<Indent>();
         }
 
         protected internal void Reset()
@@ -122,7 +149,17 @@ namespace Markdig.Renderers
         public void PushIndent(string indent)
         {
             if (indent == null) ThrowHelper.ArgumentNullException(nameof(indent));
-            indents.Add(indent);
+            indents.Add(new Indent(indent));
+        }
+
+        public void PushIndent(IEnumerable<string> lineSpecific)
+        {
+            if (indents == null) ThrowHelper.ArgumentNullException(nameof(indents));
+            indents.Add(new Indent(lineSpecific));
+
+            // ensure that indents are written to the output stream
+            // this assumes that calls after PushIndent wil write children content
+            previousWasLine = true;
         }
 
         public void PopIndent()
@@ -138,7 +175,9 @@ namespace Markdig.Renderers
                 previousWasLine = false;
                 for (int i = 0; i < indents.Count; i++)
                 {
-                    Writer.Write(indents[i]);
+                    var indent = indents[i];
+                    var indentText = indent.Next();
+                    Writer.Write(indentText);
                 }
             }
         }
@@ -250,6 +289,20 @@ namespace Markdig.Renderers
             Writer.WriteLine();
             previousWasLine = true;
             return (T) this;
+        }
+
+        /// <summary>
+        /// Writes a newline.
+        /// </summary>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T WriteLine(NewLine newLine)
+        {
+            WriteIndent();
+            Writer.NewLine = newLine.AsString();
+            Writer.WriteLine();
+            previousWasLine = true;
+            return (T)this;
         }
 
         /// <summary>

@@ -45,19 +45,10 @@ namespace Markdig.Syntax
         }
 
         /// <summary>
-        /// Gets or sets the label.
+        /// Gets or sets the label. Text is normalized according to spec.
         /// </summary>
+        /// <see cref="https://spec.commonmark.org/0.29/#matches"/>
         public string Label { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URL.
-        /// </summary>
-        public string Url { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        public string Title { get; set; }
 
         /// <summary>
         /// The label span
@@ -65,15 +56,72 @@ namespace Markdig.Syntax
         public SourceSpan LabelSpan;
 
         /// <summary>
+        /// Non-normalized Label (includes trivia)
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice LabelWithTrivia { get; set; }
+
+        /// <summary>
+        /// Whitespace before the <see cref="Url"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice TriviaBeforeUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL.
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
         /// The URL span
         /// </summary>
         public SourceSpan UrlSpan;
+
+        /// <summary>
+        /// Non-normalized <see cref="Url"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice UnescapedUrl { get; set; }
+
+        /// <summary>
+        /// True when the <see cref="Url"/> is enclosed in point brackets in the source document.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// false.
+        /// </summary>
+        public bool UrlHasPointyBrackets { get; set; }
+
+        /// <summary>
+        /// gets or sets the whitespace before a <see cref="Title"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice TriviaBeforeTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        public string Title { get; set; }
 
         /// <summary>
         /// The title span
         /// </summary>
         public SourceSpan TitleSpan;
 
+        /// <summary>
+        /// Non-normalized <see cref="Title"/>.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice UnescapedTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the character the <see cref="Title"/> is enclosed in.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise \0.
+        /// </summary>
+        public char TitleEnclosingCharacter { get; set; }
 
         /// <summary>
         /// Gets or sets the create link inline callback for this instance.
@@ -107,6 +155,66 @@ namespace Markdig.Syntax
                 UrlSpan = urlSpan,
                 TitleSpan = titleSpan,
                 Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End: urlSpan.End)
+            };
+            return true;
+        }
+
+        /// <summary>
+        /// Tries to the parse the specified text into a definition.
+        /// </summary>
+        /// <typeparam name="T">Type of the text</typeparam>
+        /// <param name="text">The text.</param>
+        /// <param name="block">The block.</param>
+        /// <returns><c>true</c> if parsing is successful; <c>false</c> otherwise</returns>
+        public static bool TryParseTrivia<T>(
+            ref T text,
+            out LinkReferenceDefinition block,
+            out SourceSpan triviaBeforeLabel,
+            out SourceSpan labelWithTrivia,
+            out SourceSpan triviaBeforeUrl,
+            out SourceSpan unescapedUrl,
+            out SourceSpan triviaBeforeTitle,
+            out SourceSpan unescapedTitle,
+            out SourceSpan triviaAfterTitle) where T : ICharIterator
+        {
+            block = null;
+
+            var startSpan = text.Start;
+
+            if (!LinkHelper.TryParseLinkReferenceDefinitionTrivia(
+                ref text,
+                out triviaBeforeLabel,
+                out string label,
+                out labelWithTrivia,
+                out triviaBeforeUrl,
+                out string url,
+                out unescapedUrl,
+                out bool urlHasPointyBrackets,
+                out triviaBeforeTitle,
+                out string title,
+                out unescapedTitle,
+                out char titleEnclosingCharacter,
+                out NewLine newLine,
+                out triviaAfterTitle,
+                out SourceSpan labelSpan,
+                out SourceSpan urlSpan,
+                out SourceSpan titleSpan))
+            {
+                return false;
+            }
+
+            block = new LinkReferenceDefinition(label, url, title)
+            {
+                UrlHasPointyBrackets = urlHasPointyBrackets,
+                TitleEnclosingCharacter = titleEnclosingCharacter,
+                //LabelWithWhitespace = labelWithWhitespace,
+                LabelSpan = labelSpan,
+                UrlSpan = urlSpan,
+                //UnescapedUrl = unescapedUrl,
+                //UnescapedTitle = unescapedTitle,
+                TitleSpan = titleSpan,
+                Span = new SourceSpan(startSpan, titleSpan.End > 0 ? titleSpan.End : urlSpan.End),
+                NewLine = newLine,
             };
             return true;
         }

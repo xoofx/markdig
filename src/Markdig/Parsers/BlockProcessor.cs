@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -20,11 +21,12 @@ namespace Markdig.Parsers
         private readonly BlockParserStateCache parserStateCache;
         private int originalLineStart = 0;
 
-        private BlockProcessor(BlockProcessor root)
+        private BlockProcessor(BlockProcessor root, bool trackTrivia = false)
         {
             // These properties are not changing between a parent and a children BlockProcessor
             this.root = root;
             this.parserStateCache = root.parserStateCache;
+            TrackTrivia = trackTrivia;
             Document = root.Document;
             Parsers = root.Parsers;
 
@@ -41,10 +43,11 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context)
+        public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context, bool trackTrivia = false)
         {
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
+            TrackTrivia = trackTrivia;
             parserStateCache = new BlockParserStateCache(this);
             Document = document;
             document.IsOpen = true;
@@ -55,6 +58,8 @@ namespace Markdig.Parsers
             root = this;
             Open(document);
         }
+
+        public bool SkipFirstUnwindSpace { get; set; }
 
         /// <summary>
         /// Gets the new blocks to push. A <see cref="BlockParser"/> is required to push new blocks that it creates to this property.
@@ -161,10 +166,52 @@ namespace Markdig.Parsers
         /// </summary>
         private List<Block> OpenedBlocks { get; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to continue processing the current line.
-        /// </summary>
         private bool ContinueProcessingLine { get; set; }
+
+        /// <summary>
+        /// Gets or sets the position of the first character trivia is encountered
+        /// and not yet assigned to a syntax node.
+        /// Trivia: only used when <see cref="TrackTrivia"/> is enabled, otherwise 0.
+        /// </summary>
+        public int TriviaStart { get; set; }
+
+        /// <summary>
+        /// Returns trivia that has not yet been assigned to any node and
+        /// advances the position of trivia to the ending position.
+        /// </summary>
+        /// <param name="end">End position of the trivia</param>
+        /// <returns></returns>
+        public StringSlice UseTrivia(int end)
+        {
+            var stringSlice = new StringSlice(Line.Text, TriviaStart, end);
+            TriviaStart = end + 1;
+            return stringSlice;
+        }
+
+        /// <summary>
+        /// Returns the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
+        /// Afterwards, the <see cref="LinesBefore"/> is set to null.
+        /// </summary>
+        internal List<StringSlice> UseLinesBefore()
+        {
+            var linesBefore = LinesBefore;
+            LinesBefore = null;
+            return linesBefore;
+        }
+
+        /// <summary>
+        /// Gets or sets the stack of empty lines not yet assigned to any <see cref="Block"/>.
+        /// An entry may contain an empty <see cref="StringSlice"/>. In that case the
+        /// <see cref="StringSlice.NewLine"/> is relevant. Otherwise, the <see cref="StringSlice"/>
+        /// entry will contain trivia.
+        /// </summary>
+        public List<StringSlice> LinesBefore { get; set; }
+
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; }
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -248,7 +295,7 @@ namespace Markdig.Parsers
             var startBeforeIndent = Start;
             var previousColumnBeforeIndent = ColumnBeforeIndent;
             var columnBeforeIndent = Column;
-            while (c !='\0')
+            while (c != '\0')
             {
                 if (c == '\t')
                 {
@@ -333,6 +380,12 @@ namespace Markdig.Parsers
             for (; Line.Start > originalLineStart; Line.Start--)
             {
                 var c = Line.PeekCharAbsolute(Line.Start - 1);
+
+                // don't unwind all the way next to a '>', but one space right of the '>' if there is a space
+                if (TrackTrivia && SkipFirstUnwindSpace && Line.Start == TriviaStart)
+                {
+                    break;
+                }
                 if (c == 0)
                 {
                     break;
@@ -530,6 +583,28 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
+                if (TrackTrivia)
+                {
+                    if (LinesBefore != null && LinesBefore.Count > 0)
+                    {
+                        // single emptylines are significant for the syntax tree, attach
+                        // them to the block
+                        if (LinesBefore.Count == 1)
+                        {
+                            block.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = UseLinesBefore();
+                            block.LinesAfter.AddRange(linesBefore);
+                        }
+                        else
+                        {
+                            // attach multiple lines after to the root most parent ContainerBlock
+                            var rootMostContainerBlock = Block.FindRootMostContainerParent(block);
+                            rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = UseLinesBefore();
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        }
+                    }
+                }
                 Close(i);
             }
             UpdateLastBlockAndContainer();
@@ -641,7 +716,16 @@ namespace Markdig.Parsers
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        if (TrackTrivia)
+                        {
+                            if (block is FencedCodeBlock && block.Parent is ListItemBlock)
+                            {
+                                // the line was already given to the parent, rendering will ignore that parent line.
+                                // The child FencedCodeBlock should get the eaten whitespace at start of the line.
+                                UnwindAllIndents();
+                            }
+                        }
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                 }
 
@@ -651,6 +735,16 @@ namespace Markdig.Parsers
 
                 if (result == BlockState.BreakDiscard)
                 {
+                    if (Line.IsEmpty)
+                    {
+                        if (TrackTrivia)
+                        {
+                            LinesBefore ??= new List<StringSlice>();
+                            var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.NewLine);
+                            LinesBefore.Add(line);
+                            Line.Start = StartBeforeIndent;
+                        }
+                    }
                     ContinueProcessingLine = false;
                     break;
                 }
@@ -723,6 +817,13 @@ namespace Markdig.Parsers
                 var blockParser = parsers[j];
                 if (Line.IsEmpty)
                 {
+                    if (TrackTrivia)
+                    {
+                        LinesBefore ??= new List<StringSlice>();
+                        var line = new StringSlice(Line.Text, TriviaStart, Line.Start - 1, Line.NewLine);
+                        LinesBefore.Add(line);
+                        Line.Start = StartBeforeIndent;
+                    }
                     ContinueProcessingLine = false;
                     break;
                 }
@@ -766,9 +867,21 @@ namespace Markdig.Parsers
 
                     if (!result.IsDiscard())
                     {
-                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        if (TrackTrivia)
+                        {
+                            UnwindAllIndents();
+                        }
+                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
-
+                    if (TrackTrivia)
+                    {
+                        // special case: take care when refactoring this
+                        if (paragraph.Parent is QuoteBlock qb)
+                        {
+                            var triviaAfter = UseTrivia(Start - 1);
+                            qb.QuoteLines.Last().TriviaAfter = triviaAfter;
+                        }
+                    }
                     // We have just found a lazy continuation for a paragraph, early exit
                     // Mark all block opened after a lazy continuation
                     OpenAll();
@@ -821,7 +934,15 @@ namespace Markdig.Parsers
                 {
                     if (!result.IsDiscard())
                     {
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition);
+                        if (TrackTrivia)
+                        {
+                            if (block is ParagraphBlock ||
+                                block is HtmlBlock)
+                            {
+                                UnwindAllIndents();
+                            }
+                        }
+                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
 
                     if (newBlocks.Count > 0)
@@ -866,6 +987,7 @@ namespace Markdig.Parsers
             ColumnBeforeIndent = 0;
             StartBeforeIndent = Start;
             originalLineStart = newLine.Start;
+            TriviaStart = newLine.Start;
         }
 
         private void Reset()

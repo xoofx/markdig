@@ -92,7 +92,9 @@ namespace Markdig.Parsers
                 if (result.IsBreak())
                 {
                     // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
-                    processor.NewBlocks.Pop();
+                    var thematicBreak = processor.NewBlocks.Pop();
+                    var linesBefore = thematicBreak.LinesBefore;
+                    processor.LinesBefore = linesBefore;
                     return BlockState.None;
                 }
             }
@@ -129,7 +131,10 @@ namespace Markdig.Parsers
                     if (!(state.NextContinue is ListBlock))
                     {
                         list.CountAllBlankLines++;
-                        listItem.Add(new BlankLineBlock());
+                        if (!state.TrackTrivia)
+                        {
+                            listItem.Add(new BlankLineBlock());
+                        }
                     }
                     list.CountBlankLinesReset++;
                 }
@@ -166,6 +171,7 @@ namespace Markdig.Parsers
 
                 // Update list-item source end position
                 listItem.UpdateSpanEnd(state.Line.End);
+                listItem.NewLine = state.Line.NewLine;
 
                 return BlockState.Continue;
             }
@@ -203,6 +209,11 @@ namespace Markdig.Parsers
                 state.GoToColumn(initColumn);
                 return BlockState.None;
             }
+            var savedTriviaStart = state.TriviaStart;
+            var triviaBefore = state.UseTrivia(sourcePosition - 1);
+
+            // set trivia to the mandatory whitespace after the bullet
+            state.TriviaStart = state.Start;
 
             bool isOrdered = itemParser is OrderedListItemParser;
 
@@ -223,6 +234,7 @@ namespace Markdig.Parsers
                 if (!c.IsSpaceOrTab())
                 {
                     state.GoToColumn(initColumn);
+                    state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
                     return BlockState.None;
                 }
 
@@ -253,6 +265,7 @@ namespace Markdig.Parsers
                     state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart != "1")
                 {
                     state.GoToColumn(initColumn);
+                    state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
                     return BlockState.None;
                 }
             }
@@ -263,7 +276,11 @@ namespace Markdig.Parsers
                 Column = initColumn,
                 ColumnWidth = columnWidth,
                 Order = order,
-                Span = new SourceSpan(sourcePosition, sourceEndPosition)
+                SourceBullet = listInfo.SourceBullet,
+                TriviaBefore = triviaBefore,
+                Span = new SourceSpan(sourcePosition, sourceEndPosition),
+                LinesBefore = state.UseLinesBefore(),
+                NewLine = state.Line.NewLine,
             };
             state.NewBlocks.Push(newListItem);
 
@@ -296,15 +313,20 @@ namespace Markdig.Parsers
                     OrderedDelimiter = listInfo.OrderedDelimiter,
                     DefaultOrderedStart = listInfo.DefaultOrderedStart,
                     OrderedStart = listInfo.OrderedStart,
+                    LinesBefore = state.UseLinesBefore(),
                 };
                 state.NewBlocks.Push(newList);
             }
-
             return BlockState.Continue;
         }
 
         public override bool Close(BlockProcessor processor, Block blockToClose)
         {
+            if (processor.TrackTrivia)
+            {
+                return true;
+            }
+
             // Process only if we have blank lines
             if (blockToClose is ListBlock listBlock && listBlock.CountAllBlankLines > 0)
             {
@@ -334,7 +356,7 @@ namespace Markdig.Parsers
 
                             listItem.RemoveAt(i);
 
-                            // If we have removed all blank lines, we can exit
+                            //If we have removed all blank lines, we can exit
                             listBlock.CountAllBlankLines--;
                             if (listBlock.CountAllBlankLines == 0)
                             {
@@ -345,7 +367,7 @@ namespace Markdig.Parsers
                 }
             }
 
-        done:
+            done:
             return true;
         }
     }

@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -28,31 +29,45 @@ namespace Markdig.Syntax
         }
 
         /// <summary>
-        /// Gets or sets the language parsed after the first line of
-        /// the fenced code block. May be null.
-        /// </summary>
-        public string Info { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arguments after the <see cref="Info"/>.
-        /// May be null.
-        /// </summary>
-        public string Arguments { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fenced character count used to open this fenced code block.
-        /// </summary>
-        public int FencedCharCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fenced character used to open and close this fenced code block.
-        /// </summary>
-        public char FencedChar { get; set; }
-
-        /// <summary>
         /// Gets or sets the indent count when the fenced code block was indented
         /// and we need to remove up to indent count chars spaces from the begining of a line.
         /// </summary>
         public int IndentCount { get; set; }
+
+        /// <inheritdoc />
+        public char FencedChar { get; set; }
+
+        /// <inheritdoc />
+        public int OpeningFencedCharCount { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaAfterFencedChar { get; set; }
+
+        /// <inheritdoc />
+        public string Info { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedInfo { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaAfterInfo { get; set; }
+
+        /// <inheritdoc />
+        public string Arguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice UnescapedArguments { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaAfterArguments { get; set; }
+
+        /// <inheritdoc />
+        public NewLine InfoNewLine { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaBeforeClosingFence { get; set; }
+
+        /// <inheritdoc />
+        public int ClosingFencedCharCount { get; set; }
     }
 }

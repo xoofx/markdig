@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -22,5 +23,7 @@ namespace Markdig.Syntax
         public char ThematicChar { get; set; }
 
         public int ThematicCharCount { get; set; }
+
+        public StringSlice Content;
     }
 }

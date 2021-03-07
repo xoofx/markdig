@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.Diagnostics;
 
 namespace Markdig.Parsers
 {
@@ -28,23 +29,56 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
-            var column = processor.Column;
             var sourcePosition = processor.Start;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var quoteChar = processor.CurrentChar;
+            var column = processor.Column;
             var c = processor.NextChar();
-            if (c.IsSpaceOrTab())
-            {
-                processor.NextColumn();
-            }
-            processor.NewBlocks.Push(new QuoteBlock(this)
+
+            var quoteBlock = new QuoteBlock(this)
             {
                 QuoteChar = quoteChar,
                 Column = column,
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
+                LinesBefore = processor.UseLinesBefore()
+            };
+
+            bool hasSpaceAfterQuoteChar = false;
+            if (c == ' ')
+            {
+                processor.NextColumn();
+                hasSpaceAfterQuoteChar = true;
+                processor.SkipFirstUnwindSpace = true;
+            }
+            else if (c == '\t')
+            {
+                processor.NextColumn();
+            }
+
+            var triviaBefore = processor.UseTrivia(sourcePosition - 1);
+            StringSlice triviaAfter = StringSlice.Empty;
+            bool wasEmptyLine = false;
+            if (processor.Line.IsEmptyOrWhitespace())
+            {
+                processor.TriviaStart = processor.Start;
+                triviaAfter = processor.UseTrivia(processor.Line.End);
+                wasEmptyLine = true;
+            }
+            quoteBlock.QuoteLines.Add(new QuoteBlockLine
+            {
+                TriviaBefore = triviaBefore,
+                TriviaAfter = triviaAfter,
+                QuoteChar = true,
+                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
+                NewLine = processor.Line.NewLine,
             });
+            processor.NewBlocks.Push(quoteBlock);
+            if (!wasEmptyLine)
+            {
+                processor.TriviaStart = processor.Start;
+            }
             return BlockState.Continue;
         }
 
@@ -56,21 +90,61 @@ namespace Markdig.Parsers
             }
 
             var quote = (QuoteBlock) block;
+            var sourcePosition = processor.Start;
 
             // 5.1 Block quotes 
             // A block quote marker consists of 0-3 spaces of initial indent, plus (a) the character > together with a following space, or (b) a single character > not followed by a space.
             var c = processor.CurrentChar;
+            bool hasSpaceAfterQuoteChar = false;
             if (c != quote.QuoteChar)
             {
-                return processor.IsBlankLine ? BlockState.BreakDiscard : BlockState.None;
+                if (processor.IsBlankLine)
+                {
+                    return BlockState.BreakDiscard;
+                }
+                else
+                {
+                    quote.QuoteLines.Add(new QuoteBlockLine
+                    {
+                        QuoteChar = false,
+                        NewLine = processor.Line.NewLine,
+                    });
+                    return BlockState.None;
+                }
             }
-
-            c = processor.NextChar(); // Skip opening char
-            if (c.IsSpace())
+            c = processor.NextChar(); // Skip quote marker char
+            if (c == ' ')
             {
-                processor.NextChar(); // Skip following space
+                processor.NextColumn();
+                hasSpaceAfterQuoteChar = true;
+                processor.SkipFirstUnwindSpace = true;
             }
+            else if (c == '\t')
+            {
+                processor.NextColumn();
+            }
+            var TriviaSpaceBefore = processor.UseTrivia(sourcePosition - 1);
+            StringSlice triviaAfter = StringSlice.Empty;
+            bool wasEmptyLine = false;
+            if (processor.Line.IsEmptyOrWhitespace())
+            {
+                processor.TriviaStart = processor.Start;
+                triviaAfter = processor.UseTrivia(processor.Line.End);
+                wasEmptyLine = true;
+            }
+            quote.QuoteLines.Add(new QuoteBlockLine
+            {
+                QuoteChar = true,
+                HasSpaceAfterQuoteChar = hasSpaceAfterQuoteChar,
+                TriviaBefore = TriviaSpaceBefore,
+                TriviaAfter = triviaAfter,
+                NewLine = processor.Line.NewLine,
+            });
 
+            if (!wasEmptyLine)
+            {
+                processor.TriviaStart = processor.Start;
+            }
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }

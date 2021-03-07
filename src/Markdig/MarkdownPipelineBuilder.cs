@@ -77,6 +77,12 @@ namespace Markdig
         public TextWriter DebugLog { get; set; }
 
         /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; set; }
+
+        /// <summary>
         /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.
         /// </summary>
         public event ProcessDocumentDelegate DocumentProcessed;
@@ -116,7 +122,8 @@ namespace Markdig
                 DebugLog,
                 GetDocumentProcessed)
             {
-                PreciseSourceLocation = PreciseSourceLocation
+                PreciseSourceLocation = PreciseSourceLocation,
+                TrackTrivia = TrackTrivia,
             };
             return pipeline;
         }

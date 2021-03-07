@@ -73,14 +73,13 @@ namespace Markdig.Syntax
         /// <param name="column">The column.</param>
         /// <param name="line">The line.</param>
         /// <param name="sourceLinePosition"></param>
-        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition)
+        public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool trackTrivia)
         {
             if (Lines.Lines == null)
             {
                 Lines = new StringLineGroup(4, ProcessInlines);
             }
-
-            var stringLine = new StringLine(ref slice, line, column, sourceLinePosition);
+            var stringLine = new StringLine(ref slice, line, column, sourceLinePosition, slice.NewLine);
             // Regular case, we are not in the middle of a tab
             if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
             {
@@ -88,13 +87,21 @@ namespace Markdig.Syntax
             }
             else
             {
-                // We need to expand tabs to spaces
                 var builder = StringBuilderCache.Local();
-                builder.Append(' ', CharHelper.AddTab(column) - column);
-                builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
+                if (trackTrivia)
+                {
+                    builder.Append(slice.Text, slice.Start, slice.Length);
+                }
+                else
+                {
+                    // We need to expand tabs to spaces
+                    builder.Append(' ', CharHelper.AddTab(column) - column);
+                    builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
+                }
                 stringLine.Slice = new StringSlice(builder.GetStringAndReset());
                 Lines.Add(ref stringLine);
             }
+            NewLine = slice.NewLine; // update newline, as it should be the last newline of the block
         }
     }
 }

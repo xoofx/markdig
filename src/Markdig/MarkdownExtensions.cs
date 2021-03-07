@@ -677,5 +677,20 @@ namespace Markdig
             }
             return pipeline;
         }
+
+        /// <summary>
+        /// Enables parsing and tracking of trivia characters
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <returns>he modified pipeline</returns>
+        public static MarkdownPipelineBuilder EnableTrackTrivia(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.TrackTrivia = true;
+            if (pipeline.BlockParsers.TryFind<FencedCodeBlockParser>(out var parser))
+            {
+                parser.InfoParser = FencedCodeBlockParser.RoundtripInfoParser;
+            }
+            return pipeline;
+        }
     }
 }

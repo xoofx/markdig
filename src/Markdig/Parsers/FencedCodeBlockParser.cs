@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.ComponentModel;
 
 namespace Markdig.Parsers
 {
@@ -26,13 +27,19 @@ namespace Markdig.Parsers
 
         protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
         {
-            return new FencedCodeBlock(this) {IndentCount = processor.Indent};
+            return new FencedCodeBlock(this)
+            {
+                IndentCount = processor.Indent,
+                LinesBefore = processor.UseLinesBefore(),
+                TriviaBefore = processor.UseTrivia(processor.Start - 1),
+                NewLine = processor.Line.NewLine,
+            };
         }
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)
         {
             var result = base.TryContinue(processor, block);
-            if (result == BlockState.Continue)
+            if (result == BlockState.Continue && !processor.TrackTrivia)
             {
                 var fence = (FencedCodeBlock)block;
                 // Remove any indent spaces

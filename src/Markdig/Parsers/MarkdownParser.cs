@@ -26,6 +26,12 @@ namespace Markdig.Parsers
         private readonly ProcessDocumentDelegate documentProcessed;
         private readonly bool preciseSourceLocation;
 
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; }
+
         private readonly int roughLineCountEstimate;
 
         private LineReader lineReader;
@@ -43,6 +49,7 @@ namespace Markdig.Parsers
             if (text == null) ThrowHelper.ArgumentNullException_text();
             if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
+            TrackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
             lineReader = new LineReader(text);
@@ -52,10 +59,10 @@ namespace Markdig.Parsers
             document = new MarkdownDocument();
 
             // Initialize the block parsers
-            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context);
+            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context, pipeline.TrackTrivia);
 
             // Initialize the inline parsers
-            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context)
+            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, pipeline.TrackTrivia)
             {
                 DebugLog = pipeline.DebugLog
             };
@@ -114,6 +121,29 @@ namespace Markdig.Parsers
                 // If this is the end of file and the last line is empty
                 if (lineText.Text is null)
                 {
+                    if (TrackTrivia)
+                    {
+                        Block lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock == null && document.Count == 0)
+                        {
+                            // this means we have unassigned characters
+                            var noBlocksFoundBlock = new EmptyBlock (null);
+                            List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
+                            noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
+                            noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+                            document.Add(noBlocksFoundBlock);
+                        }
+                        else if (lastBlock != null && blockProcessor.LinesBefore != null)
+                        {
+                            // this means we're out of lines, but still have unassigned empty lines.
+                            // thus, we'll assign the empty unsassigned lines to the last block
+                            // of the document.
+                            var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
+                            rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
+                            var linesBefore = blockProcessor.UseLinesBefore();
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        }
+                    }
                     break;
                 }
                 blockProcessor.ProcessLine(lineText);

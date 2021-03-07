@@ -41,7 +41,8 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
             }
-
+            string label;
+            SourceSpan labelWithTriviaSpan = SourceSpan.Empty;
             switch (c)
             {
                 case '[':
@@ -49,22 +50,40 @@ namespace Markdig.Parsers.Inlines
                     // so we try to resolve it here
                     var saved = slice;
 
+                    SourceSpan labelSpan;
                     // If the label is followed by either a ( or a [, this is not a shortcut
-                    if (LinkHelper.TryParseLabel(ref slice, out string label, out SourceSpan labelSpan))
+                    if (processor.TrackTrivia)
                     {
-                        if (!processor.Document.ContainsLinkReferenceDefinition(label))
+                        if (LinkHelper.TryParseLabelTrivia(ref slice, out label, out labelSpan))
                         {
-                            label = null;
+                            labelWithTriviaSpan.Start = labelSpan.Start; // skip opening [
+                            labelWithTriviaSpan.End = labelSpan.End; // skip closing ]
+                            if (!processor.Document.ContainsLinkReferenceDefinition(label))
+                            {
+                                label = null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (LinkHelper.TryParseLabel(ref slice, out label, out labelSpan))
+                        {
+                            if (!processor.Document.ContainsLinkReferenceDefinition(label))
+                            {
+                                label = null;
+                            }
                         }
                     }
                     slice = saved;
 
                     // Else we insert a LinkDelimiter
                     slice.NextChar();
+                    var labelWithTrivia = new StringSlice(slice.Text, labelWithTriviaSpan.Start, labelWithTriviaSpan.End);
                     processor.Inline = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
                         Label = label,
+                        LabelWithTrivia = labelWithTrivia,
                         LabelSpan = processor.GetSourcePositionFromLocalSpan(labelSpan),
                         IsImage = isImage,
                         Span = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
@@ -92,7 +111,16 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private bool ProcessLinkReference(InlineProcessor state, string label, bool isShortcut, SourceSpan labelSpan, LinkDelimiterInline parent, int endPosition)
+        private bool ProcessLinkReference(
+            InlineProcessor state,
+            StringSlice text,
+            string label,
+            SourceSpan labelWithriviaSpan,
+            bool isShortcut,
+            SourceSpan labelSpan,
+            LinkDelimiterInline parent,
+            int endPosition,
+            LocalLabel localLabel)
         {
             if (!state.Document.TryGetLinkReferenceDefinition(label, out LinkReferenceDefinition linkRef))
             {
@@ -109,6 +137,7 @@ namespace Markdig.Parsers.Inlines
             // Create a default link if the callback was not found
             if (link == null)
             {
+                var labelWithTrivia = new StringSlice(text.Text, labelWithriviaSpan.Start, labelWithriviaSpan.End);
                 // Inline Link
                 link = new LinkInline()
                 {
@@ -116,6 +145,10 @@ namespace Markdig.Parsers.Inlines
                     Title = HtmlHelper.Unescape(linkRef.Title),
                     Label = label,
                     LabelSpan = labelSpan,
+                    LabelWithTrivia = labelWithTrivia,
+                    LinkRefDefLabel = linkRef.Label,
+                    LinkRefDefLabelWithTrivia = linkRef.LabelWithTrivia,
+                    LocalLabel = localLabel,
                     UrlSpan = linkRef.UrlSpan,
                     IsImage = parent.IsImage,
                     IsShortcut = isShortcut,
@@ -200,40 +233,105 @@ namespace Markdig.Parsers.Inlines
 
             if (text.CurrentChar == '(')
             {
-                if (LinkHelper.TryParseInlineLink(ref text, out string url, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan))
+                if (inlineState.TrackTrivia)
                 {
-                    // Inline Link
-                    var link = new LinkInline()
+                    if (LinkHelper.TryParseInlineLinkTrivia(
+                        ref text,
+                        out string url,
+                        out SourceSpan unescapedUrlSpan,
+                        out string title,
+                        out SourceSpan unescapedTitleSpan,
+                        out char titleEnclosingCharacter,
+                        out SourceSpan linkSpan,
+                        out SourceSpan titleSpan,
+                        out SourceSpan triviaBeforeLink,
+                        out SourceSpan triviaAfterLink,
+                        out SourceSpan triviaAfterTitle,
+                        out bool urlHasPointyBrackets))
                     {
-                        Url = HtmlHelper.Unescape(url),
-                        Title = HtmlHelper.Unescape(title),
-                        IsImage = openParent.IsImage,
-                        LabelSpan = openParent.LabelSpan,
-                        UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
-                        TitleSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan),
-                        Span = new SourceSpan(openParent.Span.Start, inlineState.GetSourcePosition(text.Start - 1)),
-                        Line = openParent.Line,
-                        Column = openParent.Column,
-                    };
+                        var wsBeforeLink = new StringSlice(text.Text, triviaBeforeLink.Start, triviaBeforeLink.End);
+                        var wsAfterLink = new StringSlice(text.Text, triviaAfterLink.Start, triviaAfterLink.End);
+                        var wsAfterTitle = new StringSlice(text.Text, triviaAfterTitle.Start, triviaAfterTitle.End);
+                        var unescapedUrl = new StringSlice(text.Text, unescapedUrlSpan.Start, unescapedUrlSpan.End);
+                        var unescapedTitle = new StringSlice(text.Text, unescapedTitleSpan.Start, unescapedTitleSpan.End);
+                        // Inline Link
+                        var link = new LinkInline()
+                        {
+                            TriviaBeforeUrl = wsBeforeLink,
+                            Url = HtmlHelper.Unescape(url),
+                            UnescapedUrl = unescapedUrl,
+                            UrlHasPointyBrackets = urlHasPointyBrackets,
+                            TriviaAfterUrl = wsAfterLink,
+                            Title = HtmlHelper.Unescape(title),
+                            UnescapedTitle = unescapedTitle,
+                            TitleEnclosingCharacter = titleEnclosingCharacter,
+                            TriviaAfterTitle = wsAfterTitle,
+                            IsImage = openParent.IsImage,
+                            LabelSpan = openParent.LabelSpan,
+                            UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
+                            TitleSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan),
+                            Span = new SourceSpan(openParent.Span.Start, inlineState.GetSourcePosition(text.Start - 1)),
+                            Line = openParent.Line,
+                            Column = openParent.Column,
+                        };
 
-                    openParent.ReplaceBy(link);
-                    // Notifies processor as we are creating an inline locally
-                    inlineState.Inline = link;
+                        openParent.ReplaceBy(link);
+                        // Notifies processor as we are creating an inline locally
+                        inlineState.Inline = link;
 
-                    // Process emphasis delimiters
-                    inlineState.PostProcessInlines(0, link, null, false);
+                        // Process emphasis delimiters
+                        inlineState.PostProcessInlines(0, link, null, false);
 
-                    // If we have a link (and not an image),
-                    // we also set all [ delimiters before the opening delimiter to inactive.
-                    // (This will prevent us from getting links within links.)
-                    if (!openParent.IsImage)
-                    {
-                        MarkParentAsInactive(parentDelimiter);
+                        // If we have a link (and not an image),
+                        // we also set all [ delimiters before the opening delimiter to inactive.
+                        // (This will prevent us from getting links within links.)
+                        if (!openParent.IsImage)
+                        {
+                            MarkParentAsInactive(parentDelimiter);
+                        }
+
+                        link.IsClosed = true;
+
+                        return true;
                     }
+                }
+                else
+                {
+                    if (LinkHelper.TryParseInlineLink(ref text, out string url, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan))
+                    {
+                        // Inline Link
+                        var link = new LinkInline()
+                        {
+                            Url = HtmlHelper.Unescape(url),
+                            Title = HtmlHelper.Unescape(title),
+                            IsImage = openParent.IsImage,
+                            LabelSpan = openParent.LabelSpan,
+                            UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
+                            TitleSpan = inlineState.GetSourcePositionFromLocalSpan(titleSpan),
+                            Span = new SourceSpan(openParent.Span.Start, inlineState.GetSourcePosition(text.Start - 1)),
+                            Line = openParent.Line,
+                            Column = openParent.Column,
+                        };
 
-                    link.IsClosed = true;
+                        openParent.ReplaceBy(link);
+                        // Notifies processor as we are creating an inline locally
+                        inlineState.Inline = link;
 
-                    return true;
+                        // Process emphasis delimiters
+                        inlineState.PostProcessInlines(0, link, null, false);
+
+                        // If we have a link (and not an image),
+                        // we also set all [ delimiters before the opening delimiter to inactive.
+                        // (This will prevent us from getting links within links.)
+                        if (!openParent.IsImage)
+                        {
+                            MarkParentAsInactive(parentDelimiter);
+                        }
+
+                        link.IsClosed = true;
+
+                        return true;
+                    }
                 }
 
                 text = savedText;
@@ -241,9 +339,11 @@ namespace Markdig.Parsers.Inlines
 
             var labelSpan = SourceSpan.Empty;
             string label = null;
+            SourceSpan labelWithTrivia = SourceSpan.Empty;
             bool isLabelSpanLocal = true;
 
             bool isShortcut = false;
+            LocalLabel localLabel = LocalLabel.Local;
             // Handle Collapsed links
             if (text.CurrentChar == '[')
             {
@@ -252,24 +352,26 @@ namespace Markdig.Parsers.Inlines
                     label = openParent.Label;
                     labelSpan = openParent.LabelSpan;
                     isLabelSpanLocal = false;
+                    localLabel = LocalLabel.Empty;
                     text.NextChar(); // Skip [
                     text.NextChar(); // Skip ]
                 }
             }
             else
             {
+                localLabel = LocalLabel.None;
                 label = openParent.Label;
                 isShortcut = true;
             }
-
-            if (label != null || LinkHelper.TryParseLabel(ref text, true, out label, out labelSpan))
+            if (label != null || LinkHelper.TryParseLabelTrivia(ref text, true, out label, out labelSpan))
             {
+                labelWithTrivia = new SourceSpan(labelSpan.Start, labelSpan.End);
                 if (isLabelSpanLocal)
                 {
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, label, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1)))
+                if (ProcessLinkReference(inlineState, text, label, labelWithTrivia, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();

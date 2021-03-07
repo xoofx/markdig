@@ -50,13 +50,16 @@ namespace Markdig.Parsers.Inlines
             {
                 // Remove line endings if the next char is a new line
                 length = nextStart - slice.Start;
-                if (text[nextStart] == '\n')
+                if (!processor.TrackTrivia)
                 {
-                    int end = nextStart - 1;
-                    while (length > 0 && text[end].IsSpace())
+                    if (text[nextStart] == '\n')
                     {
-                        length--;
-                        end--;
+                        int end = nextStart - 1;
+                        while (length > 0 && text[end].IsSpace())
+                        {
+                            length--;
+                            end--;
+                        }
                     }
                 }
             }
@@ -77,7 +80,7 @@ namespace Markdig.Parsers.Inlines
                 var newSlice = length > 0 ? new StringSlice(slice.Text, slice.Start, endPosition) : StringSlice.Empty;
                 if (!newSlice.IsEmpty)
                 {
-                    processor.Inline = new LiteralInline()
+                    processor.Inline = new LiteralInline
                     {
                         Content = length > 0 ? newSlice : StringSlice.Empty,
                         Span = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),

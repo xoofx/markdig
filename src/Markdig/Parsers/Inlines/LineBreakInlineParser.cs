@@ -19,7 +19,7 @@ namespace Markdig.Parsers.Inlines
         /// </summary>
         public LineBreakInlineParser()
         {
-            OpeningCharacters = new[] {'\n'};
+            OpeningCharacters = new[] { '\n', '\r' };
         }
 
         /// <summary>
@@ -37,16 +37,44 @@ namespace Markdig.Parsers.Inlines
 
             var startPosition = slice.Start;
             var hasDoubleSpacesBefore = slice.PeekCharExtra(-1).IsSpace() && slice.PeekCharExtra(-2).IsSpace();
-            slice.NextChar(); // Skip \n
+            var newLine = NewLine.LineFeed;
+            if (processor.TrackTrivia)
+            {
+                if (slice.CurrentChar == '\r')
+                {
+                    if (slice.PeekChar() == '\n')
+                    {
+                        newLine = NewLine.CarriageReturnLineFeed;
+                        slice.NextChar(); // Skip \n
+                    }
+                    else
+                    {
+                        newLine = NewLine.CarriageReturn;
+                    }
+                }
+                else
+                {
+                    newLine = NewLine.LineFeed;
+                }
+            }
+            else
+            {
+                if (slice.CurrentChar == '\r' && slice.PeekChar() == '\n')
+                {
+                    slice.NextChar(); // Skip \n
+                }
+            }
+            slice.NextChar(); // Skip \r or \n
 
             processor.Inline = new LineBreakInline
             {
                 Span = { Start = processor.GetSourcePosition(startPosition, out int line, out int column) },
                 IsHard = EnableSoftAsHard || (slice.Start != 0 && hasDoubleSpacesBefore),
                 Line = line,
-                Column = column
+                Column = column,
+                NewLine = newLine
             };
-            processor.Inline.Span.End = processor.Inline.Span.Start;
+            processor.Inline.Span.End = processor.Inline.Span.Start + (newLine == NewLine.CarriageReturnLineFeed ? 1 : 0);
             return true;
         }
     }

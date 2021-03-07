@@ -263,6 +263,7 @@ namespace Markdig.Parsers
             if (result != BlockState.BreakDiscard)
             {
                 htmlBlock.Span.End = line.End;
+                htmlBlock.NewLine = state.Line.NewLine;
             }
 
             return result;
@@ -275,7 +276,10 @@ namespace Markdig.Parsers
                 Column = startColumn,
                 Type = type,
                 // By default, setup to the end of line
-                Span = new SourceSpan(startPosition, startPosition + state.Line.End)
+                Span = new SourceSpan(startPosition, startPosition + state.Line.End),
+                //BeforeWhitespace = state.PopBeforeWhitespace(startPosition - 1),
+                LinesBefore = state.UseLinesBefore(),
+                NewLine = state.Line.NewLine,
             });
             return BlockState.Continue;
         }

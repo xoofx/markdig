@@ -139,10 +139,15 @@ namespace Markdig
         /// <param name="markdown">The markdown text.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
-        public static MarkdownDocument Parse(string markdown)
+        public static MarkdownDocument Parse(string markdown, bool trackTrivia = false)
         {
             if (markdown == null) ThrowHelper.ArgumentNullException_markdown();
-            return Parse(markdown, null);
+
+            MarkdownPipeline pipeline = trackTrivia ? new MarkdownPipelineBuilder()
+                .EnableTrackTrivia()
+                .Build() : null;
+
+            return Parse(markdown, pipeline);
         }
 
         /// <summary>

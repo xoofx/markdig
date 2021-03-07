@@ -61,7 +61,7 @@ namespace Markdig.Extensions.Figures
                     Column = column + line.Start - startPosition,
                     IsOpen = false
                 };
-                caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition);
+                caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
                 figure.Add(caption);
             }
             processor.NewBlocks.Push(figure);
@@ -96,7 +96,7 @@ namespace Markdig.Extensions.Figures
                         Column = column + line.Start - startPosition,
                         IsOpen = false
                     };
-                    caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition);
+                    caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
                     figure.Add(caption);
                 }
 

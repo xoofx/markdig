@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System.Diagnostics;
 
 namespace Markdig.Parsers
 {
@@ -26,7 +27,9 @@ namespace Markdig.Parsers
             processor.NewBlocks.Push(new ParagraphBlock(this)
             {
                 Column = processor.Column,
-                Span = new SourceSpan(processor.Line.Start, processor.Line.End)
+                Span = new SourceSpan(processor.Line.Start, processor.Line.End),
+                LinesBefore = processor.UseLinesBefore(),
+                NewLine = processor.Line.NewLine,
             });
             return BlockState.Continue;
         }
@@ -42,7 +45,7 @@ namespace Markdig.Parsers
             {
                 return TryParseSetexHeading(processor, block);
             }
-
+            block.NewLine = processor.Line.NewLine;
             block.UpdateSpanEnd(processor.Line.End);
             return BlockState.Continue;
         }
@@ -53,7 +56,14 @@ namespace Markdig.Parsers
             {
                 ref var lines = ref paragraph.Lines;
 
-                TryMatchLinkReferenceDefinition(ref lines, processor);
+                if (processor.TrackTrivia)
+                {
+                    TryMatchLinkReferenceDefinitionTrivia(ref lines, processor, paragraph);
+                }
+                else
+                {
+                    TryMatchLinkReferenceDefinition(ref lines, processor);
+                }
 
                 int lineCount = lines.Count;
 
@@ -63,12 +73,14 @@ namespace Markdig.Parsers
                     return false;
                 }
 
-                for (int i = 0; i < lineCount; i++)
+                if (!processor.TrackTrivia)
                 {
-                    lines.Lines[i].Slice.TrimStart();
+                    for (int i = 0; i < lineCount; i++)
+                    {
+                        lines.Lines[i].Slice.TrimStart();
+                    }
+                    lines.Lines[lineCount - 1].Slice.TrimEnd();
                 }
-
-                lines.Lines[lineCount - 1].Slice.TrimEnd();
             }
 
             return true;
@@ -77,23 +89,37 @@ namespace Markdig.Parsers
         private BlockState TryParseSetexHeading(BlockProcessor state, Block block)
         {
             var line = state.Line;
-
-            char headingChar = GetHeadingChar(ref line);
+            var sourcePosition = line.Start;
+            int count = 0;
+            char headingChar = GetHeadingChar(ref line, ref count);
 
             if (headingChar != 0)
             {
                 var paragraph = (ParagraphBlock)block;
 
+                bool foundLrd;
+                if (state.TrackTrivia)
+                {
+                    foundLrd = TryMatchLinkReferenceDefinitionTrivia(ref paragraph.Lines, state, paragraph);
+                }
+                else
+                {
+                    foundLrd = TryMatchLinkReferenceDefinition(ref paragraph.Lines, state);
+                }
+
                 // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
                 // lines are empty, we can early exit and remove the paragraph
                 var parent = block.Parent;
-                
                 bool isSetTextHeading = !state.IsLazy || paragraph.Column == state.Column || !(parent is QuoteBlock || parent is ListItemBlock);
-
-                if (!(TryMatchLinkReferenceDefinition(ref paragraph.Lines, state) && paragraph.Lines.Count == 0) && isSetTextHeading)
+                if (!(foundLrd && paragraph.Lines.Count == 0) && isSetTextHeading)
                 {
                     // We discard the paragraph that will be transformed to a heading
                     state.Discard(paragraph);
+
+                    while (state.CurrentChar == headingChar)
+                    {
+                        state.NextChar();
+                    }
 
                     int level = headingChar == '=' ? 1 : 2;
 
@@ -103,8 +129,18 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
+                        TriviaBefore = state.UseTrivia(sourcePosition - 1), // remove dashes
+                        TriviaAfter = new StringSlice(state.Line.Text, state.Start, line.End),
+                        LinesBefore = paragraph.LinesBefore,
+                        NewLine = state.Line.NewLine,
+                        IsSetext = true,
+                        HeaderCharCount = count,
+                        SetextNewline = paragraph.NewLine,
                     };
-                    heading.Lines.Trim();
+                    if (!state.TrackTrivia)
+                    {
+                        heading.Lines.Trim();
+                    }
 
                     // Remove the paragraph as a pending block
                     state.NewBlocks.Push(heading);
@@ -118,13 +154,13 @@ namespace Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private static char GetHeadingChar(ref StringSlice line)
+        private static char GetHeadingChar(ref StringSlice line, ref int count)
         {
             char headingChar = line.CurrentChar;
 
             if (headingChar == '=' || headingChar == '-')
             {
-                line.CountAndSkipChar(headingChar);
+                count = line.CountAndSkipChar(headingChar);
 
                 if (line.IsEmpty)
                 {
@@ -154,7 +190,7 @@ namespace Markdig.Parsers
                 var iterator = lines.ToCharIterator();
                 if (LinkReferenceDefinition.TryParse(ref iterator, out LinkReferenceDefinition linkReferenceDefinition))
                 {
-                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition);
+                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition, true);
                     atLeastOneFound = true;
 
                     // Correct the locations of each field
@@ -167,6 +203,69 @@ namespace Markdig.Parsers
                     linkReferenceDefinition.TitleSpan   = linkReferenceDefinition.TitleSpan .MoveForward(startPosition);
 
                     lines = iterator.Remaining();
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return atLeastOneFound;
+        }
+
+        private static bool TryMatchLinkReferenceDefinitionTrivia(ref StringLineGroup lines, BlockProcessor state, ParagraphBlock paragraph)
+        {
+            bool atLeastOneFound = false;
+
+            while (true)
+            {
+                // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
+                var iterator = lines.ToCharIterator();
+                if (LinkReferenceDefinition.TryParseTrivia(
+                    ref iterator,
+                    out LinkReferenceDefinition lrd,
+                    out SourceSpan triviaBeforeLabel,
+                    out SourceSpan labelWithTrivia,
+                    out SourceSpan triviaBeforeUrl,
+                    out SourceSpan unescapedUrl,
+                    out SourceSpan triviaBeforeTitle,
+                    out SourceSpan unescapedTitle,
+                    out SourceSpan triviaAfterTitle))
+                {
+                    state.Document.SetLinkReferenceDefinition(lrd.Label, lrd, false);
+                    lrd.Parent = null; // remove LRDG parent from lrd
+                    atLeastOneFound = true;
+
+                    // Correct the locations of each field
+                    lrd.Line = lines.Lines[0].Line;
+                    var text = lines.Lines[0].Slice.Text;
+                    int startPosition = lines.Lines[0].Slice.Start;
+
+                    triviaBeforeLabel = triviaBeforeLabel.MoveForward(startPosition);
+                    labelWithTrivia = labelWithTrivia.MoveForward(startPosition);
+                    triviaBeforeUrl = triviaBeforeUrl.MoveForward(startPosition);
+                    unescapedUrl = unescapedUrl.MoveForward(startPosition);
+                    triviaBeforeTitle = triviaBeforeTitle.MoveForward(startPosition);
+                    unescapedTitle = unescapedTitle.MoveForward(startPosition);
+                    triviaAfterTitle = triviaAfterTitle.MoveForward(startPosition);
+                    lrd.Span = lrd.Span.MoveForward(startPosition);
+                    lrd.TriviaBefore = new StringSlice(text, triviaBeforeLabel.Start, triviaBeforeLabel.End);
+                    lrd.LabelSpan = lrd.LabelSpan.MoveForward(startPosition);
+                    lrd.LabelWithTrivia = new StringSlice(text, labelWithTrivia.Start, labelWithTrivia.End);
+                    lrd.TriviaBeforeUrl = new StringSlice(text, triviaBeforeUrl.Start, triviaBeforeUrl.End);
+                    lrd.UrlSpan = lrd.UrlSpan.MoveForward(startPosition);
+                    lrd.UnescapedUrl = new StringSlice(text, unescapedUrl.Start, unescapedUrl.End);
+                    lrd.TriviaBeforeTitle = new StringSlice(text, triviaBeforeTitle.Start, triviaBeforeTitle.End);
+                    lrd.TitleSpan = lrd.TitleSpan.MoveForward(startPosition);
+                    lrd.UnescapedTitle = new StringSlice(text, unescapedTitle.Start, unescapedTitle.End);
+                    lrd.TriviaAfter = new StringSlice(text, triviaAfterTitle.Start, triviaAfterTitle.End);
+                    lrd.LinesBefore = paragraph.LinesBefore;
+
+                    state.LinesBefore = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack
+
+                    lines = iterator.Remaining();
+                    var index = paragraph.Parent.IndexOf(paragraph);
+                    paragraph.Parent.Insert(index, lrd);
                 }
                 else
                 {

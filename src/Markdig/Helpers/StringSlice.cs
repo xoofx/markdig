@@ -27,6 +27,19 @@ namespace Markdig.Helpers
             Text = text;
             Start = 0;
             End = (Text?.Length ?? 0) - 1;
+            NewLine = NewLine.None;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        public StringSlice(string text, NewLine newLine)
+        {
+            Text = text;
+            Start = 0;
+            End = (Text?.Length ?? 0) - 1;
+            NewLine = newLine;
         }
 
         /// <summary>
@@ -44,6 +57,25 @@ namespace Markdig.Helpers
             Text = text;
             Start = start;
             End = end;
+            NewLine = NewLine.None;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringSlice"/> struct.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public StringSlice(string text, int start, int end, NewLine newLine)
+        {
+            if (text is null)
+                ThrowHelper.ArgumentNullException_text();
+
+            Text = text;
+            Start = start;
+            End = end;
+            NewLine = newLine;
         }
 
         /// <summary>
@@ -65,6 +97,8 @@ namespace Markdig.Helpers
         /// Gets the length.
         /// </summary>
         public readonly int Length => End - Start + 1;
+
+        public NewLine NewLine;
 
         /// <summary>
         /// Gets the current character.
@@ -421,6 +455,16 @@ namespace Markdig.Helpers
                 }
             }
             return true;
+        }
+
+        public bool Overlaps(StringSlice other)
+        {
+            if (Length == 0 || other.Length == 0)
+            {
+                return false;
+            }
+
+            return Start <= other.End && End >= other.Start;
         }
     }
 }

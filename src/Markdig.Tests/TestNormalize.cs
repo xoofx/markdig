@@ -21,7 +21,8 @@ namespace Markdig.Tests
             AssertSyntax("````csharp\npublic void HelloWorld()\n{\n}\n````", new FencedCodeBlock(null)
             {
                 FencedChar = '`',
-                FencedCharCount = 4,
+                OpeningFencedCharCount = 4,
+                ClosingFencedCharCount = 4,
                 Info = "csharp",
                 Lines = new StringLineGroup(4)
                 {

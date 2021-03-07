@@ -15,7 +15,7 @@ namespace Markdig.Tests
         public void TestUrlSimple()
         {
             var text = new StringSlice("toto tutu");
-            Assert.True(LinkHelper.TryParseUrl(ref text, out string link));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, out _));
             Assert.AreEqual("toto", link);
             Assert.AreEqual(' ', text.CurrentChar);
         }
@@ -24,7 +24,7 @@ namespace Markdig.Tests
         public void TestUrlUrl()
         {
             var text = new StringSlice("http://google.com)");
-            Assert.True(LinkHelper.TryParseUrl(ref text, out string link));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, out _));
             Assert.AreEqual("http://google.com", link);
             Assert.AreEqual(')', text.CurrentChar);
         }
@@ -35,7 +35,7 @@ namespace Markdig.Tests
         public void TestUrlTrailingFullStop(string uri)
         {
             var text = new StringSlice(uri);
-            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, true));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, out _, true));
             Assert.AreEqual("http://google.com", link);
             Assert.AreEqual('.', text.CurrentChar);
         }
@@ -44,7 +44,7 @@ namespace Markdig.Tests
         public void TestUrlNestedParenthesis()
         {
             var text = new StringSlice("(toto)tutu(tata) nooo");
-            Assert.True(LinkHelper.TryParseUrl(ref text, out string link));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, out _));
             Assert.AreEqual("(toto)tutu(tata)", link);
             Assert.AreEqual(' ', text.CurrentChar);
         }
@@ -53,7 +53,7 @@ namespace Markdig.Tests
         public void TestUrlAlternate()
         {
             var text = new StringSlice("<toto_tata_tutu> nooo");
-            Assert.True(LinkHelper.TryParseUrl(ref text, out string link));
+            Assert.True(LinkHelper.TryParseUrl(ref text, out string link, out _));
             Assert.AreEqual("toto_tata_tutu", link);
             Assert.AreEqual(' ', text.CurrentChar);
         }
@@ -62,14 +62,14 @@ namespace Markdig.Tests
         public void TestUrlAlternateInvalid()
         {
             var text = new StringSlice("<toto_tata_tutu");
-            Assert.False(LinkHelper.TryParseUrl(ref text, out string link));
+            Assert.False(LinkHelper.TryParseUrl(ref text, out string link, out _));
         }
 
         [Test]
         public void TestTitleSimple()
         {
             var text = new StringSlice(@"'tata\tutu\''");
-            Assert.True(LinkHelper.TryParseTitle(ref text, out string title));
+            Assert.True(LinkHelper.TryParseTitle(ref text, out string title, out _));
             Assert.AreEqual(@"tata\tutu'", title);
         }
 
@@ -77,7 +77,7 @@ namespace Markdig.Tests
         public void TestTitleSimpleAlternate()
         {
             var text = new StringSlice(@"""tata\tutu\"""" ");
-            Assert.True(LinkHelper.TryParseTitle(ref text, out string title));
+            Assert.True(LinkHelper.TryParseTitle(ref text, out string title, out _));
             Assert.AreEqual(@"tata\tutu""", title);
             Assert.AreEqual(' ', text.CurrentChar);
         }

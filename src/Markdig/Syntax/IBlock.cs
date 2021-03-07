@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -56,5 +57,17 @@ namespace Markdig.Syntax
         /// Occurs when the process of inlines ends for this instance.
         /// </summary>
         event ProcessInlineDelegate ProcessInlinesEnd;
+
+        /// <summary>
+        /// Trivia occurring before this block
+        /// </summary>
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        StringSlice TriviaBefore { get; set; }
+
+        /// <summary>
+        /// Trivia occurring after this block
+        /// </summary>
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        StringSlice TriviaAfter { get; set; }
     }
 }

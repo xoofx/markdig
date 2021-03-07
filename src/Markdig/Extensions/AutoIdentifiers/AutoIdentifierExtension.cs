@@ -107,7 +107,7 @@ namespace Markdig.Extensions.AutoIdentifiers
                 // If it is the case, we skip the auto identifier for the Heading
                 if (!doc.TryGetLinkReferenceDefinition(keyPair.Key, out var linkDef))
                 {
-                    doc.SetLinkReferenceDefinition(keyPair.Key, keyPair.Value);
+                    doc.SetLinkReferenceDefinition(keyPair.Key, keyPair.Value, true);
                 }
             }
             // Once we are done, we don't need to keep the intermediate dictionary around

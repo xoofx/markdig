@@ -37,13 +37,14 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context)
+        public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context, bool trackTrivia = false)
         {
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
             Document = document;
             Parsers = parsers;
             Context = context;
+            TrackTrivia = trackTrivia;
             PreciseSourceLocation = preciseSourcelocation;
             lineOffsets = new List<StringLineGroup.LineOffset>();
             ParserStates = new object[Parsers.Count];
@@ -104,6 +105,12 @@ namespace Markdig.Parsers
         /// Gets or sets the debug log writer. No log if null.
         /// </summary>
         public TextWriter DebugLog { get; set; }
+
+        /// <summary>
+        /// True to parse trivia such as whitespace, extra heading characters and unescaped
+        /// string values.
+        /// </summary>
+        public bool TrackTrivia { get; }
 
         /// <summary>
         /// Gets the literal inline parser.
@@ -185,7 +192,6 @@ namespace Markdig.Parsers
             lineOffsets.Clear();
             var text = leafBlock.Lines.ToSlice(lineOffsets);
             leafBlock.Lines.Release();
-
             int previousStart = -1;
 
             while (!text.IsEmpty)
@@ -270,6 +276,15 @@ namespace Markdig.Parsers
                 //    DebugLog.WriteLine($"** Dump: char '{c}");
                 //    leafBlock.Inline.DumpTo(DebugLog);
                 //}
+            }
+
+            if (TrackTrivia)
+            {
+                if (!(leafBlock is HeadingBlock))
+                {
+                    var newLine = leafBlock.NewLine;
+                    leafBlock.Inline.AppendChild(new LineBreakInline { NewLine = newLine });
+                }
             }
 
             Inline = null;

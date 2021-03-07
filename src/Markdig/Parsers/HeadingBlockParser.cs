@@ -65,23 +65,36 @@ namespace Markdig.Parsers
                 {
                     break;
                 }
-                c = line.NextChar();
+                c = processor.NextChar();
                 leadingCount++;
             }
 
             // A space is required after leading #
             if (leadingCount > 0 && leadingCount <= MaxLeadingCount && (c.IsSpaceOrTab() || c == '\0'))
             {
+                StringSlice trivia = StringSlice.Empty;
+                if (processor.TrackTrivia && c.IsSpaceOrTab())
+                {
+                    trivia = new StringSlice(processor.Line.Text, processor.Start, processor.Start);
+                    processor.NextChar();
+                }
                 // Move to the content
                 var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
+                    TriviaAfterAtxHeaderChar = trivia,
                     Level = leadingCount,
                     Column = column,
-                    Span = { Start =  sourcePosition }
+                    Span = { Start = sourcePosition },
+                    TriviaBefore = processor.UseTrivia(sourcePosition - 1),
+                    LinesBefore = processor.UseLinesBefore(),
+                    NewLine = processor.Line.NewLine,
                 };
                 processor.NewBlocks.Push(headingBlock);
-                processor.GoToColumn(column + leadingCount + 1);
+                if (!processor.TrackTrivia)
+                {
+                    processor.GoToColumn(column + leadingCount + 1);
+                }
 
                 // Gives a chance to parse attributes
                 TryParseAttributes?.Invoke(processor, ref processor.Line, headingBlock);
@@ -89,6 +102,7 @@ namespace Markdig.Parsers
                 // The optional closing sequence of #s must be preceded by a space and may be followed by spaces only.
                 int endState = 0;
                 int countClosingTags = 0;
+                int sourceEnd = processor.Line.End;
                 for (int i = processor.Line.End; i >= processor.Line.Start - 1; i--)  // Go up to Start - 1 in order to match the space after the first ###
                 {
                     c = processor.Line.Text[i];
@@ -126,18 +140,34 @@ namespace Markdig.Parsers
                 // Setup the source end position of this element
                 headingBlock.Span.End = processor.Line.End;
 
+                if (processor.TrackTrivia)
+                {
+                    var wsa = new StringSlice(processor.Line.Text, processor.Line.End + 1, sourceEnd);
+                    headingBlock.TriviaAfter = wsa;
+                    if (wsa.Overlaps(headingBlock.TriviaAfterAtxHeaderChar))
+                    {
+                        // prevent double whitespace allocation in case of closing # i.e. "# #"
+                        headingBlock.TriviaAfterAtxHeaderChar = StringSlice.Empty;
+                    }
+                }
+
                 // We expect a single line, so don't continue
                 return BlockState.Break;
             }
 
             // Else we don't have an header
+            processor.Line.Start = sourcePosition;
+            processor.Column = column;
             return BlockState.None;
         }
 
         public override bool Close(BlockProcessor processor, Block block)
         {
-            var heading = (HeadingBlock)block;
-            heading.Lines.Trim();
+            if (!processor.TrackTrivia)
+            {
+                var heading = (HeadingBlock)block;
+                heading.Lines.Trim();
+            }
             return true;
         }
     }

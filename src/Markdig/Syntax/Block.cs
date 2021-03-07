@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Parsers;
+using System.Collections.Generic;
 
 namespace Markdig.Syntax
 {
@@ -45,9 +46,40 @@ namespace Markdig.Syntax
         public bool IsBreakable { get; set; }
 
         /// <summary>
+        /// The last newline of this block
+        /// </summary>
+        public NewLine NewLine { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this block must be removed from its container after inlines have been processed.
         /// </summary>
         public bool RemoveAfterProcessInlines { get; set; }
+
+        /// <summary>
+        /// Gets or sets the trivia right before this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice TriviaBefore { get; set; }
+
+        /// <summary>
+        /// Gets or sets trivia occurring after this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice TriviaAfter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the empty lines occurring before this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// </summary>
+        public List<StringSlice> LinesBefore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the empty lines occurring after this block.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// </summary>
+        public List<StringSlice> LinesAfter { get; set; }
 
         /// <summary>
         /// Occurs when the process of inlines begin.
@@ -92,6 +124,15 @@ namespace Markdig.Syntax
                 depth++;
             }
             ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
+        }
+
+        internal static Block FindRootMostContainerParent(Block block)
+        {
+            if (block.Parent is ContainerBlock && !(block.Parent is MarkdownDocument))
+            {
+                return FindRootMostContainerParent(block.Parent);
+            }
+            return block;
         }
     }
 }

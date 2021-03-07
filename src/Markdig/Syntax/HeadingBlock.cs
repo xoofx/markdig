@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics;
+using Markdig.Helpers;
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -31,5 +32,27 @@ namespace Markdig.Syntax
         /// Gets or sets the level of heading (starting at 1 for the lowest level).
         /// </summary>
         public int Level { get; set; }
+
+        /// <summary>
+        /// True if this heading is a Setext heading.
+        /// </summary>
+        public bool IsSetext { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of - or = characters when <see cref="IsSetext"/> is true.
+        /// </summary>
+        public int HeaderCharCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the newline of the first line when <see cref="IsSetext"/> is true.
+        /// </summary>
+        public NewLine SetextNewline { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whitespace after the # character when <see cref="IsSetext"/> is false.
+        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// <see cref="StringSlice.IsEmpty"/>.
+        /// </summary>
+        public StringSlice TriviaAfterAtxHeaderChar { get; set; }
     }
 }

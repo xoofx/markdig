@@ -41,20 +41,47 @@ namespace Markdig.Parsers.Inlines
             }
 
             // A backslash at the end of the line is a [hard line break]:
-            if (c == '\n')
+            if (processor.TrackTrivia)
             {
-                processor.Inline = new LineBreakInline()
+                if (c == '\n' || c == '\r')
                 {
-                    IsHard = true,
-                    IsBackslash = true,
-                    Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
-                    Line = line,
-                    Column = column
-                };
-                processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                slice.NextChar();
-                return true;
+                    var newLine = c == '\n' ? NewLine.LineFeed : NewLine.CarriageReturn;
+                    if (c == '\r' && slice.PeekChar() == '\n')
+                    {
+                        newLine = NewLine.CarriageReturnLineFeed;
+                    }
+                    processor.Inline = new LineBreakInline()
+                    {
+                        IsHard = true,
+                        IsBackslash = true,
+                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
+                        Line = line,
+                        Column = column,
+                        NewLine = newLine
+                    };
+                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
+                    slice.NextChar();
+                    return true;
+                }
             }
+            else
+            {
+                if (c == '\n')
+                {
+                    processor.Inline = new LineBreakInline()
+                    {
+                        IsHard = true,
+                        IsBackslash = true,
+                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
+                        Line = line,
+                        Column = column
+                    };
+                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
+                    slice.NextChar();
+                    return true;
+                }
+            }
+
             return false;
         }
     }

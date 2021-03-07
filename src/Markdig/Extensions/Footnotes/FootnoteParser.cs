@@ -79,7 +79,7 @@ namespace Markdig.Extensions.Footnotes
                 LabelSpan = labelSpan,
                 Label = label
             };
-            processor.Document.SetLinkReferenceDefinition(footnote.Label, linkRef);
+            processor.Document.SetLinkReferenceDefinition(footnote.Label, linkRef, true);
             processor.NewBlocks.Push(footnote);
             return BlockState.Continue;
         }

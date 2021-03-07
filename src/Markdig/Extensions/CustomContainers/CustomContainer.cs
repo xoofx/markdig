@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
 
@@ -22,12 +23,40 @@ namespace Markdig.Extensions.CustomContainers
         {
         }
 
+        /// <inheritdoc />
+        public char FencedChar { get; set; }
+
+        /// <inheritdoc />
+        public int OpeningFencedCharCount { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaAfterFencedChar { get; set; }
+
+        /// <inheritdoc />
         public string Info { get; set; }
 
+        /// <inheritdoc />
+        public StringSlice UnescapedInfo { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaAfterInfo { get; set; }
+
+        /// <inheritdoc />
         public string Arguments { get; set; }
 
-        public int FencedCharCount { get; set; }
+        /// <inheritdoc />
+        public StringSlice UnescapedArguments { get; set; }
 
-        public char FencedChar { get; set; }
+        /// <inheritdoc />
+        public StringSlice TriviaAfterArguments { get; set; }
+
+        /// <inheritdoc />
+        public NewLine InfoNewLine { get; set; }
+
+        /// <inheritdoc />
+        public StringSlice TriviaBeforeClosingFence { get; set; }
+
+        /// <inheritdoc />
+        public int ClosingFencedCharCount { get; set; }
     }
 }

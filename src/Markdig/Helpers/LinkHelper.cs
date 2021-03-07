@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -356,10 +357,10 @@ namespace Markdig.Helpers
             if (c == '(')
             {
                 text.NextChar();
-                text.TrimStart();
+                text.TrimStart(); // this breaks whitespace before an uri
 
                 var pos = text.Start;
-                if (TryParseUrl(ref text, out link))
+                if (TryParseUrl(ref text, out link, out _))
                 {
                     linkSpan.Start = pos;
                     linkSpan.End = text.Start - 1;
@@ -384,7 +385,7 @@ namespace Markdig.Helpers
                         {
                             isValid = true;
                         }
-                        else if (TryParseTitle(ref text, out title))
+                        else if (TryParseTitle(ref text, out title, out char enclosingCharacter))
                         {
                             titleSpan.Start = pos;
                             titleSpan.End = text.Start - 1;
@@ -414,21 +415,129 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
+        public static bool TryParseInlineLinkTrivia(
+            ref StringSlice text,
+            out string link,
+            out SourceSpan unescapedLink,
+            out string title,
+            out SourceSpan unescapedTitle,
+            out char titleEnclosingCharacter,
+            out SourceSpan linkSpan,
+            out SourceSpan titleSpan,
+            out SourceSpan triviaBeforeLink,
+            out SourceSpan triviaAfterLink,
+            out SourceSpan triviaAfterTitle,
+            out bool urlHasPointyBrackets)
         {
-            return TryParseTitle(ref text, out title);
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 3. an optional link destination, 
+            // 4. an optional link title separated from the link destination by whitespace, 
+            // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
+            // 6. and a right parenthesis )
+            bool isValid = false;
+            var c = text.CurrentChar;
+            link = null;
+            unescapedLink = SourceSpan.Empty;
+            title = null;
+            unescapedTitle = SourceSpan.Empty;
+
+            linkSpan = SourceSpan.Empty;
+            titleSpan = SourceSpan.Empty;
+            triviaBeforeLink = SourceSpan.Empty;
+            triviaAfterLink = SourceSpan.Empty;
+            triviaAfterTitle = SourceSpan.Empty;
+            urlHasPointyBrackets = false;
+            titleEnclosingCharacter = '\0';
+
+            // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+            if (c == '(')
+            {
+                text.NextChar();
+                var sourcePosition = text.Start;
+                text.TrimStart();
+                triviaBeforeLink = new SourceSpan(sourcePosition, text.Start - 1);
+                var pos = text.Start;
+                if (TryParseUrlTrivia(ref text, out link, out urlHasPointyBrackets))
+                {
+                    linkSpan.Start = pos;
+                    linkSpan.End = text.Start - 1;
+                    unescapedLink.Start = pos + (urlHasPointyBrackets ? 1 : 0);
+                    unescapedLink.End = text.Start - 1 - (urlHasPointyBrackets ? 1 : 0);
+                    if (linkSpan.End < linkSpan.Start)
+                    {
+                        linkSpan = SourceSpan.Empty;
+                    }
+
+                    int triviaStart = text.Start;
+                    text.TrimStart(out int spaceCount);
+
+                    triviaAfterLink = new SourceSpan(triviaStart, text.Start - 1);
+                    var hasWhiteSpaces = spaceCount > 0;
+
+                    c = text.CurrentChar;
+                    if (c == ')')
+                    {
+                        isValid = true;
+                    }
+                    else if (hasWhiteSpaces)
+                    {
+                        c = text.CurrentChar;
+                        pos = text.Start;
+                        if (c == ')')
+                        {
+                            isValid = true;
+                        }
+                        else if (TryParseTitleTrivia(ref text, out title, out titleEnclosingCharacter))
+                        {
+                            titleSpan.Start = pos;
+                            titleSpan.End = text.Start - 1;
+                            unescapedTitle.Start = pos + 1; // skip opening character
+                            unescapedTitle.End = text.Start - 1 - 1; // skip closing character
+                            if (titleSpan.End < titleSpan.Start)
+                            {
+                                titleSpan = SourceSpan.Empty;
+                            }
+                            var startTrivia = text.Start;
+                            text.TrimStart();
+                            triviaAfterTitle = new SourceSpan(startTrivia, text.Start - 1);
+                            c = text.CurrentChar;
+
+                            if (c == ')')
+                            {
+                                isValid = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (isValid)
+            {
+                // Skip ')'
+                text.NextChar();
+                title ??= string.Empty;
+            }
+            return isValid;
         }
 
-        public static bool TryParseTitle<T>(ref T text, out string title) where T : ICharIterator
+        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
+        {
+            return TryParseTitle(ref text, out title, out _);
+        }
+
+        public static bool TryParseTitle<T>(ref T text, out string title, out char enclosingCharacter) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
+            enclosingCharacter = '\0';
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
             // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
+                enclosingCharacter = c;
                 var closingQuote = c == '(' ? ')' : c;
                 bool hasEscape = false;
                 // -1: undefined
@@ -439,7 +548,7 @@ namespace Markdig.Helpers
                 {
                     c = text.NextChar();
 
-                    if (c == '\n')
+                    if (c == '\r' || c == '\n')
                     {
                         if (hasOnlyWhiteSpacesSinceLastLine >= 0)
                         {
@@ -449,6 +558,12 @@ namespace Markdig.Helpers
                             }
                             hasOnlyWhiteSpacesSinceLastLine = -1;
                         }
+                        buffer.Append(c);
+                        if (c == '\r' && text.PeekChar() == '\n')
+                        {
+                            buffer.Append('\n');
+                        }
+                        continue;
                     }
 
                     if (c == '\0')
@@ -491,7 +606,101 @@ namespace Markdig.Helpers
                             hasOnlyWhiteSpacesSinceLastLine = 1;
                         }
                     }
-                    else if (c != '\n')
+                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+                    {
+                        hasOnlyWhiteSpacesSinceLastLine = 0;
+                    }
+
+                    buffer.Append(c);
+                }
+            }
+
+            title = isValid ? buffer.ToString() : null;
+            buffer.Length = 0;
+            return isValid;
+        }
+
+        public static bool TryParseTitleTrivia<T>(ref T text, out string title, out char enclosingCharacter) where T : ICharIterator
+        {
+            bool isValid = false;
+            var buffer = StringBuilderCache.Local();
+            enclosingCharacter = '\0';
+
+            // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
+            // a sequence of zero or more characters between straight single-quote characters ('), including a ' character only if it is backslash-escaped, or
+            var c = text.CurrentChar;
+            if (c == '\'' || c == '"' || c == '(')
+            {
+                enclosingCharacter = c;
+                var closingQuote = c == '(' ? ')' : c;
+                bool hasEscape = false;
+                // -1: undefined
+                //  0: has only spaces
+                //  1: has other characters
+                int hasOnlyWhiteSpacesSinceLastLine = -1;
+                while (true)
+                {
+                    c = text.NextChar();
+
+                    if (c == '\r' || c == '\n')
+                    {
+                        if (hasOnlyWhiteSpacesSinceLastLine >= 0)
+                        {
+                            if (hasOnlyWhiteSpacesSinceLastLine == 1)
+                            {
+                                break;
+                            }
+                            hasOnlyWhiteSpacesSinceLastLine = -1;
+                        }
+                        buffer.Append(c);
+                        if (c == '\r' && text.PeekChar() == '\n')
+                        {
+                            buffer.Append('\n');
+                        }
+                        continue;
+                    }
+
+                    if (c == '\0')
+                    {
+                        break;
+                    }
+
+                    if (c == closingQuote)
+                    {
+                        if (hasEscape)
+                        {
+                            buffer.Append(closingQuote);
+                            hasEscape = false;
+                            continue;
+                        }
+
+                        // Skip last quote
+                        text.NextChar();
+                        isValid = true;
+                        break;
+                    }
+
+                    if (hasEscape && !c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                    }
+
+                    if (c == '\\')
+                    {
+                        hasEscape = true;
+                        continue;
+                    }
+
+                    hasEscape = false;
+
+                    if (c.IsSpaceOrTab())
+                    {
+                        if (hasOnlyWhiteSpacesSinceLastLine < 0)
+                        {
+                            hasOnlyWhiteSpacesSinceLastLine = 1;
+                        }
+                    }
+                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
                     {
                         hasOnlyWhiteSpacesSinceLastLine = 0;
                     }
@@ -507,12 +716,13 @@ namespace Markdig.Helpers
 
         public static bool TryParseUrl<T>(T text, out string link) where T : ICharIterator
         {
-            return TryParseUrl(ref text, out link);
+            return TryParseUrl(ref text, out link, out _);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string link, bool isAutoLink = false) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, out string link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
+            hasPointyBrackets = false;
             var buffer = StringBuilderCache.Local();
 
             var c = text.CurrentChar;
@@ -528,6 +738,7 @@ namespace Markdig.Helpers
                     if (!hasEscape && c == '>')
                     {
                         text.NextChar();
+                        hasPointyBrackets = true;
                         isValid = true;
                         break;
                     }
@@ -548,7 +759,7 @@ namespace Markdig.Helpers
                         continue;
                     }
 
-                    if (c.IsNewLine())
+                    if (c.IsNewLineOrLineFeed())
                     {
                         break;
                     }
@@ -648,6 +859,152 @@ namespace Markdig.Helpers
             return isValid;
         }
 
+        public static bool TryParseUrlTrivia<T>(ref T text, out string link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
+        {
+            bool isValid = false;
+            hasPointyBrackets = false;
+            var buffer = StringBuilderCache.Local();
+            var unescaped = new StringBuilder();
+
+            var c = text.CurrentChar;
+
+            // a sequence of zero or more characters between an opening < and a closing > 
+            // that contains no line breaks, or unescaped < or > characters, or
+            if (c == '<')
+            {
+                bool hasEscape = false;
+                do
+                {
+                    c = text.NextChar();
+                    if (!hasEscape && c == '>')
+                    {
+                        text.NextChar();
+                        hasPointyBrackets = true;
+                        isValid = true;
+                        break;
+                    }
+
+                    if (!hasEscape && c == '<')
+                    {
+                        break;
+                    }
+
+                    if (hasEscape && !c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                        unescaped.Append('\\');
+                    }
+
+                    if (c == '\\')
+                    {
+                        hasEscape = true;
+                        unescaped.Append('\\');
+                        continue;
+                    }
+
+                    if (c.IsNewLineOrLineFeed())
+                    {
+                        break;
+                    }
+
+                    hasEscape = false;
+
+                    buffer.Append(c);
+                    unescaped.Append(c);
+
+                } while (c != '\0');
+            }
+            else
+            {
+                // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
+                // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
+                // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
+                // parentheses. 
+                bool hasEscape = false;
+                int openedParent = 0;
+                while (true)
+                {
+                    // Match opening and closing parenthesis
+                    if (c == '(')
+                    {
+                        if (!hasEscape)
+                        {
+                            openedParent++;
+                        }
+                    }
+
+                    if (c == ')')
+                    {
+                        if (!hasEscape)
+                        {
+                            openedParent--;
+                            if (openedParent < 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isAutoLink)
+                    {
+                        if (hasEscape && !c.IsAsciiPunctuation())
+                        {
+                            buffer.Append('\\');
+                        }
+
+                        // If we have an escape
+                        if (c == '\\')
+                        {
+                            hasEscape = true;
+                            c = text.NextChar();
+                            unescaped.Append('\\');
+                            continue;
+                        }
+
+                        hasEscape = false;
+                    }
+
+                    if (IsEndOfUri(c, isAutoLink))
+                    {
+                        isValid = true;
+                        break;
+                    }
+
+                    if (isAutoLink)
+                    {
+                        if (c == '&')
+                        {
+                            if (HtmlHelper.ScanEntity(text, out _, out _, out _) > 0)
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                        if (IsTrailingUrlStopCharacter(c) && IsEndOfUri(text.PeekChar(), true))
+                        {
+                            isValid = true;
+                            break;
+                        }
+                    }
+
+                    buffer.Append(c);
+                    unescaped.Append(c);
+
+                    c = text.NextChar();
+                }
+
+                if (openedParent > 0)
+                {
+                    isValid = false;
+                }
+            }
+
+            link = isValid ? buffer.ToString() : null;
+            buffer.Length = 0;
+            return isValid;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsTrailingUrlStopCharacter(char c)
         {
@@ -712,19 +1069,6 @@ namespace Markdig.Helpers
                 segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
         }
 
-        public static bool TryParseLinkReferenceDefinition<T>(T text, out string label, out string url,
-            out string title) where T : ICharIterator
-        {
-            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title);
-        }
-
-        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title)
-            where T : ICharIterator
-        {
-            return TryParseLinkReferenceDefinition(ref text, out label, out url, out title, out SourceSpan labelSpan, out SourceSpan urlSpan,
-                out SourceSpan titleSpan);
-        }
-
         public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
         {
             url = null;
@@ -750,7 +1094,7 @@ namespace Markdig.Helpers
 
             urlSpan.Start = text.Start;
             bool isAngleBracketsUrl = text.CurrentChar == '<';
-            if (!TryParseUrl(ref text, out url) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            if (!TryParseUrl(ref text, out url, out _) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
             {
                 return false;
             }
@@ -762,7 +1106,7 @@ namespace Markdig.Helpers
             if (c == '\'' || c == '"' || c == '(')
             {
                 titleSpan.Start = text.Start;
-                if (TryParseTitle(ref text, out title))
+                if (TryParseTitle(ref text, out title, out _))
                 {
                     titleSpan.End = text.Start - 1;
                     // If we have a title, it requires a whitespace after the url
@@ -811,6 +1155,154 @@ namespace Markdig.Helpers
             return true;
         }
 
+        public static bool TryParseLinkReferenceDefinitionTrivia<T>(
+            ref T text,
+            out SourceSpan triviaBeforeLabel,
+            out string label,
+            out SourceSpan labelWithTrivia,
+            out SourceSpan triviaBeforeUrl, // can contain newline
+            out string url,
+            out SourceSpan unescapedUrl,
+            out bool urlHasPointyBrackets,
+            out SourceSpan triviaBeforeTitle, // can contain newline
+            out string title, // can contain non-consecutive newlines
+            out SourceSpan unescapedTitle,
+            out char titleEnclosingCharacter,
+            out NewLine newLine,
+            out SourceSpan triviaAfterTitle,
+            out SourceSpan labelSpan,
+            out SourceSpan urlSpan,
+            out SourceSpan titleSpan) where T : ICharIterator
+        {
+            labelWithTrivia = SourceSpan.Empty;
+            triviaBeforeUrl = SourceSpan.Empty;
+            url = null;
+            unescapedUrl = SourceSpan.Empty;
+            triviaBeforeTitle = SourceSpan.Empty;
+            title = null;
+            unescapedTitle = SourceSpan.Empty;
+            newLine = NewLine.None;
+
+            urlSpan = SourceSpan.Empty;
+            titleSpan = SourceSpan.Empty;
+
+            text.TrimStart();
+            triviaBeforeLabel = new SourceSpan(0, text.Start - 1);
+            triviaAfterTitle = SourceSpan.Empty;
+            urlHasPointyBrackets = false;
+            titleEnclosingCharacter = '\0';
+
+            labelWithTrivia.Start = text.Start + 1; // skip opening [
+            if (!TryParseLabelTrivia(ref text, out label, out labelSpan))
+            {
+                return false;
+            }
+            labelWithTrivia.End = text.Start - 2; // skip closing ] and subsequent :
+
+            if (text.CurrentChar != ':')
+            {
+                label = null;
+                return false;
+            }
+            text.NextChar(); // Skip ':'
+            var triviaBeforeUrlStart = text.Start;
+
+            // Skip any whitespace before the url
+            text.TrimStart();
+            triviaBeforeUrl = new SourceSpan(triviaBeforeUrlStart, text.Start - 1);
+
+            urlSpan.Start = text.Start;
+            bool isAngleBracketsUrl = text.CurrentChar == '<';
+            unescapedUrl.Start = text.Start + (isAngleBracketsUrl ? 1 : 0);
+            if (!TryParseUrlTrivia(ref text, out url, out urlHasPointyBrackets) || (!isAngleBracketsUrl && string.IsNullOrEmpty(url)))
+            {
+                return false;
+            }
+            urlSpan.End = text.Start - 1;
+            unescapedUrl.End = text.Start - 1 - (isAngleBracketsUrl ? 1 : 0);
+            int triviaBeforeTitleStart = text.Start;
+
+            var saved = text;
+            var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out newLine);
+
+            triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, text.Start - 1);
+            var c = text.CurrentChar;
+            if (c == '\'' || c == '"' || c == '(')
+            {
+                titleSpan.Start = text.Start;
+                unescapedTitle.Start = text.Start + 1; // + 1; // skip opening enclosing character
+                if (TryParseTitleTrivia(ref text, out title, out titleEnclosingCharacter))
+                {
+                    titleSpan.End = text.Start - 1;
+                    unescapedTitle.End = text.Start - 1 - 1;  // skip closing enclosing character
+                    // If we have a title, it requires a whitespace after the url
+                    if (!hasWhiteSpaces)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (text.CurrentChar == '\0' || newLineCount > 0)
+                {
+                    triviaAfterTitle = new SourceSpan(text.Start, text.Start - 1);
+                    return true;
+                }
+            }
+
+            // Check that the current line has only trailing spaces
+            c = text.CurrentChar;
+            int triviaAfterTitleStart = text.Start;
+            while (c.IsSpaceOrTab())
+            {
+                c = text.NextChar();
+            }
+
+            if (c != '\0' && c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+            {
+                // If we were able to parse the url but the title doesn't end with space, 
+                // we are still returning a valid definition
+                if (newLineCount > 0 && title != null)
+                {
+                    text = saved;
+                    title = null;
+                    unescapedTitle = SourceSpan.Empty;
+                    triviaAfterTitle = SourceSpan.Empty;
+                    return true;
+                }
+
+                label = null;
+                url = null;
+                unescapedUrl = SourceSpan.Empty;
+                title = null;
+                unescapedTitle = SourceSpan.Empty;
+                return false;
+            }
+            triviaAfterTitle = new SourceSpan(triviaAfterTitleStart, text.Start - 1);
+            if (c != '\0')
+            {
+                if (c == '\n')
+                {
+                    newLine = NewLine.LineFeed;
+                }
+                else if (c == '\r' && text.PeekChar() == '\n')
+                {
+                    newLine = NewLine.CarriageReturnLineFeed;
+                }
+                else if (c == '\r')
+                {
+                    newLine = NewLine.CarriageReturn;
+                }
+            }
+
+            return true;
+        }
+
         public static bool TryParseLabel<T>(T lines, out string label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
@@ -829,6 +1321,11 @@ namespace Markdig.Helpers
         public static bool TryParseLabel<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
+        }
+
+        public static bool TryParseLabelTrivia<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        {
+            return TryParseLabelTrivia(ref lines, false, out label, out labelSpan);
         }
 
         public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string label, out SourceSpan labelSpan) where T : ICharIterator
@@ -945,5 +1442,125 @@ namespace Markdig.Helpers
 
             return isValid;
         }
+
+        public static bool TryParseLabelTrivia<T>(ref T lines, bool allowEmpty, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        {
+            label = null;
+            char c = lines.CurrentChar;
+            labelSpan = SourceSpan.Empty;
+            if (c != '[')
+            {
+                return false;
+            }
+            var buffer = StringBuilderCache.Local();
+
+            var startLabel = -1;
+            var endLabel = -1;
+
+            bool hasEscape = false;
+            bool previousWhitespace = true;
+            bool hasNonWhiteSpace = false;
+            bool isValid = false;
+            while (true)
+            {
+                c = lines.NextChar();
+                if (c == '\0')
+                {
+                    break;
+                }
+
+                if (hasEscape)
+                {
+                    if (c != '[' && c != ']' && c != '\\')
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (c == '[')
+                    {
+                        break;
+                    }
+
+                    if (c == ']')
+                    {
+                        lines.NextChar(); // Skip ]
+                        if (allowEmpty || hasNonWhiteSpace)
+                        {
+                            // Remove trailing spaces
+                            for (int i = buffer.Length - 1; i >= 0; i--)
+                            {
+                                if (!buffer[i].IsWhitespace())
+                                {
+                                    break;
+                                }
+                                buffer.Length = i;
+                                endLabel--;
+                            }
+
+                            // Only valid if buffer is less than 1000 characters
+                            if (buffer.Length <= 999)
+                            {
+                                labelSpan.Start = startLabel;
+                                labelSpan.End = endLabel;
+                                if (labelSpan.Start > labelSpan.End)
+                                {
+                                    labelSpan = SourceSpan.Empty;
+                                }
+
+                                label = buffer.ToString();
+                                isValid = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                var isWhitespace = c.IsWhitespace();
+
+
+                if (!hasEscape && c == '\\')
+                {
+                    if (startLabel < 0)
+                    {
+                        startLabel = lines.Start;
+                    }
+                    hasEscape = true;
+                }
+                else
+                {
+                    hasEscape = false;
+
+                    if (!previousWhitespace || !isWhitespace)
+                    {
+                        if (startLabel < 0)
+                        {
+                            startLabel = lines.Start;
+                        }
+                        endLabel = lines.Start;
+                        if (isWhitespace)
+                        {
+                            // Replace any whitespace by a single ' '
+                            buffer.Append(' ');
+                        }
+                        else
+                        {
+                            buffer.Append(c);
+                        }
+                        if (!isWhitespace)
+                        {
+                            hasNonWhiteSpace = true;
+                        }
+                    }
+                }
+                previousWhitespace = isWhitespace;
+            }
+
+            buffer.Length = 0;
+
+            return isValid;
+        }
+
     }
 }
