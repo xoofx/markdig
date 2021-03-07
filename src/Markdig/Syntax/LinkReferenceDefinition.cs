@@ -47,7 +47,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the label. Text is normalized according to spec.
         /// </summary>
-        /// <see cref="https://spec.commonmark.org/0.29/#matches"/>
+        /// https://spec.commonmark.org/0.29/#matches
         public string Label { get; set; }
 
         /// <summary>

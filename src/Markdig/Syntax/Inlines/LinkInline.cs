@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Parsers;
 using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines

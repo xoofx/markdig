@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Markdig.Helpers;
+using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
 
 namespace Markdig.Renderers.Roundtrip
