@@ -1,6 +1,8 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+#nullable enable
 
 using System.Collections.Generic;
 
@@ -18,9 +20,9 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="c">The input char.</param>
         /// <returns>The simple ASCII string or null if the char itself cannot be simplified</returns>
-        public static string ConvertToAscii(char c)
+        public static string? ConvertToAscii(char c)
         {
-            return CodeToAscii.TryGetValue(c, out string str) ? str : null;
+            return CodeToAscii.TryGetValue(c, out string? str) ? str : null;
         }
 
         static CharNormalizer()

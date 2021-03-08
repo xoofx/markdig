@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System;
+#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Markdig.Syntax;
@@ -14,7 +16,7 @@ namespace Markdig.Helpers
     /// </summary>
     public static class LinkHelper
     {
-        public static bool TryParseAutolink(StringSlice text, out string link, out bool isEmail)
+        public static bool TryParseAutolink(StringSlice text, [NotNullWhen(true)] out string? link, out bool isEmail)
         {
             return TryParseAutolink(ref text, out link, out isEmail);
         }
@@ -118,7 +120,7 @@ namespace Markdig.Helpers
             return c == '_' || c == '-' || c == '.';
         }
 
-        public static bool TryParseAutolink(ref StringSlice text, out string link, out bool isEmail)
+        public static bool TryParseAutolink(ref StringSlice text, [NotNullWhen(true)] out string? link, out bool isEmail)
         {
             link = null;
             isEmail = false;
@@ -322,22 +324,22 @@ namespace Markdig.Helpers
             return false;
         }
 
-        public static bool TryParseInlineLink(StringSlice text, out string link, out string title)
+        public static bool TryParseInlineLink(StringSlice text, out string? link, out string? title)
         {
             return TryParseInlineLink(ref text, out link, out title, out _, out _);
         }
 
-        public static bool TryParseInlineLink(StringSlice text, out string link, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan)
+        public static bool TryParseInlineLink(StringSlice text, out string? link, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan)
         {
             return TryParseInlineLink(ref text, out link, out title, out linkSpan, out titleSpan);
         }
 
-        public static bool TryParseInlineLink(ref StringSlice text, out string link, out string title)
+        public static bool TryParseInlineLink(ref StringSlice text, out string? link, out string? title)
         {
             return TryParseInlineLink(ref text, out link, out title, out SourceSpan linkSpan, out SourceSpan titleSpan);
         }
 
-        public static bool TryParseInlineLink(ref StringSlice text, out string link, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan)
+        public static bool TryParseInlineLink(ref StringSlice text, out string? link, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan)
         {
             // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
             // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
@@ -417,9 +419,9 @@ namespace Markdig.Helpers
 
         public static bool TryParseInlineLinkTrivia(
             ref StringSlice text,
-            out string link,
+            out string? link,
             out SourceSpan unescapedLink,
-            out string title,
+            out string? title,
             out SourceSpan unescapedTitle,
             out char titleEnclosingCharacter,
             out SourceSpan linkSpan,
@@ -521,12 +523,12 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitle<T>(T text, out string title) where T : ICharIterator
+        public static bool TryParseTitle<T>(T text, out string? title) where T : ICharIterator
         {
             return TryParseTitle(ref text, out title, out _);
         }
 
-        public static bool TryParseTitle<T>(ref T text, out string title, out char enclosingCharacter) where T : ICharIterator
+        public static bool TryParseTitle<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -620,7 +622,7 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseTitleTrivia<T>(ref T text, out string title, out char enclosingCharacter) where T : ICharIterator
+        public static bool TryParseTitleTrivia<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
         {
             bool isValid = false;
             var buffer = StringBuilderCache.Local();
@@ -714,12 +716,12 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseUrl<T>(T text, out string link) where T : ICharIterator
+        public static bool TryParseUrl<T>(T text, out string? link) where T : ICharIterator
         {
             return TryParseUrl(ref text, out link, out _);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
             hasPointyBrackets = false;
@@ -859,7 +861,7 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseUrlTrivia<T>(ref T text, out string link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
+        public static bool TryParseUrlTrivia<T>(ref T text, out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
             hasPointyBrackets = false;
@@ -1069,7 +1071,7 @@ namespace Markdig.Helpers
                 segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
         }
 
-        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string label, out string url, out string title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
+        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string? label, out string? url, out string? title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
         {
             url = null;
             title = null;
@@ -1158,14 +1160,14 @@ namespace Markdig.Helpers
         public static bool TryParseLinkReferenceDefinitionTrivia<T>(
             ref T text,
             out SourceSpan triviaBeforeLabel,
-            out string label,
+            out string? label,
             out SourceSpan labelWithTrivia,
             out SourceSpan triviaBeforeUrl, // can contain newline
-            out string url,
+            out string? url,
             out SourceSpan unescapedUrl,
             out bool urlHasPointyBrackets,
             out SourceSpan triviaBeforeTitle, // can contain newline
-            out string title, // can contain non-consecutive newlines
+            out string? title, // can contain non-consecutive newlines
             out SourceSpan unescapedTitle,
             out char titleEnclosingCharacter,
             out NewLine newLine,
@@ -1303,32 +1305,32 @@ namespace Markdig.Helpers
             return true;
         }
 
-        public static bool TryParseLabel<T>(T lines, out string label) where T : ICharIterator
+        public static bool TryParseLabel<T>(T lines, out string? label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
-        public static bool TryParseLabel<T>(T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, out string label) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, out string? label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabelTrivia<T>(ref T lines, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabelTrivia<T>(ref T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabelTrivia(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             label = null;
             char c = lines.CurrentChar;
@@ -1443,7 +1445,7 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseLabelTrivia<T>(ref T lines, bool allowEmpty, out string label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabelTrivia<T>(ref T lines, bool allowEmpty, out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             label = null;
             char c = lines.CurrentChar;
