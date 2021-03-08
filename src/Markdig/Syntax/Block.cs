@@ -57,27 +57,27 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the trivia right before this block.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaBefore { get; set; }
 
         /// <summary>
         /// Gets or sets trivia occurring after this block.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring before this block.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
         public List<StringSlice> LinesBefore { get; set; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring after this block.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise null.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
         public List<StringSlice> LinesAfter { get; set; }
 

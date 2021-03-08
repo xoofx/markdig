@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Roundtrip
     /// <summary>
     /// An Roundtrip renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{CodeBlock}" />
+    /// <seealso cref="RoundtripObjectRenderer{CodeBlock}" />
     public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
     {
         protected override void Write(RoundtripRenderer renderer, CodeBlock obj)

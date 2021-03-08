@@ -73,6 +73,7 @@ namespace Markdig.Syntax
         /// <param name="column">The column.</param>
         /// <param name="line">The line.</param>
         /// <param name="sourceLinePosition"></param>
+        /// <param name="trackTrivia">Whether to keep track of trivia such as whitespace, extra heading characters and unescaped string values.</param>
         public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool trackTrivia)
         {
             if (Lines.Lines == null)

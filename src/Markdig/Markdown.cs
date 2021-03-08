@@ -137,6 +137,7 @@ namespace Markdig
         /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
         /// <param name="markdown">The markdown text.</param>
+        /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
         public static MarkdownDocument Parse(string markdown, bool trackTrivia = false)

@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="LiteralInline"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{LiteralInline}" />
+    /// <seealso cref="RoundtripObjectRenderer{LiteralInline}" />
     public class LiteralInlineRenderer : RoundtripObjectRenderer<LiteralInline>
     {
         protected override void Write(RoundtripRenderer renderer, LiteralInline obj)

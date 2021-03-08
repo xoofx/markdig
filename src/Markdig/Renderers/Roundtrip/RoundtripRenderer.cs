@@ -6,14 +6,13 @@ using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Roundtrip.Inlines;
 using Markdig.Helpers;
-using Markdig.Parsers;
 
 namespace Markdig.Renderers.Roundtrip
 {
     /// <summary>
     /// Markdown renderer honoring trivia for a  <see cref="MarkdownDocument"/> object.
     /// </summary>
-    /// Ensure to enable the <see cref="MarkdownParser.TrackTrivia"/> property when
+    /// Ensure to call the <see cref="MarkdownExtensions.EnableTrackTrivia"/> extension method when
     /// parsing markdown to have trivia available for rendering.
     public class RoundtripRenderer : TextRendererBase<RoundtripRenderer>
     {
@@ -51,8 +50,6 @@ namespace Markdig.Renderers.Roundtrip
         /// Writes the lines of a <see cref="LeafBlock"/>
         /// </summary>
         /// <param name="leafBlock">The leaf block.</param>
-        /// <param name="writeEndOfLines">if set to <c>true</c> write end of lines.</param>
-        /// <param name="indent">Whether to write indents.</param>
         /// <returns>This instance</returns>
         public void WriteLeafRawLines(LeafBlock leafBlock)
         {

@@ -25,12 +25,7 @@ namespace Markdig.Parsers
         private readonly MarkdownDocument document;
         private readonly ProcessDocumentDelegate documentProcessed;
         private readonly bool preciseSourceLocation;
-
-        /// <summary>
-        /// True to parse trivia such as whitespace, extra heading characters and unescaped
-        /// string values.
-        /// </summary>
-        public bool TrackTrivia { get; }
+        private readonly bool trackTrivia;
 
         private readonly int roughLineCountEstimate;
 
@@ -49,7 +44,7 @@ namespace Markdig.Parsers
             if (text == null) ThrowHelper.ArgumentNullException_text();
             if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
-            TrackTrivia = pipeline.TrackTrivia;
+            trackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;
             text = FixupZero(text);
             lineReader = new LineReader(text);
@@ -121,7 +116,7 @@ namespace Markdig.Parsers
                 // If this is the end of file and the last line is empty
                 if (lineText.Text is null)
                 {
-                    if (TrackTrivia)
+                    if (trackTrivia)
                     {
                         Block lastBlock = blockProcessor.LastBlock;
                         if (lastBlock == null && document.Count == 0)
