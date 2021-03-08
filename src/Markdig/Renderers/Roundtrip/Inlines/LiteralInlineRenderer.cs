@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
-using Markdig.Renderers.Normalize;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Renderers.Roundtrip.Inlines

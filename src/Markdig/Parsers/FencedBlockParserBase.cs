@@ -70,7 +70,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// The roundtrip parser for the information after the fenced code block special characters (usually ` or ~)
         /// </summary>
-        /// <param name="blockProcessor">The parser processor.</param>
+        /// <param name="state">The parser processor.</param>
         /// <param name="line">The line.</param>
         /// <param name="fenced">The fenced code block.</param>
         /// <param name="openingCharacter">The opening character for this fenced code block.</param>
