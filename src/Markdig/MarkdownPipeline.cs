@@ -52,7 +52,7 @@ namespace Markdig
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
         /// string values.
         /// </summary>
-        internal bool TrackTrivia { get; set; }
+        public bool TrackTrivia { get; internal set; }
 
         /// <summary>
         /// Allows to setup a <see cref="IMarkdownRenderer"/>.
