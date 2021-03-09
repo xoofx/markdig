@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Text;
 
@@ -30,7 +32,8 @@ namespace Markdig.Helpers
                 }
             }
         }
-        public static string EscapeUrlCharacter(char c)
+
+        public static string? EscapeUrlCharacter(char c)
         {
             return c < 128 ? EscapeUrlsForAscii[c] : null;
         }
@@ -431,7 +434,7 @@ namespace Markdig.Helpers
         /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
         /// <param name="removeBackSlash">if set to <c>true</c> [remove back slash].</param>
         /// <returns></returns>
-        public static string Unescape(string text, bool removeBackSlash = true)
+        public static string Unescape(string? text, bool removeBackSlash = true)
         {
             // Credits: code from CommonMark.NET
             // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
@@ -446,9 +449,9 @@ namespace Markdig.Helpers
             int lastPos = 0;
             char c;
             char[] search = removeBackSlash ? SearchBackAndAmp : SearchAmp;
-            StringBuilder sb = null;
+            StringBuilder? sb = null;
 
-            while ((searchPos = text.IndexOfAny(search, searchPos)) != -1)
+            while ((searchPos = text!.IndexOfAny(search, searchPos)) != -1)
             {
                 sb ??= StringBuilderCache.Local();
                 c = text[searchPos];

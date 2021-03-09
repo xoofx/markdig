@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +32,7 @@ namespace Markdig.Helpers
             Lines = _pool.Rent(capacity);
             Count = 0;
         }
+
         internal StringLineGroup(int capacity, bool willRelease)
         {
             if (capacity <= 0) ThrowHelper.ArgumentOutOfRangeException(nameof(capacity));
@@ -116,7 +119,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="lineOffsets">The position of the `\n` line offsets from the beginning of the returned slice.</param>
         /// <returns>A single slice concatenating the lines of this instance</returns>
-        public readonly StringSlice ToSlice(List<LineOffset> lineOffsets = null)
+        public readonly StringSlice ToSlice(List<LineOffset>? lineOffsets = null)
         {
             // Optimization case for a single line.
             if (Count == 1)
@@ -201,7 +204,7 @@ namespace Markdig.Helpers
         {
             Array.Clear(Lines, 0, Count);
             _pool.Return(Lines);
-            Lines = null;
+            Lines = null!;
             Count = -1;
         }
 

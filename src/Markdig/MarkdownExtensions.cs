@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using Markdig.Extensions.Abbreviations;
 using Markdig.Extensions.AutoIdentifiers;
@@ -101,7 +103,7 @@ namespace Markdig
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="options">The options.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions options = null)
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, AutoLinkOptions? options = null)
         {
             pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(options));
             return pipeline;
@@ -136,7 +138,7 @@ namespace Markdig
         /// <param name="defaultTag">The default tag to use to match the self pipeline configuration. By default, <see cref="SelfPipelineExtension.DefaultTag"/>, meaning that the HTML tag will be &lt;--markdig:extensions--&gt;</param>
         /// <param name="defaultExtensions">The default extensions to configure if no pipeline setup was found from the Markdown document</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseSelfPipeline(this MarkdownPipelineBuilder pipeline, string defaultTag = SelfPipelineExtension.DefaultTag, string defaultExtensions = null)
+        public static MarkdownPipelineBuilder UseSelfPipeline(this MarkdownPipelineBuilder pipeline, string defaultTag = SelfPipelineExtension.DefaultTag, string? defaultExtensions = null)
         {
             if (pipeline.Extensions.Count != 0)
             {
@@ -210,7 +212,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseMediaLinks(this MarkdownPipelineBuilder pipeline, MediaOptions options = null)
+        public static MarkdownPipelineBuilder UseMediaLinks(this MarkdownPipelineBuilder pipeline, MediaOptions? options = null)
         {
             if (!pipeline.Extensions.Contains<MediaLinkExtension>())
             {
@@ -244,7 +246,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UseSmartyPants(this MarkdownPipelineBuilder pipeline, SmartyPantOptions options = null)
+        public static MarkdownPipelineBuilder UseSmartyPants(this MarkdownPipelineBuilder pipeline, SmartyPantOptions? options = null)
         {
             if (!pipeline.Extensions.Contains<SmartyPantsExtension>())
             {
@@ -316,7 +318,7 @@ namespace Markdig
         /// <returns>
         /// The modified pipeline
         /// </returns>
-        public static MarkdownPipelineBuilder UsePipeTables(this MarkdownPipelineBuilder pipeline, PipeTableOptions options = null)
+        public static MarkdownPipelineBuilder UsePipeTables(this MarkdownPipelineBuilder pipeline, PipeTableOptions? options = null)
         {
             if (!pipeline.Extensions.Contains<PipeTableExtension>())
             {
