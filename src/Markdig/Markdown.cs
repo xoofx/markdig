@@ -93,7 +93,7 @@ namespace Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
-        public static string ToHtml(MarkdownDocument document, MarkdownPipeline pipeline = null)
+        public static string ToHtml(this MarkdownDocument document, MarkdownPipeline pipeline = null)
         {
             if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
             pipeline ??= new MarkdownPipelineBuilder().Build();
