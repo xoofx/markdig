@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Roundtrip
     /// <summary>
     /// A Roundtrip renderer for a <see cref="ThematicBreakBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{ThematicBreakBlock}" />
+    /// <seealso cref="RoundtripObjectRenderer{ThematicBreakBlock}" />
     public class ThematicBreakRenderer : RoundtripObjectRenderer<ThematicBreakBlock>
     {
         protected override void Write(RoundtripRenderer renderer, ThematicBreakBlock obj)

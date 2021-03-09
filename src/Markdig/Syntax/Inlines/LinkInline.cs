@@ -62,14 +62,14 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// Gets or sets the <see cref="Label"/> with trivia.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice LabelWithTrivia { get; set; }
 
         /// <summary>
         /// Gets or sets the type of label parsed
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="LocalLabel.None"/>.
         /// </summary>
         public LocalLabel LocalLabel { get; set; }
@@ -92,7 +92,7 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// Gets or sets the trivia before the <see cref="Url"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaBeforeUrl { get; set; }
@@ -100,7 +100,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// True if the <see cref="Url"/> in the source document is enclosed
         /// in pointy brackets.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// false.
         /// </summary>
         public bool UrlHasPointyBrackets { get; set; }
@@ -117,14 +117,14 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// The <see cref="Url"/> but with trivia and unescaped characters
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice UnescapedUrl { get; set; }
 
         /// <summary>
         /// Any trivia after the <see cref="Url"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaAfterUrl { get; set; }
@@ -137,7 +137,7 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// Gets or sets the character used to enclose the <see cref="Title"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public char TitleEnclosingCharacter { get; set; }
@@ -155,14 +155,14 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the <see cref="Title"/> exactly as parsed from the
         /// source document including unescaped characters
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice UnescapedTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="Title"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaAfterTitle { get; set; }

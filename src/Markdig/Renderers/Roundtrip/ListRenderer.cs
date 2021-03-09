@@ -11,7 +11,7 @@ namespace Markdig.Renderers.Roundtrip
     /// <summary>
     /// A Roundtrip renderer for a <see cref="ListBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{ListBlock}" />
+    /// <seealso cref="RoundtripObjectRenderer{ListBlock}" />
     public class ListRenderer : RoundtripObjectRenderer<ListBlock>
     {
         protected override void Write(RoundtripRenderer renderer, ListBlock listBlock)

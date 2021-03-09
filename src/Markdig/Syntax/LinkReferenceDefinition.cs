@@ -47,7 +47,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the label. Text is normalized according to spec.
         /// </summary>
-        /// <see cref="https://spec.commonmark.org/0.29/#matches"/>
+        /// https://spec.commonmark.org/0.29/#matches
         public string Label { get; set; }
 
         /// <summary>
@@ -57,14 +57,14 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Non-normalized Label (includes trivia)
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice LabelWithTrivia { get; set; }
 
         /// <summary>
         /// Whitespace before the <see cref="Url"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaBeforeUrl { get; set; }
@@ -81,21 +81,21 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Non-normalized <see cref="Url"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice UnescapedUrl { get; set; }
 
         /// <summary>
         /// True when the <see cref="Url"/> is enclosed in point brackets in the source document.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// false.
         /// </summary>
         public bool UrlHasPointyBrackets { get; set; }
 
         /// <summary>
         /// gets or sets the whitespace before a <see cref="Title"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaBeforeTitle { get; set; }
@@ -112,14 +112,14 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Non-normalized <see cref="Title"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice UnescapedTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the character the <see cref="Title"/> is enclosed in.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise \0.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise \0.
         /// </summary>
         public char TitleEnclosingCharacter { get; set; }
 

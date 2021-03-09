@@ -80,7 +80,7 @@ namespace Markdig
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
         /// string values.
         /// </summary>
-        public bool TrackTrivia { get; set; }
+        public bool TrackTrivia { get; internal set; }
 
         /// <summary>
         /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.

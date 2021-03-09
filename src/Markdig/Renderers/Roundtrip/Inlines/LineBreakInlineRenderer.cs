@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
     /// <summary>
     /// A Normalize renderer for a <see cref="LineBreakInline"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{LineBreakInline}" />
+    /// <seealso cref="RoundtripObjectRenderer{LineBreakInline}" />
     public class LineBreakInlineRenderer : RoundtripObjectRenderer<LineBreakInline>
     {
         protected override void Write(RoundtripRenderer renderer, LineBreakInline obj)

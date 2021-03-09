@@ -10,7 +10,7 @@ namespace Markdig.Renderers.Roundtrip
     /// <summary>
     /// A Roundtrip renderer for a <see cref="ParagraphBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
+    /// <seealso cref="RoundtripObjectRenderer{ParagraphBlock}" />
     [DebuggerDisplay("renderer.Writer.ToString()")]
     public class ParagraphRenderer : RoundtripObjectRenderer<ParagraphBlock>
     {

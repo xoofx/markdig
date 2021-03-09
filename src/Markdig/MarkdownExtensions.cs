@@ -41,7 +41,7 @@ using Markdig.Extensions.ReferralLinks;
 namespace Markdig
 {
     /// <summary>
-    /// Provides extension methods for <see cref="MarkdownPipeline"/> to enable several Markdown extensions.
+    /// Provides extension methods for <see cref="MarkdownPipelineBuilder"/> to enable several Markdown extensions.
     /// </summary>
     public static class MarkdownExtensions
     {

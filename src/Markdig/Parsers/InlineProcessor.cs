@@ -35,6 +35,7 @@ namespace Markdig.Parsers
         /// <param name="parsers">The parsers.</param>
         /// <param name="preciseSourcelocation">A value indicating whether to provide precise source location.</param>
         /// <param name="context">A parser context used for the parsing.</param>
+        /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
         public InlineProcessor(MarkdownDocument document, InlineParserList parsers, bool preciseSourcelocation, MarkdownParserContext context, bool trackTrivia = false)

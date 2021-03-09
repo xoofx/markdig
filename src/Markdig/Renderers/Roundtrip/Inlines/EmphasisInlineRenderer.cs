@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
     /// <summary>
     /// A Normalize renderer for an <see cref="EmphasisInline"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{EmphasisInline}" />
+    /// <seealso cref="RoundtripObjectRenderer{EmphasisInline}" />
     public class EmphasisInlineRenderer : RoundtripObjectRenderer<EmphasisInline>
     {
         protected override void Write(RoundtripRenderer renderer, EmphasisInline obj)

@@ -9,7 +9,7 @@ namespace Markdig.Renderers.Roundtrip
     /// <summary>
     /// An Roundtrip renderer for a <see cref="HeadingBlock"/>.
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{HeadingBlock}" />
+    /// <seealso cref="RoundtripObjectRenderer{HeadingBlock}" />
     public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
     {
         private static readonly string[] HeadingTexts = {

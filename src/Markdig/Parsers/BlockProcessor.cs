@@ -41,6 +41,7 @@ namespace Markdig.Parsers
         /// <param name="document">The document to build blocks into.</param>
         /// <param name="parsers">The list of parsers.</param>
         /// <param name="context">A parser context used for the parsing.</param>
+        /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext context, bool trackTrivia = false)
