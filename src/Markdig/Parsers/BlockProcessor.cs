@@ -588,7 +588,7 @@ namespace Markdig.Parsers
                 }
                 if (TrackTrivia)
                 {
-                    if (LinesBefore != null && LinesBefore.Count > 0)
+                    if (LinesBefore is { Count: > 0 })
                     {
                         // single emptylines are significant for the syntax tree, attach
                         // them to the block

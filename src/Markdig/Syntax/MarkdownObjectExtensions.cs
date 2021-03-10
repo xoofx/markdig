@@ -119,7 +119,7 @@ namespace Markdig.Syntax
         /// </returns>
         public static IEnumerable<T> Descendants<T>(this ContainerBlock block) where T : Block
         {
-            if (block != null && block.Count > 0)
+            if (block is { Count: > 0 })
             {
                 return BlockDescendantsInternal<T>(block);
             }
@@ -133,7 +133,7 @@ namespace Markdig.Syntax
         {
             Debug.Assert(typeof(T).IsSubclassOf(typeof(Block)));
 
-            Stack<Block> stack = new Stack<Block>();
+            var stack = new Stack<Block>();
 
             int childrenCount = block.Count;
             while (childrenCount-- > 0)

@@ -36,7 +36,7 @@ namespace Markdig.Parsers
 
                 parser.Initialize();
                 parser.Index = i;
-                if (parser.OpeningCharacters != null && parser.OpeningCharacters.Length != 0)
+                if (parser.OpeningCharacters is { Length: > 0 })
                 {
                     foreach (var openingChar in parser.OpeningCharacters)
                     {
