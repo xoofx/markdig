@@ -31,6 +31,7 @@ namespace Markdig.Renderers
         {
             if (writer is null) ThrowHelper.ArgumentNullException_writer();
             this.writer = writer;
+            this.writer.NewLine = "\n";
         }
 
         /// <summary>
