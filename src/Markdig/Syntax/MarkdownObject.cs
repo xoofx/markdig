@@ -2,8 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using Markdig.Helpers;
+#nullable enable
+
 using System;
+using Markdig.Helpers;
 
 namespace Markdig.Syntax
 {
@@ -22,7 +24,7 @@ namespace Markdig.Syntax
         /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)
         /// so it will gives faster access than a Dictionary, and lower memory occupation
         /// </summary>
-        private DataEntries _attachedDatas;
+        private DataEntries? _attachedDatas;
 
         /// <summary>
         /// Gets or sets the text column this instance was declared (zero-based).
@@ -70,7 +72,7 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <returns>The associated data or null if none</returns>
         /// <exception cref="ArgumentNullException">if key is null</exception>
-        public object GetData(object key) => _attachedDatas?.GetData(key);
+        public object? GetData(object key) => _attachedDatas?.GetData(key);
 
         /// <summary>
         /// Removes the associated data for the specified key.
@@ -128,9 +130,9 @@ namespace Markdig.Syntax
                 _count++;
             }
 
-            public object GetData(object key)
+            public object? GetData(object key)
             {
-                if (key == null) ThrowHelper.ArgumentNullException_key();
+                if (key is null) ThrowHelper.ArgumentNullException_key();
 
                 DataEntry[] entries = _entries;
                 int count = _count;
@@ -149,7 +151,7 @@ namespace Markdig.Syntax
 
             public bool ContainsData(object key)
             {
-                if (key == null) ThrowHelper.ArgumentNullException_key();
+                if (key is null) ThrowHelper.ArgumentNullException_key();
 
                 DataEntry[] entries = _entries;
                 int count = _count;
@@ -167,7 +169,7 @@ namespace Markdig.Syntax
 
             public bool RemoveData(object key)
             {
-                if (key == null) ThrowHelper.ArgumentNullException_key();
+                if (key is null) ThrowHelper.ArgumentNullException_key();
 
                 DataEntry[] entries = _entries;
                 int count = _count;
