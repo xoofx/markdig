@@ -189,9 +189,9 @@ namespace Markdig.Parsers
             {
                 // If we have found a LinkReferenceDefinition, we can discard the previous paragraph
                 var iterator = lines.ToCharIterator();
-                if (LinkReferenceDefinition.TryParse(ref iterator, out LinkReferenceDefinition linkReferenceDefinition))
+                if (LinkReferenceDefinition.TryParse(ref iterator, out LinkReferenceDefinition? linkReferenceDefinition))
                 {
-                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label, linkReferenceDefinition, true);
+                    state.Document.SetLinkReferenceDefinition(linkReferenceDefinition.Label!, linkReferenceDefinition, true);
                     atLeastOneFound = true;
 
                     // Correct the locations of each field
@@ -224,7 +224,7 @@ namespace Markdig.Parsers
                 var iterator = lines.ToCharIterator();
                 if (LinkReferenceDefinition.TryParseTrivia(
                     ref iterator,
-                    out LinkReferenceDefinition lrd,
+                    out LinkReferenceDefinition? lrd,
                     out SourceSpan triviaBeforeLabel,
                     out SourceSpan labelWithTrivia,
                     out SourceSpan triviaBeforeUrl,
@@ -233,7 +233,7 @@ namespace Markdig.Parsers
                     out SourceSpan unescapedTitle,
                     out SourceSpan triviaAfterTitle))
                 {
-                    state.Document.SetLinkReferenceDefinition(lrd.Label, lrd, false);
+                    state.Document.SetLinkReferenceDefinition(lrd.Label!, lrd, false);
                     lrd.Parent = null; // remove LRDG parent from lrd
                     atLeastOneFound = true;
 
@@ -265,7 +265,7 @@ namespace Markdig.Parsers
                     state.LinesBefore = paragraph.LinesAfter; // ensure closed paragraph with linesafter placed back on stack
 
                     lines = iterator.Remaining();
-                    var index = paragraph.Parent.IndexOf(paragraph);
+                    var index = paragraph.Parent!.IndexOf(paragraph);
                     paragraph.Parent.Insert(index, lrd);
                 }
                 else

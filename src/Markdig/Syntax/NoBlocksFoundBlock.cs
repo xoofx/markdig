@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -12,7 +14,7 @@ namespace Markdig.Syntax
     /// </summary>
     public sealed class EmptyBlock  : LeafBlock
     {
-        public EmptyBlock (BlockParser parser) : base(parser)
+        public EmptyBlock (BlockParser? parser) : base(parser)
         {
         }
     }

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 
@@ -1778,7 +1780,7 @@ namespace Markdig.Extensions.Emoji
                 if (string.IsNullOrEmpty(smiley.Key) || string.IsNullOrEmpty(smiley.Value))
                     ThrowHelper.ArgumentException("The dictionaries cannot contain null or empty keys/values", nameof(smileyToShortcode));
 
-                if (!shortcodeToUnicode.TryGetValue(smiley.Value, out string unicode))
+                if (!shortcodeToUnicode.TryGetValue(smiley.Value, out string? unicode))
                     ThrowHelper.ArgumentException(string.Format("Invalid smiley target: {0} is not present in the emoji shortcodes dictionary", smiley.Value));
 
                 firstChars.Add(smiley.Key[0]);

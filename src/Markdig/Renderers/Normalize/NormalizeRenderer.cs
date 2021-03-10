@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Normalize.Inlines;
@@ -20,7 +22,7 @@ namespace Markdig.Renderers.Normalize
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="options">The normalize options</param>
-        public NormalizeRenderer(TextWriter writer, NormalizeOptions options = null) : base(writer)
+        public NormalizeRenderer(TextWriter writer, NormalizeOptions? options = null) : base(writer)
         {
             Options = options ?? new NormalizeOptions();
             // Default block renderers
@@ -131,7 +133,7 @@ namespace Markdig.Renderers.Normalize
         /// <returns>This instance</returns>
         public NormalizeRenderer WriteLeafRawLines(LeafBlock leafBlock, bool writeEndOfLines, bool indent = false)
         {
-            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
+            if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
             if (leafBlock.Lines.Lines != null)
             {
                 var lines = leafBlock.Lines;

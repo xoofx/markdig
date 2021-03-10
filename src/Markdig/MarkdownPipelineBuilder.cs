@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.IO;
 using Markdig.Helpers;
@@ -16,7 +18,7 @@ namespace Markdig
     /// <remarks>NOTE: A pipeline is not thread-safe.</remarks>
     public class MarkdownPipelineBuilder
     {
-        private MarkdownPipeline pipeline;
+        private MarkdownPipeline? pipeline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
@@ -74,7 +76,7 @@ namespace Markdig
         /// <summary>
         /// Gets or sets the debug log.
         /// </summary>
-        public TextWriter DebugLog { get; set; }
+        public TextWriter? DebugLog { get; set; }
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -85,9 +87,9 @@ namespace Markdig
         /// <summary>
         /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.
         /// </summary>
-        public event ProcessDocumentDelegate DocumentProcessed;
+        public event ProcessDocumentDelegate? DocumentProcessed;
 
-        internal ProcessDocumentDelegate GetDocumentProcessed => DocumentProcessed;
+        internal ProcessDocumentDelegate? GetDocumentProcessed => DocumentProcessed;
 
         /// <summary>
         /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.

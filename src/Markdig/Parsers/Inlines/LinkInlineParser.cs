@@ -116,7 +116,7 @@ namespace Markdig.Parsers.Inlines
         private bool ProcessLinkReference(
             InlineProcessor state,
             StringSlice text,
-            string? label,
+            string label,
             SourceSpan labelWithriviaSpan,
             bool isShortcut,
             SourceSpan labelSpan,
@@ -124,7 +124,7 @@ namespace Markdig.Parsers.Inlines
             int endPosition,
             LocalLabel localLabel)
         {
-            if (!state.Document.TryGetLinkReferenceDefinition(label, out LinkReferenceDefinition linkRef))
+            if (!state.Document.TryGetLinkReferenceDefinition(label, out LinkReferenceDefinition? linkRef))
             {
                 return false;
             }
@@ -137,7 +137,7 @@ namespace Markdig.Parsers.Inlines
             }
 
             // Create a default link if the callback was not found
-            if (link == null)
+            if (link is null)
             {
                 var labelWithTrivia = new StringSlice(text.Text, labelWithriviaSpan.Start, labelWithriviaSpan.End);
                 // Inline Link
@@ -164,7 +164,7 @@ namespace Markdig.Parsers.Inlines
             if (link is ContainerInline containerLink)
             {
                 var child = parent.FirstChild;
-                if (child == null)
+                if (child is null)
                 {
                     child = new LiteralInline()
                     {
@@ -373,7 +373,7 @@ namespace Markdig.Parsers.Inlines
                     labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);
                 }
 
-                if (ProcessLinkReference(inlineState, text, label, labelWithTrivia, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
+                if (ProcessLinkReference(inlineState, text, label!, labelWithTrivia, isShortcut, labelSpan, openParent, inlineState.GetSourcePosition(text.Start - 1), localLabel))
                 {
                     // Remove the open parent
                     openParent.Remove();

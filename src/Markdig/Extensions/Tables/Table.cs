@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Collections.Generic;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -25,7 +27,7 @@ namespace Markdig.Extensions.Tables
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        public Table(BlockParser parser) : base(parser)
+        public Table(BlockParser? parser) : base(parser)
         {
             ColumnDefinitions = new List<TableColumnDefinition>();
         }
@@ -83,8 +85,7 @@ namespace Markdig.Extensions.Tables
             var maxColumn = 0;
             for (int i = 0; i < this.Count; i++)
             {
-                var row = this[i] as TableRow;
-                if (row != null && row.Count > maxColumn)
+                if (this[i] is TableRow row && row.Count > maxColumn)
                 {
                     maxColumn = row.Count;
                 }
@@ -92,8 +93,7 @@ namespace Markdig.Extensions.Tables
 
             for (int i = 0; i < this.Count; i++)
             {
-                var row = this[i] as TableRow;
-                if (row != null)
+                if (this[i] is TableRow row)
                 {
                     for (int j = row.Count; j < maxColumn; j++)
                     {
@@ -124,8 +124,7 @@ namespace Markdig.Extensions.Tables
 
             for (int i = 0; i < this.Count; i++)
             {
-                var row = this[i] as TableRow;
-                if (row != null)
+                if (this[i] is TableRow row)
                 {
                     for (int j = row.Count; j < maxColumn; j++)
                     {

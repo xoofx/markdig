@@ -75,7 +75,7 @@ namespace Markdig.Extensions.Abbreviations
             return BlockState.BreakDiscard;
         }
 
-        private void DocumentOnProcessInlinesBegin(InlineProcessor inlineProcessor, Inline inline)
+        private void DocumentOnProcessInlinesBegin(InlineProcessor inlineProcessor, Inline? inline)
         {
             inlineProcessor.Document.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
 

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -25,7 +27,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the label of this link.
         /// </summary>
-        public string Label { get; set; }
+        public string? Label { get; set; }
 
         /// <summary>
         /// The label span

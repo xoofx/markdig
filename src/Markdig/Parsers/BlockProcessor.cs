@@ -48,8 +48,8 @@ namespace Markdig.Parsers
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia = false)
         {
-            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
-            if (parsers == null) ThrowHelper.ArgumentNullException(nameof(parsers));
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers is null) ThrowHelper.ArgumentNullException(nameof(parsers));
             TrackTrivia = trackTrivia;
             parserStateCache = new BlockParserStateCache(this);
             Document = document;
@@ -489,7 +489,7 @@ namespace Markdig.Parsers
             {
                 if (OpenedBlocks[i] == block)
                 {
-                    block.Parent.Remove(block);
+                    block.Parent!.Remove(block);
                     OpenedBlocks.RemoveAt(i);
                     break;
                 }
@@ -683,8 +683,7 @@ namespace Markdig.Parsers
                 }
 
                 // Else tries to match the Default with the current line
-                var parser = block.Parser;
-
+                var parser = block.Parser!;
 
                 // If we have a discard, we can remove it from the current state
                 UpdateLastBlockAndContainer(i);

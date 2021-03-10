@@ -25,7 +25,7 @@ namespace Markdig.Parsers
         private readonly BlockProcessor blockProcessor;
         private readonly InlineProcessor inlineProcessor;
         private readonly MarkdownDocument document;
-        private readonly ProcessDocumentDelegate documentProcessed;
+        private readonly ProcessDocumentDelegate? documentProcessed;
         private readonly bool preciseSourceLocation;
         private readonly bool trackTrivia;
 
@@ -43,8 +43,8 @@ namespace Markdig.Parsers
         /// </exception>
         private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext? context)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
-            if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
+            if (text is null) ThrowHelper.ArgumentNullException_text();
+            if (pipeline is null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
             trackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +27,7 @@ namespace Markdig.Syntax
         /// Initializes a new instance of the <see cref="ContainerBlock"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        protected ContainerBlock(BlockParser parser) : base(parser)
+        protected ContainerBlock(BlockParser? parser) : base(parser)
         {
             children = ArrayHelper.Empty<Block>();
         }
@@ -33,7 +35,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets the last child.
         /// </summary>
-        public Block LastChild => Count > 0 ? children[Count - 1] : null;
+        public Block? LastChild => Count > 0 ? children[Count - 1] : null;
 
         /// <summary>
         /// Specialize enumerator.
@@ -98,7 +100,7 @@ namespace Markdig.Syntax
             for (int i = 0; i < Count; i++)
             {
                 children[i].Parent = null;
-                children[i] = null;
+                children[i] = null!;
             }
 
             Count = 0;
@@ -106,7 +108,7 @@ namespace Markdig.Syntax
 
         public bool Contains(Block item)
         {
-            if (item == null)
+            if (item is null)
                 ThrowHelper.ArgumentNullException_item();
 
             for (int i = 0; i < Count; i++)
@@ -146,7 +148,7 @@ namespace Markdig.Syntax
 
         public int IndexOf(Block item)
         {
-            if (item == null)
+            if (item is null)
                 ThrowHelper.ArgumentNullException_item();
 
             for (int i = 0; i < Count; i++)
@@ -161,7 +163,7 @@ namespace Markdig.Syntax
 
         public void Insert(int index, Block item)
         {
-            if (item == null)
+            if (item is null)
                 ThrowHelper.ArgumentNullException_item();
 
             if (item.Parent != null)
@@ -198,7 +200,7 @@ namespace Markdig.Syntax
             {
                 Array.Copy(children, index + 1, children, index, Count - index);
             }
-            children[Count] = null;
+            children[Count] = null!;
         }
 
         public Block this[int index]
@@ -234,14 +236,14 @@ namespace Markdig.Syntax
 
         public void Sort(IComparer<Block> comparer)
         {
-            if (comparer == null) ThrowHelper.ArgumentNullException(nameof(comparer));
-            Array.Sort(children, 0, Count, comparer);
+            if (comparer is null) ThrowHelper.ArgumentNullException(nameof(comparer));
+            Array.Sort(children, 0, Count, comparer!);
         }
 
         public void Sort(Comparison<Block> comparison)
         {
             if (comparison == null) ThrowHelper.ArgumentNullException(nameof(comparison));
-            Array.Sort(children, 0, Count, new BlockComparer(comparison));
+            Array.Sort(children, 0, Count, new BlockComparer(comparison)!);
         }
 
         #region Nested type: Enumerator
@@ -251,7 +253,7 @@ namespace Markdig.Syntax
         {
             private readonly ContainerBlock block;
             private int index;
-            private Block current;
+            private Block? current;
 
             internal Enumerator(ContainerBlock block)
             {
@@ -260,10 +262,9 @@ namespace Markdig.Syntax
                 current = null;
             }
 
-            public Block Current => current;
+            public Block Current => current!;
 
             object IEnumerator.Current => Current;
-
 
             public void Dispose()
             {
@@ -305,9 +306,9 @@ namespace Markdig.Syntax
                 this.comparison = comparison;
             }
 
-            public int Compare(Block x, Block y)
+            public int Compare(Block? x, Block? y)
             {
-                return comparison(x, y);
+                return comparison(x!, y!);
             }
         }
     }

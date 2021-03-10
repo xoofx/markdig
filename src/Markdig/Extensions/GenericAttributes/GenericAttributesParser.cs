@@ -45,7 +45,7 @@ namespace Markdig.Extensions.GenericAttributes
                         }
                     }
                 }
-                var objectToAttach = inline == null || inline == processor.Root ? (MarkdownObject) processor.Block : inline;
+                var objectToAttach = inline is null || inline == processor.Root ? (MarkdownObject)processor.Block : inline;
 
                 // If the current block is a Paragraph, but only the HtmlAttributes is used,
                 // Try to attach the attributes to the following block

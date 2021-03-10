@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 namespace Markdig.Parsers
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Defines the characters that are used for detecting this list item.
         /// </summary>
-        public char[] OpeningCharacters { get; protected set; }
+        public char[]? OpeningCharacters { get; protected set; }
 
         /// <summary>
         /// Tries to parse the current input as a list item for this particular instance.

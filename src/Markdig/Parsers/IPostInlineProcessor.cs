@@ -23,6 +23,6 @@ namespace Markdig.Parsers
         /// <param name="isFinalProcessing"></param>
         /// <returns><c>true</c> to continue to the next delimiter processor;
         /// <c>false</c> to stop the process (in case a processor is performing sub-sequent processor itself)</returns>
-        bool PostProcess(InlineProcessor state, Inline root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing);
+        bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing);
     }
 }

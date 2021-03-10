@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -17,8 +19,8 @@ namespace Markdig.Renderers
     public abstract class RendererBase : IMarkdownRenderer
     {
         private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
-        private IMarkdownObjectRenderer previousRenderer;
-        private Type previousObjectType;
+        private IMarkdownObjectRenderer? previousRenderer;
+        private Type? previousObjectType;
         internal int childrenDepth = 0;
 
         /// <summary>
@@ -41,12 +43,12 @@ namespace Markdig.Renderers
         /// <summary>
         /// Occurs when before writing an object.
         /// </summary>
-        public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteBefore;
+        public event Action<IMarkdownRenderer, MarkdownObject>? ObjectWriteBefore;
 
         /// <summary>
         /// Occurs when after writing an object.
         /// </summary>
-        public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteAfter;
+        public event Action<IMarkdownRenderer, MarkdownObject>? ObjectWriteAfter;
 
         /// <summary>
         /// Writes the children of the specified <see cref="ContainerBlock"/>.
@@ -54,7 +56,7 @@ namespace Markdig.Renderers
         /// <param name="containerBlock">The container block.</param>
         public void WriteChildren(ContainerBlock containerBlock)
         {
-            if (containerBlock == null)
+            if (containerBlock is null)
             {
                 return;
             }
@@ -129,7 +131,7 @@ namespace Markdig.Renderers
 
             var objectType = obj.GetType();
 
-            IMarkdownObjectRenderer renderer;
+            IMarkdownObjectRenderer? renderer;
 
             // Handle regular renderers
             if (objectType == previousObjectType)

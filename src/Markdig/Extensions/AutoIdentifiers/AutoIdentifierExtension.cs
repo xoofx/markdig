@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.IO;
 using Markdig.Helpers;
@@ -95,11 +97,11 @@ namespace Markdig.Extensions.AutoIdentifiers
             headingBlock.ProcessInlinesEnd += HeadingBlock_ProcessInlinesEnd;
         }
 
-        private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline inline)
+        private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline? inline)
         {
             var doc = processor.Document;
             doc.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
-            var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this);
+            var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this)!;
             foreach (var keyPair in dictionary)
             {
                 // Here we make sure that auto-identifiers will not override an existing link definition
@@ -118,7 +120,7 @@ namespace Markdig.Extensions.AutoIdentifiers
         /// Callback when there is a reference to found to a heading.
         /// Note that reference are only working if they are declared after.
         /// </summary>
-        private Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline child)
+        private Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline? child)
         {
             var headingRef = (HeadingLinkReferenceDefinition) linkRef;
             return new LinkInline()
@@ -135,23 +137,23 @@ namespace Markdig.Extensions.AutoIdentifiers
         /// </summary>
         /// <param name="processor">The processor.</param>
         /// <param name="inline">The inline.</param>
-        private void HeadingBlock_ProcessInlinesEnd(InlineProcessor processor, Inline inline)
+        private void HeadingBlock_ProcessInlinesEnd(InlineProcessor processor, Inline? inline)
         {
             var identifiers = processor.Document.GetData(AutoIdentifierKey) as HashSet<string>;
-            if (identifiers == null)
+            if (identifiers is null)
             {
                 identifiers = new HashSet<string>();
                 processor.Document.SetData(AutoIdentifierKey, identifiers);
             }
 
-            var headingBlock = (HeadingBlock) processor.Block;
-            if (headingBlock.Inline == null)
+            var headingBlock = (HeadingBlock) processor.Block!;
+            if (headingBlock.Inline is null)
             {
                 return;
             }
 
             // If id is already set, don't try to modify it
-            var attributes = processor.Block.GetAttributes();
+            var attributes = processor.Block!.GetAttributes();
             if (attributes.Id != null)
             {
                 return;
@@ -161,7 +163,7 @@ namespace Markdig.Extensions.AutoIdentifiers
             var stripRenderer = rendererCache.Get();
 
             stripRenderer.Render(headingBlock.Inline);
-            var headingText = stripRenderer.Writer.ToString();
+            var headingText = stripRenderer.Writer.ToString()!;
             rendererCache.Release(stripRenderer);
 
             // Urilize the link

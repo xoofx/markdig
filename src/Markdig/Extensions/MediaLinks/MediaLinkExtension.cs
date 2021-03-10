@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -20,7 +22,7 @@ namespace Markdig.Extensions.MediaLinks
         {
         }
 
-        public MediaLinkExtension(MediaOptions options)
+        public MediaLinkExtension(MediaOptions? options)
         {
             Options = options ?? new MediaOptions();
         }
@@ -53,7 +55,7 @@ namespace Markdig.Extensions.MediaLinks
 
             bool isSchemaRelative = false;
             // Only process absolute Uri
-            if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out Uri uri) || !uri.IsAbsoluteUri)
+            if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out Uri? uri) || !uri.IsAbsoluteUri)
             {
                 // see https://tools.ietf.org/html/rfc3986#section-4.2
                 // since relative uri doesn't support many properties, "http" is used as a placeholder here.
@@ -98,7 +100,7 @@ namespace Markdig.Extensions.MediaLinks
             // Otherwise try to detect if we have an audio/video from the file extension
             var lastDot = path.LastIndexOf('.');
             if (lastDot >= 0 &&
-                Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out string mimeType))
+                Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out string? mimeType))
             {
                 var htmlAttributes = GetHtmlAttributes(linkInline);
                 var isAudio = mimeType.StartsWith("audio");
@@ -126,9 +128,8 @@ namespace Markdig.Extensions.MediaLinks
 
         private bool TryRenderIframeFromKnownProviders(Uri uri, bool isSchemaRelative, HtmlRenderer renderer, LinkInline linkInline)
         {
-
-            IHostProvider foundProvider = null;
-            string iframeUrl = null;
+            IHostProvider? foundProvider = null;
+            string? iframeUrl = null;
             foreach (var provider in Options.Hosts)
             {
                 if (!provider.TryHandle(uri, isSchemaRelative, out iframeUrl))
@@ -137,7 +138,7 @@ namespace Markdig.Extensions.MediaLinks
                 break;
             }
 
-            if (foundProvider == null)
+            if (foundProvider is null)
             {
                 return false;
             }
@@ -156,8 +157,8 @@ namespace Markdig.Extensions.MediaLinks
             if (!string.IsNullOrEmpty(Options.Class))
                 htmlAttributes.AddClass(Options.Class);
 
-            if (!string.IsNullOrEmpty(foundProvider.Class))
-                htmlAttributes.AddClass(foundProvider.Class);
+            if (foundProvider.Class is { Length: > 0 } className)
+                htmlAttributes.AddClass(className);
 
             htmlAttributes.AddPropertyIfNotExist("frameborder", "0");
             if (foundProvider.AllowFullScreen)

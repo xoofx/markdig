@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Threading;
 
 namespace Markdig.Helpers
@@ -23,14 +25,14 @@ namespace Markdig.Helpers
             public T[] Rent()
             {
                 T[][] buffers = _buffers;
-                T[] buffer = null;
+                T[] buffer = null!;
                 if (Interlocked.CompareExchange(ref _lock, 1, 0) == 0)
                 {
                     int index = _index;
                     if ((uint)index < (uint)buffers.Length)
                     {
                         buffer = buffers[index];
-                        buffers[index] = null;
+                        buffers[index] = null!;
                         _index = index + 1;
                     }
                     Interlocked.Decrement(ref _lock);
@@ -64,17 +66,16 @@ namespace Markdig.Helpers
             _bucket32 = new Bucket(size32);
         }
 
-        private Bucket SelectBucket(int length)
+        private Bucket? SelectBucket(int length)
         {
-            switch (length)
+            return length switch
             {
-                case 4: return _bucket4;
-                case 8: return _bucket8;
-                case 16: return _bucket16;
-                case 32: return _bucket32;
-
-                default: return null;
-            }
+                4  => _bucket4,
+                8  => _bucket8,
+                16 => _bucket16,
+                32 => _bucket32,
+                _  => null
+            };
         }
 
         public T[] Rent(int length)

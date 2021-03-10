@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace Markdig.Syntax
         /// Initializes a new instance of the <see cref="Block"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        protected Block(BlockParser parser)
+        protected Block(BlockParser? parser)
         {
             Parser = parser;
             IsOpen = true;
@@ -28,12 +30,12 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets the parent of this container. May be null.
         /// </summary>
-        public ContainerBlock Parent { get; internal set;  }
+        public ContainerBlock? Parent { get; internal set;  }
 
         /// <summary>
         /// Gets the parser associated to this instance.
         /// </summary>
-        public BlockParser Parser { get; }
+        public BlockParser? Parser { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is still open.
@@ -73,23 +75,23 @@ namespace Markdig.Syntax
         /// Gets or sets the empty lines occurring before this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
-        public List<StringSlice> LinesBefore { get; set; }
+        public List<StringSlice>? LinesBefore { get; set; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring after this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
-        public List<StringSlice> LinesAfter { get; set; }
+        public List<StringSlice>? LinesAfter { get; set; }
 
         /// <summary>
         /// Occurs when the process of inlines begin.
         /// </summary>
-        public event ProcessInlineDelegate ProcessInlinesBegin;
+        public event ProcessInlineDelegate? ProcessInlinesBegin;
 
         /// <summary>
         /// Occurs when the process of inlines ends for this instance.
         /// </summary>
-        public event ProcessInlineDelegate ProcessInlinesEnd;
+        public event ProcessInlineDelegate? ProcessInlinesEnd;
 
         /// <summary>
         /// Called when the process of inlines begin.

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -171,9 +173,9 @@ namespace Markdig.Extensions.SmartyPants
                 var quotePants = GetOrCreateState(processor);
 
                 // Register only if we don't have yet any quotes
-                if (quotePants.Count == 0)
+                if (quotePants.Count is 0)
                 {
-                    processor.Block.ProcessInlinesEnd += BlockOnProcessInlinesEnd;
+                    processor.Block!.ProcessInlinesEnd += BlockOnProcessInlinesEnd;
                 }
                 quotePants.Add(pant);
             }
@@ -203,13 +205,13 @@ namespace Markdig.Extensions.SmartyPants
             }
         }
 
-        private void BlockOnProcessInlinesEnd(InlineProcessor processor, Inline inline)
+        private void BlockOnProcessInlinesEnd(InlineProcessor processor, Inline? inline)
         {
-            processor.Block.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
+            processor.Block!.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
 
             var pants = (ListSmartyPants) processor.ParserStates[Index];
 
-            Stack<Opener> openers = new Stack<Opener>(4);
+            var openers = new Stack<Opener>(4);
 
             for (int i = 0; i < pants.Count; i++)
             {
@@ -219,17 +221,17 @@ namespace Markdig.Extensions.SmartyPants
                 int type;
                 bool isLeft;
 
-                if (quoteType == SmartyPantType.LeftQuote || quoteType == SmartyPantType.RightQuote)
+                if (quoteType is SmartyPantType.LeftQuote or SmartyPantType.RightQuote)
                 {
                     type = 0;
                     isLeft = quoteType == SmartyPantType.LeftQuote;
                 }
-                else if (quoteType == SmartyPantType.LeftDoubleQuote || quoteType == SmartyPantType.RightDoubleQuote)
+                else if (quoteType is SmartyPantType.LeftDoubleQuote or SmartyPantType.RightDoubleQuote)
                 {
                     type = 1;
                     isLeft = quoteType == SmartyPantType.LeftDoubleQuote;
                 }
-                else if (quoteType == SmartyPantType.LeftAngleQuote || quoteType == SmartyPantType.RightAngleQuote)
+                else if (quoteType is SmartyPantType.LeftAngleQuote or SmartyPantType.RightAngleQuote)
                 {
                     type = 2;
                     isLeft = quoteType == SmartyPantType.LeftAngleQuote;
@@ -280,11 +282,15 @@ namespace Markdig.Extensions.SmartyPants
             pants.Clear();
         }
 
-        bool IPostInlineProcessor.PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex,
+        bool IPostInlineProcessor.PostProcess(
+            InlineProcessor state,
+            Inline? root,
+            Inline? lastChild,
+            int postInlineProcessorIndex,
             bool isFinalProcessing)
         {
             // Don't try to process anything if there are no dash
-            if (!(state.ParserStates[Index] is ListSmartyPants quotePants) || !quotePants.HasDash)
+            if (!(state.ParserStates[Index] is ListSmartyPants { HasDash: false }))
             {
                 return true;
             }
@@ -339,9 +345,9 @@ namespace Markdig.Extensions.SmartyPants
                             next = postLiteral;
                         }
                     }
-                    else if (child is ContainerInline)
+                    else if (child is ContainerInline childContainer)
                     {
-                        pendingContainers.Push(((ContainerInline)child).FirstChild);
+                        pendingContainers.Push(childContainer.FirstChild!);
                     }
 
                     child = next;

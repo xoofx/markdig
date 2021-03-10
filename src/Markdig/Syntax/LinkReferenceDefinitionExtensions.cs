@@ -2,6 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
+
 using Markdig.Helpers;
 
 namespace Markdig.Syntax
@@ -26,12 +30,12 @@ namespace Markdig.Syntax
 
         public static void SetLinkReferenceDefinition(this MarkdownDocument document, string label, LinkReferenceDefinition linkReferenceDefinition, bool addGroup)
         {
-            if (label == null) ThrowHelper.ArgumentNullException_label();
+            if (label is null) ThrowHelper.ArgumentNullException_label();
             var references = document.GetLinkReferenceDefinitions(addGroup);
             references.Set(label, linkReferenceDefinition);
         }
 
-        public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, out LinkReferenceDefinition linkReferenceDefinition)
+        public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, [NotNullWhen(true)] out LinkReferenceDefinition? linkReferenceDefinition)
         {
             if (label == null) ThrowHelper.ArgumentNullException_label();
             linkReferenceDefinition = null;

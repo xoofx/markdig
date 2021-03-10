@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Parsers;
 using Markdig.Syntax;
 
@@ -24,7 +26,7 @@ namespace Markdig.Extensions.Tables
         /// Initializes a new instance of the <see cref="TableCell"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        public TableCell(BlockParser parser) : base(parser)
+        public TableCell(BlockParser? parser) : base(parser)
         {
             AllowClose = true;
             ColumnSpan = 1;

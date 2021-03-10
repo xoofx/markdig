@@ -1071,7 +1071,13 @@ namespace Markdig.Helpers
                 segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
         }
 
-        public static bool TryParseLinkReferenceDefinition<T>(ref T text, out string? label, out string? url, out string? title, out SourceSpan labelSpan, out SourceSpan urlSpan, out SourceSpan titleSpan) where T : ICharIterator
+        public static bool TryParseLinkReferenceDefinition<T>(ref T text,
+            out string? label,
+            out string? url,
+            out string? title,
+            out SourceSpan labelSpan,
+            out SourceSpan urlSpan,
+            out SourceSpan titleSpan) where T : ICharIterator
         {
             url = null;
             title = null;
@@ -1305,32 +1311,32 @@ namespace Markdig.Helpers
             return true;
         }
 
-        public static bool TryParseLabel<T>(T lines, out string? label) where T : ICharIterator
+        public static bool TryParseLabel<T>(T lines, [NotNullWhen(true)] out string? label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
-        public static bool TryParseLabel<T>(T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, out string? label) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, [NotNullWhen(true)] out string? label) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabel(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabelTrivia<T>(ref T lines, out string? label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabelTrivia<T>(ref T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             return TryParseLabelTrivia(ref lines, false, out label, out labelSpan);
         }
 
-        public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, out string? label, out SourceSpan labelSpan) where T : ICharIterator
+        public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
         {
             label = null;
             char c = lines.CurrentChar;

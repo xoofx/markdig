@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -33,7 +35,7 @@ namespace Markdig.Parsers.Inlines
             var saved = slice;
             int line;
             int column;
-            if (LinkHelper.TryParseAutolink(ref slice, out string link, out bool isEmail))
+            if (LinkHelper.TryParseAutolink(ref slice, out string? link, out bool isEmail))
             {
                 processor.Inline = new AutolinkInline()
                 {

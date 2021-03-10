@@ -121,7 +121,7 @@ namespace Markdig.Parsers
 
         private BlockState TryContinueListItem(BlockProcessor state, ListItemBlock listItem)
         {
-            var list = (ListBlock)listItem.Parent;
+            var list = (ListBlock)listItem.Parent!;
 
             // Allow all blanks lines if the last block is a fenced code block
             // Allow 1 blank line inside a list
@@ -337,7 +337,7 @@ namespace Markdig.Parsers
                     lastListItem.LastChild is BlankLineBlock)
                 {
                     // Inform the outer list that we have a blank line
-                    var parentList = (ListBlock)parentListItemBlock.Parent;
+                    var parentList = (ListBlock)parentListItemBlock.Parent!;
 
                     parentList.CountAllBlankLines++;
                     parentListItemBlock.Add(new BlankLineBlock());
