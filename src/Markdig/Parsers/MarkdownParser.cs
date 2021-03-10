@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -41,10 +39,10 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext? context)
+        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
         {
-            if (text is null) ThrowHelper.ArgumentNullException_text();
-            if (pipeline is null) ThrowHelper.ArgumentNullException(nameof(pipeline));
+            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
             trackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;
@@ -75,7 +73,7 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
-        public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
@@ -120,8 +118,8 @@ namespace Markdig.Parsers
                 {
                     if (trackTrivia)
                     {
-                        Block? lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock is null && document.Count == 0)
+                        Block lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock == null && document.Count == 0)
                         {
                             // this means we have unassigned characters
                             var noBlocksFoundBlock = new EmptyBlock (null);
@@ -157,29 +155,20 @@ namespace Markdig.Parsers
             return text.Replace('\0', CharHelper.ReplacementChar);
         }
 
-        private sealed class ContainerItemCache : DefaultObjectCache<ContainerItem>
-        {
-            protected override void Reset(ContainerItem instance)
-            {
-                instance.Container = null;
-                instance.Index = 0;
-            }
-        }
-
         private void ProcessInlines()
         {
             // "stackless" processor
-            var cache = new ContainerItemCache();
-            var blocks = new Stack<ContainerItem>();
+            int blockCount = 1;
+            var blocks = new ContainerItem[4];
 
-            // TODO: Use an ObjectCache for ContainerItem
-            blocks.Push(new ContainerItem(document));
+            blocks[0] = new ContainerItem(document);
             document.OnProcessInlinesBegin(inlineProcessor);
-            while (blocks.Count > 0)
+
+            while (blockCount != 0)
             {
                 process_new_block:
-                var item = blocks.Peek();
-                var container = item.Container!;
+                ref ContainerItem item = ref blocks[blockCount - 1];
+                var container = item.Container;
 
                 for (; item.Index < container.Count; item.Index++)
                 {
@@ -214,37 +203,33 @@ namespace Markdig.Parsers
                             // Else we have processed it
                             item.Index++;
                         }
-                        var newItem = cache.Get();
-                        newItem.Container = (ContainerBlock)block;
-                        block.OnProcessInlinesBegin(inlineProcessor);
-                        newItem.Index = 0;
-                        ThrowHelper.CheckDepthLimit(blocks.Count);
-                        blocks.Push(newItem);
+
+                        if (blockCount == blocks.Length)
+                        {
+                            Array.Resize(ref blocks, blockCount * 2);
+                            ThrowHelper.CheckDepthLimit(blocks.Length);
+                        }
+                        blocks[blockCount++] = new ContainerItem(newContainer);
+                        newContainer.OnProcessInlinesBegin(inlineProcessor);
                         goto process_new_block;
                     }
                 }
-                item = blocks.Pop();
-                container = item.Container!;
                 container.OnProcessInlinesEnd(inlineProcessor);
-
-                cache.Release(item);
+                blocks[--blockCount] = default;
             }
         }
 
-        private sealed class ContainerItem
+        private struct ContainerItem
         {
-            public ContainerItem()
-            {
-            }
-
             public ContainerItem(ContainerBlock container)
             {
                 Container = container;
+                Index = 0;
             }
 
-            public ContainerBlock? Container { get; set; }
+            public readonly ContainerBlock Container;
 
-            public int Index { get; set; }
+            public int Index;
         }
     }
 }

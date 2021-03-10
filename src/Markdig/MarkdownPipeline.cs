@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers;
@@ -68,40 +69,76 @@ namespace Markdig
         }
 
 
-        private HtmlRendererCache _rendererCache = null;
+        private HtmlRendererCache _rendererCache, _rendererCacheForCustomWriter;
 
-        internal HtmlRenderer GetCacheableHtmlRenderer()
+        internal RentedHtmlRenderer RentHtmlRenderer(TextWriter writer = null)
         {
-            if (_rendererCache is null)
+            HtmlRendererCache cache = writer is null
+                ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false)
+                : _rendererCacheForCustomWriter ??= new HtmlRendererCache(this, customWriter: true);
+
+            HtmlRenderer renderer = cache.Get();
+
+            if (writer is not null)
             {
-                _rendererCache = new HtmlRendererCache
-                {
-                    OnNewInstanceCreated = Setup
-                };
+                renderer.Writer = writer;
             }
-            return _rendererCache.Get();
-        }
-        internal void ReleaseCacheableHtmlRenderer(HtmlRenderer renderer)
-        {
-            _rendererCache.Release(renderer);
+
+            return new RentedHtmlRenderer(cache, renderer);
         }
 
-        private sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
+        internal sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
         {
-            public Action<HtmlRenderer> OnNewInstanceCreated;
+            private const int InitialCapacity = 1024;
+
+            private static readonly StringWriter _dummyWriter = new();
+
+            private readonly MarkdownPipeline _pipeline;
+            private readonly bool _customWriter;
+
+            public HtmlRendererCache(MarkdownPipeline pipeline, bool customWriter = false)
+            {
+                _pipeline = pipeline;
+                _customWriter = customWriter;
+            }
 
             protected override HtmlRenderer NewInstance()
             {
-                var writer = new StringWriter();
+                var writer = _customWriter ? _dummyWriter : new StringWriter(new StringBuilder(InitialCapacity));
                 var renderer = new HtmlRenderer(writer);
-                OnNewInstanceCreated(renderer);
+                _pipeline.Setup(renderer);
                 return renderer;
             }
 
             protected override void Reset(HtmlRenderer instance)
             {
-                instance.Reset();
+                instance.ResetInternal();
+
+                if (_customWriter)
+                {
+                    instance.Writer = _dummyWriter;
+                }
+                else
+                {
+                    ((StringWriter)instance.Writer).GetStringBuilder().Length = 0;
+                }
+
             }
         }
+
+        internal readonly struct RentedHtmlRenderer : IDisposable
+        {
+            private readonly HtmlRendererCache _cache;
+            public readonly HtmlRenderer Instance;
+
+            internal RentedHtmlRenderer(HtmlRendererCache cache, HtmlRenderer renderer)
+            {
+                _cache = cache;
+                Instance = renderer;
+            }
+
+            public void Dispose() => _cache.Release(Instance);
+        }
+
     }
 }
