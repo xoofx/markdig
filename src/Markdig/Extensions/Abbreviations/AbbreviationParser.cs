@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -41,7 +43,7 @@ namespace Markdig.Extensions.Abbreviations
                 return BlockState.None;
             }
 
-            if (!LinkHelper.TryParseLabel(ref slice, out string label, out SourceSpan labelSpan))
+            if (!LinkHelper.TryParseLabel(ref slice, out string? label, out SourceSpan labelSpan))
             {
                 return BlockState.None;
             }
@@ -89,10 +91,10 @@ namespace Markdig.Extensions.Abbreviations
 
             inlineProcessor.LiteralInlineParser.PostMatch += (InlineProcessor processor, ref StringSlice slice) =>
             {
-                var literal = (LiteralInline)processor.Inline;
+                var literal = (LiteralInline)processor.Inline!;
                 var originalLiteral = literal;
 
-                ContainerInline container = null;
+                ContainerInline? container = null;
 
                 // This is slow, but we don't have much the choice
                 var content = literal.Content;

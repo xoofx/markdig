@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -175,7 +177,6 @@ namespace Markdig.Parsers
         private const string EndOfComment = "-->";
         private const string EndOfCDATA = "]]>";
         private const string EndOfProcessingInstruction = "?>";
-
 
         private BlockState MatchEnd(BlockProcessor state, HtmlBlock htmlBlock)
         {

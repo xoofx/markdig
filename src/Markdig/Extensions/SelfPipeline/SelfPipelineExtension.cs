@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using Markdig.Helpers;
 using Markdig.Renderers;
@@ -24,7 +26,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// <param name="tag">The matching start tag.</param>
         /// <param name="defaultExtensions">The default extensions.</param>
         /// <exception cref="ArgumentException">Tag cannot contain angle brackets</exception>
-        public SelfPipelineExtension(string tag = null, string defaultExtensions = null)
+        public SelfPipelineExtension(string? tag = null, string? defaultExtensions = null)
         {
             tag = tag?.Trim();
             tag = string.IsNullOrEmpty(tag) ? DefaultTag : tag;
@@ -46,7 +48,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// <summary>
         /// Gets the default pipeline to configure if no tag was found in the input text. Default is <c>null</c> (core pipeline).
         /// </summary>
-        public string DefaultExtensions { get; }
+        public string? DefaultExtensions { get; }
 
         /// <summary>
         /// Gets the self pipeline hint tag start that will be matched.
@@ -78,7 +80,7 @@ namespace Markdig.Extensions.SelfPipeline
             if (inputText == null) ThrowHelper.ArgumentNullException(nameof(inputText));
 
             var builder = new MarkdownPipelineBuilder();
-            string defaultConfig = DefaultExtensions;
+            string? defaultConfig = DefaultExtensions;
             var indexOfSelfPipeline = inputText.IndexOf(SelfPipelineHintTagStart, StringComparison.OrdinalIgnoreCase);
             if (indexOfSelfPipeline >= 0)
             {
@@ -90,7 +92,7 @@ namespace Markdig.Extensions.SelfPipeline
                 }
             }
 
-            if (!string.IsNullOrEmpty(defaultConfig))
+            if (defaultConfig is { Length: > 0 })
             {
                 builder.Configure(defaultConfig);
             }

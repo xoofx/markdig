@@ -2,9 +2,12 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Markdig.Extensions.MediaLinks
@@ -13,12 +16,23 @@ namespace Markdig.Extensions.MediaLinks
     {
         private sealed class DelegateProvider : IHostProvider
         {
-            public string HostPrefix { get; set; }
-            public Func<Uri, string> Delegate { get; set; }
-            public bool AllowFullScreen { get; set; } = true;
-            public string Class { get; set; }
+            public DelegateProvider(string hostPrefix, Func<Uri, string?> handler, bool allowFullscreen = true, string? className = null)
+            {
+                HostPrefix = hostPrefix;
+                Delegate = handler;
+                AllowFullScreen = allowFullscreen;
+                Class = className;
+            }
 
-            public bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl)
+            public string HostPrefix { get; }
+
+            public Func<Uri, string?> Delegate { get; }
+
+            public bool AllowFullScreen { get; }
+
+            public string? Class { get; }
+
+            public bool TryHandle(Uri mediaUri, bool isSchemaRelative, [NotNullWhen(true)] out string? iframeUrl)
             {
                 if (!mediaUri.Host.StartsWith(HostPrefix, StringComparison.OrdinalIgnoreCase))
                 {
@@ -38,14 +52,14 @@ namespace Markdig.Extensions.MediaLinks
         /// <param name="allowFullScreen">Should the generated iframe has allowfullscreen attribute.</param>
         /// <param name="iframeClass">"class" attribute of generated iframe.</param>
         /// <returns>A <see cref="IHostProvider"/> with delegate handler.</returns>
-        public static IHostProvider Create(string hostPrefix, Func<Uri, string> handler, bool allowFullScreen = true, string iframeClass = null)
+        public static IHostProvider Create(string hostPrefix, Func<Uri, string?> handler, bool allowFullScreen = true, string? iframeClass = null)
         {
             if (string.IsNullOrEmpty(hostPrefix))
                 ThrowHelper.ArgumentException("hostPrefix is null or empty.", nameof(hostPrefix));
             if (handler == null)
                 ThrowHelper.ArgumentNullException(nameof(handler));
 
-            return new DelegateProvider { HostPrefix = hostPrefix, Delegate = handler, AllowFullScreen = allowFullScreen, Class = iframeClass };
+            return new DelegateProvider(hostPrefix, handler, allowFullScreen, iframeClass);
         }
 
         internal static Dictionary<string, IHostProvider> KnownHosts { get; }
@@ -67,7 +81,7 @@ namespace Markdig.Extensions.MediaLinks
             return query.Split(SplitAnd, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private static string YouTube(Uri uri)
+        private static string? YouTube(Uri uri)
         {
             string uriPath = uri.AbsolutePath;
             if (string.Equals(uriPath, "/embed", StringComparison.OrdinalIgnoreCase) || uriPath.StartsWith("/embed/", StringComparison.OrdinalIgnoreCase))
@@ -85,7 +99,7 @@ namespace Markdig.Extensions.MediaLinks
             );
         }
 
-        private static string YouTubeShortened(Uri uri)
+        private static string? YouTubeShortened(Uri uri)
         {
             return BuildYouTubeIframeUrl(
                 uri.AbsolutePath.Substring(1),
@@ -93,7 +107,7 @@ namespace Markdig.Extensions.MediaLinks
             );
         }
 
-        private static string BuildYouTubeIframeUrl(string videoId, string startTime)
+        private static string? BuildYouTubeIframeUrl(string? videoId, string? startTime)
         {
             if (string.IsNullOrEmpty(videoId))
             {
@@ -103,29 +117,25 @@ namespace Markdig.Extensions.MediaLinks
             return string.IsNullOrEmpty(startTime) ? url : $"{url}?start={startTime}";
         }
 
-        private static string Vimeo(Uri uri)
+        private static string? Vimeo(Uri uri)
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
             return items.Length > 0 ? $"https://player.vimeo.com/video/{ items[items.Length - 1] }" : null;
         }
 
-        private static string Odnoklassniki(Uri uri)
+        private static string? Odnoklassniki(Uri uri)
         {
             var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
             return items.Length > 0 ? $"https://ok.ru/videoembed/{ items[items.Length - 1] }" : null;
         }
 
-        private static string Yandex(Uri uri)
+        private static string? Yandex(Uri uri)
         {
-            var items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
-            var albumKeyword
-                = items.Skip(0).FirstOrDefault();
-            var albumId
-                = items.Skip(1).FirstOrDefault();
-            var trackKeyword
-                = items.Skip(2).FirstOrDefault();
-            var trackId
-                = items.Skip(3).FirstOrDefault();
+            string[] items = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped).Split('/');
+            string? albumKeyword = items.Skip(0).FirstOrDefault();
+            string? albumId = items.Skip(1).FirstOrDefault();
+            string? trackKeyword = items.Skip(2).FirstOrDefault();
+            string? trackId = items.Skip(3).FirstOrDefault();
 
             if (albumKeyword != "album" || albumId == null || trackKeyword != "track" || trackId == null)
             {

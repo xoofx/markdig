@@ -214,7 +214,7 @@ namespace Markdig.Extensions.Tables
                 }
             }
 
-            if (currentRow != null && currentRow.Count > 0)
+            if (currentRow is { Count: > 0 })
             {
                 gridTable.Add(currentRow);
             }

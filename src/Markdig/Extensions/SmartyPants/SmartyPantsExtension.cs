@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
@@ -16,7 +18,7 @@ namespace Markdig.Extensions.SmartyPants
         /// Initializes a new instance of the <see cref="SmartyPantsExtension"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        public SmartyPantsExtension(SmartyPantOptions options)
+        public SmartyPantsExtension(SmartyPantOptions? options)
         {
             Options = options ?? new SmartyPantOptions();
         }

@@ -363,7 +363,7 @@ namespace Markdig.Renderers
                 Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
             }
 
-            if (attributes.Classes != null && attributes.Classes.Count > 0)
+            if (attributes.Classes is { Count: > 0 })
             {
                 Write(" class=\"");
                 for (int i = 0; i < attributes.Classes.Count; i++)
@@ -378,7 +378,7 @@ namespace Markdig.Renderers
                 Write("\"");
             }
 
-            if (attributes.Properties != null && attributes.Properties.Count > 0)
+            if (attributes.Properties is { Count: > 0 })
             {
                 foreach (var property in attributes.Properties)
                 {

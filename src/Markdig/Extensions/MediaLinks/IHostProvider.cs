@@ -2,7 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Markdig.Extensions.MediaLinks
 {
@@ -14,7 +17,7 @@ namespace Markdig.Extensions.MediaLinks
         /// <summary>
         /// "class" attribute of generated iframe.
         /// </summary>
-        string Class { get; }
+        string? Class { get; }
 
         /// <summary>
         /// Generate url for iframe.
@@ -23,7 +26,7 @@ namespace Markdig.Extensions.MediaLinks
         /// <param name="isSchemaRelative"><see langword="true"/> if <paramref name="mediaUri"/> is a schema relative uri, i.e. uri starts with "//".</param>
         /// <param name="iframeUrl">Generated url for iframe.</param>
         /// <seealso href="https://tools.ietf.org/html/rfc3986#section-4.2"/>
-        bool TryHandle(Uri mediaUri, bool isSchemaRelative, out string iframeUrl);
+        bool TryHandle(Uri mediaUri, bool isSchemaRelative, [NotNullWhen(true)] out string? iframeUrl);
 
         /// <summary>
         /// Should the generated iframe has allowfullscreen attribute.

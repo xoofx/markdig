@@ -2,6 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
+using System;
+
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -24,12 +28,12 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the information parser.
         /// </summary>
-        public InfoParserDelegate InfoParser { get; set; }
+        public InfoParserDelegate? InfoParser { get; set; }
 
         /// <summary>
         /// A delegates that allows to process attached attributes
         /// </summary>
-        public TryParseAttributesDelegate TryParseAttributes { get; set; }
+        public TryParseAttributesDelegate? TryParseAttributes { get; set; }
     }
 
     /// <summary>
@@ -38,7 +42,6 @@ namespace Markdig.Parsers
     /// <seealso cref="BlockParser" />
     public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T : Block, IFencedBlock
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedBlockParserBase{T}"/> class.
         /// </summary>
@@ -52,7 +55,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets or sets the language prefix (default is "language-")
         /// </summary>
-        public string InfoPrefix { get; set; }
+        public string? InfoPrefix { get; set; }
 
         public int MinimumMatchCount { get; set; }
 
@@ -79,11 +82,11 @@ namespace Markdig.Parsers
         {
             var start = line.Start;
             var end = start - 1;
-            StringSlice afterFence = new StringSlice(line.Text, start, end);
-            StringSlice info = new StringSlice(line.Text, start, end);
-            StringSlice afterInfo = new StringSlice(line.Text, start, end);
-            StringSlice arg = new StringSlice(line.Text, start, end);
-            StringSlice afterArg = new StringSlice(line.Text, start, end);
+            var afterFence = new StringSlice(line.Text, start, end);
+            var info = new StringSlice(line.Text, start, end);
+            var afterInfo = new StringSlice(line.Text, start, end);
+            var arg = new StringSlice(line.Text, start, end);
+            var afterArg = new StringSlice(line.Text, start, end);
             ParseState state = ParseState.AfterFence;
 
             for (int i = line.Start; i <= line.End; i++)
@@ -182,7 +185,7 @@ namespace Markdig.Parsers
         public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
             string infoString;
-            string argString = null;
+            string? argString = null;
 
             // An info string cannot contain any backticks (unless it is a tilde block)
             int firstSpace = -1;
@@ -216,7 +219,7 @@ namespace Markdig.Parsers
 
             if (firstSpace > 0)
             {
-                infoString = line.Text.Substring(line.Start, firstSpace - line.Start).Trim();
+                infoString = line.Text.AsSpan(line.Start, firstSpace - line.Start).Trim().ToString();
 
                 // Skip any spaces after info string
                 firstSpace++;
@@ -329,7 +332,7 @@ namespace Markdig.Parsers
             {
                 block.UpdateSpanEnd(startBeforeTrim - 1);
 
-                var fencedBlock = block as IFencedBlock;
+                var fencedBlock = (IFencedBlock)block;
                 fencedBlock.ClosingFencedCharCount = closingCount;
                 fencedBlock.NewLine = processor.Line.NewLine;
                 fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
