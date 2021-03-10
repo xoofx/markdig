@@ -24,7 +24,7 @@ namespace Markdig.Syntax
         /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)
         /// so it will gives faster access than a Dictionary, and lower memory occupation
         /// </summary>
-        private DataEntry[] attachedDatas;
+        private DataEntry[]? attachedDatas;
         private int count;
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace Markdig.Syntax
         /// <exception cref="ArgumentNullException">if key is null</exception>
         public void SetData(object key, object value)
         {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
+            if (key is null) ThrowHelper.ArgumentNullException_key();
+            if (attachedDatas is null)
             {
                 attachedDatas = new DataEntry[1];
             }
@@ -93,7 +93,7 @@ namespace Markdig.Syntax
         /// <exception cref="ArgumentNullException">if key is null</exception>
         public bool ContainsData(object key)
         {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
+            if (key is null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 return false;
