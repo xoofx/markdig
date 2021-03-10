@@ -290,7 +290,7 @@ namespace Markdig.Extensions.SmartyPants
             bool isFinalProcessing)
         {
             // Don't try to process anything if there are no dash
-            if (!(state.ParserStates[Index] is ListSmartyPants { HasDash: false }))
+            if (!(state.ParserStates[Index] is ListSmartyPants quotePants) || !quotePants.HasDash)
             {
                 return true;
             }
