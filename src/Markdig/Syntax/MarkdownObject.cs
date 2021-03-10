@@ -22,8 +22,7 @@ namespace Markdig.Syntax
         /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)
         /// so it will gives faster access than a Dictionary, and lower memory occupation
         /// </summary>
-        private DataEntry[] attachedDatas;
-        private int count;
+        private DataEntries _attachedDatas;
 
         /// <summary>
         /// Gets or sets the text column this instance was declared (zero-based).
@@ -55,33 +54,7 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         /// <exception cref="ArgumentNullException">if key is null</exception>
-        public void SetData(object key, object value)
-        {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
-            {
-                attachedDatas = new DataEntry[1];
-            }
-            else
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    if (attachedDatas[i].Key == key)
-                    {
-                        attachedDatas[i].Value = value;
-                        return;
-                    }
-                }
-                if (count == attachedDatas.Length)
-                {
-                    var temp = new DataEntry[attachedDatas.Length + 1];
-                    Array.Copy(attachedDatas, 0, temp, 0, count);
-                    attachedDatas = temp;
-                }
-            }
-            attachedDatas[count] = new DataEntry(key, value);
-            count++;
-        }
+        public void SetData(object key, object value) => (_attachedDatas ??= new DataEntries()).SetData(key, value);
 
         /// <summary>
         /// Determines whether this instance contains the specified key data.
@@ -89,23 +62,7 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <returns><c>true</c> if a data with the key is stored</returns>
         /// <exception cref="ArgumentNullException">if key is null</exception>
-        public bool ContainsData(object key)
-        {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < count; i++)
-            {
-                if (attachedDatas[i].Key == key)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        public bool ContainsData(object key) => _attachedDatas?.ContainsData(key) ?? false;
 
         /// <summary>
         /// Gets the associated data for the specified key.
@@ -113,22 +70,7 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <returns>The associated data or null if none</returns>
         /// <exception cref="ArgumentNullException">if key is null</exception>
-        public object GetData(object key)
-        {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
-            {
-                return null;
-            }
-            for (int i = 0; i < count; i++)
-            {
-                if (attachedDatas[i].Key == key)
-                {
-                    return attachedDatas[i].Value;
-                }
-            }
-            return null;
-        }
+        public object GetData(object key) => _attachedDatas?.GetData(key);
 
         /// <summary>
         /// Removes the associated data for the specified key.
@@ -136,44 +78,117 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <returns><c>true</c> if the data was removed; <c>false</c> otherwise</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public bool RemoveData(object key)
-        {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
-            {
-                return true;
-            }
+        public bool RemoveData(object key) => _attachedDatas?.RemoveData(key) ?? false;
 
-            for (int i = 0; i < count; i++)
+        private class DataEntries
+        {
+            private struct DataEntry
             {
-                if (attachedDatas[i].Key == key)
+                public readonly object Key;
+                public object Value;
+
+                public DataEntry(object key, object value)
                 {
-                    if (i < count - 1)
-                    {
-                        Array.Copy(attachedDatas, i + 1, attachedDatas, i, count - i - 1);
-                    }
-                    count--;
-                    attachedDatas[count] = new DataEntry();
-                    return true;
+                    Key = key;
+                    Value = value;
                 }
             }
-            return false;
-        }
 
-        /// <summary>
-        /// Store a Key/Value pair.
-        /// </summary>
-        private struct DataEntry
-        {
-            public DataEntry(object key, object value)
+            private DataEntry[] _entries;
+            private int _count;
+
+            public DataEntries()
             {
-                Key = key;
-                Value = value;
+                _entries = new DataEntry[2];
             }
 
-            public readonly object Key;
+            public void SetData(object key, object value)
+            {
+                if (key == null) ThrowHelper.ArgumentNullException_key();
 
-            public object Value;
+                DataEntry[] entries = _entries;
+                int count = _count;
+
+                for (int i = 0; i < entries.Length && i < count; i++)
+                {
+                    ref DataEntry entry = ref entries[i];
+                    if (entry.Key == key)
+                    {
+                        entry.Value = value;
+                        return;
+                    }
+                }
+
+                if (count == entries.Length)
+                {
+                    Array.Resize(ref _entries, count + 2);
+                }
+
+                _entries[count] = new DataEntry(key, value);
+                _count++;
+            }
+
+            public object GetData(object key)
+            {
+                if (key == null) ThrowHelper.ArgumentNullException_key();
+
+                DataEntry[] entries = _entries;
+                int count = _count;
+
+                for (int i = 0; i < entries.Length && i < count; i++)
+                {
+                    ref DataEntry entry = ref entries[i];
+                    if (entry.Key == key)
+                    {
+                        return entry.Value;
+                    }
+                }
+
+                return null;
+            }
+
+            public bool ContainsData(object key)
+            {
+                if (key == null) ThrowHelper.ArgumentNullException_key();
+
+                DataEntry[] entries = _entries;
+                int count = _count;
+
+                for (int i = 0; i < entries.Length && i < count; i++)
+                {
+                    if (entries[i].Key == key)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public bool RemoveData(object key)
+            {
+                if (key == null) ThrowHelper.ArgumentNullException_key();
+
+                DataEntry[] entries = _entries;
+                int count = _count;
+
+                for (int i = 0; i < entries.Length && i < count; i++)
+                {
+                    if (entries[i].Key == key)
+                    {
+                        if (i < count - 1)
+                        {
+                            Array.Copy(entries, i + 1, entries, i, count - i - 1);
+                        }
+                        count--;
+                        entries[count] = default;
+                        _count = count;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
     }
 }
