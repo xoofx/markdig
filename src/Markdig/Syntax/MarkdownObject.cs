@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using System;
 
@@ -113,7 +115,7 @@ namespace Markdig.Syntax
         /// <param name="key">The key.</param>
         /// <returns>The associated data or null if none</returns>
         /// <exception cref="ArgumentNullException">if key is null</exception>
-        public object GetData(object key)
+        public object? GetData(object key)
         {
             if (key == null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
@@ -138,7 +140,7 @@ namespace Markdig.Syntax
         /// <exception cref="ArgumentNullException"></exception>
         public bool RemoveData(object key)
         {
-            if (key == null) ThrowHelper.ArgumentNullException_key();
+            if (key is null) ThrowHelper.ArgumentNullException_key();
             if (attachedDatas == null)
             {
                 return true;

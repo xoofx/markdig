@@ -538,9 +538,9 @@ namespace Markdig
         /// <param name="pipeline">The pipeline (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTables"/> and <see cref="UseGridTables"/></param>
         /// <param name="extensions">The extensions to activate as a string</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string extensions)
+        public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string? extensions)
         {
-            if (extensions == null)
+            if (extensions is null)
             {
                 return pipeline;
             }

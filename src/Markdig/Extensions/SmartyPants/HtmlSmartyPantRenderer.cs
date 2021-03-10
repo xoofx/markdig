@@ -1,6 +1,9 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
+
+#nullable enable
+
 using System;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -22,14 +25,14 @@ namespace Markdig.Extensions.SmartyPants
         /// </summary>
         /// <param name="options">The options.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public HtmlSmartyPantRenderer(SmartyPantOptions options)
+        public HtmlSmartyPantRenderer(SmartyPantOptions? options)
         {
             this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         protected override void Write(HtmlRenderer renderer, SmartyPant obj)
         {
-            if (!options.Mapping.TryGetValue(obj.Type, out string text))
+            if (!options.Mapping.TryGetValue(obj.Type, out string? text))
             {
                 DefaultOptions.Mapping.TryGetValue(obj.Type, out text);
             }

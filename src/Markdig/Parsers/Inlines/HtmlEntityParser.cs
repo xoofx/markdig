@@ -2,7 +2,11 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
+using System.Diagnostics.CodeAnalysis;
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -24,7 +28,7 @@ namespace Markdig.Parsers.Inlines
         }
 
 
-        public static bool TryParse(ref StringSlice slice, out string literal, out int match)
+        public static bool TryParse(ref StringSlice slice, [NotNullWhen(true)] out string? literal, out int match)
         {
             literal = null;
             match = HtmlHelper.ScanEntity(slice, out int entityValue, out int entityNameStart, out int entityNameLength);
@@ -46,7 +50,7 @@ namespace Markdig.Parsers.Inlines
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
-            if (!TryParse(ref slice, out string literal, out int match))
+            if (!TryParse(ref slice, out string? literal, out int match))
             {
                 return false;
             }

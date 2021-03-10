@@ -9,7 +9,7 @@ namespace Markdig.Parsers.Inlines
     /// <summary>
     /// Descriptor for an emphasis.
     /// </summary>
-    public class EmphasisDescriptor
+    public sealed class EmphasisDescriptor
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisDescriptor"/> class.
@@ -33,21 +33,21 @@ namespace Markdig.Parsers.Inlines
         /// <summary>
         /// The character of this emphasis.
         /// </summary>
-        public readonly char Character;
+        public  char Character { get; }
 
         /// <summary>
         /// The minimum number of character this emphasis is expected to have (must be >=1)
         /// </summary>
-        public readonly int MinimumCount;
+        public int MinimumCount { get; }
 
         /// <summary>
         /// The maximum number of character this emphasis is expected to have (must be >=1 and >= minimumCount)
         /// </summary>
-        public readonly int MaximumCount;
+        public int MaximumCount { get; }
 
         /// <summary>
         /// This emphasis can be used within a word.
         /// </summary>
-        public readonly bool EnableWithinWord;
+        public bool EnableWithinWord { get; }
     }
 }

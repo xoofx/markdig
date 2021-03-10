@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,17 +20,17 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets the parent container of this inline.
         /// </summary>
-        public ContainerInline Parent { get; internal set; }
+        public ContainerInline? Parent { get; internal set; }
 
         /// <summary>
         /// Gets the previous inline.
         /// </summary>
-        public Inline PreviousSibling { get; private set; }
+        public Inline? PreviousSibling { get; private set; }
 
         /// <summary>
         /// Gets the next sibling inline.
         /// </summary>
-        public Inline NextSibling { get; internal set; }
+        public Inline? NextSibling { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is closed.
@@ -224,7 +226,7 @@ namespace Markdig.Syntax.Inlines
             }
         }
 
-        public T FirstParentOfType<T>() where T : Inline
+        public T? FirstParentOfType<T>() where T : notnull, Inline
         {
             var inline = this;
             while (inline != null)
@@ -250,7 +252,7 @@ namespace Markdig.Syntax.Inlines
                     continue;
                 }
 
-                current = current.PreviousSibling;
+                current = current.PreviousSibling!;
             }
 
             return current;

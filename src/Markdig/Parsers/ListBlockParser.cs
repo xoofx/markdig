@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -14,7 +16,7 @@ namespace Markdig.Parsers
     /// <seealso cref="BlockParser" />
     public class ListBlockParser : BlockParser
     {
-        private CharacterMap<ListItemParser> mapItemParsers;
+        private CharacterMap<ListItemParser>? mapItemParsers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListBlockParser"/> class.
@@ -179,10 +181,10 @@ namespace Markdig.Parsers
             return BlockState.None;
         }
 
-        private BlockState TryParseListItem(BlockProcessor state, Block block)
+        private BlockState TryParseListItem(BlockProcessor state, Block? block)
         {
             var currentListItem = block as ListItemBlock;
-            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent;
+            var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent!;
 
             // We can early exit if we have a code indent and we are either (1) not in a ListItem, (2) preceded by a blank line, (3) in an unordered list
             if (state.IsCodeIndent && (currentListItem is null || currentListItem.LastChild is BlankLineBlock || !currentParent.IsOrdered))
@@ -196,7 +198,7 @@ namespace Markdig.Parsers
             var sourceEndPosition = state.Line.End;
 
             var c = state.CurrentChar;
-            var itemParser = mapItemParsers[c];
+            var itemParser = mapItemParsers![c];
             if (itemParser == null)
             {
                 return BlockState.None;

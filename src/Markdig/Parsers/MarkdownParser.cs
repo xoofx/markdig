@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -39,10 +41,10 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext context)
+        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext? context)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
-            if (pipeline == null) ThrowHelper.ArgumentNullException(nameof(pipeline));
+            if (text is null) ThrowHelper.ArgumentNullException_text();
+            if (pipeline is null) ThrowHelper.ArgumentNullException(nameof(pipeline));
 
             trackTrivia = pipeline.TrackTrivia;
             roughLineCountEstimate = text.Length / 40;
@@ -73,7 +75,7 @@ namespace Markdig.Parsers
         /// <param name="context">A parser context used for the parsing.</param>
         /// <returns>An AST Markdown document</returns>
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
-        public static MarkdownDocument Parse(string text, MarkdownPipeline pipeline = null, MarkdownParserContext context = null)
+        public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
         {
             if (text == null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
@@ -118,8 +120,8 @@ namespace Markdig.Parsers
                 {
                     if (trackTrivia)
                     {
-                        Block lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock == null && document.Count == 0)
+                        Block? lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock is null && document.Count == 0)
                         {
                             // this means we have unassigned characters
                             var noBlocksFoundBlock = new EmptyBlock (null);
@@ -177,7 +179,7 @@ namespace Markdig.Parsers
             {
                 process_new_block:
                 var item = blocks.Peek();
-                var container = item.Container;
+                var container = item.Container!;
 
                 for (; item.Index < container.Count; item.Index++)
                 {
@@ -222,14 +224,14 @@ namespace Markdig.Parsers
                     }
                 }
                 item = blocks.Pop();
-                container = item.Container;
+                container = item.Container!;
                 container.OnProcessInlinesEnd(inlineProcessor);
 
                 cache.Release(item);
             }
         }
 
-        private class ContainerItem
+        private sealed class ContainerItem
         {
             public ContainerItem()
             {
@@ -240,9 +242,9 @@ namespace Markdig.Parsers
                 Container = container;
             }
 
-            public ContainerBlock Container;
+            public ContainerBlock? Container { get; set; }
 
-            public int Index;
+            public int Index { get; set; }
         }
     }
 }

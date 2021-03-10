@@ -95,9 +95,9 @@ namespace Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
-        public static string ToHtml(this MarkdownDocument document, MarkdownPipeline pipeline = null)
+        public static string ToHtml(this MarkdownDocument document, MarkdownPipeline? pipeline = null)
         {
-            if (document == null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             var renderer = pipeline.GetCacheableHtmlRenderer();
@@ -105,7 +105,7 @@ namespace Markdig
             renderer.Render(document);
             renderer.Writer.Flush();
 
-            string html = renderer.Writer.ToString();
+            string html = renderer.Writer.ToString()!;
             pipeline.ReleaseCacheableHtmlRenderer(renderer);
             return html;
         }

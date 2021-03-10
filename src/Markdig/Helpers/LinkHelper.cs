@@ -419,7 +419,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseInlineLinkTrivia(
             ref StringSlice text,
-            out string? link,
+            [NotNullWhen(true)] out string? link,
             out SourceSpan unescapedLink,
             out string? title,
             out SourceSpan unescapedTitle,

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -41,7 +43,7 @@ namespace Markdig.Parsers.Inlines
                     return false;
                 }
             }
-            string label;
+            string? label;
             SourceSpan labelWithTriviaSpan = SourceSpan.Empty;
             switch (c)
             {
@@ -114,7 +116,7 @@ namespace Markdig.Parsers.Inlines
         private bool ProcessLinkReference(
             InlineProcessor state,
             StringSlice text,
-            string label,
+            string? label,
             SourceSpan labelWithriviaSpan,
             bool isShortcut,
             SourceSpan labelSpan,
@@ -127,7 +129,7 @@ namespace Markdig.Parsers.Inlines
                 return false;
             }
 
-            Inline link = null;
+            Inline? link = null;
             // Try to use a callback directly defined on the LinkReferenceDefinition
             if (linkRef.CreateLinkInline != null)
             {
@@ -200,7 +202,7 @@ namespace Markdig.Parsers.Inlines
 
         private bool TryProcessLinkOrImage(InlineProcessor inlineState, ref StringSlice text)
         {
-            LinkDelimiterInline openParent = inlineState.Inline.FirstParentOfType<LinkDelimiterInline>();
+            LinkDelimiterInline? openParent = inlineState.Inline!.FirstParentOfType<LinkDelimiterInline>();
 
             if (openParent is null)
             {
@@ -237,9 +239,9 @@ namespace Markdig.Parsers.Inlines
                 {
                     if (LinkHelper.TryParseInlineLinkTrivia(
                         ref text,
-                        out string url,
+                        out string? url,
                         out SourceSpan unescapedUrlSpan,
-                        out string title,
+                        out string? title,
                         out SourceSpan unescapedTitleSpan,
                         out char titleEnclosingCharacter,
                         out SourceSpan linkSpan,
@@ -297,7 +299,7 @@ namespace Markdig.Parsers.Inlines
                 }
                 else
                 {
-                    if (LinkHelper.TryParseInlineLink(ref text, out string url, out string title, out SourceSpan linkSpan, out SourceSpan titleSpan))
+                    if (LinkHelper.TryParseInlineLink(ref text, out string? url, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan))
                     {
                         // Inline Link
                         var link = new LinkInline()
@@ -338,7 +340,7 @@ namespace Markdig.Parsers.Inlines
             }
 
             var labelSpan = SourceSpan.Empty;
-            string label = null;
+            string? label = null;
             SourceSpan labelWithTrivia = SourceSpan.Empty;
             bool isLabelSpanLocal = true;
 
@@ -401,7 +403,7 @@ namespace Markdig.Parsers.Inlines
             return false;
         }
 
-        private void MarkParentAsInactive(Inline inline)
+        private void MarkParentAsInactive(Inline? inline)
         {
             while (inline != null)
             {

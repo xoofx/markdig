@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -31,7 +33,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// A delegates that allows to process attached attributes after #
         /// </summary>
-        public TryParseAttributesDelegate TryParseAttributes { get; set; }
+        public TryParseAttributesDelegate? TryParseAttributes { get; set; }
 
         public override BlockState TryOpen(BlockProcessor processor)
         {

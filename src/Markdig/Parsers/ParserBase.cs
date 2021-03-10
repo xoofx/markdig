@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 namespace Markdig.Parsers
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the opening characters this parser will be triggered if the character is found.
         /// </summary>
-        public char[] OpeningCharacters { get; set; }
+        public char[]? OpeningCharacters { get; set; }
 
         /// <summary>
         /// Initializes this parser with the specified parser processor.

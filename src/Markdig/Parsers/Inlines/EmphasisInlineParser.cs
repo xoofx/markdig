@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +21,7 @@ namespace Markdig.Parsers.Inlines
     /// <seealso cref="IPostInlineProcessor" />
     public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     {
-        private CharacterMap<EmphasisDescriptor> emphasisMap;
+        private CharacterMap<EmphasisDescriptor>? emphasisMap;
         private readonly DelimitersObjectCache inlinesCache = new DelimitersObjectCache();
 
         [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
@@ -64,7 +66,7 @@ namespace Markdig.Parsers.Inlines
         /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
         /// </summary>
         [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
-        public CreateEmphasisInlineDelegate CreateEmphasisInline { get; set; }
+        public CreateEmphasisInlineDelegate? CreateEmphasisInline { get; set; }
         public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = new List<TryCreateEmphasisInlineDelegate>();
 
         public override void Initialize()
@@ -89,14 +91,14 @@ namespace Markdig.Parsers.Inlines
             emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
         }
 
-        public bool PostProcess(InlineProcessor state, Inline root, Inline lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
+        public bool PostProcess(InlineProcessor state, Inline root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
             if (!(root is ContainerInline container))
             {
                 return true;
             }
 
-            List<EmphasisDelimiterInline> delimiters = null;
+            List<EmphasisDelimiterInline>? delimiters = null;
             if (container is EmphasisDelimiterInline emphasisDelimiter)
             {
                 delimiters = inlinesCache.Get();
@@ -139,7 +141,7 @@ namespace Markdig.Parsers.Inlines
             // The amount of delimiter characters in the delimiter run may exceed emphasisDesc.MaximumCount, as that is handeled in `ProcessEmphasis`
 
             var delimiterChar = slice.CurrentChar;
-            var emphasisDesc = emphasisMap[delimiterChar];
+            var emphasisDesc = emphasisMap![delimiterChar];
 
             char pc = (char)0;
             if (processor.Inline is HtmlEntityInline htmlEntityInline)
@@ -173,7 +175,7 @@ namespace Markdig.Parsers.Inlines
             char c = slice.CurrentChar;
 
             // The following character is actually an entity, we need to decode it
-            if (HtmlEntityParser.TryParse(ref slice, out string htmlString, out int htmlLength))
+            if (HtmlEntityParser.TryParse(ref slice, out string? htmlString, out int htmlLength))
             {
                 c = htmlString[0];
             }
@@ -218,7 +220,7 @@ namespace Markdig.Parsers.Inlines
             {
                 var closeDelimiter = delimiters[i];
                 // Skip delimiters not supported by this instance
-                EmphasisDescriptor emphasisDesc = emphasisMap[closeDelimiter.DelimiterChar];
+                EmphasisDescriptor emphasisDesc = emphasisMap![closeDelimiter.DelimiterChar];
                 if (emphasisDesc == null)
                 {
                     continue;
@@ -230,7 +232,7 @@ namespace Markdig.Parsers.Inlines
                     {
                         // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
                         // for the first matching potential opener (“matching” means same delimiter).
-                        EmphasisDelimiterInline openDelimiter = null;
+                        EmphasisDelimiterInline? openDelimiter = null;
                         int openDelimiterIndex = -1;
                         for (int j = i - 1; j >= 0; j--)
                         {
@@ -260,7 +262,7 @@ namespace Markdig.Parsers.Inlines
                             int delimiterDelta = Math.Min(Math.Min(openDelimiter.DelimiterCount, closeDelimiter.DelimiterCount), emphasisDesc.MaximumCount);
 
                             // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
-                            EmphasisInline emphasis = null;
+                            EmphasisInline? emphasis = null;
                             {
                                 if (delimiterDelta <= 2) // We can try using the legacy delegate
                                 {
@@ -293,7 +295,7 @@ namespace Markdig.Parsers.Inlines
                             var openDelimitercount = openDelimiter.DelimiterCount;
                             var closeDelimitercount = closeDelimiter.DelimiterCount;
 
-                            emphasis.Span.Start = openDelimiter.Span.Start;
+                            emphasis!.Span.Start = openDelimiter.Span.Start;
                             emphasis.Line = openDelimiter.Line;
                             emphasis.Column = openDelimiter.Column;
                             emphasis.Span.End = closeDelimiter.Span.End - closeDelimitercount + delimiterDelta;
