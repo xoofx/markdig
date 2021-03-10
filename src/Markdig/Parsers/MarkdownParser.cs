@@ -120,8 +120,8 @@ namespace Markdig.Parsers
                 {
                     if (trackTrivia)
                     {
-                        Block lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock == null && document.Count == 0)
+                        Block? lastBlock = blockProcessor.LastBlock;
+                        if (lastBlock is null && document.Count == 0)
                         {
                             // this means we have unassigned characters
                             var noBlocksFoundBlock = new EmptyBlock (null);
