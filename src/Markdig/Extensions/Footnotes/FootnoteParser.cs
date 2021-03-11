@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -63,7 +61,7 @@ namespace Markdig.Extensions.Footnotes
 
             // Maintain a list of all footnotes at document level
             var footnotes = processor.Document.GetData(DocumentKey) as FootnoteGroup;
-            if (footnotes is null)
+            if (footnotes == null)
             {
                 footnotes = new FootnoteGroup(this);
                 processor.Document.Add(footnotes);
@@ -89,7 +87,7 @@ namespace Markdig.Extensions.Footnotes
         {
             var footnote = (Footnote) block;
 
-            if (processor.CurrentBlock is null || processor.CurrentBlock.IsBreakable)
+            if (processor.CurrentBlock == null || processor.CurrentBlock.IsBreakable)
             {
                 if (processor.IsBlankLine)
                 {
@@ -172,7 +170,7 @@ namespace Markdig.Extensions.Footnotes
                     paragraphBlock = new ParagraphBlock();
                     footnote.Add(paragraphBlock);
                 }
-                if (paragraphBlock.Inline is null)
+                if (paragraphBlock.Inline == null)
                 {
                     paragraphBlock.Inline = new ContainerInline();
                 }
