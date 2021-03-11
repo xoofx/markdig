@@ -464,9 +464,9 @@ namespace Markdig
             return pipeline.UseReferralLinks("nofollow");
         }
 
-        public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
+        public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[]? rels)
         {
-            if (rels is null) ThrowHelper.ArgumentNullException(nameof(rels));
+            rels ??= Array.Empty<string>();
 
             var extension = pipeline.Extensions.Find<ReferralLinksExtension>();
 
