@@ -237,13 +237,13 @@ namespace Markdig.Syntax
         public void Sort(IComparer<Block> comparer)
         {
             if (comparer is null) ThrowHelper.ArgumentNullException(nameof(comparer));
-            Array.Sort(children, 0, Count, comparer!);
+            Array.Sort(children, 0, Count, comparer);
         }
 
         public void Sort(Comparison<Block> comparison)
         {
-            if (comparison == null) ThrowHelper.ArgumentNullException(nameof(comparison));
-            Array.Sort(children, 0, Count, new BlockComparer(comparison)!);
+            if (comparison is null) ThrowHelper.ArgumentNullException(nameof(comparison));
+            Array.Sort(children, 0, Count, new BlockComparer(comparison));
         }
 
         #region Nested type: Enumerator
