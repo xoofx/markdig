@@ -234,7 +234,7 @@ namespace Markdig.Parsers
                     }
                 }
 
-                argString = line.Text.Substring(firstSpace, line.End - firstSpace + 1).Trim();
+                argString = line.Text.AsSpan(firstSpace, line.End - firstSpace + 1).Trim().ToString();
             }
             else
             {

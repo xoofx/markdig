@@ -86,7 +86,7 @@ namespace Markdig.Extensions.SelfPipeline
                 var endOfTag = inputText.IndexOf("-->", optionStart, StringComparison.OrdinalIgnoreCase);
                 if (endOfTag >= 0)
                 {
-                    defaultConfig = inputText.Substring(optionStart, endOfTag - optionStart).Trim();
+                    defaultConfig = inputText.AsSpan(optionStart, endOfTag - optionStart).Trim().ToString();
                 }
             }
 
