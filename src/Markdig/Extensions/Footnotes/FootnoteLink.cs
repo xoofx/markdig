@@ -12,6 +12,11 @@ namespace Markdig.Extensions.Footnotes
     /// <seealso cref="Inline" />
     public class FootnoteLink : Inline
     {
+        public FootnoteLink(Footnote footnote)
+        {
+            Footnote = footnote;
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is back link (from a footnote to the link)
         /// </summary>

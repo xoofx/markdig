@@ -102,7 +102,7 @@ namespace Markdig.Extensions.EmphasisExtras
             }
         }
 
-        private string GetTag(EmphasisInline emphasisInline)
+        private string? GetTag(EmphasisInline emphasisInline)
         {
             var c = emphasisInline.DelimiterChar;
             switch (c)

@@ -67,7 +67,7 @@ namespace Markdig.Extensions.Globalization
             }
             else if (item is LeafBlock leaf)
             {
-                return ShouldBeRightToLeft(leaf.Inline);
+                return ShouldBeRightToLeft(leaf.Inline!);
             }
             else if (item is LiteralInline literal)
             {
@@ -76,7 +76,7 @@ namespace Markdig.Extensions.Globalization
 
             foreach (var paragraph in item.Descendants<ParagraphBlock>())
             {
-                foreach (var inline in paragraph.Inline)
+                foreach (var inline in paragraph.Inline!)
                 {
                     if (inline is LiteralInline literal)
                     {

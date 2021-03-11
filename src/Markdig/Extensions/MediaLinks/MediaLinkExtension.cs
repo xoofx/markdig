@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -48,7 +46,7 @@ namespace Markdig.Extensions.MediaLinks
 
         private bool TryLinkInlineRenderer(HtmlRenderer renderer, LinkInline linkInline)
         {
-            if (!linkInline.IsImage || linkInline.Url == null)
+            if (!linkInline.IsImage || linkInline.Url is null)
             {
                 return false;
             }

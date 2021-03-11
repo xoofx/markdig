@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,7 +175,7 @@ namespace Markdig.Parsers
         /// <param name="leafBlock">The leaf block.</param>
         public void ProcessInlineLeaf(LeafBlock leafBlock)
         {
-            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
+            if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
 
             // clear parser states
             Array.Clear(ParserStates, 0, ParserStates.Length);
@@ -241,7 +239,7 @@ namespace Markdig.Parsers
                 var nextInline = Inline;
                 if (nextInline != null)
                 {
-                    if (nextInline.Parent == null)
+                    if (nextInline.Parent is null)
                     {
                         // Get deepest container
                         var container = FindLastContainer();

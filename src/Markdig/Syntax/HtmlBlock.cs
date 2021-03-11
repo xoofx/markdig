@@ -16,7 +16,7 @@ namespace Markdig.Syntax
         /// Initializes a new instance of the <see cref="HtmlBlock"/> class.
         /// </summary>
         /// <param name="parser">The parser.</param>
-        public HtmlBlock(BlockParser parser) : base(parser)
+        public HtmlBlock(BlockParser? parser) : base(parser)
         {
         }
 

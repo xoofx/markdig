@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Markdig.Helpers;
@@ -102,7 +100,7 @@ namespace Markdig.Parsers
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T[] GetParsersForOpeningCharacter(uint openingChar)
+        public T[]? GetParsersForOpeningCharacter(uint openingChar)
         {
             return charMap[openingChar];
         }

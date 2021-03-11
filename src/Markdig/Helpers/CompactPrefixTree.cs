@@ -1,5 +1,8 @@
 // Copyright (c) Miha Zupan. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license.
+
+#nullable disable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -277,7 +280,7 @@ namespace Markdig.Helpers
             }
             else
             {
-                if (_unicodeRootMap == null)
+                if (_unicodeRootMap is null)
                 {
                     _unicodeRootMap = new Dictionary<char, int>();
                 }
@@ -312,7 +315,7 @@ namespace Markdig.Helpers
         /// <param name="input">Matches to initialize the <see cref="CompactPrefixTree{TValue}"/> with. For best lookup performance, this collection should be sorted.</param>
         public CompactPrefixTree(ICollection<KeyValuePair<string, TValue>> input)
         {
-            if (input == null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.input);
+            if (input is null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.input);
 
             Init(input.Count, input.Count * 2, input.Count * 2);
 
@@ -426,7 +429,7 @@ namespace Markdig.Helpers
         private bool TryInsert(in KeyValuePair<string, TValue> pair, InsertionBehavior behavior)
         {
             string key = pair.Key;
-            if (key == null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
+            if (key is null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
             if (key.Length == 0) ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.key, ExceptionReason.String_Empty);
             Debug.Assert(!string.IsNullOrEmpty(key));
 

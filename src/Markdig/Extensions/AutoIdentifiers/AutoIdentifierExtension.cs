@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System.Collections.Generic;
 using System.IO;
 using Markdig.Helpers;
@@ -76,15 +74,14 @@ namespace Markdig.Extensions.AutoIdentifiers
 
                 var text = headingLine.ToString();
 
-                var linkRef = new HeadingLinkReferenceDefinition()
+                var linkRef = new HeadingLinkReferenceDefinition(headingBlock)
                 {
-                    Heading = headingBlock,
                     CreateLinkInline = CreateLinkInlineForHeading
                 };
 
                 var doc = processor.Document;
                 var dictionary = doc.GetData(this) as Dictionary<string, HeadingLinkReferenceDefinition>;
-                if (dictionary == null)
+                if (dictionary is null)
                 {
                     dictionary = new Dictionary<string, HeadingLinkReferenceDefinition>();
                     doc.SetData(this, dictionary);

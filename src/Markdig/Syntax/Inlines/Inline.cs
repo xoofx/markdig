@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +43,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public void InsertAfter(Inline next)
         {
-            if (next == null) ThrowHelper.ArgumentNullException(nameof(next));
+            if (next is null) ThrowHelper.ArgumentNullException(nameof(next));
             if (next.Parent != null)
             {
                 ThrowHelper.ArgumentException("Inline has already a parent", nameof(next));
@@ -76,7 +74,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public void InsertBefore(Inline previous)
         {
-            if (previous == null) ThrowHelper.ArgumentNullException(nameof(previous));
+            if (previous is null) ThrowHelper.ArgumentNullException(nameof(previous));
             if (previous.Parent != null)
             {
                 ThrowHelper.ArgumentException("Inline has already a parent", nameof(previous));
@@ -132,7 +130,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException">If inline is null</exception>
         public Inline ReplaceBy(Inline inline, bool copyChildren = true)
         {
-            if (inline == null) ThrowHelper.ArgumentNullException(nameof(inline));
+            if (inline is null) ThrowHelper.ArgumentNullException(nameof(inline));
 
             // Save sibling
             var parent = Parent;
@@ -274,7 +272,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException"></exception>
         public void DumpTo(TextWriter writer)
         {
-            if (writer == null) ThrowHelper.ArgumentNullException_writer();
+            if (writer is null) ThrowHelper.ArgumentNullException_writer();
             DumpTo(writer, 0);
         }
 
@@ -286,7 +284,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException">if writer is null</exception>
         public void DumpTo(TextWriter writer, int level)
         {
-            if (writer == null) ThrowHelper.ArgumentNullException_writer();
+            if (writer is null) ThrowHelper.ArgumentNullException_writer();
             for (int i = 0; i < level; i++)
             {
                 writer.Write(' ');

@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 namespace Markdig.Syntax
 {
     /// <summary>
@@ -43,7 +41,7 @@ namespace Markdig.Syntax
                     upperIndex = midIndex - 1;
             }
 
-            if (block == null)
+            if (block is null)
             {
                 return rootBlock;
             }

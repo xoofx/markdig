@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System.Collections.Generic;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -33,7 +31,7 @@ namespace Markdig.Extensions.Tables
 
         public void AddLine(ref StringSlice line)
         {
-            if (Lines.Lines == null)
+            if (Lines.Lines is null)
             {
                 Lines = new StringLineGroup(4);
             }

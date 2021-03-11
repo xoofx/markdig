@@ -44,7 +44,7 @@ namespace Markdig.Renderers.Normalize.Inlines
                 {
                     renderer.Write('(').Write(link.Url);
 
-                    if (!string.IsNullOrEmpty(link.Title))
+                    if (link.Title is { Length: > 0 })
                     {
                         renderer.Write(" \"");
                         renderer.Write(link.Title.Replace(@"""", @"\"""));

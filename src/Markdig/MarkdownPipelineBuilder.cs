@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.IO;
 using Markdig.Helpers;
@@ -110,7 +108,7 @@ namespace Markdig
             // Allow extensions to modify existing BlockParsers, InlineParsers and Renderer
             foreach (var extension in Extensions)
             {
-                if (extension == null)
+                if (extension is null)
                 {
                     ThrowHelper.InvalidOperationException("An extension cannot be null");
                 }

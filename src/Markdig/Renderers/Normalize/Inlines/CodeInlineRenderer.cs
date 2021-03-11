@@ -15,7 +15,7 @@ namespace Markdig.Renderers.Normalize.Inlines
         protected override void Write(NormalizeRenderer renderer, CodeInline obj)
         {
             var delimiterCount = 0;
-            for (var i = 0; i < obj.Content.Length; i++)
+            for (var i = 0; i < obj.Content!.Length; i++)
             {
                 var index = obj.Content.IndexOf(obj.Delimiter, i);
                 if (index == -1) break;

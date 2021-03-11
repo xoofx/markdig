@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System.IO;
 using Markdig.Syntax;
 using Markdig.Renderers.Normalize.Inlines;
@@ -71,7 +69,7 @@ namespace Markdig.Renderers.Normalize
         ///// <returns></returns>
         //public NormalizeRenderer WriteAttributes(MarkdownObject obj)
         //{
-        //    if (obj == null) throw new ArgumentNullException(nameof(obj));
+        //    if (obj is null) throw new ArgumentNullException(nameof(obj));
         //    return WriteAttributes(obj.TryGetAttributes());
         //}
 
@@ -82,7 +80,7 @@ namespace Markdig.Renderers.Normalize
         ///// <returns>This instance</returns>
         //public NormalizeRenderer WriteAttributes(HtmlAttributes attributes)
         //{
-        //    if (attributes == null)
+        //    if (attributes is null)
         //    {
         //        return this;
         //    }

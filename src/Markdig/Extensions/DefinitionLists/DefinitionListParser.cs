@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -63,7 +61,7 @@ namespace Markdig.Extensions.DefinitionLists
                 paragraphBlock.Parent.Remove(paragraphBlock);
             }
 
-            if (currentDefinitionList == null)
+            if (currentDefinitionList is null)
             {
                 currentDefinitionList = new DefinitionList(this)
                 {
@@ -173,7 +171,7 @@ namespace Markdig.Extensions.DefinitionLists
             var isBreakable = definitionItem.LastChild?.IsBreakable ?? true;
             if (processor.IsBlankLine)
             {
-                if (lastBlankLine == null && isBreakable)
+                if (lastBlankLine is null && isBreakable)
                 {
                     definitionItem.Add(new BlankLineBlock());
                 }

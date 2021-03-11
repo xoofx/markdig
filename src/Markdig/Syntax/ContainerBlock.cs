@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,7 +56,7 @@ namespace Markdig.Syntax
 
         public void Add(Block item)
         {
-            if (item == null)
+            if (item is null)
                 ThrowHelper.ArgumentNullException_item();
 
             if (item.Parent != null)
@@ -128,7 +126,7 @@ namespace Markdig.Syntax
 
         public bool Remove(Block item)
         {
-            if (item == null)
+            if (item is null)
                 ThrowHelper.ArgumentNullException_item();
 
             for (int i = Count - 1; i >= 0; i--)
@@ -219,7 +217,7 @@ namespace Markdig.Syntax
             {
                 if ((uint)index >= (uint)Count) ThrowHelper.ThrowIndexOutOfRangeException();
 
-                if (value == null)
+                if (value is null)
                     ThrowHelper.ArgumentNullException_item();
 
                 if (value.Parent != null)

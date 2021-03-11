@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -454,7 +452,7 @@ namespace Markdig.Parsers
         /// <exception cref="ArgumentException">The block must be opened</exception>
         public void Open(Block block)
         {
-            if (block == null) ThrowHelper.ArgumentNullException(nameof(block));
+            if (block is null) ThrowHelper.ArgumentNullException(nameof(block));
             if (!block.IsOpen) ThrowHelper.ArgumentException("The block must be opened", nameof(block));
             OpenedBlocks.Add(block);
         }
@@ -636,7 +634,7 @@ namespace Markdig.Parsers
             for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
             {
                 var block = OpenedBlocks[i];
-                if (CurrentBlock == null)
+                if (CurrentBlock is null)
                 {
                     CurrentBlock = block;
                 }
@@ -923,7 +921,7 @@ namespace Markdig.Parsers
             {
                 var block = newBlocks.Pop();
 
-                if (block.Parser == null)
+                if (block.Parser is null)
                 {
                     ThrowHelper.InvalidOperationException($"The new block [{block.GetType()}] must have a valid Parser property");
                 }

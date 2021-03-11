@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -74,7 +72,7 @@ namespace Markdig.Extensions.Tables
                     return false;
                 }
 
-                if (processor.Inline == null)
+                if (processor.Inline is null)
                 {
                     isFirstLineEmpty = true;
                 }
@@ -197,7 +195,7 @@ namespace Markdig.Extensions.Tables
             state.ParserStates[Index] = null!;
 
             // Continue
-            if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
+            if (tableState is null || container is null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
             {
                 return true;
             }
@@ -207,7 +205,7 @@ namespace Markdig.Extensions.Tables
             // TODO: we could optimize this by merging FindHeaderRow and the cell loop
             var aligns = FindHeaderRow(delimiters);
 
-            if (Options.RequireHeaderSeparator && aligns == null)
+            if (Options.RequireHeaderSeparator && aligns is null)
             {
                 return true;
             }
@@ -293,7 +291,7 @@ namespace Markdig.Extensions.Tables
                 var pipeSeparator = delimiter as PipeTableDelimiterInline;
                 var isLine = delimiter is LineBreakInline;
 
-                if (row == null)
+                if (row is null)
                 {
                     row = new TableRow();
 
@@ -302,7 +300,7 @@ namespace Markdig.Extensions.Tables
                     // If the first delimiter is a pipe and doesn't have any parent or previous sibling, for cases like:
                     // 0)  | a | b | \n
                     // 1)  | a | b \n
-                    if (pipeSeparator != null && (delimiter.PreviousSibling == null || delimiter.PreviousSibling is LineBreakInline))
+                    if (pipeSeparator != null && (delimiter.PreviousSibling is null || delimiter.PreviousSibling is LineBreakInline))
                     {
                         delimiter.Remove();
                         continue;
@@ -321,7 +319,7 @@ namespace Markdig.Extensions.Tables
                 {
                     cellContentIt = cellContentIt.PreviousSibling ?? cellContentIt.Parent;
 
-                    if (cellContentIt == null || cellContentIt is LineBreakInline)
+                    if (cellContentIt is null || cellContentIt is LineBreakInline)
                     {
                         break;
                     }
@@ -330,7 +328,7 @@ namespace Markdig.Extensions.Tables
                     if (cellContentIt is PipeTableDelimiterInline || (cellContentIt.GetType() == typeof(ContainerInline) && cellContentIt.Parent is null ))
                     {
                         beginOfCell = ((ContainerInline)cellContentIt).FirstChild;
-                        if (endOfCell == null)
+                        if (endOfCell is null)
                         {
                             endOfCell = beginOfCell;
                         }
@@ -338,7 +336,7 @@ namespace Markdig.Extensions.Tables
                     }
 
                     beginOfCell = cellContentIt;
-                    if (endOfCell == null)
+                    if (endOfCell is null)
                     {
                         endOfCell = beginOfCell;
                     }
@@ -469,7 +467,7 @@ namespace Markdig.Extensions.Tables
         {
             align = 0;
             var literal = inline as LiteralInline;
-            if (literal == null)
+            if (literal is null)
             {
                 return false;
             }
@@ -525,7 +523,7 @@ namespace Markdig.Extensions.Tables
                     aligns.Add(new TableColumnDefinition() { Alignment =  align });
 
                     // If this is the last delimiter, we need to check the right side of the `|` delimiter
-                    if (nextDelimiter == null)
+                    if (nextDelimiter is null)
                     {
                         var nextSibling = columnDelimiter != null
                             ? columnDelimiter.FirstChild
@@ -587,7 +585,7 @@ namespace Markdig.Extensions.Tables
                 }
                 previous = previous.PreviousSibling;
             }
-            return previous == null || IsLine(previous);
+            return previous is null || IsLine(previous);
         }
 
         private static void TrimStart(Inline? inline)

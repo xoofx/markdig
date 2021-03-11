@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using Markdig.Helpers;
 using Markdig.Syntax;
 using System.Collections.Generic;
@@ -58,7 +56,7 @@ namespace Markdig.Parsers
         {
             if (!processor.IsCodeIndent || processor.IsBlankLine)
             {
-                if (block == null || !processor.IsBlankLine)
+                if (block is null || !processor.IsBlankLine)
                 {
                     if (block != null)
                     {
@@ -109,7 +107,7 @@ namespace Markdig.Parsers
         public override bool Close(BlockProcessor processor, Block block)
         {
             var codeBlock = (CodeBlock)block;
-            if (codeBlock == null)
+            if (codeBlock is null)
             {
                 return true;
             }

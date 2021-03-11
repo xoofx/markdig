@@ -2,14 +2,12 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
-using Markdig.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Markdig.Helpers;
 
 namespace Markdig.Syntax.Inlines
 {
@@ -174,7 +172,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException">If the container is null</exception>
         public void EmbraceChildrenBy(ContainerInline container)
         {
-            if (container == null) ThrowHelper.ArgumentNullException(nameof(container));
+            if (container is null) ThrowHelper.ArgumentNullException(nameof(container));
             var child = FirstChild;
             while (child != null)
             {
@@ -190,11 +188,11 @@ namespace Markdig.Syntax.Inlines
         protected override void OnChildInsert(Inline child)
         {
             // A child is inserted before the FirstChild
-            if (child.PreviousSibling == null && child.NextSibling == FirstChild)
+            if (child.PreviousSibling is null && child.NextSibling == FirstChild)
             {
                 FirstChild = child;
             }
-            else if (child.NextSibling == null && child.PreviousSibling == LastChild)
+            else if (child.NextSibling is null && child.PreviousSibling == LastChild)
             {
                 LastChild = child;
             }
@@ -246,7 +244,7 @@ namespace Markdig.Syntax.Inlines
 
             public Enumerator(ContainerInline container) : this()
             {
-                if (container == null) ThrowHelper.ArgumentNullException(nameof(container));
+                if (container is null) ThrowHelper.ArgumentNullException(nameof(container));
                 this.container = container;
                 currentChild = nextChild = container.FirstChild;
             }

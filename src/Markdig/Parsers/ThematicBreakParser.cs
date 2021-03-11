@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -74,8 +72,8 @@ namespace Markdig.Parsers
             var isSetexHeading = previousParagraph != null && breakChar == '-' && !hasInnerSpaces;
             if (isSetexHeading)
             {
-                var parent = previousParagraph.Parent;
-                if (previousParagraph.Column != processor.Column && (parent is QuoteBlock || parent is ListItemBlock))
+                var parent = previousParagraph!.Parent!;
+                if (previousParagraph.Column != processor.Column && (parent is QuoteBlock or ListItemBlock))
                 {
                     isSetexHeading = false;
                 }

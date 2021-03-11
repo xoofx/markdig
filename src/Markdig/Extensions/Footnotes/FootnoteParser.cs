@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -72,9 +70,8 @@ namespace Markdig.Extensions.Footnotes
             }
             footnotes.Add(footnote);
 
-            var linkRef = new FootnoteLinkReferenceDefinition()
+            var linkRef = new FootnoteLinkReferenceDefinition(footnote)
             {
-                Footnote = footnote,
                 CreateLinkInline = CreateLinkToFootnote,
                 Line = processor.LineIndex,
                 Span = new SourceSpan(start, processor.Start - 2), // account for ]:
@@ -182,11 +179,10 @@ namespace Markdig.Extensions.Footnotes
                 {
                     linkIndex++;
                     link.Index = linkIndex;
-                    var backLink = new FootnoteLink()
+                    var backLink = new FootnoteLink(footnote)
                     {
                         Index = linkIndex,
-                        IsBackLink = true,
-                        Footnote = footnote
+                        IsBackLink = true
                     };
                     paragraphBlock.Inline.AppendChild(backLink);
                 }
@@ -203,7 +199,7 @@ namespace Markdig.Extensions.Footnotes
                 footnote.Order = footnotes.CurrentOrder;
             }
 
-            var link = new FootnoteLink() {Footnote = footnote};
+            var link = new FootnoteLink(footnote);
             footnote.Links.Add(link);
 
             return link;

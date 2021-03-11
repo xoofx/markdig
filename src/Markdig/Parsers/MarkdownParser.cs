@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -77,7 +75,7 @@ namespace Markdig.Parsers
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
         public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (text is null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing

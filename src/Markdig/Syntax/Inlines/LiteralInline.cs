@@ -20,7 +20,7 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public LiteralInline()
         {
-            Content = new StringSlice(null);
+            Content = new StringSlice(null!);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentNullException"></exception>
         public LiteralInline(string text)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (text is null) ThrowHelper.ArgumentNullException_text();
             Content = new StringSlice(text);
         }
 

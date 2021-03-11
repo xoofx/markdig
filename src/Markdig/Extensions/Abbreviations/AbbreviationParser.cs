@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using Markdig.Helpers;
@@ -81,7 +79,7 @@ namespace Markdig.Extensions.Abbreviations
 
             var abbreviations = inlineProcessor.Document.GetAbbreviations();
             // Should not happen, but another extension could decide to remove them, so...
-            if (abbreviations == null)
+            if (abbreviations is null)
             {
                 return;
             }
@@ -129,7 +127,7 @@ namespace Markdig.Extensions.Abbreviations
                         var indexAfterMatch = i + match.Length;
 
                         // If we don't have a container, create a new one
-                        if (container == null)
+                        if (container is null)
                         {
                             container = literal.Parent ??
                                 new ContainerInline
@@ -152,7 +150,7 @@ namespace Markdig.Extensions.Abbreviations
                         abbrInline.Span.End = abbrInline.Span.Start + match.Length - 1;
 
                         // Append the previous literal
-                        if (i > content.Start && literal.Parent == null)
+                        if (i > content.Start && literal.Parent is null)
                         {
                             container.AppendChild(literal);
                         }

@@ -13,6 +13,11 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("{Tag}")]
     public class HtmlInline : LeafInline
     {
+        public HtmlInline(string tag)
+        {
+            Tag = tag;
+        }
+
         /// <summary>
         /// Gets or sets the full declaration of this tag.
         /// </summary>

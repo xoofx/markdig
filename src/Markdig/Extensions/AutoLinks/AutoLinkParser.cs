@@ -106,7 +106,7 @@ namespace Markdig.Extensions.AutoLinks
                 }
 
                 // Parse URL
-                if (!LinkHelper.TryParseUrl(ref slice, out string link, out _, true))
+                if (!LinkHelper.TryParseUrl(ref slice, out string? link, out _, true))
                 {
                     return false;
                 }

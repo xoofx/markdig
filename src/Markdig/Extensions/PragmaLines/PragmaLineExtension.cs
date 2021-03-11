@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -36,7 +36,7 @@ namespace Markdig.Extensions.PragmaLines
         {
             var attribute = block.GetAttributes();
             var pragmaId = GetPragmaId(block);
-            if ( attribute.Id == null)
+            if ( attribute.Id is null)
             {
                 attribute.Id = pragmaId;
             }
@@ -49,8 +49,7 @@ namespace Markdig.Extensions.PragmaLines
                 var tag = $"<a id=\"{pragmaId}\"></a>";
                 if (heading?.Inline?.FirstChild != null)
                 {
-                    heading.Inline.FirstChild.InsertBefore(new HtmlInline() { Tag = tag });
-
+                    heading.Inline.FirstChild.InsertBefore(new HtmlInline(tag));
                 }
                 else
                 {

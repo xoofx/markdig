@@ -3,6 +3,8 @@
 // See the license.txt file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
@@ -28,7 +30,7 @@ namespace Markdig.Extensions.GenericAttributes
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             var startPosition = slice.Start;
-            if (TryParse(ref slice, out HtmlAttributes attributes))
+            if (TryParse(ref slice, out HtmlAttributes? attributes))
             {
                 var inline = processor.Inline;
 
@@ -45,16 +47,16 @@ namespace Markdig.Extensions.GenericAttributes
                         }
                     }
                 }
-                var objectToAttach = inline is null || inline == processor.Root ? (MarkdownObject)processor.Block : inline;
+                var objectToAttach = inline is null || inline == processor.Root ? (MarkdownObject)processor.Block! : inline;
 
                 // If the current block is a Paragraph, but only the HtmlAttributes is used,
                 // Try to attach the attributes to the following block
                 if (objectToAttach is ParagraphBlock paragraph &&
-                    paragraph.Inline.FirstChild == null &&
-                    processor.Inline == null &&
+                    paragraph.Inline!.FirstChild is null &&
+                    processor.Inline is null &&
                     slice.IsEmptyOrWhitespace())
                 {
-                    var parent = paragraph.Parent;
+                    var parent = paragraph.Parent!;
                     var indexOfParagraph = parent.IndexOf(paragraph);
                     if (indexOfParagraph + 1 < parent.Count)
                     {
@@ -86,7 +88,7 @@ namespace Markdig.Extensions.GenericAttributes
         /// <param name="slice">The slice to parse.</param>
         /// <param name="attributes">The output attributes or null if not found or invalid</param>
         /// <returns><c>true</c> if parsing the HTML attributes was successful</returns>
-        public static bool TryParse(ref StringSlice slice, out HtmlAttributes attributes)
+        public static bool TryParse(ref StringSlice slice, [NotNullWhen(true)] out HtmlAttributes? attributes)
         {
             attributes = null;
             if (slice.PeekCharExtra(-1) == '{')
@@ -96,9 +98,9 @@ namespace Markdig.Extensions.GenericAttributes
 
             var line = slice;
 
-            string id = null;
-            List<string> classes = null;
-            List<KeyValuePair<string, string>> properties = null;
+            string? id = null;
+            List<string>? classes = null;
+            List<KeyValuePair<string, string?>>? properties = null;
 
             bool isValid = false;
             var c = line.NextChar();
@@ -135,7 +137,7 @@ namespace Markdig.Extensions.GenericAttributes
                     var text = slice.Text.Substring(start, end - start + 1);
                     if (isClass)
                     {
-                        if (classes == null)
+                        if (classes is null)
                         {
                             classes = new List<string>();
                         }
@@ -175,12 +177,10 @@ namespace Markdig.Extensions.GenericAttributes
                     // Handle boolean properties that are not followed by =
                     if ((hasSpace && (c == '.' || c == '#' || IsStartAttributeName(c))) || c == '}')
                     {
-                        if (properties == null)
-                        {
-                            properties = new List<KeyValuePair<string, string>>();
-                        }
+                        properties ??= new ();
+                        
                         // Add a null value for the property
-                        properties.Add(new KeyValuePair<string, string>(name, null));
+                        properties.Add(new KeyValuePair<string, string?>(name, null));
                         continue;
                     }
 
@@ -245,11 +245,8 @@ namespace Markdig.Extensions.GenericAttributes
 
                     var value = slice.Text.Substring(startValue, endValue - startValue + 1);
 
-                    if (properties == null)
-                    {
-                        properties = new List<KeyValuePair<string, string>>();
-                    }
-                    properties.Add(new KeyValuePair<string, string>(name, value));
+                    properties ??= new();
+                    properties.Add(new KeyValuePair<string, string?>(name, value));
                     continue;
                 }
 

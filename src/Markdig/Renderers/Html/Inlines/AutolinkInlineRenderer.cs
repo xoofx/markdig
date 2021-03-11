@@ -21,7 +21,7 @@ namespace Markdig.Renderers.Html.Inlines
         {
             get
             {
-                return Rel.Contains("nofollow");
+                return Rel is not null && Rel.Contains("nofollow");
             }
             set
             {
@@ -40,7 +40,7 @@ namespace Markdig.Renderers.Html.Inlines
         /// <summary>
         /// Gets or sets the literal string in property rel for links
         /// </summary>
-        public string Rel { get; set; }
+        public string? Rel { get; set; }
 
         protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
         {

@@ -29,7 +29,7 @@ namespace Markdig.Extensions.Tables
         {
             // Only if we have already a paragraph
             var paragraph = processor.CurrentBlock as ParagraphBlock;
-            if (processor.IsCodeIndent || paragraph  == null)
+            if (processor.IsCodeIndent || paragraph  is null)
             {
                 return BlockState.None;
             }
