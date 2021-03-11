@@ -49,7 +49,7 @@ namespace Markdig.Extensions.Tables
                     return BlockState.None;
                 }
 
-                tableState ??= new GridTableState { Start = processor.Start, ExpectRow = true };
+                tableState ??= new GridTableState(start: processor.Start, expectRow: true);
                 tableState.AddColumn(columnStart - lineStart, line.Start - lineStart, columnAlign);
 
                 c = line.CurrentChar;

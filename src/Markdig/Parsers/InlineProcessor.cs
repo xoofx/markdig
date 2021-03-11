@@ -19,7 +19,7 @@ namespace Markdig.Parsers
     /// </summary>
     /// <param name="processor">The processor.</param>
     /// <param name="inline">The inline being processed.</param>
-    public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline inline);
+    public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline? inline);
 
     /// <summary>
     /// The inline parser state used by all <see cref="InlineParser"/>.
@@ -102,7 +102,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the parser states that can be used by <see cref="InlineParser"/> using their <see cref="ParserBase{Inline}.Index"/> property.
         /// </summary>
-        public object?[] ParserStates { get; }
+        public object[] ParserStates { get; }
 
         /// <summary>
         /// Gets or sets the debug log writer. No log if null.
@@ -309,7 +309,7 @@ namespace Markdig.Parsers
             //}
         }
 
-        public void PostProcessInlines(int startingIndex, Inline root, Inline? lastChild, bool isFinalProcessing)
+        public void PostProcessInlines(int startingIndex, Inline? root, Inline? lastChild, bool isFinalProcessing)
         {
             for (int i = startingIndex; i < Parsers.PostInlineProcessors.Length; i++)
             {
@@ -323,7 +323,7 @@ namespace Markdig.Parsers
 
         private ContainerInline FindLastContainer()
         {
-            var container = Block!.Inline;
+            var container = Block!.Inline!;
             for (int depth = 0; ; depth++)
             {
                 if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)

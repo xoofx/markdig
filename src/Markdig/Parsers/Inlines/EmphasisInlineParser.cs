@@ -26,7 +26,7 @@ namespace Markdig.Parsers.Inlines
 
         [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
         public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
-        public delegate EmphasisInline TryCreateEmphasisInlineDelegate(char emphasisChar, int delimiterCount);
+        public delegate EmphasisInline? TryCreateEmphasisInlineDelegate(char emphasisChar, int delimiterCount);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmphasisInlineParser"/> class.
@@ -91,7 +91,7 @@ namespace Markdig.Parsers.Inlines
             emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
         }
 
-        public bool PostProcess(InlineProcessor state, Inline root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
+        public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
             if (!(root is ContainerInline container))
             {
@@ -331,7 +331,7 @@ namespace Markdig.Parsers.Inlines
 
                             if (closeDelimiter.DelimiterCount == 0)
                             {
-                                var newParent = openDelimiter.DelimiterCount > 0 ? emphasis : emphasis.Parent;
+                                var newParent = openDelimiter.DelimiterCount > 0 ? emphasis : emphasis.Parent!;
                                 closeDelimiter.MoveChildrenAfter(newParent);
                                 closeDelimiter.Remove();
                                 delimiters.RemoveAt(i);
@@ -363,7 +363,7 @@ namespace Markdig.Parsers.Inlines
                             else
                             {
                                 // Remove the open delimiter if it is also empty
-                                var firstChild = openDelimiter.FirstChild;
+                                var firstChild = openDelimiter.FirstChild!;
                                 firstChild.Remove();
                                 openDelimiter.ReplaceBy(firstChild);
                                 firstChild.IsClosed = true;

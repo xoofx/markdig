@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -25,7 +27,7 @@ namespace Markdig.Extensions.DefinitionLists
         public override BlockState TryOpen(BlockProcessor processor)
         {
             var paragraphBlock = processor.LastBlock as ParagraphBlock;
-            if (processor.IsCodeIndent || paragraphBlock == null || paragraphBlock.LastLine - processor.LineIndex > 1)
+            if (processor.IsCodeIndent || paragraphBlock is null || paragraphBlock.LastLine - processor.LineIndex > 1)
             {
                 return BlockState.None;
             }
@@ -50,7 +52,7 @@ namespace Markdig.Extensions.DefinitionLists
                 processor.GoToColumn(column + 4);
             }
 
-            var previousParent = paragraphBlock.Parent;
+            var previousParent = paragraphBlock.Parent!;
             var currentDefinitionList = GetCurrentDefinitionList(paragraphBlock, previousParent);
 
             processor.Discard(paragraphBlock);
@@ -102,7 +104,7 @@ namespace Markdig.Extensions.DefinitionLists
             return BlockState.Continue;
         }
 
-        private static DefinitionList GetCurrentDefinitionList(ParagraphBlock paragraphBlock, ContainerBlock previousParent)
+        private static DefinitionList? GetCurrentDefinitionList(ParagraphBlock paragraphBlock, ContainerBlock previousParent)
         {
             var index = previousParent.IndexOf(paragraphBlock) - 1;
             if (index < 0) return null;
@@ -124,11 +126,11 @@ namespace Markdig.Extensions.DefinitionLists
                 return BlockState.Continue;
             }
 
-            var list = (DefinitionList)definitionItem.Parent;
+            var list = (DefinitionList)definitionItem.Parent!;
             var lastBlankLine = definitionItem.LastChild as BlankLineBlock;
 
             // Check if we have another definition list
-            if (Array.IndexOf(OpeningCharacters, processor.CurrentChar) >= 0)
+            if (Array.IndexOf(OpeningCharacters!, processor.CurrentChar) >= 0)
             {
                 var startPosition = processor.Start;
                 var column = processor.ColumnBeforeIndent;
@@ -145,7 +147,7 @@ namespace Markdig.Extensions.DefinitionLists
                         definitionItem.RemoveAt(definitionItem.Count - 1);
                     }
 
-                    list.Span.End = list.LastChild.Span.End;
+                    list.Span.End = list.LastChild!.Span.End;
                     return BlockState.None;
                 }
 
@@ -179,7 +181,7 @@ namespace Markdig.Extensions.DefinitionLists
             }
 
             var paragraphBlock = definitionItem.LastChild as ParagraphBlock;
-            if (lastBlankLine == null && paragraphBlock != null)
+            if (lastBlankLine is null && paragraphBlock != null)
             {
                 return BlockState.Continue;
             }
@@ -190,7 +192,7 @@ namespace Markdig.Extensions.DefinitionLists
                 definitionItem.RemoveAt(definitionItem.Count - 1);
             }
 
-            list.Span.End = list.LastChild.Span.End;
+            list.Span.End = list.LastChild!.Span.End;
             return BlockState.Break;
         }
     }

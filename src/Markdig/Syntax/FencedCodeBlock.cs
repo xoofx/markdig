@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -44,7 +46,7 @@ namespace Markdig.Syntax
         public StringSlice TriviaAfterFencedChar { get; set; }
 
         /// <inheritdoc />
-        public string Info { get; set; }
+        public string? Info { get; set; }
 
         /// <inheritdoc />
         public StringSlice UnescapedInfo { get; set; }
@@ -53,7 +55,7 @@ namespace Markdig.Syntax
         public StringSlice TriviaAfterInfo { get; set; }
 
         /// <inheritdoc />
-        public string Arguments { get; set; }
+        public string? Arguments { get; set; }
 
         /// <inheritdoc />
         public StringSlice UnescapedArguments { get; set; }

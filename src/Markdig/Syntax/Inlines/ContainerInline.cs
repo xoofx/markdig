@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using System;
 using System.Collections;
@@ -20,17 +22,17 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets the parent block of this inline.
         /// </summary>
-        public LeafBlock ParentBlock { get; internal set; }
+        public LeafBlock? ParentBlock { get; internal set; }
 
         /// <summary>
         /// Gets the first child.
         /// </summary>
-        public Inline FirstChild { get; private set; }
+        public Inline? FirstChild { get; private set; }
 
         /// <summary>
         /// Gets the last child.
         /// </summary>
-        public Inline LastChild { get; private set; }
+        public Inline? LastChild { get; private set; }
 
         /// <summary>
         /// Clears this instance by removing all its children.
@@ -56,13 +58,13 @@ namespace Markdig.Syntax.Inlines
         /// <exception cref="ArgumentException">Inline has already a parent</exception>
         public virtual ContainerInline AppendChild(Inline child)
         {
-            if (child == null) ThrowHelper.ArgumentNullException(nameof(child));
+            if (child is null) ThrowHelper.ArgumentNullException(nameof(child));
             if (child.Parent != null)
             {
                 ThrowHelper.ArgumentException("Inline has already a parent", nameof(child));
             }
 
-            if (FirstChild == null)
+            if (FirstChild is null)
             {
                 FirstChild = child;
                 LastChild = child;
@@ -70,7 +72,7 @@ namespace Markdig.Syntax.Inlines
             }
             else
             {
-                LastChild.InsertAfter(child);
+                LastChild!.InsertAfter(child);
             }
             return this;
         }
@@ -115,7 +117,7 @@ namespace Markdig.Syntax.Inlines
         {
             Debug.Assert(typeof(T).IsSubclassOf(typeof(Inline)));
 
-            Stack<Inline> stack = new Stack<Inline>();
+            var stack = new Stack<Inline>();
 
             var child = LastChild;
             while (child != null)
@@ -151,7 +153,7 @@ namespace Markdig.Syntax.Inlines
         /// <param name="parent">The parent.</param>
         public void MoveChildrenAfter(Inline parent)
         {
-            if (parent == null) ThrowHelper.ArgumentNullException(nameof(parent));
+            if (parent is null) ThrowHelper.ArgumentNullException(nameof(parent));
             var child = FirstChild;
             var nextSibling = parent;
             while (child != null)
@@ -197,11 +199,11 @@ namespace Markdig.Syntax.Inlines
                 LastChild = child;
             }
 
-            if (LastChild == null)
+            if (LastChild is null)
             {
                 LastChild = FirstChild;
             }
-            else if (FirstChild == null)
+            else if (FirstChild is null)
             {
                 FirstChild = LastChild;
             }
@@ -239,8 +241,8 @@ namespace Markdig.Syntax.Inlines
         public struct Enumerator : IEnumerator<Inline>
         {
             private readonly ContainerInline container;
-            private Inline currentChild;
-            private Inline nextChild;
+            private Inline? currentChild;
+            private Inline? nextChild;
 
             public Enumerator(ContainerInline container) : this()
             {
@@ -249,7 +251,7 @@ namespace Markdig.Syntax.Inlines
                 currentChild = nextChild = container.FirstChild;
             }
 
-            public Inline Current => currentChild;
+            public Inline Current => currentChild!;
 
             object IEnumerator.Current => Current;
 

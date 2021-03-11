@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 namespace Markdig.Syntax.Inlines
 {
     /// <summary>
@@ -13,17 +15,17 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets the parent container of this inline.
         /// </summary>
-        ContainerInline Parent { get; }
+        ContainerInline? Parent { get; }
 
         /// <summary>
         /// Gets the previous inline.
         /// </summary>
-        Inline PreviousSibling { get; }
+        Inline? PreviousSibling { get; }
 
         /// <summary>
         /// Gets the next sibling inline.
         /// </summary>
-        Inline NextSibling { get; }
+        Inline? NextSibling { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is closed.

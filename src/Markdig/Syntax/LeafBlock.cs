@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -16,13 +18,13 @@ namespace Markdig.Syntax
     [DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines}")]
     public abstract class LeafBlock : Block
     {
-        private ContainerInline inline;
+        private ContainerInline? inline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LeafBlock"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        protected LeafBlock(BlockParser parser) : base(parser)
+        protected LeafBlock(BlockParser? parser) : base(parser)
         {
         }
 
@@ -35,7 +37,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the inline syntax tree (may be null).
         /// </summary>
-        public ContainerInline Inline
+        public ContainerInline? Inline
         {
             get => inline;
             set

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -33,12 +35,12 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the ordered start number (valid when <see cref="IsOrdered"/> is <c>true</c>)
         /// </summary>
-        public string OrderedStart { get; set; }
+        public string? OrderedStart { get; set; }
 
         /// <summary>
         /// Gets or sets the default ordered start ("1" for BulletType = '1')
         /// </summary>
-        public string DefaultOrderedStart { get; set; }
+        public string? DefaultOrderedStart { get; set; }
 
         /// <summary>
         /// Gets or sets the ordered delimiter character (usually `.` or `)`) found after an ordered list item.

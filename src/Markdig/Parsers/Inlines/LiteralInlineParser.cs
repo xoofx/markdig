@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -28,7 +30,7 @@ namespace Markdig.Parsers.Inlines
         /// <summary>
         /// Gets or sets the post match delegate called after the inline has been processed.
         /// </summary>
-        public PostMatchDelegate PostMatch { get; set; }
+        public PostMatchDelegate? PostMatch { get; set; }
 
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {

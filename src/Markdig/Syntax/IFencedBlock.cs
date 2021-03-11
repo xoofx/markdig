@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -33,7 +35,7 @@ namespace Markdig.Syntax
         /// Gets or sets the language parsed after the first line of 
         /// the fenced code block. May be null.
         /// </summary>
-        string Info { get; set; }
+        string? Info { get; set; }
 
         /// <summary>
         /// Non-escaped <see cref="Info"/> exactly as in source markdown.
@@ -53,7 +55,7 @@ namespace Markdig.Syntax
         /// Gets or sets the arguments after the <see cref="Info"/>.
         /// May be null.
         /// </summary>
-        string Arguments { get; set; }
+        string? Arguments { get; set; }
 
         /// <summary>
         /// Non-escaped <see cref="Arguments"/> exactly as in source markdown.

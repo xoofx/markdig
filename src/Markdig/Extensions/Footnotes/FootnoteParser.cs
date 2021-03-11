@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -41,7 +43,7 @@ namespace Markdig.Extensions.Footnotes
 
             var saved = processor.Column;
             int start = processor.Start;
-            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string label, out SourceSpan labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string? label, out SourceSpan labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
             {
                 processor.GoToColumn(saved);
                 return BlockState.None;
@@ -130,12 +132,12 @@ namespace Markdig.Extensions.Footnotes
         /// </summary>
         /// <param name="state">The processor.</param>
         /// <param name="inline">The inline.</param>
-        private void Document_ProcessInlinesEnd(InlineProcessor state, Inline inline)
+        private void Document_ProcessInlinesEnd(InlineProcessor state, Inline? inline)
         {
             // Unregister
             state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
 
-            var footnotes = ((FootnoteGroup)state.Document.GetData(DocumentKey));
+            var footnotes = (FootnoteGroup)state.Document.GetData(DocumentKey)!;
             // Remove the footnotes from the document and readd them at the end
             state.Document.Remove(footnotes);
             state.Document.Add(footnotes);
@@ -166,7 +168,7 @@ namespace Markdig.Extensions.Footnotes
 
                 // Insert all footnote backlinks
                 var paragraphBlock = footnote.LastChild as ParagraphBlock;
-                if (paragraphBlock == null)
+                if (paragraphBlock is null)
                 {
                     paragraphBlock = new ParagraphBlock();
                     footnote.Add(paragraphBlock);
@@ -191,12 +193,12 @@ namespace Markdig.Extensions.Footnotes
             }
         }
 
-        private static Inline CreateLinkToFootnote(InlineProcessor state, LinkReferenceDefinition linkRef, Inline child)
+        private static Inline CreateLinkToFootnote(InlineProcessor state, LinkReferenceDefinition linkRef, Inline? child)
         {
             var footnote = ((FootnoteLinkReferenceDefinition)linkRef).Footnote;
             if (footnote.Order < 0)
             {
-                var footnotes = (FootnoteGroup)state.Document.GetData(DocumentKey);
+                var footnotes = (FootnoteGroup)state.Document.GetData(DocumentKey)!;
                 footnotes.CurrentOrder++;
                 footnote.Order = footnotes.CurrentOrder;
             }

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using System.IO;
@@ -79,12 +81,12 @@ namespace Markdig.Renderers
         /// <summary>
         /// Gets a value to use as the base url for all relative links
         /// </summary>
-        public Uri BaseUrl { get; set; }
+        public Uri? BaseUrl { get; set; }
 
         /// <summary>
         /// Allows links to be rewritten
         /// </summary>
-        public Func<string, string> LinkRewriter { get; set; }
+        public Func<string, string>? LinkRewriter { get; set; }
 
         /// <summary>
         /// Writes the content escaped for HTML.
@@ -92,12 +94,12 @@ namespace Markdig.Renderers
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public HtmlRenderer WriteEscape(string content)
+        public HtmlRenderer WriteEscape(string? content)
         {
-            if (string.IsNullOrEmpty(content))
-                return this;
-
-            WriteEscape(content, 0, content.Length);
+            if (content is { Length: > 0 })
+            {
+                WriteEscape(content, 0, content.Length);
+            }
             return this;
         }
 
@@ -200,9 +202,9 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteEscapeUrl(string content)
+        public HtmlRenderer WriteEscapeUrl(string? content)
         {
-            if (content == null)
+            if (content is null)
                 return this;
 
             if (BaseUrl != null
@@ -341,7 +343,7 @@ namespace Markdig.Renderers
         /// <returns></returns>
         public HtmlRenderer WriteAttributes(MarkdownObject markdownObject)
         {
-            if (markdownObject == null) ThrowHelper.ArgumentNullException_markdownObject();
+            if (markdownObject is null) ThrowHelper.ArgumentNullException_markdownObject();
             return WriteAttributes(markdownObject.TryGetAttributes());
         }
 
@@ -351,9 +353,9 @@ namespace Markdig.Renderers
         /// <param name="attributes">The attributes to render.</param>
         /// <param name="classFilter">A class filter used to transform a class into another class at writing time</param>
         /// <returns>This instance</returns>
-        public HtmlRenderer WriteAttributes(HtmlAttributes attributes, Func<string, string> classFilter = null)
+        public HtmlRenderer WriteAttributes(HtmlAttributes? attributes, Func<string, string>? classFilter = null)
         {
-            if (attributes == null)
+            if (attributes is null)
             {
                 return this;
             }

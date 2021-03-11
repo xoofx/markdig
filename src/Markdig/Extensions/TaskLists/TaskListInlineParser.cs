@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
@@ -40,7 +42,7 @@ namespace Markdig.Extensions.TaskLists
             // [ ]
             // or [x] or [X]
 
-            if (!(processor.Block.Parent is ListItemBlock listItemBlock))
+            if (!(processor.Block!.Parent is ListItemBlock listItemBlock))
             {
                 return false;
             }
@@ -75,7 +77,7 @@ namespace Markdig.Extensions.TaskLists
                 listItemBlock.GetAttributes().AddClass(ListItemClass);
             }
 
-            var listBlock = (ListBlock) listItemBlock.Parent;
+            var listBlock = (ListBlock) listItemBlock.Parent!;
             if (!string.IsNullOrEmpty(ListClass))
             {
                 listBlock.GetAttributes().AddClass(ListClass);

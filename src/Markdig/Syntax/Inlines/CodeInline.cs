@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Helpers;
 using System.Diagnostics;
 
@@ -27,7 +29,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the content of the span.
         /// </summary>
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         /// <summary>
         /// Gets or sets the content with trivia and whitespace.

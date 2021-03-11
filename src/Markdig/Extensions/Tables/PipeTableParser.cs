@@ -122,7 +122,7 @@ namespace Markdig.Extensions.Tables
             return true;
         }
 
-        public bool PostProcess(InlineProcessor state, Inline root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
+        public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
             var container = root as ContainerInline;
             var tableState = state.ParserStates[Index] as TableState;
@@ -130,7 +130,7 @@ namespace Markdig.Extensions.Tables
             // If the delimiters are being processed by an image link, we need to transform them back to literals
             if (!isFinalProcessing)
             {
-                if (container == null || tableState == null)
+                if (container is null || tableState is null)
                 {
                     return true;
                 }
@@ -194,7 +194,7 @@ namespace Markdig.Extensions.Tables
             }
 
             // Remove previous state
-            state.ParserStates[Index] = null;
+            state.ParserStates[Index] = null!;
 
             // Continue
             if (tableState == null || container == null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
@@ -215,7 +215,7 @@ namespace Markdig.Extensions.Tables
             var table = new Table();
 
             // If the current paragraph block has any attributes attached, we can copy them
-            var attributes = state.Block.TryGetAttributes();
+            var attributes = state.Block!.TryGetAttributes();
             if (attributes != null)
             {
                 attributes.CopyTo(table.GetAttributes());
@@ -419,7 +419,7 @@ namespace Markdig.Extensions.Tables
                         table.Line = row.Line;
                         table.Column = row.Column;
                     }
-                    table.Add(row);
+                    table.Add(row!);
                     row = null;
                 }
             }

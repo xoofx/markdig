@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,8 +29,9 @@ namespace Markdig.Renderers
         /// <exception cref="ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
-            if (writer == null) ThrowHelper.ArgumentNullException_writer();
-            Writer = writer;
+            if (writer is null) ThrowHelper.ArgumentNullException_writer();
+            this.writer = writer;
+            this.writer.NewLine = "\n";
         }
 
         /// <summary>
@@ -72,13 +75,14 @@ namespace Markdig.Renderers
     {
         private class Indent
         {
-            private readonly string _constant;
-            private readonly Queue<string> _lineSpecific;
+            private readonly string? _constant;
+            private readonly Queue<string>? _lineSpecific;
 
             internal Indent(string constant)
             {
                 _constant = constant;
             }
+
             internal Indent(IEnumerable<string> lineSpecific)
             {
                 _lineSpecific = new Queue<string>(lineSpecific);
@@ -90,8 +94,9 @@ namespace Markdig.Renderers
                 {
                     return _constant;
                 }
+
                 //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
-                if (_lineSpecific.Count == 0) return string.Empty;
+                if (_lineSpecific!.Count == 0) return string.Empty;
                 var next = _lineSpecific.Dequeue();
                 return next;
             }
@@ -194,7 +199,7 @@ namespace Markdig.Renderers
         /// <param name="content">The content.</param>
         /// <returns>This instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Write(string content)
+        public T Write(string? content)
         {
             WriteIndent();
             previousWasLine = false;
@@ -331,16 +336,15 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T WriteLeafInline(LeafBlock leafBlock)
         {
-            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
-            var inline = (Inline) leafBlock.Inline;
-            if (inline != null)
+            if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
+            var inline = (Inline) leafBlock.Inline!;
+          
+            while (inline != null)
             {
-                while (inline != null)
-                {
-                    Write(inline);
-                    inline = inline.NextSibling;
-                }
+                Write(inline);
+                inline = inline.NextSibling;
             }
+            
             return (T) this;
         }
     }

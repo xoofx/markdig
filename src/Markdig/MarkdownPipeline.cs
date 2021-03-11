@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Text;
@@ -14,17 +16,22 @@ namespace Markdig
     /// <summary>
     /// This class is the Markdown pipeline build from a <see cref="MarkdownPipelineBuilder"/>.
     /// </summary>
-    public class MarkdownPipeline
+    public sealed class MarkdownPipeline
     {
         // This class is immutable
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
         /// </summary>
-        internal MarkdownPipeline(OrderedList<IMarkdownExtension> extensions, BlockParserList blockParsers, InlineParserList inlineParsers, TextWriter debugLog, ProcessDocumentDelegate documentProcessed)
+        internal MarkdownPipeline(
+            OrderedList<IMarkdownExtension> extensions,
+            BlockParserList blockParsers,
+            InlineParserList inlineParsers,
+            TextWriter? debugLog,
+            ProcessDocumentDelegate? documentProcessed)
         {
-            if (blockParsers == null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
-            if (inlineParsers == null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
+            if (blockParsers is null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
+            if (inlineParsers is null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
             // Add all default parsers
             Extensions = extensions;
             BlockParsers = blockParsers;
@@ -45,9 +52,9 @@ namespace Markdig
         internal InlineParserList InlineParsers { get; }
 
         // TODO: Move the log to a better place
-        internal TextWriter DebugLog { get; }
+        internal TextWriter? DebugLog { get; }
 
-        internal ProcessDocumentDelegate DocumentProcessed;
+        internal ProcessDocumentDelegate? DocumentProcessed;
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -61,17 +68,17 @@ namespace Markdig
         /// <param name="renderer">The markdown renderer to setup</param>
         public void Setup(IMarkdownRenderer renderer)
         {
-            if (renderer == null) ThrowHelper.ArgumentNullException(nameof(renderer));
+            if (renderer is null) ThrowHelper.ArgumentNullException(nameof(renderer));
             foreach (var extension in Extensions)
             {
                 extension.Setup(this, renderer);
             }
         }
 
+        private HtmlRendererCache? _rendererCache;
+        private HtmlRendererCache? _rendererCacheForCustomWriter;
 
-        private HtmlRendererCache _rendererCache, _rendererCacheForCustomWriter;
-
-        internal RentedHtmlRenderer RentHtmlRenderer(TextWriter writer = null)
+        internal RentedHtmlRenderer RentHtmlRenderer(TextWriter? writer = null)
         {
             HtmlRendererCache cache = writer is null
                 ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false)
@@ -122,7 +129,6 @@ namespace Markdig
                 {
                     ((StringWriter)instance.Writer).GetStringBuilder().Length = 0;
                 }
-
             }
         }
 
@@ -139,6 +145,5 @@ namespace Markdig
 
             public void Dispose() => _cache.Release(Instance);
         }
-
     }
 }

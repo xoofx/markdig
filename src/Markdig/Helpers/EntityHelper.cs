@@ -31,6 +31,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -47,7 +49,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="entity">The entity without <c>&amp;</c> and <c>;</c> symbols, for example, <c>copy</c>.</param>
         /// <returns>The unicode character set or <c>null</c> if the entity was not recognized.</returns>
-        public static string DecodeEntity(ReadOnlySpan<char> entity)
+        public static string? DecodeEntity(ReadOnlySpan<char> entity)
         {
             if (EntityMap.TryMatchExact(entity, out KeyValuePair<string, string> result))
                 return result.Value;
