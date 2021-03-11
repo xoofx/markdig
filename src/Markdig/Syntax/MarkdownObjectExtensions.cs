@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Markdig.Helpers;
+
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Syntax
@@ -95,7 +95,7 @@ namespace Markdig.Syntax
                 }
             }
 
-            return ArrayHelper.Empty<T>();
+            return Array.Empty<T>();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Markdig.Syntax
             }
             else
             {
-                return ArrayHelper.Empty<T>();
+                return Array.Empty<T>();
             }
         }
 

@@ -104,7 +104,7 @@ namespace Markdig.Syntax.Inlines
         {
             if (FirstChild is null)
             {
-                return ArrayHelper.Empty<T>();
+                return Array.Empty<T>();
             }
             else
             {
