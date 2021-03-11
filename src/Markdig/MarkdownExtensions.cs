@@ -465,20 +465,19 @@ namespace Markdig
 
         public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
         {
-            if (!pipeline.Extensions.Contains<ReferralLinksExtension>())
+            if (pipeline.Extensions.TryFind(out ReferralLinksExtension? referralLinksExtension))
             {
-                pipeline.Extensions.Add(new ReferralLinksExtension(rels));
-            }
-            else
-            {
-                var referralLinksExtension = pipeline.Extensions.Find<ReferralLinksExtension>();
-                foreach(string rel in rels)
+                foreach (string rel in rels)
                 {
                     if (!referralLinksExtension.Rels.Contains(rel))
                     {
                         referralLinksExtension.Rels.Add(rel);
                     }
                 }
+            }
+            else
+            {
+                pipeline.Extensions.Add(new ReferralLinksExtension(rels));
             }
             return pipeline;
         }

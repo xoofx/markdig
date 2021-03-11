@@ -37,20 +37,6 @@ namespace Markdig.Tests
             Assert.That(html, Contains.Substring($"rel=\"{expected}\""));
         }
 
-
-        [Test]
-        public void TestLinksWithNullRel()
-        {
-            var markdown = "[world](http://example.com)";
-
-            var pipeline = new MarkdownPipelineBuilder()
-                .UseReferralLinks(null)
-                .Build();
-            var html = Markdown.ToHtml(markdown, pipeline);
-
-            Assert.That(html, !Contains.Substring("rel="));
-        }
-
         [Test]
         [TestCase(new[] { "noopener" }, "noopener")]
         [TestCase(new[] { "nofollow" }, "nofollow")]
