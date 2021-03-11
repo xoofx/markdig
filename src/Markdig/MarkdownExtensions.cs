@@ -466,7 +466,7 @@ namespace Markdig
 
         public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[]? rels)
         {
-            rels ??= Array.Empty<string>();
+            rels ??= ArrayHelper.Empty<string>();
 
             var extension = pipeline.Extensions.Find<ReferralLinksExtension>();
 

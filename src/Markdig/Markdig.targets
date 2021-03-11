@@ -6,7 +6,10 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <VersionPrefix>0.23.0</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
-    <TargetFrameworks>net461;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+
+    <!-- Markdig.Wpf needs support for net452 which is supported by Microsoft until January 10, 2023 -->
+    <!-- The decision to continue support for this target is documented in https://github.com/xoofx/markdig/pull/466 -->
+    <TargetFrameworks>net452;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
@@ -21,7 +24,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
