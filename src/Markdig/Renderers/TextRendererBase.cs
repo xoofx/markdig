@@ -71,19 +71,21 @@ namespace Markdig.Renderers
     /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
-        private class Indent
+        private sealed class Indent
         {
             private readonly string? _constant;
-            private readonly Queue<string>? _lineSpecific;
+            private readonly string[]? _lines;
+
+            private int position = 0;
 
             internal Indent(string constant)
             {
                 _constant = constant;
             }
 
-            internal Indent(IEnumerable<string> lineSpecific)
+            internal Indent(string[] lineSpecific)
             {
-                _lineSpecific = new Queue<string>(lineSpecific);
+                _lines = lineSpecific;
             }
 
             internal string Next()
@@ -93,10 +95,10 @@ namespace Markdig.Renderers
                     return _constant;
                 }
 
-                //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
-                if (_lineSpecific!.Count == 0) return string.Empty;
-                var next = _lineSpecific.Dequeue();
-                return next;
+                //if (_lines.Count == 0) throw new Exception("Indents empty");
+                if (position == _lines!.Length) return string.Empty;
+
+                return _lines![position++];             
             }
         }
 
@@ -160,7 +162,7 @@ namespace Markdig.Renderers
             indents.Add(new Indent(indent));
         }
 
-        public void PushIndent(IEnumerable<string> lineSpecific)
+        public void PushIndent(string[] lineSpecific)
         {
             if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
             indents.Add(new Indent(lineSpecific));

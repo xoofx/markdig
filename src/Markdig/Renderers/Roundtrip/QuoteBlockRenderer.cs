@@ -18,14 +18,15 @@ namespace Markdig.Renderers.Roundtrip
             renderer.RenderLinesBefore(quoteBlock);
             renderer.Write(quoteBlock.TriviaBefore);
 
-            var indents = new List<string>();
-            foreach (var quoteLine in quoteBlock.QuoteLines)
+            var indents = new string[quoteBlock.QuoteLines.Count];
+            for (int i = 0; i < quoteBlock.QuoteLines.Count; i++)
             {
+                var quoteLine = quoteBlock.QuoteLines[i];
                 var wsb = quoteLine.TriviaBefore.ToString();
                 var quoteChar = quoteLine.QuoteChar ? ">" : "";
                 var spaceAfterQuoteChar = quoteLine.HasSpaceAfterQuoteChar ? " " : "";
                 var wsa = quoteLine.TriviaAfter.ToString();
-                indents.Add(wsb + quoteChar + spaceAfterQuoteChar + wsa);
+                indents[i] = (wsb + quoteChar + spaceAfterQuoteChar + wsa);
             }
             bool noChildren = false;
             if (quoteBlock.Count == 0)
