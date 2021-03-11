@@ -23,7 +23,7 @@ namespace Markdig.Extensions.Footnotes
         /// <summary>
         /// Gets or sets the label used by this footnote.
         /// </summary>
-        public string Label { get; set; }
+        public string? Label { get; set; }
 
         /// <summary>
         /// Gets or sets the order of this footnote (determined by the order of the <see cref="FootnoteLink"/> in the document)

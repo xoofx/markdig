@@ -53,7 +53,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the label.
         /// </summary>
-        public string Label { get; set; }
+        public string? Label { get; set; }
 
         /// <summary>
         /// The label span
@@ -77,12 +77,12 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the reference this link is attached to. May be null.
         /// </summary>
-        public LinkReferenceDefinition Reference { get; set; }
+        public LinkReferenceDefinition? Reference { get; set; }
 
         /// <summary>
         /// Gets or sets the label as matched against the <see cref="LinkReferenceDefinition"/>.
         /// </summary>
-        public string LinkRefDefLabel { get; set; }
+        public string? LinkRefDefLabel { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="LinkRefDefLabel"/> with trivia as matched against
@@ -108,7 +108,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the URL.
         /// </summary>
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// The URL source span.
@@ -133,7 +133,7 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the GetDynamicUrl delegate. If this property is set, 
         /// it is used instead of <see cref="Url"/> to get the Url from this instance.
         /// </summary>
-        public GetUrlDelegate GetDynamicUrl { get; set; }
+        public GetUrlDelegate? GetDynamicUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the character used to enclose the <see cref="Title"/>.
@@ -145,7 +145,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// The title source span.

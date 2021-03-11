@@ -102,7 +102,7 @@ namespace Markdig.Parsers
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T[] GetParsersForOpeningCharacter(uint openingChar)
+        public T[]? GetParsersForOpeningCharacter(uint openingChar)
         {
             return charMap[openingChar];
         }

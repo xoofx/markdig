@@ -51,7 +51,7 @@ namespace Markdig.Extensions.GenericAttributes
                     var copy = line;
                     copy.Start = indexOfAttributes;
                     var startOfAttributes = copy.Start;
-                    if (GenericAttributesParser.TryParse(ref copy, out HtmlAttributes attributes))
+                    if (GenericAttributesParser.TryParse(ref copy, out HtmlAttributes? attributes))
                     {
                         var htmlAttributes = block.GetAttributes();
                         attributes.CopyTo(htmlAttributes);

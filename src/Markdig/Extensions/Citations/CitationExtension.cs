@@ -2,11 +2,11 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
-using System.Diagnostics;
 
 namespace Markdig.Extensions.Citations
 {
@@ -40,7 +40,7 @@ namespace Markdig.Extensions.Citations
             }
         }
 
-        private static string GetTag(EmphasisInline emphasisInline)
+        private static string? GetTag(EmphasisInline emphasisInline)
         {
             Debug.Assert(emphasisInline.DelimiterCount <= 2);
             return emphasisInline.DelimiterCount == 2 && emphasisInline.DelimiterChar == '"' ? "cite" : null;

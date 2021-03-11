@@ -74,8 +74,8 @@ namespace Markdig.Parsers
             var isSetexHeading = previousParagraph != null && breakChar == '-' && !hasInnerSpaces;
             if (isSetexHeading)
             {
-                var parent = previousParagraph.Parent;
-                if (previousParagraph.Column != processor.Column && (parent is QuoteBlock || parent is ListItemBlock))
+                var parent = previousParagraph!.Parent!;
+                if (previousParagraph.Column != processor.Column && (parent is QuoteBlock or ListItemBlock))
                 {
                     isSetexHeading = false;
                 }

@@ -76,9 +76,8 @@ namespace Markdig.Extensions.AutoIdentifiers
 
                 var text = headingLine.ToString();
 
-                var linkRef = new HeadingLinkReferenceDefinition()
+                var linkRef = new HeadingLinkReferenceDefinition(headingBlock)
                 {
-                    Heading = headingBlock,
                     CreateLinkInline = CreateLinkInlineForHeading
                 };
 

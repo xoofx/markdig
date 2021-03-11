@@ -141,7 +141,7 @@ namespace Markdig.Parsers.Inlines
             // The amount of delimiter characters in the delimiter run may exceed emphasisDesc.MaximumCount, as that is handeled in `ProcessEmphasis`
 
             var delimiterChar = slice.CurrentChar;
-            var emphasisDesc = emphasisMap![delimiterChar];
+            var emphasisDesc = emphasisMap![delimiterChar]!;
 
             char pc = (char)0;
             if (processor.Inline is HtmlEntityInline htmlEntityInline)
@@ -220,8 +220,8 @@ namespace Markdig.Parsers.Inlines
             {
                 var closeDelimiter = delimiters[i];
                 // Skip delimiters not supported by this instance
-                EmphasisDescriptor emphasisDesc = emphasisMap![closeDelimiter.DelimiterChar];
-                if (emphasisDesc == null)
+                EmphasisDescriptor? emphasisDesc = emphasisMap![closeDelimiter.DelimiterChar];
+                if (emphasisDesc is null)
                 {
                     continue;
                 }

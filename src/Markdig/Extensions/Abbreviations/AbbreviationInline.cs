@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -14,13 +14,6 @@ namespace Markdig.Extensions.Abbreviations
     [DebuggerDisplay("{Abbreviation}")]
     public class AbbreviationInline : LeafInline
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbbreviationInline"/> class.
-        /// </summary>
-        public AbbreviationInline()
-        {
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AbbreviationInline"/> class.
         /// </summary>

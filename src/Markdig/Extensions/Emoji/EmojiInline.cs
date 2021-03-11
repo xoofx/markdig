@@ -34,6 +34,6 @@ namespace Markdig.Extensions.Emoji
         /// <summary>
         /// Gets or sets the original match string (either an emoji shortcode or a text smiley)
         /// </summary>
-        public string Match { get; set; }
+        public string? Match { get; set; }
     }
 }

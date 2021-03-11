@@ -16,7 +16,7 @@ namespace Markdig.Renderers.Roundtrip.Inlines
         {
             var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
             renderer.Write(delimiterRun);
-            if (obj.Content.Length != 0)
+            if (obj.Content is { Length: > 0 })
             {
                 renderer.Write(obj.ContentWithTrivia);
             }

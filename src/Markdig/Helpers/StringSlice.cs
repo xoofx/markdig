@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable disable
+
 using System;
 using System.Runtime.CompilerServices;
 
@@ -81,7 +83,7 @@ namespace Markdig.Helpers
         /// <summary>
         /// The text of this slice.
         /// </summary>
-        public readonly string Text;
+        public string Text;
 
         /// <summary>
         /// Gets or sets the start position within <see cref="Text"/>.

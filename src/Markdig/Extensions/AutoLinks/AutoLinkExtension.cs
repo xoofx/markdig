@@ -17,7 +17,7 @@ namespace Markdig.Extensions.AutoLinks
     {
         public readonly AutoLinkOptions Options;
 
-        public AutoLinkExtension(AutoLinkOptions options)
+        public AutoLinkExtension(AutoLinkOptions? options)
         {
             Options = options ?? new AutoLinkOptions();
         }

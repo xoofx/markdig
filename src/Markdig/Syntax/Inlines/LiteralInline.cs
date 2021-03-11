@@ -20,7 +20,7 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public LiteralInline()
         {
-            Content = new StringSlice(null);
+            Content = new StringSlice(null!);
         }
 
         /// <summary>

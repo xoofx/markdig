@@ -28,6 +28,6 @@ namespace Markdig.Syntax
         /// Gets a list of zero-based indexes of line beginnings in the source span
         /// <para>Available if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is used, otherwise null</para>
         /// </summary>
-        public List<int> LineStartIndexes;
+        public List<int>? LineStartIndexes { get; set; }
     }
 }

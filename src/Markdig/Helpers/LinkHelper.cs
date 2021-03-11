@@ -716,12 +716,12 @@ namespace Markdig.Helpers
             return isValid;
         }
 
-        public static bool TryParseUrl<T>(T text, out string? link) where T : ICharIterator
+        public static bool TryParseUrl<T>(T text, [NotNullWhen(true)] out string? link) where T : ICharIterator
         {
             return TryParseUrl(ref text, out link, out _);
         }
 
-        public static bool TryParseUrl<T>(ref T text, out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
+        public static bool TryParseUrl<T>(ref T text, [NotNullWhen(true)] out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
         {
             bool isValid = false;
             hasPointyBrackets = false;

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +29,7 @@ namespace Markdig.Helpers
         /// <exception cref="ArgumentNullException"></exception>
         public CharacterMap(IEnumerable<KeyValuePair<char, T>> maps)
         {
-            if (maps == null) ThrowHelper.ArgumentNullException(nameof(maps));
+            if (maps is null) ThrowHelper.ArgumentNullException(nameof(maps));
             var charSet = new HashSet<char>();
             int maxChar = 0;
 
@@ -59,7 +61,7 @@ namespace Markdig.Helpers
                     asciiMap[openingChar] ??= state.Value;
                     isOpeningCharacter.Set(openingChar);
                 }
-                else if (!nonAsciiMap.ContainsKey(openingChar))
+                else if (!nonAsciiMap!.ContainsKey(openingChar))
                 {
                     nonAsciiMap[openingChar] = state.Value;
                 }
