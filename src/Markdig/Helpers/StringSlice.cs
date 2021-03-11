@@ -83,7 +83,7 @@ namespace Markdig.Helpers
         /// <summary>
         /// The text of this slice.
         /// </summary>
-        public string Text;
+        public readonly string Text;
 
         /// <summary>
         /// Gets or sets the start position within <see cref="Text"/>.
