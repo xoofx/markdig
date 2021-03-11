@@ -41,7 +41,7 @@ namespace Markdig.Parsers
 
             foreach (var itemParser in ItemParsers)
             {
-                if (itemParser.OpeningCharacters == null)
+                if (itemParser.OpeningCharacters is null)
                 {
                     ThrowHelper.InvalidOperationException($"The list item parser of type [{itemParser.GetType()}] cannot have OpeningCharacters to null. It must define a list of valid opening characters");
                 }
@@ -199,7 +199,7 @@ namespace Markdig.Parsers
 
             var c = state.CurrentChar;
             var itemParser = mapItemParsers![c];
-            if (itemParser == null)
+            if (itemParser is null)
             {
                 return BlockState.None;
             }
@@ -304,7 +304,7 @@ namespace Markdig.Parsers
                 }
             }
 
-            if (currentParent == null)
+            if (currentParent is null)
             {
                 var newList = new ListBlock(this)
                 {

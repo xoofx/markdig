@@ -71,7 +71,7 @@ namespace Markdig.Renderers.Normalize
         ///// <returns></returns>
         //public NormalizeRenderer WriteAttributes(MarkdownObject obj)
         //{
-        //    if (obj == null) throw new ArgumentNullException(nameof(obj));
+        //    if (obj is null) throw new ArgumentNullException(nameof(obj));
         //    return WriteAttributes(obj.TryGetAttributes());
         //}
 
@@ -82,7 +82,7 @@ namespace Markdig.Renderers.Normalize
         ///// <returns>This instance</returns>
         //public NormalizeRenderer WriteAttributes(HtmlAttributes attributes)
         //{
-        //    if (attributes == null)
+        //    if (attributes is null)
         //    {
         //        return this;
         //    }

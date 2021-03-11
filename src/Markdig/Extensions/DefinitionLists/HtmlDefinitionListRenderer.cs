@@ -55,7 +55,7 @@ namespace Markdig.Extensions.DefinitionLists
                         }
 
                         var nextTerm = i + 1 < definitionItem.Count ? definitionItem[i + 1] : null;
-                        bool isSimpleParagraph = (nextTerm == null || nextTerm is DefinitionItem) && countdd == 0 &&
+                        bool isSimpleParagraph = (nextTerm is null || nextTerm is DefinitionItem) && countdd == 0 &&
                                                  definitionTermOrContent is ParagraphBlock;
 
                         var saveImplicitParagraph = renderer.ImplicitParagraph;

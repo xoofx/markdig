@@ -116,7 +116,7 @@ namespace Markdig.Parsers.Inlines
                 }
                 if (child is EmphasisDelimiterInline delimiter)
                 {
-                    if (delimiters == null)
+                    if (delimiters is null)
                     {
                         delimiters = inlinesCache.Get();
                     }
@@ -270,7 +270,7 @@ namespace Markdig.Parsers.Inlines
                                     emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong: delimiterDelta == 2);
                                     #pragma warning restore CS0618 // Support fields marked as obsolete
                                 }
-                                if (emphasis == null)
+                                if (emphasis is null)
                                 {
                                     // Go in backwards order to give priority to newer delegates
                                     for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
@@ -279,7 +279,7 @@ namespace Markdig.Parsers.Inlines
                                         if (emphasis != null) break;
                                     }
 
-                                    if (emphasis == null)
+                                    if (emphasis is null)
                                     {
                                         emphasis = new EmphasisInline()
                                         {

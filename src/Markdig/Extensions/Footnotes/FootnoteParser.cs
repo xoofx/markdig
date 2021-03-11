@@ -63,7 +63,7 @@ namespace Markdig.Extensions.Footnotes
 
             // Maintain a list of all footnotes at document level
             var footnotes = processor.Document.GetData(DocumentKey) as FootnoteGroup;
-            if (footnotes == null)
+            if (footnotes is null)
             {
                 footnotes = new FootnoteGroup(this);
                 processor.Document.Add(footnotes);
@@ -89,7 +89,7 @@ namespace Markdig.Extensions.Footnotes
         {
             var footnote = (Footnote) block;
 
-            if (processor.CurrentBlock == null || processor.CurrentBlock.IsBreakable)
+            if (processor.CurrentBlock is null || processor.CurrentBlock.IsBreakable)
             {
                 if (processor.IsBlankLine)
                 {
@@ -172,7 +172,7 @@ namespace Markdig.Extensions.Footnotes
                     paragraphBlock = new ParagraphBlock();
                     footnote.Add(paragraphBlock);
                 }
-                if (paragraphBlock.Inline == null)
+                if (paragraphBlock.Inline is null)
                 {
                     paragraphBlock.Inline = new ContainerInline();
                 }

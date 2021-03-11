@@ -77,7 +77,7 @@ namespace Markdig.Extensions.SelfPipeline
         /// <exception cref="ArgumentNullException"></exception>
         public MarkdownPipeline CreatePipelineFromInput(string inputText)
         {
-            if (inputText == null) ThrowHelper.ArgumentNullException(nameof(inputText));
+            if (inputText is null) ThrowHelper.ArgumentNullException(nameof(inputText));
 
             var builder = new MarkdownPipelineBuilder();
             string? defaultConfig = DefaultExtensions;

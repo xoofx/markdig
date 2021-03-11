@@ -19,9 +19,9 @@ namespace Markdig.Syntax
 
         public static bool ContainsLinkReferenceDefinition(this MarkdownDocument document, string label)
         {
-            if (label == null) ThrowHelper.ArgumentNullException_label();
+            if (label is null) ThrowHelper.ArgumentNullException_label();
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
-            if (references == null)
+            if (references is null)
             {
                 return false;
             }
@@ -37,10 +37,10 @@ namespace Markdig.Syntax
 
         public static bool TryGetLinkReferenceDefinition(this MarkdownDocument document, string label, [NotNullWhen(true)] out LinkReferenceDefinition? linkReferenceDefinition)
         {
-            if (label == null) ThrowHelper.ArgumentNullException_label();
+            if (label is null) ThrowHelper.ArgumentNullException_label();
             linkReferenceDefinition = null;
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
-            if (references == null)
+            if (references is null)
             {
                 return false;
             }
@@ -50,7 +50,7 @@ namespace Markdig.Syntax
         public static LinkReferenceDefinitionGroup GetLinkReferenceDefinitions(this MarkdownDocument document, bool addGroup)
         {
             var references = document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
-            if (references == null)
+            if (references is null)
             {
                 references = new LinkReferenceDefinitionGroup();
                 document.SetData(DocumentKey, references);

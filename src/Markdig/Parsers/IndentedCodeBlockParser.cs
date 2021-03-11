@@ -58,7 +58,7 @@ namespace Markdig.Parsers
         {
             if (!processor.IsCodeIndent || processor.IsBlankLine)
             {
-                if (block == null || !processor.IsBlankLine)
+                if (block is null || !processor.IsBlankLine)
                 {
                     if (block != null)
                     {
@@ -109,7 +109,7 @@ namespace Markdig.Parsers
         public override bool Close(BlockProcessor processor, Block block)
         {
             var codeBlock = (CodeBlock)block;
-            if (codeBlock == null)
+            if (codeBlock is null)
             {
                 return true;
             }

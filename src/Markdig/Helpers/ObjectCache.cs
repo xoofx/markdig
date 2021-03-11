@@ -58,7 +58,7 @@ namespace Markdig.Helpers
         /// <exception cref="ArgumentNullException">if instance is null</exception>
         public void Release(T instance)
         {
-            if (instance == null) ThrowHelper.ArgumentNullException(nameof(instance));
+            if (instance is null) ThrowHelper.ArgumentNullException(nameof(instance));
             Reset(instance);
             lock (builders)
             {

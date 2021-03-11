@@ -53,7 +53,7 @@ namespace Markdig.Renderers.Roundtrip
         /// <returns>This instance</returns>
         public void WriteLeafRawLines(LeafBlock leafBlock)
         {
-            if (leafBlock == null) ThrowHelper.ArgumentNullException_leafBlock();
+            if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
             if (leafBlock.Lines.Lines != null)
             {
                 var lines = leafBlock.Lines;
@@ -69,7 +69,7 @@ namespace Markdig.Renderers.Roundtrip
 
         public void RenderLinesBefore(Block block)
         {
-            if (block.LinesBefore == null)
+            if (block.LinesBefore is null)
             {
                 return;
             }
@@ -83,7 +83,7 @@ namespace Markdig.Renderers.Roundtrip
         public void RenderLinesAfter(Block block)
         {
             previousWasLine = true;
-            if (block.LinesAfter == null)
+            if (block.LinesAfter is null)
             {
                 return;
             }

@@ -27,7 +27,7 @@ namespace Markdig.Helpers
 
         public bool InsertBefore<TItem>(T item) where TItem : T
         {
-            if (item == null) ThrowHelper.ArgumentNullException_item();
+            if (item is null) ThrowHelper.ArgumentNullException_item();
             for (int i = 0; i < Count; i++)
             {
                 if (this[i] is TItem)
@@ -87,7 +87,7 @@ namespace Markdig.Helpers
 
         public bool InsertAfter<TItem>(T item) where TItem : T
         {
-            if (item == null) ThrowHelper.ArgumentNullException_item();
+            if (item is null) ThrowHelper.ArgumentNullException_item();
             for (int i = 0; i < Count; i++)
             {
                 if (this[i] is TItem)

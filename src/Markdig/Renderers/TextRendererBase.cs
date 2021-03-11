@@ -43,7 +43,7 @@ namespace Markdig.Renderers
             get { return writer; }
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     ThrowHelper.ArgumentNullException(nameof(value));
                 }
@@ -158,13 +158,13 @@ namespace Markdig.Renderers
 
         public void PushIndent(string indent)
         {
-            if (indent == null) ThrowHelper.ArgumentNullException(nameof(indent));
+            if (indent is null) ThrowHelper.ArgumentNullException(nameof(indent));
             indents.Add(new Indent(indent));
         }
 
         public void PushIndent(IEnumerable<string> lineSpecific)
         {
-            if (indents == null) ThrowHelper.ArgumentNullException(nameof(indents));
+            if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
             indents.Add(new Indent(lineSpecific));
 
             // ensure that indents are written to the output stream
@@ -256,7 +256,7 @@ namespace Markdig.Renderers
         /// <returns>This instance</returns>
         public T Write(string content, int offset, int length)
         {
-            if (content == null)
+            if (content is null)
             {
                 return (T) this;
             }

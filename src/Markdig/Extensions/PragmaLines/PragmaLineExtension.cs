@@ -36,7 +36,7 @@ namespace Markdig.Extensions.PragmaLines
         {
             var attribute = block.GetAttributes();
             var pragmaId = GetPragmaId(block);
-            if ( attribute.Id == null)
+            if ( attribute.Id is null)
             {
                 attribute.Id = pragmaId;
             }

@@ -33,7 +33,7 @@ namespace Markdig.Extensions.Tables
 
         public void AddLine(ref StringSlice line)
         {
-            if (Lines.Lines == null)
+            if (Lines.Lines is null)
             {
                 Lines = new StringLineGroup(4);
             }

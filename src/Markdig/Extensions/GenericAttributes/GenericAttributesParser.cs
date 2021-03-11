@@ -137,7 +137,7 @@ namespace Markdig.Extensions.GenericAttributes
                     var text = slice.Text.Substring(start, end - start + 1);
                     if (isClass)
                     {
-                        if (classes == null)
+                        if (classes is null)
                         {
                             classes = new List<string>();
                         }

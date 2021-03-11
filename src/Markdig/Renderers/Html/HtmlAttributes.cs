@@ -104,7 +104,7 @@ namespace Markdig.Renderers.Html
         /// <exception cref="ArgumentNullException"></exception>
         public void CopyTo(HtmlAttributes htmlAttributes, bool mergeIdAndProperties = false, bool shared = true)
         {
-            if (htmlAttributes == null) ThrowHelper.ArgumentNullException(nameof(htmlAttributes));
+            if (htmlAttributes is null) ThrowHelper.ArgumentNullException(nameof(htmlAttributes));
             // Add html htmlAttributes to the object
             if (!mergeIdAndProperties || Id != null)
             {
@@ -119,7 +119,7 @@ namespace Markdig.Renderers.Html
                 htmlAttributes.Classes.AddRange(Classes);
             }
 
-            if (htmlAttributes.Properties == null)
+            if (htmlAttributes.Properties is null)
             {
                 htmlAttributes.Properties = shared ? Properties : Properties != null ? new (Properties) : null;
             }

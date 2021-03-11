@@ -55,7 +55,7 @@ namespace Markdig.Extensions.Tables
                 c = line.CurrentChar;
             }
 
-            if (c != 0 || tableState == null)
+            if (c != 0 || tableState is null)
             {
                 return BlockState.None;
             }
@@ -196,7 +196,7 @@ namespace Markdig.Extensions.Tables
                 }
 
                 // Renew the block parser processor (or reset it for the last row)
-                if (columnSlice.BlockProcessor != null && (columnSlice.CurrentCell == null || columnSlice.CurrentCell.AllowClose))
+                if (columnSlice.BlockProcessor != null && (columnSlice.CurrentCell is null || columnSlice.CurrentCell.AllowClose))
                 {
                     columnSlice.BlockProcessor.ReleaseChild();
                     columnSlice.BlockProcessor = isLastRow ? null : processor.CreateChild();
@@ -265,7 +265,7 @@ namespace Markdig.Extensions.Tables
 
                 if (!isRowLine || !IsRowSeperator(sliceForCell))
                 {
-                    if (columnSlice.CurrentCell == null)
+                    if (columnSlice.CurrentCell is null)
                     {
                         columnSlice.CurrentCell = new TableCell(this)
                         {
@@ -273,7 +273,7 @@ namespace Markdig.Extensions.Tables
                             ColumnIndex = i
                         };
 
-                        if (columnSlice.BlockProcessor == null)
+                        if (columnSlice.BlockProcessor is null)
                         {
                             columnSlice.BlockProcessor = processor.CreateChild();
                         }

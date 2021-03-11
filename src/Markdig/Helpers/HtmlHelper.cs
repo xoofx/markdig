@@ -54,7 +54,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseHtmlTag(ref StringSlice text, StringBuilder builder)
         {
-            if (builder == null) ThrowHelper.ArgumentNullException(nameof(builder));
+            if (builder is null) ThrowHelper.ArgumentNullException(nameof(builder));
             var c = text.CurrentChar;
             if (c != '<')
             {
@@ -500,7 +500,7 @@ namespace Markdig.Helpers
                 }
             }
 
-            if (sb == null || lastPos == 0)
+            if (sb is null || lastPos == 0)
                 return text;
 
             sb.Append(text, lastPos, text.Length - lastPos);

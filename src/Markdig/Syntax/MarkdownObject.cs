@@ -106,7 +106,7 @@ namespace Markdig.Syntax
 
             public void SetData(object key, object value)
             {
-                if (key == null) ThrowHelper.ArgumentNullException_key();
+                if (key is null) ThrowHelper.ArgumentNullException_key();
 
                 DataEntry[] entries = _entries;
                 int count = _count;

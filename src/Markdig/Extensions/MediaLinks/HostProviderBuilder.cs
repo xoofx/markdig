@@ -56,7 +56,7 @@ namespace Markdig.Extensions.MediaLinks
         {
             if (string.IsNullOrEmpty(hostPrefix))
                 ThrowHelper.ArgumentException("hostPrefix is null or empty.", nameof(hostPrefix));
-            if (handler == null)
+            if (handler is null)
                 ThrowHelper.ArgumentNullException(nameof(handler));
 
             return new DelegateProvider(hostPrefix, handler, allowFullScreen, iframeClass);
@@ -137,7 +137,7 @@ namespace Markdig.Extensions.MediaLinks
             string? trackKeyword = items.Skip(2).FirstOrDefault();
             string? trackId = items.Skip(3).FirstOrDefault();
 
-            if (albumKeyword != "album" || albumId == null || trackKeyword != "track" || trackId == null)
+            if (albumKeyword != "album" || albumId is null || trackKeyword != "track" || trackId is null)
             {
                 return null;
             }

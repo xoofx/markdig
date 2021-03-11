@@ -1747,10 +1747,10 @@ namespace Markdig.Extensions.Emoji
         /// </summary>
         public EmojiMapping(IDictionary<string, string> shortcodeToUnicode, IDictionary<string, string> smileyToShortcode)
         {
-            if (shortcodeToUnicode == null)
+            if (shortcodeToUnicode is null)
                 ThrowHelper.ArgumentNullException(nameof(shortcodeToUnicode));
 
-            if (smileyToShortcode == null)
+            if (smileyToShortcode is null)
                 ThrowHelper.ArgumentNullException(nameof(smileyToShortcode));
 
             // Build emojis and smileys CompactPrefixTree

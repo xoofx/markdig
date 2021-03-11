@@ -17,7 +17,7 @@ namespace Markdig.Syntax.Inlines
     {
         protected DelimiterInline(InlineParser parser)
         {
-            if (parser == null) ThrowHelper.ArgumentNullException(nameof(parser));
+            if (parser is null) ThrowHelper.ArgumentNullException(nameof(parser));
             Parser = parser;
             IsActive = true;
         }

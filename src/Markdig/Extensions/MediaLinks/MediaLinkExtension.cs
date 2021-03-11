@@ -48,7 +48,7 @@ namespace Markdig.Extensions.MediaLinks
 
         private bool TryLinkInlineRenderer(HtmlRenderer renderer, LinkInline linkInline)
         {
-            if (!linkInline.IsImage || linkInline.Url == null)
+            if (!linkInline.IsImage || linkInline.Url is null)
             {
                 return false;
             }

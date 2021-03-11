@@ -47,7 +47,7 @@ namespace Markdig.Helpers
         /// <exception cref="ArgumentNullException"></exception>
         public StringLineGroup(string text)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (text is null) ThrowHelper.ArgumentNullException_text();
             Lines = new StringLine[1];
             Count = 0;
             Add(new StringSlice(text));

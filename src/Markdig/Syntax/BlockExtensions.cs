@@ -43,7 +43,7 @@ namespace Markdig.Syntax
                     upperIndex = midIndex - 1;
             }
 
-            if (block == null)
+            if (block is null)
             {
                 return rootBlock;
             }

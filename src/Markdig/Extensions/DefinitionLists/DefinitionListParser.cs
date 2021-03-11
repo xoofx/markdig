@@ -63,7 +63,7 @@ namespace Markdig.Extensions.DefinitionLists
                 paragraphBlock.Parent.Remove(paragraphBlock);
             }
 
-            if (currentDefinitionList == null)
+            if (currentDefinitionList is null)
             {
                 currentDefinitionList = new DefinitionList(this)
                 {
@@ -173,7 +173,7 @@ namespace Markdig.Extensions.DefinitionLists
             var isBreakable = definitionItem.LastChild?.IsBreakable ?? true;
             if (processor.IsBlankLine)
             {
-                if (lastBlankLine == null && isBreakable)
+                if (lastBlankLine is null && isBreakable)
                 {
                     definitionItem.Add(new BlankLineBlock());
                 }

@@ -86,7 +86,7 @@ namespace Markdig.Renderers
         /// <param name="containerInline">The container inline.</param>
         public void WriteChildren(ContainerInline containerInline)
         {
-            if (containerInline == null)
+            if (containerInline is null)
             {
                 return;
             }
@@ -101,7 +101,7 @@ namespace Markdig.Renderers
             while (inline != null)
             {
                 IsFirstInContainer = isFirst;
-                IsLastInContainer = inline.NextSibling == null;
+                IsLastInContainer = inline.NextSibling is null;
 
                 Write(inline);
                 inline = inline.NextSibling;
@@ -121,7 +121,7 @@ namespace Markdig.Renderers
         /// <param name="obj">The Markdown object to write to this renderer.</param>
         public void Write(MarkdownObject obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return;
             }

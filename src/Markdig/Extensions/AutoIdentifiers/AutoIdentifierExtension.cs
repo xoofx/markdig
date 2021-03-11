@@ -83,7 +83,7 @@ namespace Markdig.Extensions.AutoIdentifiers
 
                 var doc = processor.Document;
                 var dictionary = doc.GetData(this) as Dictionary<string, HeadingLinkReferenceDefinition>;
-                if (dictionary == null)
+                if (dictionary is null)
                 {
                     dictionary = new Dictionary<string, HeadingLinkReferenceDefinition>();
                     doc.SetData(this, dictionary);

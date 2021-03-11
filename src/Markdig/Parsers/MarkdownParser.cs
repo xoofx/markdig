@@ -77,7 +77,7 @@ namespace Markdig.Parsers
         /// <exception cref="ArgumentNullException">if reader variable is null</exception>
         public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
         {
-            if (text == null) ThrowHelper.ArgumentNullException_text();
+            if (text is null) ThrowHelper.ArgumentNullException_text();
             pipeline ??= new MarkdownPipelineBuilder().Build();
 
             // Perform the parsing

@@ -78,7 +78,7 @@ namespace Markdig.Syntax
         /// <param name="trackTrivia">Whether to keep track of trivia such as whitespace, extra heading characters and unescaped string values.</param>
         public void AppendLine(ref StringSlice slice, int column, int line, int sourceLinePosition, bool trackTrivia)
         {
-            if (Lines.Lines == null)
+            if (Lines.Lines is null)
             {
                 Lines = new StringLineGroup(4, ProcessInlines);
             }
