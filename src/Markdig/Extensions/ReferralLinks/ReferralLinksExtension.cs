@@ -9,14 +9,14 @@ using Markdig.Renderers.Html.Inlines;
 
 namespace Markdig.Extensions.ReferralLinks
 {
-    public class ReferralLinksExtension : IMarkdownExtension
+    public sealed class ReferralLinksExtension : IMarkdownExtension
     {
         public ReferralLinksExtension(string[] rels)
         {
-            Rels = rels?.ToList();
+            Rels = rels.ToList();
         }
 
-        public List<string>? Rels { get; }
+        public List<string> Rels { get; }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {

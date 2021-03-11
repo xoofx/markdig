@@ -452,6 +452,7 @@ namespace Markdig
             }
             return pipeline;
         }
+
         /// <summary>
         /// Add rel=nofollow to all links rendered to HTML.
         /// </summary>
@@ -465,18 +466,21 @@ namespace Markdig
 
         public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
         {
-            if (!pipeline.Extensions.Contains<ReferralLinksExtension>())
+            if (rels is null) ThrowHelper.ArgumentNullException(nameof(rels));
+
+            var extension = pipeline.Extensions.Find<ReferralLinksExtension>();
+
+            if (extension is null)
             {
                 pipeline.Extensions.Add(new ReferralLinksExtension(rels));
             }
             else
             {
-                var referralLinksExtension = pipeline.Extensions.Find<ReferralLinksExtension>();
-                foreach(string rel in rels)
+                foreach (string rel in rels)
                 {
-                    if (!referralLinksExtension.Rels.Contains(rel))
+                    if (!extension.Rels.Contains(rel))
                     {
-                        referralLinksExtension.Rels.Add(rel);
+                        extension.Rels.Add(rel);
                     }
                 }
             }
