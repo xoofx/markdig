@@ -92,8 +92,8 @@ namespace Markdig.Extensions.MediaLinks
             }
             var queryParams = SplitQuery(uri);
             return BuildYouTubeIframeUrl(
-                queryParams.FirstOrDefault(p => p.StartsWith("v="))?.Substring(2),
-                queryParams.FirstOrDefault(p => p.StartsWith("t="))?.Substring(2)
+                queryParams.FirstOrDefault(p => p.StartsWith("v=", StringComparison.Ordinal))?.Substring(2),
+                queryParams.FirstOrDefault(p => p.StartsWith("t=", StringComparison.Ordinal))?.Substring(2)
             );
         }
 
@@ -101,7 +101,7 @@ namespace Markdig.Extensions.MediaLinks
         {
             return BuildYouTubeIframeUrl(
                 uri.AbsolutePath.Substring(1),
-                SplitQuery(uri).FirstOrDefault(p => p.StartsWith("t="))?.Substring(2)
+                SplitQuery(uri).FirstOrDefault(p => p.StartsWith("t=", StringComparison.Ordinal))?.Substring(2)
             );
         }
 
@@ -135,7 +135,7 @@ namespace Markdig.Extensions.MediaLinks
             string? trackKeyword = items.Skip(2).FirstOrDefault();
             string? trackId = items.Skip(3).FirstOrDefault();
 
-            if (albumKeyword != "album" || albumId is null || trackKeyword != "track" || trackId is null)
+            if (albumKeyword is not "album" || albumId is null || trackKeyword is not "track" || trackId is null)
             {
                 return null;
             }

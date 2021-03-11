@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System;
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
@@ -41,7 +43,7 @@ namespace Markdig.Extensions.Footnotes
 
             var saved = processor.Column;
             int start = processor.Start;
-            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string? label, out SourceSpan labelSpan) || !label.StartsWith("^") || processor.CurrentChar != ':')
+            if (!LinkHelper.TryParseLabel(ref processor.Line, false, out string? label, out SourceSpan labelSpan) || !label.StartsWith("^", StringComparison.Ordinal) || processor.CurrentChar != ':')
             {
                 processor.GoToColumn(saved);
                 return BlockState.None;
