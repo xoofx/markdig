@@ -67,10 +67,10 @@ namespace Markdig.Renderers.Roundtrip
             }
             else
             {
-                var indents = new List<string>();
-                foreach (var cbl in obj.CodeBlockLines)
+                var indents = new string[obj.CodeBlockLines.Count];
+                for (int i = 0; i < obj.CodeBlockLines.Count; i++)
                 {
-                    indents.Add(cbl.TriviaBefore.ToString());
+                    indents[i] = obj.CodeBlockLines[i].TriviaBefore.ToString();
                 }
                 renderer.PushIndent(indents);
                 WriteLeafRawLines(renderer, obj);
