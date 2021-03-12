@@ -47,7 +47,7 @@ namespace Markdig.Renderers.Html
                 {
                     renderer.Write("<div")
                             .WriteAttributes(obj.TryGetAttributes(),
-                                cls => cls.StartsWith(infoPrefix) ? cls.Substring(infoPrefix.Length) : cls)
+                                cls => cls.StartsWith(infoPrefix, StringComparison.Ordinal) ? cls.Substring(infoPrefix.Length) : cls)
                             .Write(">");
                 }
 

@@ -519,7 +519,7 @@ namespace Markdig.Helpers
                                 Debug.Assert(key.Length != previousKey.Length);
                                 if (previousKey.Length < key.Length) // If the input was sorted, this should be hit
                                 {
-                                    Debug.Assert(key.StartsWith(previousKey));
+                                    Debug.Assert(key.StartsWith(previousKey, StringComparison.Ordinal));
                                     node.ChildChar = key[i];
                                     node.MatchIndex = previousMatchIndex;
                                     EnsureTreeCapacity(TreeSize + 1);
@@ -533,7 +533,7 @@ namespace Markdig.Helpers
                                 else // if key.Length < previousKey.Length
                                 {
                                     Debug.Assert(key.Length < previousKey.Length);
-                                    Debug.Assert(previousKey.StartsWith(key));
+                                    Debug.Assert(previousKey.StartsWith(key, StringComparison.Ordinal));
                                     node.ChildChar = previousKey[i];
                                     node.MatchIndex = Count;
                                     EnsureTreeCapacity(TreeSize + 1);
@@ -583,7 +583,7 @@ namespace Markdig.Helpers
                         else
                         {
                             // This node has a child char, therefore we either don't have a match attached or that match is simply a prefix of the current key
-                            Debug.Assert(node.MatchIndex == -1 || key.StartsWith(_matches[node.MatchIndex].Key));
+                            Debug.Assert(node.MatchIndex == -1 || key.StartsWith(_matches[node.MatchIndex].Key, StringComparison.Ordinal));
 
                             // Set this pair as the current node's first element in the Children list
                             node.Children = _childrenIndex;
@@ -641,7 +641,7 @@ namespace Markdig.Helpers
                         // It's not a duplicate but shares key.Length characters, therefore it's longer
                         // This will never occur if the input was sorted
                         Debug.Assert(previousMatch.Key.Length > key.Length);
-                        Debug.Assert(previousMatch.Key.StartsWith(key));
+                        Debug.Assert(previousMatch.Key.StartsWith(key, StringComparison.Ordinal));
                         Debug.Assert(node.ChildChar == 0 && node.Children == -1);
 
                         // It is a leaf node
