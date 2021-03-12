@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Markdig.Helpers;
 using Markdig.Syntax;
@@ -16,24 +17,8 @@ namespace Markdig.Parsers
     /// </summary>
     public class BlockProcessor
     {
-        private readonly BlockProcessor? root;
         private int currentStackIndex;
-        private readonly BlockParserStateCache parserStateCache;
-        private int originalLineStart = 0;
-
-        private BlockProcessor(BlockProcessor root, bool trackTrivia = false)
-        {
-            // These properties are not changing between a parent and a children BlockProcessor
-            this.root = root;
-            this.parserStateCache = root.parserStateCache;
-            TrackTrivia = trackTrivia;
-            Document = root.Document;
-            Parsers = root.Parsers;
-
-            // These properties are local to a state
-            OpenedBlocks = new List<Block>();
-            NewBlocks = new Stack<Block>();
-        }
+        private int originalLineStart;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockProcessor" /> class.
@@ -46,36 +31,30 @@ namespace Markdig.Parsers
         /// </exception>
         public BlockProcessor(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia = false)
         {
-            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
-            if (parsers is null) ThrowHelper.ArgumentNullException(nameof(parsers));
-            TrackTrivia = trackTrivia;
-            parserStateCache = new BlockParserStateCache(this);
-            Document = document;
+            Setup(document, parsers, context, trackTrivia);
+
             document.IsOpen = true;
-            Parsers = parsers;
-            Context = context;
-            OpenedBlocks = new List<Block>();
-            NewBlocks = new Stack<Block>();
-            root = this;
             Open(document);
         }
+
+        private BlockProcessor() { }
 
         public bool SkipFirstUnwindSpace { get; set; }
 
         /// <summary>
         /// Gets the new blocks to push. A <see cref="BlockParser"/> is required to push new blocks that it creates to this property.
         /// </summary>
-        public Stack<Block> NewBlocks { get; }
+        public Stack<Block> NewBlocks { get; } = new();
 
         /// <summary>
-        /// Gets the list of <see cref="BlockParser"/> configured with this parser state.
+        /// Gets the list of <see cref="BlockParser"/>s configured with this parser state.
         /// </summary>
-        public BlockParserList Parsers { get; }
+        public BlockParserList Parsers { get; private set; } = null!; // Set in Setup
 
         /// <summary>
         /// Gets the parser context or <c>null</c> if none is available.
         /// </summary>
-        public MarkdownParserContext? Context { get; }
+        public MarkdownParserContext? Context { get; private set; }
 
         /// <summary>
         /// Gets the current active container.
@@ -100,7 +79,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the root document.
         /// </summary>
-        public MarkdownDocument Document { get; }
+        public MarkdownDocument Document { get; private set; } = null!; // Set in Setup
 
         /// <summary>
         /// The current line being processed.
@@ -156,7 +135,7 @@ namespace Markdig.Parsers
         /// Gets the character position before the indent occurred.
         /// </summary>
         public int StartBeforeIndent { get; private set; }
-        
+
         /// <summary>
         /// Gets a boolean indicating whether the current line being parsed is lazy continuation.
         /// </summary>
@@ -165,7 +144,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.
         /// </summary>
-        private List<Block> OpenedBlocks { get; }
+        private List<Block> OpenedBlocks { get; } = new();
 
         private bool ContinueProcessingLine { get; set; }
 
@@ -212,7 +191,7 @@ namespace Markdig.Parsers
         /// True to parse trivia such as whitespace, extra heading characters and unescaped
         /// string values.
         /// </summary>
-        public bool TrackTrivia { get; }
+        public bool TrackTrivia { get; private set; }
 
         /// <summary>
         /// Get the current Container that is currently opened
@@ -517,21 +496,6 @@ namespace Markdig.Parsers
             CloseAll(false);
 
             LineIndex++;
-        }
-
-        public BlockProcessor CreateChild()
-        {
-            var newState = parserStateCache.Get();
-            return newState;
-        }
-
-        public void ReleaseChild()
-        {
-            if (this == root)
-            {
-                ThrowHelper.InvalidOperationException("Cannot release the root parser state");
-            }
-            parserStateCache.Release(this);
         }
 
         internal bool IsOpen(Block block)
@@ -990,34 +954,72 @@ namespace Markdig.Parsers
             TriviaStart = newLine.Start;
         }
 
-        private void Reset()
+
+
+        [MemberNotNull(nameof(Document), nameof(Parsers))]
+        internal void Setup(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia)
         {
-            Line = StringSlice.Empty;
-            Column = 0;
-            ColumnBeforeIndent = 0;
-            StartBeforeIndent = 0;
-            OpenedBlocks.Clear();
-            NewBlocks.Clear();
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+
+            Document = document;
+            Parsers = parsers;
+            Context = context;
+            TrackTrivia = trackTrivia;
         }
 
-        private sealed class BlockParserStateCache : ObjectCache<BlockProcessor>
+        private void Reset()
         {
-            private readonly BlockProcessor root;
+            Document = null!;
+            Parsers = null!;
+            Context = null;
+            CurrentContainer = null;
+            CurrentBlock = null;
+            LastBlock = null;
 
-            public BlockParserStateCache(BlockProcessor root)
-            {
-                this.root = root;
-            }
+            TrackTrivia = false;
+            SkipFirstUnwindSpace = false;
+            ContinueProcessingLine = false;
+            IsLazy = false;
 
-            protected override BlockProcessor NewInstance()
-            {
-                return new BlockProcessor(root);
-            }
+            currentStackIndex = 0;
+            originalLineStart = 0;
+            CurrentLineStartPosition = 0;
+            ColumnBeforeIndent = 0;
+            StartBeforeIndent = 0;
+            LineIndex = 0;
+            Column = 0;
+            TriviaStart = 0;
 
-            protected override void Reset(BlockProcessor instance)
-            {
-                instance.Reset();
-            }
+            Line = StringSlice.Empty;
+
+            NewBlocks.Clear();
+            OpenedBlocks.Clear();
+            LinesBefore = null;
+        }
+
+        public BlockProcessor CreateChild() => Rent(Document, Parsers, Context, TrackTrivia);
+
+        public void ReleaseChild() => Release(this);
+
+        private static readonly BlockProcessorCache _cache = new();
+
+        internal static BlockProcessor Rent(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia)
+        {
+            var processor = _cache.Get();
+            processor.Setup(document, parsers, context, trackTrivia);
+            return processor;
+        }
+
+        internal static void Release(BlockProcessor processor)
+        {
+            _cache.Release(processor);
+        }
+
+        private sealed class BlockProcessorCache : ObjectCache<BlockProcessor>
+        {
+            protected override BlockProcessor NewInstance() => new BlockProcessor();
+
+            protected override void Reset(BlockProcessor instance) => instance.Reset();
         }
     }
 }

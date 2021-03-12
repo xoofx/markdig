@@ -18,53 +18,8 @@ namespace Markdig.Parsers
     /// <summary>
     /// The Markdown parser.
     /// </summary>
-    public sealed class MarkdownParser
+    public static class MarkdownParser
     {
-        private readonly BlockProcessor blockProcessor;
-        private readonly InlineProcessor inlineProcessor;
-        private readonly MarkdownDocument document;
-        private readonly ProcessDocumentDelegate? documentProcessed;
-        private readonly bool preciseSourceLocation;
-        private readonly bool trackTrivia;
-
-        private readonly int roughLineCountEstimate;
-
-        private LineReader lineReader;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownParser" /> class.
-        /// </summary>
-        /// <param name="text">The reader.</param>
-        /// <param name="pipeline">The pipeline.</param>
-        /// <param name="context">A parser context used for the parsing.</param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        private MarkdownParser(string text, MarkdownPipeline pipeline, MarkdownParserContext? context)
-        {
-            if (text is null) ThrowHelper.ArgumentNullException_text();
-            if (pipeline is null) ThrowHelper.ArgumentNullException(nameof(pipeline));
-
-            trackTrivia = pipeline.TrackTrivia;
-            roughLineCountEstimate = text.Length / 40;
-            text = FixupZero(text);
-            lineReader = new LineReader(text);
-            preciseSourceLocation = pipeline.PreciseSourceLocation;
-
-            // Initialize the pipeline
-            document = new MarkdownDocument();
-
-            // Initialize the block parsers
-            blockProcessor = new BlockProcessor(document, pipeline.BlockParsers, context, pipeline.TrackTrivia);
-
-            // Initialize the inline parsers
-            inlineProcessor = new InlineProcessor(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, pipeline.TrackTrivia)
-            {
-                DebugLog = pipeline.DebugLog
-            };
-
-            documentProcessed = pipeline.DocumentProcessed;
-        }
-
         /// <summary>
         /// Parses the specified markdown into an AST <see cref="MarkdownDocument"/>
         /// </summary>
@@ -76,86 +31,107 @@ namespace Markdig.Parsers
         public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
         {
             if (text is null) ThrowHelper.ArgumentNullException_text();
-            pipeline ??= new MarkdownPipelineBuilder().Build();
 
-            // Perform the parsing
-            var markdownParser = new MarkdownParser(text, pipeline, context);
-            return markdownParser.Parse();
-        }
+            pipeline ??= Markdown.DefaultPipeline;
 
-        /// <summary>
-        /// Parses the current <see cref="lineReader"/> into a Markdown <see cref="MarkdownDocument"/>.
-        /// </summary>
-        /// <returns>A document instance</returns>
-        private MarkdownDocument Parse()
-        {
-            if (preciseSourceLocation)
+            text = FixupZero(text);
+
+            var document = new MarkdownDocument
             {
-                // Save some List resizing allocations
-                document.LineStartIndexes = new List<int>(Math.Min(512, roughLineCountEstimate));
+                IsOpen = true
+            };
+
+            if (pipeline.PreciseSourceLocation)
+            {
+                int roughLineCountEstimate = text.Length / 40;
+                roughLineCountEstimate = Math.Min(4, Math.Max(512, roughLineCountEstimate));
+                document.LineStartIndexes = new List<int>(roughLineCountEstimate);
             }
 
-            ProcessBlocks();
-            ProcessInlines();
-
-            // At this point the LineIndex is the same as the number of lines in the document
-            document.LineCount = blockProcessor.LineIndex;
-            
-            // Allow to call a hook after processing a document
-            documentProcessed?.Invoke(document);
-            return document;
-        }
-
-        private void ProcessBlocks()
-        {
-            while (true)
+            var blockProcessor = BlockProcessor.Rent(document, pipeline.BlockParsers, context, pipeline.TrackTrivia);
+            try
             {
-                // Get the precise position of the begining of the line
-                var lineText = lineReader.ReadLine();
-                
-                // If this is the end of file and the last line is empty
-                if (lineText.Text is null)
+                blockProcessor.Open(document);
+
+                ProcessBlocks(blockProcessor, new LineReader(text));
+
+                if (pipeline.TrackTrivia)
                 {
-                    if (trackTrivia)
+                    Block? lastBlock = blockProcessor.LastBlock;
+                    if (lastBlock is null && document.Count == 0)
                     {
-                        Block? lastBlock = blockProcessor.LastBlock;
-                        if (lastBlock is null && document.Count == 0)
-                        {
-                            // this means we have unassigned characters
-                            var noBlocksFoundBlock = new EmptyBlock (null);
-                            List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
-                            noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
-                            noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
-                            document.Add(noBlocksFoundBlock);
-                        }
-                        else if (lastBlock != null && blockProcessor.LinesBefore != null)
-                        {
-                            // this means we're out of lines, but still have unassigned empty lines.
-                            // thus, we'll assign the empty unsassigned lines to the last block
-                            // of the document.
-                            var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
-                            rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
-                            var linesBefore = blockProcessor.UseLinesBefore();
-                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
-                        }
+                        // this means we have unassigned characters
+                        var noBlocksFoundBlock = new EmptyBlock(null);
+                        List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
+                        noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
+                        noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+                        document.Add(noBlocksFoundBlock);
                     }
-                    break;
+                    else if (lastBlock != null && blockProcessor.LinesBefore != null)
+                    {
+                        // this means we're out of lines, but still have unassigned empty lines.
+                        // thus, we'll assign the empty unsassigned lines to the last block
+                        // of the document.
+                        var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
+                        rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
+                        var linesBefore = blockProcessor.UseLinesBefore();
+                        rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                    }
                 }
-                blockProcessor.ProcessLine(lineText);
+
+                // At this point the LineIndex is the same as the number of lines in the document
+                document.LineCount = blockProcessor.LineIndex;
             }
-            blockProcessor.CloseAll(true);
+            finally
+            {
+                BlockProcessor.Release(blockProcessor);
+            }
+
+            var inlineProcessor = InlineProcessor.Rent(document, pipeline.InlineParsers, pipeline.PreciseSourceLocation, context, pipeline.TrackTrivia);
+            inlineProcessor.DebugLog = pipeline.DebugLog;
+            try
+            {
+                ProcessInlines(inlineProcessor, document);
+            }
+            finally
+            {
+                InlineProcessor.Release(inlineProcessor);
+            }
+
+            // Allow to call a hook after processing a document
+            pipeline.DocumentProcessed?.Invoke(document);
+
+            return document;
         }
 
         /// <summary>
         /// Fixups the zero character by replacing it to a secure character (Section 2.3 Insecure characters, CommonMark specs)
         /// </summary>
         /// <param name="text">The text to secure.</param>
-        private string FixupZero(string text)
+        private static string FixupZero(string text)
         {
             return text.Replace('\0', CharHelper.ReplacementChar);
         }
 
-        private void ProcessInlines()
+        private static void ProcessBlocks(BlockProcessor blockProcessor, LineReader lineReader)
+        {
+            while (true)
+            {
+                // Get the precise position of the begining of the line
+                var lineText = lineReader.ReadLine();
+
+                // If this is the end of file and the last line is empty
+                if (lineText.Text is null)
+                {
+                    break;
+                }
+
+                blockProcessor.ProcessLine(lineText);
+            }
+            blockProcessor.CloseAll(true);
+        }
+
+        private static void ProcessInlines(InlineProcessor inlineProcessor, MarkdownDocument document)
         {
             // "stackless" processor
             int blockCount = 1;

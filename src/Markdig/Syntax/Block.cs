@@ -128,9 +128,9 @@ namespace Markdig.Syntax
 
         internal static Block FindRootMostContainerParent(Block block)
         {
-            if (block.Parent is ContainerBlock && !(block.Parent is MarkdownDocument))
+            while (block.Parent is ContainerBlock && block.Parent is not MarkdownDocument)
             {
-                return FindRootMostContainerParent(block.Parent);
+                block = block.Parent;
             }
             return block;
         }
