@@ -625,24 +625,17 @@ namespace Markdig.Extensions.Tables
 
         private sealed class TableState
         {
-            public TableState()
-            {
-                ColumnAndLineDelimiters = new List<Inline>();
-                Cells = new List<TableCell>();
-                EndOfLines = new List<Inline>();
-            }
-
             public bool IsInvalidTable { get; set; }
 
             public bool LineHasPipe { get; set; }
 
             public int LineIndex { get; set; }
 
-            public List<Inline> ColumnAndLineDelimiters { get; }
+            public List<Inline> ColumnAndLineDelimiters { get; } = new();
 
-            public List<TableCell> Cells { get; }
+            public List<TableCell> Cells { get; } = new();
 
-            public List<Inline> EndOfLines { get; }
+            public List<Inline> EndOfLines { get; } = new();
         }
     }
 }
