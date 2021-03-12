@@ -31,7 +31,7 @@ namespace Markdig.Renderers.Html
 
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<").Write(headingText).WriteAttributes(obj).Write(">");
+                renderer.Write("<").Write(headingText).WriteAttributes(obj).Write('>');
             }
 
             renderer.WriteLeafInline(obj);

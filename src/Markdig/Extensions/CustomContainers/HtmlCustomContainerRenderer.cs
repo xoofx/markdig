@@ -18,7 +18,7 @@ namespace Markdig.Extensions.CustomContainers
             renderer.EnsureLine();
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<div").WriteAttributes(obj).Write(">");
+                renderer.Write("<div").WriteAttributes(obj).Write('>');
             }
             // We don't escape a CustomContainer
             renderer.WriteChildren(obj);

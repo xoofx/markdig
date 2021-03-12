@@ -18,7 +18,7 @@ namespace Markdig.Extensions.Tables
         protected override void Write(HtmlRenderer renderer, Table table)
         {
             renderer.EnsureLine();
-            renderer.Write("<table").WriteAttributes(table).WriteLine(">");
+            renderer.Write("<table").WriteAttributes(table).WriteLine('>');
 
             bool hasBody = false;
             bool hasAlreadyHeader = false;
@@ -109,7 +109,7 @@ namespace Markdig.Extensions.Tables
                         }
                     }
                     renderer.WriteAttributes(cell);
-                    renderer.Write(">");
+                    renderer.Write('>');
 
                     var previousImplicitParagraph = renderer.ImplicitParagraph;
                     if (cell.Count == 1)

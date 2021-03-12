@@ -22,21 +22,21 @@ namespace Markdig.Renderers.Html
                     renderer.Write("<ol");
                     if (listBlock.BulletType != '1')
                     {
-                        renderer.Write(" type=\"").Write(listBlock.BulletType).Write("\"");
+                        renderer.Write(" type=\"").Write(listBlock.BulletType).Write('"');
                     }
 
                     if (listBlock.OrderedStart != null && (listBlock.OrderedStart is not "1"))
                     {
-                        renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write("\"");
+                        renderer.Write(" start=\"").Write(listBlock.OrderedStart).Write('"');
                     }
                     renderer.WriteAttributes(listBlock);
-                    renderer.WriteLine(">");
+                    renderer.WriteLine('>');
                 }
                 else
                 {
                     renderer.Write("<ul");
                     renderer.WriteAttributes(listBlock);
-                    renderer.WriteLine(">");
+                    renderer.WriteLine('>');
                 }
             }
 
@@ -49,7 +49,7 @@ namespace Markdig.Renderers.Html
                 renderer.EnsureLine();
                 if (renderer.EnableHtmlForBlock)
                 {
-                    renderer.Write("<li").WriteAttributes(listItem).Write(">");
+                    renderer.Write("<li").WriteAttributes(listItem).Write('>');
                 }
 
                 renderer.WriteChildren(listItem);

@@ -144,7 +144,7 @@ namespace Markdig.Extensions.MediaLinks
             var htmlAttributes = GetHtmlAttributes(linkInline);
             renderer.Write("<iframe src=\"");
             renderer.WriteEscapeUrl(iframeUrl);
-            renderer.Write("\"");
+            renderer.Write('"');
 
             if (!string.IsNullOrEmpty(Options.Width))
                 htmlAttributes.AddPropertyIfNotExist("width", Options.Width);

@@ -327,6 +327,20 @@ namespace Markdig.Renderers
         }
 
         /// <summary>
+        /// Writes a content followed by a newline.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T WriteLine(char content)
+        {
+            WriteIndent();
+            previousWasLine = true;
+            Writer.WriteLine(content);
+            return (T)this;
+        }
+
+        /// <summary>
         /// Writes the inlines of a leaf inline.
         /// </summary>
         /// <param name="leafBlock">The leaf block.</param>

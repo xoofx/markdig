@@ -87,7 +87,7 @@ namespace Markdig.Renderers.Normalize
 
         //    if (attributes.Id != null)
         //    {
-        //        Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
+        //        Write(" id=\"").WriteEscape(attributes.Id).Write('"');
         //    }
 
         //    if (attributes.Classes != null && attributes.Classes.Count > 0)
@@ -102,19 +102,19 @@ namespace Markdig.Renderers.Normalize
         //            }
         //            WriteEscape(cssClass);
         //        }
-        //        Write("\"");
+        //        Write('"');
         //    }
 
         //    if (attributes.Properties != null && attributes.Properties.Count > 0)
         //    {
         //        foreach (var property in attributes.Properties)
         //        {
-        //            Write(" ").Write(property.Key);
+        //            Write(' ').Write(property.Key);
         //            if (property.Value != null)
         //            {
-        //                Write("=").Write("\"");
+        //                Write('=').Write('"');
         //                WriteEscape(property.Value);
-        //                Write("\"");
+        //                Write('"');
         //            }
         //        }
         //    }

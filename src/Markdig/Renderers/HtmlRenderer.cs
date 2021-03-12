@@ -360,7 +360,7 @@ namespace Markdig.Renderers
 
             if (attributes.Id != null)
             {
-                Write(" id=\"").WriteEscape(attributes.Id).Write("\"");
+                Write(" id=\"").WriteEscape(attributes.Id).Write('"');
             }
 
             if (attributes.Classes is { Count: > 0 })
@@ -371,21 +371,21 @@ namespace Markdig.Renderers
                     var cssClass = attributes.Classes[i];
                     if (i > 0)
                     {
-                        Write(" ");
+                        Write(' ');
                     }
                     WriteEscape(classFilter != null ? classFilter(cssClass) : cssClass);
                 }
-                Write("\"");
+                Write('"');
             }
 
             if (attributes.Properties is { Count: > 0 })
             {
                 foreach (var property in attributes.Properties)
                 {
-                    Write(" ").Write(property.Key);
-                    Write("=").Write("\"");
+                    Write(' ').Write(property.Key);
+                    Write("=\"");
                     WriteEscape(property.Value ?? "");
-                    Write("\"");
+                    Write('"');
                 }
             }
 

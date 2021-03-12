@@ -48,7 +48,7 @@ namespace Markdig.Renderers.Html.Inlines
             {
                 renderer.Write(link.IsImage ? "<img src=\"" : "<a href=\"");
                 renderer.WriteEscapeUrl(link.GetDynamicUrl != null ? link.GetDynamicUrl() ?? link.Url : link.Url);
-                renderer.Write("\"");
+                renderer.Write('"');
                 renderer.WriteAttributes(link);
             }
             if (link.IsImage)
@@ -63,7 +63,7 @@ namespace Markdig.Renderers.Html.Inlines
                 renderer.EnableHtmlForInline = wasEnableHtmlForInline;
                 if (renderer.EnableHtmlForInline)
                 {
-                    renderer.Write("\"");
+                    renderer.Write('"');
                 }
             }
 
@@ -71,7 +71,7 @@ namespace Markdig.Renderers.Html.Inlines
             {
                 renderer.Write(" title=\"");
                 renderer.WriteEscape(link.Title);
-                renderer.Write("\"");
+                renderer.Write('"');
             }
 
             if (link.IsImage)
@@ -89,7 +89,7 @@ namespace Markdig.Renderers.Html.Inlines
                     {
                         renderer.Write($" rel=\"{Rel}\"");
                     }
-                    renderer.Write(">");
+                    renderer.Write('>');
                 }
                 renderer.WriteChildren(link);
                 if (renderer.EnableHtmlForInline)

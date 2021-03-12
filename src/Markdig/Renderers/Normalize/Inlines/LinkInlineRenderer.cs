@@ -48,7 +48,7 @@ namespace Markdig.Renderers.Normalize.Inlines
                     {
                         renderer.Write(" \"");
                         renderer.Write(link.Title.Replace(@"""", @"\"""));
-                        renderer.Write("\"");
+                        renderer.Write('"');
                     }
 
                     renderer.Write(')');

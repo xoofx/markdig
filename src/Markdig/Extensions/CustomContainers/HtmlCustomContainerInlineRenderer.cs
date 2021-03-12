@@ -15,7 +15,7 @@ namespace Markdig.Extensions.CustomContainers
     {
         protected override void Write(HtmlRenderer renderer, CustomContainerInline obj)
         {
-            renderer.Write("<span").WriteAttributes(obj).Write(">");
+            renderer.Write("<span").WriteAttributes(obj).Write('>');
             renderer.WriteChildren(obj);
             renderer.Write("</span>");
         }
