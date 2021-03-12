@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,10 +14,10 @@ namespace Markdig.Helpers
     /// Allows to associate characters to a data structures and query efficiently for them.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class CharacterMap<T> where T : class
+    public sealed class CharacterMap<T> where T : class
     {
         private readonly T[] asciiMap;
-        private readonly Dictionary<uint, T> nonAsciiMap;
+        private readonly Dictionary<uint, T>? nonAsciiMap;
         private readonly BoolVector128 isOpeningCharacter;
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace Markdig.Helpers
         /// </summary>
         /// <param name="openingChar">The opening character.</param>
         /// <returns>A list of parsers valid for the specified opening character or null if no parsers registered.</returns>
-        public T this[uint openingChar]
+        public T? this[uint openingChar]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -90,7 +88,7 @@ namespace Markdig.Helpers
                 }
                 else
                 {
-                    T map = null;
+                    T? map = null;
                     nonAsciiMap?.TryGetValue(openingChar, out map);
                     return map;
                 }
@@ -174,7 +172,7 @@ namespace Markdig.Helpers
                     for (int i = start; i <= end; i++)
                     {
                         char c = pText[i];
-                        if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap.ContainsKey(c))
+                        if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap!.ContainsKey(c))
                         {
                             return i;
                         }
