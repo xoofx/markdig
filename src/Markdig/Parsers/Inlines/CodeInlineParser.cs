@@ -107,10 +107,9 @@ namespace Markdig.Parsers.Inlines
                 int delimiterCount = Math.Min(openSticks, closeSticks);
                 var spanStart = processor.GetSourcePosition(startPosition, out int line, out int column);
                 var spanEnd = processor.GetSourcePosition(slice.Start - 1);
-                processor.Inline = new CodeInline()
+                processor.Inline = new CodeInline(content)
                 {
                     Delimiter = match,
-                    Content = content,
                     ContentWithTrivia = new StringSlice(slice.Text, contentStart, contentEnd - 1),
                     Span = new SourceSpan(spanStart, spanEnd),
                     Line = line,
