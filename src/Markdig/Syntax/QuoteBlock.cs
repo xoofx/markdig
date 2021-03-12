@@ -27,7 +27,7 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public List<QuoteBlockLine> QuoteLines { get; set; } = new List<QuoteBlockLine>();
+        public List<QuoteBlockLine> QuoteLines { get; } = new ();
 
         /// <summary>
         /// Gets or sets the quote character (usually `&gt;`)

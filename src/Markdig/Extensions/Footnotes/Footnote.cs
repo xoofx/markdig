@@ -16,7 +16,6 @@ namespace Markdig.Extensions.Footnotes
     {
         public Footnote(BlockParser parser) : base(parser)
         {
-            Links = new List<FootnoteLink>();
             Order = -1;
         }
 
@@ -33,7 +32,7 @@ namespace Markdig.Extensions.Footnotes
         /// <summary>
         /// Gets the links referencing this footnote.
         /// </summary>
-        public List<FootnoteLink> Links { get; private set; }
+        public List<FootnoteLink> Links { get; } = new ();
 
         /// <summary>
         /// The label span
