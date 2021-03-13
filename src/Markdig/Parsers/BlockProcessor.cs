@@ -960,6 +960,7 @@ namespace Markdig.Parsers
         internal void Setup(MarkdownDocument document, BlockParserList parsers, MarkdownParserContext? context, bool trackTrivia)
         {
             if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (parsers is null) ThrowHelper.ArgumentNullException(nameof(parsers));
 
             Document = document;
             Parsers = parsers;
