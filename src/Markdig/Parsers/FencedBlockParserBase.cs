@@ -45,7 +45,7 @@ namespace Markdig.Parsers
         /// </summary>
         protected FencedBlockParserBase()
         {
-            InfoParser = RoundtripInfoParser;
+            InfoParser = DefaultInfoParser;
             MinimumMatchCount = 3;
             MaximumMatchCount = int.MaxValue;
         }
