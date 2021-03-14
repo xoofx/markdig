@@ -47,7 +47,7 @@ namespace Markdig.Parsers.Inlines
             else if (EnableHtmlParsing)
             {
                 slice = saved;
-                if (!HtmlHelper.TryParseHtmlTag(ref slice, out string htmlTag))
+                if (!HtmlHelper.TryParseHtmlTag(ref slice, out string? htmlTag))
                 {
                     return false;
                 }
