@@ -35,7 +35,7 @@ namespace Markdig.Parsers.Inlines
             int column;
             if (LinkHelper.TryParseAutolink(ref slice, out string? link, out bool isEmail))
             {
-                processor.Inline = new AutolinkInline(url: link)
+                processor.Inline = new AutolinkInline(link)
                 {
                     IsEmail = isEmail,
                     Span = new SourceSpan(processor.GetSourcePosition(saved.Start, out line, out column), processor.GetSourcePosition(slice.Start - 1)),
