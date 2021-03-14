@@ -128,7 +128,7 @@ namespace Markdig.Parsers
                 c = line.NextChar();
             }
 
-            var tag = new char[10];
+            Span<char> tag = stackalloc char[10];
             var count = 0;
             for (; count < tag.Length; count++)
             {
@@ -152,12 +152,12 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
-            var tagName = new string(tag, 0, count);
-            var tagIndex = Array.BinarySearch(HtmlTags, tagName, StringComparer.Ordinal);
-            if (tagIndex < 0)
+            if (!HtmlTags.TryMatchExact(tag.Slice(0, count), out var match))
             {
                 return BlockState.None;
             }
+
+            int tagIndex = match.Value;
 
             // Cannot start with </script </pre or </style
             if ((tagIndex == 49 || tagIndex == 50 || tagIndex == 53))
@@ -283,73 +283,73 @@ namespace Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private static readonly string[] HtmlTags =
+        private static readonly CompactPrefixTree<int> HtmlTags = new(65, 93, 82)
         {
-            "address", // 0
-            "article", // 1
-            "aside", // 2
-            "base", // 3
-            "basefont", // 4
-            "blockquote", // 5
-            "body", // 6
-            "caption", // 7
-            "center", // 8
-            "col", // 9
-            "colgroup", // 10
-            "dd", // 11
-            "details", // 12
-            "dialog", // 13
-            "dir", // 14
-            "div", // 15
-            "dl", // 16
-            "dt", // 17
-            "fieldset", // 18
-            "figcaption", // 19
-            "figure", // 20
-            "footer", // 21
-            "form", // 22
-            "frame", // 23
-            "frameset", // 24
-            "h1", // 25
-            "h2", // 26
-            "h3", // 27
-            "h4", // 28
-            "h5", // 29
-            "h6", // 30
-            "head", // 31
-            "header", // 32
-            "hr", // 33
-            "html", // 34
-            "iframe", // 35
-            "legend", // 36
-            "li", // 37
-            "link", // 38
-            "main", // 39
-            "menu", // 40
-            "menuitem", // 41
-            "nav", // 42
-            "noframes", // 43
-            "ol", // 44
-            "optgroup", // 45
-            "option", // 46
-            "p", // 47
-            "param", // 48
-            "pre", // 49       <=== special group 1
-            "script", // 50    <=== special group 1
-            "section", // 51
-            "source", // 52
-            "style", // 53     <=== special group 1
-            "summary", // 54
-            "table", // 55
-            "tbody", // 56
-            "td", // 57
-            "tfoot", // 58
-            "th", // 59
-            "thead", // 60
-            "title", // 61
-            "tr", // 62
-            "track", // 63
-            "ul", // 64
+            { "address", 0 },
+            { "article", 1 },
+            { "aside", 2 },
+            { "base", 3 },
+            { "basefont", 4 },
+            { "blockquote", 5 },
+            { "body", 6 },
+            { "caption", 7 },
+            { "center", 8 },
+            { "col", 9 },
+            { "colgroup", 10 },
+            { "dd", 11 },
+            { "details", 12 },
+            { "dialog", 13 },
+            { "dir", 14 },
+            { "div", 15 },
+            { "dl", 16 },
+            { "dt", 17 },
+            { "fieldset", 18 },
+            { "figcaption", 19 },
+            { "figure", 20 },
+            { "footer", 21 },
+            { "form", 22 },
+            { "frame", 23 },
+            { "frameset", 24 },
+            { "h1", 25 },
+            { "h2", 26 },
+            { "h3", 27 },
+            { "h4", 28 },
+            { "h5", 29 },
+            { "h6", 30 },
+            { "head", 31 },
+            { "header", 32 },
+            { "hr", 33 },
+            { "html", 34 },
+            { "iframe", 35 },
+            { "legend", 36 },
+            { "li", 37 },
+            { "link", 38 },
+            { "main", 39 },
+            { "menu", 40 },
+            { "menuitem", 41 },
+            { "nav", 42 },
+            { "noframes", 43 },
+            { "ol", 44 },
+            { "optgroup", 45 },
+            { "option", 46 },
+            { "p", 47 },
+            { "param", 48 },
+            { "pre", 49 },      // <=== special group 1
+            { "script", 50 },   // <=== special group 1
+            { "section", 51 },
+            { "source", 52 },
+            { "style", 53 },    // <=== special group 1
+            { "summary", 54 },
+            { "table", 55 },
+            { "tbody", 56 },
+            { "td", 57 },
+            { "tfoot", 58 },
+            { "th", 59 },
+            { "thead", 60 },
+            { "title", 61 },
+            { "tr", 62 },
+            { "track", 63 },
+            { "ul", 64 }
         };
     }
 }
