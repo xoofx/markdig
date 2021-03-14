@@ -122,8 +122,8 @@ namespace Markdig.Helpers
             // Optimization case for a single line.
             if (Count == 1)
             {
-                var l = Lines[0];
-                lineOffsets?.Add(new LineOffset(l.Position, l.Column, l.Slice.Start - l.Position, l.Slice.Start, l.Slice.End + 1));
+                ref StringLine line = ref Lines[0];
+                lineOffsets?.Add(new LineOffset(line.Position, line.Column, line.Slice.Start - line.Position, line.Slice.Start, line.Slice.End + 1));
                 return Lines[0];
             }
 
@@ -149,7 +149,7 @@ namespace Markdig.Helpers
                     builder.Append(newLine.AsString());
                     previousStartOfLine = builder.Length;
                 }
-                ref var line = ref Lines[i];
+                ref StringLine line = ref Lines[i];
                 if (!line.Slice.IsEmpty)
                 {
                     builder.Append(line.Slice.Text, line.Slice.Start, line.Slice.Length);
@@ -225,7 +225,7 @@ namespace Markdig.Helpers
                 End = -1;
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    var line = lines.Lines[i];
+                    ref StringLine line = ref lines.Lines[i];
                     End += line.Slice.Length + line.NewLine.Length(); // Add chars
                 }
                 SkipChar();
@@ -257,8 +257,9 @@ namespace Markdig.Helpers
 
                     if (lines.Count > 0 && _offset > 0)
                     {
-                        lines.Lines[0].Column += _offset;
-                        lines.Lines[0].Slice.Start += _offset;
+                        ref StringLine line = ref lines.Lines[0];
+                        line.Column += _offset;
+                        line.Slice.Start += _offset;
                     }
                 }
 
@@ -334,8 +335,8 @@ namespace Markdig.Helpers
                 offset += _offset;
 
                 int sliceIndex = SliceIndex;
-                var line = _lines.Lines[sliceIndex];
-                var slice = line.Slice;
+                ref StringLine line = ref _lines.Lines[sliceIndex];
+                ref StringSlice slice = ref line.Slice;
                 if (!(line.NewLine == NewLine.CarriageReturnLineFeed && offset == slice.Length + 1))
                 {
                     while (offset > slice.Length)
@@ -344,7 +345,7 @@ namespace Markdig.Helpers
                         offset -= slice.Length + 1; // + 1 for new line
 
                         Debug.Assert(sliceIndex + 1 < _lines.Lines.Length, "'Start + offset > End' check above should prevent us from indexing out of range");
-                        slice = _lines.Lines[++sliceIndex].Slice;
+                        slice = ref _lines.Lines[++sliceIndex].Slice;
                     }
                 }
                 else
