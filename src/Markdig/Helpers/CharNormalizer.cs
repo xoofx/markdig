@@ -20,7 +20,7 @@ namespace Markdig.Helpers
         /// <returns>The simple ASCII string or null if the char itself cannot be simplified</returns>
         public static string? ConvertToAscii(char c)
         {
-            return CodeToAscii.TryGetValue(c, out string? str) ? str : null;
+            return c >= 160 && CodeToAscii.TryGetValue(c, out string? str) ? str : null;
         }
 
         static CharNormalizer()
