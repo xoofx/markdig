@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Syntax;
 using System.Collections.Generic;
 
@@ -90,8 +91,8 @@ namespace Markdig.Renderers.Roundtrip
                 var slices = lines.Lines;
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    var slice = slices[i].Slice;
-                    renderer.Write(ref slices[i].Slice);
+                    ref StringSlice slice = ref slices[i].Slice;
+                    renderer.Write(ref slice);
                     renderer.WriteLine(slice.NewLine);
                 }
             }
