@@ -244,7 +244,7 @@ namespace Markdig.Helpers
             public StringLineGroup Remaining()
             {
                 var lines = _lines;
-                if (CurrentChar == '\0')
+                if (IsEmpty)
                 {
                     lines.Clear();
                 }

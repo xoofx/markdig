@@ -472,7 +472,7 @@ namespace Markdig.Helpers
 
         public bool Overlaps(StringSlice other)
         {
-            if (Length == 0 || other.Length == 0)
+            if (IsEmpty || other.IsEmpty)
             {
                 return false;
             }

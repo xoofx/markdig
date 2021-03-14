@@ -1128,7 +1128,7 @@ namespace Markdig.Helpers
             }
             else
             {
-                if (text.CurrentChar == '\0' || newLineCount > 0)
+                if (text.IsEmpty || newLineCount > 0)
                 {
                     return true;
                 }
@@ -1254,7 +1254,7 @@ namespace Markdig.Helpers
             }
             else
             {
-                if (text.CurrentChar == '\0' || newLineCount > 0)
+                if (text.IsEmpty || newLineCount > 0)
                 {
                     triviaAfterTitle = new SourceSpan(text.Start, text.Start - 1);
                     return true;

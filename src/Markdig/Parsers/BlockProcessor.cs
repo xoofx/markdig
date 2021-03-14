@@ -120,7 +120,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets a value indicating whether the line is blank (valid only after <see cref="ParseIndent"/> has been called).
         /// </summary>
-        public bool IsBlankLine => CurrentChar == '\0';
+        public bool IsBlankLine => Line.IsEmpty;
 
         /// <summary>
         /// Gets the current character being processed.
