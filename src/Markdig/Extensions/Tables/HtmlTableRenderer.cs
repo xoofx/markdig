@@ -69,7 +69,7 @@ namespace Markdig.Extensions.Tables
                     renderer.WriteLine("<tbody>");
                     hasBody = true;
                 }
-                renderer.Write("<tr").WriteAttributes(row).WriteLine(">");
+                renderer.Write("<tr").WriteAttributes(row).WriteLine('>');
                 for (int i = 0; i < row.Count; i++)
                 {
                     var cellObj = row[i];

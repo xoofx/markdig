@@ -17,7 +17,7 @@ namespace Markdig.Extensions.DefinitionLists
         protected override void Write(HtmlRenderer renderer, DefinitionList list)
         {
             renderer.EnsureLine();
-            renderer.Write("<dl").WriteAttributes(list).WriteLine(">");
+            renderer.Write("<dl").WriteAttributes(list).WriteLine('>');
             foreach (var item in list)
             {
                 bool hasOpendd = false;
