@@ -33,7 +33,7 @@ namespace Markdig.Extensions.Tables
             while (c == '+')
             {
                 var columnStart = line.Start;
-                line.NextChar();
+                line.SkipChar();
                 line.TrimStart();
 
                 // if we have reached the end of the line, exit
@@ -161,15 +161,16 @@ namespace Markdig.Extensions.Tables
 
         private static bool IsRowSeperator(StringSlice slice)
         {
-            while (slice.Length > 0)
+            char c = slice.CurrentChar;
+            do
             {
-                if (slice.CurrentChar != '-' && slice.CurrentChar != '=' && slice.CurrentChar != ':')
+                if (c != '-' && c != '=' && c != ':')
                 {
-                    return false;
+                    return c == '\0';
                 }
-                slice.NextChar();
+                c = slice.NextChar();
             }
-            return true;
+            while (true);
         }
 
         private static void TerminateCurrentRow(BlockProcessor processor, GridTableState tableState, Table gridTable, bool isLastRow)

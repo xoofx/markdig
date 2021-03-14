@@ -247,7 +247,7 @@ namespace Markdig.Helpers
                             break;
                         }
 
-                        text.NextChar();
+                        text.SkipChar();
                         link = builder.ToString();
                         builder.Length = 0;
                         return true;
@@ -295,7 +295,7 @@ namespace Markdig.Helpers
 
                     if (c == '>')
                     {
-                        text.NextChar();
+                        text.SkipChar();
                         link = builder.ToString();
                         builder.Length = 0;
                         return true;
@@ -356,7 +356,7 @@ namespace Markdig.Helpers
             // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
             if (c == '(')
             {
-                text.NextChar();
+                text.SkipChar();
                 text.TrimStart(); // this breaks whitespace before an uri
 
                 var pos = text.Start;
@@ -408,7 +408,7 @@ namespace Markdig.Helpers
             if (isValid)
             {
                 // Skip ')'
-                text.NextChar();
+                text.SkipChar();
                 title ??= string.Empty;
             }
 
@@ -453,7 +453,7 @@ namespace Markdig.Helpers
             // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
             if (c == '(')
             {
-                text.NextChar();
+                text.SkipChar();
                 var sourcePosition = text.Start;
                 text.TrimStart();
                 triviaBeforeLink = new SourceSpan(sourcePosition, text.Start - 1);
@@ -515,7 +515,7 @@ namespace Markdig.Helpers
             if (isValid)
             {
                 // Skip ')'
-                text.NextChar();
+                text.SkipChar();
                 title ??= string.Empty;
             }
             return isValid;
@@ -581,7 +581,7 @@ namespace Markdig.Helpers
                         }
 
                         // Skip last quote
-                        text.NextChar();
+                        text.SkipChar();
                         isValid = true;
                         break;
                     }
@@ -675,7 +675,7 @@ namespace Markdig.Helpers
                         }
 
                         // Skip last quote
-                        text.NextChar();
+                        text.SkipChar();
                         isValid = true;
                         break;
                     }
@@ -737,7 +737,7 @@ namespace Markdig.Helpers
                     c = text.NextChar();
                     if (!hasEscape && c == '>')
                     {
-                        text.NextChar();
+                        text.SkipChar();
                         hasPointyBrackets = true;
                         isValid = true;
                         break;
@@ -878,7 +878,7 @@ namespace Markdig.Helpers
                     c = text.NextChar();
                     if (!hasEscape && c == '>')
                     {
-                        text.NextChar();
+                        text.SkipChar();
                         hasPointyBrackets = true;
                         isValid = true;
                         break;
@@ -1093,7 +1093,7 @@ namespace Markdig.Helpers
                 label = null;
                 return false;
             }
-            text.NextChar(); // Skip ':'
+            text.SkipChar(); // Skip ':'
 
             // Skip any whitespace before the url
             text.TrimStart();
@@ -1210,7 +1210,7 @@ namespace Markdig.Helpers
                 label = null;
                 return false;
             }
-            text.NextChar(); // Skip ':'
+            text.SkipChar(); // Skip ':'
             var triviaBeforeUrlStart = text.Start;
 
             // Skip any whitespace before the url
@@ -1376,7 +1376,7 @@ namespace Markdig.Helpers
 
                     if (c == ']')
                     {
-                        lines.NextChar(); // Skip ]
+                        lines.SkipChar(); // Skip ]
                         if (allowEmpty || hasNonWhiteSpace)
                         {
                             // Remove trailing spaces
@@ -1491,7 +1491,7 @@ namespace Markdig.Helpers
 
                     if (c == ']')
                     {
-                        lines.NextChar(); // Skip ]
+                        lines.SkipChar(); // Skip ]
                         if (allowEmpty || hasNonWhiteSpace)
                         {
                             // Remove trailing spaces

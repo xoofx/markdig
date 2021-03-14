@@ -153,5 +153,33 @@ namespace Markdig.Tests
 
             Assert.Throws<ArgumentOutOfRangeException>(() => iterator.PeekChar(-1));
         }
+
+        [Test]
+        public void TestIteratorSkipChar()
+        {
+            var lineGroup = new StringLineGroup(4)
+            {
+                new StringSlice("ABC", NewLine.LineFeed),
+                new StringSlice("E", NewLine.LineFeed)
+            };
+
+            Test(lineGroup.ToCharIterator());
+
+            Test(new StringSlice("ABC\nE\n"));
+
+            Test(new StringSlice("Foo\nABC\nE\n", 4, 9));
+
+            static void Test<T>(T iterator) where T : ICharIterator
+            {
+                Assert.AreEqual('A', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('B', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('C', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('\n', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('E', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('\n', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('\0', iterator.CurrentChar); iterator.SkipChar();
+                Assert.AreEqual('\0', iterator.CurrentChar); iterator.SkipChar();
+            }
+        }
     }
 }

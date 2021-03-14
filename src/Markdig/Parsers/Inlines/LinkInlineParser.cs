@@ -77,7 +77,7 @@ namespace Markdig.Parsers.Inlines
                     slice = saved;
 
                     // Else we insert a LinkDelimiter
-                    slice.NextChar();
+                    slice.SkipChar();
                     var labelWithTrivia = new StringSlice(slice.Text, labelWithTriviaSpan.Start, labelWithTriviaSpan.End);
                     processor.Inline = new LinkDelimiterInline(this)
                     {
@@ -93,7 +93,7 @@ namespace Markdig.Parsers.Inlines
                     return true;
 
                 case ']':
-                    slice.NextChar();
+                    slice.SkipChar();
                     if (processor.Inline != null)
                     {
                         if (TryProcessLinkOrImage(processor, ref slice))
@@ -353,8 +353,8 @@ namespace Markdig.Parsers.Inlines
                     labelSpan = openParent.LabelSpan;
                     isLabelSpanLocal = false;
                     localLabel = LocalLabel.Empty;
-                    text.NextChar(); // Skip [
-                    text.NextChar(); // Skip ]
+                    text.SkipChar(); // Skip [
+                    text.SkipChar(); // Skip ]
                 }
             }
             else

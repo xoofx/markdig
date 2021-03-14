@@ -51,7 +51,7 @@ namespace Markdig.Extensions.Abbreviations
             {
                 return BlockState.None;
             }
-            slice.NextChar();
+            slice.SkipChar();
 
             slice.Trim();
 

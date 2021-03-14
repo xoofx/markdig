@@ -112,7 +112,7 @@ namespace Markdig.Extensions.Tables
                 }
                 tableState.LineHasPipe = true;
                 tableState.LineIndex = localLineIndex;
-                slice.NextChar(); // Skip the `|` character
+                slice.SkipChar(); // Skip the `|` character
 
                 tableState.ColumnAndLineDelimiters.Add(processor.Inline);
             }

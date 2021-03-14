@@ -228,7 +228,7 @@ namespace Markdig.Helpers
                     var line = lines.Lines[i];
                     End += line.Slice.Length + line.NewLine.Length(); // Add chars
                 }
-                NextChar();
+                SkipChar();
             }
 
             public int Start { get; private set; }
@@ -318,7 +318,11 @@ namespace Markdig.Helpers
                 return CurrentChar;
             }
 
-            public readonly char PeekChar(int offset = 1)
+            public void SkipChar() => NextChar();
+
+            public readonly char PeekChar() => PeekChar(1);
+
+            public readonly char PeekChar(int offset)
             {
                 if (offset < 0) ThrowHelper.ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
 
