@@ -262,7 +262,7 @@ namespace Markdig.Parsers
             if ((block ?? state.LastBlock) is ParagraphBlock previousParagraph)
             {
                 if (state.IsBlankLine ||
-                    state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart != "1")
+                    state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
                 {
                     state.GoToColumn(initColumn);
                     state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state

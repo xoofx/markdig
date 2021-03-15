@@ -17,7 +17,7 @@ namespace Markdig.Extensions.DefinitionLists
         protected override void Write(HtmlRenderer renderer, DefinitionList list)
         {
             renderer.EnsureLine();
-            renderer.Write("<dl").WriteAttributes(list).WriteLine(">");
+            renderer.Write("<dl").WriteAttributes(list).WriteLine('>');
             foreach (var item in list)
             {
                 bool hasOpendd = false;
@@ -41,7 +41,7 @@ namespace Markdig.Extensions.DefinitionLists
                             hasOpendd = false;
                             countdd = 0;
                         }
-                        renderer.Write("<dt").WriteAttributes(definitionTerm).Write(">");
+                        renderer.Write("<dt").WriteAttributes(definitionTerm).Write('>');
                         renderer.WriteLeafInline(definitionTerm);
                         renderer.WriteLine("</dt>");
                     }
@@ -49,7 +49,7 @@ namespace Markdig.Extensions.DefinitionLists
                     {
                         if (!hasOpendd)
                         {
-                            renderer.Write("<dd").WriteAttributes(definitionItem).Write(">");
+                            renderer.Write("<dd").WriteAttributes(definitionItem).Write('>');
                             countdd = 0;
                             hasOpendd = true;
                         }

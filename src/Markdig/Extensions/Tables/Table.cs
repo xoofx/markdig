@@ -17,7 +17,7 @@ namespace Markdig.Extensions.Tables
         /// <summary>
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
-        public Table() : this(null)
+        public Table() : base(null)
         {
         }
 
@@ -27,13 +27,12 @@ namespace Markdig.Extensions.Tables
         /// <param name="parser">The parser used to create this block.</param>
         public Table(BlockParser? parser) : base(parser)
         {
-            ColumnDefinitions = new List<TableColumnDefinition>();
         }
 
         /// <summary>
         /// Gets or sets the column alignments. May be null.
         /// </summary>
-        public List<TableColumnDefinition> ColumnDefinitions { get; }
+        public List<TableColumnDefinition> ColumnDefinitions { get; } = new();
 
         /// <summary>
         /// Checks if the table structure is valid.

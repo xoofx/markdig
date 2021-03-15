@@ -2,8 +2,6 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-#nullable disable
-
 using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines
@@ -13,8 +11,13 @@ namespace Markdig.Syntax.Inlines
     /// </summary>
     /// <seealso cref="LeafInline" />
     [DebuggerDisplay("<{Url}>")]
-    public class AutolinkInline : LeafInline
+    public sealed class AutolinkInline : LeafInline
     {
+        public AutolinkInline(string url)
+        {
+            Url = url;
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is an email link.
         /// </summary>

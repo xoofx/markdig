@@ -68,7 +68,7 @@ namespace Markdig.Renderers.Html.Inlines
                     renderer.Write($" rel=\"{Rel}\"");
                 }
 
-                renderer.Write(">");
+                renderer.Write('>');
             }
 
             renderer.WriteEscape(obj.Url);

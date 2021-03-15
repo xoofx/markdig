@@ -57,7 +57,7 @@ namespace Markdig.Extensions.MediaLinks
             {
                 // see https://tools.ietf.org/html/rfc3986#section-4.2
                 // since relative uri doesn't support many properties, "http" is used as a placeholder here.
-                if (linkInline.Url.StartsWith("//") && Uri.TryCreate("http:" + linkInline.Url, UriKind.Absolute, out uri))
+                if (linkInline.Url.StartsWith("//", StringComparison.Ordinal) && Uri.TryCreate("http:" + linkInline.Url, UriKind.Absolute, out uri))
                 {
                     isSchemaRelative = true;
                 }
@@ -101,7 +101,7 @@ namespace Markdig.Extensions.MediaLinks
                 Options.ExtensionToMimeType.TryGetValue(path.Substring(lastDot), out string? mimeType))
             {
                 var htmlAttributes = GetHtmlAttributes(linkInline);
-                var isAudio = mimeType.StartsWith("audio");
+                var isAudio = mimeType.StartsWith("audio", StringComparison.Ordinal);
                 var tagType = isAudio ? "audio" : "video";
 
                 renderer.Write($"<{tagType}");
@@ -144,7 +144,7 @@ namespace Markdig.Extensions.MediaLinks
             var htmlAttributes = GetHtmlAttributes(linkInline);
             renderer.Write("<iframe src=\"");
             renderer.WriteEscapeUrl(iframeUrl);
-            renderer.Write("\"");
+            renderer.Write('"');
 
             if (!string.IsNullOrEmpty(Options.Width))
                 htmlAttributes.AddPropertyIfNotExist("width", Options.Width);

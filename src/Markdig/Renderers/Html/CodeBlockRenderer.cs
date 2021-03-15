@@ -47,8 +47,8 @@ namespace Markdig.Renderers.Html
                 {
                     renderer.Write("<div")
                             .WriteAttributes(obj.TryGetAttributes(),
-                                cls => cls.StartsWith(infoPrefix) ? cls.Substring(infoPrefix.Length) : cls)
-                            .Write(">");
+                                cls => cls.StartsWith(infoPrefix, StringComparison.Ordinal) ? cls.Substring(infoPrefix.Length) : cls)
+                            .Write('>');
                 }
 
                 renderer.WriteLeafRawLines(obj, true, true, true);
@@ -77,7 +77,7 @@ namespace Markdig.Renderers.Html
                         renderer.WriteAttributes(obj);
                     }
 
-                    renderer.Write(">");
+                    renderer.Write('>');
                 }
 
                 renderer.WriteLeafRawLines(obj, true, true);

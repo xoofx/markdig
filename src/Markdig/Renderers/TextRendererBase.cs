@@ -71,19 +71,20 @@ namespace Markdig.Renderers
     /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase<T> : TextRendererBase where T : TextRendererBase<T>
     {
-        private class Indent
+        private sealed class Indent
         {
             private readonly string? _constant;
-            private readonly Queue<string>? _lineSpecific;
+            private readonly string[]? _lineSpecific;
+            private int position;
 
             internal Indent(string constant)
             {
                 _constant = constant;
             }
 
-            internal Indent(IEnumerable<string> lineSpecific)
+            internal Indent(string[] lineSpecific)
             {
-                _lineSpecific = new Queue<string>(lineSpecific);
+                _lineSpecific = lineSpecific;
             }
 
             internal string Next()
@@ -94,9 +95,9 @@ namespace Markdig.Renderers
                 }
 
                 //if (_lineSpecific.Count == 0) throw new Exception("Indents empty");
-                if (_lineSpecific!.Count == 0) return string.Empty;
-                var next = _lineSpecific.Dequeue();
-                return next;
+                if (position == _lineSpecific!.Length) return string.Empty;
+
+                return _lineSpecific![position++];
             }
         }
 
@@ -160,7 +161,7 @@ namespace Markdig.Renderers
             indents.Add(new Indent(indent));
         }
 
-        public void PushIndent(IEnumerable<string> lineSpecific)
+        public void PushIndent(string[] lineSpecific)
         {
             if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
             indents.Add(new Indent(lineSpecific));
@@ -324,6 +325,20 @@ namespace Markdig.Renderers
             previousWasLine = true;
             Writer.WriteLine(content);
             return (T) this;
+        }
+
+        /// <summary>
+        /// Writes a content followed by a newline.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T WriteLine(char content)
+        {
+            WriteIndent();
+            previousWasLine = true;
+            Writer.WriteLine(content);
+            return (T)this;
         }
 
         /// <summary>

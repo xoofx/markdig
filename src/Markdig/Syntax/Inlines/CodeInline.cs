@@ -14,6 +14,11 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("`{Content}`")]
     public class CodeInline : LeafInline
     {
+        public CodeInline(string content)
+        {
+            Content = content;
+        }
+
         /// <summary>
         /// Gets or sets the delimiter character used by this code inline.
         /// </summary>
@@ -27,7 +32,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the content of the span.
         /// </summary>
-        public string? Content { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// Gets or sets the content with trivia and whitespace.

@@ -2,8 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using Markdig.Syntax;
 using System;
+using Markdig.Syntax;
 
 namespace Markdig.Renderers.Normalize
 {
@@ -28,14 +28,14 @@ namespace Markdig.Renderers.Normalize
                 }
                 if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
                 {
-                    renderer.Write(" ").Write(fencedCodeBlock.Arguments);
+                    renderer.Write(' ').Write(fencedCodeBlock.Arguments);
                 }
 
                 /* TODO do we need this causes a empty space and would render html attributes to markdown.
                 var attributes = obj.TryGetAttributes();
                 if (attributes != null)
                 {
-                    renderer.Write(" ");
+                    renderer.Write(' ');
                     renderer.Write(attributes);
                 }
                 */

@@ -96,7 +96,6 @@ namespace Markdig.Parsers
                 {
                     TriviaBefore = processor.UseTrivia(processor.Start - 1)
                 };
-                cb.CodeBlockLines ??= new List<CodeBlockLine>();
                 cb.CodeBlockLines.Add(codeBlockLine);
                 cb.NewLine = processor.Line.NewLine; // ensure block newline is last newline
             }

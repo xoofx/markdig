@@ -21,7 +21,7 @@ namespace Markdig.Syntax
             public StringSlice TriviaBefore { get; set; }
         }
 
-        public List<CodeBlockLine> CodeBlockLines { get; set; } = new List<CodeBlockLine>();
+        public List<CodeBlockLine> CodeBlockLines { get; } = new ();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeBlock"/> class.
