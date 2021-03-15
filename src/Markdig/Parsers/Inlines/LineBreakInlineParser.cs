@@ -45,7 +45,7 @@ namespace Markdig.Parsers.Inlines
                     if (slice.PeekChar() == '\n')
                     {
                         newLine = NewLine.CarriageReturnLineFeed;
-                        slice.NextChar(); // Skip \n
+                        slice.SkipChar(); // Skip \n
                     }
                     else
                     {
@@ -61,10 +61,10 @@ namespace Markdig.Parsers.Inlines
             {
                 if (slice.CurrentChar == '\r' && slice.PeekChar() == '\n')
                 {
-                    slice.NextChar(); // Skip \n
+                    slice.SkipChar(); // Skip \n
                 }
             }
-            slice.NextChar(); // Skip \r or \n
+            slice.SkipChar(); // Skip \r or \n
 
             processor.Inline = new LineBreakInline
             {

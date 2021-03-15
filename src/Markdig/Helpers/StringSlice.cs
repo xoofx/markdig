@@ -155,6 +155,17 @@ namespace Markdig.Helpers
             return Text[start];
         }
 
+        /// <summary>
+        /// Goes to the next character, incrementing the <see cref="Start" /> position.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SkipChar()
+        {
+            int start = Start;
+            if (start <= End)
+                Start = start + 1;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int CountAndSkipChar(char matchChar)
         {
@@ -461,7 +472,7 @@ namespace Markdig.Helpers
 
         public bool Overlaps(StringSlice other)
         {
-            if (Length == 0 || other.Length == 0)
+            if (IsEmpty || other.IsEmpty)
             {
                 return false;
             }

@@ -14,7 +14,7 @@ namespace Markdig.Tests
         {
             var inputTag = "<a>";
             var text = new StringSlice(inputTag);
-            Assert.True(HtmlHelper.TryParseHtmlTag(text, out string outputTag));
+            Assert.True(HtmlHelper.TryParseHtmlTag(ref text, out string outputTag));
             Assert.AreEqual(inputTag, outputTag);
         }
 
@@ -23,7 +23,7 @@ namespace Markdig.Tests
         {
             var inputTag = "<a href='http://google.com'>";
             var text = new StringSlice(inputTag);
-            Assert.True(HtmlHelper.TryParseHtmlTag(text, out string outputTag));
+            Assert.True(HtmlHelper.TryParseHtmlTag(ref text, out string outputTag));
             Assert.AreEqual(inputTag, outputTag);
         }
     }

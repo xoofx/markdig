@@ -10,6 +10,7 @@ using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Markdig.Extensions.Globalization
 {
@@ -51,7 +52,7 @@ namespace Markdig.Extensions.Globalization
 
         }
 
-        private bool ShouldBeRightToLeft(MarkdownObject item)
+        private static bool ShouldBeRightToLeft(MarkdownObject item)
         {
             if (item is IEnumerable<MarkdownObject> container)
             {
@@ -88,14 +89,30 @@ namespace Markdig.Extensions.Globalization
             return false;
         }
 
-        private bool StartsWithRtlCharacter(StringSlice slice)
+        private static bool StartsWithRtlCharacter(StringSlice slice)
         {
-            foreach (var c in CharHelper.ToUtf32(slice))
+            for (int i = slice.Start; i <= slice.End; i++)
             {
-                if (CharHelper.IsRightToLeft(c))
+                if (slice[i] < 128)
+                {
+                    continue;
+                }
+
+                int rune;
+                if (CharHelper.IsHighSurrogate(slice[i]) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
+                {
+                    Debug.Assert(char.IsSurrogatePair(slice[i], slice[i + 1]));
+                    rune = char.ConvertToUtf32(slice[i], slice[i + 1]);
+                }
+                else
+                {
+                    rune = slice[i];
+                }
+
+                if (CharHelper.IsRightToLeft(rune))
                     return true;
 
-                else if (CharHelper.IsLeftToRight(c))
+                if (CharHelper.IsLeftToRight(rune))
                     return false;
             }
 

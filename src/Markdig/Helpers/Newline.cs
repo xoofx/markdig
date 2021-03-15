@@ -12,39 +12,24 @@ namespace Markdig.Helpers
     /// </summary>
     public enum NewLine : byte
     {
-        None,
-        CarriageReturn,
-        LineFeed,
-        CarriageReturnLineFeed
+        // Values have the length encoded in last 2 bits
+        None = 0,
+        CarriageReturn = 4 | 1,
+        LineFeed = 8 | 1,
+        CarriageReturnLineFeed = 16 | 2
     }
 
     public static class NewLineExtensions
     {
-        public static string AsString(this NewLine newLine)
+        public static string AsString(this NewLine newLine) => newLine switch
         {
-            if (newLine == NewLine.CarriageReturnLineFeed)
-            {
-                return "\r\n";
-            }
-            if (newLine == NewLine.LineFeed)
-            {
-                return "\n";
-            }
-            if (newLine == NewLine.CarriageReturn)
-            {
-                return "\r";
-            }
-            return string.Empty;
-        }
-
-        public static int Length(this NewLine newLine) => newLine switch
-        {
-            NewLine.None => 0,
-            NewLine.CarriageReturn => 1,
-            NewLine.LineFeed => 1,
-            NewLine.CarriageReturnLineFeed => 2,
-            _ => throw new NotSupportedException(),
+            NewLine.CarriageReturnLineFeed => "\r\n",
+            NewLine.LineFeed => "\n",
+            NewLine.CarriageReturn => "\r",
+            _ => string.Empty,
         };
+
+        public static int Length(this NewLine newLine) => (int)newLine & 3;
     }
 }
 

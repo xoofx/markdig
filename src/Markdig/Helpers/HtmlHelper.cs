@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Markdig.Helpers
@@ -36,18 +37,19 @@ namespace Markdig.Helpers
             return c < 128 ? EscapeUrlsForAscii[c] : null;
         }
 
-        public static bool TryParseHtmlTag(StringSlice text, out string htmlTag)
-        {
-            return TryParseHtmlTag(ref text, out htmlTag);
-        }
-
-        public static bool TryParseHtmlTag(ref StringSlice text, out string htmlTag)
+        public static bool TryParseHtmlTag(ref StringSlice text, [NotNullWhen(true)] out string? htmlTag)
         {
             var builder = StringBuilderCache.Local();
-            var result = TryParseHtmlTag(ref text, builder);
-            htmlTag = builder.ToString();
-            builder.Length = 0;
-            return result;
+            if (TryParseHtmlTag(ref text, builder))
+            {
+                htmlTag = builder.GetStringAndReset();
+                return true;
+            }
+            else
+            {
+                htmlTag = null;
+                return false;
+            }
         }
 
         public static bool TryParseHtmlTag(ref StringSlice text, StringBuilder builder)
@@ -128,7 +130,7 @@ namespace Markdig.Helpers
                     case '\0':
                         return false;
                     case '>':
-                        text.NextChar();
+                        text.SkipChar();
                         builder.Append(c);
                         return true;
                     case '/':
@@ -138,7 +140,7 @@ namespace Markdig.Helpers
                         {
                             return false;
                         }
-                        text.NextChar();
+                        text.SkipChar();
                         builder.Append('>');
                         return true;
                     case '=':
@@ -270,7 +272,7 @@ namespace Markdig.Helpers
 
                 if (c == '>')
                 {
-                    text.NextChar();
+                    text.SkipChar();
                     builder.Append('>');
                     return true;
                 }
@@ -279,16 +281,12 @@ namespace Markdig.Helpers
 
         private static bool TryParseHtmlTagCData(ref StringSlice text, StringBuilder builder)
         {
-            builder.Append('[');
-            var c = text.NextChar();
-            if (c == 'C' &&
-                text.NextChar() == 'D' &&
-                text.NextChar() == 'A' &&
-                text.NextChar() == 'T' &&
-                text.NextChar() == 'A' && 
-                (c = text.NextChar()) == '[')
+            if (text.Match("[CDATA["))
             {
-                builder.Append("CDATA[");
+                builder.Append("[CDATA[");
+                text.Start += 6;
+
+                char c = '\0';
                 while (true)
                 {
                     var pc = c;
@@ -298,23 +296,15 @@ namespace Markdig.Helpers
                         return false;
                     }
 
-                    if (c == ']' && pc == ']')
-                    {
-                        builder.Append(']');
-                        c = text.NextChar();
-                        if (c == '>')
-                        {
-                            builder.Append('>');
-                            text.NextChar();
-                            return true;
-                        }
-
-                        if (c == '\0')
-                        {
-                            return false;
-                        }
-                    }
                     builder.Append(c);
+
+                    if (c == ']' && pc == ']' && text.PeekChar() == '>')
+                    {
+                        text.SkipChar();
+                        text.SkipChar();
+                        builder.Append('>');
+                        return true;
+                    }
                 }
             }
             return false;
@@ -338,7 +328,7 @@ namespace Markdig.Helpers
                 c = text.NextChar();
                 if (c == '>')
                 {
-                    text.NextChar();
+                    text.SkipChar();
                     builder.Append('>');
                     return true;
                 }
@@ -393,7 +383,7 @@ namespace Markdig.Helpers
                     if (c == '>')
                     {
                         builder.Append('>');
-                        text.NextChar();
+                        text.SkipChar();
                         return true;
                     }
                     return false;
@@ -418,7 +408,7 @@ namespace Markdig.Helpers
                 if (c == '>' && prevChar == '?')
                 {
                     builder.Append('>');
-                    text.NextChar();
+                    text.SkipChar();
                     return true;
                 }
                 prevChar = c;
@@ -531,29 +521,24 @@ namespace Markdig.Helpers
             if (c == '#')
             {
                 c = slice.PeekChar();
-                if (c == 'x' || c == 'X')
+                if ((c | 0x20) == 'x')
                 {
                     c = slice.NextChar(); // skip #
                     // expect 1-6 hex digits starting from pos+3
                     while (c != '\0')
                     {
                         c = slice.NextChar();
-                        if (c >= '0' && c <= '9')
+
+                        if (c.IsDigit())
                         {
                             if (++counter == 7) return 0;
-                            numericEntity = numericEntity*16 + (c - '0');
+                            numericEntity = numericEntity * 16 + (c - '0');
                             continue;
                         }
-                        else if (c >= 'A' && c <= 'F')
+                        else if ((uint)((c - 'A') & ~0x20) <= ('F' - 'A'))
                         {
                             if (++counter == 7) return 0;
-                            numericEntity = numericEntity*16 + (c - 'A' + 10);
-                            continue;
-                        }
-                        else if (c >= 'a' && c <= 'f')
-                        {
-                            if (++counter == 7) return 0;
-                            numericEntity = numericEntity*16 + (c - 'a' + 10);
+                            numericEntity = numericEntity * 16 + ((c | 0x20) - 'a' + 10);
                             continue;
                         }
 
@@ -570,10 +555,10 @@ namespace Markdig.Helpers
                     {
                         c = slice.NextChar();
 
-                        if (c >= '0' && c <= '9')
+                        if (c.IsDigit())
                         {
                             if (++counter == 8) return 0;
-                            numericEntity = numericEntity*10 + (c - '0');
+                            numericEntity = numericEntity * 10 + (c - '0');
                             continue;
                         }
 
@@ -587,7 +572,7 @@ namespace Markdig.Helpers
             else
             {
                 // expect a letter and 1-31 letters or digits
-                if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
+                if (!c.IsAlpha())
                     return 0;
 
                 namedEntityStart = slice.Start;
@@ -596,7 +581,8 @@ namespace Markdig.Helpers
                 while (c != '\0')
                 {
                     c = slice.NextChar();
-                    if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+
+                    if (c.IsAlphaNumeric())
                     {
                         if (++counter == 32)
                             return 0;
