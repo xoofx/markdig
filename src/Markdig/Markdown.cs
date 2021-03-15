@@ -21,14 +21,14 @@ namespace Markdig
     {
         public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
 
-        private static readonly MarkdownPipeline _defaultPipeline = new MarkdownPipelineBuilder().Build();
+        internal static readonly MarkdownPipeline DefaultPipeline = new MarkdownPipelineBuilder().Build();
         private static readonly MarkdownPipeline _defaultTrackTriviaPipeline = new MarkdownPipelineBuilder().EnableTrackTrivia().Build();
 
         private static MarkdownPipeline GetPipeline(MarkdownPipeline? pipeline, string markdown)
         {
             if (pipeline is null)
             {
-                return _defaultPipeline;
+                return DefaultPipeline;
             }
 
             var selfPipeline = pipeline.Extensions.Find<SelfPipelineExtension>();
@@ -111,7 +111,7 @@ namespace Markdig
         {
             if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
 
-            pipeline ??= _defaultPipeline;
+            pipeline ??= DefaultPipeline;
 
             using var rentedRenderer = pipeline.RentHtmlRenderer();
             HtmlRenderer renderer = rentedRenderer.Instance;
