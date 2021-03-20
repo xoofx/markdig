@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.24.0 (20 Mar 2021)
+- Add support for roundtrip Markdown ([PR #481](https://github.com/lunet-io/markdig/pull/481))
+- Introduction of nullability ([PR #522](https://github.com/lunet-io/markdig/pull/522) [PR #524](https://github.com/lunet-io/markdig/pull/524) [PR #525](https://github.com/lunet-io/markdig/pull/525) [PR #526](https://github.com/lunet-io/markdig/pull/526) [PR #527](https://github.com/lunet-io/markdig/pull/527))
+- Various internal cleanup and small performance improvements ([PR #521](https://github.com/lunet-io/markdig/pull/521) [PR #524](https://github.com/lunet-io/markdig/pull/524) [PR #525](https://github.com/lunet-io/markdig/pull/525) [PR #529](https://github.com/lunet-io/markdig/pull/529) [PR #531](https://github.com/lunet-io/markdig/pull/531) [PR #532](https://github.com/lunet-io/markdig/pull/532))
+
 ## 0.23.0 (16 Jan 2021)
 - Add depth limits to avoid pathological-case parsing times/StackOverflows (#500)
 - Breaking change: rename AutolineInlineParser to AutolinkInlineParser
@@ -9,10 +14,10 @@
 
 ## 0.22.0 (05 Oct 2020)
 - Fix Setext headings in block quotes.
-- Fix tel: treated as autolink ([PR #478](https://github.com/lunet-io/markdig/pull/478)
-- Make Inline.FirstParentOfType public ([PR #474](https://github.com/lunet-io/markdig/pull/474)
-- Fix `&` to be parsed as a punctuation while it was detected as a html entity in certain cases ([PR #471](https://github.com/lunet-io/markdig/pull/471)
-- Add ParentBlock property to ContainerInline ([PR #468](https://github.com/lunet-io/markdig/pull/468)
+- Fix tel: treated as autolink ([PR #478](https://github.com/lunet-io/markdig/pull/478))
+- Make Inline.FirstParentOfType public ([PR #474](https://github.com/lunet-io/markdig/pull/474))
+- Fix `&` to be parsed as a punctuation while it was detected as a html entity in certain cases ([PR #471](https://github.com/lunet-io/markdig/pull/471))
+- Add ParentBlock property to ContainerInline ([PR #468](https://github.com/lunet-io/markdig/pull/468))
 
 ## 0.21.1 (17 Aug 2020)
 - Fix Markdig.Signed on GitHub Actions
