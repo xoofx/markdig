@@ -511,13 +511,15 @@ namespace Markdig.Extensions.Tables
 
                     // Check the left side of a `|` delimiter
                     TableColumnAlign? align = null;
-                    if (delimiter.PreviousSibling != null && !ParseHeaderString(delimiter.PreviousSibling, out align))
+                    if (delimiter.PreviousSibling != null &&
+                        !(delimiter.PreviousSibling is LiteralInline li && li.Content.IsEmptyOrWhitespace()) && // ignore parsed whitespace
+                        !ParseHeaderString(delimiter.PreviousSibling, out align))
                     {
                         break;
                     }
 
                     // Create aligns until we may have a header row
-                    
+
                     aligns ??= new List<TableColumnDefinition>();
                     
                     aligns.Add(new TableColumnDefinition() { Alignment =  align });
