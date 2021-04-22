@@ -28,7 +28,9 @@
     "branch": "master"
   },
   "exclude": [
-    "src"
+    "src/Markdig.Benchmarks",
+    "src/Markdig.Tests/ArgumentOutOfRangeException.md",
+    "src/Markdig.Tests/hang.md"
   ],
   "code": [{
     "input": "src/Markdig"
