@@ -1,0 +1,40 @@
+{
+  "input": ".",
+  "output": ".retype",
+  "base": "markdig",
+  "branding":
+  {
+    "label": "Docs",
+    "logo": "img/markdig-logo.svg",
+    "logoDark": "img/markdig-logo-dark.svg"
+  },
+  "meta": {
+    "title": " | Markdig - A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET"
+  },
+  "links": [
+    {
+      "text": "GitHub",
+      "link": "https://github.com/xoofx/markdig",
+      "icon": "git-pull-request"
+    },
+    {
+      "text": "Try online",
+      "link": "https://dotnetfiddle.net/GoZXyI",
+      "icon": "code-square"
+    }
+  ],
+  "edit": {
+    "repo": "https://github.com/xoofx/markdig",
+    "branch": "master"
+  },
+  "exclude": [
+    "src"
+  ],
+  "code": [{
+    "input": "src/Markdig"
+  }],
+  "footer":
+  {
+    "copyright": "&copy; Copyright {{ year }}. All rights reserved."
+  }
+}

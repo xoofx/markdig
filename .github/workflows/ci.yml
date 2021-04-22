@@ -8,8 +8,11 @@ on:
     paths-ignore:
     - 'doc/**'
     - 'img/**'
+    - 'api/**'
     - 'changelog.md'
     - 'readme.md'
+    - 'retype.json'
+    - '.github/workflows/retype.yml'
   pull_request:
 
 jobs:
@@ -27,7 +30,7 @@ jobs:
 
     - name: Build (Release)
       run: dotnet build src -c Release
-      
+
     - name: SpecFileGen
       run: dotnet src/SpecFileGen/bin/Release/net5.0/SpecFileGen.dll
 
@@ -55,7 +58,7 @@ jobs:
 
     - name: Publish
       if: github.event_name == 'push'
-      run: |      
+      run: |
           if ( "${{github.ref}}" -match "^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$" ) {
               dotnet nuget push src\${{env.PROJECT_NAME}}\bin\Release\*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}
               dotnet nuget push src\${{env.PROJECT_NAME}}.Signed\bin\Release\*.nupkg -s nuget.org -k ${{secrets.NUGET_TOKEN}}

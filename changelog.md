@@ -1,3 +1,6 @@
+---
+icon: checklist
+---
 # Changelog
 
 ## 0.24.0 (20 Mar 2021)
@@ -36,11 +39,11 @@
 
 ## 0.20.0 (18 Apr 2020)
 - Markdig is now compatible only with `NETStandard 2.0`, `NETStandard 2.1`, `NETCoreApp 2.1` and `NETCoreApp 3.1`.
-- Many performance improvements from [PR #416](https://github.com/lunet-io/markdig/pull/416) 
+- Many performance improvements from [PR #416](https://github.com/lunet-io/markdig/pull/416)
 [PR #417](https://github.com/lunet-io/markdig/pull/417)
-[PR #418](https://github.com/lunet-io/markdig/pull/418) 
-[PR #421](https://github.com/lunet-io/markdig/pull/421) 
-[PR #422](https://github.com/lunet-io/markdig/pull/422) 
+[PR #418](https://github.com/lunet-io/markdig/pull/418)
+[PR #421](https://github.com/lunet-io/markdig/pull/421)
+[PR #422](https://github.com/lunet-io/markdig/pull/422)
 [PR #410](https://github.com/lunet-io/markdig/pull/410)
 
 ## 0.18.3 (8 Mar 2020)
@@ -150,10 +153,10 @@
 - Make EmojiExtension.EnableSmiley public
 ## 0.14.2
 - Fix issue with emphasis preceded/followed by an HTML entity (#157)
-- Add support for link reference definitions for Normalize renderer (#155)   
+- Add support for link reference definitions for Normalize renderer (#155)
 - Add option to disable smiley parsing in EmojiAndSmiley extension
 ## 0.14.1
-- Fix crash in Markdown.Normalize to handle HtmlBlock correctly        
+- Fix crash in Markdown.Normalize to handle HtmlBlock correctly
 - Add better handling of bullet character for lists in Markdown.Normalize
 ## 0.14.0
 - Add Markdown.ToPlainText, Add option HtmlRenderer.EnableHtmlForBlock.
