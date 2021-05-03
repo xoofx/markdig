@@ -41,7 +41,7 @@ namespace Markdig.Extensions.JiraLinks
             var endKey = slice.Start;
 
             //read as many uppercase characters as required - project key
-            while (current.IsAlphaUpper())
+            while (current.IsAlphaUpper() || current.IsDigit())
             {
                 endKey = slice.Start;
                 current = slice.NextChar();
