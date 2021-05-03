@@ -199,13 +199,13 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Section: Jira Links
             //
             // The following Markdown:
-            //     This is not JIRA-123a issue
+            //     This is not 4JIRA-123 issue
             //
             // Should be rendered as:
-            //     <p>This is not JIRA-123a issue</p>
+            //     <p>This is not 4JIRA-123 issue</p>
 
             Console.WriteLine("Example 11\nSection Jira Links\n");
-            TestParser.TestSpec("This is not JIRA-123a issue", "<p>This is not JIRA-123a issue</p>", "jiralinks");
+            TestParser.TestSpec("This is not 4JIRA-123 issue", "<p>This is not 4JIRA-123 issue</p>", "jiralinks");
         }
 
         [Test]
@@ -215,13 +215,13 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Section: Jira Links
             //
             // The following Markdown:
-            //     This is not JIRA- issue
+            //     This is not JIRA-123a issue
             //
             // Should be rendered as:
-            //     <p>This is not JIRA- issue</p>
+            //     <p>This is not JIRA-123a issue</p>
 
             Console.WriteLine("Example 12\nSection Jira Links\n");
-            TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks");
+            TestParser.TestSpec("This is not JIRA-123a issue", "<p>This is not JIRA-123a issue</p>", "jiralinks");
         }
 
         [Test]
@@ -231,12 +231,28 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Section: Jira Links
             //
             // The following Markdown:
+            //     This is not JIRA- issue
+            //
+            // Should be rendered as:
+            //     <p>This is not JIRA- issue</p>
+
+            Console.WriteLine("Example 13\nSection Jira Links\n");
+            TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks");
+        }
+
+        [Test]
+        public void JiraLinks_Example014()
+        {
+            // Example 14
+            // Section: Jira Links
+            //
+            // The following Markdown:
             //     This is not JIR4- issue
             //
             // Should be rendered as:
             //     <p>This is not JIR4- issue</p>
 
-            Console.WriteLine("Example 13\nSection Jira Links\n");
+            Console.WriteLine("Example 14\nSection Jira Links\n");
             TestParser.TestSpec("This is not JIR4- issue", "<p>This is not JIR4- issue</p>", "jiralinks");
         }
     }
