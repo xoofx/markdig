@@ -10,7 +10,7 @@ var pipeline = new MarkdownPipelineBuilder()
 
 The rules for detecting a link are:
 
-- The project key must be composed of one or more capitalized ASCII letter `[A-Z]+`
+- The project key must be composed of one or more capitalized ASCII letters or digits `[A-Z,0-9]+`
 - A single hyphen `-` must separate the project key and issue number.
 - The issue number is composed of 1 or more digits `[0, 9]+`
 - The reference must be preceded by either `(` or whitespace or EOF.
@@ -22,6 +22,18 @@ The following are valid examples:
 This is a ABCD-123 issue
 .
 <p>This is a <a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a> issue</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a ABC4-123 issue
+.
+<p>This is a <a href="http://your.company.abc/browse/ABC4-123" target="blank">ABC4-123</a> issue</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a ABC45-123 issue
+.
+<p>This is a <a href="http://your.company.abc/browse/ABC45-123" target="blank">ABC45-123</a> issue</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -42,6 +54,12 @@ These are also valid links with `(` and `)`:
 This is a (ABCD-123) issue
 .
 <p>This is a (<a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a>) issue</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is a (ABC4-123) issue
+.
+<p>This is a (<a href="http://your.company.abc/browse/ABC4-123" target="blank">ABC4-123</a>) issue</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -74,4 +92,10 @@ This is not JIRA-123a issue
 This is not JIRA- issue
 .
 <p>This is not JIRA- issue</p>
+````````````````````````````````
+
+```````````````````````````````` example
+This is not JIR4- issue
+.
+<p>This is not JIR4- issue</p>
 ````````````````````````````````
