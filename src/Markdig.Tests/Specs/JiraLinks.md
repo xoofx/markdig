@@ -83,6 +83,12 @@ This is not aJIRA-123 issue
 ````````````````````````````````
 
 ```````````````````````````````` example
+This is not 4JIRA-123 issue
+.
+<p>This is not 4JIRA-123 issue</p>
+````````````````````````````````
+
+```````````````````````````````` example
 This is not JIRA-123a issue
 .
 <p>This is not JIRA-123a issue</p>
