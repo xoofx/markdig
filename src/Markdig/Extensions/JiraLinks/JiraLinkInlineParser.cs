@@ -40,8 +40,14 @@ namespace Markdig.Extensions.JiraLinks
             var startKey = slice.Start;
             var endKey = slice.Start;
 
-            //read as many uppercase characters as required - project key
-            while (current.IsAlphaUpper())
+            // the first character of the key can not be a digit.
+            if (current.IsDigit())
+            {
+                return false;
+            }
+
+            // read as many uppercase characters or digits as required - project key
+            while (current.IsAlphaUpper() || current.IsDigit())
             {
                 endKey = slice.Start;
                 current = slice.NextChar();
