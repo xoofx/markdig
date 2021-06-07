@@ -361,6 +361,22 @@ namespace Markdig.Helpers
         }
 
         /// <summary>
+        /// Searches for the specified character within this slice.
+        /// </summary>
+        /// <returns>A value >= 0 if the character was found, otherwise &lt; 0</returns>
+        public readonly int IndexOfAbsolute(char c, int offset)
+        {
+            if (offset > End) return -1;
+
+            int length = End - offset + 1;
+
+            if (length <= 0)
+                return -1;
+
+            return Text.IndexOf(c, offset, length);
+        }
+
+        /// <summary>
         /// Trims whitespaces at the beginning of this slice starting from <see cref="Start"/> position.
         /// </summary>
         /// <returns>
