@@ -15,6 +15,13 @@ namespace Markdig.Syntax
         /// <summary>
         /// Initializes a new instance of the <see cref="ThematicBreakBlock"/> class.
         /// </summary>
+        public ThematicBreakBlock() : base(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThematicBreakBlock"/> class.
+        /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
         public ThematicBreakBlock(BlockParser parser) : base(parser)
         {

@@ -17,6 +17,14 @@ namespace Markdig.Syntax
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
         /// </summary>
+        public QuoteBlock() : base(null)
+        {
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
+        /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
         public QuoteBlock(BlockParser parser) : base(parser)
         {

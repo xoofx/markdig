@@ -17,6 +17,14 @@ namespace Markdig.Syntax
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadingBlock"/> class.
         /// </summary>
+        public HeadingBlock() : base(null)
+        {
+            ProcessInlines = true;
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeadingBlock"/> class.
+        /// </summary>
         /// <param name="parser">The parser.</param>
         public HeadingBlock(BlockParser parser) : base(parser)
         {

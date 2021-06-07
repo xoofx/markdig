@@ -16,6 +16,13 @@ namespace Markdig.Syntax
         /// <summary>
         /// Initializes a new instance of the <see cref="ListItemBlock"/> class.
         /// </summary>
+        public ListItemBlock() : base(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListItemBlock"/> class.
+        /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
         public ListItemBlock(BlockParser parser) : base(parser)
         {
