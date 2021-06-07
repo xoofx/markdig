@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Markdig.Jira.Collections
+namespace Markdig.Collections
 {
     /// <summary>
     /// Lightweight struct list with optimized behavior over <see cref="List{T}"/>:
@@ -15,11 +15,10 @@ namespace Markdig.Jira.Collections
     /// - Settable Count
     /// - Underlying array accessible (pinnable...etc.)
     /// - Push/Pop methods
-    /// - Implements <see cref="IListAdd{T}"/>  
     /// </summary>
     /// <typeparam name="T">Type of an item</typeparam>
     [DebuggerTypeProxy(typeof(DebugListView<>)), DebuggerDisplay("Count = {Count}")]
-    internal struct InlineList<T> : IEnumerable<T> //, IListAdd<T>
+    internal struct InlineList<T> : IEnumerable<T>
     {
         private const int DefaultCapacity = 4;
         
@@ -29,10 +28,16 @@ namespace Markdig.Jira.Collections
 
         public T[] Items;
 
+#if NET452
+        private static readonly T[] EmptyArray = new T[0];
+#else
+        private static readonly T[] EmptyArray = Array.Empty<T>();
+#endif
+
         public InlineList(uint capacity)
         {
             Count = 0;
-            Items = capacity == 0 ? Array.Empty<T>() : new T[capacity];
+            Items = capacity == 0 ? EmptyArray : new T[capacity];
         }
 
         public uint Capacity
@@ -59,7 +64,7 @@ namespace Markdig.Jira.Collections
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Ensure()
         {
-            if (Items == null) Items = Array.Empty<T>();
+            if (Items == null) Items = EmptyArray;
         }
 
         public bool IsReadOnly => false;
@@ -239,9 +244,9 @@ namespace Markdig.Jira.Collections
             get
             {
 #if DEBUG
-                ThrowHelper.CheckOutOfRange(index, Count);
+                if (index >= Count) throw new ArgumentOutOfRangeException(nameof(index), $"Invalid index {index} must be < {Count}");
 #endif
-                return ref Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(Items), (IntPtr)index);
+                return ref Items[index];
             }
         }
 

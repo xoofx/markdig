@@ -4,6 +4,8 @@
 
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Roundtrip;
 
 namespace Markdig.Extensions.CustomContainers
 {
@@ -52,7 +54,14 @@ namespace Markdig.Extensions.CustomContainers
                     htmlRenderer.ObjectRenderers.Insert(0, new HtmlCustomContainerInlineRenderer());
                 }
             }
-
+            else if (renderer is RoundtripRenderer roundtripRenderer)
+            {
+                if (!roundtripRenderer.ObjectRenderers.Contains<RoundtripCustomContainerBlockRenderer>())
+                {
+                    // Must be inserted before CodeBlockRenderer
+                    roundtripRenderer.ObjectRenderers.Insert(0, new RoundtripCustomContainerBlockRenderer());
+                }
+            }
         }
     }
 }

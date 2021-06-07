@@ -18,6 +18,13 @@ namespace Markdig.Syntax
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedCodeBlock"/> class.
         /// </summary>
+        public FencedCodeBlock() : base(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FencedCodeBlock"/> class.
+        /// </summary>
         /// <param name="parser">The parser.</param>
         public FencedCodeBlock(BlockParser parser) : base(parser)
         {

@@ -18,6 +18,13 @@ namespace Markdig.Extensions.CustomContainers
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomContainer"/> class.
         /// </summary>
+        public CustomContainer() : base(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomContainer"/> class.
+        /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
         public CustomContainer(BlockParser parser) : base(parser)
         {
