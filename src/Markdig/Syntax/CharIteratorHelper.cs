@@ -13,44 +13,38 @@ namespace Markdig.Syntax
     {
         public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
         {
-            countNewLines = 0;
-            var c = iterator.CurrentChar;
-            bool hasWhitespaces = false;
-            while (c.IsWhitespace())
-            {
-                if (c == '\n')
-                {
-                    countNewLines++;
-                }
-                hasWhitespaces = true;
-                c = iterator.NextChar();
-            }
-            return hasWhitespaces;
+            return TrimStartAndCountNewLines(ref iterator, out countNewLines, out _);
         }
 
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine firstNewline) where T : ICharIterator
+        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine lastLine) where T : ICharIterator
         {
             countNewLines = 0;
             var c = iterator.CurrentChar;
             bool hasWhitespaces = false;
-            firstNewline = NewLine.None;
-            while (c.IsWhitespace())
+            lastLine = NewLine.None;
+            while (c != '\0' && c.IsWhitespace())
             {
                 if (c == '\n' || c == '\r')
                 {
-                    if (c == '\r' && iterator.PeekChar() == '\n' && firstNewline != NewLine.None)
+                    if (c == '\r' && iterator.PeekChar() == '\n')
                     {
-                        firstNewline = NewLine.CarriageReturnLineFeed;
+                        lastLine = NewLine.CarriageReturnLineFeed;
+                        iterator.SkipChar(); // skip \n
                     }
-                    else if (c == '\n' && firstNewline != NewLine.None)
+                    else if (c == '\n')
                     {
-                        firstNewline = NewLine.LineFeed;
+                        lastLine = NewLine.LineFeed;
                     }
-                    else if (c == '\r' && firstNewline != NewLine.None)
+                    else if (c == '\r')
                     {
-                        firstNewline = NewLine.CarriageReturn;
+                        lastLine = NewLine.CarriageReturn;
                     }
                     countNewLines++;
+                }
+                else
+                {
+                    // reset last line if if have a whitespace after
+                    lastLine = NewLine.None;
                 }
                 hasWhitespaces = true;
                 c = iterator.NextChar();

@@ -299,7 +299,7 @@ namespace Markdig.Helpers
                                 CurrentChar = '\r';
                             }
                         }
-                        else if (_offset + 1 == slice.Length)
+                        else if (_offset - 1 == slice.Length)
                         {
                             if (newLine == NewLine.CarriageReturnLineFeed)
                             {

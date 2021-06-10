@@ -1231,7 +1231,9 @@ namespace Markdig.Helpers
             var saved = text;
             var hasWhiteSpaces = CharIteratorHelper.TrimStartAndCountNewLines(ref text, out int newLineCount, out newLine);
 
-            triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, text.Start - 1);
+            // Remove the newline from the trivia (as it may have multiple lines)
+            var triviaBeforeTitleEnd = text.Start - 1;
+            triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, triviaBeforeTitleEnd);
             var c = text.CurrentChar;
             if (c == '\'' || c == '"' || c == '(')
             {
@@ -1246,6 +1248,9 @@ namespace Markdig.Helpers
                     {
                         return false;
                     }
+
+                    // Discard the newline if we have a title
+                    newLine = NewLine.None;
                 }
                 else
                 {
@@ -1256,6 +1261,8 @@ namespace Markdig.Helpers
             {
                 if (text.IsEmpty || newLineCount > 0)
                 {
+                    // If we have an end of line, we need to remove it from the trivia
+                    triviaBeforeTitle.End -= newLine.Length();
                     triviaAfterTitle = new SourceSpan(text.Start, text.Start - 1);
                     return true;
                 }
@@ -1277,6 +1284,7 @@ namespace Markdig.Helpers
                 {
                     text = saved;
                     title = null;
+                    newLine = NewLine.None;
                     unescapedTitle = SourceSpan.Empty;
                     triviaAfterTitle = SourceSpan.Empty;
                     return true;

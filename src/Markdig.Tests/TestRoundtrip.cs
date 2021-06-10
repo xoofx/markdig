@@ -23,7 +23,8 @@ namespace Markdig.Tests
 
             nr.Write(markdownDocument);
 
-            Assert.AreEqual(markdown, sw.ToString());
+            var result = sw.ToString();
+            Assert.AreEqual(markdown, result);
         }
     }
 }
