@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0 (10 June 2021)
+- Fix regression when parsing link reference definitions (#543)
+- Make digits in JiraKey's posible ([PR #548](https://github.com/lunet-io/markdig/pull/548))
+
 ## 0.24.0 (20 Mar 2021)
 - Add support for roundtrip Markdown ([PR #481](https://github.com/lunet-io/markdig/pull/481))
 - Introduction of nullability ([PR #522](https://github.com/lunet-io/markdig/pull/522) [PR #524](https://github.com/lunet-io/markdig/pull/524) [PR #525](https://github.com/lunet-io/markdig/pull/525) [PR #526](https://github.com/lunet-io/markdig/pull/526) [PR #527](https://github.com/lunet-io/markdig/pull/527))
