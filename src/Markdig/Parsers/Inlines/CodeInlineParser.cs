@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
@@ -62,6 +62,12 @@ namespace Markdig.Parsers.Inlines
                 if (c == '\n')
                 {
                     c = ' ';
+                }
+                else if (c == '\r')
+                {
+                    slice.SkipChar();
+                    c = slice.CurrentChar;
+                    continue;
                 }
 
                 if (c == match)
