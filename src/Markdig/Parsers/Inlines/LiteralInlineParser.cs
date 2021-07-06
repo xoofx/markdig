@@ -52,7 +52,8 @@ namespace Markdig.Parsers.Inlines
                 length = nextStart - slice.Start;
                 if (!processor.TrackTrivia)
                 {
-                    if (text[nextStart] == '\n')
+                    var nextText = text[nextStart];
+                    if (nextText == '\n' || nextText == '\r')
                     {
                         int end = nextStart - 1;
                         while (length > 0 && text[end].IsSpace())

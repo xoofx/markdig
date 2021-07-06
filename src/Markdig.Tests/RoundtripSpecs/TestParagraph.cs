@@ -115,9 +115,9 @@ namespace Markdig.Tests.RoundtripSpecs
         }
 
 
-        //[TestCase("\n")]
-        //[TestCase("\r\n")]
-        //[TestCase("\r")]
+        [TestCase("\n")]
+        [TestCase("\r\n")]
+        [TestCase("\r")]
 
         [TestCase("p\n")]
         [TestCase("p\r")]
