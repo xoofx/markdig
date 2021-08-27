@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.0 (27 Aug 2021)
+- Fix rendering diff between line endings ([PR #560](https://github.com/lunet-io/markdig/pull/560))
+- Make Mathematics extension respect EnableHtml* options ([PR #570](https://github.com/lunet-io/markdig/pull/570))
+
 ## 0.25.0 (10 June 2021)
 - Fix regression when parsing link reference definitions (#543)
 - Make digits in JiraKey's posible ([PR #548](https://github.com/lunet-io/markdig/pull/548))
