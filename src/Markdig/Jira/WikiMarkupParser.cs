@@ -413,16 +413,6 @@ namespace Markdig.Jira
                 {
                     var quote = new QuoteBlock() {QuoteChar = '>'};
                     PushBlock(quote, true);
-
-                    var quoteLine = new QuoteBlockLine()
-                    {
-                        TriviaBefore = triviaBefore,
-                        HasSpaceAfterQuoteChar = true,
-                        NewLine = line.NewLine,
-                    };
-                    quote.QuoteLines.Add(quoteLine);
-
-                    PushBlock(quote, true);
                 };
 
                 // continue parsing the line
@@ -446,64 +436,68 @@ namespace Markdig.Jira
 
                 if (valid)
                 {
-                    // Collect active list blocks
-                    _listBlocks.Clear();
-                    var visitBlock = _currentBlock;
-                    while (true)
+                    _currentLineBlockAction = () =>
                     {
-                        if (visitBlock is ListBlock listBlock)
+                        // Collect active list blocks
+                        _listBlocks.Clear();
+                        var visitBlock = _currentBlock;
+                        while (true)
                         {
-                            _listBlocks.Add(listBlock);
-                            visitBlock = visitBlock.Parent;
-                            continue;
-                        }
-                        else if (visitBlock is ListItemBlock)
-                        {
-                            visitBlock = visitBlock.Parent;
-                            continue;
-                        }
-                        break;
-                    }
+                            if (visitBlock is ListBlock listBlock)
+                            {
+                                _listBlocks.Add(listBlock);
+                                visitBlock = visitBlock.Parent;
+                                continue;
+                            }
+                            else if (visitBlock is ListItemBlock)
+                            {
+                                visitBlock = visitBlock.Parent;
+                                continue;
+                            }
 
-                    uint blockIndex = 0;
-                    for (int i = line.Start; i <= line.End; i++, blockIndex++)
-                    {
-                        var nc = line[i];
-                        if (nc.IsWhitespace())
-                        {
-                            line.Start = i + 1;
                             break;
                         }
 
-                        var kind = nc == '*' || nc == '-' ? nc : '1';
-                        
-                        var currentListBlock = blockIndex < _listBlocks.Count ? _listBlocks[blockIndex] : null;
-                        if (currentListBlock == null || currentListBlock.BulletType != kind)
+                        uint blockIndex = 0;
+                        for (int i = line.Start; i <= line.End; i++, blockIndex++)
                         {
-                            var nextListBlock = new ListBlock()
+                            var nc = line[i];
+                            if (nc.IsWhitespace())
                             {
-                                BulletType = kind,
-                            };
-
-                            if (kind == '#')
-                            {
-                                nextListBlock.IsOrdered = true;
-                                nextListBlock.DefaultOrderedStart = "1";
-                                nextListBlock.BulletType = '1';
-                                nextListBlock.OrderedStart = "1";
+                                line.Start = i + 1;
+                                break;
                             }
 
-                            var containerBlock = currentListBlock?.Parent ?? _currentDoc;
-                            containerBlock.Add(nextListBlock);
-                            _currentDoc.Add(nextListBlock);
+                            var kind = nc == '*' || nc == '-' ? nc : '1';
 
-                            currentListBlock = nextListBlock;
+                            var currentListBlock = blockIndex < _listBlocks.Count ? _listBlocks[blockIndex] : null;
+                            if (currentListBlock == null || currentListBlock.BulletType != kind)
+                            {
+                                var nextListBlock = new ListBlock()
+                                {
+                                    BulletType = kind,
+                                };
+
+                                if (kind == '#')
+                                {
+                                    nextListBlock.IsOrdered = true;
+                                    nextListBlock.DefaultOrderedStart = "1";
+                                    nextListBlock.BulletType = '1';
+                                    nextListBlock.OrderedStart = "1";
+                                }
+
+                                var containerBlock = currentListBlock?.Parent ?? _currentDoc;
+                                containerBlock.Add(nextListBlock);
+                                _currentDoc.Add(nextListBlock);
+
+                                currentListBlock = nextListBlock;
+                            }
+
+                            var nextListItemBlock = new ListItemBlock();
+                            currentListBlock.Add(nextListItemBlock);
+                            _currentBlock = nextListItemBlock;
                         }
-
-                        var nextListItemBlock = new ListItemBlock();
-                        currentListBlock.Add(nextListItemBlock);
-                        _currentBlock = nextListItemBlock;
-                    }
+                    };
                 }
             }
 
@@ -923,11 +917,14 @@ namespace Markdig.Jira
                 case WikiBlockKind.Code:
                 case WikiBlockKind.CodeWithArgs:
                 case WikiBlockKind.NoFormat:
+
+                    var endBlock = _wikiBlocks[(uint)block.OtherBlockIndex];
+
                     var markdownCodeBlock = new FencedCodeBlock
                     {
                         InfoNewLine = NewLine.LineFeed,
                         NewLine = NewLine.LineFeed,
-                        Lines = new StringLineGroup(10) // TODO: use exact number of lines
+                        Lines = new StringLineGroup((int)(endBlock.LineIndex - block.LineIndex) + 1)
                     };
 
                     if (block.Kind == WikiBlockKind.CodeWithArgs)
@@ -939,7 +936,6 @@ namespace Markdig.Jira
                         markdownCodeBlock.Arguments = arguments;
                     }
 
-                    var endBlock = _wikiBlocks[(uint)block.OtherBlockIndex];
 
                     markdownCodeBlock.FencedChar = '`';
                     markdownCodeBlock.OpeningFencedCharCount = 3;
@@ -1008,15 +1004,6 @@ namespace Markdig.Jira
                         Debug.Assert(block.Flags == TextPartFlags.Close);
 
                         var quoteBlock = (QuoteBlock) FindContainerForNewBlock();
-
-                        // Add quote lines
-                        quoteBlock.QuoteLines.Add(new QuoteBlockLine()
-                        {
-                            QuoteChar = true,
-                            HasSpaceAfterQuoteChar = true,
-                            NewLine = NewLine.LineFeed,
-                        });
-
                         _currentBlock = quoteBlock.Parent;
                     }
 
@@ -1188,6 +1175,10 @@ namespace Markdig.Jira
             kind = TextEffectKind.Default;
             line.Start++; // skip [
 
+            // Early check that we have a ]
+            var indexOfCloseBracket = line.IndexOf(']');
+            if (indexOfCloseBracket < 0) return -1;
+
             var c = line.CurrentChar;
             if (c == '#')
             {
@@ -1208,7 +1199,8 @@ namespace Markdig.Jira
             else
             {
                 var barIndex = line.IndexOf('|');
-                if (barIndex < 0)
+                // Case where [text]|
+                if (barIndex < 0 || barIndex > indexOfCloseBracket)
                 {
                     return -1;
                 }
@@ -1221,33 +1213,8 @@ namespace Markdig.Jira
                 kind = TextEffectKind.LinkExternalWithTitle;
             }
 
-            var pc = '\0';
-            for (int i = line.Start; i <= line.End; i++)
-            {
-                c = line[i];
-
-                if (pc != '\\')
-                {
-                    // If we have a valid \{[A-Za-z0-9].*?\}, then the link is not valid
-                    if (c == '{')
-                    {
-                        var nc = line.PeekCharAbsolute(i + 1);
-                        if (nc.IsAlphaNumeric())
-                        {
-                            if (line.IndexOfAbsolute('}', i + 1) < 0) return -1;
-                        }
-                    }
-                    else if (c == ']')
-                    {
-                        return i;
-                    }
-                }
-
-                pc = c;
-            }
-
             // Else the link is invalid
-            return -1;
+            return indexOfCloseBracket;
         }
         
         private static int MatchClosingMonospaced(StringSlice line)
