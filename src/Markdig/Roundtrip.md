@@ -5,7 +5,7 @@ Without tracking trivia characters, the renderer must make all kinds of assumpti
 
 To use this functionality, set the optional `trackTrivia` parameter to true when using the static `Markdown` class:
 ```csharp
-MarkdownDocument markdownDocument = Markdown.Parse(inputMarkdown, trackTrivia = true);
+MarkdownDocument markdownDocument = Markdown.Parse(inputMarkdown, trackTrivia: true);
 ```
 
 You will get a parse tree where `Block` and `Inline` instances now have various `Trivia*` properties.
