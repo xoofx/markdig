@@ -40,10 +40,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a ABCD-123 issue
             //
             // Should be rendered as:
-            //     <p>This is a <a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a> issue</p>
+            //     <p>This is a <a href="http://your.company.abc/browse/ABCD-123" target="_blank">ABCD-123</a> issue</p>
 
             Console.WriteLine("Example 1\nSection Jira Links\n");
-            TestParser.TestSpec("This is a ABCD-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABCD-123\" target=\"blank\">ABCD-123</a> issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a ABCD-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a> issue</p>", "jiralinks");
         }
 
         [Test]
@@ -56,10 +56,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a ABC4-123 issue
             //
             // Should be rendered as:
-            //     <p>This is a <a href="http://your.company.abc/browse/ABC4-123" target="blank">ABC4-123</a> issue</p>
+            //     <p>This is a <a href="http://your.company.abc/browse/ABC4-123" target="_blank">ABC4-123</a> issue</p>
 
             Console.WriteLine("Example 2\nSection Jira Links\n");
-            TestParser.TestSpec("This is a ABC4-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC4-123\" target=\"blank\">ABC4-123</a> issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a ABC4-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a> issue</p>", "jiralinks");
         }
 
         [Test]
@@ -72,10 +72,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a ABC45-123 issue
             //
             // Should be rendered as:
-            //     <p>This is a <a href="http://your.company.abc/browse/ABC45-123" target="blank">ABC45-123</a> issue</p>
+            //     <p>This is a <a href="http://your.company.abc/browse/ABC45-123" target="_blank">ABC45-123</a> issue</p>
 
             Console.WriteLine("Example 3\nSection Jira Links\n");
-            TestParser.TestSpec("This is a ABC45-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC45-123\" target=\"blank\">ABC45-123</a> issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a ABC45-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC45-123\" target=\"_blank\">ABC45-123</a> issue</p>", "jiralinks");
         }
 
         [Test]
@@ -88,10 +88,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a KIRA-1 issue
             //
             // Should be rendered as:
-            //     <p>This is a <a href="http://your.company.abc/browse/KIRA-1" target="blank">KIRA-1</a> issue</p>
+            //     <p>This is a <a href="http://your.company.abc/browse/KIRA-1" target="_blank">KIRA-1</a> issue</p>
 
             Console.WriteLine("Example 4\nSection Jira Links\n");
-            TestParser.TestSpec("This is a KIRA-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/KIRA-1\" target=\"blank\">KIRA-1</a> issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a KIRA-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a> issue</p>", "jiralinks");
         }
 
         [Test]
@@ -104,10 +104,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a Z-1 issue
             //
             // Should be rendered as:
-            //     <p>This is a <a href="http://your.company.abc/browse/Z-1" target="blank">Z-1</a> issue</p>
+            //     <p>This is a <a href="http://your.company.abc/browse/Z-1" target="_blank">Z-1</a> issue</p>
 
             Console.WriteLine("Example 5\nSection Jira Links\n");
-            TestParser.TestSpec("This is a Z-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/Z-1\" target=\"blank\">Z-1</a> issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a Z-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a> issue</p>", "jiralinks");
         }
 
         // These are also valid links with `(` and `)`:
@@ -121,10 +121,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a (ABCD-123) issue
             //
             // Should be rendered as:
-            //     <p>This is a (<a href="http://your.company.abc/browse/ABCD-123" target="blank">ABCD-123</a>) issue</p>
+            //     <p>This is a (<a href="http://your.company.abc/browse/ABCD-123" target="_blank">ABCD-123</a>) issue</p>
 
             Console.WriteLine("Example 6\nSection Jira Links\n");
-            TestParser.TestSpec("This is a (ABCD-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABCD-123\" target=\"blank\">ABCD-123</a>) issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a (ABCD-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a>) issue</p>", "jiralinks");
         }
 
         [Test]
@@ -137,10 +137,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a (ABC4-123) issue
             //
             // Should be rendered as:
-            //     <p>This is a (<a href="http://your.company.abc/browse/ABC4-123" target="blank">ABC4-123</a>) issue</p>
+            //     <p>This is a (<a href="http://your.company.abc/browse/ABC4-123" target="_blank">ABC4-123</a>) issue</p>
 
             Console.WriteLine("Example 7\nSection Jira Links\n");
-            TestParser.TestSpec("This is a (ABC4-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABC4-123\" target=\"blank\">ABC4-123</a>) issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a (ABC4-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a>) issue</p>", "jiralinks");
         }
 
         [Test]
@@ -153,10 +153,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a (KIRA-1) issue
             //
             // Should be rendered as:
-            //     <p>This is a (<a href="http://your.company.abc/browse/KIRA-1" target="blank">KIRA-1</a>) issue</p>
+            //     <p>This is a (<a href="http://your.company.abc/browse/KIRA-1" target="_blank">KIRA-1</a>) issue</p>
 
             Console.WriteLine("Example 8\nSection Jira Links\n");
-            TestParser.TestSpec("This is a (KIRA-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/KIRA-1\" target=\"blank\">KIRA-1</a>) issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a (KIRA-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a>) issue</p>", "jiralinks");
         }
 
         [Test]
@@ -169,10 +169,10 @@ namespace Markdig.Tests.Specs.JiraLinks
             //     This is a (Z-1) issue
             //
             // Should be rendered as:
-            //     <p>This is a (<a href="http://your.company.abc/browse/Z-1" target="blank">Z-1</a>) issue</p>
+            //     <p>This is a (<a href="http://your.company.abc/browse/Z-1" target="_blank">Z-1</a>) issue</p>
 
             Console.WriteLine("Example 9\nSection Jira Links\n");
-            TestParser.TestSpec("This is a (Z-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/Z-1\" target=\"blank\">Z-1</a>) issue</p>", "jiralinks");
+            TestParser.TestSpec("This is a (Z-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a>) issue</p>", "jiralinks");
         }
 
         // These are not valid links:
