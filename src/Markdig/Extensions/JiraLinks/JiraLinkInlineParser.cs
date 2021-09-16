@@ -106,7 +106,7 @@ namespace Markdig.Extensions.JiraLinks
 
             if (_options.OpenInNewWindow)
             {
-                jiraLink.GetAttributes().AddProperty("target", "blank");
+                jiraLink.GetAttributes().AddProperty("target", "_blank");
             }
 
             processor.Inline = jiraLink;

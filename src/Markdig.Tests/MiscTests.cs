@@ -272,7 +272,7 @@ $$
             var newWindowPipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions() { OpenInNewWindow = true }).Build();
 
             TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
-            TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\" target=\"blank\">www.foo.bar</a></p>", newWindowPipeline);
+            TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\" target=\"_blank\">www.foo.bar</a></p>", newWindowPipeline);
         }
 
         [Test]

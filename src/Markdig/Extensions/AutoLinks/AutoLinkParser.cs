@@ -201,7 +201,7 @@ namespace Markdig.Extensions.AutoLinks
 
                 if (Options.OpenInNewWindow)
                 {
-                    inline.GetAttributes().AddPropertyIfNotExist("target", "blank");
+                    inline.GetAttributes().AddPropertyIfNotExist("target", "_blank");
                 }
 
                 return true;
