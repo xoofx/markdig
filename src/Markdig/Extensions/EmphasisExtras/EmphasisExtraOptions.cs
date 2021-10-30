@@ -33,12 +33,12 @@ namespace Markdig.Extensions.EmphasisExtras
         Superscript = 4,
 
         /// <summary>
-        /// A text that can be rendered as a inserted using the character ++
+        /// A text that can be rendered as a inserted using the double character ++
         /// </summary>
         Inserted = 8,
 
         /// <summary>
-        /// A text that can be rendered as a inserted using the character ==
+        /// A text that can be rendered as a marked using the double character ==
         /// </summary>
         Marked = 16,
     }
