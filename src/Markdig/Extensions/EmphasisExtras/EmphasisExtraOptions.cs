@@ -38,7 +38,7 @@ namespace Markdig.Extensions.EmphasisExtras
         Inserted = 8,
 
         /// <summary>
-        /// A text that can be rendered as a marked using the double character ==
+        /// A text that can be rendered as marked using the double character ==
         /// </summary>
         Marked = 16,
     }
