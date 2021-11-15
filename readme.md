@@ -128,10 +128,6 @@ This is an early preview of the benchmarking against various implementations:
 - [Marked.NET](https://github.com/T-Alex/MarkedNet) (version: 1.0.5) port of original [marked.js](https://github.com/chjj/marked) project
 - [Microsoft.DocAsCode.MarkdownLite](https://github.com/dotnet/docfx/tree/dev/src/Microsoft.DocAsCode.MarkdownLite) (version: 2.0.1) used by the [docfx](https://github.com/dotnet/docfx) project
 
-**JavaScript/V8 implementations**:
-
-- [Strike.V8](https://github.com/SimonCropp/Strike) (version: 1.5.0)  [marked.js](https://github.com/chjj/marked) running in Google V8 (not .NET based)
-
 ### Analysis of the results:
 
 - Markdig is roughly **x100 times faster than MarkdownSharp**, **30x times faster than docfx**
@@ -166,7 +162,6 @@ CommonMark.NET(pipe_tables) |   5.6164 ms | 0.0298 ms |  0.72 |  111.00| 56.00| 
                MarkdownDeep |   7.8193 ms | 0.0334 ms |  1.00 |  120.00| 56.00|    49.00|      1,884,854.85 |
                       cmark |   4.2698 ms | 0.1526 ms |  0.55 |       -|     -|        -|                NA |
                   Moonshine |   6.0929 ms | 0.1053 ms |  1.28 |       -|     -|        -|                NA |
-                  Strike.V8 |  10.5895 ms | 0.0492 ms |  1.35 |       -|     -|        -|                NA |
                  Marked.NET | 207.3169 ms | 5.2628 ms | 26.51 |    0.00|  0.00|     0.00|    303,125,228.65 |
               MarkdownSharp | 675.0185 ms | 2.8447 ms | 86.32 |   40.00| 27.00|    41.00|      2,413,394.17 |
 Microsoft DocfxMarkdownLite | 166.3357 ms | 0.4529 ms | 21.27 |4,452.00|948.00|11,167.00|    180,218,359.60 |
