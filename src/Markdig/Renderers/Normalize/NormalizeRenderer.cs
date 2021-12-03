@@ -20,7 +20,7 @@ namespace Markdig.Renderers.Normalize
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="options">The normalize options</param>
-        public NormalizeRenderer(TextWriter writer, NormalizeOptions? options = null) : base(writer)
+        public NormalizeRenderer(TextWriter writer, NormalizeOptions? options = null, MarkdownParserContext? context = null) : base(writer, context)
         {
             Options = options ?? new NormalizeOptions();
             // Default block renderers

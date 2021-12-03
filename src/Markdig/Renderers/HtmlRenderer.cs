@@ -24,7 +24,7 @@ namespace Markdig.Renderers
         /// Initializes a new instance of the <see cref="HtmlRenderer"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public HtmlRenderer(TextWriter writer) : base(writer)
+        public HtmlRenderer(TextWriter writer, MarkdownParserContext? context = null) : base(writer, context)
         {
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());

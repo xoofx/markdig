@@ -76,7 +76,7 @@ namespace Markdig
         private HtmlRendererCache? _rendererCache;
         private HtmlRendererCache? _rendererCacheForCustomWriter;
 
-        internal RentedHtmlRenderer RentHtmlRenderer(TextWriter? writer = null)
+        internal RentedHtmlRenderer RentHtmlRenderer(TextWriter? writer = null, MarkdownParserContext? context = null)
         {
             HtmlRendererCache cache = writer is null
                 ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false)
@@ -100,17 +100,19 @@ namespace Markdig
 
             private readonly MarkdownPipeline _pipeline;
             private readonly bool _customWriter;
+            private readonly MarkdownParserContext? _context;
 
-            public HtmlRendererCache(MarkdownPipeline pipeline, bool customWriter = false)
+            public HtmlRendererCache(MarkdownPipeline pipeline, bool customWriter = false, MarkdownParserContext? context = null)
             {
                 _pipeline = pipeline;
                 _customWriter = customWriter;
+                _context = context;
             }
 
             protected override HtmlRenderer NewInstance()
             {
                 var writer = _customWriter ? _dummyWriter : new StringWriter(new StringBuilder(InitialCapacity));
-                var renderer = new HtmlRenderer(writer);
+                var renderer = new HtmlRenderer(writer, _context);
                 _pipeline.Setup(renderer);
                 return renderer;
             }

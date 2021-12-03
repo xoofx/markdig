@@ -72,7 +72,7 @@ namespace Markdig
 
             var document = MarkdownParser.Parse(markdown, pipeline, context);
 
-            var renderer = new NormalizeRenderer(writer, options);
+            var renderer = new NormalizeRenderer(writer, options, context);
             pipeline.Setup(renderer);
 
             renderer.Render(document);
@@ -97,7 +97,7 @@ namespace Markdig
 
             var document = MarkdownParser.Parse(markdown, pipeline, context);
 
-            return ToHtml(document, pipeline);
+            return ToHtml(document, pipeline, context);
         }
 
         /// <summary>
@@ -107,13 +107,13 @@ namespace Markdig
         /// <param name="pipeline">The pipeline used for the conversion.</param>
         /// <returns>The result of the conversion</returns>
         /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
-        public static string ToHtml(this MarkdownDocument document, MarkdownPipeline? pipeline = null)
+        public static string ToHtml(this MarkdownDocument document, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
         {
             if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
 
             pipeline ??= DefaultPipeline;
 
-            using var rentedRenderer = pipeline.RentHtmlRenderer();
+            using var rentedRenderer = pipeline.RentHtmlRenderer(null, context);
             HtmlRenderer renderer = rentedRenderer.Instance;
 
             renderer.Render(document);
@@ -140,7 +140,7 @@ namespace Markdig
 
             var document = MarkdownParser.Parse(markdown, pipeline, context);
 
-            using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
+            using var rentedRenderer = pipeline.RentHtmlRenderer(writer, context);
             HtmlRenderer renderer = rentedRenderer.Instance;
 
             renderer.Render(document);

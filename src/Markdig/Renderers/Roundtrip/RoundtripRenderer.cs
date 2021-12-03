@@ -20,7 +20,7 @@ namespace Markdig.Renderers.Roundtrip
         /// Initializes a new instance of the <see cref="RoundtripRenderer"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public RoundtripRenderer(TextWriter writer) : base(writer)
+        public RoundtripRenderer(TextWriter writer, MarkdownParserContext? context = null) : base(writer, context)
         {
             // Default block renderers
             ObjectRenderers.Add(new CodeBlockRenderer());

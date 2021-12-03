@@ -25,11 +25,13 @@ namespace Markdig.Renderers
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        protected TextRendererBase(TextWriter writer)
+        protected TextRendererBase(TextWriter writer, MarkdownParserContext? context)
         {
             if (writer is null) ThrowHelper.ArgumentNullException_writer();
             this.writer = writer;
             this.writer.NewLine = "\n";
+
+            Context = context;
         }
 
         /// <summary>
@@ -51,6 +53,11 @@ namespace Markdig.Renderers
                 writer = value;
             }
         }
+
+        /// <summary>
+        /// Gets the renderer context or <c>null</c> if none is available.
+        /// </summary>
+        public MarkdownParserContext? Context { get; private set; }
 
         /// <summary>
         /// Renders the specified markdown object (returns the <see cref="Writer"/> as a render object).
@@ -111,7 +118,7 @@ namespace Markdig.Renderers
         /// Initializes a new instance of the <see cref="TextRendererBase{T}"/> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        protected TextRendererBase(TextWriter writer) : base(writer)
+        protected TextRendererBase(TextWriter writer, MarkdownParserContext? context) : base(writer, context)
         {
 #if !NETCORE
             buffer = new char[1024];
