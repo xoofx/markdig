@@ -4,17 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace UnicodeNormDApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             using var httpClient = new HttpClient();
-            using var response = httpClient.GetAsync("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt").Result;
-            using var content = response.Content;
-            var data = content.ReadAsStringAsync().Result;
+            var data = await httpClient.GetStringAsync("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt");
 
             var stringReader = new StringReader(data);
 
