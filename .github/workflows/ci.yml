@@ -20,16 +20,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Install .NET 5.0
+    - name: Install .NET 6.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
+        dotnet-version: '6.0.x'
 
     - name: Build (Release)
       run: dotnet build src -c Release
       
     - name: SpecFileGen
-      run: dotnet src/SpecFileGen/bin/Release/net5.0/SpecFileGen.dll
+      run: dotnet src/SpecFileGen/bin/Release/net6.0/SpecFileGen.dll
 
     - name: Test (Release)
       run: dotnet test src -c Release
@@ -38,7 +38,7 @@ jobs:
       run: dotnet test src -c Debug
 
     - name: Coverlet
-      run: dotnet test src -c Release -f net5.0 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+      run: dotnet test src -c Release -f net6.0 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
     - name: Coveralls Upload
       uses: coverallsapp/github-action@v1.0.1
