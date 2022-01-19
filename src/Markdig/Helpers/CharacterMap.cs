@@ -159,7 +159,7 @@ namespace Markdig.Helpers
             for (int i = start; i <= end; i++)
             {
                 char c = Unsafe.Add(ref textRef, i);
-                if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap.ContainsKey(c))
+                if (c < 128 ? isOpeningCharacter[c] : nonAsciiMap!.ContainsKey(c))
                 {
                     return i;
                 }

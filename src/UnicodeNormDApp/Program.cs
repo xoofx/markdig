@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace UnicodeNormDApp
@@ -11,10 +11,10 @@ namespace UnicodeNormDApp
     {
         static void Main(string[] args)
         {
-
-            var httpClient = new WebClient();
-
-            var data = httpClient.DownloadString("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt");
+            using var httpClient = new HttpClient();
+            using var response = httpClient.GetAsync("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt").Result;
+            using var content = response.Content;
+            var data = content.ReadAsStringAsync().Result;
 
             var stringReader = new StringReader(data);
 
