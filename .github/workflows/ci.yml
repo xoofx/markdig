@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Install .NET 6.0
       uses: actions/setup-dotnet@v1
@@ -41,7 +41,7 @@ jobs:
       run: dotnet test src -c Release -f net6.0 /p:Include=\"[${{env.PROJECT_NAME}}]*\" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
     - name: Coveralls Upload
-      uses: coverallsapp/github-action@v1.0.1
+      uses: coverallsapp/github-action@v1
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
