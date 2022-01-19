@@ -167,6 +167,13 @@ namespace Markdig.Syntax
         /// <typeparam name="T">Type of the text</typeparam>
         /// <param name="text">The text.</param>
         /// <param name="block">The block.</param>
+        /// <param name="triviaBeforeLabel"></param>
+        /// <param name="labelWithTrivia"></param>
+        /// <param name="triviaBeforeUrl"></param>
+        /// <param name="unescapedUrl"></param>
+        /// <param name="triviaBeforeTitle"></param>
+        /// <param name="unescapedTitle"></param>
+        /// <param name="triviaAfterTitle"></param>
         /// <returns><c>true</c> if parsing is successful; <c>false</c> otherwise</returns>
         public static bool TryParseTrivia<T>(
             ref T text,

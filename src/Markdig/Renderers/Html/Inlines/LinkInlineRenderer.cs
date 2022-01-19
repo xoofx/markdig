@@ -25,12 +25,15 @@ namespace Markdig.Renderers.Html.Inlines
             }
             set
             {
-                string rel = "nofollow";
-                if (value && !Rel.Contains(rel))
+                const string rel = "nofollow";
+                if (value)
                 {
-                    Rel = string.IsNullOrEmpty(Rel) ? rel : Rel + $" {rel}";
+                    if (string.IsNullOrEmpty(Rel))
+                        Rel = rel;
+                    else if (!Rel!.Contains(rel))
+                        Rel += $" {rel}";
                 }
-                else if (!value && Rel.Contains(rel))
+                else if (!value && Rel is not null)
                 {
                     Rel = Rel.Replace(rel, string.Empty);
                 }

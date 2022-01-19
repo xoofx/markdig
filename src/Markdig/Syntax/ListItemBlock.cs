@@ -30,7 +30,7 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the bullet as parsed in the source document.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice SourceBullet { get; set; }

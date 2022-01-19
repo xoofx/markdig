@@ -24,7 +24,7 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="FencedChar"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice TriviaAfterFencedChar { get; set; }
@@ -37,14 +37,14 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Non-escaped <see cref="Info"/> exactly as in source markdown.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice UnescapedInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="Info"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice TriviaAfterInfo { get; set; }
@@ -57,28 +57,28 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Non-escaped <see cref="Arguments"/> exactly as in source markdown.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice UnescapedArguments { get; set; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="Arguments"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice TriviaAfterArguments { get; set; }
 
         /// <summary>
         /// Newline of the line with the opening fenced chars.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         NewLine InfoNewLine { get; set; }
 
         /// <summary>
         /// Trivia before the closing fenced chars
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         StringSlice TriviaBeforeClosingFence { get; set; }
@@ -91,7 +91,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Newline after the last line, which is always the line containing the closing fence chars.
         /// "Inherited" from <see cref="Block.NewLine"/>.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         NewLine NewLine { get; set; }
