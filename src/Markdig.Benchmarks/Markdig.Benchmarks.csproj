@@ -36,12 +36,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
-    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.1" />
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
     <PackageReference Include="MarkdownSharp" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.0.161401" />
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.62" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.0.226801" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.74" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />

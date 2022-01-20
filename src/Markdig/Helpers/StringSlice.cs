@@ -36,6 +36,7 @@ namespace Markdig.Helpers
         /// Initializes a new instance of the <see cref="StringSlice"/> struct.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <param name="newLine">The line separation.</param>
         public StringSlice(string text, NewLine newLine)
         {
             Text = text;
@@ -68,6 +69,7 @@ namespace Markdig.Helpers
         /// <param name="text">The text.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
+        /// <param name="newLine">The line separation.</param>
         /// <exception cref="ArgumentNullException"></exception>
         public StringSlice(string text, int start, int end, NewLine newLine)
         {

@@ -1,20 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace UnicodeNormDApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-
-            var httpClient = new WebClient();
-
-            var data = httpClient.DownloadString("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt");
+            using var httpClient = new HttpClient();
+            var data = await httpClient.GetStringAsync("http://www.unicode.org/Public/UCD/latest/ucd/NormalizationTest.txt");
 
             var stringReader = new StringReader(data);
 

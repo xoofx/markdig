@@ -83,7 +83,7 @@ namespace Markdig
         public bool TrackTrivia { get; internal set; }
 
         /// <summary>
-        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse()"/> method.
+        /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse"/> method.
         /// </summary>
         public event ProcessDocumentDelegate? DocumentProcessed;
 

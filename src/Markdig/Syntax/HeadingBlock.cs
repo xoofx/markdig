@@ -50,7 +50,7 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the whitespace after the # character when <see cref="IsSetext"/> is false.
-        /// Trivia: only parsed when <see cref="MarkdownParser.TrackTrivia"/> is enabled, otherwise
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
         public StringSlice TriviaAfterAtxHeaderChar { get; set; }
