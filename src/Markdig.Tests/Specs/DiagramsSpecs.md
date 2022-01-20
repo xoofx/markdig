@@ -16,10 +16,10 @@ graph TD;
 ```
 .
 <div class="mermaid">graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    A--&gt;B;
+    A--&gt;C;
+    B--&gt;D;
+    C--&gt;D;
 </div>
 ````````````````````````````````
 
@@ -49,7 +49,7 @@ Using a fenced code block with the `nomnoml` language info will output a `<div c
   methodB()
 |
   [subA]--[subB]
-  [subA]-:>[sub C]
+  [subA]-:&gt;[sub C]
 ]
 </div>
 ````````````````````````````````
