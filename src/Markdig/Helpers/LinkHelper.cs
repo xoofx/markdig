@@ -606,7 +606,7 @@ namespace Markdig.Helpers
                             hasOnlyWhiteSpacesSinceLastLine = 1;
                         }
                     }
-                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+                    else if (c != '\n' && c != '\r' && text.PeekChar() != '\n')
                     {
                         hasOnlyWhiteSpacesSinceLastLine = 0;
                     }
@@ -700,7 +700,7 @@ namespace Markdig.Helpers
                             hasOnlyWhiteSpacesSinceLastLine = 1;
                         }
                     }
-                    else if (c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+                    else if (c != '\n' && c != '\r' && text.PeekChar() != '\n')
                     {
                         hasOnlyWhiteSpacesSinceLastLine = 0;
                     }
@@ -1141,7 +1141,7 @@ namespace Markdig.Helpers
                 c = text.NextChar();
             }
 
-            if (c != '\0' && c != '\n')
+            if (c != '\0' && c != '\n' && c != '\r' && text.PeekChar() != '\n')
             {
                 // If we were able to parse the url but the title doesn't end with space, 
                 // we are still returning a valid definition
@@ -1156,6 +1156,11 @@ namespace Markdig.Helpers
                 url = null;
                 title = null;
                 return false;
+            }
+
+            if (c == '\r' && text.PeekChar() == '\n')
+            {
+                text.SkipChar();
             }
 
             return true;
@@ -1276,7 +1281,7 @@ namespace Markdig.Helpers
                 c = text.NextChar();
             }
 
-            if (c != '\0' && c != '\n' && c != '\r' && (c != '\r' && text.PeekChar() != '\n'))
+            if (c != '\0' && c != '\n' && c != '\r' && text.PeekChar() != '\n')
             {
                 // If we were able to parse the url but the title doesn't end with space, 
                 // we are still returning a valid definition
@@ -1307,6 +1312,7 @@ namespace Markdig.Helpers
                 else if (c == '\r' && text.PeekChar() == '\n')
                 {
                     newLine = NewLine.CarriageReturnLineFeed;
+                    text.SkipChar();
                 }
                 else if (c == '\r')
                 {
