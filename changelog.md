@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0 (23 Jan 2022)
+- Fix link reference definition parse bug with title and CRLF ([PR #590](https://github.com/lunet-io/markdig/pull/590))
+- Move tests to net6.0 ([PR #560](https://github.com/lunet-io/markdig/pull/560))
+
 ## 0.26.0 (27 Aug 2021)
 - Fix rendering diff between line endings ([PR #560](https://github.com/lunet-io/markdig/pull/560))
 - Make Mathematics extension respect EnableHtml* options ([PR #570](https://github.com/lunet-io/markdig/pull/570))

@@ -4,7 +4,7 @@
     <Description>A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET with 20+ builtin extensions (pipetables, footnotes, definition lists... etc.)</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>0.26.0</VersionPrefix>
+    <VersionPrefix>0.27.0</VersionPrefix>
     <Authors>Alexandre Mutel</Authors>
     <!-- Markdig.Wpf still supports net452, a target still supported by by Microsoft until January 10, 2023 -->
     <!-- see: https://github.com/xoofx/markdig/pull/466 -->
@@ -13,6 +13,7 @@
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
     <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageIcon>markdig.png</PackageIcon>
     <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -48,6 +49,7 @@
 
   <ItemGroup>
     <None Include="../../img/markdig.png" Pack="true" PackagePath="" />
+    <None Include="../../readme.md" Pack="true" PackagePath="/"/>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.*" PrivateAssets="All"/>
   </ItemGroup>
 
