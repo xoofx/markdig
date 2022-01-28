@@ -17,6 +17,7 @@ namespace System.Diagnostics.CodeAnalysis
     }
 #endif
 
+#if !NET5_0_OR_GREATER
     internal sealed class MemberNotNullAttribute : Attribute
     {
         public MemberNotNullAttribute(string member) => Members = new[] { member };
@@ -25,4 +26,5 @@ namespace System.Diagnostics.CodeAnalysis
 
         public string[] Members { get; }
     }
+#endif
 }
