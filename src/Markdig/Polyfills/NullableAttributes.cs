@@ -5,7 +5,7 @@
 
 namespace System.Diagnostics.CodeAnalysis
 {
-#if !NETCORE || NETCOREAPP2_1
+#if !NETCORE
     internal sealed class DoesNotReturnAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
