@@ -103,7 +103,7 @@ You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/mark
 
 ## Build
 
-In order to build Markdig, you need to install [.NET Core RTM](https://www.microsoft.com/net/core)
+In order to build Markdig, you need to install [.NET 6.0](https://dotnet.microsoft.com/en-us/download)
 
 ## License
 
