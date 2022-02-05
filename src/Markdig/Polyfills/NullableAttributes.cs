@@ -5,7 +5,7 @@
 
 namespace System.Diagnostics.CodeAnalysis
 {
-#if !NETCORE
+#if !NETSTANDARD2_1_OR_GREATER && !NETCOREAPP3_1_OR_GREATER
     internal sealed class DoesNotReturnAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]

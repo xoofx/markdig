@@ -69,7 +69,7 @@ namespace Markdig.Helpers
 
             utf32 -= 65536;
             return new string(
-#if NETCORE
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
                 stackalloc
 #else
                 new
