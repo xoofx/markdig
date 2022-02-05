@@ -19,8 +19,6 @@ using System.Runtime.CompilerServices;
  * Please note the lack of a Remove method on this data structure
  */
 
-// Relies on NETCORE being set for selective use of Spans
-
 //namespace SharpCollections.Generic
 namespace Markdig.Helpers
 {

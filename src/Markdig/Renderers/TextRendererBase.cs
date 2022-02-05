@@ -102,7 +102,7 @@ namespace Markdig.Renderers
         }
 
         protected bool previousWasLine;
-#if !NETCORE
+#if !NETSTANDARD2_1_OR_GREATER && !NETCOREAPP3_1_OR_GREATER
         private char[] buffer;
 #endif
         private readonly List<Indent> indents;
@@ -113,7 +113,7 @@ namespace Markdig.Renderers
         /// <param name="writer">The writer.</param>
         protected TextRendererBase(TextWriter writer) : base(writer)
         {
-#if !NETCORE
+#if !NETSTANDARD2_1_OR_GREATER && !NETCOREAPP3_1_OR_GREATER
             buffer = new char[1024];
 #endif
             // We assume that we are starting as if we had previously a newline
@@ -263,7 +263,7 @@ namespace Markdig.Renderers
             WriteIndent();
             previousWasLine = false;
 
-#if NETCORE
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             Writer.Write(content.AsSpan(offset, length));
 #else
             if (offset == 0 && content.Length == length)
