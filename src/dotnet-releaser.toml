@@ -1,0 +1,10 @@
+[msbuild]
+project = ["markdig.sln", "./Markdig.Signed/Markdig.Signed.csproj"]
+build_debug = true
+[github]
+user = "xoofx"
+repo = "markdig"
+[test]
+run_tests_for_debug = true
+[coverage]
+exclude = "[SpecFileGen*]*"

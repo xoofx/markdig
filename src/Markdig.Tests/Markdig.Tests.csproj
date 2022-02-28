@@ -5,6 +5,8 @@
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <StartupObject>Markdig.Tests.Program</StartupObject>
+    <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.dll</SpecExecutable>
+    <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.timestamp</SpecTimestamp>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +21,33 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
+    <ProjectReference Include="..\SpecFileGen\SpecFileGen.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ItemSpecExecutable Include="$(SpecExecutable)" />
+    <InputSpecFiles Include="Specs\*.md" />
+    <InputSpecFiles Include="NormalizeSpecs\*.md" />
+    <InputSpecFiles Include="PlainTextSpecs\*.md" />
+    <InputSpecFiles Include="RoundtripSpecs\*.md" />
+    <InputSpecFiles Remove="Specs\readme.md" />
+    <!-- Allow Visual Studio up-to-date check to verify that nothing has changed - https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md -->
+    <UpToDateCheckInput Include="@(InputSpecFiles)"/>
+    <OutputSpecFiles Include="@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')" />
+  </ItemGroup>
+
+  <Target Name="GeneratedSpecsFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="@(ItemSpecExecutable);@(InputSpecFiles)" Outputs="@(ItemSpecExecutable->'%(RelativeDir)%(Filename).timestamp');@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')">
+    <Message Importance="high" Text="Regenerating Specs Files Input @(InputSpecFiles) Output @(OutputSpecFiles)'" />
+    <Exec Command="dotnet $(SpecExecutable)" />
+    <WriteLinesToFile File="$(SpecTimestamp)" Lines="$([System.DateTime]::Now)" />
+    <ItemGroup>
+      <FileWrites Include="$(SpecTimestamp)" />
+      <_GeneratedSpecsFile Include="Specs\*.generated.cs" />
+      <_GeneratedSpecsFile Include="NormalizeSpecs\*.generated.cs" />
+      <_GeneratedSpecsFile Include="PlainTextSpecs\*.generated.cs" />
+      <_GeneratedSpecsFile Include="RoundtripSpecs\*.generated.cs" />
+      <_GeneratedSpecsFile Remove="@(Compile)" />
+      <Compile Include="@(_GeneratedSpecsFile)" />
+    </ItemGroup>
+  </Target>
 </Project>
