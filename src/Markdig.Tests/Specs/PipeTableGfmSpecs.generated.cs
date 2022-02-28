@@ -58,8 +58,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 1\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // The following is also considered as a table, even if the second line starts like a list:
@@ -90,8 +89,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 2\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // A pipe table with only one header row is allowed:
@@ -115,8 +113,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </thead>
             //     </table>
 
-            Console.WriteLine("Example 3\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // After a row separator header, they will be interpreted as plain column:
@@ -147,8 +144,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 4\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\n-- | --\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>--</td>\n<td>--</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // But if a table doesn't start with a column delimiter, it is not interpreted as a table, even if following lines have a column delimiter
@@ -168,8 +164,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     c | d
             //     e | f</p>
 
-            Console.WriteLine("Example 5\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "gfm-pipetables");
+            TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // If a line doesn't have a column delimiter `|` the table is not detected
@@ -187,8 +182,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     <p>a | b
             //     c no d</p>
 
-            Console.WriteLine("Example 6\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\nc no d", "<p>a | b\nc no d</p>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // If a row contains more columns than the header row, the extra columns will be ignored:
@@ -229,8 +223,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 7\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a  | b \n-- | --\n0  | 1 | 2\n3  | 4\n5  |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3</td>\n<td>4</td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #2**
@@ -265,8 +258,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 8\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a          | b              |\n-- | --\n0      | 1       |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #4**
@@ -308,8 +300,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 9\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("  a     | b     |\n--      | --\n| 0     | 1\n| 2     | 3     |\n  4     | 5 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n<tr>\n<td>4</td>\n<td>5</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // A pipe may be present at both the beginning/ending of each line:
@@ -340,8 +331,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 10\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("|a|b|\n|-|-|\n|0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // Or may be omitted on one side:
@@ -372,8 +362,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 11\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a|b|\n-|-|\n0|1|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -403,8 +392,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 12\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("|a|b\n|-|-\n|0|1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // Single column table can be declared with lines starting only by a column delimiter: 
@@ -437,8 +425,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 13\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("| a\n| --\n| b\n| c ", "<table>\n<thead>\n<tr>\n<th>a</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b</td>\n</tr>\n<tr>\n<td>c</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #5**
@@ -482,8 +469,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 14\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec(" a     | b \n-------|-------\n 0     | 1 \n 2     | 3 ", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // The text alignment is defined by default to be center for header and left for cells. If the left alignment is applied, it will force the column heading to be left aligned.
@@ -524,8 +510,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 15\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\">0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\">3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec(" a     | b       | c \n:------|:-------:| ----:\n 0     | 1       | 2 \n 3     | 4       | 5 ", "<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">a</th>\n<th style=\"text-align: center;\">b</th>\n<th style=\"text-align: right;\">c</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\">0</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: right;\">2</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\">3</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: right;\">5</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // Test alignment with starting and ending pipes:
@@ -558,8 +543,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 16\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("| abc | def | ghi |\n|:---:|-----|----:|\n|  1  | 2   | 3   |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: center;\">abc</th>\n<th>def</th>\n<th style=\"text-align: right;\">ghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\">1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("| abc | def | ghi |\n|:---:|-----|----:|\n|  1  | 2   | 3   |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: center;\">abc</th>\n<th>def</th>\n<th style=\"text-align: right;\">ghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\">1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // The following example shows a non matching header column separator:
@@ -581,8 +565,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     0     | 1
             //     2     | 3</p> 
 
-            Console.WriteLine("Example 17\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "gfm-pipetables");
+            TestParser.TestSpec(" a     | b\n-------|---x---\n 0     | 1\n 2     | 3 ", "<p>a     | b\n-------|---x---\n0     | 1\n2     | 3</p> ", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #6**
@@ -620,8 +603,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 18\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec(" *a*   | b\n-----  |-----\n 0     | _1_\n _2    | 3* ", "<table>\n<thead>\n<tr>\n<th><em>a</em></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td><em>1</em></td>\n</tr>\n<tr>\n<td>_2</td>\n<td>3*</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #7**
@@ -640,8 +622,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             // Should be rendered as:
             //     <p>a | b <code>0 |</code></p> 
 
-            Console.WriteLine("Example 19\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "gfm-pipetables");
+            TestParser.TestSpec("a | b `\n0 | ` ", "<p>a | b <code>0 |</code></p> ", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #8**
@@ -674,8 +655,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 20\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #9**
@@ -708,8 +688,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 21\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #10**
@@ -735,8 +714,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </thead>
             //     </table>
 
-            Console.WriteLine("Example 22\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a  | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a  | b\n-- | --", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -760,8 +738,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </thead>
             //     </table>
 
-            Console.WriteLine("Example 23\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("|a|b|c\n|---|---|---|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th>c</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("|a|b|c\n|---|---|---|", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th>c</th>\n</tr>\n</thead>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Tests**
@@ -809,8 +786,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 24\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("| abc | def | \n|---|---|\n| cde| ddd| \n| eee| fff|\n| fff | fffff   | \n|gggg  | ffff | ", "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cde</td>\n<td>ddd</td>\n</tr>\n<tr>\n<td>eee</td>\n<td>fff</td>\n</tr>\n<tr>\n<td>fff</td>\n<td>fffff</td>\n</tr>\n<tr>\n<td>gggg</td>\n<td>ffff</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
 
         // **Normalized columns count**
@@ -849,8 +825,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 25\nSection Extensions / Gfm Pipe Table\n");
-            TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2\n3 |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3</td>\n<td></td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables");
+            TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2\n3 |", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3</td>\n<td></td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example {number}\nSection {name}\n");
         }
     }
 }

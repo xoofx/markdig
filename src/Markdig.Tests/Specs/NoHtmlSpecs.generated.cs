@@ -30,8 +30,7 @@ namespace Markdig.Tests.Specs.NoHtml
             // Should be rendered as:
             //     <p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>
 
-            Console.WriteLine("Example 1\nSection Extensions / NoHTML\n");
-            TestParser.TestSpec("this is some text</td></tr>", "<p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>", "nohtml");
+            TestParser.TestSpec("this is some text</td></tr>", "<p>this is some text&lt;/td&gt;&lt;/tr&gt;</p>", "nohtml", context: "Example {number}\nSection {name}\n");
         }
 
         // For Block HTML:
@@ -51,8 +50,7 @@ namespace Markdig.Tests.Specs.NoHtml
             //     this is some text
             //     &lt;/div&gt;</p>
 
-            Console.WriteLine("Example 2\nSection Extensions / NoHTML\n");
-            TestParser.TestSpec("<div>\nthis is some text\n</div>", "<p>&lt;div&gt;\nthis is some text\n&lt;/div&gt;</p>", "nohtml");
+            TestParser.TestSpec("<div>\nthis is some text\n</div>", "<p>&lt;div&gt;\nthis is some text\n&lt;/div&gt;</p>", "nohtml", context: "Example {number}\nSection {name}\n");
         }
     }
 }

@@ -41,8 +41,7 @@ namespace Markdig.Tests.Specs.Diagrams
             //         C-->D;
             //     </div>
 
-            Console.WriteLine("Example 1\nSection Extensions / Mermaid diagrams\n");
-            TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<div class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</div>", "diagrams|advanced");
+            TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<div class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</div>", "diagrams|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -85,8 +84,7 @@ namespace Markdig.Tests.Specs.Diagrams
             //     ]
             //     </div>
 
-            Console.WriteLine("Example 2\nSection Extensions / nomnoml diagrams\n");
-            TestParser.TestSpec("```nomnoml\n[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n```", "<div class=\"nomnoml\">[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n</div>", "diagrams|advanced");
+            TestParser.TestSpec("```nomnoml\n[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n```", "<div class=\"nomnoml\">[example|\n  propertyA: Int\n  propertyB: string\n|\n  methodA()\n  methodB()\n|\n  [subA]--[subB]\n  [subA]-:>[sub C]\n]\n</div>", "diagrams|advanced", context: "Example {number}\nSection {name}\n");
         }
         // TODO: Add other text diagram languages
     }

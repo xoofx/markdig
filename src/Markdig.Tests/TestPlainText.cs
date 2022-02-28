@@ -36,9 +36,9 @@ namespace Markdig.Tests
             TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
         }
 
-        public static void TestSpec(string markdownText, string expected, string extensions)
+        public static void TestSpec(string markdownText, string expected, string extensions, string context = null)
         {
-            TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
+            TestParser.TestSpec(markdownText, expected, extensions, plainText: true, context: context);
         }
     }
 }

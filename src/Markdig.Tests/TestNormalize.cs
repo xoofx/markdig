@@ -458,18 +458,18 @@ This is a last line";
             Assert.AreEqual(expected, actual);
         }
 
-        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null)
+        public static void TestSpec(string inputText, string expectedOutputText, string extensions = null, string context = null)
         {
             foreach (var pipeline in TestParser.GetPipeline(extensions))
             {
-                AssertNormalize(inputText, expectedOutputText, trim: false, pipeline: pipeline.Value);
+                AssertNormalize(inputText, expectedOutputText, trim: false, pipeline: pipeline.Value, context: context);
             }
         }
 
         public static void AssertNormalizeNoTrim(string input, string expected = null, NormalizeOptions options = null)
             => AssertNormalize(input, expected, false, options);
 
-        public static void AssertNormalize(string input, string expected = null, bool trim = true, NormalizeOptions options = null, MarkdownPipeline pipeline = null)
+        public static void AssertNormalize(string input, string expected = null, bool trim = true, NormalizeOptions options = null, MarkdownPipeline pipeline = null, string context = null)
         {
             expected = expected ?? input;
             input = NormText(input, trim);
@@ -484,7 +484,7 @@ This is a last line";
             var result = Markdown.Normalize(input, options, pipeline: pipeline);
             result = NormText(result, trim);
 
-            TestParser.PrintAssertExpected(input, result, expected);
+            TestParser.PrintAssertExpected(input, result, expected, context);
         }
 
         private static string NormText(string text, bool trim)

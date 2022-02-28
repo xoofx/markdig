@@ -36,8 +36,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Last item</li>
             //     </ol>
 
-            Console.WriteLine("Example 1\nSection Extensions / Ordered list with alpha letter\n");
-            TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("a. First item\nb. Second item\nc. Last item", "<ol type=\"a\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // It works also for uppercase alpha: 
@@ -59,8 +58,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Last item</li>
             //     </ol>
 
-            Console.WriteLine("Example 2\nSection Extensions / Ordered list with alpha letter\n");
-            TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("A. First item\nB. Second item\nC. Last item", "<ol type=\"A\">\n<li>First item</li>\n<li>Second item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Like for numbered list, a list can start with a different letter
@@ -80,8 +78,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Second item</li>
             //     </ol>
 
-            Console.WriteLine("Example 3\nSection Extensions / Ordered list with alpha letter\n");
-            TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("b. First item\nc. Second item", "<ol type=\"a\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // A different type of list will break the existing list:
@@ -105,8 +102,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>First item2</li>
             //     </ol>
 
-            Console.WriteLine("Example 4\nSection Extensions / Ordered list with alpha letter\n");
-            TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("a. First item1\nb. Second item\nA. First item2", "<ol type=\"a\">\n<li>First item1</li>\n<li>Second item</li>\n</ol>\n<ol type=\"A\">\n<li>First item2</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -136,8 +132,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Last item</li>
             //     </ol>
 
-            Console.WriteLine("Example 5\nSection Extensions / Ordered list with roman letter\n");
-            TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("i. First item\nii. Second item\niii. Third item\niv. Last item", "<ol type=\"i\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // It works also for uppercase alpha: 
@@ -161,8 +156,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Last item</li>
             //     </ol>
 
-            Console.WriteLine("Example 6\nSection Extensions / Ordered list with roman letter\n");
-            TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("I. First item\nII. Second item\nIII. Third item\nIV. Last item", "<ol type=\"I\">\n<li>First item</li>\n<li>Second item</li>\n<li>Third item</li>\n<li>Last item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Like for numbered list, a list can start with a different letter
@@ -182,8 +176,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Second item</li>
             //     </ol>
 
-            Console.WriteLine("Example 7\nSection Extensions / Ordered list with roman letter\n");
-            TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("ii. First item\niii. Second item", "<ol type=\"i\" start=\"2\">\n<li>First item</li>\n<li>Second item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Lists can be restarted, specifying the start point.
@@ -209,8 +202,7 @@ namespace Markdig.Tests.Specs.ListExtras
             //     <li>Second item</li>
             //     </ol>
 
-            Console.WriteLine("Example 8\nSection Extensions / Ordered list with roman letter\n");
-            TestParser.TestSpec("1.   First item\n\nSome text\n\n2.   Second item", "<ol>\n<li>First item</li>\n</ol>\n<p>Some text</p>\n<ol start=\"2\">\n<li>Second item</li>\n</ol>", "listextras|advanced");
+            TestParser.TestSpec("1.   First item\n\nSome text\n\n2.   Second item", "<ol>\n<li>First item</li>\n</ol>\n<p>Some text</p>\n<ol start=\"2\">\n<li>Second item</li>\n</ol>", "listextras|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 }

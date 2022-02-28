@@ -7,12 +7,12 @@ namespace Markdig.Tests
 {
     internal static class TestRoundtrip
     {
-        internal static void TestSpec(string markdownText, string expected, string extensions)
+        internal static void TestSpec(string markdownText, string expected, string extensions, string context = null)
         {
-            RoundTrip(markdownText);
+            RoundTrip(markdownText, context);
         }
 
-        internal static void RoundTrip(string markdown)
+        internal static void RoundTrip(string markdown, string context = null)
         {
             var pipelineBuilder = new MarkdownPipelineBuilder();
             pipelineBuilder.EnableTrackTrivia();
@@ -24,7 +24,7 @@ namespace Markdig.Tests
             nr.Write(markdownDocument);
 
             var result = sw.ToString();
-            Assert.AreEqual(markdown, result);
+            TestParser.PrintAssertExpected("", result, markdown, context);
         }
     }
 }

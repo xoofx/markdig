@@ -374,8 +374,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>foo→baz→→bim
             //     </code></pre>
 
-            Console.WriteLine("Example 1\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("\tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "");
+            TestRoundtrip.TestSpec("\tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -391,8 +390,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>foo→baz→→bim
             //     </code></pre>
 
-            Console.WriteLine("Example 2\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("  \tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "");
+            TestRoundtrip.TestSpec("  \tfoo\tbaz\t\tbim", "<pre><code>foo\tbaz\t\tbim\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -410,8 +408,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ὐ→a
             //     </code></pre>
 
-            Console.WriteLine("Example 3\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("    a\ta\n    ὐ\ta", "<pre><code>a\ta\nὐ\ta\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    a\ta\n    ὐ\ta", "<pre><code>a\ta\nὐ\ta\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In the following example, a continuation paragraph of a list
@@ -436,8 +433,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 4\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("  - foo\n\n\tbar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("  - foo\n\n\tbar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -460,8 +456,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 5\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("- foo\n\n\t\tbar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n\n\t\tbar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Normally the `>` that begins a block quote may be followed
@@ -487,8 +482,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     </blockquote>
 
-            Console.WriteLine("Example 6\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec(">\t\tfoo", "<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">\t\tfoo", "<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -508,8 +502,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 7\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("-\t\tfoo", "<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("-\t\tfoo", "<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -527,8 +520,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     bar
             //     </code></pre>
 
-            Console.WriteLine("Example 8\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("    foo\n\tbar", "<pre><code>foo\nbar\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    foo\n\tbar", "<pre><code>foo\nbar\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -555,8 +547,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 9\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec(" - foo\n   - bar\n\t - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec(" - foo\n   - bar\n\t - baz", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -571,8 +562,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h1>Foo</h1>
 
-            Console.WriteLine("Example 10\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("#\tFoo", "<h1>Foo</h1>", "");
+            TestRoundtrip.TestSpec("#\tFoo", "<h1>Foo</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -587,8 +577,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 11\nSection Preliminaries / Tabs\n");
-            TestRoundtrip.TestSpec("*\t*\t*\t", "<hr />", "");
+            TestRoundtrip.TestSpec("*\t*\t*\t", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -630,8 +619,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>two`</li>
             //     </ul>
 
-            Console.WriteLine("Example 12\nSection Blocks and inlines / Precedence\n");
-            TestRoundtrip.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -681,8 +669,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <hr />
 
-            Console.WriteLine("Example 13\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />", "");
+            TestRoundtrip.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Wrong characters:
@@ -698,8 +685,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>+++</p>
 
-            Console.WriteLine("Example 14\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("+++", "<p>+++</p>", "");
+            TestRoundtrip.TestSpec("+++", "<p>+++</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -714,8 +700,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>===</p>
 
-            Console.WriteLine("Example 15\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("===", "<p>===</p>", "");
+            TestRoundtrip.TestSpec("===", "<p>===</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Not enough characters:
@@ -735,8 +720,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     **
             //     __</p>
 
-            Console.WriteLine("Example 16\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("--\n**\n__", "<p>--\n**\n__</p>", "");
+            TestRoundtrip.TestSpec("--\n**\n__", "<p>--\n**\n__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // One to three spaces indent are allowed:
@@ -756,8 +740,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <hr />
 
-            Console.WriteLine("Example 17\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />", "");
+            TestRoundtrip.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces is too many:
@@ -774,8 +757,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>***
             //     </code></pre>
 
-            Console.WriteLine("Example 18\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("    ***", "<pre><code>***\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    ***", "<pre><code>***\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -792,8 +774,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>Foo
             //     ***</p>
 
-            Console.WriteLine("Example 19\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("Foo\n    ***", "<p>Foo\n***</p>", "");
+            TestRoundtrip.TestSpec("Foo\n    ***", "<p>Foo\n***</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // More than three characters may be used:
@@ -809,8 +790,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 20\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("_____________________________________", "<hr />", "");
+            TestRoundtrip.TestSpec("_____________________________________", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Spaces are allowed between the characters:
@@ -826,8 +806,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 21\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec(" - - -", "<hr />", "");
+            TestRoundtrip.TestSpec(" - - -", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -842,8 +821,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 22\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec(" **  * ** * ** * **", "<hr />", "");
+            TestRoundtrip.TestSpec(" **  * ** * ** * **", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -858,8 +836,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 23\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("-     -      -      -", "<hr />", "");
+            TestRoundtrip.TestSpec("-     -      -      -", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Spaces are allowed at the end:
@@ -875,8 +852,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <hr />
 
-            Console.WriteLine("Example 24\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("- - - -    ", "<hr />", "");
+            TestRoundtrip.TestSpec("- - - -    ", "<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, no other characters may occur in the line:
@@ -898,8 +874,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>a------</p>
             //     <p>---a---</p>
 
-            Console.WriteLine("Example 25\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>", "");
+            TestRoundtrip.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // It is required that all of the [non-whitespace characters] be the same.
@@ -916,8 +891,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>-</em></p>
 
-            Console.WriteLine("Example 26\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec(" *-*", "<p><em>-</em></p>", "");
+            TestRoundtrip.TestSpec(" *-*", "<p><em>-</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Thematic breaks do not need blank lines before or after:
@@ -941,8 +915,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 27\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Thematic breaks can interrupt a paragraph:
@@ -962,8 +935,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <p>bar</p>
 
-            Console.WriteLine("Example 28\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If a line of dashes that meets the above conditions for being a
@@ -986,8 +958,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>Foo</h2>
             //     <p>bar</p>
 
-            Console.WriteLine("Example 29\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // When both a thematic break and a list item are possible
@@ -1012,8 +983,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>Bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 30\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If you want a thematic break in a list item, use a different bullet:
@@ -1035,8 +1005,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 31\nSection Leaf blocks / Thematic breaks\n");
-            TestRoundtrip.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -1080,8 +1049,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h5>foo</h5>
             //     <h6>foo</h6>
 
-            Console.WriteLine("Example 32\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>", "");
+            TestRoundtrip.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // More than six `#` characters is not a heading:
@@ -1097,8 +1065,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>####### foo</p>
 
-            Console.WriteLine("Example 33\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("####### foo", "<p>####### foo</p>", "");
+            TestRoundtrip.TestSpec("####### foo", "<p>####### foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // At least one space is required between the `#` characters and the
@@ -1123,8 +1090,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>#5 bolt</p>
             //     <p>#hashtag</p>
 
-            Console.WriteLine("Example 34\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>", "");
+            TestRoundtrip.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a heading, because the first `#` is escaped:
@@ -1140,8 +1106,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>## foo</p>
 
-            Console.WriteLine("Example 35\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("\\## foo", "<p>## foo</p>", "");
+            TestRoundtrip.TestSpec("\\## foo", "<p>## foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Contents are parsed as inlines:
@@ -1157,8 +1122,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h1>foo <em>bar</em> *baz*</h1>
 
-            Console.WriteLine("Example 36\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>", "");
+            TestRoundtrip.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Leading and trailing [whitespace] is ignored in parsing inline content:
@@ -1174,8 +1138,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h1>foo</h1>
 
-            Console.WriteLine("Example 37\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("#                  foo                     ", "<h1>foo</h1>", "");
+            TestRoundtrip.TestSpec("#                  foo                     ", "<h1>foo</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // One to three spaces indentation are allowed:
@@ -1195,8 +1158,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>foo</h2>
             //     <h1>foo</h1>
 
-            Console.WriteLine("Example 38\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>", "");
+            TestRoundtrip.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces are too much:
@@ -1213,8 +1175,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code># foo
             //     </code></pre>
 
-            Console.WriteLine("Example 39\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("    # foo", "<pre><code># foo\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    # foo", "<pre><code># foo\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1231,8 +1192,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo
             //     # bar</p>
 
-            Console.WriteLine("Example 40\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>", "");
+            TestRoundtrip.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A closing sequence of `#` characters is optional:
@@ -1250,8 +1210,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>foo</h2>
             //     <h3>bar</h3>
 
-            Console.WriteLine("Example 41\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>", "");
+            TestRoundtrip.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // It need not be the same length as the opening sequence:
@@ -1269,8 +1228,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>foo</h1>
             //     <h5>foo</h5>
 
-            Console.WriteLine("Example 42\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>", "");
+            TestRoundtrip.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Spaces are allowed after the closing sequence:
@@ -1286,8 +1244,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h3>foo</h3>
 
-            Console.WriteLine("Example 43\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("### foo ###     ", "<h3>foo</h3>", "");
+            TestRoundtrip.TestSpec("### foo ###     ", "<h3>foo</h3>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A sequence of `#` characters with anything but [spaces] following it
@@ -1305,8 +1262,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h3>foo ### b</h3>
 
-            Console.WriteLine("Example 44\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("### foo ### b", "<h3>foo ### b</h3>", "");
+            TestRoundtrip.TestSpec("### foo ### b", "<h3>foo ### b</h3>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The closing sequence must be preceded by a space:
@@ -1322,8 +1278,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h1>foo#</h1>
 
-            Console.WriteLine("Example 45\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("# foo#", "<h1>foo#</h1>", "");
+            TestRoundtrip.TestSpec("# foo#", "<h1>foo#</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash-escaped `#` characters do not count as part
@@ -1344,8 +1299,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>foo ###</h2>
             //     <h1>foo #</h1>
 
-            Console.WriteLine("Example 46\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>", "");
+            TestRoundtrip.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // ATX headings need not be separated from surrounding content by blank
@@ -1366,8 +1320,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>foo</h2>
             //     <hr />
 
-            Console.WriteLine("Example 47\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />", "");
+            TestRoundtrip.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1386,8 +1339,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>baz</h1>
             //     <p>Bar foo</p>
 
-            Console.WriteLine("Example 48\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>", "");
+            TestRoundtrip.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // ATX headings can be empty:
@@ -1407,8 +1359,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1></h1>
             //     <h3></h3>
 
-            Console.WriteLine("Example 49\nSection Leaf blocks / ATX headings\n");
-            TestRoundtrip.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>", "");
+            TestRoundtrip.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -1463,8 +1414,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>Foo <em>bar</em></h1>
             //     <h2>Foo <em>bar</em></h2>
 
-            Console.WriteLine("Example 50\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>", "");
+            TestRoundtrip.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The content of the header may span more than one line:
@@ -1483,8 +1433,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>Foo <em>bar
             //     baz</em></h1>
 
-            Console.WriteLine("Example 51\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "");
+            TestRoundtrip.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The contents are the result of parsing the headings's raw
@@ -1506,8 +1455,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>Foo <em>bar
             //     baz</em></h1>
 
-            Console.WriteLine("Example 52\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("  Foo *bar\nbaz*\t\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "");
+            TestRoundtrip.TestSpec("  Foo *bar\nbaz*\t\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The underlining can be any length:
@@ -1528,8 +1476,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>Foo</h2>
             //     <h1>Foo</h1>
 
-            Console.WriteLine("Example 53\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>", "");
+            TestRoundtrip.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The heading content can be indented up to three spaces, and need
@@ -1555,8 +1502,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>Foo</h2>
             //     <h1>Foo</h1>
 
-            Console.WriteLine("Example 54\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>", "");
+            TestRoundtrip.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces indent is too much:
@@ -1581,8 +1527,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <hr />
 
-            Console.WriteLine("Example 55\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />", "");
+            TestRoundtrip.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The setext heading underline can be indented up to three spaces, and
@@ -1600,8 +1545,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h2>Foo</h2>
 
-            Console.WriteLine("Example 56\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>", "");
+            TestRoundtrip.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces is too much:
@@ -1619,8 +1563,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>Foo
             //     ---</p>
 
-            Console.WriteLine("Example 57\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\n    ---", "<p>Foo\n---</p>", "");
+            TestRoundtrip.TestSpec("Foo\n    ---", "<p>Foo\n---</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The setext heading underline cannot contain internal spaces:
@@ -1643,8 +1586,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>Foo</p>
             //     <hr />
 
-            Console.WriteLine("Example 58\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />", "");
+            TestRoundtrip.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Trailing spaces in the content line do not cause a line break:
@@ -1661,8 +1603,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h2>Foo</h2>
 
-            Console.WriteLine("Example 59\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo  \n-----", "<h2>Foo</h2>", "");
+            TestRoundtrip.TestSpec("Foo  \n-----", "<h2>Foo</h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Nor does a backslash at the end:
@@ -1679,8 +1620,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h2>Foo\</h2>
 
-            Console.WriteLine("Example 60\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>", "");
+            TestRoundtrip.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Since indicators of block structure take precedence over
@@ -1706,8 +1646,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>&lt;a title=&quot;a lot</h2>
             //     <p>of dashes&quot;/&gt;</p>
 
-            Console.WriteLine("Example 61\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>", "");
+            TestRoundtrip.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The setext heading underline cannot be a [lazy continuation
@@ -1728,8 +1667,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <hr />
 
-            Console.WriteLine("Example 62\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />", "");
+            TestRoundtrip.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1750,8 +1688,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ===</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 63\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1770,8 +1707,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ul>
             //     <hr />
 
-            Console.WriteLine("Example 64\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />", "");
+            TestRoundtrip.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A blank line is needed between a paragraph and a following
@@ -1792,8 +1728,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>Foo
             //     Bar</h2>
 
-            Console.WriteLine("Example 65\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>", "");
+            TestRoundtrip.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But in general a blank line is not required before or after
@@ -1818,8 +1753,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>Bar</h2>
             //     <p>Baz</p>
 
-            Console.WriteLine("Example 66\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>", "");
+            TestRoundtrip.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Setext headings cannot be empty:
@@ -1836,8 +1770,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>====</p>
 
-            Console.WriteLine("Example 67\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("\n====", "<p>====</p>", "");
+            TestRoundtrip.TestSpec("\n====", "<p>====</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Setext heading text lines must not be interpretable as block
@@ -1857,8 +1790,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <hr />
 
-            Console.WriteLine("Example 68\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("---\n---", "<hr />\n<hr />", "");
+            TestRoundtrip.TestSpec("---\n---", "<hr />\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1877,8 +1809,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ul>
             //     <hr />
 
-            Console.WriteLine("Example 69\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />", "");
+            TestRoundtrip.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1896,8 +1827,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <hr />
 
-            Console.WriteLine("Example 70\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />", "");
+            TestRoundtrip.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -1916,8 +1846,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <hr />
 
-            Console.WriteLine("Example 71\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "");
+            TestRoundtrip.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If you want a heading with `> foo` as its literal text, you can
@@ -1935,8 +1864,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h2>&gt; foo</h2>
 
-            Console.WriteLine("Example 72\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>", "");
+            TestRoundtrip.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // **Compatibility note:**  Most existing Markdown implementations
@@ -1979,8 +1907,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h2>bar</h2>
             //     <p>baz</p>
 
-            Console.WriteLine("Example 73\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Authors who want interpretation 2 can put blank lines around
@@ -2005,8 +1932,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <p>baz</p>
 
-            Console.WriteLine("Example 74\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // or use a thematic break that cannot count as a [setext heading
@@ -2029,8 +1955,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <hr />
             //     <p>baz</p>
 
-            Console.WriteLine("Example 75\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Authors who want interpretation 3 can use backslash escapes:
@@ -2052,8 +1977,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ---
             //     baz</p>
 
-            Console.WriteLine("Example 76\nSection Leaf blocks / Setext headings\n");
-            TestRoundtrip.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>", "");
+            TestRoundtrip.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -2089,8 +2013,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       indented code block
             //     </code></pre>
 
-            Console.WriteLine("Example 77\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If there is any ambiguity between an interpretation of indentation
@@ -2115,8 +2038,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 78\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2140,8 +2062,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 79\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The contents of a code block are literal text, and do not get parsed
@@ -2165,8 +2086,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     - one
             //     </code></pre>
 
-            Console.WriteLine("Example 80\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here we have three chunks separated by blank lines:
@@ -2195,8 +2115,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     chunk3
             //     </code></pre>
 
-            Console.WriteLine("Example 81\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Any initial spaces beyond four will be included in the content, even
@@ -2218,8 +2137,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       chunk2
             //     </code></pre>
 
-            Console.WriteLine("Example 82\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // An indented code block cannot interrupt a paragraph.  (This
@@ -2239,8 +2157,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>Foo
             //     bar</p>
 
-            Console.WriteLine("Example 83\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>", "");
+            TestRoundtrip.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, any non-blank line with fewer than four leading spaces ends
@@ -2261,8 +2178,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>bar</p>
 
-            Console.WriteLine("Example 84\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And indented code can occur immediately before and after other kinds of
@@ -2290,8 +2206,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <hr />
 
-            Console.WriteLine("Example 85\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />", "");
+            TestRoundtrip.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The first line can be indented more than four spaces:
@@ -2310,8 +2225,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     bar
             //     </code></pre>
 
-            Console.WriteLine("Example 86\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>", "");
+            TestRoundtrip.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Blank lines preceding or following an indented code block
@@ -2333,8 +2247,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>foo
             //     </code></pre>
 
-            Console.WriteLine("Example 87\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("\n    \n    foo\n    \n", "<pre><code>foo\n</code></pre>", "");
+            TestRoundtrip.TestSpec("\n    \n    foo\n    \n", "<pre><code>foo\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Trailing spaces are included in the code block's content:
@@ -2351,8 +2264,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>foo  
             //     </code></pre>
 
-            Console.WriteLine("Example 88\nSection Leaf blocks / Indented code blocks\n");
-            TestRoundtrip.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>", "");
+            TestRoundtrip.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -2421,8 +2333,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //      &gt;
             //     </code></pre>
 
-            Console.WriteLine("Example 89\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // With tildes:
@@ -2443,8 +2354,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //      &gt;
             //     </code></pre>
 
-            Console.WriteLine("Example 90\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Fewer than three backticks is not enough:
@@ -2462,8 +2372,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo</code></p>
 
-            Console.WriteLine("Example 91\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>", "");
+            TestRoundtrip.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The closing code fence must use the same character as the opening
@@ -2485,8 +2394,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ~~~
             //     </code></pre>
 
-            Console.WriteLine("Example 92\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2506,8 +2414,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ```
             //     </code></pre>
 
-            Console.WriteLine("Example 93\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The closing code fence must be at least as long as the opening fence:
@@ -2528,8 +2435,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ```
             //     </code></pre>
 
-            Console.WriteLine("Example 94\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>", "");
+            TestRoundtrip.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2549,8 +2455,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ~~~
             //     </code></pre>
 
-            Console.WriteLine("Example 95\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Unclosed code blocks are closed by the end of the document
@@ -2567,8 +2472,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <pre><code></code></pre>
 
-            Console.WriteLine("Example 96\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```", "<pre><code></code></pre>", "");
+            TestRoundtrip.TestSpec("```", "<pre><code></code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2589,8 +2493,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 97\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2612,8 +2515,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <p>bbb</p>
 
-            Console.WriteLine("Example 98\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>", "");
+            TestRoundtrip.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A code block can have all empty lines as its content:
@@ -2634,8 +2536,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       
             //     </code></pre>
 
-            Console.WriteLine("Example 99\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A code block can be empty:
@@ -2652,8 +2553,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <pre><code></code></pre>
 
-            Console.WriteLine("Example 100\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\n```", "<pre><code></code></pre>", "");
+            TestRoundtrip.TestSpec("```\n```", "<pre><code></code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Fences can be indented.  If the opening fence is indented,
@@ -2676,8 +2576,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 101\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2699,8 +2598,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 102\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2722,8 +2620,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 103\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces indentation produces an indented code block:
@@ -2744,8 +2641,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ```
             //     </code></pre>
 
-            Console.WriteLine("Example 104\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Closing fences may be indented by 0-3 spaces, and their indentation
@@ -2765,8 +2661,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 105\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2784,8 +2679,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 106\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a closing fence, because it is indented 4 spaces:
@@ -2805,8 +2699,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //         ```
             //     </code></pre>
 
-            Console.WriteLine("Example 107\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Code fences (opening and closing) cannot contain internal spaces:
@@ -2824,8 +2717,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><code> </code>
             //     aaa</p>
 
-            Console.WriteLine("Example 108\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("``` ```\naaa", "<p><code> </code>\naaa</p>", "");
+            TestRoundtrip.TestSpec("``` ```\naaa", "<p><code> </code>\naaa</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2844,8 +2736,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ~~~ ~~
             //     </code></pre>
 
-            Console.WriteLine("Example 109\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Fenced code blocks can interrupt paragraphs, and can be followed
@@ -2869,8 +2760,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>baz</p>
 
-            Console.WriteLine("Example 110\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Other blocks can also occur before and after fenced code blocks
@@ -2895,8 +2785,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <h1>baz</h1>
 
-            Console.WriteLine("Example 111\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>", "");
+            TestRoundtrip.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // An [info string] can be provided after the opening code fence.
@@ -2924,8 +2813,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     end
             //     </code></pre>
 
-            Console.WriteLine("Example 112\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2947,8 +2835,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     end
             //     </code></pre>
 
-            Console.WriteLine("Example 113\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -2964,8 +2851,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <pre><code class="language-;"></code></pre>
 
-            Console.WriteLine("Example 114\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>", "");
+            TestRoundtrip.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Info strings] for backtick code blocks cannot contain backticks:
@@ -2983,8 +2869,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><code>aa</code>
             //     foo</p>
 
-            Console.WriteLine("Example 115\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>", "");
+            TestRoundtrip.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Info strings] for tilde code blocks can contain backticks and tildes:
@@ -3003,8 +2888,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code class="language-aa">foo
             //     </code></pre>
 
-            Console.WriteLine("Example 116\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("~~~ aa ``` ~~~\nfoo\n~~~", "<pre><code class=\"language-aa\">foo\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~ aa ``` ~~~\nfoo\n~~~", "<pre><code class=\"language-aa\">foo\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Closing code fences cannot have [info strings]:
@@ -3023,8 +2907,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>``` aaa
             //     </code></pre>
 
-            Console.WriteLine("Example 117\nSection Leaf blocks / Fenced code blocks\n");
-            TestRoundtrip.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>", "");
+            TestRoundtrip.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -3121,8 +3004,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </pre></p>
             //     </td></tr></table>
 
-            Console.WriteLine("Example 118\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>", "<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>", "");
+            TestRoundtrip.TestSpec("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>", "<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In this case, the HTML block is terminated by the newline — the `**Hello**`
@@ -3163,8 +3045,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </table>
             //     <p>okay.</p>
 
-            Console.WriteLine("Example 119\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>", "");
+            TestRoundtrip.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3183,8 +3064,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       *hello*
             //              <foo><a>
 
-            Console.WriteLine("Example 120\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>", "");
+            TestRoundtrip.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A block can also start with a closing tag:
@@ -3202,8 +3082,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </div>
             //     *foo*
 
-            Console.WriteLine("Example 121\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("</div>\n*foo*", "</div>\n*foo*", "");
+            TestRoundtrip.TestSpec("</div>\n*foo*", "</div>\n*foo*", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here we have two HTML blocks with a Markdown paragraph between them:
@@ -3225,8 +3104,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>Markdown</em></p>
             //     </DIV>
 
-            Console.WriteLine("Example 122\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>", "");
+            TestRoundtrip.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The tag on the first line can be partial, as long
@@ -3247,8 +3125,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       class="bar">
             //     </div>
 
-            Console.WriteLine("Example 123\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>", "");
+            TestRoundtrip.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3267,8 +3144,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       baz">
             //     </div>
 
-            Console.WriteLine("Example 124\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "");
+            TestRoundtrip.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // An open tag need not be closed:
@@ -3289,8 +3165,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *foo*
             //     <p><em>bar</em></p>
 
-            Console.WriteLine("Example 125\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>", "");
+            TestRoundtrip.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A partial tag need not even be completed (garbage
@@ -3309,8 +3184,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <div id="foo"
             //     *hi*
 
-            Console.WriteLine("Example 126\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*", "");
+            TestRoundtrip.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3327,8 +3201,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <div class
             //     foo
 
-            Console.WriteLine("Example 127\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div class\nfoo", "<div class\nfoo", "");
+            TestRoundtrip.TestSpec("<div class\nfoo", "<div class\nfoo", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The initial tag doesn't even need to be a valid
@@ -3347,8 +3220,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <div *???-&&&-<---
             //     *foo*
 
-            Console.WriteLine("Example 128\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*", "");
+            TestRoundtrip.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In type 6 blocks, the initial tag need not be on a line by
@@ -3365,8 +3237,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <div><a href="bar">*foo*</a></div>
 
-            Console.WriteLine("Example 129\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>", "");
+            TestRoundtrip.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3385,8 +3256,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     foo
             //     </td></tr></table>
 
-            Console.WriteLine("Example 130\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>", "");
+            TestRoundtrip.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Everything until the next blank line or end of document
@@ -3412,8 +3282,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     int x = 33;
             //     ```
 
-            Console.WriteLine("Example 131\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```", "");
+            TestRoundtrip.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```", "", context: "Example {number}\nSection {name}\n");
         }
 
         // To start an [HTML block] with a tag that is *not* in the
@@ -3435,8 +3304,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *bar*
             //     </a>
 
-            Console.WriteLine("Example 132\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>", "");
+            TestRoundtrip.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In type 7 blocks, the [tag name] can be anything:
@@ -3456,8 +3324,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *bar*
             //     </Warning>
 
-            Console.WriteLine("Example 133\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>", "");
+            TestRoundtrip.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3476,8 +3343,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *bar*
             //     </i>
 
-            Console.WriteLine("Example 134\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>", "");
+            TestRoundtrip.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3494,8 +3360,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ins>
             //     *bar*
 
-            Console.WriteLine("Example 135\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("</ins>\n*bar*", "</ins>\n*bar*", "");
+            TestRoundtrip.TestSpec("</ins>\n*bar*", "</ins>\n*bar*", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These rules are designed to allow us to work with tags that
@@ -3519,8 +3384,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *foo*
             //     </del>
 
-            Console.WriteLine("Example 136\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>", "");
+            TestRoundtrip.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In this case, we get a raw HTML block that just includes
@@ -3544,8 +3408,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>foo</em></p>
             //     </del>
 
-            Console.WriteLine("Example 137\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>", "");
+            TestRoundtrip.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Finally, in this case, the `<del>` tags are interpreted
@@ -3564,8 +3427,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><del><em>foo</em></del></p>
 
-            Console.WriteLine("Example 138\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>", "");
+            TestRoundtrip.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // HTML tags designed to contain literal content
@@ -3600,8 +3462,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>okay</p>
 
-            Console.WriteLine("Example 139\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A script tag (type 1):
@@ -3627,8 +3488,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </script>
             //     <p>okay</p>
 
-            Console.WriteLine("Example 140\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A style tag (type 1):
@@ -3656,8 +3516,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </style>
             //     <p>okay</p>
 
-            Console.WriteLine("Example 141\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If there is no matching end tag, the block will end at the
@@ -3681,8 +3540,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     
             //     foo
 
-            Console.WriteLine("Example 142\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo", "");
+            TestRoundtrip.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3704,8 +3562,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <p>bar</p>
 
-            Console.WriteLine("Example 143\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3726,8 +3583,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>foo</li>
             //     </ul>
 
-            Console.WriteLine("Example 144\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The end tag can occur on the same line as the start tag:
@@ -3745,8 +3601,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <style>p{color:red;}</style>
             //     <p><em>foo</em></p>
 
-            Console.WriteLine("Example 145\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3763,8 +3618,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <!-- foo -->*bar*
             //     <p><em>baz</em></p>
 
-            Console.WriteLine("Example 146\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>", "");
+            TestRoundtrip.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that anything on the last line after the
@@ -3785,8 +3639,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     foo
             //     </script>1. *bar*
 
-            Console.WriteLine("Example 147\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*", "");
+            TestRoundtrip.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A comment (type 2):
@@ -3810,8 +3663,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //        baz -->
             //     <p>okay</p>
 
-            Console.WriteLine("Example 148\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A processing instruction (type 3):
@@ -3837,8 +3689,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ?>
             //     <p>okay</p>
 
-            Console.WriteLine("Example 149\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A declaration (type 4):
@@ -3854,8 +3705,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <!DOCTYPE html>
 
-            Console.WriteLine("Example 150\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>", "");
+            TestRoundtrip.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // CDATA (type 5):
@@ -3895,8 +3745,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ]]>
             //     <p>okay</p>
 
-            Console.WriteLine("Example 151\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "");
+            TestRoundtrip.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The opening tag can be indented 1-3 spaces, but not 4:
@@ -3916,8 +3765,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>&lt;!-- foo --&gt;
             //     </code></pre>
 
-            Console.WriteLine("Example 152\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>", "");
+            TestRoundtrip.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -3936,8 +3784,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>&lt;div&gt;
             //     </code></pre>
 
-            Console.WriteLine("Example 153\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>", "");
+            TestRoundtrip.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // An HTML block of types 1--6 can interrupt a paragraph, and need not be
@@ -3960,8 +3807,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     bar
             //     </div>
 
-            Console.WriteLine("Example 154\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>", "");
+            TestRoundtrip.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, a following blank line is needed, except at the end of
@@ -3985,8 +3831,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </div>
             //     *foo*
 
-            Console.WriteLine("Example 155\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*", "");
+            TestRoundtrip.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*", "", context: "Example {number}\nSection {name}\n");
         }
 
         // HTML blocks of type 7 cannot interrupt a paragraph:
@@ -4006,8 +3851,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <a href="bar">
             //     baz</p>
 
-            Console.WriteLine("Example 156\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>", "");
+            TestRoundtrip.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This rule differs from John Gruber's original Markdown syntax
@@ -4057,8 +3901,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>Emphasized</em> text.</p>
             //     </div>
 
-            Console.WriteLine("Example 157\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>", "");
+            TestRoundtrip.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4077,8 +3920,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     *Emphasized* text.
             //     </div>
 
-            Console.WriteLine("Example 158\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>", "");
+            TestRoundtrip.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Some Markdown implementations have adopted a convention of
@@ -4119,8 +3961,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </tr>
             //     </table>
 
-            Console.WriteLine("Example 159\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>", "");
+            TestRoundtrip.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // There are problems, however, if the inner tags are indented
@@ -4155,8 +3996,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //       </tr>
             //     </table>
 
-            Console.WriteLine("Example 160\nSection Leaf blocks / HTML blocks\n");
-            TestRoundtrip.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>", "");
+            TestRoundtrip.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -4200,8 +4040,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 161\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4220,8 +4059,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="the title">foo</a></p>
 
-            Console.WriteLine("Example 162\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4238,8 +4076,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="my_(url)" title="title (with parens)">Foo*bar]</a></p>
 
-            Console.WriteLine("Example 163\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>", "");
+            TestRoundtrip.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4258,8 +4095,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="my%20url" title="title">Foo bar</a></p>
 
-            Console.WriteLine("Example 164\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>", "");
+            TestRoundtrip.TestSpec("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The title may extend over multiple lines:
@@ -4285,8 +4121,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     line2
             //     ">foo</a></p>
 
-            Console.WriteLine("Example 165\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, it may not contain a [blank line]:
@@ -4308,8 +4143,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>with blank line'</p>
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 166\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The title may be omitted:
@@ -4328,8 +4162,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url">foo</a></p>
 
-            Console.WriteLine("Example 167\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link destination may not be omitted:
@@ -4348,8 +4181,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[foo]:</p>
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 168\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         //  However, an empty link destination may be specified using
@@ -4368,8 +4200,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="">foo</a></p>
 
-            Console.WriteLine("Example 169\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: <>\n\n[foo]", "<p><a href=\"\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: <>\n\n[foo]", "<p><a href=\"\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The title must be separated from the link destination by
@@ -4389,8 +4220,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[foo]: <bar>(baz)</p>
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 170\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: <bar>(baz)\n\n[foo]", "<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("[foo]: <bar>(baz)\n\n[foo]", "<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Both title and destination can contain backslash escapes
@@ -4409,8 +4239,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url%5Cbar*baz" title="foo&quot;bar\baz">foo</a></p>
 
-            Console.WriteLine("Example 171\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A link can come before its corresponding definition:
@@ -4428,8 +4257,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="url">foo</a></p>
 
-            Console.WriteLine("Example 172\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If there are several matching definitions, the first one takes
@@ -4449,8 +4277,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="first">foo</a></p>
 
-            Console.WriteLine("Example 173\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // As noted in the section on [Links], matching of labels is
@@ -4469,8 +4296,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url">Foo</a></p>
 
-            Console.WriteLine("Example 174\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>", "");
+            TestRoundtrip.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4487,8 +4313,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
 
-            Console.WriteLine("Example 175\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>", "");
+            TestRoundtrip.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here is a link reference definition with no corresponding link.
@@ -4504,8 +4329,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //
             // Should be rendered as:
             //
-            Console.WriteLine("Example 176\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url", "", "");
+            TestRoundtrip.TestSpec("[foo]: /url", "", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here is another one:
@@ -4524,8 +4348,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>bar</p>
 
-            Console.WriteLine("Example 177\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>", "");
+            TestRoundtrip.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a link reference definition, because there are
@@ -4542,8 +4365,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo]: /url &quot;title&quot; ok</p>
 
-            Console.WriteLine("Example 178\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a link reference definition, but it has no title:
@@ -4560,8 +4382,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&quot;title&quot; ok</p>
 
-            Console.WriteLine("Example 179\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a link reference definition, because it is indented
@@ -4582,8 +4403,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 180\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a link reference definition, because it occurs inside
@@ -4606,8 +4426,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 181\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A [link reference definition] cannot interrupt a paragraph.
@@ -4628,8 +4447,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     [bar]: /baz</p>
             //     <p>[bar]</p>
 
-            Console.WriteLine("Example 182\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>", "");
+            TestRoundtrip.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, it can directly follow other block elements, such as headings
@@ -4651,8 +4469,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 183\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4671,8 +4488,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <h1>bar</h1>
             //     <p><a href="/url">foo</a></p>
 
-            Console.WriteLine("Example 184\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url\nbar\n===\n[foo]", "<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url\nbar\n===\n[foo]", "<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4690,8 +4506,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>===
             //     <a href="/url">foo</a></p>
 
-            Console.WriteLine("Example 185\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url\n===\n[foo]", "<p>===\n<a href=\"/url\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url\n===\n[foo]", "<p>===\n<a href=\"/url\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Several [link reference definitions]
@@ -4717,8 +4532,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <a href="/bar-url" title="bar">bar</a>,
             //     <a href="/baz-url">baz</a></p>
 
-            Console.WriteLine("Example 186\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Link reference definitions] can occur
@@ -4741,8 +4555,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 187\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Whether something is a [link reference definition] is
@@ -4761,8 +4574,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //
             // Should be rendered as:
             //
-            Console.WriteLine("Example 188\nSection Leaf blocks / Link reference definitions\n");
-            TestRoundtrip.TestSpec("[foo]: /url", "", "");
+            TestRoundtrip.TestSpec("[foo]: /url", "", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -4794,8 +4606,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa</p>
             //     <p>bbb</p>
 
-            Console.WriteLine("Example 189\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "");
+            TestRoundtrip.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Paragraphs can contain multiple lines, but no blank lines:
@@ -4818,8 +4629,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>ccc
             //     ddd</p>
 
-            Console.WriteLine("Example 190\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>", "");
+            TestRoundtrip.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Multiple blank lines between paragraph have no effect:
@@ -4839,8 +4649,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa</p>
             //     <p>bbb</p>
 
-            Console.WriteLine("Example 191\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "");
+            TestRoundtrip.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Leading spaces are skipped:
@@ -4858,8 +4667,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa
             //     bbb</p>
 
-            Console.WriteLine("Example 192\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>", "");
+            TestRoundtrip.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Lines after the first may be indented any amount, since indented
@@ -4880,8 +4688,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     bbb
             //     ccc</p>
 
-            Console.WriteLine("Example 193\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>", "");
+            TestRoundtrip.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, the first line may be indented at most three spaces,
@@ -4900,8 +4707,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa
             //     bbb</p>
 
-            Console.WriteLine("Example 194\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>", "");
+            TestRoundtrip.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -4919,8 +4725,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </code></pre>
             //     <p>bbb</p>
 
-            Console.WriteLine("Example 195\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>", "");
+            TestRoundtrip.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Final spaces are stripped before inline parsing, so a paragraph
@@ -4940,8 +4745,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa<br />
             //     bbb</p>
 
-            Console.WriteLine("Example 196\nSection Leaf blocks / Paragraphs\n");
-            TestRoundtrip.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>", "");
+            TestRoundtrip.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -4975,8 +4779,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>aaa</p>
             //     <h1>aaa</h1>
 
-            Console.WriteLine("Example 197\nSection Leaf blocks / Blank lines\n");
-            TestRoundtrip.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>", "");
+            TestRoundtrip.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -5050,8 +4853,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 198\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The spaces after the `>` characters can be omitted:
@@ -5073,8 +4875,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 199\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The `>` characters can be indented 1-3 spaces:
@@ -5096,8 +4897,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 200\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces gives us a code block:
@@ -5118,8 +4918,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     &gt; baz
             //     </code></pre>
 
-            Console.WriteLine("Example 201\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The Laziness clause allows us to omit the `>` before
@@ -5142,8 +4941,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 202\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A block quote can contain some lazy and some non-lazy
@@ -5166,8 +4964,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     foo</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 203\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Laziness only applies to lines that would have been continuations of
@@ -5196,8 +4993,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <hr />
 
-            Console.WriteLine("Example 204\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "");
+            TestRoundtrip.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Similarly, if we omit the `> ` in the second line of
@@ -5228,8 +5024,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 205\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // For the same reason, we can't omit the `> ` in front of
@@ -5252,8 +5047,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>bar
             //     </code></pre>
 
-            Console.WriteLine("Example 206\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>", "");
+            TestRoundtrip.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5274,8 +5068,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo</p>
             //     <pre><code></code></pre>
 
-            Console.WriteLine("Example 207\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "");
+            TestRoundtrip.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that in the following case, we have a [lazy
@@ -5296,8 +5089,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     - bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 208\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // To see why, note that in
@@ -5325,8 +5117,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 209\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">", "<blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">", "<blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5344,8 +5135,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 210\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A block quote can have initial or final blank lines:
@@ -5365,8 +5155,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 211\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A blank line always separates block quotes:
@@ -5389,8 +5178,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 212\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // (Most current Markdown implementations, including John Gruber's
@@ -5416,8 +5204,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 213\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // To get a block quote with two paragraphs, use:
@@ -5438,8 +5225,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 214\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Block quotes can interrupt paragraphs:
@@ -5459,8 +5245,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>bar</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 215\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In general, blank lines are not needed before or after block
@@ -5485,8 +5270,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>bbb</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 216\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, because of laziness, a blank line is needed between
@@ -5507,8 +5291,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 217\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5528,8 +5311,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <p>baz</p>
 
-            Console.WriteLine("Example 218\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5549,8 +5331,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     <p>baz</p>
 
-            Console.WriteLine("Example 219\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "");
+            TestRoundtrip.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // It is a consequence of the Laziness rule that any number
@@ -5576,8 +5357,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 220\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5602,8 +5382,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 221\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // When including an indented code block in a block quote,
@@ -5630,8 +5409,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>not code</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 222\nSection Container blocks / Block quotes\n");
-            TestRoundtrip.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -5698,8 +5476,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>A block quote.</p>
             //     </blockquote>
 
-            Console.WriteLine("Example 223\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
@@ -5732,8 +5509,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 224\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The most important thing to notice is that the position of
@@ -5763,8 +5539,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ul>
             //     <p>two</p>
 
-            Console.WriteLine("Example 225\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>", "");
+            TestRoundtrip.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5786,8 +5561,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 226\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5808,8 +5582,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code> two
             //     </code></pre>
 
-            Console.WriteLine("Example 227\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>", "");
+            TestRoundtrip.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -5831,8 +5604,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 228\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // It is tempting to think of this in terms of columns:  the continuation
@@ -5865,8 +5637,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 229\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here `two` occurs in the same column as the list marker `1.`,
@@ -5898,8 +5669,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </blockquote>
             //     </blockquote>
 
-            Console.WriteLine("Example 230\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>", "");
+            TestRoundtrip.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that at least one space is needed between the list marker and
@@ -5919,8 +5689,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>-one</p>
             //     <p>2.two</p>
 
-            Console.WriteLine("Example 231\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "");
+            TestRoundtrip.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list item may contain blocks that are separated by more than
@@ -5945,8 +5714,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 232\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list item may contain any kind of block:
@@ -5980,8 +5748,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 233\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list item that contains an indented code block will preserve
@@ -6012,8 +5779,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 234\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that ordered list start numbers must be nine digits or less:
@@ -6031,8 +5797,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>ok</li>
             //     </ol>
 
-            Console.WriteLine("Example 235\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6047,8 +5812,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>1234567890. not ok</p>
 
-            Console.WriteLine("Example 236\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "");
+            TestRoundtrip.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A start number may begin with 0s:
@@ -6066,8 +5830,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>ok</li>
             //     </ol>
 
-            Console.WriteLine("Example 237\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6084,8 +5847,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>ok</li>
             //     </ol>
 
-            Console.WriteLine("Example 238\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A start number may not be negative:
@@ -6101,8 +5863,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>-1. not ok</p>
 
-            Console.WriteLine("Example 239\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-1. not ok", "<p>-1. not ok</p>", "");
+            TestRoundtrip.TestSpec("-1. not ok", "<p>-1. not ok</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
@@ -6139,8 +5900,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 240\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And in this case it is 11 spaces:
@@ -6164,8 +5924,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 241\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If the *first* block in the list item is an indented code block,
@@ -6191,8 +5950,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>more code
             //     </code></pre>
 
-            Console.WriteLine("Example 242\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6219,8 +5977,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 243\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that an additional space indent is interpreted as space
@@ -6249,8 +6006,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 244\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that rules #1 and #2 only apply to two cases:  (a) cases
@@ -6275,8 +6031,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo</p>
             //     <p>bar</p>
 
-            Console.WriteLine("Example 245\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6296,8 +6051,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ul>
             //     <p>bar</p>
 
-            Console.WriteLine("Example 246\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "");
+            TestRoundtrip.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not a significant restriction, because when a block begins
@@ -6323,8 +6077,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 247\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
@@ -6369,8 +6122,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 248\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // When the list item starts with a blank line, the number of spaces
@@ -6390,8 +6142,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>foo</li>
             //     </ul>
 
-            Console.WriteLine("Example 249\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list item can begin with at most one blank line.
@@ -6414,8 +6165,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ul>
             //     <p>foo</p>
 
-            Console.WriteLine("Example 250\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "");
+            TestRoundtrip.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here is an empty bullet list item:
@@ -6437,8 +6187,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 251\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // It does not matter whether there are spaces following the [list marker]:
@@ -6460,8 +6209,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 252\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here is an empty ordered list item:
@@ -6483,8 +6231,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ol>
 
-            Console.WriteLine("Example 253\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list may start or end with an empty list item:
@@ -6502,8 +6249,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li></li>
             //     </ul>
 
-            Console.WriteLine("Example 254\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("*", "<ul>\n<li></li>\n</ul>", "");
+            TestRoundtrip.TestSpec("*", "<ul>\n<li></li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, an empty list item cannot interrupt a paragraph:
@@ -6526,8 +6272,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo
             //     1.</p>
 
-            Console.WriteLine("Example 255\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "");
+            TestRoundtrip.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
@@ -6564,8 +6309,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 256\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Indented two spaces:
@@ -6596,8 +6340,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 257\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Indented three spaces:
@@ -6628,8 +6371,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 258\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Four spaces indent gives a code block:
@@ -6656,8 +6398,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //         &gt; A block quote.
             //     </code></pre>
 
-            Console.WriteLine("Example 259\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
@@ -6697,8 +6438,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 260\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Indentation can be partially deleted:
@@ -6718,8 +6458,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     with two lines.</li>
             //     </ol>
 
-            Console.WriteLine("Example 261\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These examples show how laziness can work in nested structures:
@@ -6745,8 +6484,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ol>
             //     </blockquote>
 
-            Console.WriteLine("Example 262\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6771,8 +6509,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </ol>
             //     </blockquote>
 
-            Console.WriteLine("Example 263\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "");
+            TestRoundtrip.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // 6.  **That's all.** Nothing that is not counted as a list item by rules
@@ -6813,8 +6550,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 264\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // One is not enough:
@@ -6838,8 +6574,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>boo</li>
             //     </ul>
 
-            Console.WriteLine("Example 265\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here we need four, because the list marker is wider:
@@ -6862,8 +6597,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 266\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Three is not enough:
@@ -6885,8 +6619,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bar</li>
             //     </ul>
 
-            Console.WriteLine("Example 267\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list may be the first block in a list item:
@@ -6908,8 +6641,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 268\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -6934,8 +6666,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 269\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A list item can contain a heading:
@@ -6961,8 +6692,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     baz</li>
             //     </ul>
 
-            Console.WriteLine("Example 270\nSection Container blocks / List items\n");
-            TestRoundtrip.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -7207,8 +6937,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>baz</li>
             //     </ul>
 
-            Console.WriteLine("Example 271\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7231,8 +6960,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>baz</li>
             //     </ol>
 
-            Console.WriteLine("Example 272\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In CommonMark, a list can interrupt a paragraph. That is,
@@ -7256,8 +6984,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>baz</li>
             //     </ul>
 
-            Console.WriteLine("Example 273\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // `Markdown.pl` does not allow this, through fear of triggering a list
@@ -7338,8 +7065,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>The number of windows in my house is
             //     14.  The number of doors is 6.</p>
 
-            Console.WriteLine("Example 274\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "");
+            TestRoundtrip.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // We may still get an unintended result in cases like
@@ -7359,8 +7085,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>The number of doors is 6.</li>
             //     </ol>
 
-            Console.WriteLine("Example 275\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // but this rule should prevent most spurious list captures.
@@ -7393,8 +7118,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 276\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7427,8 +7151,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 277\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // To separate consecutive lists of the same type, or to separate a
@@ -7461,8 +7184,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>bim</li>
             //     </ul>
 
-            Console.WriteLine("Example 278\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7496,8 +7218,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>code
             //     </code></pre>
 
-            Console.WriteLine("Example 279\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "");
+            TestRoundtrip.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // List items need not be indented to the same level.  The following
@@ -7530,8 +7251,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>g</li>
             //     </ul>
 
-            Console.WriteLine("Example 280\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7560,8 +7280,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 281\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("1. a\n\n  2. b\n\n   3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1. a\n\n  2. b\n\n   3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note, however, that list items may not be indented more than
@@ -7589,8 +7308,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     - e</li>
             //     </ul>
 
-            Console.WriteLine("Example 282\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n - b\n  - c\n   - d\n    - e", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n - b\n  - c\n   - d\n    - e", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And here, `3. c` is treated as in indented code block,
@@ -7621,8 +7339,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>3. c
             //     </code></pre>
 
-            Console.WriteLine("Example 283\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>", "");
+            TestRoundtrip.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a loose list, because there is a blank line between
@@ -7652,8 +7369,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 284\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // So is this, with a empty second item:
@@ -7680,8 +7396,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 285\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These are loose lists, even though there is no space between the items,
@@ -7714,8 +7429,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 286\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7744,8 +7458,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 287\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a tight list, because the blank lines are in a code block:
@@ -7776,8 +7489,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>c</li>
             //     </ul>
 
-            Console.WriteLine("Example 288\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a tight list, because the blank line is between two
@@ -7809,8 +7521,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>d</li>
             //     </ul>
 
-            Console.WriteLine("Example 289\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a tight list, because the blank line is inside the
@@ -7837,8 +7548,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>c</li>
             //     </ul>
 
-            Console.WriteLine("Example 290\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This list is tight, because the consecutive block elements
@@ -7869,8 +7579,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>d</li>
             //     </ul>
 
-            Console.WriteLine("Example 291\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A single-paragraph list is tight:
@@ -7888,8 +7597,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>a</li>
             //     </ul>
 
-            Console.WriteLine("Example 292\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -7911,8 +7619,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 293\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This list is loose, because of the blank line between the
@@ -7939,8 +7646,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ol>
 
-            Console.WriteLine("Example 294\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>", "");
+            TestRoundtrip.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here the outer list is loose, the inner list tight:
@@ -7967,8 +7673,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 295\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8004,8 +7709,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     </li>
             //     </ul>
 
-            Console.WriteLine("Example 296\nSection Container blocks / Lists\n");
-            TestRoundtrip.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -8029,8 +7733,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>hi</code>lo`</p>
 
-            Console.WriteLine("Example 297\nSection Inlines\n");
-            TestRoundtrip.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>", "");
+            TestRoundtrip.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -8056,8 +7759,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
 
-            Console.WriteLine("Example 298\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>", "");
+            TestRoundtrip.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslashes before other characters are treated as literal
@@ -8074,8 +7776,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>\→\A\a\ \3\φ\«</p>
 
-            Console.WriteLine("Example 299\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>", "");
+            TestRoundtrip.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Escaped characters are treated as regular characters and do
@@ -8108,8 +7809,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     [foo]: /url &quot;not a reference&quot;
             //     &amp;ouml; not a character entity</p>
 
-            Console.WriteLine("Example 300\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>", "");
+            TestRoundtrip.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If a backslash is itself escaped, the following character is not:
@@ -8125,8 +7825,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>\<em>emphasis</em></p>
 
-            Console.WriteLine("Example 301\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>", "");
+            TestRoundtrip.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A backslash at the end of the line is a [hard line break]:
@@ -8144,8 +7843,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     bar</p>
 
-            Console.WriteLine("Example 302\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>", "");
+            TestRoundtrip.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash escapes do not work in code blocks, code spans, autolinks, or
@@ -8162,8 +7860,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>\[\`</code></p>
 
-            Console.WriteLine("Example 303\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>", "");
+            TestRoundtrip.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8179,8 +7876,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>\[\]
             //     </code></pre>
 
-            Console.WriteLine("Example 304\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8198,8 +7894,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>\[\]
             //     </code></pre>
 
-            Console.WriteLine("Example 305\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>", "");
+            TestRoundtrip.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8214,8 +7909,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
 
-            Console.WriteLine("Example 306\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "");
+            TestRoundtrip.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8230,8 +7924,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <a href="/bar\/)">
 
-            Console.WriteLine("Example 307\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">", "");
+            TestRoundtrip.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But they work in all other contexts, including URLs and link titles,
@@ -8248,8 +7941,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/bar*" title="ti*tle">foo</a></p>
 
-            Console.WriteLine("Example 308\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8266,8 +7958,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/bar*" title="ti*tle">foo</a></p>
 
-            Console.WriteLine("Example 309\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8285,8 +7976,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code class="language-foo+bar">foo
             //     </code></pre>
 
-            Console.WriteLine("Example 310\nSection Inlines / Backslash escapes\n");
-            TestRoundtrip.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>", "");
+            TestRoundtrip.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -8334,8 +8024,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     ¾ ℋ ⅆ
             //     ∲ ≧̸</p>
 
-            Console.WriteLine("Example 311\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>", "");
+            TestRoundtrip.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Decimal numeric character
@@ -8357,8 +8046,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p># Ӓ Ϡ �</p>
 
-            Console.WriteLine("Example 312\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&#35; &#1234; &#992; &#0;", "<p># Ӓ Ϡ �</p>", "");
+            TestRoundtrip.TestSpec("&#35; &#1234; &#992; &#0;", "<p># Ӓ Ϡ �</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Hexadecimal numeric character
@@ -8378,8 +8066,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&quot; ആ ಫ</p>
 
-            Console.WriteLine("Example 313\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>", "");
+            TestRoundtrip.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here are some nonentities:
@@ -8401,8 +8088,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     &amp;#abcdef0;
             //     &amp;ThisIsNotDefined; &amp;hi?;</p>
 
-            Console.WriteLine("Example 314\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "");
+            TestRoundtrip.TestSpec("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Although HTML5 does accept some entity references
@@ -8420,8 +8106,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&amp;copy</p>
 
-            Console.WriteLine("Example 315\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&copy", "<p>&amp;copy</p>", "");
+            TestRoundtrip.TestSpec("&copy", "<p>&amp;copy</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Strings that are not on the list of HTML5 named entities are not
@@ -8438,8 +8123,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&amp;MadeUpEntity;</p>
 
-            Console.WriteLine("Example 316\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>", "");
+            TestRoundtrip.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Entity and numeric character references are recognized in any
@@ -8457,8 +8141,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <a href="&ouml;&ouml;.html">
 
-            Console.WriteLine("Example 317\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">", "");
+            TestRoundtrip.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8473,8 +8156,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 
-            Console.WriteLine("Example 318\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8491,8 +8173,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 
-            Console.WriteLine("Example 319\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8510,8 +8191,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code class="language-föö">foo
             //     </code></pre>
 
-            Console.WriteLine("Example 320\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>", "");
+            TestRoundtrip.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Entity and numeric character references are treated as literal
@@ -8528,8 +8208,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>f&amp;ouml;&amp;ouml;</code></p>
 
-            Console.WriteLine("Example 321\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>", "");
+            TestRoundtrip.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8545,8 +8224,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <pre><code>f&amp;ouml;f&amp;ouml;
             //     </code></pre>
 
-            Console.WriteLine("Example 322\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>", "");
+            TestRoundtrip.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Entity and numeric character references cannot be used
@@ -8566,8 +8244,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>*foo*
             //     <em>foo</em></p>
 
-            Console.WriteLine("Example 323\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&#42;foo&#42;\n*foo*", "<p>*foo*\n<em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("&#42;foo&#42;\n*foo*", "<p>*foo*\n<em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8587,8 +8264,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <li>foo</li>
             //     </ul>
 
-            Console.WriteLine("Example 324\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&#42; foo\n\n* foo", "<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>", "");
+            TestRoundtrip.TestSpec("&#42; foo\n\n* foo", "<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8605,8 +8281,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     
             //     bar</p>
 
-            Console.WriteLine("Example 325\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("foo&#10;&#10;bar", "<p>foo\n\nbar</p>", "");
+            TestRoundtrip.TestSpec("foo&#10;&#10;bar", "<p>foo\n\nbar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8621,8 +8296,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>→foo</p>
 
-            Console.WriteLine("Example 326\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("&#9;foo", "<p>\tfoo</p>", "");
+            TestRoundtrip.TestSpec("&#9;foo", "<p>\tfoo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8637,8 +8311,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[a](url &quot;tit&quot;)</p>
 
-            Console.WriteLine("Example 327\nSection Inlines / Entity and numeric character references\n");
-            TestRoundtrip.TestSpec("[a](url &quot;tit&quot;)", "<p>[a](url &quot;tit&quot;)</p>", "");
+            TestRoundtrip.TestSpec("[a](url &quot;tit&quot;)", "<p>[a](url &quot;tit&quot;)</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -8677,8 +8350,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo</code></p>
 
-            Console.WriteLine("Example 328\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`foo`", "<p><code>foo</code></p>", "");
+            TestRoundtrip.TestSpec("`foo`", "<p><code>foo</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here two backticks are used, because the code contains a backtick.
@@ -8696,8 +8368,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo ` bar</code></p>
 
-            Console.WriteLine("Example 329\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`` foo ` bar ``", "<p><code>foo ` bar</code></p>", "");
+            TestRoundtrip.TestSpec("`` foo ` bar ``", "<p><code>foo ` bar</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This example shows the motivation for stripping leading and trailing
@@ -8714,8 +8385,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>``</code></p>
 
-            Console.WriteLine("Example 330\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("` `` `", "<p><code>``</code></p>", "");
+            TestRoundtrip.TestSpec("` `` `", "<p><code>``</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that only *one* space is stripped:
@@ -8731,8 +8401,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code> `` </code></p>
 
-            Console.WriteLine("Example 331\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`  ``  `", "<p><code> `` </code></p>", "");
+            TestRoundtrip.TestSpec("`  ``  `", "<p><code> `` </code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The stripping only happens if the space is on both
@@ -8749,8 +8418,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code> a</code></p>
 
-            Console.WriteLine("Example 332\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("` a`", "<p><code> a</code></p>", "");
+            TestRoundtrip.TestSpec("` a`", "<p><code> a</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Only [spaces], and not [unicode whitespace] in general, are
@@ -8767,8 +8435,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code> b </code></p>
 
-            Console.WriteLine("Example 333\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("` b `", "<p><code> b </code></p>", "");
+            TestRoundtrip.TestSpec("` b `", "<p><code> b </code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // No stripping occurs if the code span contains only spaces:
@@ -8786,8 +8453,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><code> </code>
             //     <code>  </code></p>
 
-            Console.WriteLine("Example 334\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("` `\n`  `", "<p><code> </code>\n<code>  </code></p>", "");
+            TestRoundtrip.TestSpec("` `\n`  `", "<p><code> </code>\n<code>  </code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Line endings] are treated like spaces:
@@ -8807,8 +8473,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo bar   baz</code></p>
 
-            Console.WriteLine("Example 335\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("``\nfoo\nbar  \nbaz\n``", "<p><code>foo bar   baz</code></p>", "");
+            TestRoundtrip.TestSpec("``\nfoo\nbar  \nbaz\n``", "<p><code>foo bar   baz</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8825,8 +8490,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo </code></p>
 
-            Console.WriteLine("Example 336\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("``\nfoo \n``", "<p><code>foo </code></p>", "");
+            TestRoundtrip.TestSpec("``\nfoo \n``", "<p><code>foo </code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Interior spaces are not collapsed:
@@ -8843,8 +8507,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo   bar  baz</code></p>
 
-            Console.WriteLine("Example 337\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`foo   bar \nbaz`", "<p><code>foo   bar  baz</code></p>", "");
+            TestRoundtrip.TestSpec("`foo   bar \nbaz`", "<p><code>foo   bar  baz</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that browsers will typically collapse consecutive spaces
@@ -8868,8 +8531,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo\</code>bar`</p>
 
-            Console.WriteLine("Example 338\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`foo\\`bar`", "<p><code>foo\\</code>bar`</p>", "");
+            TestRoundtrip.TestSpec("`foo\\`bar`", "<p><code>foo\\</code>bar`</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash escapes are never needed, because one can always choose a
@@ -8887,8 +8549,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo`bar</code></p>
 
-            Console.WriteLine("Example 339\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("``foo`bar``", "<p><code>foo`bar</code></p>", "");
+            TestRoundtrip.TestSpec("``foo`bar``", "<p><code>foo`bar</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -8903,8 +8564,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>foo `` bar</code></p>
 
-            Console.WriteLine("Example 340\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("` foo `` bar `", "<p><code>foo `` bar</code></p>", "");
+            TestRoundtrip.TestSpec("` foo `` bar `", "<p><code>foo `` bar</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Code span backticks have higher precedence than any other inline
@@ -8923,8 +8583,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*foo<code>*</code></p>
 
-            Console.WriteLine("Example 341\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("*foo`*`", "<p>*foo<code>*</code></p>", "");
+            TestRoundtrip.TestSpec("*foo`*`", "<p>*foo<code>*</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And this is not parsed as a link:
@@ -8940,8 +8599,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[not a <code>link](/foo</code>)</p>
 
-            Console.WriteLine("Example 342\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>", "");
+            TestRoundtrip.TestSpec("[not a `link](/foo`)", "<p>[not a <code>link](/foo</code>)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Code spans, HTML tags, and autolinks have the same precedence.
@@ -8958,8 +8616,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
 
-            Console.WriteLine("Example 343\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>", "");
+            TestRoundtrip.TestSpec("`<a href=\"`\">`", "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But this is an HTML tag:
@@ -8975,8 +8632,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="`">`</p>
 
-            Console.WriteLine("Example 344\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>", "");
+            TestRoundtrip.TestSpec("<a href=\"`\">`", "<p><a href=\"`\">`</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // And this is code:
@@ -8992,8 +8648,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
 
-            Console.WriteLine("Example 345\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "");
+            TestRoundtrip.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But this is an autolink:
@@ -9009,8 +8664,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
 
-            Console.WriteLine("Example 346\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "");
+            TestRoundtrip.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // When a backtick string is not closed by a matching backtick string,
@@ -9027,8 +8681,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>```foo``</p>
 
-            Console.WriteLine("Example 347\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("```foo``", "<p>```foo``</p>", "");
+            TestRoundtrip.TestSpec("```foo``", "<p>```foo``</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9043,8 +8696,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>`foo</p>
 
-            Console.WriteLine("Example 348\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`foo", "<p>`foo</p>", "");
+            TestRoundtrip.TestSpec("`foo", "<p>`foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The following case also illustrates the need for opening and
@@ -9061,8 +8713,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>`foo<code>bar</code></p>
 
-            Console.WriteLine("Example 349\nSection Inlines / Code spans\n");
-            TestRoundtrip.TestSpec("`foo``bar``", "<p>`foo<code>bar</code></p>", "");
+            TestRoundtrip.TestSpec("`foo``bar``", "<p>`foo<code>bar</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -9290,8 +8941,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo bar</em></p>
 
-            Console.WriteLine("Example 350\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo bar*", "<p><em>foo bar</em></p>", "");
+            TestRoundtrip.TestSpec("*foo bar*", "<p><em>foo bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the opening `*` is followed by
@@ -9308,8 +8958,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>a * foo bar*</p>
 
-            Console.WriteLine("Example 351\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("a * foo bar*", "<p>a * foo bar*</p>", "");
+            TestRoundtrip.TestSpec("a * foo bar*", "<p>a * foo bar*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the opening `*` is preceded
@@ -9327,8 +8976,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>a*&quot;foo&quot;*</p>
 
-            Console.WriteLine("Example 352\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>", "");
+            TestRoundtrip.TestSpec("a*\"foo\"*", "<p>a*&quot;foo&quot;*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Unicode nonbreaking spaces count as whitespace, too:
@@ -9344,8 +8992,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>* a *</p>
 
-            Console.WriteLine("Example 353\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("* a *", "<p>* a *</p>", "");
+            TestRoundtrip.TestSpec("* a *", "<p>* a *</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword emphasis with `*` is permitted:
@@ -9361,8 +9008,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo<em>bar</em></p>
 
-            Console.WriteLine("Example 354\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "");
+            TestRoundtrip.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9377,8 +9023,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>5<em>6</em>78</p>
 
-            Console.WriteLine("Example 355\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "");
+            TestRoundtrip.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 2:
@@ -9394,8 +9039,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo bar</em></p>
 
-            Console.WriteLine("Example 356\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "");
+            TestRoundtrip.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the opening `_` is followed by
@@ -9412,8 +9056,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_ foo bar_</p>
 
-            Console.WriteLine("Example 357\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "");
+            TestRoundtrip.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the opening `_` is preceded
@@ -9430,8 +9073,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>a_&quot;foo&quot;_</p>
 
-            Console.WriteLine("Example 358\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "");
+            TestRoundtrip.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Emphasis with `_` is not allowed inside words:
@@ -9447,8 +9089,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo_bar_</p>
 
-            Console.WriteLine("Example 359\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo_bar_", "<p>foo_bar_</p>", "");
+            TestRoundtrip.TestSpec("foo_bar_", "<p>foo_bar_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9463,8 +9104,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>5_6_78</p>
 
-            Console.WriteLine("Example 360\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("5_6_78", "<p>5_6_78</p>", "");
+            TestRoundtrip.TestSpec("5_6_78", "<p>5_6_78</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9479,8 +9119,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>пристаням_стремятся_</p>
 
-            Console.WriteLine("Example 361\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "");
+            TestRoundtrip.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here `_` does not generate emphasis, because the first delimiter run
@@ -9497,8 +9136,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>aa_&quot;bb&quot;_cc</p>
 
-            Console.WriteLine("Example 362\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "");
+            TestRoundtrip.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is emphasis, even though the opening delimiter is
@@ -9516,8 +9154,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo-<em>(bar)</em></p>
 
-            Console.WriteLine("Example 363\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "");
+            TestRoundtrip.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 3:
@@ -9536,8 +9173,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_foo*</p>
 
-            Console.WriteLine("Example 364\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo*", "<p>_foo*</p>", "");
+            TestRoundtrip.TestSpec("_foo*", "<p>_foo*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the closing `*` is preceded by
@@ -9554,8 +9190,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*foo bar *</p>
 
-            Console.WriteLine("Example 365\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo bar *", "<p>*foo bar *</p>", "");
+            TestRoundtrip.TestSpec("*foo bar *", "<p>*foo bar *</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A newline also counts as whitespace:
@@ -9573,8 +9208,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>*foo bar
             //     *</p>
 
-            Console.WriteLine("Example 366\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "");
+            TestRoundtrip.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the second `*` is
@@ -9592,8 +9226,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*(*foo)</p>
 
-            Console.WriteLine("Example 367\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*(*foo)", "<p>*(*foo)</p>", "");
+            TestRoundtrip.TestSpec("*(*foo)", "<p>*(*foo)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The point of this restriction is more easily appreciated
@@ -9610,8 +9243,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>(<em>foo</em>)</em></p>
 
-            Console.WriteLine("Example 368\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "");
+            TestRoundtrip.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword emphasis with `*` is allowed:
@@ -9627,8 +9259,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo</em>bar</p>
 
-            Console.WriteLine("Example 369\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "");
+            TestRoundtrip.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 4:
@@ -9647,8 +9278,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_foo bar _</p>
 
-            Console.WriteLine("Example 370\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo bar _", "<p>_foo bar _</p>", "");
+            TestRoundtrip.TestSpec("_foo bar _", "<p>_foo bar _</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not emphasis, because the second `_` is
@@ -9665,8 +9295,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_(_foo)</p>
 
-            Console.WriteLine("Example 371\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_(_foo)", "<p>_(_foo)</p>", "");
+            TestRoundtrip.TestSpec("_(_foo)", "<p>_(_foo)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is emphasis within emphasis:
@@ -9682,8 +9311,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>(<em>foo</em>)</em></p>
 
-            Console.WriteLine("Example 372\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "");
+            TestRoundtrip.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword emphasis is disallowed for `_`:
@@ -9699,8 +9327,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_foo_bar</p>
 
-            Console.WriteLine("Example 373\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo_bar", "<p>_foo_bar</p>", "");
+            TestRoundtrip.TestSpec("_foo_bar", "<p>_foo_bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9715,8 +9342,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_пристаням_стремятся</p>
 
-            Console.WriteLine("Example 374\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "");
+            TestRoundtrip.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9731,8 +9357,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo_bar_baz</em></p>
 
-            Console.WriteLine("Example 375\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "");
+            TestRoundtrip.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is emphasis, even though the closing delimiter is
@@ -9750,8 +9375,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>(bar)</em>.</p>
 
-            Console.WriteLine("Example 376\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "");
+            TestRoundtrip.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 5:
@@ -9767,8 +9391,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo bar</strong></p>
 
-            Console.WriteLine("Example 377\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not strong emphasis, because the opening delimiter is
@@ -9785,8 +9408,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>** foo bar**</p>
 
-            Console.WriteLine("Example 378\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("** foo bar**", "<p>** foo bar**</p>", "");
+            TestRoundtrip.TestSpec("** foo bar**", "<p>** foo bar**</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not strong emphasis, because the opening `**` is preceded
@@ -9804,8 +9426,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>a**&quot;foo&quot;**</p>
 
-            Console.WriteLine("Example 379\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "");
+            TestRoundtrip.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword strong emphasis with `**` is permitted:
@@ -9821,8 +9442,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo<strong>bar</strong></p>
 
-            Console.WriteLine("Example 380\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "");
+            TestRoundtrip.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 6:
@@ -9838,8 +9458,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo bar</strong></p>
 
-            Console.WriteLine("Example 381\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not strong emphasis, because the opening delimiter is
@@ -9856,8 +9475,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__ foo bar__</p>
 
-            Console.WriteLine("Example 382\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "");
+            TestRoundtrip.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A newline counts as whitespace:
@@ -9875,8 +9493,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>__
             //     foo bar__</p>
 
-            Console.WriteLine("Example 383\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "");
+            TestRoundtrip.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not strong emphasis, because the opening `__` is preceded
@@ -9893,8 +9510,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>a__&quot;foo&quot;__</p>
 
-            Console.WriteLine("Example 384\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "");
+            TestRoundtrip.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword strong emphasis is forbidden with `__`:
@@ -9910,8 +9526,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo__bar__</p>
 
-            Console.WriteLine("Example 385\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo__bar__", "<p>foo__bar__</p>", "");
+            TestRoundtrip.TestSpec("foo__bar__", "<p>foo__bar__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9926,8 +9541,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>5__6__78</p>
 
-            Console.WriteLine("Example 386\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("5__6__78", "<p>5__6__78</p>", "");
+            TestRoundtrip.TestSpec("5__6__78", "<p>5__6__78</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9942,8 +9556,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>пристаням__стремятся__</p>
 
-            Console.WriteLine("Example 387\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "");
+            TestRoundtrip.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -9958,8 +9571,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo, <strong>bar</strong>, baz</strong></p>
 
-            Console.WriteLine("Example 388\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is strong emphasis, even though the opening delimiter is
@@ -9977,8 +9589,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo-<strong>(bar)</strong></p>
 
-            Console.WriteLine("Example 389\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "");
+            TestRoundtrip.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 7:
@@ -9997,8 +9608,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**foo bar **</p>
 
-            Console.WriteLine("Example 390\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo bar **", "<p>**foo bar **</p>", "");
+            TestRoundtrip.TestSpec("**foo bar **", "<p>**foo bar **</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // (Nor can it be interpreted as an emphasized `*foo bar *`, because of
@@ -10018,8 +9628,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**(**foo)</p>
 
-            Console.WriteLine("Example 391\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**(**foo)", "<p>**(**foo)</p>", "");
+            TestRoundtrip.TestSpec("**(**foo)", "<p>**(**foo)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The point of this restriction is more easily appreciated
@@ -10036,8 +9645,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>(<strong>foo</strong>)</em></p>
 
-            Console.WriteLine("Example 392\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "");
+            TestRoundtrip.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10054,8 +9662,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
             //     <em>Asclepias physocarpa</em>)</strong></p>
 
-            Console.WriteLine("Example 393\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "");
+            TestRoundtrip.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10070,8 +9677,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
 
-            Console.WriteLine("Example 394\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword emphasis:
@@ -10087,8 +9693,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo</strong>bar</p>
 
-            Console.WriteLine("Example 395\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "");
+            TestRoundtrip.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 8:
@@ -10107,8 +9712,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__foo bar __</p>
 
-            Console.WriteLine("Example 396\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo bar __", "<p>__foo bar __</p>", "");
+            TestRoundtrip.TestSpec("__foo bar __", "<p>__foo bar __</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is not strong emphasis, because the second `__` is
@@ -10125,8 +9729,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__(__foo)</p>
 
-            Console.WriteLine("Example 397\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__(__foo)", "<p>__(__foo)</p>", "");
+            TestRoundtrip.TestSpec("__(__foo)", "<p>__(__foo)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The point of this restriction is more easily appreciated
@@ -10143,8 +9746,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>(<strong>foo</strong>)</em></p>
 
-            Console.WriteLine("Example 398\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "");
+            TestRoundtrip.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Intraword strong emphasis is forbidden with `__`:
@@ -10160,8 +9762,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__foo__bar</p>
 
-            Console.WriteLine("Example 399\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo__bar", "<p>__foo__bar</p>", "");
+            TestRoundtrip.TestSpec("__foo__bar", "<p>__foo__bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10176,8 +9777,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__пристаням__стремятся</p>
 
-            Console.WriteLine("Example 400\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "");
+            TestRoundtrip.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10192,8 +9792,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo__bar__baz</strong></p>
 
-            Console.WriteLine("Example 401\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is strong emphasis, even though the closing delimiter is
@@ -10211,8 +9810,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>(bar)</strong>.</p>
 
-            Console.WriteLine("Example 402\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "");
+            TestRoundtrip.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 9:
@@ -10231,8 +9829,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <a href="/url">bar</a></em></p>
 
-            Console.WriteLine("Example 403\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "");
+            TestRoundtrip.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10249,8 +9846,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>foo
             //     bar</em></p>
 
-            Console.WriteLine("Example 404\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "");
+            TestRoundtrip.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In particular, emphasis and strong emphasis can be nested
@@ -10267,8 +9863,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <strong>bar</strong> baz</em></p>
 
-            Console.WriteLine("Example 405\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
+            TestRoundtrip.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10283,8 +9878,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <em>bar</em> baz</em></p>
 
-            Console.WriteLine("Example 406\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "");
+            TestRoundtrip.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10299,8 +9893,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><em>foo</em> bar</em></p>
 
-            Console.WriteLine("Example 407\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "");
+            TestRoundtrip.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10315,8 +9908,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <em>bar</em></em></p>
 
-            Console.WriteLine("Example 408\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "");
+            TestRoundtrip.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10331,8 +9923,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <strong>bar</strong> baz</em></p>
 
-            Console.WriteLine("Example 409\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "");
+            TestRoundtrip.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10347,8 +9938,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo<strong>bar</strong>baz</em></p>
 
-            Console.WriteLine("Example 410\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "");
+            TestRoundtrip.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that in the preceding case, the interpretation
@@ -10380,8 +9970,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo**bar</em></p>
 
-            Console.WriteLine("Example 411\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo**bar*", "<p><em>foo**bar</em></p>", "");
+            TestRoundtrip.TestSpec("*foo**bar*", "<p><em>foo**bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The same condition ensures that the following
@@ -10400,8 +9989,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><strong>foo</strong> bar</em></p>
 
-            Console.WriteLine("Example 412\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "");
+            TestRoundtrip.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10416,8 +10004,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <strong>bar</strong></em></p>
 
-            Console.WriteLine("Example 413\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "");
+            TestRoundtrip.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10432,8 +10019,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo<strong>bar</strong></em></p>
 
-            Console.WriteLine("Example 414\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "");
+            TestRoundtrip.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // When the lengths of the interior closing and opening
@@ -10451,8 +10037,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo<em><strong>bar</strong></em>baz</p>
 
-            Console.WriteLine("Example 415\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo***bar***baz", "<p>foo<em><strong>bar</strong></em>baz</p>", "");
+            TestRoundtrip.TestSpec("foo***bar***baz", "<p>foo<em><strong>bar</strong></em>baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10467,8 +10052,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
 
-            Console.WriteLine("Example 416\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo******bar*********baz", "<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>", "");
+            TestRoundtrip.TestSpec("foo******bar*********baz", "<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Indefinite levels of nesting are possible:
@@ -10484,8 +10068,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
 
-            Console.WriteLine("Example 417\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "");
+            TestRoundtrip.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10500,8 +10083,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <a href="/url"><em>bar</em></a></em></p>
 
-            Console.WriteLine("Example 418\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "");
+            TestRoundtrip.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // There can be no empty emphasis or strong emphasis:
@@ -10517,8 +10099,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>** is not an empty emphasis</p>
 
-            Console.WriteLine("Example 419\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "");
+            TestRoundtrip.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10533,8 +10114,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**** is not an empty strong emphasis</p>
 
-            Console.WriteLine("Example 420\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "");
+            TestRoundtrip.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 10:
@@ -10553,8 +10133,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <a href="/url">bar</a></strong></p>
 
-            Console.WriteLine("Example 421\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "");
+            TestRoundtrip.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10571,8 +10150,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><strong>foo
             //     bar</strong></p>
 
-            Console.WriteLine("Example 422\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In particular, emphasis and strong emphasis can be nested
@@ -10589,8 +10167,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <em>bar</em> baz</strong></p>
 
-            Console.WriteLine("Example 423\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10605,8 +10182,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <strong>bar</strong> baz</strong></p>
 
-            Console.WriteLine("Example 424\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10621,8 +10197,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong><strong>foo</strong> bar</strong></p>
 
-            Console.WriteLine("Example 425\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "");
+            TestRoundtrip.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10637,8 +10212,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <strong>bar</strong></strong></p>
 
-            Console.WriteLine("Example 426\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "");
+            TestRoundtrip.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10653,8 +10227,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <em>bar</em> baz</strong></p>
 
-            Console.WriteLine("Example 427\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10669,8 +10242,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo<em>bar</em>baz</strong></p>
 
-            Console.WriteLine("Example 428\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10685,8 +10257,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong><em>foo</em> bar</strong></p>
 
-            Console.WriteLine("Example 429\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "");
+            TestRoundtrip.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10701,8 +10272,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <em>bar</em></strong></p>
 
-            Console.WriteLine("Example 430\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "");
+            TestRoundtrip.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Indefinite levels of nesting are possible:
@@ -10720,8 +10290,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><strong>foo <em>bar <strong>baz</strong>
             //     bim</em> bop</strong></p>
 
-            Console.WriteLine("Example 431\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10736,8 +10305,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
 
-            Console.WriteLine("Example 432\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "");
+            TestRoundtrip.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // There can be no empty emphasis or strong emphasis:
@@ -10753,8 +10321,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__ is not an empty emphasis</p>
 
-            Console.WriteLine("Example 433\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "");
+            TestRoundtrip.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10769,8 +10336,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>____ is not an empty strong emphasis</p>
 
-            Console.WriteLine("Example 434\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "");
+            TestRoundtrip.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 11:
@@ -10786,8 +10352,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo ***</p>
 
-            Console.WriteLine("Example 435\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo ***", "<p>foo ***</p>", "");
+            TestRoundtrip.TestSpec("foo ***", "<p>foo ***</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10802,8 +10367,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <em>*</em></p>
 
-            Console.WriteLine("Example 436\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "");
+            TestRoundtrip.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10818,8 +10382,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <em>_</em></p>
 
-            Console.WriteLine("Example 437\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "");
+            TestRoundtrip.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10834,8 +10397,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo *****</p>
 
-            Console.WriteLine("Example 438\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo *****", "<p>foo *****</p>", "");
+            TestRoundtrip.TestSpec("foo *****", "<p>foo *****</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10850,8 +10412,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <strong>*</strong></p>
 
-            Console.WriteLine("Example 439\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "");
+            TestRoundtrip.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10866,8 +10427,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <strong>_</strong></p>
 
-            Console.WriteLine("Example 440\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "");
+            TestRoundtrip.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that when delimiters do not match evenly, Rule 11 determines
@@ -10885,8 +10445,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<em>foo</em></p>
 
-            Console.WriteLine("Example 441\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo*", "<p>*<em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("**foo*", "<p>*<em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10901,8 +10460,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo</em>*</p>
 
-            Console.WriteLine("Example 442\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo**", "<p><em>foo</em>*</p>", "");
+            TestRoundtrip.TestSpec("*foo**", "<p><em>foo</em>*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10917,8 +10475,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<strong>foo</strong></p>
 
-            Console.WriteLine("Example 443\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "");
+            TestRoundtrip.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10933,8 +10490,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>***<em>foo</em></p>
 
-            Console.WriteLine("Example 444\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("****foo*", "<p>***<em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("****foo*", "<p>***<em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10949,8 +10505,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo</strong>*</p>
 
-            Console.WriteLine("Example 445\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "");
+            TestRoundtrip.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10965,8 +10520,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo</em>***</p>
 
-            Console.WriteLine("Example 446\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo****", "<p><em>foo</em>***</p>", "");
+            TestRoundtrip.TestSpec("*foo****", "<p><em>foo</em>***</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 12:
@@ -10982,8 +10536,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo ___</p>
 
-            Console.WriteLine("Example 447\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo ___", "<p>foo ___</p>", "");
+            TestRoundtrip.TestSpec("foo ___", "<p>foo ___</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -10998,8 +10551,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <em>_</em></p>
 
-            Console.WriteLine("Example 448\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "");
+            TestRoundtrip.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11014,8 +10566,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <em>*</em></p>
 
-            Console.WriteLine("Example 449\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "");
+            TestRoundtrip.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11030,8 +10581,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo _____</p>
 
-            Console.WriteLine("Example 450\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo _____", "<p>foo _____</p>", "");
+            TestRoundtrip.TestSpec("foo _____", "<p>foo _____</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11046,8 +10596,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <strong>_</strong></p>
 
-            Console.WriteLine("Example 451\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "");
+            TestRoundtrip.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11062,8 +10611,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <strong>*</strong></p>
 
-            Console.WriteLine("Example 452\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "");
+            TestRoundtrip.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11078,8 +10626,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_<em>foo</em></p>
 
-            Console.WriteLine("Example 453\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo_", "<p>_<em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("__foo_", "<p>_<em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that when delimiters do not match evenly, Rule 12 determines
@@ -11097,8 +10644,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo</em>_</p>
 
-            Console.WriteLine("Example 454\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo__", "<p><em>foo</em>_</p>", "");
+            TestRoundtrip.TestSpec("_foo__", "<p><em>foo</em>_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11113,8 +10659,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_<strong>foo</strong></p>
 
-            Console.WriteLine("Example 455\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "");
+            TestRoundtrip.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11129,8 +10674,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>___<em>foo</em></p>
 
-            Console.WriteLine("Example 456\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("____foo_", "<p>___<em>foo</em></p>", "");
+            TestRoundtrip.TestSpec("____foo_", "<p>___<em>foo</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11145,8 +10689,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo</strong>_</p>
 
-            Console.WriteLine("Example 457\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "");
+            TestRoundtrip.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11161,8 +10704,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo</em>___</p>
 
-            Console.WriteLine("Example 458\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo____", "<p><em>foo</em>___</p>", "");
+            TestRoundtrip.TestSpec("_foo____", "<p><em>foo</em>___</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 13 implies that if you want emphasis nested directly inside
@@ -11179,8 +10721,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo</strong></p>
 
-            Console.WriteLine("Example 459\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo**", "<p><strong>foo</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo**", "<p><strong>foo</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11195,8 +10736,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><em>foo</em></em></p>
 
-            Console.WriteLine("Example 460\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "");
+            TestRoundtrip.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11211,8 +10751,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong>foo</strong></p>
 
-            Console.WriteLine("Example 461\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__foo__", "<p><strong>foo</strong></p>", "");
+            TestRoundtrip.TestSpec("__foo__", "<p><strong>foo</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11227,8 +10766,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><em>foo</em></em></p>
 
-            Console.WriteLine("Example 462\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "");
+            TestRoundtrip.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, strong emphasis within strong emphasis is possible without
@@ -11245,8 +10783,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong><strong>foo</strong></strong></p>
 
-            Console.WriteLine("Example 463\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "");
+            TestRoundtrip.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11261,8 +10798,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong><strong>foo</strong></strong></p>
 
-            Console.WriteLine("Example 464\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "");
+            TestRoundtrip.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 13 can be applied to arbitrarily long sequences of
@@ -11279,8 +10815,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><strong><strong><strong>foo</strong></strong></strong></p>
 
-            Console.WriteLine("Example 465\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "");
+            TestRoundtrip.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 14:
@@ -11296,8 +10831,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><strong>foo</strong></em></p>
 
-            Console.WriteLine("Example 466\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("***foo***", "<p><em><strong>foo</strong></em></p>", "");
+            TestRoundtrip.TestSpec("***foo***", "<p><em><strong>foo</strong></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11312,8 +10846,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em><strong><strong>foo</strong></strong></em></p>
 
-            Console.WriteLine("Example 467\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_____foo_____", "<p><em><strong><strong>foo</strong></strong></em></p>", "");
+            TestRoundtrip.TestSpec("_____foo_____", "<p><em><strong><strong>foo</strong></strong></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 15:
@@ -11329,8 +10862,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo _bar</em> baz_</p>
 
-            Console.WriteLine("Example 468\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "");
+            TestRoundtrip.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11345,8 +10877,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo <strong>bar *baz bim</strong> bam</em></p>
 
-            Console.WriteLine("Example 469\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>", "");
+            TestRoundtrip.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 16:
@@ -11362,8 +10893,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**foo <strong>bar baz</strong></p>
 
-            Console.WriteLine("Example 470\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>", "");
+            TestRoundtrip.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11378,8 +10908,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*foo <em>bar baz</em></p>
 
-            Console.WriteLine("Example 471\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>", "");
+            TestRoundtrip.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Rule 17:
@@ -11395,8 +10924,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<a href="/url">bar*</a></p>
 
-            Console.WriteLine("Example 472\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>", "");
+            TestRoundtrip.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11411,8 +10939,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>_foo <a href="/url">bar_</a></p>
 
-            Console.WriteLine("Example 473\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>", "");
+            TestRoundtrip.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11427,8 +10954,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<img src="foo" title="*"/></p>
 
-            Console.WriteLine("Example 474\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>", "");
+            TestRoundtrip.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11443,8 +10969,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**<a href="**"></p>
 
-            Console.WriteLine("Example 475\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>", "");
+            TestRoundtrip.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11459,8 +10984,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__<a href="__"></p>
 
-            Console.WriteLine("Example 476\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>", "");
+            TestRoundtrip.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11475,8 +10999,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>a <code>*</code></em></p>
 
-            Console.WriteLine("Example 477\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>", "");
+            TestRoundtrip.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11491,8 +11014,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>a <code>_</code></em></p>
 
-            Console.WriteLine("Example 478\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>", "");
+            TestRoundtrip.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11507,8 +11029,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>**a<a href="http://foo.bar/?q=**">http://foo.bar/?q=**</a></p>
 
-            Console.WriteLine("Example 479\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("**a<http://foo.bar/?q=**>", "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>", "");
+            TestRoundtrip.TestSpec("**a<http://foo.bar/?q=**>", "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11523,8 +11044,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>
 
-            Console.WriteLine("Example 480\nSection Inlines / Emphasis and strong emphasis\n");
-            TestRoundtrip.TestSpec("__a<http://foo.bar/?q=__>", "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>", "");
+            TestRoundtrip.TestSpec("__a<http://foo.bar/?q=__>", "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -11617,8 +11137,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            Console.WriteLine("Example 481\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The title may be omitted:
@@ -11634,8 +11153,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link</a></p>
 
-            Console.WriteLine("Example 482\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Both the title and the destination may be omitted:
@@ -11651,8 +11169,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="">link</a></p>
 
-            Console.WriteLine("Example 483\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11667,8 +11184,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="">link</a></p>
 
-            Console.WriteLine("Example 484\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The destination can only contain spaces if it is
@@ -11685,8 +11201,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link](/my uri)</p>
 
-            Console.WriteLine("Example 485\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "");
+            TestRoundtrip.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11701,8 +11216,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/my%20uri">link</a></p>
 
-            Console.WriteLine("Example 486\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The destination cannot contain line breaks,
@@ -11721,8 +11235,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[link](foo
             //     bar)</p>
 
-            Console.WriteLine("Example 487\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "");
+            TestRoundtrip.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11739,8 +11252,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[link](<foo
             //     bar>)</p>
 
-            Console.WriteLine("Example 488\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "");
+            TestRoundtrip.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The destination can contain `)` if it is enclosed
@@ -11757,8 +11269,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="b)c">a</a></p>
 
-            Console.WriteLine("Example 489\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "");
+            TestRoundtrip.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Pointy brackets that enclose links must be unescaped:
@@ -11774,8 +11285,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link](&lt;foo&gt;)</p>
 
-            Console.WriteLine("Example 490\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "");
+            TestRoundtrip.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These are not links, because the opening pointy bracket
@@ -11796,8 +11306,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     [a](&lt;b)c&gt;
             //     [a](<b>c)</p>
 
-            Console.WriteLine("Example 491\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "");
+            TestRoundtrip.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Parentheses inside the link destination may be escaped:
@@ -11813,8 +11322,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="(foo)">link</a></p>
 
-            Console.WriteLine("Example 492\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Any number of parentheses are allowed without escaping, as long as they are
@@ -11831,8 +11339,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo(and(bar))">link</a></p>
 
-            Console.WriteLine("Example 493\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, if you have unbalanced parentheses, you need to escape or use the
@@ -11849,8 +11356,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo(and(bar)">link</a></p>
 
-            Console.WriteLine("Example 494\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -11865,8 +11371,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo(and(bar)">link</a></p>
 
-            Console.WriteLine("Example 495\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Parentheses and other symbols can also be escaped, as usual
@@ -11883,8 +11388,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo):">link</a></p>
 
-            Console.WriteLine("Example 496\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A link can contain fragment identifiers and queries:
@@ -11906,8 +11410,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a href="http://example.com#fragment">link</a></p>
             //     <p><a href="http://example.com?foo=3#frag">link</a></p>
 
-            Console.WriteLine("Example 497\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that a backslash before a non-escapable character is
@@ -11924,8 +11427,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo%5Cbar">link</a></p>
 
-            Console.WriteLine("Example 498\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // URL-escaping should be left alone inside the destination, as all
@@ -11948,8 +11450,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="foo%20b%C3%A4">link</a></p>
 
-            Console.WriteLine("Example 499\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that, because titles can often be parsed as destinations,
@@ -11967,8 +11468,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="%22title%22">link</a></p>
 
-            Console.WriteLine("Example 500\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Titles may be in single quotes, double quotes, or parentheses:
@@ -11988,8 +11488,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <a href="/url" title="title">link</a>
             //     <a href="/url" title="title">link</a></p>
 
-            Console.WriteLine("Example 501\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash escapes and entity and numeric character references
@@ -12006,8 +11505,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;&quot;">link</a></p>
 
-            Console.WriteLine("Example 502\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Titles must be separated from the link using a [whitespace].
@@ -12024,8 +11522,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url%C2%A0%22title%22">link</a></p>
 
-            Console.WriteLine("Example 503\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Nested balanced quotes are not allowed without escaping:
@@ -12041,8 +11538,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
 
-            Console.WriteLine("Example 504\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "");
+            TestRoundtrip.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But it is easy to work around this by using a different quote type:
@@ -12058,8 +11554,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 
-            Console.WriteLine("Example 505\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
@@ -12091,8 +11586,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            Console.WriteLine("Example 506\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "");
+            TestRoundtrip.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // But it is not allowed between the link text and the
@@ -12109,8 +11603,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link] (/uri)</p>
 
-            Console.WriteLine("Example 507\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "");
+            TestRoundtrip.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link text may contain balanced brackets, but not unbalanced ones,
@@ -12127,8 +11620,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            Console.WriteLine("Example 508\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
+            TestRoundtrip.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12143,8 +11635,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link] bar](/uri)</p>
 
-            Console.WriteLine("Example 509\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "");
+            TestRoundtrip.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12159,8 +11650,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[link <a href="/uri">bar</a></p>
 
-            Console.WriteLine("Example 510\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12175,8 +11665,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link [bar</a></p>
 
-            Console.WriteLine("Example 511\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "");
+            TestRoundtrip.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link text may contain inline content:
@@ -12192,8 +11681,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            Console.WriteLine("Example 512\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
+            TestRoundtrip.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12208,8 +11696,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            Console.WriteLine("Example 513\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
+            TestRoundtrip.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, links may not contain other links, at any level of nesting.
@@ -12225,8 +11712,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
 
-            Console.WriteLine("Example 514\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "");
+            TestRoundtrip.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12241,8 +11727,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
 
-            Console.WriteLine("Example 515\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "");
+            TestRoundtrip.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12257,8 +11742,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="uri3" alt="[foo](uri2)" /></p>
 
-            Console.WriteLine("Example 516\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "");
+            TestRoundtrip.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These cases illustrate the precedence of link text grouping over
@@ -12275,8 +11759,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            Console.WriteLine("Example 517\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "");
+            TestRoundtrip.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12291,8 +11774,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="baz*">foo *bar</a></p>
 
-            Console.WriteLine("Example 518\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that brackets that *aren't* part of links do not take
@@ -12309,8 +11791,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><em>foo [bar</em> baz]</p>
 
-            Console.WriteLine("Example 519\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "");
+            TestRoundtrip.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These cases illustrate the precedence of HTML tags, code spans,
@@ -12327,8 +11808,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <bar attr="](baz)"></p>
 
-            Console.WriteLine("Example 520\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "");
+            TestRoundtrip.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12343,8 +11823,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo<code>](/uri)</code></p>
 
-            Console.WriteLine("Example 521\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "");
+            TestRoundtrip.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12359,8 +11838,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
 
-            Console.WriteLine("Example 522\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "");
+            TestRoundtrip.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // There are three kinds of [reference link](@)s:
@@ -12407,8 +11885,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 523\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The rules for the [link text] are the same as with
@@ -12430,8 +11907,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            Console.WriteLine("Example 524\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "");
+            TestRoundtrip.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12448,8 +11924,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link [bar</a></p>
 
-            Console.WriteLine("Example 525\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "");
+            TestRoundtrip.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link text may contain inline content:
@@ -12467,8 +11942,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            Console.WriteLine("Example 526\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "");
+            TestRoundtrip.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12485,8 +11959,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            Console.WriteLine("Example 527\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "");
+            TestRoundtrip.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // However, links may not contain other links, at any level of nesting.
@@ -12504,8 +11977,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
 
-            Console.WriteLine("Example 528\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "");
+            TestRoundtrip.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12522,8 +11994,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 
-            Console.WriteLine("Example 529\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "");
+            TestRoundtrip.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // (In the examples above, we have two [shortcut reference links]
@@ -12545,8 +12016,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            Console.WriteLine("Example 530\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "");
+            TestRoundtrip.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12563,8 +12033,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">foo *bar</a></p>
 
-            Console.WriteLine("Example 531\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These cases illustrate the precedence of HTML tags, code spans,
@@ -12583,8 +12052,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo <bar attr="][ref]"></p>
 
-            Console.WriteLine("Example 532\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "");
+            TestRoundtrip.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12601,8 +12069,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo<code>][ref]</code></p>
 
-            Console.WriteLine("Example 533\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "");
+            TestRoundtrip.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12619,8 +12086,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
 
-            Console.WriteLine("Example 534\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "");
+            TestRoundtrip.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Matching is case-insensitive:
@@ -12638,8 +12104,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 535\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Unicode case fold is used:
@@ -12657,8 +12122,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url">Толпой</a> is a Russian word.</p>
 
-            Console.WriteLine("Example 536\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>", "");
+            TestRoundtrip.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Consecutive internal [whitespace] is treated as one space for
@@ -12678,8 +12142,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url">Baz</a></p>
 
-            Console.WriteLine("Example 537\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "");
+            TestRoundtrip.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // No [whitespace] is allowed between the [link text] and the
@@ -12698,8 +12161,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo] <a href="/url" title="title">bar</a></p>
 
-            Console.WriteLine("Example 538\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12718,8 +12180,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[foo]
             //     <a href="/url" title="title">bar</a></p>
 
-            Console.WriteLine("Example 539\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // This is a departure from John Gruber's original Markdown syntax
@@ -12767,8 +12228,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url1">bar</a></p>
 
-            Console.WriteLine("Example 540\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that matching is performed on normalized strings, not parsed
@@ -12788,8 +12248,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[bar][foo!]</p>
 
-            Console.WriteLine("Example 541\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "");
+            TestRoundtrip.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Link labels] cannot contain brackets, unless they are
@@ -12809,8 +12268,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[foo][ref[]</p>
             //     <p>[ref[]: /uri</p>
 
-            Console.WriteLine("Example 542\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "");
+            TestRoundtrip.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12828,8 +12286,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[foo][ref[bar]]</p>
             //     <p>[ref[bar]]: /uri</p>
 
-            Console.WriteLine("Example 543\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "");
+            TestRoundtrip.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12847,8 +12304,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[[[foo]]]</p>
             //     <p>[[[foo]]]: /url</p>
 
-            Console.WriteLine("Example 544\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "");
+            TestRoundtrip.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12865,8 +12321,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">foo</a></p>
 
-            Console.WriteLine("Example 545\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that in this example `]` is not backslash-escaped:
@@ -12884,8 +12339,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/uri">bar\</a></p>
 
-            Console.WriteLine("Example 546\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "");
+            TestRoundtrip.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A [link label] must contain at least one [non-whitespace character]:
@@ -12904,8 +12358,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[]</p>
             //     <p>[]: /uri</p>
 
-            Console.WriteLine("Example 547\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "");
+            TestRoundtrip.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12927,8 +12380,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>[
             //     ]: /uri</p>
 
-            Console.WriteLine("Example 548\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "");
+            TestRoundtrip.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A [collapsed reference link](@)
@@ -12953,8 +12405,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 549\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -12971,8 +12422,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            Console.WriteLine("Example 550\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
+            TestRoundtrip.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link labels are case-insensitive:
@@ -12990,8 +12440,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            Console.WriteLine("Example 551\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
+            TestRoundtrip.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // As with full reference links, [whitespace] is not
@@ -13012,8 +12461,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a href="/url" title="title">foo</a>
             //     []</p>
 
-            Console.WriteLine("Example 552\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "");
+            TestRoundtrip.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A [shortcut reference link](@)
@@ -13038,8 +12486,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 553\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13056,8 +12503,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            Console.WriteLine("Example 554\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "");
+            TestRoundtrip.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13074,8 +12520,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
 
-            Console.WriteLine("Example 555\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "");
+            TestRoundtrip.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13092,8 +12537,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[[bar <a href="/url">foo</a></p>
 
-            Console.WriteLine("Example 556\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link labels are case-insensitive:
@@ -13111,8 +12555,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            Console.WriteLine("Example 557\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "");
+            TestRoundtrip.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // A space after the link text should be preserved:
@@ -13130,8 +12573,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url">foo</a> bar</p>
 
-            Console.WriteLine("Example 558\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "");
+            TestRoundtrip.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If you just want bracketed text, you can backslash-escape the
@@ -13150,8 +12592,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo]</p>
 
-            Console.WriteLine("Example 559\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "");
+            TestRoundtrip.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that this is a link, because a link label ends with the first
@@ -13170,8 +12611,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>*<a href="/url">foo*</a></p>
 
-            Console.WriteLine("Example 560\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "");
+            TestRoundtrip.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Full and compact references take precedence over shortcut
@@ -13191,8 +12631,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url2">foo</a></p>
 
-            Console.WriteLine("Example 561\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13209,8 +12648,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url1">foo</a></p>
 
-            Console.WriteLine("Example 562\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Inline links also take precedence:
@@ -13228,8 +12666,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="">foo</a></p>
 
-            Console.WriteLine("Example 563\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13246,8 +12683,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url1">foo</a>(not a link)</p>
 
-            Console.WriteLine("Example 564\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "");
+            TestRoundtrip.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // In the following case `[bar][baz]` is parsed as a reference,
@@ -13266,8 +12702,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo]<a href="/url">bar</a></p>
 
-            Console.WriteLine("Example 565\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here, though, `[foo][bar]` is parsed as a reference, since
@@ -13287,8 +12722,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
 
-            Console.WriteLine("Example 566\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Here `[foo]` is not parsed as a shortcut reference, because it
@@ -13308,8 +12742,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>[foo]<a href="/url1">bar</a></p>
 
-            Console.WriteLine("Example 567\nSection Inlines / Links\n");
-            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "");
+            TestRoundtrip.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -13339,8 +12772,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            Console.WriteLine("Example 568\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13357,8 +12789,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            Console.WriteLine("Example 569\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13373,8 +12804,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            Console.WriteLine("Example 570\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13389,8 +12819,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            Console.WriteLine("Example 571\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Though this spec is concerned with parsing, not rendering, it is
@@ -13413,8 +12842,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            Console.WriteLine("Example 572\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13431,8 +12859,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            Console.WriteLine("Example 573\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13447,8 +12874,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo" /></p>
 
-            Console.WriteLine("Example 574\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13463,8 +12889,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
 
-            Console.WriteLine("Example 575\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13479,8 +12904,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="url" alt="foo" /></p>
 
-            Console.WriteLine("Example 576\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13495,8 +12919,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="" /></p>
 
-            Console.WriteLine("Example 577\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "");
+            TestRoundtrip.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Reference-style:
@@ -13514,8 +12937,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            Console.WriteLine("Example 578\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13532,8 +12954,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            Console.WriteLine("Example 579\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Collapsed:
@@ -13551,8 +12972,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            Console.WriteLine("Example 580\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13569,8 +12989,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            Console.WriteLine("Example 581\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The labels are case-insensitive:
@@ -13588,8 +13007,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            Console.WriteLine("Example 582\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // As with reference links, [whitespace] is not allowed
@@ -13610,8 +13028,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><img src="/url" alt="foo" title="title" />
             //     []</p>
 
-            Console.WriteLine("Example 583\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "");
+            TestRoundtrip.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Shortcut:
@@ -13629,8 +13046,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            Console.WriteLine("Example 584\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13647,8 +13063,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            Console.WriteLine("Example 585\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that link labels cannot contain unescaped brackets:
@@ -13667,8 +13082,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>![[foo]]</p>
             //     <p>[[foo]]: /url &quot;title&quot;</p>
 
-            Console.WriteLine("Example 586\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "");
+            TestRoundtrip.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // The link labels are case-insensitive:
@@ -13686,8 +13100,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            Console.WriteLine("Example 587\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "");
+            TestRoundtrip.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If you just want a literal `!` followed by bracketed text, you can
@@ -13706,8 +13119,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>![foo]</p>
 
-            Console.WriteLine("Example 588\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "");
+            TestRoundtrip.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // If you want a link after a literal `!`, backslash-escape the
@@ -13726,8 +13138,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>!<a href="/url" title="title">foo</a></p>
 
-            Console.WriteLine("Example 589\nSection Inlines / Images\n");
-            TestRoundtrip.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "");
+            TestRoundtrip.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -13769,8 +13180,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
 
-            Console.WriteLine("Example 590\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "");
+            TestRoundtrip.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13785,8 +13195,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 
-            Console.WriteLine("Example 591\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "");
+            TestRoundtrip.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13801,8 +13210,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
 
-            Console.WriteLine("Example 592\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "");
+            TestRoundtrip.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Uppercase is also fine:
@@ -13818,8 +13226,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
 
-            Console.WriteLine("Example 593\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "");
+            TestRoundtrip.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Note that many strings that count as [absolute URIs] for
@@ -13838,8 +13245,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="a+b+c:d">a+b+c:d</a></p>
 
-            Console.WriteLine("Example 594\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "");
+            TestRoundtrip.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13854,8 +13260,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
 
-            Console.WriteLine("Example 595\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "");
+            TestRoundtrip.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13870,8 +13275,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://../">http://../</a></p>
 
-            Console.WriteLine("Example 596\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "");
+            TestRoundtrip.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13886,8 +13290,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
 
-            Console.WriteLine("Example 597\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "");
+            TestRoundtrip.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Spaces are not allowed in autolinks:
@@ -13903,8 +13306,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;http://foo.bar/baz bim&gt;</p>
 
-            Console.WriteLine("Example 598\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "");
+            TestRoundtrip.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash-escapes do not work inside autolinks:
@@ -13920,8 +13322,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
 
-            Console.WriteLine("Example 599\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "");
+            TestRoundtrip.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // An [email autolink](@)
@@ -13950,8 +13351,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
 
-            Console.WriteLine("Example 600\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "");
+            TestRoundtrip.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -13966,8 +13366,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
 
-            Console.WriteLine("Example 601\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "");
+            TestRoundtrip.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash-escapes do not work inside email autolinks:
@@ -13983,8 +13382,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;foo+@bar.example.com&gt;</p>
 
-            Console.WriteLine("Example 602\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "");
+            TestRoundtrip.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // These are not autolinks:
@@ -14000,8 +13398,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;&gt;</p>
 
-            Console.WriteLine("Example 603\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<>", "<p>&lt;&gt;</p>", "");
+            TestRoundtrip.TestSpec("<>", "<p>&lt;&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14016,8 +13413,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt; http://foo.bar &gt;</p>
 
-            Console.WriteLine("Example 604\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "");
+            TestRoundtrip.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14032,8 +13428,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;m:abc&gt;</p>
 
-            Console.WriteLine("Example 605\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "");
+            TestRoundtrip.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14048,8 +13443,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;foo.bar.baz&gt;</p>
 
-            Console.WriteLine("Example 606\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "");
+            TestRoundtrip.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14064,8 +13458,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>http://example.com</p>
 
-            Console.WriteLine("Example 607\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("http://example.com", "<p>http://example.com</p>", "");
+            TestRoundtrip.TestSpec("http://example.com", "<p>http://example.com</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14080,8 +13473,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo@bar.example.com</p>
 
-            Console.WriteLine("Example 608\nSection Inlines / Autolinks\n");
-            TestRoundtrip.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "");
+            TestRoundtrip.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -14174,8 +13566,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a><bab><c2c></p>
 
-            Console.WriteLine("Example 609\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "");
+            TestRoundtrip.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Empty elements:
@@ -14191,8 +13582,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><a/><b2/></p>
 
-            Console.WriteLine("Example 610\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "");
+            TestRoundtrip.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // [Whitespace] is allowed:
@@ -14210,8 +13600,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a  /><b2
             //     data="foo" ></p>
 
-            Console.WriteLine("Example 611\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "");
+            TestRoundtrip.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // With attributes:
@@ -14229,8 +13618,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a foo="bar" bam = 'baz <em>"</em>'
             //     _boolean zoop:33=zoop:33 /></p>
 
-            Console.WriteLine("Example 612\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "");
+            TestRoundtrip.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Custom tag names can be used:
@@ -14246,8 +13634,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>Foo <responsive-image src="foo.jpg" /></p>
 
-            Console.WriteLine("Example 613\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "");
+            TestRoundtrip.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Illegal tag names, not parsed as HTML:
@@ -14263,8 +13650,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;33&gt; &lt;__&gt;</p>
 
-            Console.WriteLine("Example 614\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "");
+            TestRoundtrip.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Illegal attribute names:
@@ -14280,8 +13666,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 
-            Console.WriteLine("Example 615\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "");
+            TestRoundtrip.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Illegal attribute values:
@@ -14297,8 +13682,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 
-            Console.WriteLine("Example 616\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "");
+            TestRoundtrip.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Illegal [whitespace]:
@@ -14320,8 +13704,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     &lt;foo bar=baz
             //     bim!bop /&gt;</p>
 
-            Console.WriteLine("Example 617\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "");
+            TestRoundtrip.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Missing [whitespace]:
@@ -14337,8 +13720,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;a href='bar'title=title&gt;</p>
 
-            Console.WriteLine("Example 618\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "");
+            TestRoundtrip.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Closing tags:
@@ -14354,8 +13736,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p></a></foo ></p>
 
-            Console.WriteLine("Example 619\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("</a></foo >", "<p></a></foo ></p>", "");
+            TestRoundtrip.TestSpec("</a></foo >", "<p></a></foo ></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Illegal attributes in closing tag:
@@ -14371,8 +13752,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 
-            Console.WriteLine("Example 620\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "");
+            TestRoundtrip.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Comments:
@@ -14390,8 +13770,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo <!-- this is a
             //     comment - with hyphen --></p>
 
-            Console.WriteLine("Example 621\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "");
+            TestRoundtrip.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14406,8 +13785,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
 
-            Console.WriteLine("Example 622\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "");
+            TestRoundtrip.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Not comments:
@@ -14426,8 +13804,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo &lt;!--&gt; foo --&gt;</p>
             //     <p>foo &lt;!-- foo---&gt;</p>
 
-            Console.WriteLine("Example 623\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "");
+            TestRoundtrip.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Processing instructions:
@@ -14443,8 +13820,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <?php echo $a; ?></p>
 
-            Console.WriteLine("Example 624\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "");
+            TestRoundtrip.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Declarations:
@@ -14460,8 +13836,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <!ELEMENT br EMPTY></p>
 
-            Console.WriteLine("Example 625\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "");
+            TestRoundtrip.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // CDATA sections:
@@ -14477,8 +13852,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <![CDATA[>&<]]></p>
 
-            Console.WriteLine("Example 626\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "");
+            TestRoundtrip.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Entity and numeric character references are preserved in HTML
@@ -14495,8 +13869,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <a href="&ouml;"></p>
 
-            Console.WriteLine("Example 627\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "");
+            TestRoundtrip.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Backslash escapes do not work in HTML attributes:
@@ -14512,8 +13885,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo <a href="\*"></p>
 
-            Console.WriteLine("Example 628\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "");
+            TestRoundtrip.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14528,8 +13900,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
 
-            Console.WriteLine("Example 629\nSection Inlines / Raw HTML\n");
-            TestRoundtrip.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "");
+            TestRoundtrip.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -14556,8 +13927,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     baz</p>
 
-            Console.WriteLine("Example 630\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "");
+            TestRoundtrip.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // For a more visible alternative, a backslash before the
@@ -14576,8 +13946,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     baz</p>
 
-            Console.WriteLine("Example 631\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "");
+            TestRoundtrip.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // More than two spaces can be used:
@@ -14595,8 +13964,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     baz</p>
 
-            Console.WriteLine("Example 632\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "");
+            TestRoundtrip.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Leading spaces at the beginning of the next line are ignored:
@@ -14614,8 +13982,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     bar</p>
 
-            Console.WriteLine("Example 633\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "");
+            TestRoundtrip.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14632,8 +13999,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo<br />
             //     bar</p>
 
-            Console.WriteLine("Example 634\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "");
+            TestRoundtrip.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Line breaks can occur inside emphasis, links, and other constructs
@@ -14652,8 +14018,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>foo<br />
             //     bar</em></p>
 
-            Console.WriteLine("Example 635\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "");
+            TestRoundtrip.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14670,8 +14035,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><em>foo<br />
             //     bar</em></p>
 
-            Console.WriteLine("Example 636\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "");
+            TestRoundtrip.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Line breaks do not occur inside code spans
@@ -14688,8 +14052,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>code  span</code></p>
 
-            Console.WriteLine("Example 637\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("`code \nspan`", "<p><code>code  span</code></p>", "");
+            TestRoundtrip.TestSpec("`code \nspan`", "<p><code>code  span</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14705,8 +14068,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p><code>code\ span</code></p>
 
-            Console.WriteLine("Example 638\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "");
+            TestRoundtrip.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // or HTML tags:
@@ -14724,8 +14086,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a href="foo  
             //     bar"></p>
 
-            Console.WriteLine("Example 639\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "");
+            TestRoundtrip.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14742,8 +14103,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p><a href="foo\
             //     bar"></p>
 
-            Console.WriteLine("Example 640\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "");
+            TestRoundtrip.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Hard line breaks are for separating inline content within a block.
@@ -14761,8 +14121,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo\</p>
 
-            Console.WriteLine("Example 641\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo\\", "<p>foo\\</p>", "");
+            TestRoundtrip.TestSpec("foo\\", "<p>foo\\</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14777,8 +14136,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>foo</p>
 
-            Console.WriteLine("Example 642\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("foo  ", "<p>foo</p>", "");
+            TestRoundtrip.TestSpec("foo  ", "<p>foo</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14793,8 +14151,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h3>foo\</h3>
 
-            Console.WriteLine("Example 643\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("### foo\\", "<h3>foo\\</h3>", "");
+            TestRoundtrip.TestSpec("### foo\\", "<h3>foo\\</h3>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14809,8 +14166,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <h3>foo</h3>
 
-            Console.WriteLine("Example 644\nSection Inlines / Hard line breaks\n");
-            TestRoundtrip.TestSpec("### foo  ", "<h3>foo</h3>", "");
+            TestRoundtrip.TestSpec("### foo  ", "<h3>foo</h3>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -14838,8 +14194,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo
             //     baz</p>
 
-            Console.WriteLine("Example 645\nSection Inlines / Soft line breaks\n");
-            TestRoundtrip.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "");
+            TestRoundtrip.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Spaces at the end of the line and beginning of the next line are
@@ -14858,8 +14213,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             //     <p>foo
             //     baz</p>
 
-            Console.WriteLine("Example 646\nSection Inlines / Soft line breaks\n");
-            TestRoundtrip.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "");
+            TestRoundtrip.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -14888,8 +14242,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>hello $.;'there</p>
 
-            Console.WriteLine("Example 647\nSection Inlines / Textual content\n");
-            TestRoundtrip.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "");
+            TestRoundtrip.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -14904,8 +14257,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>Foo χρῆν</p>
 
-            Console.WriteLine("Example 648\nSection Inlines / Textual content\n");
-            TestRoundtrip.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "");
+            TestRoundtrip.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "", context: "Example {number}\nSection {name}\n");
         }
 
         // Internal spaces are preserved verbatim:
@@ -14921,8 +14273,7 @@ namespace Markdig.Tests.Specs.Roundtrip.Roundtrip
             // Should be rendered as:
             //     <p>Multiple     spaces</p>
 
-            Console.WriteLine("Example 649\nSection Inlines / Textual content\n");
-            TestRoundtrip.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "");
+            TestRoundtrip.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "", context: "Example {number}\nSection {name}\n");
         }
         // <!-- END TESTS -->
         // 

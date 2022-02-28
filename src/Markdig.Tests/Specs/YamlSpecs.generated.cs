@@ -33,8 +33,7 @@ namespace Markdig.Tests.Specs.Yaml
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 1\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\n---\nThis is a text", "<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\n---\nThis is a text", "<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // But if a frontmatter doesn't happen on the first line, it will be parse as regular Markdown content
@@ -56,8 +55,7 @@ namespace Markdig.Tests.Specs.Yaml
             //     <h2>this: is a frontmatter</h2>
             //     <p>This is a text2</p>
 
-            Console.WriteLine("Example 2\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("This is a text1\n---\nthis: is a frontmatter\n---\nThis is a text2", "<h2>This is a text1</h2>\n<h2>this: is a frontmatter</h2>\n<p>This is a text2</p>", "yaml");
+            TestParser.TestSpec("This is a text1\n---\nthis: is a frontmatter\n---\nThis is a text2", "<h2>This is a text1</h2>\n<h2>this: is a frontmatter</h2>\n<p>This is a text2</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // It expects an exact 3 dashes `---`:
@@ -78,8 +76,7 @@ namespace Markdig.Tests.Specs.Yaml
             //     <h2>this: is a frontmatter</h2>
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 3\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("----\nthis: is a frontmatter\n----\nThis is a text", "<hr />\n<h2>this: is a frontmatter</h2>\n<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("----\nthis: is a frontmatter\n----\nThis is a text", "<hr />\n<h2>this: is a frontmatter</h2>\n<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // It can end with three dots `...`:
@@ -99,8 +96,7 @@ namespace Markdig.Tests.Specs.Yaml
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 4\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\n\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\n\n...\nThis is a text", "<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // If the end front matter marker (`...` or `---`) is not present, it will render the `---` has a `<hr>`:
@@ -120,8 +116,7 @@ namespace Markdig.Tests.Specs.Yaml
             //     <p>this: is a frontmatter
             //     This is a text</p>
 
-            Console.WriteLine("Example 5\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\nThis is a text", "<hr />\n<p>this: is a frontmatter\nThis is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\nThis is a text", "<hr />\n<p>this: is a frontmatter\nThis is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // It expects exactly three dots `...`:
@@ -143,8 +138,7 @@ namespace Markdig.Tests.Specs.Yaml
             //     ....
             //     This is a text</p>
 
-            Console.WriteLine("Example 6\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\n....\nThis is a text", "<hr />\n<p>this: is a frontmatter\n....\nThis is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\n....\nThis is a text", "<hr />\n<p>this: is a frontmatter\n....\nThis is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // Front matter ends with the first line containing three dots `...` or three dashes `---`:
@@ -166,8 +160,7 @@ namespace Markdig.Tests.Specs.Yaml
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 7\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\n....\n\nHello\n---\nThis is a text", "<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\n....\n\nHello\n---\nThis is a text", "<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // It expects whitespace can exist after the leading characters
@@ -186,8 +179,7 @@ namespace Markdig.Tests.Specs.Yaml
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 8\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---   \nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("---   \nthis: is a frontmatter\n...\nThis is a text", "<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
 
         // It expects whitespace can exist after the trailing characters
@@ -206,8 +198,7 @@ namespace Markdig.Tests.Specs.Yaml
             // Should be rendered as:
             //     <p>This is a text</p>
 
-            Console.WriteLine("Example 9\nSection Extensions / YAML frontmatter discard\n");
-            TestParser.TestSpec("---\nthis: is a frontmatter\n...     \nThis is a text", "<p>This is a text</p>", "yaml");
+            TestParser.TestSpec("---\nthis: is a frontmatter\n...     \nThis is a text", "<p>This is a text</p>", "yaml", context: "Example {number}\nSection {name}\n");
         }
     }
 }

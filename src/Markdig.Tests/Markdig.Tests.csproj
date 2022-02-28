@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <Target Name="GeneratedSpecsFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="@(ItemSpecExecutable);@(InputSpecFiles)" Outputs="@(ItemSpecExecutable->'%(RelativeDir)%(Filename).timestamp');@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')">
-    <Message Importance="high" Text="Regenerating Specs Files Input @(InputSpecFiles) Output @(OutputSpecFiles)'" />
+    <Message Importance="high" Text="Regenerating Specs Files" />
     <Exec Command="dotnet $(SpecExecutable)" />
     <WriteLinesToFile File="$(SpecTimestamp)" Lines="$([System.DateTime]::Now)" />
     <ItemGroup>

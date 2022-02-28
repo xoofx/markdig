@@ -30,8 +30,7 @@ namespace Markdig.Tests.Specs.Emoji
             // Should be rendered as:
             //     <p>This is a test with a 😃 and a 😠 smiley</p>
 
-            Console.WriteLine("Example 1\nSection Extensions / Emoji\n");
-            TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis|advanced+emojis");
+            TestParser.TestSpec("This is a test with a :) and a :angry: smiley", "<p>This is a test with a 😃 and a 😠 smiley</p>", "emojis|advanced+emojis", context: "Example {number}\nSection {name}\n");
         }
 
         // An emoji needs to be preceded by a space:
@@ -47,8 +46,7 @@ namespace Markdig.Tests.Specs.Emoji
             // Should be rendered as:
             //     <p>These are not:) an emoji with a:) x:angry:x</p>
 
-            Console.WriteLine("Example 2\nSection Extensions / Emoji\n");
-            TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis");
+            TestParser.TestSpec("These are not:) an emoji with a:) x:angry:x", "<p>These are not:) an emoji with a:) x:angry:x</p>", "emojis|advanced+emojis", context: "Example {number}\nSection {name}\n");
         }
 
         // Emojis can be followed by close punctuation (or any other characters):
@@ -64,8 +62,7 @@ namespace Markdig.Tests.Specs.Emoji
             // Should be rendered as:
             //     <p>We all need 😃, it makes us 💪. (and 👌).</p>
 
-            Console.WriteLine("Example 3\nSection Extensions / Emoji\n");
-            TestParser.TestSpec("We all need :), it makes us :muscle:. (and :ok_hand:).", "<p>We all need 😃, it makes us 💪. (and 👌).</p>", "emojis|advanced+emojis");
+            TestParser.TestSpec("We all need :), it makes us :muscle:. (and :ok_hand:).", "<p>We all need 😃, it makes us 💪. (and 👌).</p>", "emojis|advanced+emojis", context: "Example {number}\nSection {name}\n");
         }
 
         // Sentences can end with emojis:
@@ -83,8 +80,7 @@ namespace Markdig.Tests.Specs.Emoji
             //     <p>This is a sentence 👌
             //     and keeps going to the next line 😃</p>
 
-            Console.WriteLine("Example 4\nSection Extensions / Emoji\n");
-            TestParser.TestSpec("This is a sentence :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentence 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis");
+            TestParser.TestSpec("This is a sentence :ok_hand:\nand keeps going to the next line :)", "<p>This is a sentence 👌\nand keeps going to the next line 😃</p>", "emojis|advanced+emojis", context: "Example {number}\nSection {name}\n");
         }
     }
 }

@@ -55,7 +55,6 @@ namespace Markdig.Tests
 
 Later in a text we are using HTML and it becomes an abbr tag HTML
 ";
-
             //            var reader = new StringReader(@"> > toto tata
             //> titi toto
             //");
@@ -63,7 +62,7 @@ Later in a text we are using HTML and it becomes an abbr tag HTML
             //var result = Markdown.ToHtml(text, new MarkdownPipeline().UseFootnotes().UseEmphasisExtras());
             var result = Markdown.ToHtml(text, new MarkdownPipelineBuilder().UseAbbreviations().Build());
             //File.WriteAllText("test.html", result, Encoding.UTF8);
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
         }
 
         [Test]

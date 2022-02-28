@@ -71,8 +71,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 1\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // The following is not a valid row separator 
@@ -90,8 +89,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     <p>|-----xxx----+---------+
             //     | This is    | not a table</p>
 
-            Console.WriteLine("Example 2\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables|advanced");
+            TestParser.TestSpec("|-----xxx----+---------+\n| This is    | not a table", "<p>|-----xxx----+---------+\n| This is    | not a table</p>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // **Rule #2**
@@ -133,8 +131,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 3\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col1b             | Col3b   |\n| Col1c                       |", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col1b</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col1c</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---------+---------+---------+\n| Col1    | Col2    | Col3    |\n| Col1a   | Col2a   | Col3a   |\n| Col1b             | Col3b   |\n| Col1c                       |", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td>Col1\nCol1a</td>\n<td>Col2\nCol2a</td>\n<td>Col3\nCol3a</td>\n</tr>\n<tr>\n<td colspan=\"2\">Col1b</td>\n<td>Col3b</td>\n</tr>\n<tr>\n<td colspan=\"3\">Col1c</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // A row header is separated using `+========+` instead of `+---------+`:
@@ -161,8 +158,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </thead>
             //     </table>
 
-            Console.WriteLine("Example 4\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---------+---------+\n| This is | a table |\n+=========+=========+", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<thead>\n<tr>\n<th>This is</th>\n<th>a table</th>\n</tr>\n</thead>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // The last column separator `|` may be omitted:
@@ -188,8 +184,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 5\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
@@ -226,8 +221,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 6\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\" />\n<col style=\"width:50%\" />\n<col style=\"width:25%\" />\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+----+--------+----+\n| A  |  B C D | E  |\n+----+--------+----+", "<table>\n<col style=\"width:25%\" />\n<col style=\"width:50%\" />\n<col style=\"width:25%\" />\n<tbody>\n<tr>\n<td>A</td>\n<td>B C D</td>\n<td>E</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Alignment might be specified on the first row using the character `:`:
@@ -256,8 +250,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 7\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+-----+:---:+-----+\n|  A  |  B  |  C  |\n+-----+-----+-----+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">B</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         //  A grid table may have cells spanning both columns and rows:
@@ -300,8 +293,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 8\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+---+---+ B +\n| D | E | B |\n+ D +---+---+\n| D | CCCCC |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td colspan=\"2\">AAAAA</td>\n<td rowspan=\"2\">B\nB\nB</td>\n</tr>\n<tr>\n<td rowspan=\"2\">D\nD\nD</td>\n<td>E</td>\n</tr>\n<tr>\n<td colspan=\"2\">CCCCC</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+---+---+ B +\n| D | E | B |\n+ D +---+---+\n| D | CCCCC |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td colspan=\"2\">AAAAA</td>\n<td rowspan=\"2\">B\nB\nB</td>\n</tr>\n<tr>\n<td rowspan=\"2\">D\nD\nD</td>\n<td>E</td>\n</tr>\n<tr>\n<td colspan=\"2\">CCCCC</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // A grid table may have cells with both colspan and rowspan:
@@ -343,8 +335,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     </tbody>
             //     </table>
 
-            Console.WriteLine("Example 9\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ AAAAA +---+\n| AAAAA | C |\n+---+---+---+\n| D | E | F |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td colspan=\"2\" rowspan=\"2\">AAAAA\nAAAAA\nAAAAA</td>\n<td>B</td>\n</tr>\n<tr>\n<td>C</td>\n</tr>\n<tr>\n<td>D</td>\n<td>E</td>\n<td>F</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced");
+            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ AAAAA +---+\n| AAAAA | C |\n+---+---+---+\n| D | E | F |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td colspan=\"2\" rowspan=\"2\">AAAAA\nAAAAA\nAAAAA</td>\n<td>B</td>\n</tr>\n<tr>\n<td>C</td>\n</tr>\n<tr>\n<td>D</td>\n<td>E</td>\n<td>F</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // A grid table may not have irregularly shaped cells:
@@ -372,8 +363,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     | DDDDD | E |
             //     +---+---+---+</p>
 
-            Console.WriteLine("Example 10\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+", "<p>+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+</p>", "gridtables|advanced");
+            TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+", "<p>+---+---+---+\n| AAAAA | B |\n+ A +---+ B +\n| A | C | B |\n+---+---+---+\n| DDDDD | E |\n+---+---+---+</p>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // An empty `+` on a line should result in a simple empty list output:
@@ -391,8 +381,7 @@ namespace Markdig.Tests.Specs.GridTables
             //     <li></li>
             //     </ul>
 
-            Console.WriteLine("Example 11\nSection Extensions / Grid Table\n");
-            TestParser.TestSpec("+", "<ul>\n<li></li>\n</ul>", "gridtables|advanced");
+            TestParser.TestSpec("+", "<ul>\n<li></li>\n</ul>", "gridtables|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 }

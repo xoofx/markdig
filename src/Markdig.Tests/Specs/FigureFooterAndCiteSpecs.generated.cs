@@ -35,8 +35,7 @@ namespace Markdig.Tests.Specs.FiguresFootersAndCites
             //     <figcaption>This is a <em>caption</em></figcaption>
             //     </figure>
 
-            Console.WriteLine("Example 1\nSection Extensions / Figures\n");
-            TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures+footers+citations|advanced");
+            TestParser.TestSpec("^^^\nThis is a figure\n^^^ This is a *caption*", "<figure>\n<p>This is a figure</p>\n<figcaption>This is a <em>caption</em></figcaption>\n</figure>", "figures+footers+citations|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -60,8 +59,7 @@ namespace Markdig.Tests.Specs.FiguresFootersAndCites
             //     <footer>This is a footer
             //     multi-line</footer>
 
-            Console.WriteLine("Example 2\nSection Extensions / Footers\n");
-            TestParser.TestSpec("^^ This is a footer\n^^ multi-line", "<footer>This is a footer\nmulti-line</footer>", "figures+footers+citations|advanced");
+            TestParser.TestSpec("^^ This is a footer\n^^ multi-line", "<footer>This is a footer\nmulti-line</footer>", "figures+footers+citations|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -83,8 +81,7 @@ namespace Markdig.Tests.Specs.FiguresFootersAndCites
             // Should be rendered as:
             //     <p>This is a <cite>citation of someone</cite></p>
 
-            Console.WriteLine("Example 3\nSection Extensions / Cite\n");
-            TestParser.TestSpec("This is a \"\"citation of someone\"\"", "<p>This is a <cite>citation of someone</cite></p>", "figures+footers+citations|advanced");
+            TestParser.TestSpec("This is a \"\"citation of someone\"\"", "<p>This is a <cite>citation of someone</cite></p>", "figures+footers+citations|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 }

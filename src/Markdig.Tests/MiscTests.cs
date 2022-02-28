@@ -206,13 +206,10 @@ $$
 \end{align}
 </div>
 ";
-            Console.WriteLine("Math Expressions:\n");
-
+            //Console.WriteLine("Math Expressions:\n");
             var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
-
-
             var html = Markdown.ToHtml(math, pl);
-            Console.WriteLine(html);
+            //Console.WriteLine(html);
         }
 
         [Test]
@@ -225,10 +222,16 @@ $\frac{n!}{k!(n-k)!} = \binom{n}{k}$
             var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
 
             var html = Markdown.ToHtml(math, pl);
-            Console.WriteLine(html);
 
-            Assert.IsTrue(html.Contains("<p><span class=\"math\">\\("), "Leading bracket missing");
-            Assert.IsTrue(html.Contains("\\)</span></p>"), "Trailing bracket missing");
+            var test1 = html.Contains("<p><span class=\"math\">\\(");
+            var test2 = html.Contains("\\)</span></p>");
+            if (!test1 || !test2)
+            {
+                Console.WriteLine(html);
+            }
+
+            Assert.IsTrue(test1, "Leading bracket missing");
+            Assert.IsTrue(test2, "Trailing bracket missing");
         }
 
         [Test]
@@ -243,10 +246,15 @@ $$
             var pl = new MarkdownPipelineBuilder().UseMathematics().Build(); // UseEmphasisExtras(EmphasisExtraOptions.Subscript).Build()
 
             var html = Markdown.ToHtml(math, pl);
-            Console.WriteLine(html);
+            var test1 = html.Contains("<div class=\"math\">\n\\[");
+            var test2 = html.Contains("\\]</div>");
+            if (!test1 || !test2)
+            {
+                Console.WriteLine(html);
+            }
 
-            Assert.IsTrue(html.Contains("<div class=\"math\">\n\\["), "Leading bracket missing");
-            Assert.IsTrue(html.Contains("\\]</div>"), "Trailing bracket missing");
+            Assert.IsTrue(test1, "Leading bracket missing");
+            Assert.IsTrue(test2, "Trailing bracket missing");
         }
 
         [Test]

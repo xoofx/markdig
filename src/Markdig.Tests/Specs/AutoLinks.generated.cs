@@ -44,8 +44,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     And a <a href="tel:+1555123456">+1555123456</a>
             //     And a plain <a href="http://www.google.com">www.google.com</a></p>
 
-            Console.WriteLine("Example 1\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a tel:+1555123456\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">email@toto.com</a>\nAnd a <a href=\"tel:+1555123456\">+1555123456</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("This is a http://www.google.com URL and https://www.google.com\nThis is a ftp://test.com\nAnd a mailto:email@toto.com\nAnd a tel:+1555123456\nAnd a plain www.google.com", "<p>This is a <a href=\"http://www.google.com\">http://www.google.com</a> URL and <a href=\"https://www.google.com\">https://www.google.com</a>\nThis is a <a href=\"ftp://test.com\">ftp://test.com</a>\nAnd a <a href=\"mailto:email@toto.com\">email@toto.com</a>\nAnd a <a href=\"tel:+1555123456\">+1555123456</a>\nAnd a plain <a href=\"http://www.google.com\">www.google.com</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // But incomplete links will not be matched:
@@ -69,8 +68,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     And not a plain www. or a www.x
             //     And not a tel:</p>
 
-            Console.WriteLine("Example 2\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x \nAnd not a tel:", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x\nAnd not a tel:</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x \nAnd not a tel:", "<p>This is not a http:/www.google.com URL and https:/www.google.com\nThis is not a ftp:/test.com\nAnd not a mailto:emailtoto.com\nAnd not a plain www. or a www.x\nAnd not a tel:</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Previous character must be a punctuation or a valid space (tab, space, new line):
@@ -86,8 +84,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>This is not a nhttp://www.google.com URL but this is (<a href="https://www.google.com">https://www.google.com</a>)</p>
 
-            Console.WriteLine("Example 3\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is not a nhttp://www.google.com URL but this is (https://www.google.com)", "<p>This is not a nhttp://www.google.com URL but this is (<a href=\"https://www.google.com\">https://www.google.com</a>)</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is not a nhttp://www.google.com URL but this is (https://www.google.com)", "<p>This is not a nhttp://www.google.com URL but this is (<a href=\"https://www.google.com\">https://www.google.com</a>)</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // An autolink should not interfere with an `<a>` HTML inline:
@@ -103,8 +100,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
 
-            Console.WriteLine("Example 4\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // or even within emphasis:
@@ -120,8 +116,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>This is an HTML <a href="http://www.google.com"> <strong>http://www.google.com</strong> </a> link</p>
 
-            Console.WriteLine("Example 5\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\"> **http://www.google.com** </a> link", "<p>This is an HTML <a href=\"http://www.google.com\"> <strong>http://www.google.com</strong> </a> link</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is an HTML <a href=\"http://www.google.com\"> **http://www.google.com** </a> link", "<p>This is an HTML <a href=\"http://www.google.com\"> <strong>http://www.google.com</strong> </a> link</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // An autolink should not interfere with a markdown link:
@@ -137,8 +132,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>This is an HTML <a href="http://www.google.com">http://www.google.com</a> link</p>
 
-            Console.WriteLine("Example 6\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("This is an HTML [http://www.google.com](http://www.google.com) link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced");
+            TestParser.TestSpec("This is an HTML [http://www.google.com](http://www.google.com) link", "<p>This is an HTML <a href=\"http://www.google.com\">http://www.google.com</a> link</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // A link embraced by pending emphasis should let the emphasis takes precedence if characters are placed at the end of the matched link:
@@ -154,8 +148,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>Check <strong><a href="http://www.a.com">http://www.a.com</a></strong> or <strong><a href="http://www.b.com">http://www.b.com</a></strong></p>
 
-            Console.WriteLine("Example 7\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
+            TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // It is not mentioned by the spec, but empty emails won't be matched (only a subset of [RFC2368](https://tools.ietf.org/html/rfc2368) is supported by auto links):
@@ -171,8 +164,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="mailto:email@test.com">email@test.com</a> is okay, but mailto:@test.com is not</p>
 
-            Console.WriteLine("Example 8\nSection Extensions / AutoLinks\n");
-            TestParser.TestSpec("mailto:email@test.com is okay, but mailto:@test.com is not", "<p><a href=\"mailto:email@test.com\">email@test.com</a> is okay, but mailto:@test.com is not</p>", "autolinks|advanced");
+            TestParser.TestSpec("mailto:email@test.com is okay, but mailto:@test.com is not", "<p><a href=\"mailto:email@test.com\">email@test.com</a> is okay, but mailto:@test.com is not</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -194,8 +186,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
 
-            Console.WriteLine("Example 9\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -210,8 +201,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
 
-            Console.WriteLine("Example 10\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
+            TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -229,8 +219,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
             //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
 
-            Console.WriteLine("Example 11\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
+            TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -248,8 +237,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
             //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
 
-            Console.WriteLine("Example 12\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
+            TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -267,8 +255,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
             //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
 
-            Console.WriteLine("Example 13\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
+            TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -283,8 +270,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
 
-            Console.WriteLine("Example 14\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+            TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -305,8 +291,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
             //     <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
 
-            Console.WriteLine("Example 15\nSection Extensions / AutoLinks / GFM Support\n");
-            TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced");
+            TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -346,8 +331,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     mailto:email@test.
             //     mailto:email@.test</p>
 
-            Console.WriteLine("Example 16\nSection Extensions / AutoLinks / Valid Domain Tests\n");
-            TestParser.TestSpec("www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test", "<p>www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test</p>", "autolinks|advanced");
+            TestParser.TestSpec("www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test", "<p>www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Domain names with too few segments won't be matched
@@ -371,8 +355,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     ftp://test
             //     mailto:email@test</p>
 
-            Console.WriteLine("Example 17\nSection Extensions / AutoLinks / Valid Domain Tests\n");
-            TestParser.TestSpec("www\nwww.com\nhttp://test\nftp://test\nmailto:email@test", "<p>www\nwww.com\nhttp://test\nftp://test\nmailto:email@test</p>", "autolinks|advanced");
+            TestParser.TestSpec("www\nwww.com\nhttp://test\nftp://test\nmailto:email@test", "<p>www\nwww.com\nhttp://test\nftp://test\nmailto:email@test</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Domain names that contain an underscores in the last two segments won't be matched
@@ -400,8 +383,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="ftp://test_.foo.bar">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>
             //     <p><a href="mailto:email@_test.foo.bar">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>
 
-            Console.WriteLine("Example 18\nSection Extensions / AutoLinks / Valid Domain Tests\n");
-            TestParser.TestSpec("www._test.foo.bar is okay, but www._test.foo is not\n\nhttp://te_st.foo.bar is okay, as is http://test.foo_.bar.foo\n\nBut http://te_st.foo, http://test.foo_.bar and http://test._foo are not\n\nftp://test_.foo.bar is okay, but ftp://test.fo_o is not\n\nmailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not", "<p><a href=\"http://www._test.foo.bar\">www._test.foo.bar</a> is okay, but www._test.foo is not</p>\n<p><a href=\"http://te_st.foo.bar\">http://te_st.foo.bar</a> is okay, as is <a href=\"http://test.foo_.bar.foo\">http://test.foo_.bar.foo</a></p>\n<p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>\n<p><a href=\"ftp://test_.foo.bar\">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>\n<p><a href=\"mailto:email@_test.foo.bar\">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>", "autolinks|advanced");
+            TestParser.TestSpec("www._test.foo.bar is okay, but www._test.foo is not\n\nhttp://te_st.foo.bar is okay, as is http://test.foo_.bar.foo\n\nBut http://te_st.foo, http://test.foo_.bar and http://test._foo are not\n\nftp://test_.foo.bar is okay, but ftp://test.fo_o is not\n\nmailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not", "<p><a href=\"http://www._test.foo.bar\">www._test.foo.bar</a> is okay, but www._test.foo is not</p>\n<p><a href=\"http://te_st.foo.bar\">http://te_st.foo.bar</a> is okay, as is <a href=\"http://test.foo_.bar.foo\">http://test.foo_.bar.foo</a></p>\n<p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>\n<p><a href=\"ftp://test_.foo.bar\">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>\n<p><a href=\"mailto:email@_test.foo.bar\">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Domain names that contain invalid characters (not AlphaNumberic, -, _ or .) won't be matched
@@ -417,8 +399,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p>https://[your-domain]/api</p>
 
-            Console.WriteLine("Example 19\nSection Extensions / AutoLinks / Valid Domain Tests\n");
-            TestParser.TestSpec("https://[your-domain]/api", "<p>https://[your-domain]/api</p>", "autolinks|advanced");
+            TestParser.TestSpec("https://[your-domain]/api", "<p>https://[your-domain]/api</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Domain names followed by ?, : or # instead of / are matched
@@ -446,8 +427,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="https://github.com">https://github.com</a>:</p>
             //     <p><a href="https://github.com:443">https://github.com:443</a></p>
 
-            Console.WriteLine("Example 20\nSection Extensions / AutoLinks / Valid Domain Tests\n");
-            TestParser.TestSpec("https://github.com?\n\nhttps://github.com?a\n\nhttps://github.com#a\n\nhttps://github.com:\n\nhttps://github.com:443", "<p><a href=\"https://github.com\">https://github.com</a>?</p>\n<p><a href=\"https://github.com?a\">https://github.com?a</a></p>\n<p><a href=\"https://github.com#a\">https://github.com#a</a></p>\n<p><a href=\"https://github.com\">https://github.com</a>:</p>\n<p><a href=\"https://github.com:443\">https://github.com:443</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("https://github.com?\n\nhttps://github.com?a\n\nhttps://github.com#a\n\nhttps://github.com:\n\nhttps://github.com:443", "<p><a href=\"https://github.com\">https://github.com</a>?</p>\n<p><a href=\"https://github.com?a\">https://github.com?a</a></p>\n<p><a href=\"https://github.com#a\">https://github.com#a</a></p>\n<p><a href=\"https://github.com\">https://github.com</a>:</p>\n<p><a href=\"https://github.com:443\">https://github.com:443</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 
@@ -478,8 +458,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
             //     <p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
 
-            Console.WriteLine("Example 21\nSection Extensions / AutoLinks / Unicode support\n");
-            TestParser.TestSpec("http://abc.net/☃\n\nhttp://abc.net?☃\n\nhttp://abc.net#☃\n\nhttp://abc.net/foo#☃", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("http://abc.net/☃\n\nhttp://abc.net?☃\n\nhttp://abc.net#☃\n\nhttp://abc.net/foo#☃", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Unicode characters in the FQDN are matched and IDNA encoded
@@ -495,8 +474,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
 
-            Console.WriteLine("Example 22\nSection Extensions / AutoLinks / Unicode support\n");
-            TestParser.TestSpec("http://☃.net?☃", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("http://☃.net?☃", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // Same goes for regular autolinks
@@ -521,8 +499,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             //     <p><a href="http://abc.net#%E2%98%83">http://abc.net#☃</a></p>
             //     <p><a href="http://abc.net/foo#%E2%98%83">http://abc.net/foo#☃</a></p>
 
-            Console.WriteLine("Example 23\nSection Extensions / AutoLinks / Unicode support\n");
-            TestParser.TestSpec("<http://abc.net/☃>\n\n<http://abc.net?☃>\n\n<http://abc.net#☃>\n\n<http://abc.net/foo#☃>", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("<http://abc.net/☃>\n\n<http://abc.net?☃>\n\n<http://abc.net#☃>\n\n<http://abc.net/foo#☃>", "<p><a href=\"http://abc.net/%E2%98%83\">http://abc.net/☃</a></p>\n<p><a href=\"http://abc.net?%E2%98%83\">http://abc.net?☃</a></p>\n<p><a href=\"http://abc.net#%E2%98%83\">http://abc.net#☃</a></p>\n<p><a href=\"http://abc.net/foo#%E2%98%83\">http://abc.net/foo#☃</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         [Test]
@@ -537,8 +514,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a></p>
 
-            Console.WriteLine("Example 24\nSection Extensions / AutoLinks / Unicode support\n");
-            TestParser.TestSpec("<http://☃.net?☃>", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced");
+            TestParser.TestSpec("<http://☃.net?☃>", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a></p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
 
         // It also complies with CommonMark's vision of priority.
@@ -555,8 +531,7 @@ namespace Markdig.Tests.Specs.AutoLinks
             // Should be rendered as:
             //     <p><a href="http://xn--fo-gka.bar.%60baz">http://foö.bar.`baz</a>`</p>
 
-            Console.WriteLine("Example 25\nSection Extensions / AutoLinks / Unicode support\n");
-            TestParser.TestSpec("<http://foö.bar.`baz>`", "<p><a href=\"http://xn--fo-gka.bar.%60baz\">http://foö.bar.`baz</a>`</p>", "autolinks|advanced");
+            TestParser.TestSpec("<http://foö.bar.`baz>`", "<p><a href=\"http://xn--fo-gka.bar.%60baz\">http://foö.bar.`baz</a>`</p>", "autolinks|advanced", context: "Example {number}\nSection {name}\n");
         }
     }
 }

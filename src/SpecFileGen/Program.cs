@@ -317,10 +317,7 @@ namespace SpecFileGen
             {
                 Indent(3); Write("//");
             }
-
             Line();
-            Indent(3); Line($"Console.WriteLine(\"Example {number}\\nSection {name}\\n\");");
-
             Indent(3);
             if      (rendererType == RendererType.Html)      Write("TestParser");
             else if (rendererType == RendererType.Normalize) Write("TestNormalize");
@@ -340,7 +337,7 @@ namespace SpecFileGen
             }
             Write("\", \"");
             Write(extensions);
-            Line("\");");
+            Line("\", context: \"Example {number}\\nSection {name}\\n\");");
 
             Indent(2); Line("}");
         }
