@@ -17,6 +17,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
+        submodules: true
         fetch-depth: 0
 
     - name: Install .NET 6.0
@@ -25,6 +26,7 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Build, Test, Pack, Publish
+      shell: bash
       run: |
         dotnet tool install -g dotnet-releaser
-        dotnet-releaser run --nuget-token "${{secrets.NUGET_TOKEN != '' && secrets.NUGET_TOKEN || 'no_token'}}" --github-token "${{secrets.GITHUB_TOKEN}}" src/dotnet-releaser.toml
+        dotnet-releaser run --nuget-token "${{secrets.NUGET_TOKEN}}" --github-token "${{secrets.GITHUB_TOKEN}}" src/dotnet-releaser.toml
