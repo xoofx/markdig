@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Helpers;
@@ -19,7 +20,16 @@ namespace Markdig
     /// </summary>
     public static partial class Markdown
     {
-        public static readonly string Version = ((AssemblyFileVersionAttribute) typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false)[0]).Version;
+        public static string Version
+        {
+            get
+            {
+                if (_Version == null)
+                    _Version = ((AssemblyFileVersionAttribute)typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false).FirstOrDefault())?.Version ?? "Unknown";
+                return _Version;
+            }
+        }
+        private static string? _Version;
 
         internal static readonly MarkdownPipeline DefaultPipeline = new MarkdownPipelineBuilder().Build();
         private static readonly MarkdownPipeline _defaultTrackTriviaPipeline = new MarkdownPipelineBuilder().EnableTrackTrivia().Build();
