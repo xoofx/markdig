@@ -19,6 +19,8 @@ namespace Markdig.Renderers.Html.Inlines
 
         protected override void Write(HtmlRenderer renderer, LineBreakInline obj)
         {
+            if (renderer.IsLastInContainer) return;
+
             if (renderer.EnableHtmlForInline)
             {
                 if (obj.IsHard || RenderAsHardlineBreak)

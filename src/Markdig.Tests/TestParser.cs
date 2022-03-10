@@ -119,6 +119,8 @@ namespace Markdig.Tests
             {
                 yield return new KeyValuePair<string, MarkdownPipeline>("default", new MarkdownPipelineBuilder().Build());
 
+                //yield return new KeyValuePair<string, MarkdownPipeline>("default-trivia", new MarkdownPipelineBuilder().EnableTrackTrivia().Build());
+
                 yield return new KeyValuePair<string, MarkdownPipeline>("advanced", new MarkdownPipelineBuilder()  // Use similar to advanced extension without auto-identifier
                  .UseAbbreviations()
                 //.UseAutoIdentifiers()
