@@ -44,7 +44,7 @@ namespace Markdig.Tests.Specs.Normalize.Headings
             //     
             //     ###### Heading 6
 
-            TestNormalize.TestSpec("# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6", "# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6", "", context: "Example {number}\nSection {name}\n");
+            TestNormalize.TestSpec("# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6", "# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6", "", context: "Example 1\nSection Headings\n");
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Markdig.Tests.Specs.Normalize.Headings
             //     
             //     Text after two newlines
 
-            TestNormalize.TestSpec("###### Heading\n\nText after two newlines", "###### Heading\n\nText after two newlines", "", context: "Example {number}\nSection {name}\n");
+            TestNormalize.TestSpec("###### Heading\n\nText after two newlines", "###### Heading\n\nText after two newlines", "", context: "Example 2\nSection Headings\n");
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Markdig.Tests.Specs.Normalize.Headings
             //     
             //     Text after two newlines 1
 
-            TestNormalize.TestSpec("Heading\n=======\n\nText after two newlines 1", "# Heading\n\nText after two newlines 1", "", context: "Example {number}\nSection {name}\n");
+            TestNormalize.TestSpec("Heading\n=======\n\nText after two newlines 1", "# Heading\n\nText after two newlines 1", "", context: "Example 3\nSection Headings\n");
         }
     }
 }

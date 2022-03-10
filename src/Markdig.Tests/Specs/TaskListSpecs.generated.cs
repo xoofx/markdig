@@ -38,7 +38,7 @@ namespace Markdig.Tests.Specs.TaskLists
             //     <li>Item4</li>
             //     </ul>
 
-            TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("- [ ] Item1\n- [x] Item2\n- [ ] Item3\n- Item4", "<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item1</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Item2</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Item3</li>\n<li>Item4</li>\n</ul>", "tasklists|advanced", context: "Example 1\nSection Extensions / TaskLists\n");
         }
 
         // A task is not recognized outside a list item:
@@ -54,7 +54,7 @@ namespace Markdig.Tests.Specs.TaskLists
             // Should be rendered as:
             //     <p>[ ] This is not a task list</p>
 
-            TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("[ ] This is not a task list", "<p>[ ] This is not a task list</p>", "tasklists|advanced", context: "Example 2\nSection Extensions / TaskLists\n");
         }
     }
 }

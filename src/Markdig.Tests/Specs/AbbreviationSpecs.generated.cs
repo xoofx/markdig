@@ -34,7 +34,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>Later in a text we are using <abbr title="Hypertext Markup Language">HTML</abbr> and it becomes an abbr tag <abbr title="Hypertext Markup Language">HTML</abbr></p>
 
-            TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n\nLater in a text we are using HTML and it becomes an abbr tag HTML", "<p>Later in a text we are using <abbr title=\"Hypertext Markup Language\">HTML</abbr> and it becomes an abbr tag <abbr title=\"Hypertext Markup Language\">HTML</abbr></p>", "abbreviations|advanced", context: "Example 1\nSection Extensions / Abbreviation\n");
         }
 
         // An abbreviation definition can be indented at most 3 spaces
@@ -52,7 +52,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             //     <pre><code>*[This]: is not an abbreviation
             //     </code></pre>
 
-            TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[HTML]: Hypertext Markup Language\n    *[This]: is not an abbreviation", "<pre><code>*[This]: is not an abbreviation\n</code></pre>", "abbreviations|advanced", context: "Example 2\nSection Extensions / Abbreviation\n");
         }
 
         // An abbreviation may contain spaces:
@@ -70,7 +70,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>This is a <abbr title="Super Hypertext Markup Language">SUPER HTML</abbr> document</p>
 
-            TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[SUPER HTML]: Super Hypertext Markup Language\n\nThis is a SUPER HTML document    ", "<p>This is a <abbr title=\"Super Hypertext Markup Language\">SUPER HTML</abbr> document</p>", "abbreviations|advanced", context: "Example 3\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviation may contain any unicode characters:
@@ -88,7 +88,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>This is a <abbr title="Hypertext Markup Language">😃 HTML</abbr> document</p>
 
-            TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[😃 HTML]: Hypertext Markup Language\n\nThis is a 😃 HTML document    ", "<p>This is a <abbr title=\"Hypertext Markup Language\">😃 HTML</abbr> document</p>", "abbreviations|advanced", context: "Example 4\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviations may be similar:
@@ -108,7 +108,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>We can abbreviate <abbr title="First">1A</abbr>, <abbr title="Second">1A1</abbr> and <abbr title="Third">1A2</abbr>!</p>
 
-            TestParser.TestSpec("*[1A]: First\n*[1A1]: Second\n*[1A2]: Third\n\nWe can abbreviate 1A, 1A1 and 1A2!", "<p>We can abbreviate <abbr title=\"First\">1A</abbr>, <abbr title=\"Second\">1A1</abbr> and <abbr title=\"Third\">1A2</abbr>!</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[1A]: First\n*[1A1]: Second\n*[1A2]: Third\n\nWe can abbreviate 1A, 1A1 and 1A2!", "<p>We can abbreviate <abbr title=\"First\">1A</abbr>, <abbr title=\"Second\">1A1</abbr> and <abbr title=\"Third\">1A2</abbr>!</p>", "abbreviations|advanced", context: "Example 5\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviations should match whole word only:
@@ -126,7 +126,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>We should not abbreviate 1.1A or 11A!</p>
 
-            TestParser.TestSpec("*[1A]: First\n\nWe should not abbreviate 1.1A or 11A!", "<p>We should not abbreviate 1.1A or 11A!</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[1A]: First\n\nWe should not abbreviate 1.1A or 11A!", "<p>We should not abbreviate 1.1A or 11A!</p>", "abbreviations|advanced", context: "Example 6\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviations should match whole word only, even if the word is the entire content:
@@ -144,7 +144,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>1.1A</p>
 
-            TestParser.TestSpec("*[1A]: First\n\n1.1A", "<p>1.1A</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[1A]: First\n\n1.1A", "<p>1.1A</p>", "abbreviations|advanced", context: "Example 7\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviations should match whole word only, even if there is another glossary term:
@@ -163,7 +163,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p><abbr title="Second">SCOM</abbr></p>
 
-            TestParser.TestSpec("*[SCO]: First\n*[SCOM]: Second\n\nSCOM", "<p><abbr title=\"Second\">SCOM</abbr></p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[SCO]: First\n*[SCOM]: Second\n\nSCOM", "<p><abbr title=\"Second\">SCOM</abbr></p>", "abbreviations|advanced", context: "Example 8\nSection Extensions / Abbreviation\n");
         }
 
         // Abbreviations should only match when surrounded by whitespace:
@@ -181,7 +181,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p>PRAA</p>
 
-            TestParser.TestSpec("*[PR]: Pull Request\n\nPRAA", "<p>PRAA</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[PR]: Pull Request\n\nPRAA", "<p>PRAA</p>", "abbreviations|advanced", context: "Example 9\nSection Extensions / Abbreviation\n");
         }
 
         // Single character abbreviations should be matched
@@ -199,7 +199,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p><abbr title="Foo">A</abbr></p>
 
-            TestParser.TestSpec("*[A]: Foo\n\nA", "<p><abbr title=\"Foo\">A</abbr></p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[A]: Foo\n\nA", "<p><abbr title=\"Foo\">A</abbr></p>", "abbreviations|advanced", context: "Example 10\nSection Extensions / Abbreviation\n");
         }
 
         // The longest matching abbreviation should be used
@@ -218,7 +218,7 @@ namespace Markdig.Tests.Specs.Abbreviations
             // Should be rendered as:
             //     <p><abbr title="foo">Foo</abbr> B</p>
 
-            TestParser.TestSpec("*[Foo]: foo\n*[Foo Bar]: foobar\n\nFoo B", "<p><abbr title=\"foo\">Foo</abbr> B</p>", "abbreviations|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("*[Foo]: foo\n*[Foo Bar]: foobar\n\nFoo B", "<p><abbr title=\"foo\">Foo</abbr> B</p>", "abbreviations|advanced", context: "Example 11\nSection Extensions / Abbreviation\n");
         }
     }
 }

@@ -42,7 +42,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a <a href="http://your.company.abc/browse/ABCD-123" target="_blank">ABCD-123</a> issue</p>
 
-            TestParser.TestSpec("This is a ABCD-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a> issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a ABCD-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a> issue</p>", "jiralinks", context: "Example 1\nSection Jira Links\n");
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a <a href="http://your.company.abc/browse/ABC4-123" target="_blank">ABC4-123</a> issue</p>
 
-            TestParser.TestSpec("This is a ABC4-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a> issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a ABC4-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a> issue</p>", "jiralinks", context: "Example 2\nSection Jira Links\n");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a <a href="http://your.company.abc/browse/ABC45-123" target="_blank">ABC45-123</a> issue</p>
 
-            TestParser.TestSpec("This is a ABC45-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC45-123\" target=\"_blank\">ABC45-123</a> issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a ABC45-123 issue", "<p>This is a <a href=\"http://your.company.abc/browse/ABC45-123\" target=\"_blank\">ABC45-123</a> issue</p>", "jiralinks", context: "Example 3\nSection Jira Links\n");
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a <a href="http://your.company.abc/browse/KIRA-1" target="_blank">KIRA-1</a> issue</p>
 
-            TestParser.TestSpec("This is a KIRA-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a> issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a KIRA-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a> issue</p>", "jiralinks", context: "Example 4\nSection Jira Links\n");
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a <a href="http://your.company.abc/browse/Z-1" target="_blank">Z-1</a> issue</p>
 
-            TestParser.TestSpec("This is a Z-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a> issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a Z-1 issue", "<p>This is a <a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a> issue</p>", "jiralinks", context: "Example 5\nSection Jira Links\n");
         }
 
         // These are also valid links with `(` and `)`:
@@ -118,7 +118,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a (<a href="http://your.company.abc/browse/ABCD-123" target="_blank">ABCD-123</a>) issue</p>
 
-            TestParser.TestSpec("This is a (ABCD-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a>) issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a (ABCD-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABCD-123\" target=\"_blank\">ABCD-123</a>) issue</p>", "jiralinks", context: "Example 6\nSection Jira Links\n");
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a (<a href="http://your.company.abc/browse/ABC4-123" target="_blank">ABC4-123</a>) issue</p>
 
-            TestParser.TestSpec("This is a (ABC4-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a>) issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a (ABC4-123) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/ABC4-123\" target=\"_blank\">ABC4-123</a>) issue</p>", "jiralinks", context: "Example 7\nSection Jira Links\n");
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a (<a href="http://your.company.abc/browse/KIRA-1" target="_blank">KIRA-1</a>) issue</p>
 
-            TestParser.TestSpec("This is a (KIRA-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a>) issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a (KIRA-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/KIRA-1\" target=\"_blank\">KIRA-1</a>) issue</p>", "jiralinks", context: "Example 8\nSection Jira Links\n");
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is a (<a href="http://your.company.abc/browse/Z-1" target="_blank">Z-1</a>) issue</p>
 
-            TestParser.TestSpec("This is a (Z-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a>) issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a (Z-1) issue", "<p>This is a (<a href=\"http://your.company.abc/browse/Z-1\" target=\"_blank\">Z-1</a>) issue</p>", "jiralinks", context: "Example 9\nSection Jira Links\n");
         }
 
         // These are not valid links:
@@ -179,7 +179,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is not aJIRA-123 issue</p>
 
-            TestParser.TestSpec("This is not aJIRA-123 issue", "<p>This is not aJIRA-123 issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not aJIRA-123 issue", "<p>This is not aJIRA-123 issue</p>", "jiralinks", context: "Example 10\nSection Jira Links\n");
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is not 4JIRA-123 issue</p>
 
-            TestParser.TestSpec("This is not 4JIRA-123 issue", "<p>This is not 4JIRA-123 issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not 4JIRA-123 issue", "<p>This is not 4JIRA-123 issue</p>", "jiralinks", context: "Example 11\nSection Jira Links\n");
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is not JIRA-123a issue</p>
 
-            TestParser.TestSpec("This is not JIRA-123a issue", "<p>This is not JIRA-123a issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not JIRA-123a issue", "<p>This is not JIRA-123a issue</p>", "jiralinks", context: "Example 12\nSection Jira Links\n");
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is not JIRA- issue</p>
 
-            TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks", context: "Example 13\nSection Jira Links\n");
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace Markdig.Tests.Specs.JiraLinks
             // Should be rendered as:
             //     <p>This is not JIR4- issue</p>
 
-            TestParser.TestSpec("This is not JIR4- issue", "<p>This is not JIR4- issue</p>", "jiralinks", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not JIR4- issue", "<p>This is not JIR4- issue</p>", "jiralinks", context: "Example 14\nSection Jira Links\n");
         }
     }
 }

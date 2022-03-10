@@ -30,7 +30,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             // Should be rendered as:
             //     <p>The following text <del>is deleted</del></p>
 
-            TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("The following text ~~is deleted~~", "<p>The following text <del>is deleted</del></p>", "emphasisextras|advanced", context: "Example 1\nSection Extensions / Strikethrough\n");
         }
     }
 
@@ -52,7 +52,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             // Should be rendered as:
             //     <p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>
 
-            TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("H~2~O is a liquid. 2^10^ is 1024", "<p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024</p>", "emphasisextras|advanced", context: "Example 2\nSection Extensions / Superscript and Subscript\n");
         }
 
         // Certain punctuation characters are exempted from the rule forbidding them within inline delimiters
@@ -71,7 +71,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             //     <p>One quintillionth can be expressed as 10<sup>-18</sup></p>
             //     <p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>
 
-            TestParser.TestSpec("One quintillionth can be expressed as 10^-18^\n\nDaggers^†^ and double-daggers^‡^ can be used to denote notes.", "<p>One quintillionth can be expressed as 10<sup>-18</sup></p>\n<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("One quintillionth can be expressed as 10^-18^\n\nDaggers^†^ and double-daggers^‡^ can be used to denote notes.", "<p>One quintillionth can be expressed as 10<sup>-18</sup></p>\n<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>", "emphasisextras|advanced", context: "Example 3\nSection Extensions / Superscript and Subscript\n");
         }
     }
 
@@ -93,7 +93,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             // Should be rendered as:
             //     <p><ins>Inserted text</ins></p>
 
-            TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("++Inserted text++", "<p><ins>Inserted text</ins></p>", "emphasisextras|advanced", context: "Example 4\nSection Extensions / Inserted\n");
         }
     }
 
@@ -115,7 +115,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             // Should be rendered as:
             //     <p><mark>Marked text</mark></p>
 
-            TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("==Marked text==", "<p><mark>Marked text</mark></p>", "emphasisextras|advanced", context: "Example 5\nSection Extensions / Marked\n");
         }
     }
 
@@ -139,7 +139,7 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             //     This is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>
             //     This is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>
 
-            TestParser.TestSpec("This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^\nThis is text MyBrand^&reg;^ and MyTrademark^&trade;^\nThis is text MyBrand~&reg;~ and MyCopyright^&copy;^", "<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>\nThis is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>\nThis is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>", "emphasisextras|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^\nThis is text MyBrand^&reg;^ and MyTrademark^&trade;^\nThis is text MyBrand~&reg;~ and MyCopyright^&copy;^", "<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>\nThis is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>\nThis is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>", "emphasisextras|advanced", context: "Example 6\nSection Extensions / Emphasis on Html Entities\n");
         }
     }
 }

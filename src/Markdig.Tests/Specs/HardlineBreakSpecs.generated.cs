@@ -32,7 +32,7 @@ namespace Markdig.Tests.Specs.HardlineBreaks
             //     <p>This is a paragraph<br />
             //     with a break inside</p>
 
-            TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak|advanced+hardlinebreak", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a paragraph\nwith a break inside", "<p>This is a paragraph<br />\nwith a break inside</p>", "hardlinebreak|advanced+hardlinebreak", context: "Example 1\nSection Extensions / Hardline break\n");
         }
     }
 }

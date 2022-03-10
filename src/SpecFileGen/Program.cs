@@ -337,7 +337,7 @@ namespace SpecFileGen
             }
             Write("\", \"");
             Write(extensions);
-            Line("\", context: \"Example {number}\\nSection {name}\\n\");");
+            Line($"\", context: \"Example {number}\\nSection {name}\\n\");");
 
             Indent(2); Line("}");
         }

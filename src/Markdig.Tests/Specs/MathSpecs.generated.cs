@@ -30,7 +30,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span></p>
 
-            TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $math block$", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example 1\nSection Extensions / Math Inline\n");
         }
 
         // Or by `$$...$$` embracing it by:
@@ -46,7 +46,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span></p>
 
-            TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $$math block$$", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example 2\nSection Extensions / Math Inline\n");
         }
 
         // Newlines inside an inline math are not allowed:
@@ -64,7 +64,7 @@ namespace Markdig.Tests.Specs.Math
             //     <p>This is not a $$math
             //     block$$ and? this is a <span class="math">\(math block\)</span></p>
 
-            TestParser.TestSpec("This is not a $$math \nblock$$ and? this is a $$math block$$", "<p>This is not a $$math\nblock$$ and? this is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not a $$math \nblock$$ and? this is a $$math block$$", "<p>This is not a $$math\nblock$$ and? this is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example 3\nSection Extensions / Math Inline\n");
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace Markdig.Tests.Specs.Math
             //     <p>This is not a $math
             //     block$ and? this is a <span class="math">\(math block\)</span></p>
 
-            TestParser.TestSpec("This is not a $math \nblock$ and? this is a $math block$", "<p>This is not a $math\nblock$ and? this is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not a $math \nblock$ and? this is a $math block$", "<p>This is not a $math\nblock$ and? this is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example 4\nSection Extensions / Math Inline\n");
         }
 
         // An opening `$` can be followed by a space if the closing is also preceded by a space `$`:
@@ -97,7 +97,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span></p>
 
-            TestParser.TestSpec("This is a $ math block $", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $ math block $", "<p>This is a <span class=\"math\">\\(math block\\)</span></p>", "mathematics|advanced", context: "Example 5\nSection Extensions / Math Inline\n");
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span> after</p>
 
-            TestParser.TestSpec("This is a $    math block     $ after", "<p>This is a <span class=\"math\">\\(math block\\)</span> after</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $    math block     $ after", "<p>This is a <span class=\"math\">\\(math block\\)</span> after</p>", "mathematics|advanced", context: "Example 6\nSection Extensions / Math Inline\n");
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span> after</p>
 
-            TestParser.TestSpec("This is a $$    math block     $$ after", "<p>This is a <span class=\"math\">\\(math block\\)</span> after</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $$    math block     $$ after", "<p>This is a <span class=\"math\">\\(math block\\)</span> after</p>", "mathematics|advanced", context: "Example 7\nSection Extensions / Math Inline\n");
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a not $ math block$ because there is not a whitespace before the closing</p>
 
-            TestParser.TestSpec("This is a not $ math block$ because there is not a whitespace before the closing", "<p>This is a not $ math block$ because there is not a whitespace before the closing</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a not $ math block$ because there is not a whitespace before the closing", "<p>This is a not $ math block$ because there is not a whitespace before the closing</p>", "mathematics|advanced", context: "Example 8\nSection Extensions / Math Inline\n");
         }
 
         // For the opening `$` it requires a space or a punctuation before (but cannot be used within a word):
@@ -158,7 +158,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is not a m$ath block$</p>
 
-            TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not a m$ath block$", "<p>This is not a m$ath block$</p>", "mathematics|advanced", context: "Example 9\nSection Extensions / Math Inline\n");
         }
 
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
@@ -174,7 +174,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is not a $math bloc$k</p>
 
-            TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is not a $math bloc$k", "<p>This is not a $math bloc$k</p>", "mathematics|advanced", context: "Example 10\nSection Extensions / Math Inline\n");
         }
 
         // For the closing `$` it requires a space after or a punctuation (but cannot be preceded by a space and cannot be used within a word):
@@ -190,7 +190,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is should not match a 16$ or a $15</p>
 
-            TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is should not match a 16$ or a $15", "<p>This is should not match a 16$ or a $15</p>", "mathematics|advanced", context: "Example 11\nSection Extensions / Math Inline\n");
         }
 
         // A `$` can be escaped between a math inline block by using the escape `\\` 
@@ -206,7 +206,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math \$ block\)</span></p>
 
-            TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">\\(math \\$ block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $math \\$ block$", "<p>This is a <span class=\"math\">\\(math \\$ block\\)</span></p>", "mathematics|advanced", context: "Example 12\nSection Extensions / Math Inline\n");
         }
 
         // At most, two `$` will be matched for the opening and closing:
@@ -222,7 +222,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\($math block$\)</span></p>
 
-            TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">\\($math block$\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $$$math block$$$", "<p>This is a <span class=\"math\">\\($math block$\\)</span></p>", "mathematics|advanced", context: "Example 13\nSection Extensions / Math Inline\n");
         }
 
         // Regular text can come both before and after the math inline
@@ -238,7 +238,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is a <span class="math">\(math block\)</span> with text on both sides.</p>
 
-            TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">\\(math block\\)</span> with text on both sides.</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a $math block$ with text on both sides.", "<p>This is a <span class=\"math\">\\(math block\\)</span> with text on both sides.</p>", "mathematics|advanced", context: "Example 14\nSection Extensions / Math Inline\n");
         }
 
         // A mathematic block takes precedence over standard emphasis `*` `_`:
@@ -254,7 +254,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p>This is *a <span class="math">\(math* block\)</span></p>
 
-            TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">\\(math* block\\)</span></p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is *a $math* block$", "<p>This is *a <span class=\"math\">\\(math* block\\)</span></p>", "mathematics|advanced", context: "Example 15\nSection Extensions / Math Inline\n");
         }
 
         // An opening $$ at the beginning of a line should not be interpreted as a Math block:
@@ -270,7 +270,7 @@ namespace Markdig.Tests.Specs.Math
             // Should be rendered as:
             //     <p><span class="math">\(math\)</span> starting at a line</p>
 
-            TestParser.TestSpec("$$ math $$ starting at a line", "<p><span class=\"math\">\\(math\\)</span> starting at a line</p>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("$$ math $$ starting at a line", "<p><span class=\"math\">\\(math\\)</span> starting at a line</p>", "mathematics|advanced", context: "Example 16\nSection Extensions / Math Inline\n");
         }
     }
 
@@ -304,7 +304,7 @@ namespace Markdig.Tests.Specs.Math
             //     \end{equation}
             //     \]</div>
 
-            TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\n\\[\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n\\]</div>", "mathematics|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("$$\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n$$", "<div class=\"math\">\n\\[\n\\begin{equation}\n  \\int_0^\\infty \\frac{x^3}{e^x-1}\\,dx = \\frac{\\pi^4}{15}\n  \\label{eq:sample}\n\\end{equation}\n\\]</div>", "mathematics|advanced", context: "Example 17\nSection Extensions / Math Block\n");
         }
     }
 }

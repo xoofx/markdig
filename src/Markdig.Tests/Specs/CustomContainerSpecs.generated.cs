@@ -33,7 +33,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <div class="spoiler"><p>This is a <em>spoiler</em></p>
             //     </div>
 
-            TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec(":::spoiler\nThis is a *spoiler*\n:::", "<div class=\"spoiler\"><p>This is a <em>spoiler</em></p>\n</div>", "customcontainers+attributes|advanced", context: "Example 1\nSection Extensions / Custom Container\n");
         }
 
         // The text following the opened custom container is optional:
@@ -52,7 +52,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <div><p>This is a regular div</p>
             //     </div>
 
-            TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec(":::\nThis is a regular div\n:::", "<div><p>This is a regular div</p>\n</div>", "customcontainers+attributes|advanced", context: "Example 2\nSection Extensions / Custom Container\n");
         }
 
         // Like for fenced code block, you can use more than 3 `:` characters as long as the closing has the same number of characters:
@@ -71,7 +71,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <div class="spoiler"><p>This is a spoiler</p>
             //     </div>
 
-            TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("::::::::::::spoiler\nThis is a spoiler\n::::::::::::", "<div class=\"spoiler\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example 3\nSection Extensions / Custom Container\n");
         }
 
         // Like for fenced code block, a custom container can span over multiple empty lines in a list block:
@@ -103,7 +103,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <li>A second item in the list</li>
             //     </ul>
 
-            TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("- This is a list\n  :::spoiler\n  This is a spoiler\n  - item1\n  - item2\n  :::\n- A second item in the list", "<ul>\n<li>This is a list\n<div class=\"spoiler\">This is a spoiler\n<ul>\n<li>item1</li>\n<li>item2</li>\n</ul>\n</div>\n</li>\n<li>A second item in the list</li>\n</ul>", "customcontainers+attributes|advanced", context: "Example 4\nSection Extensions / Custom Container\n");
         }
 
         // Attributes extension is also supported for Custom Container, as long as the Attributes extension is activated after the CustomContainer extension (`.UseCustomContainer().UseAttributes()`)
@@ -122,7 +122,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <div id="myspoiler" class="spoiler" myprop="yes"><p>This is a spoiler</p>
             //     </div>
 
-            TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec(":::spoiler {#myspoiler myprop=yes}\nThis is a spoiler\n:::", "<div id=\"myspoiler\" class=\"spoiler\" myprop=\"yes\"><p>This is a spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example 5\nSection Extensions / Custom Container\n");
         }
 
         // The content of a custom container can contain any blocks:
@@ -141,7 +141,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             //     <div class="mycontainer"><p>This is a raw spoiler</p>
             //     </div>
 
-            TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec(":::mycontainer\n<p>This is a raw spoiler</p>\n:::", "<div class=\"mycontainer\"><p>This is a raw spoiler</p>\n</div>", "customcontainers+attributes|advanced", context: "Example 6\nSection Extensions / Custom Container\n");
         }
     }
 
@@ -163,7 +163,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             // Should be rendered as:
             //     <p>This is a text <span>with special emphasis</span></p>
 
-            TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a text ::with special emphasis::", "<p>This is a text <span>with special emphasis</span></p>", "customcontainers+attributes|advanced", context: "Example 7\nSection Extensions / Inline Custom Container \n");
         }
 
         // Any other emphasis inline can be used within this emphasis inline container:
@@ -179,7 +179,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             // Should be rendered as:
             //     <p>This is a text <span>with special <em>emphasis</em></span></p>
 
-            TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a text ::with special *emphasis*::", "<p>This is a text <span>with special <em>emphasis</em></span></p>", "customcontainers+attributes|advanced", context: "Example 8\nSection Extensions / Inline Custom Container \n");
         }
 
         // Attributes can be attached to a inline custom container:
@@ -195,7 +195,7 @@ namespace Markdig.Tests.Specs.CustomContainers
             // Should be rendered as:
             //     <p>This is a text <span id="myId" class="myemphasis">with special emphasis</span></p>
 
-            TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("This is a text ::with special emphasis::{#myId .myemphasis}", "<p>This is a text <span id=\"myId\" class=\"myemphasis\">with special emphasis</span></p>", "customcontainers+attributes|advanced", context: "Example 9\nSection Extensions / Inline Custom Container \n");
         }
     }
 }

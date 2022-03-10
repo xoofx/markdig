@@ -27,7 +27,7 @@ namespace Markdig.Tests.Specs.PlainText.Sample
             //     Hello, world!
             //     
 
-            TestPlainText.TestSpec("*Hello*, [world](http://example.com)!", "Hello, world!\n", "", context: "Example {number}\nSection {name}\n");
+            TestPlainText.TestSpec("*Hello*, [world](http://example.com)!", "Hello, world!\n", "", context: "Example 1\nSection Sample plain text spec\n");
         }
     }
 }

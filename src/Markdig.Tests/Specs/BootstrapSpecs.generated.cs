@@ -45,7 +45,7 @@ namespace Markdig.Tests.Specs.Bootstrap
             //     </tbody>
             //     </table>
 
-            TestParser.TestSpec("Name | Value\n-----| -----\nAbc  | 16", "<table class=\"table\">\n<thead>\n<tr>\n<th>Name</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Abc</td>\n<td>16</td>\n</tr>\n</tbody>\n</table>", "bootstrap+pipetables+figures+attributes", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("Name | Value\n-----| -----\nAbc  | 16", "<table class=\"table\">\n<thead>\n<tr>\n<th>Name</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Abc</td>\n<td>16</td>\n</tr>\n</tbody>\n</table>", "bootstrap+pipetables+figures+attributes", context: "Example 1\nSection Extensions / Bootstrap\n");
         }
 
         // Adds bootstrap `.blockquote` class to `<blockquote>`:
@@ -63,7 +63,7 @@ namespace Markdig.Tests.Specs.Bootstrap
             //     <p>This is a blockquote</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> This is a blockquote", "<blockquote class=\"blockquote\">\n<p>This is a blockquote</p>\n</blockquote>", "bootstrap+pipetables+figures+attributes", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("> This is a blockquote", "<blockquote class=\"blockquote\">\n<p>This is a blockquote</p>\n</blockquote>", "bootstrap+pipetables+figures+attributes", context: "Example 2\nSection Extensions / Bootstrap\n");
         }
 
         // Adds bootstrap `.figure` class to `<figure>` and `.figure-caption` to `<figcaption>`
@@ -84,7 +84,7 @@ namespace Markdig.Tests.Specs.Bootstrap
             //     <figcaption class="figure-caption">This is the caption</figcaption>
             //     </figure>
 
-            TestParser.TestSpec("^^^\nThis is a text in a caption\n^^^ This is the caption", "<figure class=\"figure\">\n<p>This is a text in a caption</p>\n<figcaption class=\"figure-caption\">This is the caption</figcaption>\n</figure>", "bootstrap+pipetables+figures+attributes", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("^^^\nThis is a text in a caption\n^^^ This is the caption", "<figure class=\"figure\">\n<p>This is a text in a caption</p>\n<figcaption class=\"figure-caption\">This is the caption</figcaption>\n</figure>", "bootstrap+pipetables+figures+attributes", context: "Example 3\nSection Extensions / Bootstrap\n");
         }
 
         // Adds the `.img-fluid` class to all image links `<img>`
@@ -100,7 +100,7 @@ namespace Markdig.Tests.Specs.Bootstrap
             // Should be rendered as:
             //     <p><img src="/url" class="img-fluid" alt="Image Link" /></p>
 
-            TestParser.TestSpec("![Image Link](/url)", "<p><img src=\"/url\" class=\"img-fluid\" alt=\"Image Link\" /></p>", "bootstrap+pipetables+figures+attributes", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("![Image Link](/url)", "<p><img src=\"/url\" class=\"img-fluid\" alt=\"Image Link\" /></p>", "bootstrap+pipetables+figures+attributes", context: "Example 4\nSection Extensions / Bootstrap\n");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             // Should be rendered as:
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
-            TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example 1\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // Only punctuation `-`, `_` and `.` is kept, all other non letter characters are discarded.
@@ -48,7 +48,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             // Should be rendered as:
             //     <h1 id="this-is-a-heading_with.and">This - is a &amp;@! heading _ with . and ! -</h1>
 
-            TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This - is a &@! heading _ with . and ! -", "<h1 id=\"this-is-a-heading_with.and\">This - is a &amp;@! heading _ with . and ! -</h1>", "autoidentifiers|advanced", context: "Example 2\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // Formatting (emphasis) are also discarded:
@@ -64,7 +64,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             // Should be rendered as:
             //     <h1 id="this-is-a-heading">This is a <em>heading</em></h1>
 
-            TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This is a *heading*", "<h1 id=\"this-is-a-heading\">This is a <em>heading</em></h1>", "autoidentifiers|advanced", context: "Example 3\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // Links are also removed:
@@ -80,7 +80,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             // Should be rendered as:
             //     <h1 id="this-is-a-heading">This is a <a href="/url">heading</a></h1>
 
-            TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This is a [heading](/url)", "<h1 id=\"this-is-a-heading\">This is a <a href=\"/url\">heading</a></h1>", "autoidentifiers|advanced", context: "Example 4\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // If multiple heading have the same text, -1, -2...-n will be postfix to the header id.
@@ -98,7 +98,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <h1 id="this-is-a-heading">This is a heading</h1>
             //     <h1 id="this-is-a-heading-1">This is a heading</h1>
 
-            TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This is a heading\n# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<h1 id=\"this-is-a-heading-1\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example 5\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // The heading Id will start on the first letter character of the heading, all previous characters will be discarded:
@@ -114,7 +114,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             // Should be rendered as:
             //     <h1 id="this-is-a-heading">1.0 This is a heading</h1>
 
-            TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# 1.0 This is a heading", "<h1 id=\"this-is-a-heading\">1.0 This is a heading</h1>", "autoidentifiers|advanced", context: "Example 6\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // If the heading is all stripped by the previous rules, the id `section` will be used instead:
@@ -132,7 +132,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <h1 id="section">1.0 &amp; ^ % *</h1>
             //     <h1 id="section-1">1.0 &amp; ^ % *</h1>
 
-            TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# 1.0 & ^ % *\n# 1.0 & ^ % *", "<h1 id=\"section\">1.0 &amp; ^ % *</h1>\n<h1 id=\"section-1\">1.0 &amp; ^ % *</h1>", "autoidentifiers|advanced", context: "Example 7\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // When the options "AutoLink" is setup, it is possible to link to an existing heading by using the 
@@ -151,7 +151,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <h1 id="this-is-a-heading">This is a heading</h1>
             //     <p><a href="#this-is-a-heading">This is a heading</a></p>
 
-            TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("# This is a heading\n[This is a heading]", "<h1 id=\"this-is-a-heading\">This is a heading</h1>\n<p><a href=\"#this-is-a-heading\">This is a heading</a></p>", "autoidentifiers|advanced", context: "Example 8\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // Links before the heading are also working:
@@ -169,7 +169,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <p><a href="#this-is-a-heading">This is a heading</a></p>
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
-            TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("[This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">This is a heading</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example 9\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // The text of the link can be changed:
@@ -187,7 +187,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <p><a href="#this-is-a-heading">With a new text</a></p>
             //     <h1 id="this-is-a-heading">This is a heading</h1>
 
-            TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("[With a new text][This is a heading]\n# This is a heading", "<p><a href=\"#this-is-a-heading\">With a new text</a></p>\n<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced", context: "Example 10\nSection Extensions / Heading Auto Identifiers\n");
         }
 
         // An autoidentifier should not conflict with an existing link:
@@ -206,7 +206,7 @@ namespace Markdig.Tests.Specs.AutoIdentifiers
             //     <p><img src="./scenario.png" alt="scenario image" /></p>
             //     <h2 id="scenario">Scenario</h2>
 
-            TestParser.TestSpec("![scenario image][scenario]\n## Scenario\n[scenario]: ./scenario.png", "<p><img src=\"./scenario.png\" alt=\"scenario image\" /></p>\n<h2 id=\"scenario\">Scenario</h2>", "autoidentifiers|advanced", context: "Example {number}\nSection {name}\n");
+            TestParser.TestSpec("![scenario image][scenario]\n## Scenario\n[scenario]: ./scenario.png", "<p><img src=\"./scenario.png\" alt=\"scenario image\" /></p>\n<h2 id=\"scenario\">Scenario</h2>", "autoidentifiers|advanced", context: "Example 11\nSection Extensions / Heading Auto Identifiers\n");
         }
     }
 }
