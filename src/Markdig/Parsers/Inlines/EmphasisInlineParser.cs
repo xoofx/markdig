@@ -103,25 +103,26 @@ namespace Markdig.Parsers.Inlines
                 delimiters.Add(emphasisDelimiter);
             }
 
-            // Move current_position forward in the delimiter stack (if needed) until 
-            // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
-            var child = container.LastChild;
+            // Collect all EmphasisDelimiterInline by searching from the root container
+            var child = container.FirstChild;
             while (child != null)
             {
+                // Stop the search on the delimitation child 
                 if (child == lastChild)
                 {
                     break;
                 }
+
+                // If we have a delimiter, we search into it as we should have a tree of EmphasisDelimiterInline
                 if (child is EmphasisDelimiterInline delimiter)
                 {
-                    if (delimiters is null)
-                    {
-                        delimiters = inlinesCache.Get();
-                    }
+                    delimiters ??= inlinesCache.Get();
                     delimiters.Add(delimiter);
+                    child = delimiter.FirstChild;
+                    continue;
                 }
-                var subContainer = child as ContainerInline;
-                child = subContainer?.LastChild;
+
+                child = child.NextSibling;
             }
 
             if (delimiters != null)
