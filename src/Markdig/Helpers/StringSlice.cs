@@ -82,6 +82,15 @@ namespace Markdig.Helpers
             NewLine = newLine;
         }
 
+        // Internal ctor to skip the null check
+        internal StringSlice(string text, int start, int end, NewLine newLine, bool dummy)
+        {
+            Text = text;
+            Start = start;
+            End = end;
+            NewLine = newLine;
+        }
+
         /// <summary>
         /// The text of this slice.
         /// </summary>
