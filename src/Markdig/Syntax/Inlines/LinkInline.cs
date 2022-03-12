@@ -7,12 +7,13 @@ using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines
 {
-    public enum LocalLabel
+    public enum LocalLabel : byte
     {
         Local, // [foo][bar]
         Empty, // [foo][]
         None, // [foo]
     }
+
     /// <summary>
     /// A Link inline (Section 6.5 CommonMark specs)
     /// </summary>
@@ -20,6 +21,9 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("Url: {Url} Title: {Title} Image: {IsImage}")]
     public class LinkInline : ContainerInline
     {
+        private TriviaProperties? _trivia;
+        private TriviaProperties Trivia => _trivia ??= new();
+
         /// <summary>
         /// A delegate to use if it is setup on this instance to allow late binding 
         /// of a Url.
@@ -65,14 +69,14 @@ namespace Markdig.Syntax.Inlines
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice LabelWithTrivia { get; set; }
+        public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
         /// <summary>
         /// Gets or sets the type of label parsed
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="LocalLabel.None"/>.
         /// </summary>
-        public LocalLabel LocalLabel { get; set; }
+        public LocalLabel LocalLabel { get => _trivia?.LocalLabel ?? LocalLabel.None; set => Trivia.LocalLabel = value; }
 
         /// <summary>
         /// Gets or sets the reference this link is attached to. May be null.
@@ -81,21 +85,22 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// Gets or sets the label as matched against the <see cref="LinkReferenceDefinition"/>.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled.
         /// </summary>
-        public string? LinkRefDefLabel { get; set; }
+        public string? LinkRefDefLabel { get => _trivia?.LinkRefDefLabel; set => Trivia.LinkRefDefLabel = value; }
 
         /// <summary>
         /// Gets or sets the <see cref="LinkRefDefLabel"/> with trivia as matched against
         /// the <see cref="LinkReferenceDefinition"/>
         /// </summary>
-        public StringSlice LinkRefDefLabelWithTrivia { get; set; }
+        public StringSlice LinkRefDefLabelWithTrivia { get => _trivia?.LinkRefDefLabelWithTrivia ?? StringSlice.Empty; set => Trivia.LinkRefDefLabelWithTrivia = value; }
 
         /// <summary>
         /// Gets or sets the trivia before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice TriviaBeforeUrl { get; set; }
+        public StringSlice TriviaBeforeUrl { get => _trivia?.TriviaBeforeUrl ?? StringSlice.Empty; set => Trivia.TriviaBeforeUrl = value; }
 
         /// <summary>
         /// True if the <see cref="Url"/> in the source document is enclosed
@@ -103,7 +108,7 @@ namespace Markdig.Syntax.Inlines
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// false.
         /// </summary>
-        public bool UrlHasPointyBrackets { get; set; }
+        public bool UrlHasPointyBrackets { get => _trivia?.UrlHasPointyBrackets ?? false; set => Trivia.UrlHasPointyBrackets = value; }
 
         /// <summary>
         /// Gets or sets the URL.
@@ -120,14 +125,14 @@ namespace Markdig.Syntax.Inlines
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice UnescapedUrl { get; set; }
+        public StringSlice UnescapedUrl { get => _trivia?.UnescapedUrl ?? StringSlice.Empty; set => Trivia.UnescapedUrl = value; }
 
         /// <summary>
         /// Any trivia after the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice TriviaAfterUrl { get; set; }
+        public StringSlice TriviaAfterUrl { get => _trivia?.TriviaAfterUrl ?? StringSlice.Empty; set => Trivia.TriviaAfterUrl = value; }
 
         /// <summary>
         /// Gets or sets the GetDynamicUrl delegate. If this property is set, 
@@ -137,10 +142,9 @@ namespace Markdig.Syntax.Inlines
 
         /// <summary>
         /// Gets or sets the character used to enclose the <see cref="Title"/>.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled.
         /// </summary>
-        public char TitleEnclosingCharacter { get; set; }
+        public char TitleEnclosingCharacter { get => _trivia?.TitleEnclosingCharacter ?? default; set => Trivia.TitleEnclosingCharacter = value; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -158,14 +162,14 @@ namespace Markdig.Syntax.Inlines
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice UnescapedTitle { get; set; }
+        public StringSlice UnescapedTitle { get => _trivia?.UnescapedTitle ?? StringSlice.Empty; set => Trivia.UnescapedTitle = value; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice TriviaAfterTitle { get; set; }
+        public StringSlice TriviaAfterTitle { get => _trivia?.TriviaAfterTitle ?? StringSlice.Empty; set => Trivia.TriviaAfterTitle = value; }
 
         /// <summary>
         /// Gets or sets a boolean indicating if this link is a shortcut link to a <see cref="LinkReferenceDefinition"/>
@@ -176,5 +180,20 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets a boolean indicating whether the inline link was parsed using markdown syntax or was automatic recognized.
         /// </summary>
         public bool IsAutoLink { get; set; }
+
+        private sealed class TriviaProperties
+        {
+            public StringSlice LabelWithTrivia;
+            public LocalLabel LocalLabel;
+            public string? LinkRefDefLabel;
+            public StringSlice LinkRefDefLabelWithTrivia;
+            public StringSlice TriviaBeforeUrl;
+            public bool UrlHasPointyBrackets;
+            public StringSlice UnescapedUrl;
+            public StringSlice TriviaAfterUrl;
+            public char TitleEnclosingCharacter;
+            public StringSlice UnescapedTitle;
+            public StringSlice TriviaAfterTitle;
+        }
     }
 }

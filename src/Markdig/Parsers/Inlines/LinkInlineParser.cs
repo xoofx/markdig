@@ -138,18 +138,13 @@ namespace Markdig.Parsers.Inlines
             // Create a default link if the callback was not found
             if (link is null)
             {
-                var labelWithTrivia = new StringSlice(text.Text, labelWithriviaSpan.Start, labelWithriviaSpan.End);
                 // Inline Link
-                link = new LinkInline()
+                var linkInline = new LinkInline()
                 {
                     Url = HtmlHelper.Unescape(linkRef.Url),
                     Title = HtmlHelper.Unescape(linkRef.Title),
                     Label = label,
                     LabelSpan = labelSpan,
-                    LabelWithTrivia = labelWithTrivia,
-                    LinkRefDefLabel = linkRef.Label,
-                    LinkRefDefLabelWithTrivia = linkRef.LabelWithTrivia,
-                    LocalLabel = localLabel,
                     UrlSpan = linkRef.UrlSpan,
                     IsImage = parent.IsImage,
                     IsShortcut = isShortcut,
@@ -158,6 +153,16 @@ namespace Markdig.Parsers.Inlines
                     Line = parent.Line,
                     Column = parent.Column,
                 };
+
+                if (state.TrackTrivia)
+                {
+                    linkInline.LabelWithTrivia = new StringSlice(text.Text, labelWithriviaSpan.Start, labelWithriviaSpan.End);
+                    linkInline.LinkRefDefLabel = linkRef.Label;
+                    linkInline.LinkRefDefLabelWithTrivia = linkRef.LabelWithTrivia;
+                    linkInline.LocalLabel = localLabel;
+                }
+
+                link = linkInline;
             }
 
             if (link is ContainerInline containerLink)
