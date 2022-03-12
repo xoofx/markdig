@@ -16,6 +16,9 @@ namespace Markdig.Syntax
     /// <seealso cref="LeafBlock" />
     public class LinkReferenceDefinition : LeafBlock
     {
+        private TriviaProperties? _trivia;
+        private TriviaProperties Trivia => _trivia ??= new();
+
         /// <summary>
         /// Creates an inline link for the specified <see cref="LinkReferenceDefinition"/>.
         /// </summary>
@@ -62,14 +65,14 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice LabelWithTrivia { get; set; }
+        public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
         /// <summary>
         /// Whitespace before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice TriviaBeforeUrl { get; set; }
+        public StringSlice TriviaBeforeUrl { get => _trivia?.TriviaBeforeUrl ?? StringSlice.Empty; set => Trivia.TriviaBeforeUrl = value; }
 
         /// <summary>
         /// Gets or sets the URL.
@@ -86,21 +89,21 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice UnescapedUrl { get; set; }
+        public StringSlice UnescapedUrl { get => _trivia?.UnescapedUrl ?? StringSlice.Empty; set => Trivia.UnescapedUrl = value; }
 
         /// <summary>
         /// True when the <see cref="Url"/> is enclosed in point brackets in the source document.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// false.
         /// </summary>
-        public bool UrlHasPointyBrackets { get; set; }
+        public bool UrlHasPointyBrackets { get => _trivia?.UrlHasPointyBrackets ?? false; set => Trivia.UrlHasPointyBrackets = value; }
 
         /// <summary>
         /// gets or sets the whitespace before a <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice TriviaBeforeTitle { get; set; }
+        public StringSlice TriviaBeforeTitle { get => _trivia?.TriviaBeforeTitle ?? StringSlice.Empty; set => Trivia.TriviaBeforeTitle = value; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -117,13 +120,13 @@ namespace Markdig.Syntax
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
         /// <see cref="StringSlice.IsEmpty"/>.
         /// </summary>
-        public StringSlice UnescapedTitle { get; set; }
+        public StringSlice UnescapedTitle { get => _trivia?.UnescapedTitle ?? StringSlice.Empty; set => Trivia.UnescapedTitle = value; }
 
         /// <summary>
         /// Gets or sets the character the <see cref="Title"/> is enclosed in.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise \0.
         /// </summary>
-        public char TitleEnclosingCharacter { get; set; }
+        public char TitleEnclosingCharacter { get => _trivia?.TitleEnclosingCharacter ?? default; set => Trivia.TitleEnclosingCharacter = value; }
 
         /// <summary>
         /// Gets or sets the create link inline callback for this instance.
@@ -226,6 +229,17 @@ namespace Markdig.Syntax
                 NewLine = newLine,
             };
             return true;
+        }
+
+        private sealed class TriviaProperties
+        {
+            public StringSlice LabelWithTrivia;
+            public StringSlice TriviaBeforeUrl;
+            public StringSlice UnescapedUrl;
+            public bool UrlHasPointyBrackets;
+            public StringSlice TriviaBeforeTitle;
+            public StringSlice UnescapedTitle;
+            public char TitleEnclosingCharacter;
         }
     }
 }
