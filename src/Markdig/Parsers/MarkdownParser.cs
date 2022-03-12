@@ -43,8 +43,8 @@ namespace Markdig.Parsers
 
             if (pipeline.PreciseSourceLocation)
             {
-                int roughLineCountEstimate = text.Length / 40;
-                roughLineCountEstimate = Math.Min(4, Math.Max(512, roughLineCountEstimate));
+                int roughLineCountEstimate = text.Length / 32;
+                roughLineCountEstimate = Math.Max(4, Math.Min(512, roughLineCountEstimate));
                 document.LineStartIndexes = new List<int>(roughLineCountEstimate);
             }
 
