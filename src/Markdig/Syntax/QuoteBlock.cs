@@ -14,6 +14,8 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class QuoteBlock : ContainerBlock
     {
+        private List<QuoteBlockLine> Trivia => GetOrSetDerivedTrivia<List<QuoteBlockLine>>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
         /// </summary>
@@ -24,10 +26,9 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the trivia per line of this QuoteBlock.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
-        public List<QuoteBlockLine> QuoteLines { get; } = new ();
+        public List<QuoteBlockLine> QuoteLines => Trivia;
 
         /// <summary>
         /// Gets or sets the quote character (usually `&gt;`)
@@ -37,30 +38,23 @@ namespace Markdig.Syntax
 
     /// <summary>
     /// Represents trivia per line part of a QuoteBlock.
-    /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-    /// <see cref="QuoteBlock.QuoteLines"/> is empty.
+    /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled.
     /// </summary>
     public class QuoteBlockLine
     {
         /// <summary>
         /// Gets or sets trivia occuring before the first quote character.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
         public StringSlice TriviaBefore { get; set; }
 
         /// <summary>
         /// True when this QuoteBlock line has a quote character. False when
         /// this line is a "lazy line".
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
         public bool QuoteChar { get; set; }
 
         /// <summary>
         /// True if a space is parsed right after the quote character.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
         public bool HasSpaceAfterQuoteChar { get; set; }
 
@@ -68,15 +62,11 @@ namespace Markdig.Syntax
         /// Gets or sets the trivia after the the space after the quote character.
         /// The first space is assigned to <see cref="HasSpaceAfterQuoteChar"/>, subsequent
         /// trivia is assigned to this property.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
         public StringSlice TriviaAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the newline of this QuoeBlockLine.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="QuoteBlock.QuoteLines"/> is empty.
         /// </summary>
         public NewLine NewLine { get; set; }
     }

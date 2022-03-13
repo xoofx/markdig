@@ -36,9 +36,14 @@ namespace Markdig.Parsers
                 {
                     Column = processor.Column,
                     Span = new SourceSpan(processor.Start, processor.Line.End),
-                    LinesBefore = processor.UseLinesBefore(),
-                    NewLine = processor.Line.NewLine,
                 };
+
+                if (processor.TrackTrivia)
+                {
+                    codeBlock.LinesBefore = processor.UseLinesBefore();
+                    codeBlock.NewLine = processor.Line.NewLine;
+                }
+
                 var codeBlockLine = new CodeBlockLine
                 {
                     TriviaBefore = processor.UseTrivia(sourceStartPosition - 1)
@@ -68,8 +73,12 @@ namespace Markdig.Parsers
                             if (line.Slice.IsEmpty)
                             {
                                 codeBlock.Lines.RemoveAt(i);
-                                processor.LinesBefore ??= new List<StringSlice>();
-                                processor.LinesBefore.Add(line.Slice);
+
+                                if (processor.TrackTrivia)
+                                {
+                                    processor.LinesBefore ??= new List<StringSlice>();
+                                    processor.LinesBefore.Add(line.Slice);
+                                }
                             }
                             else
                             {
@@ -92,12 +101,15 @@ namespace Markdig.Parsers
 
                 // lines
                 var cb = (CodeBlock)block;
-                var codeBlockLine = new CodeBlockLine
-                {
-                    TriviaBefore = processor.UseTrivia(processor.Start - 1)
-                };
+                var codeBlockLine = new CodeBlockLine();
+
                 cb.CodeBlockLines.Add(codeBlockLine);
-                cb.NewLine = processor.Line.NewLine; // ensure block newline is last newline
+
+                if (processor.TrackTrivia)
+                {
+                    codeBlockLine.TriviaBefore = processor.UseTrivia(processor.Start - 1);
+                    cb.NewLine = processor.Line.NewLine; // ensure block newline is last newline
+                }
             }
 
             return BlockState.Continue;

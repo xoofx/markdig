@@ -14,6 +14,9 @@ namespace Markdig.Syntax
     [DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines} Level: {Level}")]
     public class HeadingBlock : LeafBlock
     {
+        private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetDerivedTrivia<TriviaProperties>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HeadingBlock"/> class.
         /// </summary>
@@ -45,14 +48,21 @@ namespace Markdig.Syntax
 
         /// <summary>
         /// Gets or sets the newline of the first line when <see cref="IsSetext"/> is true.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled.
         /// </summary>
-        public NewLine SetextNewline { get; set; }
+        public NewLine SetextNewline { get => _trivia?.SetextNewline ?? NewLine.None; set => Trivia.SetextNewline = value; }
 
         /// <summary>
         /// Gets or sets the whitespace after the # character when <see cref="IsSetext"/> is false.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
-        public StringSlice TriviaAfterAtxHeaderChar { get; set; }
+        public StringSlice TriviaAfterAtxHeaderChar { get => _trivia?.TriviaAfterAtxHeaderChar ?? StringSlice.Empty; set => Trivia.TriviaAfterAtxHeaderChar = value; }
+
+        private sealed class TriviaProperties
+        {
+            public NewLine SetextNewline;
+            public StringSlice TriviaAfterAtxHeaderChar;
+        }
     }
 }

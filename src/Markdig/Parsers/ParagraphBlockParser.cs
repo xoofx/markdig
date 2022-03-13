@@ -23,13 +23,19 @@ namespace Markdig.Parsers
             }
 
             // We continue trying to match by default
-            processor.NewBlocks.Push(new ParagraphBlock(this)
+            var paragraph = new ParagraphBlock(this)
             {
                 Column = processor.Column,
                 Span = new SourceSpan(processor.Line.Start, processor.Line.End),
-                LinesBefore = processor.UseLinesBefore(),
-                NewLine = processor.Line.NewLine,
-            });
+            };
+
+            if (processor.TrackTrivia)
+            {
+                paragraph.LinesBefore = processor.UseLinesBefore();
+                paragraph.NewLine = processor.Line.NewLine;
+            }
+
+            processor.NewBlocks.Push(paragraph);
             return BlockState.Continue;
         }
 
@@ -128,15 +134,19 @@ namespace Markdig.Parsers
                         Span = new SourceSpan(paragraph.Span.Start, line.Start),
                         Level = level,
                         Lines = paragraph.Lines,
-                        TriviaBefore = state.UseTrivia(sourcePosition - 1), // remove dashes
-                        TriviaAfter = new StringSlice(state.Line.Text, state.Start, line.End),
-                        LinesBefore = paragraph.LinesBefore,
-                        NewLine = state.Line.NewLine,
                         IsSetext = true,
                         HeaderCharCount = count,
-                        SetextNewline = paragraph.NewLine,
                     };
-                    if (!state.TrackTrivia)
+
+                    if (state.TrackTrivia)
+                    {
+                        heading.LinesBefore = paragraph.LinesBefore;
+                        heading.TriviaBefore = state.UseTrivia(sourcePosition - 1); // remove dashes
+                        heading.TriviaAfter = new StringSlice(state.Line.Text, state.Start, line.End);
+                        heading.NewLine = state.Line.NewLine;
+                        heading.SetextNewline = paragraph.NewLine;
+                    }
+                    else
                     {
                         heading.Lines.Trim();
                     }

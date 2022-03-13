@@ -16,8 +16,8 @@ namespace Markdig.Syntax
     /// <seealso cref="LeafBlock" />
     public class LinkReferenceDefinition : LeafBlock
     {
-        private TriviaProperties? _trivia;
-        private TriviaProperties Trivia => _trivia ??= new();
+        private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetDerivedTrivia<TriviaProperties>();
 
         /// <summary>
         /// Creates an inline link for the specified <see cref="LinkReferenceDefinition"/>.
