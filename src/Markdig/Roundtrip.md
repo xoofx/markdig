@@ -111,14 +111,14 @@ All trivia in a document should be attached to a node. The `Block` class defines
 /// <summary>
 /// Gets or sets the trivia right before this block.
 /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-/// <see cref="StringSlice.IsEmpty"/>.
+/// <see cref="StringSlice.Empty"/>.
 /// </summary>
 public StringSlice TriviaBefore { get; set; }
 
 /// <summary>
 /// Gets or sets trivia occurring after this block.
 /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-/// <see cref="StringSlice.IsEmpty"/>.
+/// <see cref="StringSlice.Empty"/>.
 /// </summary>
 public StringSlice TriviaAfter { get; set; }
 ```

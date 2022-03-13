@@ -63,14 +63,14 @@ namespace Markdig.Syntax
         /// <summary>
         /// Non-normalized Label (includes trivia)
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
         /// <summary>
         /// Whitespace before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice TriviaBeforeUrl { get => _trivia?.TriviaBeforeUrl ?? StringSlice.Empty; set => Trivia.TriviaBeforeUrl = value; }
 
@@ -87,7 +87,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Non-normalized <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice UnescapedUrl { get => _trivia?.UnescapedUrl ?? StringSlice.Empty; set => Trivia.UnescapedUrl = value; }
 
@@ -101,7 +101,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// gets or sets the whitespace before a <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice TriviaBeforeTitle { get => _trivia?.TriviaBeforeTitle ?? StringSlice.Empty; set => Trivia.TriviaBeforeTitle = value; }
 
@@ -118,7 +118,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Non-normalized <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice UnescapedTitle { get => _trivia?.UnescapedTitle ?? StringSlice.Empty; set => Trivia.UnescapedTitle = value; }
 

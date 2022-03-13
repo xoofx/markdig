@@ -67,7 +67,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the <see cref="Label"/> with trivia.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
@@ -98,7 +98,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the trivia before the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice TriviaBeforeUrl { get => _trivia?.TriviaBeforeUrl ?? StringSlice.Empty; set => Trivia.TriviaBeforeUrl = value; }
 
@@ -123,14 +123,14 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The <see cref="Url"/> but with trivia and unescaped characters
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice UnescapedUrl { get => _trivia?.UnescapedUrl ?? StringSlice.Empty; set => Trivia.UnescapedUrl = value; }
 
         /// <summary>
         /// Any trivia after the <see cref="Url"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice TriviaAfterUrl { get => _trivia?.TriviaAfterUrl ?? StringSlice.Empty; set => Trivia.TriviaAfterUrl = value; }
 
@@ -160,14 +160,14 @@ namespace Markdig.Syntax.Inlines
         /// Gets or sets the <see cref="Title"/> exactly as parsed from the
         /// source document including unescaped characters
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice UnescapedTitle { get => _trivia?.UnescapedTitle ?? StringSlice.Empty; set => Trivia.UnescapedTitle = value; }
 
         /// <summary>
         /// Gets or sets the trivia after the <see cref="Title"/>.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
         public StringSlice TriviaAfterTitle { get => _trivia?.TriviaAfterTitle ?? StringSlice.Empty; set => Trivia.TriviaAfterTitle = value; }
 

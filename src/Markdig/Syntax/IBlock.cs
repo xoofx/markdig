@@ -61,13 +61,13 @@ namespace Markdig.Syntax
         /// <summary>
         /// Trivia occurring before this block
         /// </summary>
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.Empty"/>.
         StringSlice TriviaBefore { get; set; }
 
         /// <summary>
         /// Trivia occurring after this block
         /// </summary>
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.IsEmpty"/>.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise <see cref="StringSlice.Empty"/>.
         StringSlice TriviaAfter { get; set; }
     }
 }
