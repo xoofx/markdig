@@ -79,18 +79,23 @@ namespace Markdig.Parsers.Inlines
 
                     // Else we insert a LinkDelimiter
                     slice.SkipChar();
-                    var labelWithTrivia = new StringSlice(slice.Text, labelWithTriviaSpan.Start, labelWithTriviaSpan.End);
-                    processor.Inline = new LinkDelimiterInline(this)
+                    var linkDelimiter = new LinkDelimiterInline(this)
                     {
                         Type = DelimiterType.Open,
                         Label = label,
-                        LabelWithTrivia = labelWithTrivia,
                         LabelSpan = processor.GetSourcePositionFromLocalSpan(labelSpan),
                         IsImage = isImage,
                         Span = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
                         Line = line,
                         Column = column
                     };
+
+                    if (processor.TrackTrivia)
+                    {
+                        linkDelimiter.LabelWithTrivia = new StringSlice(slice.Text, labelWithTriviaSpan.Start, labelWithTriviaSpan.End);
+                    }
+
+                    processor.Inline = linkDelimiter;
                     return true;
 
                 case ']':
