@@ -85,7 +85,7 @@ namespace Markdig.Parsers
             }
 
             // Push a new block
-            processor.NewBlocks.Push(new ThematicBreakBlock(this)
+            var thematicBreak = new ThematicBreakBlock(this)
             {
                 Column = processor.Column,
                 Span = new SourceSpan(startPosition, line.End),
@@ -94,10 +94,16 @@ namespace Markdig.Parsers
                 // TODO: should we separate whitespace before/after?
                 //BeforeWhitespace = beforeWhitespace,
                 //AfterWhitespace = processor.PopBeforeWhitespace(processor.CurrentLineStartPosition),
-                LinesBefore = processor.UseLinesBefore(),
                 Content = new StringSlice(line.Text, processor.TriviaStart, line.End, line.NewLine), //include whitespace for now
-                NewLine = processor.Line.NewLine,
-            });
+            };
+
+            if (processor.TrackTrivia)
+            {
+                thematicBreak.LinesBefore = processor.UseLinesBefore();
+                thematicBreak.NewLine = processor.Line.NewLine;
+            }
+
+            processor.NewBlocks.Push(thematicBreak);
             return BlockState.BreakDiscard;
         }
     }

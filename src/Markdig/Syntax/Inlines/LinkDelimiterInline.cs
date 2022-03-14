@@ -13,6 +13,9 @@ namespace Markdig.Syntax.Inlines
     /// <seealso cref="DelimiterInline" />
     public class LinkDelimiterInline : DelimiterInline
     {
+        private TriviaProperties? _trivia;
+        private TriviaProperties Trivia => _trivia ??= new();
+
         public LinkDelimiterInline(InlineParser parser) : base(parser)
         {
         }
@@ -35,13 +38,18 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the <see cref="Label"/> with trivia.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
-        public StringSlice LabelWithTrivia { get; set; }
+        public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
         public override string ToLiteral()
         {
             return IsImage ? "![" : "[";
+        }
+
+        private sealed class TriviaProperties
+        {
+            public StringSlice LabelWithTrivia;
         }
     }
 }

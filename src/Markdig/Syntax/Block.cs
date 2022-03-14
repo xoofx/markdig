@@ -14,6 +14,9 @@ namespace Markdig.Syntax
     /// <seealso cref="MarkdownObject" />
     public abstract class Block : MarkdownObject, IBlock
     {
+        private BlockTriviaProperties? _trivia;
+        private BlockTriviaProperties Trivia => _trivia ??= new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Block"/> class.
         /// </summary>
@@ -28,7 +31,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets the parent of this container. May be null.
         /// </summary>
-        public ContainerBlock? Parent { get; internal set;  }
+        public ContainerBlock? Parent { get; internal set; }
 
         /// <summary>
         /// Gets the parser associated to this instance.
@@ -46,7 +49,8 @@ namespace Markdig.Syntax
         public bool IsBreakable { get; set; }
 
         /// <summary>
-        /// The last newline of this block
+        /// The last newline of this block.
+        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled
         /// </summary>
         public NewLine NewLine { get; set; }
 
@@ -58,28 +62,28 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the trivia right before this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
-        public StringSlice TriviaBefore { get; set; }
+        public StringSlice TriviaBefore { get => _trivia?.TriviaBefore ?? StringSlice.Empty; set => Trivia.TriviaBefore = value; }
 
         /// <summary>
         /// Gets or sets trivia occurring after this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
-        public StringSlice TriviaAfter { get; set; }
+        public StringSlice TriviaAfter { get => _trivia?.TriviaAfter ?? StringSlice.Empty; set => Trivia.TriviaAfter = value; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring before this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
-        public List<StringSlice>? LinesBefore { get; set; }
+        public List<StringSlice>? LinesBefore { get => _trivia?.LinesBefore; set => Trivia.LinesBefore = value; }
 
         /// <summary>
         /// Gets or sets the empty lines occurring after this block.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
         /// </summary>
-        public List<StringSlice>? LinesAfter { get; set; }
+        public List<StringSlice>? LinesAfter { get => _trivia?.LinesAfter; set => Trivia.LinesAfter = value; }
 
         /// <summary>
         /// Occurs when the process of inlines begin.
@@ -133,6 +137,20 @@ namespace Markdig.Syntax
                 block = block.Parent;
             }
             return block;
+        }
+
+        private protected T? TryGetDerivedTrivia<T>() where T : class => _trivia?.DerivedTriviaSlot as T;
+        private protected T GetOrSetDerivedTrivia<T>() where T : new() => (T)(Trivia.DerivedTriviaSlot ??= new T());
+
+        private sealed class BlockTriviaProperties
+        {
+            // Used by derived types to store their own TriviaProperties
+            public object? DerivedTriviaSlot;
+
+            public StringSlice TriviaBefore;
+            public StringSlice TriviaAfter;
+            public List<StringSlice>? LinesBefore;
+            public List<StringSlice>? LinesAfter;
         }
     }
 }

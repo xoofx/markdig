@@ -332,9 +332,13 @@ namespace Markdig.Parsers
 
                 var fencedBlock = (IFencedBlock)block;
                 fencedBlock.ClosingFencedCharCount = closingCount;
-                fencedBlock.NewLine = processor.Line.NewLine;
-                fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
-                fencedBlock.TriviaAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
+
+                if (processor.TrackTrivia)
+                {
+                    fencedBlock.NewLine = processor.Line.NewLine;
+                    fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
+                    fencedBlock.TriviaAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
+                }
 
                 // Don't keep the last line
                 return BlockState.BreakDiscard;

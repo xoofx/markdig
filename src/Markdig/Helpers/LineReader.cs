@@ -4,6 +4,8 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Markdig.Helpers
 {
@@ -39,41 +41,55 @@ namespace Markdig.Helpers
         /// <returns>A new line or null if the end of <see cref="TextReader"/> has been reached</returns>
         public StringSlice ReadLine()
         {
-            string text = _text;
+            string? text = _text;
+            int end = text.Length;
             int sourcePosition = SourcePosition;
+            int newSourcePosition = int.MaxValue;
+            NewLine newLine = NewLine.None;
 
-            for (int i = sourcePosition; i < text.Length; i++)
+            if ((uint)sourcePosition >= (uint)end)
             {
-                char c = text[i];
-                if (c == '\r')
+                text = null;
+            }
+            else
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                ReadOnlySpan<char> span = MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), sourcePosition), end - sourcePosition);
+#else
+                ReadOnlySpan<char> span = text.AsSpan(sourcePosition);
+#endif
+
+                int crlf = span.IndexOfAny('\r', '\n');
+                if (crlf >= 0)
                 {
-                    int length = 1;
-                    var newLine = NewLine.CarriageReturn;
-                    if (c == '\r' && (uint)(i + 1) < (uint)text.Length && text[i + 1] == '\n')
+                    end = sourcePosition + crlf;
+                    newSourcePosition = end + 1;
+
+#if NETCOREAPP3_1_OR_GREATER
+                    if (Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), end) == '\r')
+#else
+                    if ((uint)end < (uint)text.Length && text[end] == '\r')
+#endif
                     {
-                        i++;
-                        length = 2;
-                        newLine = NewLine.CarriageReturnLineFeed;
+                        if ((uint)(newSourcePosition) < (uint)text.Length && text[newSourcePosition] == '\n')
+                        {
+                            newLine = NewLine.CarriageReturnLineFeed;
+                            newSourcePosition++;
+                        }
+                        else
+                        {
+                            newLine = NewLine.CarriageReturn;
+                        }
                     }
-
-                    var slice = new StringSlice(text, sourcePosition, i - length, newLine);
-                    SourcePosition = i + 1;
-                    return slice;
-                }
-
-                if (c == '\n')
-                {
-                    var slice = new StringSlice(text, sourcePosition, i - 1, NewLine.LineFeed);
-                    SourcePosition = i + 1;
-                    return slice;
+                    else
+                    {
+                        newLine = NewLine.LineFeed;
+                    }
                 }
             }
 
-            if (sourcePosition >= text.Length)
-                return default;
-
-            SourcePosition = int.MaxValue;
-            return new StringSlice(text, sourcePosition, text.Length - 1);
+            SourcePosition = newSourcePosition;
+            return new StringSlice(text, sourcePosition, end - 1, newLine, dummy: false);
         }
     }
 }

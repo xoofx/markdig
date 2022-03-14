@@ -82,19 +82,24 @@ namespace Markdig.Parsers
                 var headingBlock = new HeadingBlock(this)
                 {
                     HeaderChar = matchingChar,
-                    TriviaAfterAtxHeaderChar = trivia,
                     Level = leadingCount,
                     Column = column,
                     Span = { Start = sourcePosition },
-                    TriviaBefore = processor.UseTrivia(sourcePosition - 1),
-                    LinesBefore = processor.UseLinesBefore(),
-                    NewLine = processor.Line.NewLine,
                 };
-                processor.NewBlocks.Push(headingBlock);
-                if (!processor.TrackTrivia)
+
+                if (processor.TrackTrivia)
+                {
+                    headingBlock.TriviaAfterAtxHeaderChar = trivia;
+                    headingBlock.TriviaBefore = processor.UseTrivia(sourcePosition - 1);
+                    headingBlock.LinesBefore = processor.UseLinesBefore();
+                    headingBlock.NewLine = processor.Line.NewLine;
+                }
+                else
                 {
                     processor.GoToColumn(column + leadingCount + 1);
                 }
+
+                processor.NewBlocks.Push(headingBlock);
 
                 // Gives a chance to parse attributes
                 TryParseAttributes?.Invoke(processor, ref processor.Line, headingBlock);

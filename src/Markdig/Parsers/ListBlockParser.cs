@@ -93,8 +93,12 @@ namespace Markdig.Parsers
                 {
                     // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
                     var thematicBreak = processor.NewBlocks.Pop();
-                    var linesBefore = thematicBreak.LinesBefore;
-                    processor.LinesBefore = linesBefore;
+
+                    if (processor.TrackTrivia)
+                    {
+                        processor.LinesBefore = thematicBreak.LinesBefore;
+                    }
+
                     return BlockState.None;
                 }
             }
@@ -276,12 +280,17 @@ namespace Markdig.Parsers
                 Column = initColumn,
                 ColumnWidth = columnWidth,
                 Order = order,
-                SourceBullet = listInfo.SourceBullet,
-                TriviaBefore = triviaBefore,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
-                LinesBefore = state.UseLinesBefore(),
-                NewLine = state.Line.NewLine,
             };
+
+            if (state.TrackTrivia)
+            {
+                newListItem.TriviaBefore = triviaBefore;
+                newListItem.LinesBefore = state.UseLinesBefore();
+                newListItem.NewLine = state.Line.NewLine;
+                newListItem.SourceBullet = listInfo.SourceBullet;
+            }
+
             state.NewBlocks.Push(newListItem);
 
             if (currentParent != null)
@@ -313,8 +322,13 @@ namespace Markdig.Parsers
                     OrderedDelimiter = listInfo.OrderedDelimiter,
                     DefaultOrderedStart = listInfo.DefaultOrderedStart,
                     OrderedStart = listInfo.OrderedStart,
-                    LinesBefore = state.UseLinesBefore(),
                 };
+
+                if (state.TrackTrivia)
+                {
+                    newList.LinesBefore = state.UseLinesBefore();
+                }
+
                 state.NewBlocks.Push(newList);
             }
             return BlockState.Continue;

@@ -14,6 +14,9 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("`{Content}`")]
     public class CodeInline : LeafInline
     {
+        private TriviaProperties? _trivia;
+        private TriviaProperties Trivia => _trivia ??= new();
+
         public CodeInline(string content)
         {
             Content = content;
@@ -37,16 +40,13 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// Gets or sets the content with trivia and whitespace.
         /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// <see cref="StringSlice.IsEmpty"/>.
+        /// <see cref="StringSlice.Empty"/>.
         /// </summary>
-        public StringSlice ContentWithTrivia { get; set; }
+        public StringSlice ContentWithTrivia { get => _trivia?.ContentWithTrivia ?? StringSlice.Empty; set => Trivia.ContentWithTrivia = value; }
 
-        /// <summary>
-        /// True if the first and last character of the content enclosed in a backtick `
-        /// is a space.
-        /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise
-        /// false.
-        /// </summary>
-        public bool FirstAndLastWasSpace { get; set; }
+        private sealed class TriviaProperties
+        {
+            public StringSlice ContentWithTrivia;
+        }
     }
 }
