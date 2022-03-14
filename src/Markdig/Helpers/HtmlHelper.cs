@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Markdig.Helpers
 {
@@ -39,22 +38,22 @@ namespace Markdig.Helpers
 
         public static bool TryParseHtmlTag(ref StringSlice text, [NotNullWhen(true)] out string? htmlTag)
         {
-            var builder = StringBuilderCache.Local();
-            if (TryParseHtmlTag(ref text, builder))
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
+            if (TryParseHtmlTag(ref text, ref builder))
             {
-                htmlTag = builder.GetStringAndReset();
+                htmlTag = builder.ToString();
                 return true;
             }
             else
             {
+                builder.Dispose();
                 htmlTag = null;
                 return false;
             }
         }
 
-        public static bool TryParseHtmlTag(ref StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTag(ref StringSlice text, ref ValueStringBuilder builder)
         {
-            if (builder is null) ThrowHelper.ArgumentNullException(nameof(builder));
             var c = text.CurrentChar;
             if (c != '<')
             {
@@ -67,29 +66,29 @@ namespace Markdig.Helpers
             switch (c)
             {
                 case '/':
-                    return TryParseHtmlCloseTag(ref text, builder);
+                    return TryParseHtmlCloseTag(ref text, ref builder);
                 case '?':
-                    return TryParseHtmlTagProcessingInstruction(ref text, builder);
+                    return TryParseHtmlTagProcessingInstruction(ref text, ref builder);
                 case '!':
                     builder.Append(c);
                     c = text.NextChar();
                     if (c == '-')
                     {
-                        return TryParseHtmlTagHtmlComment(ref text, builder);
+                        return TryParseHtmlTagHtmlComment(ref text, ref builder);
                     }
 
                     if (c == '[')
                     {
-                        return TryParseHtmlTagCData(ref text, builder);
+                        return TryParseHtmlTagCData(ref text, ref builder);
                     }
 
-                    return TryParseHtmlTagDeclaration(ref text, builder);
+                    return TryParseHtmlTagDeclaration(ref text, ref builder);
             }
 
-            return TryParseHtmlTagOpenTag(ref text, builder);
+            return TryParseHtmlTagOpenTag(ref text, ref builder);
         }
 
-        internal static bool TryParseHtmlTagOpenTag(ref StringSlice text, StringBuilder builder)
+        internal static bool TryParseHtmlTagOpenTag(ref StringSlice text, ref ValueStringBuilder builder)
         {
             var c = text.CurrentChar;
 
@@ -244,7 +243,7 @@ namespace Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagDeclaration(ref StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagDeclaration(ref StringSlice text, ref ValueStringBuilder builder)
         {
             var c = text.CurrentChar;
             bool hasAlpha = false;
@@ -279,7 +278,7 @@ namespace Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagCData(ref StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagCData(ref StringSlice text, ref ValueStringBuilder builder)
         {
             if (text.Match("[CDATA["))
             {
@@ -310,7 +309,7 @@ namespace Markdig.Helpers
             return false;
         }
 
-        internal static bool TryParseHtmlCloseTag(ref StringSlice text, StringBuilder builder)
+        internal static bool TryParseHtmlCloseTag(ref StringSlice text, ref ValueStringBuilder builder)
         {
             // </[A-Za-z][A-Za-z0-9]+\s*>
             builder.Append('/');
@@ -355,7 +354,7 @@ namespace Markdig.Helpers
         }
 
 
-        private static bool TryParseHtmlTagHtmlComment(ref StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagHtmlComment(ref StringSlice text, ref ValueStringBuilder builder)
         {
             var c = text.NextChar();
             if (c != '-')
@@ -393,7 +392,7 @@ namespace Markdig.Helpers
             }
         }
 
-        private static bool TryParseHtmlTagProcessingInstruction(ref StringSlice text, StringBuilder builder)
+        private static bool TryParseHtmlTagProcessingInstruction(ref StringSlice text, ref ValueStringBuilder builder)
         {
             builder.Append('?');
             var prevChar = '\0';
@@ -437,11 +436,10 @@ namespace Markdig.Helpers
             int lastPos = 0;
             char c;
             char[] search = removeBackSlash ? SearchBackAndAmp : SearchAmp;
-            StringBuilder? sb = null;
+            var sb = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             while ((searchPos = text!.IndexOfAny(search, searchPos)) != -1)
             {
-                sb ??= StringBuilderCache.Local();
                 c = text[searchPos];
                 if (removeBackSlash && c == '\\')
                 {
@@ -453,7 +451,7 @@ namespace Markdig.Helpers
                     c = text[searchPos];
                     if (c.IsEscapableSymbol())
                     {
-                        sb.Append(text, lastPos, searchPos - lastPos - 1);
+                        sb.Append(text.AsSpan(lastPos, searchPos - lastPos - 1));
                         lastPos = searchPos;
                     }
                 }
@@ -473,26 +471,29 @@ namespace Markdig.Helpers
                             var decoded = EntityHelper.DecodeEntity(text.AsSpan(entityNameStart, entityNameLength));
                             if (decoded != null)
                             {
-                                sb.Append(text, lastPos, searchPos - match - lastPos);
+                                sb.Append(text.AsSpan(lastPos, searchPos - match - lastPos));
                                 sb.Append(decoded);
                                 lastPos = searchPos;
                             }
                         }
                         else if (numericEntity >= 0)
                         {
-                            sb.Append(text, lastPos, searchPos - match - lastPos);
-                            EntityHelper.DecodeEntity(numericEntity, sb);
+                            sb.Append(text.AsSpan(lastPos, searchPos - match - lastPos));
+                            EntityHelper.DecodeEntity(numericEntity, ref sb);
                             lastPos = searchPos;
                         }
                     }
                 }
             }
 
-            if (sb is null || lastPos == 0)
+            if (lastPos == 0)
+            {
+                sb.Dispose();
                 return text;
+            }
 
-            sb.Append(text, lastPos, text.Length - lastPos);
-            return sb.GetStringAndReset();
+            sb.Append(text.AsSpan(lastPos, text.Length - lastPos));
+            return sb.ToString();
         }
 
         /// <summary>

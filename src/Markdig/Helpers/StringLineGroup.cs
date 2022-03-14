@@ -139,7 +139,7 @@ namespace Markdig.Helpers
             }
 
             // Else use a builder
-            var builder = StringBuilderCache.Local();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             int previousStartOfLine = 0;
             var newLine = NewLine.None;
             for (int i = 0; i < Count; i++)
@@ -152,13 +152,13 @@ namespace Markdig.Helpers
                 ref StringLine line = ref Lines[i];
                 if (!line.Slice.IsEmpty)
                 {
-                    builder.Append(line.Slice.Text, line.Slice.Start, line.Slice.Length);
+                    builder.Append(line.Slice.AsSpan());
                 }
                 newLine = line.NewLine;
 
                 lineOffsets?.Add(new LineOffset(line.Position, line.Column, line.Slice.Start - line.Position, previousStartOfLine, builder.Length));
             }
-            return new StringSlice(builder.GetStringAndReset());
+            return new StringSlice(builder.ToString());
         }
 
         /// <summary>

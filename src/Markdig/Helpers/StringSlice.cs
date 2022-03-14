@@ -463,6 +463,7 @@ namespace Markdig.Helpers
             return text.Substring(start, length);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ReadOnlySpan<char> AsSpan()
         {
             string text = Text;

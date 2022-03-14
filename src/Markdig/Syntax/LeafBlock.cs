@@ -80,28 +80,20 @@ namespace Markdig.Syntax
             {
                 Lines = new StringLineGroup(4, ProcessInlines);
             }
+
             var stringLine = new StringLine(ref slice, line, column, sourceLinePosition, slice.NewLine);
-            // Regular case, we are not in the middle of a tab
-            if (slice.CurrentChar != '\t' || !CharHelper.IsAcrossTab(column))
+            // Regular case: we are not in the middle of a tab
+
+            if (slice.CurrentChar == '\t' && CharHelper.IsAcrossTab(column) && !trackTrivia)
             {
-                Lines.Add(ref stringLine);
+                // We need to expand tabs to spaces
+                var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
+                builder.Append(' ', CharHelper.AddTab(column) - column);
+                builder.Append(slice.AsSpan().Slice(1));
+                stringLine.Slice = new StringSlice(builder.ToString());
             }
-            else
-            {
-                var builder = StringBuilderCache.Local();
-                if (trackTrivia)
-                {
-                    builder.Append(slice.Text, slice.Start, slice.Length);
-                }
-                else
-                {
-                    // We need to expand tabs to spaces
-                    builder.Append(' ', CharHelper.AddTab(column) - column);
-                    builder.Append(slice.Text, slice.Start + 1, slice.Length - 1);
-                }
-                stringLine.Slice = new StringSlice(builder.GetStringAndReset());
-                Lines.Add(ref stringLine);
-            }
+
+            Lines.Add(ref stringLine);
             NewLine = slice.NewLine; // update newline, as it should be the last newline of the block
         }
     }

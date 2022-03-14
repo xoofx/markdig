@@ -172,17 +172,22 @@ namespace Markdig.Extensions.AutoIdentifiers
             var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
 
             // Add a trailing -1, -2, -3...etc. in case of collision
-            int index = 0;
             var headingId = baseHeadingId;
-            var headingBuffer = StringBuilderCache.Local();
-            while (!identifiers.Add(headingId))
+            if (!identifiers.Add(headingId))
             {
-                index++;
+                var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
                 headingBuffer.Append(baseHeadingId);
                 headingBuffer.Append('-');
-                headingBuffer.Append(index);
-                headingId = headingBuffer.ToString();
-                headingBuffer.Length = 0;
+                uint index = 0;
+                do
+                {
+                    index++;
+                    headingBuffer.Append(index);
+                    headingId = headingBuffer.AsSpan().ToString();
+                    headingBuffer.Length = baseHeadingId.Length + 1;
+                }
+                while (!identifiers.Add(headingId));
+                headingBuffer.Dispose();
             }
 
             attributes.Id = headingId;
