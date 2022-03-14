@@ -255,7 +255,6 @@ namespace Markdig.Helpers
             public StringLineGroup Remaining()
             {
                 StringLineGroup lines = _lines;
-
                 if (IsEmpty)
                 {
                     lines.Clear();

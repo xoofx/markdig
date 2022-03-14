@@ -434,7 +434,7 @@ namespace Markdig.Helpers
             // remove backslashes before punctuation chars:
             int searchPos = 0;
             int lastPos = 0;
-            char c;
+            char c = '\0';
             char[] search = removeBackSlash ? SearchBackAndAmp : SearchAmp;
             var sb = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
@@ -486,7 +486,7 @@ namespace Markdig.Helpers
                 }
             }
 
-            if (lastPos == 0)
+            if (c == 0)
             {
                 sb.Dispose();
                 return text;
