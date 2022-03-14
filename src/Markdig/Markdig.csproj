@@ -7,6 +7,11 @@
     <None Remove="readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="readme.md" LunetApiDotNet="true"/>
+    <AdditionalFiles Include="readme.md" LunetApiDotNet="true" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Markdig.Tests" />
+  </ItemGroup>
+
 </Project>
