@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -311,7 +312,8 @@ namespace Markdig.Parsers
             // Add the language as an attribute by default
             if (!string.IsNullOrEmpty(fenced.Info))
             {
-                string infoWithPrefix = _infoPrefixCache?.Get(fenced.Info) ?? fenced.Info;
+                Debug.Assert(_infoPrefixCache is not null || InfoPrefix is null);
+                string infoWithPrefix = _infoPrefixCache?.Get(fenced.Info!) ?? fenced.Info!;
                 fenced.GetAttributes().AddClass(infoWithPrefix);
             }
 
