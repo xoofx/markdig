@@ -29,8 +29,8 @@ namespace Markdig.Extensions.Footnotes
         {
             var order = link.Footnote.Order;
             renderer.Write(link.IsBackLink
-                ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\" target="_top">{BackLinkString}</a>"
-                : $"<a id=\"fnref:{link.Index}\" href=\"#fn:{order}\" class=\"{FootnoteLinkClass}\" target="_top"><sup>{order}</sup></a>");
+                ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\" target=\"_top\">{BackLinkString}</a>"
+                : $"<a id=\"fnref:{link.Index}\" href=\"#fn:{order}\" class=\"{FootnoteLinkClass}\" target=\"_top\"><sup>{order}</sup></a>");
         }
     }
 }
