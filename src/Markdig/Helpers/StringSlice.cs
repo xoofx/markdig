@@ -6,6 +6,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Markdig.Helpers
 {
@@ -460,6 +461,24 @@ namespace Markdig.Helpers
                 return string.Empty;
             }
             return text.Substring(start, length);
+        }
+
+        public readonly ReadOnlySpan<char> AsSpan()
+        {
+            string text = Text;
+            int start = Start;
+            int length = End - start + 1;
+
+            if (text is null || (ulong)(uint)start + (ulong)(uint)length > (ulong)(uint)text.Length)
+            {
+                return default;
+            }
+
+#if NETCOREAPP3_1_OR_GREATER
+            return MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), start), length);
+#else
+            return text.AsSpan(start, length);
+#endif
         }
 
         /// <summary>

@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using System;
-
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -40,6 +39,9 @@ namespace Markdig.Parsers
     /// <seealso cref="BlockParser" />
     public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T : Block, IFencedBlock
     {
+        private static readonly TransformedStringCache _infoStringCache = new(static infoString => HtmlHelper.Unescape(infoString));
+        private TransformedStringCache? _infoPrefixCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedBlockParserBase{T}"/> class.
         /// </summary>
@@ -50,10 +52,22 @@ namespace Markdig.Parsers
             MaximumMatchCount = int.MaxValue;
         }
 
+        private string? _infoPrefix;
         /// <summary>
         /// Gets or sets the language prefix (default is "language-")
         /// </summary>
-        public string? InfoPrefix { get; set; }
+        public string? InfoPrefix
+        {
+            get => _infoPrefix;
+            set
+            {
+                if (_infoPrefix != value)
+                {
+                    _infoPrefixCache = new TransformedStringCache(infoString => value + infoString);
+                    _infoPrefix = value;
+                }
+            }
+        }
 
         public int MinimumMatchCount { get; set; }
 
@@ -161,7 +175,7 @@ namespace Markdig.Parsers
 
         end:
             fenced.TriviaAfterFencedChar = afterFence;
-            fenced.Info = HtmlHelper.Unescape(info.ToString());
+            fenced.Info = _infoStringCache.Get(info.AsSpan());
             fenced.UnescapedInfo = info;
             fenced.TriviaAfterInfo = afterInfo;
             fenced.Arguments = HtmlHelper.Unescape(arg.ToString());
@@ -182,9 +196,6 @@ namespace Markdig.Parsers
         /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
         public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
         {
-            string infoString;
-            string? argString = null;
-
             // An info string cannot contain any backticks (unless it is a tilde block)
             int firstSpace = -1;
             if (openingCharacter == '`')
@@ -215,9 +226,12 @@ namespace Markdig.Parsers
                 }
             }
 
+            StringSlice infoStringSlice;
+            string? argString = null;
+
             if (firstSpace > 0)
             {
-                infoString = line.Text.AsSpan(line.Start, firstSpace - line.Start).Trim().ToString();
+                infoStringSlice = new StringSlice(line.Text, line.Start, firstSpace - 1);
 
                 // Skip any spaces after info string
                 firstSpace++;
@@ -234,16 +248,18 @@ namespace Markdig.Parsers
                     }
                 }
 
-                argString = line.Text.Substring(firstSpace, line.End - firstSpace + 1).Trim();
+                var argStringSlice = new StringSlice(line.Text, firstSpace, line.End);
+                argStringSlice.Trim();
+                argString = argStringSlice.ToString();
             }
             else
             {
-                var lineCopy = line;
-                lineCopy.Trim();
-                infoString = lineCopy.ToString();
+                infoStringSlice = line;
             }
 
-            fenced.Info = HtmlHelper.Unescape(infoString);
+            infoStringSlice.Trim();
+
+            fenced.Info = _infoStringCache.Get(infoStringSlice.AsSpan());
             fenced.Arguments = HtmlHelper.Unescape(argString);
 
             return true;
@@ -295,7 +311,8 @@ namespace Markdig.Parsers
             // Add the language as an attribute by default
             if (!string.IsNullOrEmpty(fenced.Info))
             {
-                fenced.GetAttributes().AddClass(InfoPrefix + fenced.Info);
+                string infoWithPrefix = _infoPrefixCache?.Get(fenced.Info) ?? fenced.Info;
+                fenced.GetAttributes().AddClass(infoWithPrefix);
             }
 
             // Store the number of matched string into the context
