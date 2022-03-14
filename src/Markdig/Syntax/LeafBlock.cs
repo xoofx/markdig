@@ -24,6 +24,7 @@ namespace Markdig.Syntax
         /// <param name="parser">The parser used to create this block.</param>
         protected LeafBlock(BlockParser? parser) : base(parser)
         {
+            IsLeafBlock = true;
         }
 
         /// <summary>

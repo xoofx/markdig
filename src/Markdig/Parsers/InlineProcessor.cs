@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
@@ -321,9 +322,14 @@ namespace Markdig.Parsers
             var container = Block!.Inline!;
             for (int depth = 0; ; depth++)
             {
-                if (container.LastChild is ContainerInline nextContainer && !nextContainer.IsClosed)
+                Inline? lastChild = container.LastChild;
+                if (lastChild is not null && lastChild.IsContainerInline && !lastChild.IsClosed)
                 {
-                    container = nextContainer;
+#if NETSTANDARD2_1
+                    container = ((ContainerInline)lastChild);
+#else
+                    container = Unsafe.As<ContainerInline>(lastChild);
+#endif
                 }
                 else
                 {

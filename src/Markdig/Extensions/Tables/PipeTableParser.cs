@@ -43,7 +43,7 @@ namespace Markdig.Extensions.Tables
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Only working on Paragraph block
-            if (!(processor.Block is ParagraphBlock))
+            if (!processor.Block!.IsParagraphBlock)
             {
                 return false;
             }

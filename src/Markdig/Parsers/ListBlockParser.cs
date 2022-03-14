@@ -263,10 +263,11 @@ namespace Markdig.Parsers
             // Starts/continue the list unless:
             // - an empty list item follows a paragraph
             // - an ordered list is not starting by '1'
-            if ((block ?? state.LastBlock) is ParagraphBlock previousParagraph)
+            block ??= state.LastBlock;
+            if (block is not null && block.IsParagraphBlock)
             {
                 if (state.IsBlankLine ||
-                    state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
+                    state.IsOpen(block) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
                 {
                     state.GoToColumn(initColumn);
                     state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
