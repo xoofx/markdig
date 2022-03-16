@@ -8,9 +8,9 @@ Markdig provides efficient, regex-free parsing of markdown documents directly in
 
 ## Introduction
 
-Markdig's parsing machinery consists of two main components at its surface: the `MarkdownParser` and the `MarkdownPipeline`.  The parsed document is represented by a `MarkdownDocument` object, which is a tree of objects derived from `MarkdownObject`, including block and inline elements. 
+Markdig's parsing machinery consists of two main components at its surface: the `Markdown.Parse(...)` method and the `MarkdownPipeline` type.  The parsed document is represented by a `MarkdownDocument` object, which is a tree of objects derived from `MarkdownObject`, including block and inline elements. 
 
-The `MarkdownParser` is a static class which contains the `Parse(...)` method, the main algorithm for parsing a markdown document. The `Parse(...)` method in turn uses a `MarkdownPipeline`, which is a sealed internal class which maintains some configuration information and the collections of parsers and extensions.  The `MarkdownPipeline` determines how the parser behaves and what its capabilities are.  The `MarkdownPipeline` can be modified with built-in as well as user developed extensions.
+The `Markdown` static class is the main entrypoint to the Markdig API. It contains the `Parse(...)` method, the main algorithm for parsing a markdown document. The `Parse(...)` method in turn uses a `MarkdownPipeline`, which is a sealed internal class which maintains some configuration information and the collections of parsers and extensions.  The `MarkdownPipeline` determines how the parser behaves and what its capabilities are.  The `MarkdownPipeline` can be modified with built-in as well as user developed extensions.
 
 ### Glossary of Relevant Types
 
@@ -18,7 +18,7 @@ The following is a table of some of the types relevant to parsing and mentioned 
 
 |Type|Description|
 |-|-|
-|`MarkdownParser`|Static entry point to the parsing algorithm via the `Parse(...)` method|
+|`Markdown`|Static class with the entry point to the parsing algorithm via the `Parse(...)` method|
 |`MarkdownPipeline`|Configuration object for the parser, contains collections of block and inline parsers and registered extensions|
 |`MarkdownPipelineBuilder`|Responsible for constructing the `MarkdownPipeline`, used by client code to configure pipeline options and behaviors|
 |`IMarkdownExtension`|Interface for [Extensions](#extensions-imarkdownextension) which alter the behavior of the pipeline, this is the standard mechanism for extending Markdig|
@@ -33,13 +33,13 @@ The following is a table of some of the types relevant to parsing and mentioned 
 
 *The following are simple examples of parsing to help get you started, see the following sections for an in-depth explanation of the different parts of Markdig's parsing mechanisms*
 
-The `MarkdownPipeline` dictate how the parser will behave.  The `MarkdownParser.Parse(...)` method will construct a default pipeline if none is provided.  A default pipeline will be CommonMark compliant but nothing else.
+The `MarkdownPipeline` dictate how the parser will behave.  The `Markdown.Parse(...)` method will construct a default pipeline if none is provided.  A default pipeline will be CommonMark compliant but nothing else.
 
 ```csharp
 var markdownText = File.ReadAllText("sample.md");
 
 // No pipeline provided means a default pipeline will be used
-var document = MarkdownParser.Parse(markdownText);
+var document = Markdown.Parse(markdownText);
 ```
 
 Pipelines can be created and configured manually, however this must be done using a `MarkdownPipelineBuilder` object, which then is configured through a fluent interface composed of extension methods.  
@@ -54,7 +54,7 @@ var pipeline = new MarkdownPipelineBuilder()
     .UseAdvancedExtensions()
     .Build();
 
-var document = MarkdownParser.Parse(markdownText, pipeline);
+var document = Markdown.Parse(markdownText, pipeline);
 ```
 
 Extensions can also be added individually:
@@ -68,12 +68,12 @@ var pipeline = new MarkdownPipelineBuilder()
     .UseMyCustomExtension()
     .Build();
 
-var document = MarkdownParser.Parse(markdownText, pipeline);
+var document = Markdown.Parse(markdownText, pipeline);
 ```
 
 ## The Parser and the Pipeline
 
-As metioned in the [Introduction](#introduction), Markdig's parsing machinery involves two surface components: the `MarkdownParser`, and the `MarkdownPipeline`.  The main parsing algorithm (not to be confused with individual `BlockParser` and `InlineParser` components) lives in the `MarkdownParser.Parse(...)` static method. The `MarkdownPipeline` is responsible for configuring the behavior of the parser.
+As metioned in the [Introduction](#introduction), Markdig's parsing machinery involves two surface components: the `Markdown.Parse(...)` method, and the `MarkdownPipeline` type.  The main parsing algorithm (not to be confused with individual `BlockParser` and `InlineParser` components) lives in the `Markdown.Parse(...)` static method. The `MarkdownPipeline` is responsible for configuring the behavior of the parser.
 
 These two components are covered in further detail in the following sections.
 
@@ -95,11 +95,11 @@ Lastly, the `MarkdownPipeline` contains a few extra elements:
 * An optional delegate which will be invoked when the document has been processed.
 * An optional `TextWriter` which will get debug logging from the parser
 
-### The MarkdownParser
+### The Markdown.Parse Method
 
-`MarkdownParser` is a stateless static class which contains the overall parsing algorithm but not the actual parsing components, which instead are contained within the pipeline.
+`Markdown.Parse` is a static method which contains the overall parsing algorithm but not the actual parsing components, which instead are contained within the pipeline.
 
-The `MarkdownParser.Parse(...)` method takes a string containing raw markdown and returns a `MarkdownDocument`, which is the root node in the abstract syntax tree.  The `Parse(...)` method optionally takes a pre-configured `MarkdownPipeline`, but if none is given will create a default pipeline which has minimal features.
+The `Markdown.Parse(...)` method takes a string containing raw markdown and returns a `MarkdownDocument`, which is the root node in the abstract syntax tree.  The `Parse(...)` method optionally takes a pre-configured `MarkdownPipeline`, but if none is given will create a default pipeline which has minimal features.
 
 Within the `Parse(...)` method, the following sequence of operations occur:
 
@@ -131,7 +131,7 @@ For a discussion on how to implement an extension, refer to the [Extensions/Pars
 
 Because the `MarkdownPipeline` is a sealed internal class, it cannot (and *should* not be attempted to) be created directly.  Rather, the `MarkdownPipelineBuilder` manages the requisite construction of the pipeline after the configuration has been provided by the client code.
 
-As discussed in the [section above](#the-markdownpipeline), the `MarkdownPipeline` primarily consists of a collection of block parsers and a collection of inline parsers, which are provided to the `MarkdownParser.Parse(...)` method and thus determine its features and behavior.  Both the collections and some of the parsers themselves are mutable, and the mechanism of mutation is the `Setup(...)` method of the `IMarkdownExtension` interface.  This is covered in more detail in the section on [Extensions](#extensions-imarkdownextension).
+As discussed in the [section above](#the-markdownpipeline), the `MarkdownPipeline` primarily consists of a collection of block parsers and a collection of inline parsers, which are provided to the `Markdown.Parse(...)` method and thus determine its features and behavior.  Both the collections and some of the parsers themselves are mutable, and the mechanism of mutation is the `Setup(...)` method of the `IMarkdownExtension` interface.  This is covered in more detail in the section on [Extensions](#extensions-imarkdownextension).
 
 #### The Fluent Interface
 
