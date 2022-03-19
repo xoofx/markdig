@@ -17,6 +17,11 @@ namespace Markdig.Syntax.Inlines
     /// <seealso cref="Inline" />
     public class ContainerInline : Inline, IEnumerable<Inline>
     {
+        public ContainerInline()
+        {
+            IsContainerInline = true;
+        }
+
         /// <summary>
         /// Gets the parent block of this inline.
         /// </summary>

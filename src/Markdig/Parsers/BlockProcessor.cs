@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -592,24 +593,32 @@ namespace Markdig.Parsers
         /// <param name="stackIndex">Index of a block in a stack considered as the last block to update from.</param>
         private void UpdateLastBlockAndContainer(int stackIndex = -1)
         {
-            currentStackIndex = stackIndex < 0 ? OpenedBlocks.Count - 1 : stackIndex;
-            CurrentBlock = null;
-            LastBlock = null;
-            for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
-            {
-                var block = OpenedBlocks[i];
-                if (CurrentBlock is null)
-                {
-                    CurrentBlock = block;
-                }
+            List<Block> openedBlocks = OpenedBlocks;
+            currentStackIndex = stackIndex < 0 ? openedBlocks.Count - 1 : stackIndex;
 
-                if (block is ContainerBlock container)
+            Block? currentBlock = null;
+            for (int i = openedBlocks.Count - 1; i >= 0; i--)
+            {
+                var block = openedBlocks[i];
+                currentBlock ??= block;
+
+                if (block.IsContainerBlock)
                 {
-                    CurrentContainer = container;
-                    LastBlock = CurrentContainer.LastChild;
-                    break;
+                    var currentContainer =
+#if NETSTANDARD2_1
+                        (ContainerBlock)block;
+#else
+                        Unsafe.As<ContainerBlock>(block);
+#endif
+                    CurrentContainer = currentContainer;
+                    LastBlock = currentContainer.LastChild;
+                    CurrentBlock = currentBlock;
+                    return;
                 }
             }
+
+            CurrentBlock = currentBlock;
+            LastBlock = null;
         }
 
         /// <summary>
@@ -639,7 +648,7 @@ namespace Markdig.Parsers
                 ParseIndent();
 
                 // If we have a paragraph block, we want to try to match other blocks before trying the Paragraph
-                if (block is ParagraphBlock)
+                if (block.IsParagraphBlock)
                 {
                     break;
                 }
@@ -675,7 +684,7 @@ namespace Markdig.Parsers
                 }
 
                 // If we have a leaf block
-                if (block is LeafBlock leaf && NewBlocks.Count == 0)
+                if (block.IsLeafBlock && NewBlocks.Count == 0)
                 {
                     ContinueProcessingLine = false;
                     if (!result.IsDiscard())
@@ -689,7 +698,13 @@ namespace Markdig.Parsers
                                 UnwindAllIndents();
                             }
                         }
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+
+#if NETSTANDARD2_1
+                        ((LeafBlock)block)
+#else
+                        Unsafe.As<LeafBlock>(block)
+#endif
+                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                 }
 
@@ -804,7 +819,7 @@ namespace Markdig.Parsers
                     continue;
                 }
 
-                IsLazy = blockParser is ParagraphBlockParser && lastBlock is ParagraphBlock;
+                IsLazy = lastBlock.IsParagraphBlock && blockParser is ParagraphBlockParser;
 
                 var result = IsLazy
                     ? blockParser.TryContinue(this, lastBlock)
@@ -825,7 +840,7 @@ namespace Markdig.Parsers
                 // Special case for paragraph
                 UpdateLastBlockAndContainer();
 
-                if (IsLazy && CurrentBlock is ParagraphBlock paragraph)
+                if (IsLazy && CurrentBlock is { } currentBlock && currentBlock.IsParagraphBlock)
                 {
                     Debug.Assert(NewBlocks.Count == 0);
 
@@ -835,12 +850,18 @@ namespace Markdig.Parsers
                         {
                             UnwindAllIndents();
                         }
-                        paragraph.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+
+#if NETSTANDARD2_1
+                        ((ParagraphBlock)currentBlock)
+#else
+                        Unsafe.As<ParagraphBlock>(currentBlock)
+#endif
+                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                     if (TrackTrivia)
                     {
                         // special case: take care when refactoring this
-                        if (paragraph.Parent is QuoteBlock qb)
+                        if (currentBlock.Parent is QuoteBlock qb)
                         {
                             var triviaAfter = UseTrivia(Start - 1);
                             qb.QuoteLines.Last().TriviaAfter = triviaAfter;
@@ -893,20 +914,24 @@ namespace Markdig.Parsers
                 block.Line = LineIndex;
 
                 // If we have a leaf block
-                var leaf = block as LeafBlock;
-                if (leaf != null)
+                if (block.IsLeafBlock)
                 {
                     if (!result.IsDiscard())
                     {
                         if (TrackTrivia)
                         {
-                            if (block is ParagraphBlock ||
-                                block is HtmlBlock)
+                            if (block.IsParagraphBlock || block is HtmlBlock)
                             {
                                 UnwindAllIndents();
                             }
                         }
-                        leaf.AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+
+#if NETSTANDARD2_1
+                        ((LeafBlock)block)
+#else
+                        Unsafe.As<LeafBlock>(block)
+#endif
+                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
 
                     if (newBlocks.Count > 0)
@@ -934,7 +959,7 @@ namespace Markdig.Parsers
                 // Add a block BlockProcessor to the stack (and leave it opened)
                 OpenedBlocks.Add(block);
 
-                if (leaf != null)
+                if (block.IsLeafBlock)
                 {
                     ContinueProcessingLine = false;
                     return;

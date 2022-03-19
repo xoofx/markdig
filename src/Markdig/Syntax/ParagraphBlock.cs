@@ -29,6 +29,7 @@ namespace Markdig.Syntax
         {
             // Inlines are processed for a paragraph
             ProcessInlines = true;
+            IsParagraphBlock = true;
         }
 
         public int LastLine => Line + Lines.Count - 1;

@@ -17,7 +17,7 @@ namespace Markdig.Parsers
     {
         public override bool CanInterrupt(BlockProcessor processor, Block block)
         {
-            return !(block is ParagraphBlock);
+            return !block.IsParagraphBlock;
         }
 
         public override BlockState TryOpen(BlockProcessor processor)

@@ -62,10 +62,10 @@ namespace Markdig.Parsers
 
         private BlockState TryParseTagType7(BlockProcessor state, StringSlice line, int startColumn, int startPosition)
         {
-            var builder = StringBuilderCache.Local();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             var c = line.CurrentChar;
             var result = BlockState.None;
-            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, builder))
+            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, ref builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, ref builder))
             {
                 // Must be followed by whitespace only
                 bool hasOnlySpaces = true;
@@ -90,7 +90,7 @@ namespace Markdig.Parsers
                 }
             }
 
-            builder.Length = 0;
+            builder.Dispose();
             return result;
         }
 

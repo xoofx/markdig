@@ -33,7 +33,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Markdig.Helpers
 {
@@ -81,7 +80,7 @@ namespace Markdig.Helpers
             });
         }
 
-        public static void DecodeEntity(int utf32, StringBuilder sb)
+        internal static void DecodeEntity(int utf32, ref ValueStringBuilder sb)
         {
             if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
             {
@@ -99,7 +98,7 @@ namespace Markdig.Helpers
             }
         }
 
-#region [ EntityMap ]
+        #region [ EntityMap ]
         /// <summary>
         /// Source: http://www.w3.org/html/wg/drafts/html/master/syntax.html#named-character-references
         /// </summary>

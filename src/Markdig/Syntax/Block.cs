@@ -38,6 +38,10 @@ namespace Markdig.Syntax
         /// </summary>
         public BlockParser? Parser { get; }
 
+        internal bool IsContainerBlock { get; private protected set; }
+        internal bool IsLeafBlock { get; private protected set; }
+        internal bool IsParagraphBlock { get; private protected set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is still open.
         /// </summary>
@@ -132,9 +136,14 @@ namespace Markdig.Syntax
 
         internal static Block FindRootMostContainerParent(Block block)
         {
-            while (block.Parent is ContainerBlock && block.Parent is not MarkdownDocument)
+            while (true)
             {
-                block = block.Parent;
+                Block? parent = block.Parent;
+                if (parent is null || !parent.IsContainerBlock || parent is MarkdownDocument)
+                {
+                    break;
+                }
+                block = parent;
             }
             return block;
         }

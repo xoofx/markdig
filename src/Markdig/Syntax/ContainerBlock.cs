@@ -28,6 +28,7 @@ namespace Markdig.Syntax
         protected ContainerBlock(BlockParser? parser) : base(parser)
         {
             children = ArrayHelper.Empty<Block>();
+            IsContainerBlock = true;
         }
 
         /// <summary>
