@@ -163,45 +163,47 @@ namespace Markdig.Renderers
 
         private void WriteEscapeSlow(ReadOnlySpan<char> content, bool softEscape = false)
         {
+            WriteIndent();
+
             int previousOffset = 0;
             for (int i = 0; i < content.Length; i++)
             {
                 switch (content[i])
                 {
                     case '<':
-                        Write(content.Slice(previousOffset, i - previousOffset));
+                        WriteRaw(content.Slice(previousOffset, i - previousOffset));
                         if (EnableHtmlEscape)
                         {
-                            Write("&lt;");
+                            WriteRaw("&lt;");
                         }
                         previousOffset = i + 1;
                         break;
                     case '>':
                         if (!softEscape)
                         {
-                            Write(content.Slice(previousOffset, i - previousOffset));
+                            WriteRaw(content.Slice(previousOffset, i - previousOffset));
                             if (EnableHtmlEscape)
                             {
-                                Write("&gt;");
+                                WriteRaw("&gt;");
                             }
                             previousOffset = i + 1;
                         }
                         break;
                     case '&':
-                        Write(content.Slice(previousOffset, i - previousOffset));
+                        WriteRaw(content.Slice(previousOffset, i - previousOffset));
                         if (EnableHtmlEscape)
                         {
-                            Write("&amp;");
+                            WriteRaw("&amp;");
                         }
                         previousOffset = i + 1;
                         break;
                     case '"':
                         if (!softEscape)
                         {
-                            Write(content.Slice(previousOffset, i - previousOffset));
+                            WriteRaw(content.Slice(previousOffset, i - previousOffset));
                             if (EnableHtmlEscape)
                             {
-                                Write("&quot;");
+                                WriteRaw("&quot;");
                             }
                             previousOffset = i + 1;
                         }
@@ -209,7 +211,7 @@ namespace Markdig.Renderers
                 }
             }
 
-            Write(content.Slice(previousOffset));
+            WriteRaw(content.Slice(previousOffset));
         }
 
         private static readonly IdnMapping IdnMapping = new IdnMapping();

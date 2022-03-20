@@ -180,7 +180,7 @@ namespace Markdig.Renderers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteIndent()
+        private protected void WriteIndent()
         {
             if (previousWasLine)
             {
@@ -276,13 +276,22 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Write(ReadOnlySpan<char> content)
         {
-            if (content.IsEmpty)
+            if (!content.IsEmpty)
             {
-                return;
+                WriteIndent();
+                WriteRaw(content);
             }
+        }
 
-            WriteIndent();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteRaw(char content) => Writer.Write(content);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteRaw(string? content) => Writer.Write(content);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteRaw(ReadOnlySpan<char> content)
+        {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             Writer.Write(content);
 #else
@@ -297,12 +306,6 @@ namespace Markdig.Renderers
             Writer.Write(buffer, 0, content.Length);
 #endif
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteRaw(char content) => Writer.Write(content);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteRaw(string? content) => Writer.Write(content);
 
         /// <summary>
         /// Writes a newline.
