@@ -97,11 +97,7 @@ namespace Markdig.Parsers.Inlines
                 return true;
             }
 
-#if NETSTANDARD2_1
-            ContainerInline container = (ContainerInline)root;
-#else
             ContainerInline container = Unsafe.As<ContainerInline>(root);
-#endif
 
             List<EmphasisDelimiterInline>? delimiters = null;
             if (container is EmphasisDelimiterInline emphasisDelimiter)

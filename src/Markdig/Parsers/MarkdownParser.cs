@@ -152,12 +152,7 @@ namespace Markdig.Parsers
                     var block = container[item.Index];
                     if (block.IsLeafBlock)
                     {
-#if NETSTANDARD2_1
-                        LeafBlock leafBlock = (LeafBlock)block;
-#else
                         LeafBlock leafBlock = Unsafe.As<LeafBlock>(block);
-#endif
-
                         leafBlock.OnProcessInlinesBegin(inlineProcessor);
                         if (leafBlock.ProcessInlines)
                         {
@@ -192,11 +187,7 @@ namespace Markdig.Parsers
                             Array.Resize(ref blocks, blockCount * 2);
                             ThrowHelper.CheckDepthLimit(blocks.Length);
                         }
-#if NETSTANDARD2_1
-                        blocks[blockCount++] = new ContainerItem((ContainerBlock)block);
-#else
                         blocks[blockCount++] = new ContainerItem(Unsafe.As<ContainerBlock>(block));
-#endif
                         block.OnProcessInlinesBegin(inlineProcessor);
                         goto process_new_block;
                     }
