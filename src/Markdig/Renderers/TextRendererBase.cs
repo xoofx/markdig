@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Markdig.Helpers;
@@ -18,7 +19,7 @@ namespace Markdig.Renderers
     /// <seealso cref="RendererBase" />
     public abstract class TextRendererBase : RendererBase
     {
-        private TextWriter writer;
+        private TextWriter _writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRendererBase"/> class.
@@ -27,9 +28,7 @@ namespace Markdig.Renderers
         /// <exception cref="ArgumentNullException"></exception>
         protected TextRendererBase(TextWriter writer)
         {
-            if (writer is null) ThrowHelper.ArgumentNullException_writer();
-            this.writer = writer;
-            this.writer.NewLine = "\n";
+            Writer = writer;
         }
 
         /// <summary>
@@ -38,8 +37,8 @@ namespace Markdig.Renderers
         /// <exception cref="ArgumentNullException">if the value is null</exception>
         public TextWriter Writer
         {
-            get { return writer; }
-            set
+            get => _writer;
+            [MemberNotNull(nameof(_writer))] set
             {
                 if (value is null)
                 {
@@ -48,7 +47,7 @@ namespace Markdig.Renderers
 
                 // By default we output a newline with '\n' only even on Windows platforms
                 value.NewLine = "\n";
-                writer = value;
+                _writer = value;
             }
         }
 
