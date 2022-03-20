@@ -16,10 +16,10 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
-        private IMarkdownObjectRenderer? previousRenderer;
-        private Type? previousObjectType;
-        internal int childrenDepth = 0;
+        private readonly Dictionary<Type, IMarkdownObjectRenderer> _renderersPerType;
+        private IMarkdownObjectRenderer? _previousRenderer;
+        private Type? _previousObjectType;
+        internal int _childrenDepth = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RendererBase"/> class.
@@ -27,7 +27,24 @@ namespace Markdig.Renderers
         protected RendererBase()
         {
             ObjectRenderers = new ObjectRendererCollection();
-            renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
+            _renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
+        }
+
+        private IMarkdownObjectRenderer? TryGetRenderer(Type objectType)
+        {
+            for (int i = 0; i < ObjectRenderers.Count; i++)
+            {
+                var renderer = ObjectRenderers[i];
+                if (renderer.Accept(this, objectType))
+                {
+                    _renderersPerType[objectType] = renderer;
+                    _previousObjectType = objectType;
+                    _previousRenderer = renderer;
+                    return renderer;
+                }
+            }
+
+            return null;
         }
 
         public ObjectRendererCollection ObjectRenderers { get; }
@@ -59,7 +76,7 @@ namespace Markdig.Renderers
                 return;
             }
 
-            ThrowHelper.CheckDepthLimit(childrenDepth++);
+            ThrowHelper.CheckDepthLimit(_childrenDepth++);
 
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
@@ -75,7 +92,7 @@ namespace Markdig.Renderers
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
 
-            childrenDepth--;
+            _childrenDepth--;
         }
 
         /// <summary>
@@ -89,7 +106,7 @@ namespace Markdig.Renderers
                 return;
             }
 
-            ThrowHelper.CheckDepthLimit(childrenDepth++);
+            ThrowHelper.CheckDepthLimit(_childrenDepth++);
 
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
@@ -110,7 +127,7 @@ namespace Markdig.Renderers
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
 
-            childrenDepth--;
+            _childrenDepth--;
         }
 
         /// <summary>
@@ -132,29 +149,18 @@ namespace Markdig.Renderers
             IMarkdownObjectRenderer? renderer;
 
             // Handle regular renderers
-            if (objectType == previousObjectType)
+            if (objectType == _previousObjectType)
             {
-                renderer = previousRenderer;
+                renderer = _previousRenderer;
             }
-            else if (!renderersPerType.TryGetValue(objectType, out renderer))
+            else if (!_renderersPerType.TryGetValue(objectType, out renderer))
             {
-                for (int i = 0; i < ObjectRenderers.Count; i++)
-                {
-                    var testRenderer = ObjectRenderers[i];
-                    if (testRenderer.Accept(this, objectType))
-                    {
-                        renderersPerType[objectType] = renderer = testRenderer;
-                        break;
-                    }
-                }
+                renderer = TryGetRenderer(objectType);
             }
 
             if (renderer != null)
             {
                 renderer.Write(this, obj);
-
-                previousObjectType = objectType;
-                previousRenderer = renderer;
             }
             else if (obj is ContainerBlock containerBlock)
             {

@@ -137,7 +137,7 @@ namespace Markdig.Renderers
 
         internal void ResetInternal()
         {
-            childrenDepth = 0;
+            _childrenDepth = 0;
             previousWasLine = true;
             indents.Clear();
         }
