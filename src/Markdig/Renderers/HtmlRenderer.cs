@@ -20,7 +20,7 @@ namespace Markdig.Renderers
     /// <seealso cref="TextRendererBase{HtmlRenderer}" />
     public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
-        private static ReadOnlySpan<char> WriteEscapeIndexOfAnyChars => new[] { '<', '>', '&', '"' };
+        private static readonly char[] s_writeEscapeIndexOfAnyChars = new[] { '<', '>', '&', '"' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlRenderer"/> class.
@@ -149,7 +149,7 @@ namespace Markdig.Renderers
         {
             if (!content.IsEmpty)
             {
-                int nextIndex = content.IndexOfAny(WriteEscapeIndexOfAnyChars);
+                int nextIndex = content.IndexOfAny(s_writeEscapeIndexOfAnyChars);
                 if (nextIndex == -1)
                 {
                     Write(content);
