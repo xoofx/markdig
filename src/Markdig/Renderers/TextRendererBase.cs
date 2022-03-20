@@ -38,7 +38,8 @@ namespace Markdig.Renderers
         public TextWriter Writer
         {
             get => _writer;
-            [MemberNotNull(nameof(_writer))] set
+            [MemberNotNull(nameof(_writer))]
+            set
             {
                 if (value is null)
                 {
@@ -145,11 +146,13 @@ namespace Markdig.Renderers
         /// Ensures a newline.
         /// </summary>
         /// <returns>This instance</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T EnsureLine()
         {
             if (!previousWasLine)
             {
-                WriteLine();
+                previousWasLine = true;
+                Writer.WriteLine();
             }
             return (T)this;
         }
@@ -176,20 +179,25 @@ namespace Markdig.Renderers
             indents.RemoveAt(indents.Count - 1);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void WriteIndent()
         {
             if (previousWasLine)
             {
-                previousWasLine = false;
-                for (int i = 0; i < indents.Count; i++)
-                {
-                    var indent = indents[i];
-                    var indentText = indent.Next();
-                    Writer.Write(indentText);
-                }
+                WriteIndentCore();
             }
         }
 
+        private void WriteIndentCore()
+        {
+            previousWasLine = false;
+            for (int i = 0; i < indents.Count; i++)
+            {
+                var indent = indents[i];
+                var indentText = indent.Next();
+                Writer.Write(indentText);
+            }
+        }
 
         /// <summary>
         /// Writes the specified content.
@@ -200,9 +208,8 @@ namespace Markdig.Renderers
         public T Write(string? content)
         {
             WriteIndent();
-            previousWasLine = false;
             Writer.Write(content);
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -213,11 +220,8 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(ref StringSlice slice)
         {
-            if (slice.Start > slice.End)
-            {
-                return (T) this;
-            }
-            return Write(slice.Text, slice.Start, slice.Length);
+            Write(slice.AsSpan());
+            return (T)this;
         }
 
         /// <summary>
@@ -228,7 +232,8 @@ namespace Markdig.Renderers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Write(StringSlice slice)
         {
-            return Write(ref slice);
+            Write(slice.AsSpan());
+            return (T)this;
         }
 
         /// <summary>
@@ -240,9 +245,12 @@ namespace Markdig.Renderers
         public T Write(char content)
         {
             WriteIndent();
-            previousWasLine = content == '\n';
+            if (content == '\n')
+            {
+                previousWasLine = true;
+            }
             Writer.Write(content);
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -254,37 +262,47 @@ namespace Markdig.Renderers
         /// <returns>This instance</returns>
         public T Write(string content, int offset, int length)
         {
-            if (content is null)
+            if (content is not null)
             {
-                return (T) this;
+                Write(content.AsSpan(offset, length));
+            }
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Writes the specified content.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Write(ReadOnlySpan<char> content)
+        {
+            if (content.IsEmpty)
+            {
+                return;
             }
 
             WriteIndent();
-            previousWasLine = false;
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-            Writer.Write(content.AsSpan(offset, length));
+            Writer.Write(content);
 #else
-            if (offset == 0 && content.Length == length)
+            if (content.Length > buffer.Length)
             {
-                Writer.Write(content);
+                buffer = content.ToArray();
             }
             else
             {
-                if (length > buffer.Length)
-                {
-                    buffer = content.ToCharArray();
-                    Writer.Write(buffer, offset, length);
-                }
-                else
-                {
-                    content.CopyTo(offset, buffer, 0, length);
-                    Writer.Write(buffer, 0, length);
-                }
+                content.CopyTo(buffer);
             }
+            Writer.Write(buffer, 0, content.Length);
 #endif
-            return (T) this;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteRaw(char content) => Writer.Write(content);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteRaw(string? content) => Writer.Write(content);
 
         /// <summary>
         /// Writes a newline.
@@ -296,7 +314,7 @@ namespace Markdig.Renderers
             WriteIndent();
             Writer.WriteLine();
             previousWasLine = true;
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -323,7 +341,7 @@ namespace Markdig.Renderers
             WriteIndent();
             previousWasLine = true;
             Writer.WriteLine(content);
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -349,15 +367,15 @@ namespace Markdig.Renderers
         public T WriteLeafInline(LeafBlock leafBlock)
         {
             if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
-            var inline = (Inline) leafBlock.Inline!;
-          
+            Inline? inline = leafBlock.Inline;
+
             while (inline != null)
             {
                 Write(inline);
                 inline = inline.NextSibling;
             }
-            
-            return (T) this;
+
+            return (T)this;
         }
     }
 }

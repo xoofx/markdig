@@ -17,7 +17,9 @@ namespace Markdig.Renderers.Html
             renderer.EnsureLine();
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<blockquote").WriteAttributes(obj).WriteLine(">");
+                renderer.Write("<blockquote");
+                renderer.WriteAttributes(obj);
+                renderer.WriteLine('>');
             }
             var savedImplicitParagraph = renderer.ImplicitParagraph;
             renderer.ImplicitParagraph = false;
