@@ -16,38 +16,34 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<Type, IMarkdownObjectRenderer> _renderersPerType;
-        private IMarkdownObjectRenderer? _previousRenderer;
-        private Type? _previousObjectType;
+        private readonly Dictionary<RuntimeTypeHandle, IMarkdownObjectRenderer?> _renderersPerType = new();
         internal int _childrenDepth = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RendererBase"/> class.
         /// </summary>
-        protected RendererBase()
-        {
-            ObjectRenderers = new ObjectRendererCollection();
-            _renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
-        }
+        protected RendererBase() { }
 
-        private IMarkdownObjectRenderer? TryGetRenderer(Type objectType)
+        private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
         {
+            RuntimeTypeHandle typeHandle = Type.GetTypeHandle(obj);
+            Type objectType = obj.GetType();
+
             for (int i = 0; i < ObjectRenderers.Count; i++)
             {
                 var renderer = ObjectRenderers[i];
                 if (renderer.Accept(this, objectType))
                 {
-                    _renderersPerType[objectType] = renderer;
-                    _previousObjectType = objectType;
-                    _previousRenderer = renderer;
+                    _renderersPerType[typeHandle] = renderer;
                     return renderer;
                 }
             }
 
+            _renderersPerType[typeHandle] = null;
             return null;
         }
 
-        public ObjectRendererCollection ObjectRenderers { get; }
+        public ObjectRendererCollection ObjectRenderers { get; } = new();
 
         public abstract object Render(MarkdownObject markdownObject);
 
@@ -144,31 +140,22 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            var objectType = obj.GetType();
-
-            IMarkdownObjectRenderer? renderer;
-
-            // Handle regular renderers
-            if (objectType == _previousObjectType)
+            if (!_renderersPerType.TryGetValue(Type.GetTypeHandle(obj), out IMarkdownObjectRenderer? renderer))
             {
-                renderer = _previousRenderer;
-            }
-            else if (!_renderersPerType.TryGetValue(objectType, out renderer))
-            {
-                renderer = TryGetRenderer(objectType);
+                renderer = GetRendererInstance(obj);
             }
 
-            if (renderer != null)
+            if (renderer is not null)
             {
                 renderer.Write(this, obj);
-            }
-            else if (obj is ContainerBlock containerBlock)
-            {
-                WriteChildren(containerBlock);
             }
             else if (obj is ContainerInline containerInline)
             {
                 WriteChildren(containerInline);
+            }
+            else if (obj is ContainerBlock containerBlock)
+            {
+                WriteChildren(containerBlock);
             }
 
             // Calls after writing an object
