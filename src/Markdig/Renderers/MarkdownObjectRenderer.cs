@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System;
 
 namespace Markdig.Renderers
 {
@@ -21,9 +22,9 @@ namespace Markdig.Renderers
 
         public delegate bool TryWriteDelegate(TRenderer renderer, TObject obj);
 
-        public virtual bool Accept(RendererBase renderer, MarkdownObject obj)
+        public bool Accept(RendererBase renderer, Type objectType)
         {
-            return obj is TObject;
+            return typeof(TObject).IsAssignableFrom(objectType);
         }
 
         public virtual void Write(RendererBase renderer, MarkdownObject obj)

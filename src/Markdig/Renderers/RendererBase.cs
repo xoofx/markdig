@@ -141,7 +141,7 @@ namespace Markdig.Renderers
                 for (int i = 0; i < ObjectRenderers.Count; i++)
                 {
                     var testRenderer = ObjectRenderers[i];
-                    if (testRenderer.Accept(this, obj))
+                    if (testRenderer.Accept(this, objectType))
                     {
                         renderersPerType[objectType] = renderer = testRenderer;
                         break;
