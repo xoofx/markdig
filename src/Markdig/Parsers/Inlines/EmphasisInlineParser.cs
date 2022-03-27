@@ -125,7 +125,8 @@ namespace Markdig.Parsers.Inlines
                     continue;
                 }
 
-                child = child.NextSibling;
+                // Follow DelimiterInline (EmphasisDelimiter, TableDelimiter...)
+                child = child is DelimiterInline delimiterInline ? delimiterInline.FirstChild : child.NextSibling;
             }
 
             if (delimiters != null)

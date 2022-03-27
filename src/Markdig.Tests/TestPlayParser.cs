@@ -13,6 +13,12 @@ namespace Markdig.Tests
     public class TestPlayParser
     {
         [Test]
+        public void TestBugWithEmphasisAndTable()
+        {
+            TestParser.TestSpec("**basics | 8:00**", "<p><strong>basics | 8:00</strong></p>", "advanced");
+        }
+
+        [Test]
         public void TestLinksWithCarriageReturn()
         {
             var text = "[Link 1][link-1], [link 2][link-2].\r\n\r\n[link-1]: https://example.com\r\n[link-2]: https://example.com";
