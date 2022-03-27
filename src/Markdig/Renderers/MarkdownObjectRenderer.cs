@@ -4,6 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
+using System;
 
 namespace Markdig.Renderers
 {
@@ -15,16 +16,15 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownObjectRenderer" />
     public abstract class MarkdownObjectRenderer<TRenderer, TObject> : IMarkdownObjectRenderer where TRenderer : RendererBase where TObject : MarkdownObject
     {
-        protected MarkdownObjectRenderer()
-        {
-            TryWriters = new OrderedList<TryWriteDelegate>();
-        }
+        private OrderedList<TryWriteDelegate>? _tryWriters;
+
+        protected MarkdownObjectRenderer() { }
 
         public delegate bool TryWriteDelegate(TRenderer renderer, TObject obj);
 
-        public virtual bool Accept(RendererBase renderer, MarkdownObject obj)
+        public bool Accept(RendererBase renderer, Type objectType)
         {
-            return obj is TObject;
+            return typeof(TObject).IsAssignableFrom(objectType);
         }
 
         public virtual void Write(RendererBase renderer, MarkdownObject obj)
@@ -32,23 +32,31 @@ namespace Markdig.Renderers
             var htmlRenderer = (TRenderer)renderer;
             var typedObj = (TObject)obj;
 
-            // Try processing
-            for (int i = 0; i < TryWriters.Count; i++)
+            if (_tryWriters is not null && TryWrite(htmlRenderer, typedObj))
             {
-                var tryWriter = TryWriters[i];
-                if (tryWriter(htmlRenderer, typedObj))
-                {
-                    return;
-                }
+                return;
             }
 
             Write(htmlRenderer, typedObj);
         }
 
+        private bool TryWrite(TRenderer renderer, TObject obj)
+        {
+            for (int i = 0; i < _tryWriters!.Count; i++)
+            {
+                var tryWriter = _tryWriters[i];
+                if (tryWriter(renderer, obj))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Gets the optional writers attached to this instance.
         /// </summary>
-        public OrderedList<TryWriteDelegate> TryWriters { get; }
+        public OrderedList<TryWriteDelegate> TryWriters => _tryWriters ??= new();
 
         /// <summary>
         /// Writes the specified Markdown object to the renderer.

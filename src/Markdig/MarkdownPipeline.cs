@@ -94,9 +94,7 @@ namespace Markdig
 
         internal sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
         {
-            private const int InitialCapacity = 1024;
-
-            private static readonly StringWriter _dummyWriter = new();
+            private static readonly TextWriter s_dummyWriter = new StringWriter();
 
             private readonly MarkdownPipeline _pipeline;
             private readonly bool _customWriter;
@@ -109,7 +107,7 @@ namespace Markdig
 
             protected override HtmlRenderer NewInstance()
             {
-                var writer = _customWriter ? _dummyWriter : new StringWriter(new StringBuilder(InitialCapacity));
+                TextWriter writer = _customWriter ? s_dummyWriter : new FastStringWriter();
                 var renderer = new HtmlRenderer(writer);
                 _pipeline.Setup(renderer);
                 return renderer;
@@ -121,11 +119,11 @@ namespace Markdig
 
                 if (_customWriter)
                 {
-                    instance.Writer = _dummyWriter;
+                    instance.Writer = s_dummyWriter;
                 }
                 else
                 {
-                    ((StringWriter)instance.Writer).GetStringBuilder().Length = 0;
+                    ((FastStringWriter)instance.Writer).Reset();
                 }
             }
         }

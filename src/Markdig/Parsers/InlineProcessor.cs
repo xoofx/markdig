@@ -325,11 +325,7 @@ namespace Markdig.Parsers
                 Inline? lastChild = container.LastChild;
                 if (lastChild is not null && lastChild.IsContainerInline && !lastChild.IsClosed)
                 {
-#if NETSTANDARD2_1
-                    container = ((ContainerInline)lastChild);
-#else
                     container = Unsafe.As<ContainerInline>(lastChild);
-#endif
                 }
                 else
                 {

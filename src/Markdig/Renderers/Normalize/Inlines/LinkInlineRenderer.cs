@@ -14,6 +14,12 @@ namespace Markdig.Renderers.Normalize.Inlines
     {
         protected override void Write(NormalizeRenderer renderer, LinkInline link)
         {
+            if (link.IsAutoLink && !renderer.Options.ExpandAutoLinks)
+            {
+                renderer.Write(link.Url);
+                return;
+            }
+
             if (link.IsImage)
             {
                 renderer.Write('!');

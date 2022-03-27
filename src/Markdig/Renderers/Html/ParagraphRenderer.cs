@@ -21,12 +21,14 @@ namespace Markdig.Renderers.Html
                     renderer.EnsureLine();
                 }
 
-                renderer.Write("<p").WriteAttributes(obj).Write(">");
+                renderer.Write("<p");
+                renderer.WriteAttributes(obj);
+                renderer.WriteRaw('>');
             }
             renderer.WriteLeafInline(obj);
             if (!renderer.ImplicitParagraph)
             {
-                if(renderer.EnableHtmlForBlock)
+                if (renderer.EnableHtmlForBlock)
                 {
                     renderer.WriteLine("</p>");
                 }

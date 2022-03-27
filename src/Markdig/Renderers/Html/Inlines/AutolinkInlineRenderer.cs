@@ -54,28 +54,26 @@ namespace Markdig.Renderers.Html.Inlines
         {
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("<a href=\"");
-                if (obj.IsEmail)
-                {
-                    renderer.Write("mailto:");
-                }
+                renderer.Write(obj.IsEmail ? "<a href=\"mailto:" : "<a href=\"");
                 renderer.WriteEscapeUrl(obj.Url);
-                renderer.Write('"');
+                renderer.WriteRaw('"');
                 renderer.WriteAttributes(obj);
 
                 if (!obj.IsEmail && !string.IsNullOrWhiteSpace(Rel))
                 {
-                    renderer.Write($" rel=\"{Rel}\"");
+                    renderer.WriteRaw(" rel=\"");
+                    renderer.WriteRaw(Rel);
+                    renderer.WriteRaw('"');
                 }
 
-                renderer.Write('>');
+                renderer.WriteRaw('>');
             }
 
             renderer.WriteEscape(obj.Url);
 
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("</a>");
+                renderer.WriteRaw("</a>");
             }
         }
     }

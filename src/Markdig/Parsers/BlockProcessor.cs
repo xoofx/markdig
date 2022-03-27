@@ -604,12 +604,7 @@ namespace Markdig.Parsers
 
                 if (block.IsContainerBlock)
                 {
-                    var currentContainer =
-#if NETSTANDARD2_1
-                        (ContainerBlock)block;
-#else
-                        Unsafe.As<ContainerBlock>(block);
-#endif
+                    var currentContainer = Unsafe.As<ContainerBlock>(block);
                     CurrentContainer = currentContainer;
                     LastBlock = currentContainer.LastChild;
                     CurrentBlock = currentBlock;
@@ -699,12 +694,7 @@ namespace Markdig.Parsers
                             }
                         }
 
-#if NETSTANDARD2_1
-                        ((LeafBlock)block)
-#else
-                        Unsafe.As<LeafBlock>(block)
-#endif
-                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+                        Unsafe.As<LeafBlock>(block).AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                 }
 
@@ -851,12 +841,7 @@ namespace Markdig.Parsers
                             UnwindAllIndents();
                         }
 
-#if NETSTANDARD2_1
-                        ((ParagraphBlock)currentBlock)
-#else
-                        Unsafe.As<ParagraphBlock>(currentBlock)
-#endif
-                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+                        Unsafe.As<ParagraphBlock>(currentBlock).AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
                     if (TrackTrivia)
                     {
@@ -926,12 +911,7 @@ namespace Markdig.Parsers
                             }
                         }
 
-#if NETSTANDARD2_1
-                        ((LeafBlock)block)
-#else
-                        Unsafe.As<LeafBlock>(block)
-#endif
-                            .AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
+                        Unsafe.As<LeafBlock>(block).AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                     }
 
                     if (newBlocks.Count > 0)
