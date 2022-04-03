@@ -62,7 +62,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The label span
         /// </summary>
-        public SourceSpan? LabelSpan;
+        public SourceSpan LabelSpan;
 
         /// <summary>
         /// Gets or sets the <see cref="Label"/> with trivia.
@@ -118,7 +118,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The URL source span.
         /// </summary>
-        public SourceSpan? UrlSpan;
+        public SourceSpan UrlSpan;
 
         /// <summary>
         /// The <see cref="Url"/> but with trivia and unescaped characters
@@ -154,7 +154,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The title source span.
         /// </summary>
-        public SourceSpan? TitleSpan;
+        public SourceSpan TitleSpan;
 
         /// <summary>
         /// Gets or sets the <see cref="Title"/> exactly as parsed from the
