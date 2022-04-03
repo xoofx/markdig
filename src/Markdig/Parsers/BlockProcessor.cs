@@ -145,7 +145,7 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the current stack of <see cref="Block"/> being processed.
         /// </summary>
-        private List<Block> OpenedBlocks { get; } = new();
+        private List<BlockWrapper> OpenedBlocks { get; } = new();
 
         private bool ContinueProcessingLine { get; set; }
 
@@ -446,7 +446,7 @@ namespace Markdig.Parsers
             // If we close a block, we close all blocks above
             for (int i = OpenedBlocks.Count - 1; i >= 0; i--)
             {
-                if (OpenedBlocks[i] == block)
+                if (ReferenceEquals(OpenedBlocks[i].Block, block))
                 {
                     for (int j = OpenedBlocks.Count - 1; j >= i; j--)
                     {
@@ -465,7 +465,7 @@ namespace Markdig.Parsers
         {
             for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
             {
-                if (OpenedBlocks[i] == block)
+                if (ReferenceEquals(OpenedBlocks[i].Block, block))
                 {
                     block.Parent!.Remove(block);
                     OpenedBlocks.RemoveAt(i);
@@ -510,7 +510,7 @@ namespace Markdig.Parsers
         /// <param name="index">The index.</param>
         private void Close(int index)
         {
-            var block = OpenedBlocks[index];
+            var block = OpenedBlocks[index].Block;
             // If the pending object is removed, we need to remove it from the parent container
             if (block.Parser != null)
             {
@@ -518,9 +518,9 @@ namespace Markdig.Parsers
                 {
                     block.Parent?.Remove(block);
 
-                    if (block is LeafBlock leaf)
+                    if (block.IsLeafBlock)
                     {
-                        leaf.Lines.Release();
+                        Unsafe.As<LeafBlock>(block).Lines.Release();
                     }
                 }
                 else
@@ -542,7 +542,7 @@ namespace Markdig.Parsers
             // Close any previous blocks not opened
             for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
             {
-                var block = OpenedBlocks[i];
+                var block = OpenedBlocks[i].Block;
 
                 // Stop on the first open block
                 if (!force && block.IsOpen)
@@ -583,7 +583,7 @@ namespace Markdig.Parsers
         {
             for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                OpenedBlocks[i].IsOpen = true;
+                OpenedBlocks[i].Block.IsOpen = true;
             }
         }
 
@@ -593,13 +593,13 @@ namespace Markdig.Parsers
         /// <param name="stackIndex">Index of a block in a stack considered as the last block to update from.</param>
         private void UpdateLastBlockAndContainer(int stackIndex = -1)
         {
-            List<Block> openedBlocks = OpenedBlocks;
+            List<BlockWrapper> openedBlocks = OpenedBlocks;
             currentStackIndex = stackIndex < 0 ? openedBlocks.Count - 1 : stackIndex;
 
             Block? currentBlock = null;
             for (int i = openedBlocks.Count - 1; i >= 0; i--)
             {
-                var block = openedBlocks[i];
+                var block = openedBlocks[i].Block;
                 currentBlock ??= block;
 
                 if (block.IsContainerBlock)
@@ -632,13 +632,13 @@ namespace Markdig.Parsers
             // They will be marked as open in the following loop
             for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                OpenedBlocks[i].IsOpen = false;
+                OpenedBlocks[i].Block.IsOpen = false;
             }
 
             // Process any current block potentially opened
             for (int i = 1; i < OpenedBlocks.Count; i++)
             {
-                var block = OpenedBlocks[i];
+                var block = OpenedBlocks[i].Block;
 
                 ParseIndent();
 
