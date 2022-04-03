@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -149,13 +150,13 @@ namespace Markdig.Renderers
             {
                 renderer.Write(this, obj);
             }
-            else if (obj is ContainerInline containerInline)
+            else if (obj.IsContainerInline)
             {
-                WriteChildren(containerInline);
+                WriteChildren(Unsafe.As<ContainerInline>(obj));
             }
-            else if (obj is ContainerBlock containerBlock)
+            else if (obj.IsContainerBlock)
             {
-                WriteChildren(containerBlock);
+                WriteChildren(Unsafe.As<ContainerBlock>(obj));
             }
 
             // Calls after writing an object

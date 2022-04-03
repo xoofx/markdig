@@ -12,6 +12,8 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{CodeInline}" />
     public class CodeInlineRenderer : HtmlObjectRenderer<CodeInline>
     {
+        public CodeInlineRenderer() => IsInternalRenderer = GetType() == typeof(CodeInlineRenderer);
+
         protected override void Write(HtmlRenderer renderer, CodeInline obj)
         {
             if (renderer.EnableHtmlForInline)

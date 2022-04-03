@@ -12,6 +12,8 @@ namespace Markdig.Renderers.Html
     /// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
     public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
     {
+        public QuoteBlockRenderer() => IsInternalRenderer = GetType() == typeof(QuoteBlockRenderer);
+
         protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
         {
             renderer.EnsureLine();

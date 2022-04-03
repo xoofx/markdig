@@ -21,6 +21,8 @@ namespace Markdig.Renderers.Html
             "h6",
         };
 
+        public HeadingRenderer() => IsInternalRenderer = GetType() == typeof(HeadingRenderer);
+
         protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
         {
             int index = obj.Level - 1;

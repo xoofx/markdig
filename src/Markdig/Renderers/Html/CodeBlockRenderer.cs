@@ -20,7 +20,7 @@ namespace Markdig.Renderers.Html
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeBlockRenderer"/> class.
         /// </summary>
-        public CodeBlockRenderer() { }
+        public CodeBlockRenderer() => IsInternalRenderer = GetType() == typeof(CodeBlockRenderer);
 
         public bool OutputAttributesOnPre { get; set; }
 

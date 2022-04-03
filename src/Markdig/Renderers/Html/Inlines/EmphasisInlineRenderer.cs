@@ -26,6 +26,7 @@ namespace Markdig.Renderers.Html.Inlines
         public EmphasisInlineRenderer()
         {
             GetTag = GetDefaultTag;
+            IsInternalRenderer = GetType() == typeof(EmphasisInlineRenderer);
         }
 
         /// <summary>
