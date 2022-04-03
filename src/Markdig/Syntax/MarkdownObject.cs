@@ -23,7 +23,7 @@ namespace Markdig.Syntax
 
         // Limit the value to 30 bits and repurpose the last two bits for commonly used flags
         private uint _lineBits;     // Also stores TypeKindMask (IsInline and IsContainer)
-        private uint _columnBits;   // Also stores IsClosedInternal
+        private uint _columnBits;   // Also stores IsClosedInternal and InternalSpareBit
 
         internal bool IsContainerInline => (_lineBits & TypeKindMask) == (IsContainerMask | IsInlineMask);
 
@@ -42,10 +42,22 @@ namespace Markdig.Syntax
         private protected bool IsClosedInternal
         {
             get => (_columnBits & FirstBitMask) != 0;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
                 if (value) _columnBits |= FirstBitMask;
                 else _columnBits &= ~FirstBitMask;
+            }
+        }
+
+        private protected bool InternalSpareBit
+        {
+            get => (_columnBits & SecondBitMask) != 0;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set
+            {
+                if (value) _columnBits |= SecondBitMask;
+                else _columnBits &= ~SecondBitMask;
             }
         }
 

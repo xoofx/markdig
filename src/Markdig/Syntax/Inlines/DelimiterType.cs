@@ -10,7 +10,7 @@ namespace Markdig.Syntax.Inlines
     /// Gets the type of a <see cref="DelimiterInline"/>.
     /// </summary>
     [Flags]
-    public enum DelimiterType
+    public enum DelimiterType : byte
     {
         /// <summary>
         /// An undefined open or close delimiter.
