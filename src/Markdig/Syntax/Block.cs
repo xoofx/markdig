@@ -14,8 +14,8 @@ namespace Markdig.Syntax
     /// <seealso cref="MarkdownObject" />
     public abstract class Block : MarkdownObject, IBlock
     {
-        private BlockTriviaProperties? _trivia;
-        private BlockTriviaProperties Trivia => _trivia ??= new();
+        private BlockTriviaProperties? _trivia => GetTrivia<BlockTriviaProperties>();
+        private BlockTriviaProperties Trivia => GetOrSetTrivia<BlockTriviaProperties>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Block"/> class.

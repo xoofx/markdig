@@ -14,8 +14,8 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("`{Content}`")]
     public class CodeInline : LeafInline
     {
-        private TriviaProperties? _trivia;
-        private TriviaProperties Trivia => _trivia ??= new();
+        private TriviaProperties? _trivia => GetTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetTrivia<TriviaProperties>();
 
         public CodeInline(string content)
         {

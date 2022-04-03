@@ -13,8 +13,8 @@ namespace Markdig.Syntax.Inlines
     /// <seealso cref="DelimiterInline" />
     public class LinkDelimiterInline : DelimiterInline
     {
-        private TriviaProperties? _trivia;
-        private TriviaProperties Trivia => _trivia ??= new();
+        private TriviaProperties? _trivia => GetTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetTrivia<TriviaProperties>();
 
         public LinkDelimiterInline(InlineParser parser) : base(parser)
         {

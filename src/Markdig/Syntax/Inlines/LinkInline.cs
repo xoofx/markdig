@@ -21,8 +21,8 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("Url: {Url} Title: {Title} Image: {IsImage}")]
     public class LinkInline : ContainerInline
     {
-        private TriviaProperties? _trivia;
-        private TriviaProperties Trivia => _trivia ??= new();
+        private TriviaProperties? _trivia => GetTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetTrivia<TriviaProperties>();
 
         /// <summary>
         /// A delegate to use if it is setup on this instance to allow late binding 
