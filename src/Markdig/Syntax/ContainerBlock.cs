@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -36,6 +37,7 @@ namespace Markdig.Syntax
         /// </summary>
         public Block? LastChild
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 BlockWrapper[] children = _children;
@@ -207,6 +209,7 @@ namespace Markdig.Syntax
 
         public Block this[int index]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 var array = _children;

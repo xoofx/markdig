@@ -75,7 +75,15 @@ namespace Markdig.Parsers
         /// <summary>
         /// Gets the next block in a <see cref="BlockParser.TryContinue"/>.
         /// </summary>
-        public Block? NextContinue => currentStackIndex + 1 < OpenedBlocks.Count ? OpenedBlocks[currentStackIndex + 1] : null;
+        public Block? NextContinue
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                int index = currentStackIndex + 1;
+                return index < OpenedBlocks.Count ? OpenedBlocks[index].Block : null;
+            }
+        }
 
         /// <summary>
         /// Gets the root document.
