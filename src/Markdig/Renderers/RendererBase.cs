@@ -16,21 +16,34 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<Type, IMarkdownObjectRenderer> renderersPerType;
-        private IMarkdownObjectRenderer? previousRenderer;
-        private Type? previousObjectType;
-        internal int childrenDepth = 0;
+        private readonly Dictionary<RuntimeTypeHandle, IMarkdownObjectRenderer?> _renderersPerType = new();
+        internal int _childrenDepth = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RendererBase"/> class.
         /// </summary>
-        protected RendererBase()
+        protected RendererBase() { }
+
+        private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
         {
-            ObjectRenderers = new ObjectRendererCollection();
-            renderersPerType = new Dictionary<Type, IMarkdownObjectRenderer>();
+            RuntimeTypeHandle typeHandle = Type.GetTypeHandle(obj);
+            Type objectType = obj.GetType();
+
+            for (int i = 0; i < ObjectRenderers.Count; i++)
+            {
+                var renderer = ObjectRenderers[i];
+                if (renderer.Accept(this, objectType))
+                {
+                    _renderersPerType[typeHandle] = renderer;
+                    return renderer;
+                }
+            }
+
+            _renderersPerType[typeHandle] = null;
+            return null;
         }
 
-        public ObjectRendererCollection ObjectRenderers { get; }
+        public ObjectRendererCollection ObjectRenderers { get; } = new();
 
         public abstract object Render(MarkdownObject markdownObject);
 
@@ -59,7 +72,7 @@ namespace Markdig.Renderers
                 return;
             }
 
-            ThrowHelper.CheckDepthLimit(childrenDepth++);
+            ThrowHelper.CheckDepthLimit(_childrenDepth++);
 
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
@@ -75,7 +88,7 @@ namespace Markdig.Renderers
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
 
-            childrenDepth--;
+            _childrenDepth--;
         }
 
         /// <summary>
@@ -89,7 +102,7 @@ namespace Markdig.Renderers
                 return;
             }
 
-            ThrowHelper.CheckDepthLimit(childrenDepth++);
+            ThrowHelper.CheckDepthLimit(_childrenDepth++);
 
             bool saveIsFirstInContainer = IsFirstInContainer;
             bool saveIsLastInContainer = IsLastInContainer;
@@ -110,7 +123,7 @@ namespace Markdig.Renderers
             IsFirstInContainer = saveIsFirstInContainer;
             IsLastInContainer = saveIsLastInContainer;
 
-            childrenDepth--;
+            _childrenDepth--;
         }
 
         /// <summary>
@@ -127,42 +140,22 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            var objectType = obj.GetType();
-
-            IMarkdownObjectRenderer? renderer;
-
-            // Handle regular renderers
-            if (objectType == previousObjectType)
+            if (!_renderersPerType.TryGetValue(Type.GetTypeHandle(obj), out IMarkdownObjectRenderer? renderer))
             {
-                renderer = previousRenderer;
-            }
-            else if (!renderersPerType.TryGetValue(objectType, out renderer))
-            {
-                for (int i = 0; i < ObjectRenderers.Count; i++)
-                {
-                    var testRenderer = ObjectRenderers[i];
-                    if (testRenderer.Accept(this, obj))
-                    {
-                        renderersPerType[objectType] = renderer = testRenderer;
-                        break;
-                    }
-                }
+                renderer = GetRendererInstance(obj);
             }
 
-            if (renderer != null)
+            if (renderer is not null)
             {
                 renderer.Write(this, obj);
-
-                previousObjectType = objectType;
-                previousRenderer = renderer;
-            }
-            else if (obj is ContainerBlock containerBlock)
-            {
-                WriteChildren(containerBlock);
             }
             else if (obj is ContainerInline containerInline)
             {
                 WriteChildren(containerInline);
+            }
+            else if (obj is ContainerBlock containerBlock)
+            {
+                WriteChildren(containerBlock);
             }
 
             // Calls after writing an object

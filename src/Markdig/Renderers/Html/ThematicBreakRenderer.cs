@@ -16,7 +16,9 @@ namespace Markdig.Renderers.Html
         {
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<hr").WriteAttributes(obj).WriteLine(" />");
+                renderer.Write("<hr");
+                renderer.WriteAttributes(obj);
+                renderer.WriteLine(" />");
             }
         }
     }

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 
@@ -43,8 +44,8 @@ namespace Markdig.Parsers
 
             if (pipeline.PreciseSourceLocation)
             {
-                int roughLineCountEstimate = text.Length / 40;
-                roughLineCountEstimate = Math.Min(4, Math.Max(512, roughLineCountEstimate));
+                int roughLineCountEstimate = text.Length / 32;
+                roughLineCountEstimate = Math.Max(4, Math.Min(512, roughLineCountEstimate));
                 document.LineStartIndexes = new List<int>(roughLineCountEstimate);
             }
 
@@ -149,8 +150,9 @@ namespace Markdig.Parsers
                 for (; item.Index < container.Count; item.Index++)
                 {
                     var block = container[item.Index];
-                    if (block is LeafBlock leafBlock)
+                    if (block.IsLeafBlock)
                     {
+                        LeafBlock leafBlock = Unsafe.As<LeafBlock>(block);
                         leafBlock.OnProcessInlinesBegin(inlineProcessor);
                         if (leafBlock.ProcessInlines)
                         {
@@ -167,10 +169,10 @@ namespace Markdig.Parsers
                         }
                         leafBlock.OnProcessInlinesEnd(inlineProcessor);
                     }
-                    else if (block is ContainerBlock newContainer)
+                    else if (block.IsContainerBlock)
                     {
                         // If we need to remove it
-                        if (newContainer.RemoveAfterProcessInlines)
+                        if (block.RemoveAfterProcessInlines)
                         {
                             container.RemoveAt(item.Index);
                         }
@@ -185,8 +187,8 @@ namespace Markdig.Parsers
                             Array.Resize(ref blocks, blockCount * 2);
                             ThrowHelper.CheckDepthLimit(blocks.Length);
                         }
-                        blocks[blockCount++] = new ContainerItem(newContainer);
-                        newContainer.OnProcessInlinesBegin(inlineProcessor);
+                        blocks[blockCount++] = new ContainerItem(Unsafe.As<ContainerBlock>(block));
+                        block.OnProcessInlinesBegin(inlineProcessor);
                         goto process_new_block;
                     }
                 }

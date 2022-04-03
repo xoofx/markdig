@@ -4,7 +4,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Markdig.Syntax;
 
 namespace Markdig.Helpers
@@ -21,7 +20,7 @@ namespace Markdig.Helpers
 
         public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
         {
-            var headingBuffer = StringBuilderCache.Local();
+            var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
             bool previousIsSpace = false;
             for (int i = 0; i < headingText.Length; i++)
@@ -92,15 +91,13 @@ namespace Markdig.Helpers
                 }
             }
 
-            var text = headingBuffer.ToString();
-            headingBuffer.Length = 0;
-            return text;
+            return headingBuffer.ToString();
         }
 
         public static string UrilizeAsGfm(string headingText)
         {
             // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
-            var headingBuffer = StringBuilderCache.Local();
+            var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             for (int i = 0; i < headingText.Length; i++)
             {
                 var c = headingText[i];
@@ -109,7 +106,7 @@ namespace Markdig.Helpers
                     headingBuffer.Append(c == ' ' ? '-' : char.ToLowerInvariant(c));
                 }
             }
-            return headingBuffer.GetStringAndReset();
+            return headingBuffer.ToString();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -165,7 +162,7 @@ namespace Markdig.Helpers
                 }
             }
 
-            var builder = StringBuilderCache.Local();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             // ****************************
             // 1. Scan scheme or user email
@@ -193,8 +190,7 @@ namespace Markdig.Helpers
                     // a scheme is any sequence of 2–32 characters 
                     if (state > 0 && builder.Length >= 32)
                     {
-                        builder.Length = 0;
-                        return false;
+                        goto ReturnFalse;
                     }
                     builder.Append(c);
                 }
@@ -202,8 +198,7 @@ namespace Markdig.Helpers
                 {
                     if (state < 0 || builder.Length <= 2)
                     {
-                        builder.Length = 0;
-                        return false;
+                        goto ReturnFalse;
                     }
                     state = 1;
                     break;
@@ -211,16 +206,14 @@ namespace Markdig.Helpers
                 {
                     if (state > 0)
                     {
-                        builder.Length = 0;
-                        return false;
+                        goto ReturnFalse;
                     }
                     state = -1;
                     break;
                 }
                 else
                 {
-                    builder.Length = 0;
-                    return false;
+                    goto ReturnFalse;
                 }
             }
 
@@ -249,7 +242,6 @@ namespace Markdig.Helpers
 
                         text.SkipChar();
                         link = builder.ToString();
-                        builder.Length = 0;
                         return true;
                     }
 
@@ -297,7 +289,6 @@ namespace Markdig.Helpers
                     {
                         text.SkipChar();
                         link = builder.ToString();
-                        builder.Length = 0;
                         return true;
                     }
 
@@ -318,7 +309,8 @@ namespace Markdig.Helpers
                 }
             }
 
-            builder.Length = 0;
+        ReturnFalse:
+            builder.Dispose();
             return false;
         }
 
@@ -528,8 +520,7 @@ namespace Markdig.Helpers
 
         public static bool TryParseTitle<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
         {
-            bool isValid = false;
-            var buffer = StringBuilderCache.Local();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             enclosingCharacter = '\0';
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
@@ -582,8 +573,7 @@ namespace Markdig.Helpers
 
                         // Skip last quote
                         text.SkipChar();
-                        isValid = true;
-                        break;
+                        goto ReturnValid;
                     }
 
                     if (hasEscape && !c.IsAsciiPunctuation())
@@ -615,15 +605,18 @@ namespace Markdig.Helpers
                 }
             }
 
-            title = isValid ? buffer.ToString() : null;
-            buffer.Length = 0;
-            return isValid;
+            buffer.Dispose();
+            title = null;
+            return false;
+
+        ReturnValid:
+            title = buffer.ToString();
+            return true;
         }
 
         public static bool TryParseTitleTrivia<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
         {
-            bool isValid = false;
-            var buffer = StringBuilderCache.Local();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             enclosingCharacter = '\0';
 
             // a sequence of zero or more characters between straight double-quote characters ("), including a " character only if it is backslash-escaped, or
@@ -676,8 +669,7 @@ namespace Markdig.Helpers
 
                         // Skip last quote
                         text.SkipChar();
-                        isValid = true;
-                        break;
+                        goto ReturnValid;
                     }
 
                     if (hasEscape && !c.IsAsciiPunctuation())
@@ -709,9 +701,13 @@ namespace Markdig.Helpers
                 }
             }
 
-            title = isValid ? buffer.ToString() : null;
-            buffer.Length = 0;
-            return isValid;
+            buffer.Dispose();
+            title = null;
+            return false;
+
+        ReturnValid:
+            title = buffer.ToString();
+            return true;
         }
 
         public static bool TryParseUrl<T>(T text, [NotNullWhen(true)] out string? link) where T : ICharIterator
@@ -723,7 +719,7 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             hasPointyBrackets = false;
-            var buffer = StringBuilderCache.Local();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             var c = text.CurrentChar;
 
@@ -854,8 +850,15 @@ namespace Markdig.Helpers
                 }
             }
 
-            link = isValid ? buffer.ToString() : null;
-            buffer.Length = 0;
+            if (isValid)
+            {
+                link = buffer.ToString();
+            }
+            else
+            {
+                buffer.Dispose();
+                link = null;
+            }
             return isValid;
         }
 
@@ -863,8 +866,7 @@ namespace Markdig.Helpers
         {
             bool isValid = false;
             hasPointyBrackets = false;
-            var buffer = StringBuilderCache.Local();
-            var unescaped = new StringBuilder();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             var c = text.CurrentChar;
 
@@ -892,13 +894,11 @@ namespace Markdig.Helpers
                     if (hasEscape && !c.IsAsciiPunctuation())
                     {
                         buffer.Append('\\');
-                        unescaped.Append('\\');
                     }
 
                     if (c == '\\')
                     {
                         hasEscape = true;
-                        unescaped.Append('\\');
                         continue;
                     }
 
@@ -910,7 +910,6 @@ namespace Markdig.Helpers
                     hasEscape = false;
 
                     buffer.Append(c);
-                    unescaped.Append(c);
 
                 } while (c != '\0');
             }
@@ -958,7 +957,6 @@ namespace Markdig.Helpers
                         {
                             hasEscape = true;
                             c = text.NextChar();
-                            unescaped.Append('\\');
                             continue;
                         }
 
@@ -989,7 +987,6 @@ namespace Markdig.Helpers
                     }
 
                     buffer.Append(c);
-                    unescaped.Append(c);
 
                     c = text.NextChar();
                 }
@@ -1000,8 +997,15 @@ namespace Markdig.Helpers
                 }
             }
 
-            link = isValid ? buffer.ToString() : null;
-            buffer.Length = 0;
+            if (isValid)
+            {
+                link = buffer.ToString();
+            }
+            else
+            {
+                buffer.Dispose();
+                link = null;
+            }
             return isValid;
         }
 
@@ -1357,7 +1361,7 @@ namespace Markdig.Helpers
             {
                 return false;
             }
-            var buffer = StringBuilderCache.Local();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             var startLabel = -1;
             var endLabel = -1;
@@ -1365,7 +1369,6 @@ namespace Markdig.Helpers
             bool hasEscape = false;
             bool previousWhitespace = true;
             bool hasNonWhiteSpace = false;
-            bool isValid = false;
             while (true)
             {
                 c = lines.NextChar();
@@ -1413,9 +1416,7 @@ namespace Markdig.Helpers
                                 {
                                     labelSpan = SourceSpan.Empty;
                                 }
-
-                                label = buffer.ToString();
-                                isValid = true;
+                                goto ReturnValid;
                             }
                         }
                         break;
@@ -1458,9 +1459,12 @@ namespace Markdig.Helpers
                 previousWhitespace = isWhitespace;
             }
 
-            buffer.Length = 0;
+            buffer.Dispose();
+            return false;
 
-            return isValid;
+        ReturnValid:
+            label = buffer.ToString();
+            return true;
         }
 
         public static bool TryParseLabelTrivia<T>(ref T lines, bool allowEmpty, out string? label, out SourceSpan labelSpan) where T : ICharIterator
@@ -1472,7 +1476,7 @@ namespace Markdig.Helpers
             {
                 return false;
             }
-            var buffer = StringBuilderCache.Local();
+            var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             var startLabel = -1;
             var endLabel = -1;
@@ -1480,7 +1484,6 @@ namespace Markdig.Helpers
             bool hasEscape = false;
             bool previousWhitespace = true;
             bool hasNonWhiteSpace = false;
-            bool isValid = false;
             while (true)
             {
                 c = lines.NextChar();
@@ -1528,9 +1531,7 @@ namespace Markdig.Helpers
                                 {
                                     labelSpan = SourceSpan.Empty;
                                 }
-
-                                label = buffer.ToString();
-                                isValid = true;
+                                goto ReturnValid;
                             }
                         }
                         break;
@@ -1577,10 +1578,12 @@ namespace Markdig.Helpers
                 previousWhitespace = isWhitespace;
             }
 
-            buffer.Length = 0;
+            buffer.Dispose();
+            return false;
 
-            return isValid;
+        ReturnValid:
+            label = buffer.ToString();
+            return true;
         }
-
     }
 }

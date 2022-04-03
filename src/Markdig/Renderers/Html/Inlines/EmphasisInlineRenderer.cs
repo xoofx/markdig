@@ -39,12 +39,17 @@ namespace Markdig.Renderers.Html.Inlines
             if (renderer.EnableHtmlForInline)
             {
                 tag = GetTag(obj);
-                renderer.Write("<").Write(tag).WriteAttributes(obj).Write('>');
+                renderer.Write('<');
+                renderer.WriteRaw(tag);
+                renderer.WriteAttributes(obj);
+                renderer.WriteRaw('>');
             }
             renderer.WriteChildren(obj);
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("</").Write(tag).Write('>');
+                renderer.Write("</");
+                renderer.WriteRaw(tag);
+                renderer.WriteRaw('>');
             }
         }
 
@@ -53,7 +58,7 @@ namespace Markdig.Renderers.Html.Inlines
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns></returns>
-        public string? GetDefaultTag(EmphasisInline obj)
+        public static string? GetDefaultTag(EmphasisInline obj)
         {
             if (obj.DelimiterChar is '*' or '_')
             {

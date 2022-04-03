@@ -2,7 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System.Text;
+using Markdig.Helpers;
+using System;
 
 namespace Markdig.Extensions.JiraLinks
 {
@@ -38,20 +39,10 @@ namespace Markdig.Extensions.JiraLinks
         /// </summary>
         public virtual string GetUrl()
         {
-            var url = new StringBuilder();
-            var baseUrl = BaseUrl;
-            if (baseUrl != null)
-            {
-                url.Append(baseUrl.TrimEnd('/'));
-            }
-
-            url.Append("/");
-
-            if (BasePath != null)
-            {
-                url.Append(BasePath.Trim('/'));
-            }
-
+            var url = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
+            url.Append(BaseUrl.AsSpan().TrimEnd('/'));
+            url.Append('/');
+            url.Append(BasePath.AsSpan().Trim('/'));
             return url.ToString();
         }
     }

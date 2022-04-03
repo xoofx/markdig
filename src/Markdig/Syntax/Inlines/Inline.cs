@@ -30,6 +30,8 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public Inline? NextSibling { get; internal set; }
 
+        internal bool IsContainerInline { get; private protected set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is closed.
         /// </summary>

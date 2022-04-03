@@ -15,6 +15,9 @@ namespace Markdig.Syntax
     /// </remarks>
     public class FencedCodeBlock : CodeBlock, IFencedBlock
     {
+        private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetDerivedTrivia<TriviaProperties>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FencedCodeBlock"/> class.
         /// </summary>
@@ -41,33 +44,44 @@ namespace Markdig.Syntax
         public int OpeningFencedCharCount { get; set; }
 
         /// <inheritdoc />
-        public StringSlice TriviaAfterFencedChar { get; set; }
+        public StringSlice TriviaAfterFencedChar { get => _trivia?.TriviaAfterFencedChar ?? StringSlice.Empty; set => Trivia.TriviaAfterFencedChar = value; }
 
         /// <inheritdoc />
         public string? Info { get; set; }
 
         /// <inheritdoc />
-        public StringSlice UnescapedInfo { get; set; }
+        public StringSlice UnescapedInfo { get => _trivia?.UnescapedInfo ?? StringSlice.Empty; set => Trivia.UnescapedInfo = value; }
 
         /// <inheritdoc />
-        public StringSlice TriviaAfterInfo { get; set; }
+        public StringSlice TriviaAfterInfo { get => _trivia?.TriviaAfterInfo ?? StringSlice.Empty; set => Trivia.TriviaAfterInfo = value; }
 
         /// <inheritdoc />
         public string? Arguments { get; set; }
 
         /// <inheritdoc />
-        public StringSlice UnescapedArguments { get; set; }
+        public StringSlice UnescapedArguments { get => _trivia?.UnescapedArguments ?? StringSlice.Empty; set => Trivia.UnescapedArguments = value; }
 
         /// <inheritdoc />
-        public StringSlice TriviaAfterArguments { get; set; }
+        public StringSlice TriviaAfterArguments { get => _trivia?.TriviaAfterArguments ?? StringSlice.Empty; set => Trivia.TriviaAfterArguments = value; }
 
         /// <inheritdoc />
-        public NewLine InfoNewLine { get; set; }
+        public NewLine InfoNewLine { get => _trivia?.InfoNewLine ?? NewLine.None; set => Trivia.InfoNewLine = value; }
 
         /// <inheritdoc />
-        public StringSlice TriviaBeforeClosingFence { get; set; }
+        public StringSlice TriviaBeforeClosingFence { get => _trivia?.TriviaBeforeClosingFence ?? StringSlice.Empty; set => Trivia.TriviaBeforeClosingFence = value; }
 
         /// <inheritdoc />
         public int ClosingFencedCharCount { get; set; }
+
+        private sealed class TriviaProperties
+        {
+            public StringSlice TriviaAfterFencedChar;
+            public StringSlice UnescapedInfo;
+            public StringSlice TriviaAfterInfo;
+            public StringSlice UnescapedArguments;
+            public StringSlice TriviaAfterArguments;
+            public NewLine InfoNewLine;
+            public StringSlice TriviaBeforeClosingFence;
+        }
     }
 }

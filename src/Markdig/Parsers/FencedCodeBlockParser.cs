@@ -26,13 +26,19 @@ namespace Markdig.Parsers
 
         protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
         {
-            return new FencedCodeBlock(this)
+            var codeBlock = new FencedCodeBlock(this)
             {
                 IndentCount = processor.Indent,
-                LinesBefore = processor.UseLinesBefore(),
-                TriviaBefore = processor.UseTrivia(processor.Start - 1),
-                NewLine = processor.Line.NewLine,
             };
+
+            if (processor.TrackTrivia)
+            {
+                codeBlock.LinesBefore = processor.UseLinesBefore();
+                codeBlock.TriviaBefore = processor.UseTrivia(processor.Start - 1);
+                codeBlock.NewLine = processor.Line.NewLine;
+            }
+
+            return codeBlock;
         }
 
         public override BlockState TryContinue(BlockProcessor processor, Block block)

@@ -30,7 +30,7 @@ namespace Markdig.Parsers.Inlines
         public override bool Match(InlineProcessor processor, ref StringSlice slice)
         {
             // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
-            if (!(processor.Block is ParagraphBlock))
+            if (!processor.Block!.IsParagraphBlock)
             {
                 return false;
             }

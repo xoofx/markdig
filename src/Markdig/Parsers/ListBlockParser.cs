@@ -93,8 +93,12 @@ namespace Markdig.Parsers
                 {
                     // TODO: We remove the thematic break, as it will be created later, but this is inefficient, try to find another way
                     var thematicBreak = processor.NewBlocks.Pop();
-                    var linesBefore = thematicBreak.LinesBefore;
-                    processor.LinesBefore = linesBefore;
+
+                    if (processor.TrackTrivia)
+                    {
+                        processor.LinesBefore = thematicBreak.LinesBefore;
+                    }
+
                     return BlockState.None;
                 }
             }
@@ -259,10 +263,11 @@ namespace Markdig.Parsers
             // Starts/continue the list unless:
             // - an empty list item follows a paragraph
             // - an ordered list is not starting by '1'
-            if ((block ?? state.LastBlock) is ParagraphBlock previousParagraph)
+            block ??= state.LastBlock;
+            if (block is not null && block.IsParagraphBlock)
             {
                 if (state.IsBlankLine ||
-                    state.IsOpen(previousParagraph) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
+                    state.IsOpen(block) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
                 {
                     state.GoToColumn(initColumn);
                     state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
@@ -276,12 +281,17 @@ namespace Markdig.Parsers
                 Column = initColumn,
                 ColumnWidth = columnWidth,
                 Order = order,
-                SourceBullet = listInfo.SourceBullet,
-                TriviaBefore = triviaBefore,
                 Span = new SourceSpan(sourcePosition, sourceEndPosition),
-                LinesBefore = state.UseLinesBefore(),
-                NewLine = state.Line.NewLine,
             };
+
+            if (state.TrackTrivia)
+            {
+                newListItem.TriviaBefore = triviaBefore;
+                newListItem.LinesBefore = state.UseLinesBefore();
+                newListItem.NewLine = state.Line.NewLine;
+                newListItem.SourceBullet = listInfo.SourceBullet;
+            }
+
             state.NewBlocks.Push(newListItem);
 
             if (currentParent != null)
@@ -313,8 +323,13 @@ namespace Markdig.Parsers
                     OrderedDelimiter = listInfo.OrderedDelimiter,
                     DefaultOrderedStart = listInfo.DefaultOrderedStart,
                     OrderedStart = listInfo.OrderedStart,
-                    LinesBefore = state.UseLinesBefore(),
                 };
+
+                if (state.TrackTrivia)
+                {
+                    newList.LinesBefore = state.UseLinesBefore();
+                }
+
                 state.NewBlocks.Push(newList);
             }
             return BlockState.Continue;

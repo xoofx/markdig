@@ -40,7 +40,7 @@ namespace Markdig.Parsers.Inlines
 
             char c = slice.CurrentChar;
 
-            var builder = StringBuilderCache.Local();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
 
             // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
             // A code span begins with a backtick string and ends with a backtick string of equal length.
@@ -98,33 +98,38 @@ namespace Markdig.Parsers.Inlines
             bool isMatching = false;
             if (closeSticks == openSticks)
             {
-                string content;
+                ReadOnlySpan<char> contentSpan = builder.AsSpan();
 
                 // Remove one space from front and back if the string is not all spaces
-                if (!allSpace && builder.Length > 2 && builder[0] == ' ' && builder[builder.Length - 1] == ' ')
+                if (!allSpace && contentSpan.Length > 2 && contentSpan[0] == ' ' && contentSpan[contentSpan.Length - 1] == ' ')
                 {
-                    content = builder.ToString(1, builder.Length - 2);
+                    contentSpan = contentSpan.Slice(1, contentSpan.Length - 2);
                 }
-                else
-                {
-                    content = builder.ToString();
-                }
+
+                string content = contentSpan.ToString();
 
                 int delimiterCount = Math.Min(openSticks, closeSticks);
                 var spanStart = processor.GetSourcePosition(startPosition, out int line, out int column);
                 var spanEnd = processor.GetSourcePosition(slice.Start - 1);
-                processor.Inline = new CodeInline(content)
+                var codeInline = new CodeInline(content)
                 {
                     Delimiter = match,
-                    ContentWithTrivia = new StringSlice(slice.Text, contentStart, contentEnd - 1),
                     Span = new SourceSpan(spanStart, spanEnd),
                     Line = line,
                     Column = column,
                     DelimiterCount = delimiterCount,
                 };
+
+                if (processor.TrackTrivia)
+                {
+                    codeInline.ContentWithTrivia = new StringSlice(slice.Text, contentStart, contentEnd - 1);
+                }
+
+                processor.Inline = codeInline;
                 isMatching = true;
             }
 
+            builder.Dispose();
             return isMatching;
         }
     }

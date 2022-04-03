@@ -95,13 +95,19 @@ namespace Markdig.Extensions.JiraLinks
             jiraLink.Span.End = jiraLink.Span.Start + (endIssue - startKey);
 
             // Builds the Url
-            var builder = StringBuilderCache.Local();
-            builder.Append(_baseUrl).Append('/').Append(jiraLink.ProjectKey).Append('-').Append(jiraLink.Issue);
-            jiraLink.Url = builder.ToString();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
+            builder.Append(_baseUrl);
+            builder.Append('/');
+            builder.Append(jiraLink.ProjectKey.AsSpan());
+            builder.Append('-');
+            builder.Append(jiraLink.Issue.AsSpan());
+            jiraLink.Url = builder.AsSpan().ToString();
 
             // Builds the Label
             builder.Length = 0;
-            builder.Append(jiraLink.ProjectKey).Append('-').Append(jiraLink.Issue);
+            builder.Append(jiraLink.ProjectKey.AsSpan());
+            builder.Append('-');
+            builder.Append(jiraLink.Issue.AsSpan());
             jiraLink.AppendChild(new LiteralInline(builder.ToString()));
 
             if (_options.OpenInNewWindow)

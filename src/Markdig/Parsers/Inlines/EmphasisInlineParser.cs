@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -91,10 +92,12 @@ namespace Markdig.Parsers.Inlines
 
         public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
         {
-            if (!(root is ContainerInline container))
+            if (root is null || !root.IsContainerInline)
             {
                 return true;
             }
+
+            ContainerInline container = Unsafe.As<ContainerInline>(root);
 
             List<EmphasisDelimiterInline>? delimiters = null;
             if (container is EmphasisDelimiterInline emphasisDelimiter)
@@ -122,7 +125,8 @@ namespace Markdig.Parsers.Inlines
                     continue;
                 }
 
-                child = child.NextSibling;
+                // Follow DelimiterInline (EmphasisDelimiter, TableDelimiter...)
+                child = child is DelimiterInline delimiterInline ? delimiterInline.FirstChild : child.NextSibling;
             }
 
             if (delimiters != null)

@@ -20,12 +20,5 @@ namespace Markdig.Helpers
         {
             return builder.Append(slice.Text, slice.Start, slice.Length);
         }
-
-        internal static string GetStringAndReset(this StringBuilder builder)
-        {
-            string text = builder.ToString();
-            builder.Length = 0;
-            return text;
-        }
     }
 }

@@ -16,7 +16,9 @@ namespace Markdig.Renderers.Html.Inlines
         {
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("<code").WriteAttributes(obj).Write('>');
+                renderer.Write("<code");
+                renderer.WriteAttributes(obj);
+                renderer.WriteRaw('>');
             }
             if (renderer.EnableHtmlEscape)
             {
@@ -28,7 +30,7 @@ namespace Markdig.Renderers.Html.Inlines
             }
             if (renderer.EnableHtmlForInline)
             {
-                renderer.Write("</code>");
+                renderer.WriteRaw("</code>");
             }
         }
     }

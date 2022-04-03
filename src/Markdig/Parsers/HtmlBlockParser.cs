@@ -62,10 +62,10 @@ namespace Markdig.Parsers
 
         private BlockState TryParseTagType7(BlockProcessor state, StringSlice line, int startColumn, int startPosition)
         {
-            var builder = StringBuilderCache.Local();
+            var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
             var c = line.CurrentChar;
             var result = BlockState.None;
-            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, builder))
+            if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, ref builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, ref builder))
             {
                 // Must be followed by whitespace only
                 bool hasOnlySpaces = true;
@@ -90,7 +90,7 @@ namespace Markdig.Parsers
                 }
             }
 
-            builder.Length = 0;
+            builder.Dispose();
             return result;
         }
 
@@ -270,16 +270,22 @@ namespace Markdig.Parsers
 
         private BlockState CreateHtmlBlock(BlockProcessor state, HtmlBlockType type, int startColumn, int startPosition)
         {
-            state.NewBlocks.Push(new HtmlBlock(this)
+            var htmlBlock = new HtmlBlock(this)
             {
                 Column = startColumn,
                 Type = type,
                 // By default, setup to the end of line
                 Span = new SourceSpan(startPosition, startPosition + state.Line.End),
                 //BeforeWhitespace = state.PopBeforeWhitespace(startPosition - 1),
-                LinesBefore = state.UseLinesBefore(),
-                NewLine = state.Line.NewLine,
-            });
+            };
+
+            if (state.TrackTrivia)
+            {
+                htmlBlock.LinesBefore = state.UseLinesBefore();
+                htmlBlock.NewLine = state.Line.NewLine;
+            }
+
+            state.NewBlocks.Push(htmlBlock);
             return BlockState.Continue;
         }
 
