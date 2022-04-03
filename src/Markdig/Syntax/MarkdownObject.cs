@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 
 namespace Markdig.Syntax
@@ -12,6 +13,42 @@ namespace Markdig.Syntax
     /// </summary>
     public abstract class MarkdownObject : IMarkdownObject
     {
+        private const uint ValueBitMask = (1u << 30) - 1;
+        private const uint FirstBitMask = 1u << 31;
+        private const uint SecondBitMask = 1u << 30;
+
+        private const uint IsInlineMask = FirstBitMask;
+        private const uint IsContainerMask = SecondBitMask;
+        private const uint TypeKindMask = IsInlineMask | IsContainerMask;
+
+        // Limit the value to 30 bits and repurpose the last two bits for commonly used flags
+        private uint _lineBits;     // Also stores TypeKindMask (IsInline and IsContainer)
+        private uint _columnBits;   // Also stores IsClosedInternal
+
+        internal bool IsContainerInline => (_lineBits & TypeKindMask) == (IsContainerMask | IsInlineMask);
+
+        internal bool IsContainerBlock => (_lineBits & TypeKindMask) == IsContainerMask;
+
+        internal bool IsContainer => (_lineBits & IsContainerMask) != 0;
+
+        internal bool IsInline => (_lineBits & IsInlineMask) != 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private protected void SetTypeKind(bool isInline, bool isContainer)
+        {
+            _lineBits |= (isInline ? IsInlineMask : 0) | (isContainer ? IsContainerMask : 0);
+        }
+
+        private protected bool IsClosedInternal
+        {
+            get => (_columnBits & FirstBitMask) != 0;
+            set
+            {
+                if (value) _columnBits |= FirstBitMask;
+                else _columnBits &= ~FirstBitMask;
+            }
+        }
+
         protected MarkdownObject()
         {
             Span = SourceSpan.Empty;
@@ -27,12 +64,20 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets or sets the text column this instance was declared (zero-based).
         /// </summary>
-        public int Column { get; set; }
+        public int Column
+        {
+            get => (int)(_columnBits & ValueBitMask);
+            set => _columnBits = (_columnBits & ~ValueBitMask) | ((uint)value & ValueBitMask);
+        }
 
         /// <summary>
         /// Gets or sets the text line this instance was declared (zero-based).
         /// </summary>
-        public int Line { get; set; }
+        public int Line
+        {
+            get => (int)(_lineBits & ValueBitMask);
+            set => _lineBits = (_lineBits & ~ValueBitMask) | ((uint)value & ValueBitMask);
+        }
 
         /// <summary>
         /// The source span

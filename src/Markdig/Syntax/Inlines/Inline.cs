@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 
 namespace Markdig.Syntax.Inlines
@@ -15,6 +16,11 @@ namespace Markdig.Syntax.Inlines
     /// <seealso cref="MarkdownObject" />
     public abstract class Inline : MarkdownObject, IInline
     {
+        protected Inline()
+        {
+            SetTypeKind(isInline: true, isContainer: false);
+        }
+
         /// <summary>
         /// Gets the parent container of this inline.
         /// </summary>
@@ -30,12 +36,14 @@ namespace Markdig.Syntax.Inlines
         /// </summary>
         public Inline? NextSibling { get; internal set; }
 
-        internal bool IsContainerInline { get; private protected set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether this instance is closed.
         /// </summary>
-        public bool IsClosed { get; set; }
+        public bool IsClosed
+        {
+            get => IsClosedInternal;
+            set => IsClosedInternal = value;
+        }
 
         /// <summary>
         /// Inserts the specified inline after this instance.
@@ -153,15 +161,14 @@ namespace Markdig.Syntax.Inlines
                 parent.AppendChild(inline);
             }
 
-            var container = this as ContainerInline;
-            if (copyChildren && container != null)
+            if (copyChildren && IsContainerInline)
             {
-                var newContainer = inline as ContainerInline;
-                // Don't append to a closed container
-                if (newContainer != null && newContainer.IsClosed)
-                {
-                    newContainer = null;
-                }
+                var container = Unsafe.As<ContainerInline>(this);
+
+                ContainerInline? newContainer = inline.IsContainerInline && !inline.IsClosed
+                    ? Unsafe.As<ContainerInline>(inline)
+                    : null;
+
                 // TODO: This part is not efficient as it is using child.Remove()
                 // We need a method to quickly move all children without having to mess Next/Prev sibling
                 var child = container.FirstChild;

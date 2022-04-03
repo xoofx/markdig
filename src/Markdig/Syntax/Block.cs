@@ -26,6 +26,7 @@ namespace Markdig.Syntax
             Parser = parser;
             IsOpen = true;
             IsBreakable = true;
+            SetTypeKind(isInline: false, isContainer: false);
         }
 
         /// <summary>
@@ -38,8 +39,8 @@ namespace Markdig.Syntax
         /// </summary>
         public BlockParser? Parser { get; }
 
-        internal bool IsContainerBlock { get; private protected set; }
         internal bool IsLeafBlock { get; private protected set; }
+
         internal bool IsParagraphBlock { get; private protected set; }
 
         /// <summary>
