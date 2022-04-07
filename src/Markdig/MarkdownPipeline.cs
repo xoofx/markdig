@@ -94,7 +94,7 @@ namespace Markdig
 
         internal sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
         {
-            private static readonly TextWriter s_dummyWriter = new StringWriter();
+            private static readonly TextWriter s_dummyWriter = new FastStringWriter();
 
             private readonly MarkdownPipeline _pipeline;
             private readonly bool _customWriter;
