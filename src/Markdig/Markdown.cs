@@ -133,6 +133,28 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Converts a Markdown document to HTML.
+        /// </summary>
+        /// <param name="document">A Markdown document.</param>
+        /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
+        /// <param name="pipeline">The pipeline used for the conversion.</param>
+        /// <returns>The result of the conversion</returns>
+        /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
+        public static void ToHtml(this MarkdownDocument document, TextWriter writer, MarkdownPipeline? pipeline = null)
+        {
+            if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
+            if (writer is null) ThrowHelper.ArgumentNullException_writer();
+
+            pipeline ??= DefaultPipeline;
+
+            using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
+            HtmlRenderer renderer = rentedRenderer.Instance;
+
+            renderer.Render(document);
+            renderer.Writer.Flush();
+        }
+
+        /// <summary>
         /// Converts a Markdown string to HTML and output to the specified writer.
         /// </summary>
         /// <param name="markdown">A Markdown text.</param>
