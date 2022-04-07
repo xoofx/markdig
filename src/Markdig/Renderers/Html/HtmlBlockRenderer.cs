@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html
     /// <seealso cref="HtmlObjectRenderer{HtmlBlock}" />
     public class HtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
     {
-        public HtmlBlockRenderer() => IsInternalRenderer = GetType() == typeof(HtmlBlockRenderer);
-
         protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
         {
             renderer.WriteLeafRawLines(obj, true, false);

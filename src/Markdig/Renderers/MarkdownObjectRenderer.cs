@@ -5,7 +5,6 @@
 using Markdig.Helpers;
 using Markdig.Syntax;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace Markdig.Renderers
 {
@@ -19,9 +18,6 @@ namespace Markdig.Renderers
     {
         private OrderedList<TryWriteDelegate>? _tryWriters;
 
-        // Indicates whether it's safe to skip type checks during Write
-        private protected bool IsInternalRenderer;
-
         protected MarkdownObjectRenderer() { }
 
         public delegate bool TryWriteDelegate(TRenderer renderer, TObject obj);
@@ -33,26 +29,15 @@ namespace Markdig.Renderers
 
         public virtual void Write(RendererBase renderer, MarkdownObject obj)
         {
-            TRenderer typedRenderer;
-            TObject typedObj;
+            var htmlRenderer = (TRenderer)renderer;
+            var typedObj = (TObject)obj;
 
-            if (IsInternalRenderer)
-            {
-                typedRenderer = Unsafe.As<TRenderer>(renderer);
-                typedObj = Unsafe.As<TObject>(obj);
-            }
-            else
-            {
-                typedRenderer = (TRenderer)renderer;
-                typedObj = (TObject)obj;
-            }
-
-            if (_tryWriters is not null && TryWrite(typedRenderer, typedObj))
+            if (_tryWriters is not null && TryWrite(htmlRenderer, typedObj))
             {
                 return;
             }
 
-            Write(typedRenderer, typedObj);
+            Write(htmlRenderer, typedObj);
         }
 
         private bool TryWrite(TRenderer renderer, TObject obj)

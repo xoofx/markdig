@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html
     /// <seealso cref="HtmlObjectRenderer{ThematicBreakBlock}" />
     public class ThematicBreakRenderer : HtmlObjectRenderer<ThematicBreakBlock>
     {
-        public ThematicBreakRenderer() => IsInternalRenderer = GetType() == typeof(ThematicBreakRenderer);
-
         protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)
         {
             if (renderer.EnableHtmlForBlock)

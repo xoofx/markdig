@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{DelimiterInline}" />
     public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
     {
-        public DelimiterInlineRenderer() => IsInternalRenderer = GetType() == typeof(DelimiterInlineRenderer);
-
         protected override void Write(HtmlRenderer renderer, DelimiterInline obj)
         {
             renderer.WriteEscape(obj.ToLiteral());

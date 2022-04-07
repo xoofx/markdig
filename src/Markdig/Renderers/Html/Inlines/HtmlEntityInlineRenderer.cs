@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{HtmlEntityInline}" />
     public class HtmlEntityInlineRenderer : HtmlObjectRenderer<HtmlEntityInline>
     {
-        public HtmlEntityInlineRenderer() => IsInternalRenderer = GetType() == typeof(HtmlEntityInlineRenderer);
-
         protected override void Write(HtmlRenderer renderer, HtmlEntityInline obj)
         {
             if (renderer.EnableHtmlEscape)

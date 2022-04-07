@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html
     /// <seealso cref="HtmlObjectRenderer{ListBlock}" />
     public class ListRenderer : HtmlObjectRenderer<ListBlock>
     {
-        public ListRenderer() => IsInternalRenderer = GetType() == typeof(ListRenderer);
-
         protected override void Write(HtmlRenderer renderer, ListBlock listBlock)
         {
             renderer.EnsureLine();

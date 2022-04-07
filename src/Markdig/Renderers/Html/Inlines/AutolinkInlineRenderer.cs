@@ -13,8 +13,6 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{AutolinkInline}" />
     public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     {
-        public AutolinkInlineRenderer() => IsInternalRenderer = GetType() == typeof(AutolinkInlineRenderer);
-
         /// <summary>
         /// Gets or sets a value indicating whether to always add rel="nofollow" for links or not.
         /// </summary>

@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{LiteralInline}" />
     public class LiteralInlineRenderer : HtmlObjectRenderer<LiteralInline>
     {
-        public LiteralInlineRenderer() => IsInternalRenderer = GetType() == typeof(LiteralInlineRenderer);
-
         protected override void Write(HtmlRenderer renderer, LiteralInline obj)
         {
             if (renderer.EnableHtmlEscape)

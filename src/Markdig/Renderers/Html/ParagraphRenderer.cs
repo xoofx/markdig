@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html
     /// <seealso cref="HtmlObjectRenderer{ParagraphBlock}" />
     public class ParagraphRenderer : HtmlObjectRenderer<ParagraphBlock>
     {
-        public ParagraphRenderer() => IsInternalRenderer = GetType() == typeof(ParagraphRenderer);
-
         protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)
         {
             if (!renderer.ImplicitParagraph && renderer.EnableHtmlForBlock)

@@ -12,8 +12,6 @@ namespace Markdig.Renderers.Html.Inlines
     /// <seealso cref="HtmlObjectRenderer{LineBreakInline}" />
     public class LineBreakInlineRenderer : HtmlObjectRenderer<LineBreakInline>
     {
-        public LineBreakInlineRenderer() => IsInternalRenderer = GetType() == typeof(LineBreakInlineRenderer);
-
         /// <summary>
         /// Gets or sets a value indicating whether to render this softline break as a HTML hardline break tag (&lt;br /&gt;)
         /// </summary>
