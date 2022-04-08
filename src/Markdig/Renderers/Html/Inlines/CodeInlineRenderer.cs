@@ -22,11 +22,11 @@ namespace Markdig.Renderers.Html.Inlines
             }
             if (renderer.EnableHtmlEscape)
             {
-                renderer.WriteEscape(obj.Content);
+                renderer.WriteEscape(obj.ContentSpan);
             }
             else
             {
-                renderer.Write(obj.Content);
+                renderer.Write(obj.ContentSpan);
             }
             if (renderer.EnableHtmlForInline)
             {
