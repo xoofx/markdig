@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Markdig.Helpers;
 using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
@@ -113,11 +114,6 @@ namespace Markdig.Parsers
         /// </summary>
         public LiteralInlineParser LiteralInlineParser { get; } = new();
 
-        public int GetSourcePosition(int sliceOffset)
-        {
-            return GetSourcePosition(sliceOffset, out _, out _);
-        }
-
         public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
         {
             if (span.IsEmpty)
@@ -125,7 +121,7 @@ namespace Markdig.Parsers
                 return SourceSpan.Empty;
             }
 
-            return new SourceSpan(GetSourcePosition(span.Start, out _, out _), GetSourcePosition(span.End, out _, out _));
+            return new SourceSpan(GetSourcePosition(span.Start), GetSourcePosition(span.End));
         }
 
         /// <summary>
@@ -142,9 +138,18 @@ namespace Markdig.Parsers
             int position = 0;
             if (PreciseSourceLocation)
             {
+#if NET
+                var offsets = CollectionsMarshal.AsSpan(lineOffsets);
+
+                for (; (uint)lineIndex < (uint)offsets.Length; lineIndex++)
+                {
+                    ref var lineOffset = ref offsets[lineIndex];
+#else
                 for (; lineIndex < lineOffsets.Count; lineIndex++)
                 {
                     var lineOffset = lineOffsets[lineIndex];
+#endif
+
                     if (sliceOffset <= lineOffset.End)
                     {
                         // Use the beginning of the line as a previous slice offset
@@ -162,6 +167,41 @@ namespace Markdig.Parsers
                 }
             }
             return position;
+        }
+
+        /// <summary>
+        /// Gets the source position for the specified offset within the current slice.
+        /// </summary>
+        /// <param name="sliceOffset">The slice offset.</param>
+        /// <returns>The source position</returns>
+        public int GetSourcePosition(int sliceOffset)
+        {
+            if (PreciseSourceLocation)
+            {
+                int lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
+
+#if NET
+                var offsets = CollectionsMarshal.AsSpan(lineOffsets);
+
+                for (; (uint)lineIndex < (uint)offsets.Length; lineIndex++)
+                {
+                    ref var lineOffset = ref offsets[lineIndex];
+#else
+                for (; lineIndex < lineOffsets.Count; lineIndex++)
+                {
+                    var lineOffset = lineOffsets[lineIndex];
+#endif
+
+                    if (sliceOffset <= lineOffset.End)
+                    {
+                        previousLineIndexForSliceOffset = lineIndex;
+                        previousSliceOffset = lineOffset.Start;
+
+                        return sliceOffset - lineOffset.Start + lineOffset.LinePosition + lineOffset.Offset;
+                    }
+                }
+            }
+            return 0;
         }
 
         /// <summary>
