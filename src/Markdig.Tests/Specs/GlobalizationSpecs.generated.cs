@@ -226,5 +226,27 @@ namespace Markdig.Tests.Specs.Globalization
 
             TestParser.TestSpec("Nutrition |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table>\n<thead>\n<tr>\n<th>Nutrition</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization+advanced+emojis", context: "Example 3\nSection Extensions / Globalization\n");
         }
+
+        // But if text starts with LTR characters, no attributes are added.
+        [Test]
+        public void ExtensionsGlobalization_Example004()
+        {
+            // Example 4
+            // Section: Extensions / Globalization
+            //
+            // The following Markdown:
+            //     Foo میوە
+            //     
+            //     میوە bar
+            //     
+            //     Baz میوە
+            //
+            // Should be rendered as:
+            //     <p>Foo میوە</p>
+            //     <p dir="rtl">میوە bar</p>
+            //     <p>Baz میوە</p>
+
+            TestParser.TestSpec("Foo میوە\n\nمیوە bar\n\nBaz میوە", "<p>Foo میوە</p>\n<p dir=\"rtl\">میوە bar</p>\n<p>Baz میوە</p>", "globalization+advanced+emojis", context: "Example 4\nSection Extensions / Globalization\n");
+        }
     }
 }

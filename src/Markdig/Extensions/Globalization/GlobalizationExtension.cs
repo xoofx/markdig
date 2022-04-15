@@ -93,20 +93,23 @@ namespace Markdig.Extensions.Globalization
         {
             for (int i = slice.Start; i <= slice.End; i++)
             {
-                if (slice[i] < 128)
+                char c = slice[i];
+                if (c < 128)
                 {
+                    if (CharHelper.IsAlpha(c))
+                    {
+                        return false;
+                    }
+
                     continue;
                 }
 
-                int rune;
-                if (CharHelper.IsHighSurrogate(slice[i]) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
+                int rune = c;
+                if (CharHelper.IsHighSurrogate(c) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
                 {
-                    Debug.Assert(char.IsSurrogatePair(slice[i], slice[i + 1]));
-                    rune = char.ConvertToUtf32(slice[i], slice[i + 1]);
-                }
-                else
-                {
-                    rune = slice[i];
+                    Debug.Assert(char.IsSurrogatePair(c, slice[i + 1]));
+                    rune = char.ConvertToUtf32(c, slice[i + 1]);
+                    i++;
                 }
 
                 if (CharHelper.IsRightToLeft(rune))

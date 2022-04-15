@@ -187,3 +187,17 @@ Sugar|10g|9g
 </tbody>
 </table>
 ````````````````````````````````
+
+But if text starts with LTR characters, no attributes are added.
+
+```````````````````````````````` example
+Foo میوە
+
+میوە bar
+
+Baz میوە
+.
+<p>Foo میوە</p>
+<p dir="rtl">میوە bar</p>
+<p>Baz میوە</p>
+````````````````````````````````
