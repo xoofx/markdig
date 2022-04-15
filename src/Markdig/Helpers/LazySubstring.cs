@@ -9,37 +9,36 @@ namespace Markdig.Helpers
 {
     internal struct LazySubstring
     {
-        public string Text;
+        private string _text;
         public int Offset;
         public int Length;
 
         public LazySubstring(string text)
         {
-            Text = text;
+            _text = text;
             Offset = 0;
             Length = text.Length;
         }
 
         public LazySubstring(string text, int offset, int length)
         {
-            Debug.Assert((ulong)offset + (ulong)length < (ulong)text.Length, $"{offset}-{length} in {text}");
-            Text = text;
+            Debug.Assert((ulong)offset + (ulong)length <= (ulong)text.Length, $"{offset}-{length} in {text}");
+            _text = text;
             Offset = offset;
             Length = length;
         }
 
-        public ReadOnlySpan<char> AsSpan() => Text.AsSpan(Offset, Length);
+        public ReadOnlySpan<char> AsSpan() => _text.AsSpan(Offset, Length);
 
         public override string ToString()
         {
-            if (Offset != 0 || Length != Text.Length)
+            if (Offset != 0 || Length != _text.Length)
             {
-                Text = Text.Substring(Offset, Length);
+                _text = _text.Substring(Offset, Length);
                 Offset = 0;
             }
 
-            return Text;
-
+            return _text;
         }
     }
 }
