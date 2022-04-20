@@ -11,6 +11,7 @@ namespace Markdig.Tests
         [TestCase("a  \nb", "<p>a<br />\nb</p>\n")]
         [TestCase("a\\\nb", "<p>a<br />\nb</p>\n")]
         [TestCase("a `b\nc`", "<p>a <code>b c</code></p>\n")]
+        [TestCase("# Text A\nText B\n\n## Text C", "<h1>Text A</h1>\n<p>Text B</p>\n<h2>Text C</h2>\n")]
         public void Test(string value, string expectedHtml)
         {
             Assert.AreEqual(expectedHtml, Markdown.ToHtml(value));
