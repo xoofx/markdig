@@ -41,45 +41,35 @@ namespace Markdig.Parsers.Inlines
             }
 
             // A backslash at the end of the line is a [hard line break]:
-            if (processor.TrackTrivia)
+            if (c == '\n' || c == '\r')
             {
-                if (c == '\n' || c == '\r')
+                var newLine = c == '\n' ? NewLine.LineFeed : NewLine.CarriageReturn;
+                if (c == '\r' && slice.PeekChar() == '\n')
                 {
-                    var newLine = c == '\n' ? NewLine.LineFeed : NewLine.CarriageReturn;
-                    if (c == '\r' && slice.PeekChar() == '\n')
-                    {
-                        newLine = NewLine.CarriageReturnLineFeed;
-                    }
-                    processor.Inline = new LineBreakInline()
-                    {
-                        IsHard = true,
-                        IsBackslash = true,
-                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
-                        Line = line,
-                        Column = column,
-                        NewLine = newLine
-                    };
-                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                    slice.SkipChar();
-                    return true;
+                    newLine = NewLine.CarriageReturnLineFeed;
                 }
-            }
-            else
-            {
-                if (c == '\n' || c == '\r')
+                var inline = new LineBreakInline()
                 {
-                    processor.Inline = new LineBreakInline()
-                    {
-                        IsHard = true,
-                        IsBackslash = true,
-                        Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
-                        Line = line,
-                        Column = column
-                    };
-                    processor.Inline.Span.End = processor.Inline.Span.Start + 1;
-                    slice.SkipChar();
-                    return true;
+                    IsHard = true,
+                    IsBackslash = true,
+                    Span = { Start = processor.GetSourcePosition(startPosition, out line, out column) },
+                    Line = line,
+                    Column = column,
+                };
+                processor.Inline = inline;
+
+                if (processor.TrackTrivia)
+                {
+                    inline.NewLine = newLine;
                 }
+                
+                inline.Span.End = inline.Span.Start + 1;
+                slice.SkipChar(); // Skip \n or \r alone
+                if (newLine == NewLine.CarriageReturnLineFeed)
+                {
+                    slice.SkipChar(); // Skip \r\n
+                }
+                return true;
             }
 
             return false;
