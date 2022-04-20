@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,13 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="3.1.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +28,7 @@
     <InputSpecFiles Include="RoundtripSpecs\*.md" />
     <InputSpecFiles Remove="Specs\readme.md" />
     <!-- Allow Visual Studio up-to-date check to verify that nothing has changed - https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md -->
-    <UpToDateCheckInput Include="@(InputSpecFiles)"/>
+    <UpToDateCheckInput Include="@(InputSpecFiles)" />
     <OutputSpecFiles Include="@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')" />
   </ItemGroup>
 
