@@ -159,8 +159,8 @@ namespace Markdig.Parsers
 
             int tagIndex = match.Value;
 
-            // Cannot start with </script </pre or </style
-            if ((tagIndex == 49 || tagIndex == 50 || tagIndex == 53))
+            // Cannot start with </script </pre or </style or </textArea
+            if ((tagIndex == 49 || tagIndex == 50 || tagIndex == 53 || tagIndex == 56))
             {
                 if (c == '/' || hasLeadingClose)
                 {
@@ -241,6 +241,15 @@ namespace Markdig.Parsers
                                 htmlBlock.UpdateSpanEnd(index + "</style>".Length);
                                 result = BlockState.Break;
                             }
+                            else
+                            {
+                                index = line.IndexOf("</textarea>", 0, true);
+                                if (index >= 0)
+                                {
+                                    htmlBlock.UpdateSpanEnd(index + "</textarea>".Length);
+                                    result = BlockState.Break;
+                                }
+                            }
                         }
                     }
                     break;
@@ -289,7 +298,7 @@ namespace Markdig.Parsers
             return BlockState.Continue;
         }
 
-        private static readonly CompactPrefixTree<int> HtmlTags = new(65, 93, 82)
+        private static readonly CompactPrefixTree<int> HtmlTags = new(66, 94, 83)
         {
             { "address", 0 },
             { "article", 1 },
@@ -347,15 +356,16 @@ namespace Markdig.Parsers
             { "style", 53 },    // <=== special group 1
             { "summary", 54 },
             { "table", 55 },
-            { "tbody", 56 },
-            { "td", 57 },
-            { "tfoot", 58 },
-            { "th", 59 },
-            { "thead", 60 },
-            { "title", 61 },
-            { "tr", 62 },
-            { "track", 63 },
-            { "ul", 64 }
+            { "textarea", 56 }, // <=== special group 1
+            { "tbody", 57 },
+            { "td", 58 },
+            { "tfoot", 59 },
+            { "th", 60 },
+            { "thead", 61 },
+            { "title", 62 },
+            { "tr", 63 },
+            { "track", 64 },
+            { "ul", 65 }
         };
     }
 }
