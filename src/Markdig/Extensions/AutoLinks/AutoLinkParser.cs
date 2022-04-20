@@ -49,6 +49,53 @@ namespace Markdig.Extensions.AutoLinks
                 return false;
             }
 
+            var startPosition = slice.Start;
+            int domainOffset = 0;
+
+            var c = slice.CurrentChar;
+            // Precheck URL
+            switch (c)
+            {
+                case 'h':
+                    if (slice.MatchLowercase("ttp://", 1))
+                    {
+                        domainOffset = 7; // http://
+                    }
+                    else if (slice.MatchLowercase("ttps://", 1))
+                    {
+                        domainOffset = 8; // https://
+                    }
+                    else return false;
+                    break;
+                case 'f':
+                    if (!slice.MatchLowercase("tp://", 1))
+                    {
+                        return false;
+                    }
+                    domainOffset = 6; // ftp://
+                    break;
+                case 'm':
+                    if (!slice.MatchLowercase("ailto:", 1))
+                    {
+                        return false;
+                    }
+                    break;
+                case 't':
+                    if (!slice.MatchLowercase("el:", 1))
+                    {
+                        return false;
+                    }
+                    domainOffset = 4;
+                    break;
+                case 'w':
+                    if (!slice.MatchLowercase("ww.", 1)) // We won't match http:/www. or /www.xxx
+                    {
+                        return false;
+                    }
+                    domainOffset = 4; // www.
+                    break;
+            }
+
             List<char> pendingEmphasis = _listOfCharCache.Get();
             try
             {
@@ -56,53 +103,6 @@ namespace Markdig.Extensions.AutoLinks
                 if (!IsAutoLinkValidInCurrentContext(processor, pendingEmphasis))
                 {
                     return false;
-                }
-
-                var startPosition = slice.Start;
-                int domainOffset = 0;
-
-                var c = slice.CurrentChar;
-                // Precheck URL
-                switch (c)
-                {
-                    case 'h':
-                        if (slice.MatchLowercase("ttp://", 1))
-                        {
-                            domainOffset = 7; // http://
-                        }
-                        else if (slice.MatchLowercase("ttps://", 1))
-                        {
-                            domainOffset = 8; // https://
-                        }
-                        else return false;
-                        break;
-                    case 'f':
-                        if (!slice.MatchLowercase("tp://", 1))
-                        {
-                            return false;
-                        }
-                        domainOffset = 6; // ftp://
-                        break;
-                    case 'm':
-                        if (!slice.MatchLowercase("ailto:", 1))
-                        {
-                            return false;
-                        }
-                        break;
-                    case 't':
-                        if (!slice.MatchLowercase("el:", 1))
-                        {
-                            return false;
-                        }
-                        domainOffset = 4;
-                        break;
-                    case 'w':
-                        if (!slice.MatchLowercase("ww.", 1)) // We won't match http:/www. or /www.xxx
-                        {
-                            return false;
-                        }
-                        domainOffset = 4; // www.
-                        break;
                 }
 
                 // Parse URL

@@ -21,8 +21,8 @@ namespace Markdig.Syntax.Inlines
     [DebuggerDisplay("Url: {Url} Title: {Title} Image: {IsImage}")]
     public class LinkInline : ContainerInline
     {
-        private TriviaProperties? _trivia;
-        private TriviaProperties Trivia => _trivia ??= new();
+        private TriviaProperties? _trivia => GetTrivia<TriviaProperties>();
+        private TriviaProperties Trivia => GetOrSetTrivia<TriviaProperties>();
 
         /// <summary>
         /// A delegate to use if it is setup on this instance to allow late binding 
@@ -62,7 +62,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The label span
         /// </summary>
-        public SourceSpan? LabelSpan;
+        public SourceSpan LabelSpan;
 
         /// <summary>
         /// Gets or sets the <see cref="Label"/> with trivia.
@@ -118,7 +118,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The URL source span.
         /// </summary>
-        public SourceSpan? UrlSpan;
+        public SourceSpan UrlSpan;
 
         /// <summary>
         /// The <see cref="Url"/> but with trivia and unescaped characters
@@ -154,7 +154,7 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// The title source span.
         /// </summary>
-        public SourceSpan? TitleSpan;
+        public SourceSpan TitleSpan;
 
         /// <summary>
         /// Gets or sets the <see cref="Title"/> exactly as parsed from the

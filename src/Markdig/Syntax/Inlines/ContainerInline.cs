@@ -19,7 +19,7 @@ namespace Markdig.Syntax.Inlines
     {
         public ContainerInline()
         {
-            IsContainerInline = true;
+            SetTypeKind(isInline: true, isContainer: true);
         }
 
         /// <summary>

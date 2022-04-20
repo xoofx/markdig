@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using System;
 
 namespace Markdig.Parsers
 {
@@ -56,7 +57,16 @@ namespace Markdig.Parsers
                 return false;
             }
 
-            result.OrderedStart = state.Line.Text.Substring(startChar, endChar - startChar + 1);
+            if (startChar == endChar)
+            {
+                // Common case: a single digit character
+                result.OrderedStart = CharHelper.SmallNumberToString(state.Line.Text[startChar] - '0');
+            }
+            else
+            {
+                result.OrderedStart = state.Line.Text.Substring(startChar, endChar - startChar + 1);
+            }
+
             result.OrderedDelimiter = orderedDelimiter;
             result.BulletType = '1';
             result.DefaultOrderedStart = "1";

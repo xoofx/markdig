@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -16,7 +17,20 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<RuntimeTypeHandle, IMarkdownObjectRenderer?> _renderersPerType = new();
+        private readonly struct KeyWrapper : IEquatable<KeyWrapper>
+        {
+            public readonly IntPtr Key;
+
+            public KeyWrapper(IntPtr key) => Key = key;
+
+            public bool Equals(KeyWrapper other) => Key == other.Key;
+
+            public override int GetHashCode() => Key.GetHashCode();
+
+            public override bool Equals(object? obj) => throw new NotImplementedException();
+        }
+
+        private readonly Dictionary<KeyWrapper, IMarkdownObjectRenderer?> _renderersPerType = new();
         internal int _childrenDepth = 0;
 
         /// <summary>
@@ -26,7 +40,7 @@ namespace Markdig.Renderers
 
         private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
         {
-            RuntimeTypeHandle typeHandle = Type.GetTypeHandle(obj);
+            KeyWrapper key = GetKeyForType(obj);
             Type objectType = obj.GetType();
 
             for (int i = 0; i < ObjectRenderers.Count; i++)
@@ -34,12 +48,12 @@ namespace Markdig.Renderers
                 var renderer = ObjectRenderers[i];
                 if (renderer.Accept(this, objectType))
                 {
-                    _renderersPerType[typeHandle] = renderer;
+                    _renderersPerType[key] = renderer;
                     return renderer;
                 }
             }
 
-            _renderersPerType[typeHandle] = null;
+            _renderersPerType[key] = null;
             return null;
         }
 
@@ -140,7 +154,7 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            if (!_renderersPerType.TryGetValue(Type.GetTypeHandle(obj), out IMarkdownObjectRenderer? renderer))
+            if (!_renderersPerType.TryGetValue(GetKeyForType(obj), out IMarkdownObjectRenderer? renderer))
             {
                 renderer = GetRendererInstance(obj);
             }
@@ -149,17 +163,34 @@ namespace Markdig.Renderers
             {
                 renderer.Write(this, obj);
             }
-            else if (obj is ContainerInline containerInline)
+            else if (obj.IsContainerInline)
             {
-                WriteChildren(containerInline);
+                WriteChildren(Unsafe.As<ContainerInline>(obj));
             }
-            else if (obj is ContainerBlock containerBlock)
+            else if (obj.IsContainerBlock)
             {
-                WriteChildren(containerBlock);
+                WriteChildren(Unsafe.As<ContainerBlock>(obj));
             }
 
             // Calls after writing an object
             ObjectWriteAfter?.Invoke(this, obj);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static KeyWrapper GetKeyForType(MarkdownObject obj)
+        {
+#if NET
+            IntPtr methodTablePtr = Unsafe.Add(ref Unsafe.As<RawData>(obj).Data, -1);
+            return new KeyWrapper(methodTablePtr);
+#else
+            IntPtr typeHandle = Type.GetTypeHandle(obj).Value;
+            return new KeyWrapper(typeHandle);
+#endif
+        }
+
+        private sealed class RawData
+        {
+            public IntPtr Data;
         }
     }
 }

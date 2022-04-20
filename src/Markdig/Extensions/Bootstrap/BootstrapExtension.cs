@@ -28,9 +28,16 @@ namespace Markdig.Extensions.Bootstrap
 
         private static void PipelineOnDocumentProcessed(MarkdownDocument document)
         {
-            foreach(var node in document.Descendants())
+            foreach (var node in document.Descendants())
             {
-                if (node is Block)
+                if (node.IsInline)
+                {
+                    if (node.IsContainerInline && node is LinkInline link && link.IsImage)
+                    {
+                        link.GetAttributes().AddClass("img-fluid");
+                    }
+                }
+                else if (node.IsContainerBlock)
                 {
                     if (node is Tables.Table)
                     {
@@ -44,16 +51,12 @@ namespace Markdig.Extensions.Bootstrap
                     {
                         node.GetAttributes().AddClass("figure");
                     }
-                    else if (node is Figures.FigureCaption)
+                }
+                else
+                {
+                    if (node is Figures.FigureCaption)
                     {
                         node.GetAttributes().AddClass("figure-caption");
-                    }
-                }
-                else if (node is Inline)
-                {
-                    if (node is LinkInline link && link.IsImage)
-                    {
-                        link.GetAttributes().AddClass("img-fluid");
                     }
                 }
             }

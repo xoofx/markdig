@@ -68,12 +68,14 @@ namespace Markdig.Parsers.Inlines
             // The LiteralInlineParser is always matching (at least an empty string)
             var endPosition = slice.Start + length - 1;
 
-            if (processor.Inline is LiteralInline previousInline
-                && ReferenceEquals(previousInline.Content.Text, slice.Text)
-                && previousInline.Content.End + 1 == slice.Start)
+            if (processor.Inline is { } previousInline
+                && !previousInline.IsContainer
+                && processor.Inline is LiteralInline previousLiteral
+                && ReferenceEquals(previousLiteral.Content.Text, slice.Text)
+                && previousLiteral.Content.End + 1 == slice.Start)
             {
-                previousInline.Content.End = endPosition;
-                previousInline.Span.End = processor.GetSourcePosition(endPosition);
+                previousLiteral.Content.End = endPosition;
+                previousLiteral.Span.End = processor.GetSourcePosition(endPosition);
             }
             else
             {

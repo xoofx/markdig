@@ -6,6 +6,7 @@ using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using System;
+using System.Diagnostics;
 
 namespace Markdig.Parsers.Inlines
 {
@@ -54,6 +55,7 @@ namespace Markdig.Parsers.Inlines
             // whitespace from the opening or closing backtick strings.
 
             bool allSpace = true;
+            bool containsNewLine = false;
             var contentEnd = -1;
 
             while (c != '\0')
@@ -61,10 +63,12 @@ namespace Markdig.Parsers.Inlines
                 // Transform '\n' into a single space
                 if (c == '\n')
                 {
+                    containsNewLine = true;
                     c = ' ';
                 }
                 else if (c == '\r')
                 {
+                    containsNewLine = true;
                     slice.SkipChar();
                     c = slice.CurrentChar;
                     continue;
@@ -100,13 +104,18 @@ namespace Markdig.Parsers.Inlines
             {
                 ReadOnlySpan<char> contentSpan = builder.AsSpan();
 
+                var content = containsNewLine
+                    ? new LazySubstring(contentSpan.ToString())
+                    : new LazySubstring(slice.Text, contentStart, contentSpan.Length);
+
+                Debug.Assert(contentSpan.SequenceEqual(content.AsSpan()));
+
                 // Remove one space from front and back if the string is not all spaces
                 if (!allSpace && contentSpan.Length > 2 && contentSpan[0] == ' ' && contentSpan[contentSpan.Length - 1] == ' ')
                 {
-                    contentSpan = contentSpan.Slice(1, contentSpan.Length - 2);
+                    content.Offset++;
+                    content.Length -= 2;
                 }
-
-                string content = contentSpan.ToString();
 
                 int delimiterCount = Math.Min(openSticks, closeSticks);
                 var spanStart = processor.GetSourcePosition(startPosition, out int line, out int column);

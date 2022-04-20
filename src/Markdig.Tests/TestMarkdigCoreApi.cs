@@ -75,6 +75,35 @@ namespace Markdig.Tests
         }
 
         [Test]
+        public void TestDocumentToHtmlWithWriter()
+        {
+            var writer = new StringWriter();
+
+            for (int i = 0; i < 5; i++)
+            {
+                MarkdownDocument document = Markdown.Parse("This is a text with some *emphasis*");
+                document.ToHtml(writer);
+                string html = writer.ToString();
+                Assert.AreEqual("<p>This is a text with some <em>emphasis</em></p>\n", html);
+                writer.GetStringBuilder().Length = 0;
+            }
+
+            writer = new StringWriter();
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .Build();
+
+            for (int i = 0; i < 5; i++)
+            {
+                MarkdownDocument document = Markdown.Parse("This is a text with a https://link.tld/", pipeline);
+                document.ToHtml(writer, pipeline);
+                string html = writer.ToString();
+                Assert.AreEqual("<p>This is a text with a <a href=\"https://link.tld/\">https://link.tld/</a></p>\n", html);
+                writer.GetStringBuilder().Length = 0;
+            }
+        }
+
+        [Test]
         public void TestConvert()
         {
             var writer = new StringWriter();

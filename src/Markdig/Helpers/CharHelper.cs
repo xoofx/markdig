@@ -744,7 +744,7 @@ namespace Markdig.Helpers
                 return cache[number];
             }
 
-            return number.ToString();
+            return number.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -51,7 +51,11 @@ namespace Markdig.Syntax.Inlines
         /// <summary>
         /// A boolean indicating whether the first character of this literal is escaped by `\`.
         /// </summary>
-        public bool IsFirstCharacterEscaped { get; set; }
+        public bool IsFirstCharacterEscaped
+        {
+            get => InternalSpareBit;
+            set => InternalSpareBit = value;
+        }
 
         public override string ToString()
         {
