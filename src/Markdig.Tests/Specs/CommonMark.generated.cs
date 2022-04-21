@@ -14,8 +14,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
-        // version: 0.29
-        // date: '2019-04-06'
+        // version: '0.30'
+        // date: '2021-06-19'
         // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
         // ...
         // 
@@ -127,7 +127,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     not require that.  This is hardly a "corner case," and divergences
         //     between implementations on this issue often lead to surprises for
         //     users in real documents. (See [this comment by John
-        //     Gruber](http://article.gmane.org/gmane.text.markdown.general/1997).)
+        //     Gruber](https://web.archive.org/web/20170611172104/http://article.gmane.org/gmane.text.markdown.general/1997).)
         // 
         // 2.  Is a blank line needed before a block quote or heading?
         //     Most implementations do not require the blank line.  However,
@@ -135,7 +135,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     also to ambiguities in parsing (note that some implementations
         //     put the heading inside the blockquote, while others do not).
         //     (John Gruber has also spoken [in favor of requiring the blank
-        //     lines](http://article.gmane.org/gmane.text.markdown.general/2146).)
+        //     lines](https://web.archive.org/web/20170611172104/http://article.gmane.org/gmane.text.markdown.general/2146).)
         // 
         // 3.  Is a blank line needed before an indented code block?
         //     (`Markdown.pl` requires it, but this is not mentioned in the
@@ -168,7 +168,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     ```
         // 
         //     (There are some relevant comments by John Gruber
-        //     [here](http://article.gmane.org/gmane.text.markdown.general/2554).)
+        //     [here](https://web.archive.org/web/20170611172104/http://article.gmane.org/gmane.text.markdown.general/2554).)
         // 
         // 5.  Can list markers be indented?  Can ordered list markers be right-aligned?
         // 
@@ -283,6 +283,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // choice of HTML for the tests makes it possible to run the tests against
         // an implementation without writing an abstract syntax tree renderer.
         // 
+        // Note that not every feature of the HTML samples is mandated by
+        // the spec.  For example, the spec says what counts as a link
+        // destination, but it doesn't mandate that non-ASCII characters in
+        // the URL be percent-encoded.  To use the automatic tests,
+        // implementers will need to provide a renderer that conforms to
+        // the expectations of the spec examples (percent-encoding
+        // non-ASCII characters in URLs).  But a conforming implementation
+        // can use a different renderer and may choose not to
+        // percent-encode non-ASCII characters in URLs.
+        // 
         // This document is generated from a text file, `spec.txt`, written
         // in Markdown with a small extension for the side-by-side tests.
         // The script `tools/makespec.py` can be used to convert `spec.txt` into
@@ -307,37 +317,31 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // to a certain encoding.
         // 
         // A [line](@) is a sequence of zero or more [characters]
-        // other than newline (`U+000A`) or carriage return (`U+000D`),
+        // other than line feed (`U+000A`) or carriage return (`U+000D`),
         // followed by a [line ending] or by the end of file.
         // 
-        // A [line ending](@) is a newline (`U+000A`), a carriage return
-        // (`U+000D`) not followed by a newline, or a carriage return and a
-        // following newline.
+        // A [line ending](@) is a line feed (`U+000A`), a carriage return
+        // (`U+000D`) not followed by a line feed, or a carriage return and a
+        // following line feed.
         // 
         // A line containing no characters, or a line containing only spaces
         // (`U+0020`) or tabs (`U+0009`), is called a [blank line](@).
         // 
         // The following definitions of character classes will be used in this spec:
         // 
-        // A [whitespace character](@) is a space
-        // (`U+0020`), tab (`U+0009`), newline (`U+000A`), line tabulation (`U+000B`),
-        // form feed (`U+000C`), or carriage return (`U+000D`).
-        // 
-        // [Whitespace](@) is a sequence of one or more [whitespace
-        // characters].
-        // 
         // A [Unicode whitespace character](@) is
         // any code point in the Unicode `Zs` general category, or a tab (`U+0009`),
-        // carriage return (`U+000D`), newline (`U+000A`), or form feed
-        // (`U+000C`).
+        // line feed (`U+000A`), form feed (`U+000C`), or carriage return (`U+000D`).
         // 
-        // [Unicode whitespace](@) is a sequence of one
-        // or more [Unicode whitespace characters].
+        // [Unicode whitespace](@) is a sequence of one or more
+        // [Unicode whitespace characters].
+        // 
+        // A [tab](@) is `U+0009`.
         // 
         // A [space](@) is `U+0020`.
         // 
-        // A [non-whitespace character](@) is any character
-        // that is not a [whitespace character].
+        // An [ASCII control character](@) is a character between `U+0000–1F` (both
+        // including) or `U+007F`.
         // 
         // An [ASCII punctuation character](@)
         // is `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`,
@@ -346,14 +350,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // `[`, `\`, `]`, `^`, `_`, `` ` `` (U+005B–0060), 
         // `{`, `|`, `}`, or `~` (U+007B–007E).
         // 
-        // A [punctuation character](@) is an [ASCII
+        // A [Unicode punctuation character](@) is an [ASCII
         // punctuation character] or anything in
         // the general Unicode categories  `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or `Ps`.
         // 
         // ## Tabs
         // 
         // Tabs in lines are not expanded to [spaces].  However,
-        // in contexts where whitespace helps to define block structure,
+        // in contexts where spaces help to define block structure,
         // tabs behave as if they were replaced by spaces with a tab stop
         // of 4 characters.
         // 
@@ -582,13 +586,588 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
     }
 
     [TestFixture]
-    public class TestBlocksAndInlinesPrecedence
+    public class TestPreliminariesBackslashEscapes
     {
         // ## Insecure characters
         // 
         // For security reasons, the Unicode character `U+0000` must be replaced
         // with the REPLACEMENT CHARACTER (`U+FFFD`).
         // 
+        // 
+        // ## Backslash escapes
+        // 
+        // Any ASCII punctuation character may be backslash-escaped:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example012()
+        {
+            // Example 12
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
+            //
+            // Should be rendered as:
+            //     <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
+
+            TestParser.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>", "", context: "Example 12\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // Backslashes before other characters are treated as literal
+        // backslashes:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example013()
+        {
+            // Example 13
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     \→\A\a\ \3\φ\«
+            //
+            // Should be rendered as:
+            //     <p>\→\A\a\ \3\φ\«</p>
+
+            TestParser.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>", "", context: "Example 13\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // Escaped characters are treated as regular characters and do
+        // not have their usual Markdown meanings:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example014()
+        {
+            // Example 14
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     \*not emphasized*
+            //     \<br/> not a tag
+            //     \[not a link](/foo)
+            //     \`not code`
+            //     1\. not a list
+            //     \* not a list
+            //     \# not a heading
+            //     \[foo]: /url "not a reference"
+            //     \&ouml; not a character entity
+            //
+            // Should be rendered as:
+            //     <p>*not emphasized*
+            //     &lt;br/&gt; not a tag
+            //     [not a link](/foo)
+            //     `not code`
+            //     1. not a list
+            //     * not a list
+            //     # not a heading
+            //     [foo]: /url &quot;not a reference&quot;
+            //     &amp;ouml; not a character entity</p>
+
+            TestParser.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>", "", context: "Example 14\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // If a backslash is itself escaped, the following character is not:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example015()
+        {
+            // Example 15
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     \\*emphasis*
+            //
+            // Should be rendered as:
+            //     <p>\<em>emphasis</em></p>
+
+            TestParser.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>", "", context: "Example 15\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // A backslash at the end of the line is a [hard line break]:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example016()
+        {
+            // Example 16
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     foo\
+            //     bar
+            //
+            // Should be rendered as:
+            //     <p>foo<br />
+            //     bar</p>
+
+            TestParser.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>", "", context: "Example 16\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // Backslash escapes do not work in code blocks, code spans, autolinks, or
+        // raw HTML:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example017()
+        {
+            // Example 17
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     `` \[\` ``
+            //
+            // Should be rendered as:
+            //     <p><code>\[\`</code></p>
+
+            TestParser.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>", "", context: "Example 17\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example018()
+        {
+            // Example 18
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //         \[\]
+            //
+            // Should be rendered as:
+            //     <pre><code>\[\]
+            //     </code></pre>
+
+            TestParser.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example 18\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example019()
+        {
+            // Example 19
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     ~~~
+            //     \[\]
+            //     ~~~
+            //
+            // Should be rendered as:
+            //     <pre><code>\[\]
+            //     </code></pre>
+
+            TestParser.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example 19\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example020()
+        {
+            // Example 20
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     <http://example.com?find=\*>
+            //
+            // Should be rendered as:
+            //     <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
+
+            TestParser.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "", context: "Example 20\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example021()
+        {
+            // Example 21
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     <a href="/bar\/)">
+            //
+            // Should be rendered as:
+            //     <a href="/bar\/)">
+
+            TestParser.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">", "", context: "Example 21\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        // But they work in all other contexts, including URLs and link titles,
+        // link references, and [info strings] in [fenced code blocks]:
+        [Test]
+        public void PreliminariesBackslashEscapes_Example022()
+        {
+            // Example 22
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     [foo](/bar\* "ti\*tle")
+            //
+            // Should be rendered as:
+            //     <p><a href="/bar*" title="ti*tle">foo</a></p>
+
+            TestParser.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example 22\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example023()
+        {
+            // Example 23
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     [foo]
+            //     
+            //     [foo]: /bar\* "ti\*tle"
+            //
+            // Should be rendered as:
+            //     <p><a href="/bar*" title="ti*tle">foo</a></p>
+
+            TestParser.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example 23\nSection Preliminaries / Backslash escapes\n");
+        }
+
+        [Test]
+        public void PreliminariesBackslashEscapes_Example024()
+        {
+            // Example 24
+            // Section: Preliminaries / Backslash escapes
+            //
+            // The following Markdown:
+            //     ``` foo\+bar
+            //     foo
+            //     ```
+            //
+            // Should be rendered as:
+            //     <pre><code class="language-foo+bar">foo
+            //     </code></pre>
+
+            TestParser.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>", "", context: "Example 24\nSection Preliminaries / Backslash escapes\n");
+        }
+    }
+
+    [TestFixture]
+    public class TestPreliminariesEntityAndNumericCharacterReferences
+    {
+        // ## Entity and numeric character references
+        // 
+        // Valid HTML entity references and numeric character references
+        // can be used in place of the corresponding Unicode character,
+        // with the following exceptions:
+        // 
+        // - Entity and character references are not recognized in code
+        //   blocks and code spans.
+        // 
+        // - Entity and character references cannot stand in place of
+        //   special characters that define structural elements in
+        //   CommonMark.  For example, although `&#42;` can be used
+        //   in place of a literal `*` character, `&#42;` cannot replace
+        //   `*` in emphasis delimiters, bullet list markers, or thematic
+        //   breaks.
+        // 
+        // Conforming CommonMark parsers need not store information about
+        // whether a particular character was represented in the source
+        // using a Unicode character or an entity reference.
+        // 
+        // [Entity references](@) consist of `&` + any of the valid
+        // HTML5 entity names + `;`. The
+        // document <https://html.spec.whatwg.org/entities.json>
+        // is used as an authoritative source for the valid entity
+        // references and their corresponding code points.
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example025()
+        {
+            // Example 25
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &nbsp; &amp; &copy; &AElig; &Dcaron;
+            //     &frac34; &HilbertSpace; &DifferentialD;
+            //     &ClockwiseContourIntegral; &ngE;
+            //
+            // Should be rendered as:
+            //     <p>  &amp; © Æ Ď
+            //     ¾ ℋ ⅆ
+            //     ∲ ≧̸</p>
+
+            TestParser.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>", "", context: "Example 25\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // [Decimal numeric character
+        // references](@)
+        // consist of `&#` + a string of 1--7 arabic digits + `;`. A
+        // numeric character reference is parsed as the corresponding
+        // Unicode character. Invalid Unicode code points will be replaced by
+        // the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
+        // the code point `U+0000` will also be replaced by `U+FFFD`.
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example026()
+        {
+            // Example 26
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &#35; &#1234; &#992; &#0;
+            //
+            // Should be rendered as:
+            //     <p># Ӓ Ϡ �</p>
+
+            TestParser.TestSpec("&#35; &#1234; &#992; &#0;", "<p># Ӓ Ϡ �</p>", "", context: "Example 26\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // [Hexadecimal numeric character
+        // references](@) consist of `&#` +
+        // either `X` or `x` + a string of 1-6 hexadecimal digits + `;`.
+        // They too are parsed as the corresponding Unicode character (this
+        // time specified with a hexadecimal numeral instead of decimal).
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example027()
+        {
+            // Example 27
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &#X22; &#XD06; &#xcab;
+            //
+            // Should be rendered as:
+            //     <p>&quot; ആ ಫ</p>
+
+            TestParser.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>", "", context: "Example 27\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Here are some nonentities:
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example028()
+        {
+            // Example 28
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &nbsp &x; &#; &#x;
+            //     &#87654321;
+            //     &#abcdef0;
+            //     &ThisIsNotDefined; &hi?;
+            //
+            // Should be rendered as:
+            //     <p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
+            //     &amp;#87654321;
+            //     &amp;#abcdef0;
+            //     &amp;ThisIsNotDefined; &amp;hi?;</p>
+
+            TestParser.TestSpec("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "", context: "Example 28\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Although HTML5 does accept some entity references
+        // without a trailing semicolon (such as `&copy`), these are not
+        // recognized here, because it makes the grammar too ambiguous:
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example029()
+        {
+            // Example 29
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &copy
+            //
+            // Should be rendered as:
+            //     <p>&amp;copy</p>
+
+            TestParser.TestSpec("&copy", "<p>&amp;copy</p>", "", context: "Example 29\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Strings that are not on the list of HTML5 named entities are not
+        // recognized as entity references either:
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example030()
+        {
+            // Example 30
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &MadeUpEntity;
+            //
+            // Should be rendered as:
+            //     <p>&amp;MadeUpEntity;</p>
+
+            TestParser.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>", "", context: "Example 30\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Entity and numeric character references are recognized in any
+        // context besides code spans or code blocks, including
+        // URLs, [link titles], and [fenced code block][] [info strings]:
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example031()
+        {
+            // Example 31
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     <a href="&ouml;&ouml;.html">
+            //
+            // Should be rendered as:
+            //     <a href="&ouml;&ouml;.html">
+
+            TestParser.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">", "", context: "Example 31\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example032()
+        {
+            // Example 32
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
+            //
+            // Should be rendered as:
+            //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
+
+            TestParser.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example 32\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example033()
+        {
+            // Example 33
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     [foo]
+            //     
+            //     [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
+            //
+            // Should be rendered as:
+            //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
+
+            TestParser.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example 33\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example034()
+        {
+            // Example 34
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     ``` f&ouml;&ouml;
+            //     foo
+            //     ```
+            //
+            // Should be rendered as:
+            //     <pre><code class="language-föö">foo
+            //     </code></pre>
+
+            TestParser.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>", "", context: "Example 34\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Entity and numeric character references are treated as literal
+        // text in code spans and code blocks:
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example035()
+        {
+            // Example 35
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     `f&ouml;&ouml;`
+            //
+            // Should be rendered as:
+            //     <p><code>f&amp;ouml;&amp;ouml;</code></p>
+
+            TestParser.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>", "", context: "Example 35\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example036()
+        {
+            // Example 36
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //         f&ouml;f&ouml;
+            //
+            // Should be rendered as:
+            //     <pre><code>f&amp;ouml;f&amp;ouml;
+            //     </code></pre>
+
+            TestParser.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>", "", context: "Example 36\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        // Entity and numeric character references cannot be used
+        // in place of symbols indicating structure in CommonMark
+        // documents.
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example037()
+        {
+            // Example 37
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &#42;foo&#42;
+            //     *foo*
+            //
+            // Should be rendered as:
+            //     <p>*foo*
+            //     <em>foo</em></p>
+
+            TestParser.TestSpec("&#42;foo&#42;\n*foo*", "<p>*foo*\n<em>foo</em></p>", "", context: "Example 37\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example038()
+        {
+            // Example 38
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &#42; foo
+            //     
+            //     * foo
+            //
+            // Should be rendered as:
+            //     <p>* foo</p>
+            //     <ul>
+            //     <li>foo</li>
+            //     </ul>
+
+            TestParser.TestSpec("&#42; foo\n\n* foo", "<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>", "", context: "Example 38\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example039()
+        {
+            // Example 39
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     foo&#10;&#10;bar
+            //
+            // Should be rendered as:
+            //     <p>foo
+            //     
+            //     bar</p>
+
+            TestParser.TestSpec("foo&#10;&#10;bar", "<p>foo\n\nbar</p>", "", context: "Example 39\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example040()
+        {
+            // Example 40
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     &#9;foo
+            //
+            // Should be rendered as:
+            //     <p>→foo</p>
+
+            TestParser.TestSpec("&#9;foo", "<p>\tfoo</p>", "", context: "Example 40\nSection Preliminaries / Entity and numeric character references\n");
+        }
+
+        [Test]
+        public void PreliminariesEntityAndNumericCharacterReferences_Example041()
+        {
+            // Example 41
+            // Section: Preliminaries / Entity and numeric character references
+            //
+            // The following Markdown:
+            //     [a](url &quot;tit&quot;)
+            //
+            // Should be rendered as:
+            //     <p>[a](url &quot;tit&quot;)</p>
+
+            TestParser.TestSpec("[a](url &quot;tit&quot;)", "<p>[a](url &quot;tit&quot;)</p>", "", context: "Example 41\nSection Preliminaries / Entity and numeric character references\n");
+        }
+    }
+
+    [TestFixture]
+    public class TestBlocksAndInlinesPrecedence
+    {
         // # Blocks and inlines
         // 
         // We can think of a document as a sequence of
@@ -604,9 +1183,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // of inline structure.  So, for example, the following is a list with
         // two items, not a list with one item containing a code span:
         [Test]
-        public void BlocksAndInlinesPrecedence_Example012()
+        public void BlocksAndInlinesPrecedence_Example042()
         {
-            // Example 12
+            // Example 42
             // Section: Blocks and inlines / Precedence
             //
             // The following Markdown:
@@ -619,7 +1198,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>two`</li>
             //     </ul>
 
-            TestParser.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>", "", context: "Example 12\nSection Blocks and inlines / Precedence\n");
+            TestParser.TestSpec("- `one\n- two`", "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>", "", context: "Example 42\nSection Blocks and inlines / Precedence\n");
         }
     }
 
@@ -638,8 +1217,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // ## Container blocks and leaf blocks
         // 
         // We can divide blocks into two types:
-        // [container blocks](@),
-        // which can contain other blocks, and [leaf blocks](@),
+        // [container blocks](#container-blocks),
+        // which can contain other blocks, and [leaf blocks](#leaf-blocks),
         // which cannot.
         // 
         // # Leaf blocks
@@ -649,14 +1228,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // ## Thematic breaks
         // 
-        // A line consisting of 0-3 spaces of indentation, followed by a sequence
-        // of three or more matching `-`, `_`, or `*` characters, each followed
+        // A line consisting of optionally up to three spaces of indentation, followed by a
+        // sequence of three or more matching `-`, `_`, or `*` characters, each followed
         // optionally by any number of spaces or tabs, forms a
         // [thematic break](@).
         [Test]
-        public void LeafBlocksThematicBreaks_Example013()
+        public void LeafBlocksThematicBreaks_Example043()
         {
-            // Example 13
+            // Example 43
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -669,14 +1248,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <hr />
 
-            TestParser.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />", "", context: "Example 13\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("***\n---\n___", "<hr />\n<hr />\n<hr />", "", context: "Example 43\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // Wrong characters:
         [Test]
-        public void LeafBlocksThematicBreaks_Example014()
+        public void LeafBlocksThematicBreaks_Example044()
         {
-            // Example 14
+            // Example 44
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -685,13 +1264,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>+++</p>
 
-            TestParser.TestSpec("+++", "<p>+++</p>", "", context: "Example 14\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("+++", "<p>+++</p>", "", context: "Example 44\nSection Leaf blocks / Thematic breaks\n");
         }
 
         [Test]
-        public void LeafBlocksThematicBreaks_Example015()
+        public void LeafBlocksThematicBreaks_Example045()
         {
-            // Example 15
+            // Example 45
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -700,14 +1279,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>===</p>
 
-            TestParser.TestSpec("===", "<p>===</p>", "", context: "Example 15\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("===", "<p>===</p>", "", context: "Example 45\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // Not enough characters:
         [Test]
-        public void LeafBlocksThematicBreaks_Example016()
+        public void LeafBlocksThematicBreaks_Example046()
         {
-            // Example 16
+            // Example 46
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -720,14 +1299,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     **
             //     __</p>
 
-            TestParser.TestSpec("--\n**\n__", "<p>--\n**\n__</p>", "", context: "Example 16\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("--\n**\n__", "<p>--\n**\n__</p>", "", context: "Example 46\nSection Leaf blocks / Thematic breaks\n");
         }
 
-        // One to three spaces indent are allowed:
+        // Up to three spaces of indentation are allowed:
         [Test]
-        public void LeafBlocksThematicBreaks_Example017()
+        public void LeafBlocksThematicBreaks_Example047()
         {
-            // Example 17
+            // Example 47
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -740,14 +1319,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <hr />
 
-            TestParser.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />", "", context: "Example 17\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec(" ***\n  ***\n   ***", "<hr />\n<hr />\n<hr />", "", context: "Example 47\nSection Leaf blocks / Thematic breaks\n");
         }
 
-        // Four spaces is too many:
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksThematicBreaks_Example018()
+        public void LeafBlocksThematicBreaks_Example048()
         {
-            // Example 18
+            // Example 48
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -757,13 +1336,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>***
             //     </code></pre>
 
-            TestParser.TestSpec("    ***", "<pre><code>***\n</code></pre>", "", context: "Example 18\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("    ***", "<pre><code>***\n</code></pre>", "", context: "Example 48\nSection Leaf blocks / Thematic breaks\n");
         }
 
         [Test]
-        public void LeafBlocksThematicBreaks_Example019()
+        public void LeafBlocksThematicBreaks_Example049()
         {
-            // Example 19
+            // Example 49
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -774,14 +1353,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>Foo
             //     ***</p>
 
-            TestParser.TestSpec("Foo\n    ***", "<p>Foo\n***</p>", "", context: "Example 19\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("Foo\n    ***", "<p>Foo\n***</p>", "", context: "Example 49\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // More than three characters may be used:
         [Test]
-        public void LeafBlocksThematicBreaks_Example020()
+        public void LeafBlocksThematicBreaks_Example050()
         {
-            // Example 20
+            // Example 50
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -790,14 +1369,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <hr />
 
-            TestParser.TestSpec("_____________________________________", "<hr />", "", context: "Example 20\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("_____________________________________", "<hr />", "", context: "Example 50\nSection Leaf blocks / Thematic breaks\n");
         }
 
-        // Spaces are allowed between the characters:
+        // Spaces and tabs are allowed between the characters:
         [Test]
-        public void LeafBlocksThematicBreaks_Example021()
+        public void LeafBlocksThematicBreaks_Example051()
         {
-            // Example 21
+            // Example 51
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -806,13 +1385,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <hr />
 
-            TestParser.TestSpec(" - - -", "<hr />", "", context: "Example 21\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec(" - - -", "<hr />", "", context: "Example 51\nSection Leaf blocks / Thematic breaks\n");
         }
 
         [Test]
-        public void LeafBlocksThematicBreaks_Example022()
+        public void LeafBlocksThematicBreaks_Example052()
         {
-            // Example 22
+            // Example 52
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -821,13 +1400,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <hr />
 
-            TestParser.TestSpec(" **  * ** * ** * **", "<hr />", "", context: "Example 22\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec(" **  * ** * ** * **", "<hr />", "", context: "Example 52\nSection Leaf blocks / Thematic breaks\n");
         }
 
         [Test]
-        public void LeafBlocksThematicBreaks_Example023()
+        public void LeafBlocksThematicBreaks_Example053()
         {
-            // Example 23
+            // Example 53
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -836,14 +1415,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <hr />
 
-            TestParser.TestSpec("-     -      -      -", "<hr />", "", context: "Example 23\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("-     -      -      -", "<hr />", "", context: "Example 53\nSection Leaf blocks / Thematic breaks\n");
         }
 
-        // Spaces are allowed at the end:
+        // Spaces and tabs are allowed at the end:
         [Test]
-        public void LeafBlocksThematicBreaks_Example024()
+        public void LeafBlocksThematicBreaks_Example054()
         {
-            // Example 24
+            // Example 54
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -852,14 +1431,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <hr />
 
-            TestParser.TestSpec("- - - -    ", "<hr />", "", context: "Example 24\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("- - - -    ", "<hr />", "", context: "Example 54\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // However, no other characters may occur in the line:
         [Test]
-        public void LeafBlocksThematicBreaks_Example025()
+        public void LeafBlocksThematicBreaks_Example055()
         {
-            // Example 25
+            // Example 55
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -874,15 +1453,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>a------</p>
             //     <p>---a---</p>
 
-            TestParser.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>", "", context: "Example 25\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("_ _ _ _ a\n\na------\n\n---a---", "<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>", "", context: "Example 55\nSection Leaf blocks / Thematic breaks\n");
         }
 
-        // It is required that all of the [non-whitespace characters] be the same.
+        // It is required that all of the characters other than spaces or tabs be the same.
         // So, this is not a thematic break:
         [Test]
-        public void LeafBlocksThematicBreaks_Example026()
+        public void LeafBlocksThematicBreaks_Example056()
         {
-            // Example 26
+            // Example 56
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -891,14 +1470,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><em>-</em></p>
 
-            TestParser.TestSpec(" *-*", "<p><em>-</em></p>", "", context: "Example 26\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec(" *-*", "<p><em>-</em></p>", "", context: "Example 56\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // Thematic breaks do not need blank lines before or after:
         [Test]
-        public void LeafBlocksThematicBreaks_Example027()
+        public void LeafBlocksThematicBreaks_Example057()
         {
-            // Example 27
+            // Example 57
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -915,14 +1494,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 27\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("- foo\n***\n- bar", "<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 57\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // Thematic breaks can interrupt a paragraph:
         [Test]
-        public void LeafBlocksThematicBreaks_Example028()
+        public void LeafBlocksThematicBreaks_Example058()
         {
-            // Example 28
+            // Example 58
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -935,7 +1514,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <p>bar</p>
 
-            TestParser.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>", "", context: "Example 28\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("Foo\n***\nbar", "<p>Foo</p>\n<hr />\n<p>bar</p>", "", context: "Example 58\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // If a line of dashes that meets the above conditions for being a
@@ -944,9 +1523,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // [setext heading] takes precedence. Thus, for example,
         // this is a setext heading, not a paragraph followed by a thematic break:
         [Test]
-        public void LeafBlocksThematicBreaks_Example029()
+        public void LeafBlocksThematicBreaks_Example059()
         {
-            // Example 29
+            // Example 59
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -958,15 +1537,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>Foo</h2>
             //     <p>bar</p>
 
-            TestParser.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>", "", context: "Example 29\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("Foo\n---\nbar", "<h2>Foo</h2>\n<p>bar</p>", "", context: "Example 59\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // When both a thematic break and a list item are possible
         // interpretations of a line, the thematic break takes precedence:
         [Test]
-        public void LeafBlocksThematicBreaks_Example030()
+        public void LeafBlocksThematicBreaks_Example060()
         {
-            // Example 30
+            // Example 60
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -983,14 +1562,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>Bar</li>
             //     </ul>
 
-            TestParser.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>", "", context: "Example 30\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("* Foo\n* * *\n* Bar", "<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>", "", context: "Example 60\nSection Leaf blocks / Thematic breaks\n");
         }
 
         // If you want a thematic break in a list item, use a different bullet:
         [Test]
-        public void LeafBlocksThematicBreaks_Example031()
+        public void LeafBlocksThematicBreaks_Example061()
         {
-            // Example 31
+            // Example 61
             // Section: Leaf blocks / Thematic breaks
             //
             // The following Markdown:
@@ -1005,7 +1584,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>", "", context: "Example 31\nSection Leaf blocks / Thematic breaks\n");
+            TestParser.TestSpec("- Foo\n- * * *", "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>", "", context: "Example 61\nSection Leaf blocks / Thematic breaks\n");
         }
     }
 
@@ -1018,19 +1597,19 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // consists of a string of characters, parsed as inline content, between an
         // opening sequence of 1--6 unescaped `#` characters and an optional
         // closing sequence of any number of unescaped `#` characters.
-        // The opening sequence of `#` characters must be followed by a
-        // [space] or by the end of line. The optional closing sequence of `#`s must be
-        // preceded by a [space] and may be followed by spaces only.  The opening
-        // `#` character may be indented 0-3 spaces.  The raw contents of the
-        // heading are stripped of leading and trailing spaces before being parsed
-        // as inline content.  The heading level is equal to the number of `#`
-        // characters in the opening sequence.
+        // The opening sequence of `#` characters must be followed by spaces or tabs, or
+        // by the end of line. The optional closing sequence of `#`s must be preceded by
+        // spaces or tabs and may be followed by spaces or tabs only.  The opening
+        // `#` character may be preceded by up to three spaces of indentation.  The raw
+        // contents of the heading are stripped of leading and trailing space or tabs
+        // before being parsed as inline content.  The heading level is equal to the number
+        // of `#` characters in the opening sequence.
         // 
         // Simple headings:
         [Test]
-        public void LeafBlocksATXHeadings_Example032()
+        public void LeafBlocksATXHeadings_Example062()
         {
-            // Example 32
+            // Example 62
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1049,14 +1628,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h5>foo</h5>
             //     <h6>foo</h6>
 
-            TestParser.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>", "", context: "Example 32\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo", "<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>", "", context: "Example 62\nSection Leaf blocks / ATX headings\n");
         }
 
         // More than six `#` characters is not a heading:
         [Test]
-        public void LeafBlocksATXHeadings_Example033()
+        public void LeafBlocksATXHeadings_Example063()
         {
-            // Example 33
+            // Example 63
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1065,10 +1644,10 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>####### foo</p>
 
-            TestParser.TestSpec("####### foo", "<p>####### foo</p>", "", context: "Example 33\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("####### foo", "<p>####### foo</p>", "", context: "Example 63\nSection Leaf blocks / ATX headings\n");
         }
 
-        // At least one space is required between the `#` characters and the
+        // At least one space or tab is required between the `#` characters and the
         // heading's contents, unless the heading is empty.  Note that many
         // implementations currently do not require the space.  However, the
         // space was required by the
@@ -1076,9 +1655,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // and it helps prevent things like the following from being parsed as
         // headings:
         [Test]
-        public void LeafBlocksATXHeadings_Example034()
+        public void LeafBlocksATXHeadings_Example064()
         {
-            // Example 34
+            // Example 64
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1090,14 +1669,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>#5 bolt</p>
             //     <p>#hashtag</p>
 
-            TestParser.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>", "", context: "Example 34\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("#5 bolt\n\n#hashtag", "<p>#5 bolt</p>\n<p>#hashtag</p>", "", context: "Example 64\nSection Leaf blocks / ATX headings\n");
         }
 
         // This is not a heading, because the first `#` is escaped:
         [Test]
-        public void LeafBlocksATXHeadings_Example035()
+        public void LeafBlocksATXHeadings_Example065()
         {
-            // Example 35
+            // Example 65
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1106,14 +1685,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>## foo</p>
 
-            TestParser.TestSpec("\\## foo", "<p>## foo</p>", "", context: "Example 35\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("\\## foo", "<p>## foo</p>", "", context: "Example 65\nSection Leaf blocks / ATX headings\n");
         }
 
         // Contents are parsed as inlines:
         [Test]
-        public void LeafBlocksATXHeadings_Example036()
+        public void LeafBlocksATXHeadings_Example066()
         {
-            // Example 36
+            // Example 66
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1122,14 +1701,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h1>foo <em>bar</em> *baz*</h1>
 
-            TestParser.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>", "", context: "Example 36\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("# foo *bar* \\*baz\\*", "<h1>foo <em>bar</em> *baz*</h1>", "", context: "Example 66\nSection Leaf blocks / ATX headings\n");
         }
 
-        // Leading and trailing [whitespace] is ignored in parsing inline content:
+        // Leading and trailing spaces or tabs are ignored in parsing inline content:
         [Test]
-        public void LeafBlocksATXHeadings_Example037()
+        public void LeafBlocksATXHeadings_Example067()
         {
-            // Example 37
+            // Example 67
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1138,14 +1717,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h1>foo</h1>
 
-            TestParser.TestSpec("#                  foo                     ", "<h1>foo</h1>", "", context: "Example 37\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("#                  foo                     ", "<h1>foo</h1>", "", context: "Example 67\nSection Leaf blocks / ATX headings\n");
         }
 
-        // One to three spaces indentation are allowed:
+        // Up to three spaces of indentation are allowed:
         [Test]
-        public void LeafBlocksATXHeadings_Example038()
+        public void LeafBlocksATXHeadings_Example068()
         {
-            // Example 38
+            // Example 68
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1158,14 +1737,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>foo</h2>
             //     <h1>foo</h1>
 
-            TestParser.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>", "", context: "Example 38\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec(" ### foo\n  ## foo\n   # foo", "<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>", "", context: "Example 68\nSection Leaf blocks / ATX headings\n");
         }
 
-        // Four spaces are too much:
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksATXHeadings_Example039()
+        public void LeafBlocksATXHeadings_Example069()
         {
-            // Example 39
+            // Example 69
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1175,13 +1754,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code># foo
             //     </code></pre>
 
-            TestParser.TestSpec("    # foo", "<pre><code># foo\n</code></pre>", "", context: "Example 39\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("    # foo", "<pre><code># foo\n</code></pre>", "", context: "Example 69\nSection Leaf blocks / ATX headings\n");
         }
 
         [Test]
-        public void LeafBlocksATXHeadings_Example040()
+        public void LeafBlocksATXHeadings_Example070()
         {
-            // Example 40
+            // Example 70
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1192,14 +1771,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo
             //     # bar</p>
 
-            TestParser.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>", "", context: "Example 40\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("foo\n    # bar", "<p>foo\n# bar</p>", "", context: "Example 70\nSection Leaf blocks / ATX headings\n");
         }
 
         // A closing sequence of `#` characters is optional:
         [Test]
-        public void LeafBlocksATXHeadings_Example041()
+        public void LeafBlocksATXHeadings_Example071()
         {
-            // Example 41
+            // Example 71
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1210,14 +1789,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>foo</h2>
             //     <h3>bar</h3>
 
-            TestParser.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>", "", context: "Example 41\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("## foo ##\n  ###   bar    ###", "<h2>foo</h2>\n<h3>bar</h3>", "", context: "Example 71\nSection Leaf blocks / ATX headings\n");
         }
 
         // It need not be the same length as the opening sequence:
         [Test]
-        public void LeafBlocksATXHeadings_Example042()
+        public void LeafBlocksATXHeadings_Example072()
         {
-            // Example 42
+            // Example 72
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1228,14 +1807,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>foo</h1>
             //     <h5>foo</h5>
 
-            TestParser.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>", "", context: "Example 42\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("# foo ##################################\n##### foo ##", "<h1>foo</h1>\n<h5>foo</h5>", "", context: "Example 72\nSection Leaf blocks / ATX headings\n");
         }
 
-        // Spaces are allowed after the closing sequence:
+        // Spaces or tabs are allowed after the closing sequence:
         [Test]
-        public void LeafBlocksATXHeadings_Example043()
+        public void LeafBlocksATXHeadings_Example073()
         {
-            // Example 43
+            // Example 73
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1244,16 +1823,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h3>foo</h3>
 
-            TestParser.TestSpec("### foo ###     ", "<h3>foo</h3>", "", context: "Example 43\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("### foo ###     ", "<h3>foo</h3>", "", context: "Example 73\nSection Leaf blocks / ATX headings\n");
         }
 
-        // A sequence of `#` characters with anything but [spaces] following it
+        // A sequence of `#` characters with anything but spaces or tabs following it
         // is not a closing sequence, but counts as part of the contents of the
         // heading:
         [Test]
-        public void LeafBlocksATXHeadings_Example044()
+        public void LeafBlocksATXHeadings_Example074()
         {
-            // Example 44
+            // Example 74
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1262,14 +1841,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h3>foo ### b</h3>
 
-            TestParser.TestSpec("### foo ### b", "<h3>foo ### b</h3>", "", context: "Example 44\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("### foo ### b", "<h3>foo ### b</h3>", "", context: "Example 74\nSection Leaf blocks / ATX headings\n");
         }
 
-        // The closing sequence must be preceded by a space:
+        // The closing sequence must be preceded by a space or tab:
         [Test]
-        public void LeafBlocksATXHeadings_Example045()
+        public void LeafBlocksATXHeadings_Example075()
         {
-            // Example 45
+            // Example 75
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1278,15 +1857,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h1>foo#</h1>
 
-            TestParser.TestSpec("# foo#", "<h1>foo#</h1>", "", context: "Example 45\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("# foo#", "<h1>foo#</h1>", "", context: "Example 75\nSection Leaf blocks / ATX headings\n");
         }
 
         // Backslash-escaped `#` characters do not count as part
         // of the closing sequence:
         [Test]
-        public void LeafBlocksATXHeadings_Example046()
+        public void LeafBlocksATXHeadings_Example076()
         {
-            // Example 46
+            // Example 76
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1299,15 +1878,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>foo ###</h2>
             //     <h1>foo #</h1>
 
-            TestParser.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>", "", context: "Example 46\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("### foo \\###\n## foo #\\##\n# foo \\#", "<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>", "", context: "Example 76\nSection Leaf blocks / ATX headings\n");
         }
 
         // ATX headings need not be separated from surrounding content by blank
         // lines, and they can interrupt paragraphs:
         [Test]
-        public void LeafBlocksATXHeadings_Example047()
+        public void LeafBlocksATXHeadings_Example077()
         {
-            // Example 47
+            // Example 77
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1320,13 +1899,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>foo</h2>
             //     <hr />
 
-            TestParser.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />", "", context: "Example 47\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("****\n## foo\n****", "<hr />\n<h2>foo</h2>\n<hr />", "", context: "Example 77\nSection Leaf blocks / ATX headings\n");
         }
 
         [Test]
-        public void LeafBlocksATXHeadings_Example048()
+        public void LeafBlocksATXHeadings_Example078()
         {
-            // Example 48
+            // Example 78
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1339,14 +1918,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>baz</h1>
             //     <p>Bar foo</p>
 
-            TestParser.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>", "", context: "Example 48\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("Foo bar\n# baz\nBar foo", "<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>", "", context: "Example 78\nSection Leaf blocks / ATX headings\n");
         }
 
         // ATX headings can be empty:
         [Test]
-        public void LeafBlocksATXHeadings_Example049()
+        public void LeafBlocksATXHeadings_Example079()
         {
-            // Example 49
+            // Example 79
             // Section: Leaf blocks / ATX headings
             //
             // The following Markdown:
@@ -1359,7 +1938,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1></h1>
             //     <h3></h3>
 
-            TestParser.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>", "", context: "Example 49\nSection Leaf blocks / ATX headings\n");
+            TestParser.TestSpec("## \n#\n### ###", "<h2></h2>\n<h1></h1>\n<h3></h3>", "", context: "Example 79\nSection Leaf blocks / ATX headings\n");
         }
     }
 
@@ -1369,8 +1948,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // ## Setext headings
         // 
         // A [setext heading](@) consists of one or more
-        // lines of text, each containing at least one [non-whitespace
-        // character], with no more than 3 spaces indentation, followed by
+        // lines of text, not interrupted by a blank line, of which the first line does not
+        // have more than 3 spaces of indentation, followed by
         // a [setext heading underline].  The lines of text must be such
         // that, were they not followed by the setext heading underline,
         // they would be interpreted as a paragraph:  they cannot be
@@ -1380,10 +1959,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A [setext heading underline](@) is a sequence of
         // `=` characters or a sequence of `-` characters, with no more than 3
-        // spaces indentation and any number of trailing spaces.  If a line
-        // containing a single `-` can be interpreted as an
-        // empty [list items], it should be interpreted this way
-        // and not as a [setext heading underline].
+        // spaces of indentation and any number of trailing spaces or tabs.
         // 
         // The heading is a level 1 heading if `=` characters are used in
         // the [setext heading underline], and a level 2 heading if `-`
@@ -1398,9 +1974,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Simple examples:
         [Test]
-        public void LeafBlocksSetextHeadings_Example050()
+        public void LeafBlocksSetextHeadings_Example080()
         {
-            // Example 50
+            // Example 80
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1414,14 +1990,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>Foo <em>bar</em></h1>
             //     <h2>Foo <em>bar</em></h2>
 
-            TestParser.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>", "", context: "Example 50\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo *bar*\n=========\n\nFoo *bar*\n---------", "<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>", "", context: "Example 80\nSection Leaf blocks / Setext headings\n");
         }
 
         // The content of the header may span more than one line:
         [Test]
-        public void LeafBlocksSetextHeadings_Example051()
+        public void LeafBlocksSetextHeadings_Example081()
         {
-            // Example 51
+            // Example 81
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1433,17 +2009,17 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>Foo <em>bar
             //     baz</em></h1>
 
-            TestParser.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example 51\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo *bar\nbaz*\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example 81\nSection Leaf blocks / Setext headings\n");
         }
 
         // The contents are the result of parsing the headings's raw
         // content as inlines.  The heading's raw content is formed by
         // concatenating the lines and removing initial and final
-        // [whitespace].
+        // spaces or tabs.
         [Test]
-        public void LeafBlocksSetextHeadings_Example052()
+        public void LeafBlocksSetextHeadings_Example082()
         {
-            // Example 52
+            // Example 82
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1455,14 +2031,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>Foo <em>bar
             //     baz</em></h1>
 
-            TestParser.TestSpec("  Foo *bar\nbaz*\t\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example 52\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("  Foo *bar\nbaz*\t\n====", "<h1>Foo <em>bar\nbaz</em></h1>", "", context: "Example 82\nSection Leaf blocks / Setext headings\n");
         }
 
         // The underlining can be any length:
         [Test]
-        public void LeafBlocksSetextHeadings_Example053()
+        public void LeafBlocksSetextHeadings_Example083()
         {
-            // Example 53
+            // Example 83
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1476,15 +2052,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>Foo</h2>
             //     <h1>Foo</h1>
 
-            TestParser.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example 53\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\n-------------------------\n\nFoo\n=", "<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example 83\nSection Leaf blocks / Setext headings\n");
         }
 
-        // The heading content can be indented up to three spaces, and need
-        // not line up with the underlining:
+        // The heading content can be preceded by up to three spaces of indentation, and
+        // need not line up with the underlining:
         [Test]
-        public void LeafBlocksSetextHeadings_Example054()
+        public void LeafBlocksSetextHeadings_Example084()
         {
-            // Example 54
+            // Example 84
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1502,14 +2078,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>Foo</h2>
             //     <h1>Foo</h1>
 
-            TestParser.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example 54\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===", "<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>", "", context: "Example 84\nSection Leaf blocks / Setext headings\n");
         }
 
-        // Four spaces indent is too much:
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksSetextHeadings_Example055()
+        public void LeafBlocksSetextHeadings_Example085()
         {
-            // Example 55
+            // Example 85
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1527,15 +2103,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <hr />
 
-            TestParser.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />", "", context: "Example 55\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("    Foo\n    ---\n\n    Foo\n---", "<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />", "", context: "Example 85\nSection Leaf blocks / Setext headings\n");
         }
 
-        // The setext heading underline can be indented up to three spaces, and
-        // may have trailing spaces:
+        // The setext heading underline can be preceded by up to three spaces of
+        // indentation, and may have trailing spaces or tabs:
         [Test]
-        public void LeafBlocksSetextHeadings_Example056()
+        public void LeafBlocksSetextHeadings_Example086()
         {
-            // Example 56
+            // Example 86
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1545,14 +2121,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h2>Foo</h2>
 
-            TestParser.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>", "", context: "Example 56\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\n   ----      ", "<h2>Foo</h2>", "", context: "Example 86\nSection Leaf blocks / Setext headings\n");
         }
 
-        // Four spaces is too much:
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksSetextHeadings_Example057()
+        public void LeafBlocksSetextHeadings_Example087()
         {
-            // Example 57
+            // Example 87
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1563,14 +2139,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>Foo
             //     ---</p>
 
-            TestParser.TestSpec("Foo\n    ---", "<p>Foo\n---</p>", "", context: "Example 57\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\n    ---", "<p>Foo\n---</p>", "", context: "Example 87\nSection Leaf blocks / Setext headings\n");
         }
 
-        // The setext heading underline cannot contain internal spaces:
+        // The setext heading underline cannot contain internal spaces or tabs:
         [Test]
-        public void LeafBlocksSetextHeadings_Example058()
+        public void LeafBlocksSetextHeadings_Example088()
         {
-            // Example 58
+            // Example 88
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1586,14 +2162,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>Foo</p>
             //     <hr />
 
-            TestParser.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />", "", context: "Example 58\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\n= =\n\nFoo\n--- -", "<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />", "", context: "Example 88\nSection Leaf blocks / Setext headings\n");
         }
 
-        // Trailing spaces in the content line do not cause a line break:
+        // Trailing spaces or tabs in the content line do not cause a hard line break:
         [Test]
-        public void LeafBlocksSetextHeadings_Example059()
+        public void LeafBlocksSetextHeadings_Example089()
         {
-            // Example 59
+            // Example 89
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1603,14 +2179,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h2>Foo</h2>
 
-            TestParser.TestSpec("Foo  \n-----", "<h2>Foo</h2>", "", context: "Example 59\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo  \n-----", "<h2>Foo</h2>", "", context: "Example 89\nSection Leaf blocks / Setext headings\n");
         }
 
         // Nor does a backslash at the end:
         [Test]
-        public void LeafBlocksSetextHeadings_Example060()
+        public void LeafBlocksSetextHeadings_Example090()
         {
-            // Example 60
+            // Example 90
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1620,15 +2196,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h2>Foo\</h2>
 
-            TestParser.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>", "", context: "Example 60\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\\\n----", "<h2>Foo\\</h2>", "", context: "Example 90\nSection Leaf blocks / Setext headings\n");
         }
 
         // Since indicators of block structure take precedence over
         // indicators of inline structure, the following are setext headings:
         [Test]
-        public void LeafBlocksSetextHeadings_Example061()
+        public void LeafBlocksSetextHeadings_Example091()
         {
-            // Example 61
+            // Example 91
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1646,15 +2222,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>&lt;a title=&quot;a lot</h2>
             //     <p>of dashes&quot;/&gt;</p>
 
-            TestParser.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>", "", context: "Example 61\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>", "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>", "", context: "Example 91\nSection Leaf blocks / Setext headings\n");
         }
 
         // The setext heading underline cannot be a [lazy continuation
         // line] in a list item or block quote:
         [Test]
-        public void LeafBlocksSetextHeadings_Example062()
+        public void LeafBlocksSetextHeadings_Example092()
         {
-            // Example 62
+            // Example 92
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1667,13 +2243,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <hr />
 
-            TestParser.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />", "", context: "Example 62\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("> Foo\n---", "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />", "", context: "Example 92\nSection Leaf blocks / Setext headings\n");
         }
 
         [Test]
-        public void LeafBlocksSetextHeadings_Example063()
+        public void LeafBlocksSetextHeadings_Example093()
         {
-            // Example 63
+            // Example 93
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1688,13 +2264,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ===</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>", "", context: "Example 63\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("> foo\nbar\n===", "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>", "", context: "Example 93\nSection Leaf blocks / Setext headings\n");
         }
 
         [Test]
-        public void LeafBlocksSetextHeadings_Example064()
+        public void LeafBlocksSetextHeadings_Example094()
         {
-            // Example 64
+            // Example 94
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1707,16 +2283,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ul>
             //     <hr />
 
-            TestParser.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />", "", context: "Example 64\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("- Foo\n---", "<ul>\n<li>Foo</li>\n</ul>\n<hr />", "", context: "Example 94\nSection Leaf blocks / Setext headings\n");
         }
 
         // A blank line is needed between a paragraph and a following
         // setext heading, since otherwise the paragraph becomes part
         // of the heading's content:
         [Test]
-        public void LeafBlocksSetextHeadings_Example065()
+        public void LeafBlocksSetextHeadings_Example095()
         {
-            // Example 65
+            // Example 95
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1728,15 +2304,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>Foo
             //     Bar</h2>
 
-            TestParser.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>", "", context: "Example 65\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\nBar\n---", "<h2>Foo\nBar</h2>", "", context: "Example 95\nSection Leaf blocks / Setext headings\n");
         }
 
         // But in general a blank line is not required before or after
         // setext headings:
         [Test]
-        public void LeafBlocksSetextHeadings_Example066()
+        public void LeafBlocksSetextHeadings_Example096()
         {
-            // Example 66
+            // Example 96
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1753,14 +2329,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>Bar</h2>
             //     <p>Baz</p>
 
-            TestParser.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>", "", context: "Example 66\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("---\nFoo\n---\nBar\n---\nBaz", "<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>", "", context: "Example 96\nSection Leaf blocks / Setext headings\n");
         }
 
         // Setext headings cannot be empty:
         [Test]
-        public void LeafBlocksSetextHeadings_Example067()
+        public void LeafBlocksSetextHeadings_Example097()
         {
-            // Example 67
+            // Example 97
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1770,16 +2346,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>====</p>
 
-            TestParser.TestSpec("\n====", "<p>====</p>", "", context: "Example 67\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("\n====", "<p>====</p>", "", context: "Example 97\nSection Leaf blocks / Setext headings\n");
         }
 
         // Setext heading text lines must not be interpretable as block
         // constructs other than paragraphs.  So, the line of dashes
         // in these examples gets interpreted as a thematic break:
         [Test]
-        public void LeafBlocksSetextHeadings_Example068()
+        public void LeafBlocksSetextHeadings_Example098()
         {
-            // Example 68
+            // Example 98
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1790,13 +2366,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <hr />
 
-            TestParser.TestSpec("---\n---", "<hr />\n<hr />", "", context: "Example 68\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("---\n---", "<hr />\n<hr />", "", context: "Example 98\nSection Leaf blocks / Setext headings\n");
         }
 
         [Test]
-        public void LeafBlocksSetextHeadings_Example069()
+        public void LeafBlocksSetextHeadings_Example099()
         {
-            // Example 69
+            // Example 99
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1809,13 +2385,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ul>
             //     <hr />
 
-            TestParser.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />", "", context: "Example 69\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("- foo\n-----", "<ul>\n<li>foo</li>\n</ul>\n<hr />", "", context: "Example 99\nSection Leaf blocks / Setext headings\n");
         }
 
         [Test]
-        public void LeafBlocksSetextHeadings_Example070()
+        public void LeafBlocksSetextHeadings_Example100()
         {
-            // Example 70
+            // Example 100
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1827,13 +2403,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <hr />
 
-            TestParser.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example 70\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("    foo\n---", "<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example 100\nSection Leaf blocks / Setext headings\n");
         }
 
         [Test]
-        public void LeafBlocksSetextHeadings_Example071()
+        public void LeafBlocksSetextHeadings_Example101()
         {
-            // Example 71
+            // Example 101
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1846,15 +2422,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <hr />
 
-            TestParser.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example 71\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("> foo\n-----", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example 101\nSection Leaf blocks / Setext headings\n");
         }
 
         // If you want a heading with `> foo` as its literal text, you can
         // use backslash escapes:
         [Test]
-        public void LeafBlocksSetextHeadings_Example072()
+        public void LeafBlocksSetextHeadings_Example102()
         {
-            // Example 72
+            // Example 102
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1864,7 +2440,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h2>&gt; foo</h2>
 
-            TestParser.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>", "", context: "Example 72\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("\\> foo\n------", "<h2>&gt; foo</h2>", "", context: "Example 102\nSection Leaf blocks / Setext headings\n");
         }
 
         // **Compatibility note:**  Most existing Markdown implementations
@@ -1890,9 +2466,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // multiline headings.  Authors who want interpretation 1 can
         // put a blank line after the first paragraph:
         [Test]
-        public void LeafBlocksSetextHeadings_Example073()
+        public void LeafBlocksSetextHeadings_Example103()
         {
-            // Example 73
+            // Example 103
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1907,15 +2483,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h2>bar</h2>
             //     <p>baz</p>
 
-            TestParser.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>", "", context: "Example 73\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\n\nbar\n---\nbaz", "<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>", "", context: "Example 103\nSection Leaf blocks / Setext headings\n");
         }
 
         // Authors who want interpretation 2 can put blank lines around
         // the thematic break,
         [Test]
-        public void LeafBlocksSetextHeadings_Example074()
+        public void LeafBlocksSetextHeadings_Example104()
         {
-            // Example 74
+            // Example 104
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1932,15 +2508,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <p>baz</p>
 
-            TestParser.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example 74\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\nbar\n\n---\n\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example 104\nSection Leaf blocks / Setext headings\n");
         }
 
         // or use a thematic break that cannot count as a [setext heading
         // underline], such as
         [Test]
-        public void LeafBlocksSetextHeadings_Example075()
+        public void LeafBlocksSetextHeadings_Example105()
         {
-            // Example 75
+            // Example 105
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1955,14 +2531,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <hr />
             //     <p>baz</p>
 
-            TestParser.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example 75\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\nbar\n* * *\nbaz", "<p>Foo\nbar</p>\n<hr />\n<p>baz</p>", "", context: "Example 105\nSection Leaf blocks / Setext headings\n");
         }
 
         // Authors who want interpretation 3 can use backslash escapes:
         [Test]
-        public void LeafBlocksSetextHeadings_Example076()
+        public void LeafBlocksSetextHeadings_Example106()
         {
-            // Example 76
+            // Example 106
             // Section: Leaf blocks / Setext headings
             //
             // The following Markdown:
@@ -1977,7 +2553,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ---
             //     baz</p>
 
-            TestParser.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>", "", context: "Example 76\nSection Leaf blocks / Setext headings\n");
+            TestParser.TestSpec("Foo\nbar\n\\---\nbaz", "<p>Foo\nbar\n---\nbaz</p>", "", context: "Example 106\nSection Leaf blocks / Setext headings\n");
         }
     }
 
@@ -1989,8 +2565,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // An [indented code block](@) is composed of one or more
         // [indented chunks] separated by blank lines.
         // An [indented chunk](@) is a sequence of non-blank lines,
-        // each indented four or more spaces. The contents of the code block are
-        // the literal contents of the lines, including trailing
+        // each preceded by four or more spaces of indentation. The contents of the code
+        // block are the literal contents of the lines, including trailing
         // [line endings], minus four spaces of indentation.
         // An indented code block has no [info string].
         // 
@@ -1999,9 +2575,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // (A blank line is not needed, however, between a code block and a following
         // paragraph.)
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example077()
+        public void LeafBlocksIndentedCodeBlocks_Example107()
         {
-            // Example 77
+            // Example 107
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2013,16 +2589,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       indented code block
             //     </code></pre>
 
-            TestParser.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>", "", context: "Example 77\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    a simple\n      indented code block", "<pre><code>a simple\n  indented code block\n</code></pre>", "", context: "Example 107\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // If there is any ambiguity between an interpretation of indentation
         // as a code block and as indicating that material belongs to a [list
         // item][list items], the list item interpretation takes precedence:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example078()
+        public void LeafBlocksIndentedCodeBlocks_Example108()
         {
-            // Example 78
+            // Example 108
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2038,13 +2614,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 78\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("  - foo\n\n    bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 108\nSection Leaf blocks / Indented code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example079()
+        public void LeafBlocksIndentedCodeBlocks_Example109()
         {
-            // Example 79
+            // Example 109
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2062,15 +2638,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example 79\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("1.  foo\n\n    - bar", "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example 109\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // The contents of a code block are literal text, and do not get parsed
         // as Markdown:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example080()
+        public void LeafBlocksIndentedCodeBlocks_Example110()
         {
-            // Example 80
+            // Example 110
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2086,14 +2662,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     - one
             //     </code></pre>
 
-            TestParser.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>", "", context: "Example 80\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    <a/>\n    *hi*\n\n    - one", "<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>", "", context: "Example 110\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // Here we have three chunks separated by blank lines:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example081()
+        public void LeafBlocksIndentedCodeBlocks_Example111()
         {
-            // Example 81
+            // Example 111
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2115,15 +2691,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     chunk3
             //     </code></pre>
 
-            TestParser.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>", "", context: "Example 81\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    chunk1\n\n    chunk2\n  \n \n \n    chunk3", "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>", "", context: "Example 111\nSection Leaf blocks / Indented code blocks\n");
         }
 
-        // Any initial spaces beyond four will be included in the content, even
-        // in interior blank lines:
+        // Any initial spaces or tabs beyond four spaces of indentation will be included in
+        // the content, even in interior blank lines:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example082()
+        public void LeafBlocksIndentedCodeBlocks_Example112()
         {
-            // Example 82
+            // Example 112
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2137,15 +2713,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       chunk2
             //     </code></pre>
 
-            TestParser.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>", "", context: "Example 82\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    chunk1\n      \n      chunk2", "<pre><code>chunk1\n  \n  chunk2\n</code></pre>", "", context: "Example 112\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // An indented code block cannot interrupt a paragraph.  (This
         // allows hanging indents and the like.)
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example083()
+        public void LeafBlocksIndentedCodeBlocks_Example113()
         {
-            // Example 83
+            // Example 113
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2157,16 +2733,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>Foo
             //     bar</p>
 
-            TestParser.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>", "", context: "Example 83\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("Foo\n    bar\n", "<p>Foo\nbar</p>", "", context: "Example 113\nSection Leaf blocks / Indented code blocks\n");
         }
 
-        // However, any non-blank line with fewer than four leading spaces ends
+        // However, any non-blank line with fewer than four spaces of indentation ends
         // the code block immediately.  So a paragraph may occur immediately
         // after indented code:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example084()
+        public void LeafBlocksIndentedCodeBlocks_Example114()
         {
-            // Example 84
+            // Example 114
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2178,15 +2754,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>bar</p>
 
-            TestParser.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>", "", context: "Example 84\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    foo\nbar", "<pre><code>foo\n</code></pre>\n<p>bar</p>", "", context: "Example 114\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // And indented code can occur immediately before and after other kinds of
         // blocks:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example085()
+        public void LeafBlocksIndentedCodeBlocks_Example115()
         {
-            // Example 85
+            // Example 115
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2206,14 +2782,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <hr />
 
-            TestParser.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example 85\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("# Heading\n    foo\nHeading\n------\n    foo\n----", "<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />", "", context: "Example 115\nSection Leaf blocks / Indented code blocks\n");
         }
 
-        // The first line can be indented more than four spaces:
+        // The first line can be preceded by more than four spaces of indentation:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example086()
+        public void LeafBlocksIndentedCodeBlocks_Example116()
         {
-            // Example 86
+            // Example 116
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2225,15 +2801,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     bar
             //     </code></pre>
 
-            TestParser.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>", "", context: "Example 86\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("        foo\n    bar", "<pre><code>    foo\nbar\n</code></pre>", "", context: "Example 116\nSection Leaf blocks / Indented code blocks\n");
         }
 
         // Blank lines preceding or following an indented code block
         // are not included in it:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example087()
+        public void LeafBlocksIndentedCodeBlocks_Example117()
         {
-            // Example 87
+            // Example 117
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2247,14 +2823,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>foo
             //     </code></pre>
 
-            TestParser.TestSpec("\n    \n    foo\n    \n", "<pre><code>foo\n</code></pre>", "", context: "Example 87\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("\n    \n    foo\n    \n", "<pre><code>foo\n</code></pre>", "", context: "Example 117\nSection Leaf blocks / Indented code blocks\n");
         }
 
-        // Trailing spaces are included in the code block's content:
+        // Trailing spaces or tabs are included in the code block's content:
         [Test]
-        public void LeafBlocksIndentedCodeBlocks_Example088()
+        public void LeafBlocksIndentedCodeBlocks_Example118()
         {
-            // Example 88
+            // Example 118
             // Section: Leaf blocks / Indented code blocks
             //
             // The following Markdown:
@@ -2264,7 +2840,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>foo  
             //     </code></pre>
 
-            TestParser.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>", "", context: "Example 88\nSection Leaf blocks / Indented code blocks\n");
+            TestParser.TestSpec("    foo  ", "<pre><code>foo  \n</code></pre>", "", context: "Example 118\nSection Leaf blocks / Indented code blocks\n");
         }
     }
 
@@ -2277,11 +2853,11 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // of at least three consecutive backtick characters (`` ` ``) or
         // tildes (`~`).  (Tildes and backticks cannot be mixed.)
         // A [fenced code block](@)
-        // begins with a code fence, indented no more than three spaces.
+        // begins with a code fence, preceded by up to three spaces of indentation.
         // 
         // The line with the opening code fence may optionally contain some text
         // following the code fence; this is trimmed of leading and trailing
-        // whitespace and called the [info string](@). If the [info string] comes
+        // spaces or tabs and called the [info string](@). If the [info string] comes
         // after a backtick fence, it may not contain any backtick
         // characters.  (The reason for this restriction is that otherwise
         // some inline code would be incorrectly interpreted as the
@@ -2291,13 +2867,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // a closing [code fence] of the same type as the code block
         // began with (backticks or tildes), and with at least as many backticks
         // or tildes as the opening code fence.  If the leading code fence is
-        // indented N spaces, then up to N spaces of indentation are removed from
-        // each line of the content (if present).  (If a content line is not
-        // indented, it is preserved unchanged.  If it is indented less than N
-        // spaces, all of the indentation is removed.)
+        // preceded by N spaces of indentation, then up to N spaces of indentation are
+        // removed from each line of the content (if present).  (If a content line is not
+        // indented, it is preserved unchanged.  If it is indented N spaces or less, all
+        // of the indentation is removed.)
         // 
-        // The closing code fence may be indented up to three spaces, and may be
-        // followed only by spaces, which are ignored.  If the end of the
+        // The closing code fence may be preceded by up to three spaces of indentation, and
+        // may be followed only by spaces or tabs, which are ignored.  If the end of the
         // containing block (or document) is reached and no closing code fence
         // has been found, the code block contains all of the lines after the
         // opening code fence until the end of the containing block (or
@@ -2317,9 +2893,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here is a simple example with backticks:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example089()
+        public void LeafBlocksFencedCodeBlocks_Example119()
         {
-            // Example 89
+            // Example 119
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2333,14 +2909,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //      &gt;
             //     </code></pre>
 
-            TestParser.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example 89\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\n<\n >\n```", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example 119\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // With tildes:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example090()
+        public void LeafBlocksFencedCodeBlocks_Example120()
         {
-            // Example 90
+            // Example 120
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2354,14 +2930,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //      &gt;
             //     </code></pre>
 
-            TestParser.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example 90\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~\n<\n >\n~~~", "<pre><code>&lt;\n &gt;\n</code></pre>", "", context: "Example 120\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Fewer than three backticks is not enough:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example091()
+        public void LeafBlocksFencedCodeBlocks_Example121()
         {
-            // Example 91
+            // Example 121
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2372,15 +2948,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><code>foo</code></p>
 
-            TestParser.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>", "", context: "Example 91\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("``\nfoo\n``", "<p><code>foo</code></p>", "", context: "Example 121\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // The closing code fence must use the same character as the opening
         // fence:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example092()
+        public void LeafBlocksFencedCodeBlocks_Example122()
         {
-            // Example 92
+            // Example 122
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2394,13 +2970,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ~~~
             //     </code></pre>
 
-            TestParser.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example 92\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\naaa\n~~~\n```", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example 122\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example093()
+        public void LeafBlocksFencedCodeBlocks_Example123()
         {
-            // Example 93
+            // Example 123
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2414,14 +2990,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ```
             //     </code></pre>
 
-            TestParser.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example 93\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~\naaa\n```\n~~~", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example 123\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // The closing code fence must be at least as long as the opening fence:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example094()
+        public void LeafBlocksFencedCodeBlocks_Example124()
         {
-            // Example 94
+            // Example 124
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2435,13 +3011,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ```
             //     </code></pre>
 
-            TestParser.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example 94\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("````\naaa\n```\n``````", "<pre><code>aaa\n```\n</code></pre>", "", context: "Example 124\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example095()
+        public void LeafBlocksFencedCodeBlocks_Example125()
         {
-            // Example 95
+            // Example 125
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2455,15 +3031,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ~~~
             //     </code></pre>
 
-            TestParser.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example 95\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~~\naaa\n~~~\n~~~~", "<pre><code>aaa\n~~~\n</code></pre>", "", context: "Example 125\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Unclosed code blocks are closed by the end of the document
         // (or the enclosing [block quote][block quotes] or [list item][list items]):
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example096()
+        public void LeafBlocksFencedCodeBlocks_Example126()
         {
-            // Example 96
+            // Example 126
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2472,13 +3048,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <pre><code></code></pre>
 
-            TestParser.TestSpec("```", "<pre><code></code></pre>", "", context: "Example 96\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```", "<pre><code></code></pre>", "", context: "Example 126\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example097()
+        public void LeafBlocksFencedCodeBlocks_Example127()
         {
-            // Example 97
+            // Example 127
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2493,13 +3069,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     aaa
             //     </code></pre>
 
-            TestParser.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>", "", context: "Example 97\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("`````\n\n```\naaa", "<pre><code>\n```\naaa\n</code></pre>", "", context: "Example 127\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example098()
+        public void LeafBlocksFencedCodeBlocks_Example128()
         {
-            // Example 98
+            // Example 128
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2515,14 +3091,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <p>bbb</p>
 
-            TestParser.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>", "", context: "Example 98\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("> ```\n> aaa\n\nbbb", "<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>", "", context: "Example 128\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // A code block can have all empty lines as its content:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example099()
+        public void LeafBlocksFencedCodeBlocks_Example129()
         {
-            // Example 99
+            // Example 129
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2536,14 +3112,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       
             //     </code></pre>
 
-            TestParser.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>", "", context: "Example 99\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\n\n  \n```", "<pre><code>\n  \n</code></pre>", "", context: "Example 129\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // A code block can be empty:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example100()
+        public void LeafBlocksFencedCodeBlocks_Example130()
         {
-            // Example 100
+            // Example 130
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2553,16 +3129,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <pre><code></code></pre>
 
-            TestParser.TestSpec("```\n```", "<pre><code></code></pre>", "", context: "Example 100\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\n```", "<pre><code></code></pre>", "", context: "Example 130\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Fences can be indented.  If the opening fence is indented,
         // content lines will have equivalent opening indentation removed,
         // if present:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example101()
+        public void LeafBlocksFencedCodeBlocks_Example131()
         {
-            // Example 101
+            // Example 131
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2576,13 +3152,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     aaa
             //     </code></pre>
 
-            TestParser.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>", "", context: "Example 101\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec(" ```\n aaa\naaa\n```", "<pre><code>aaa\naaa\n</code></pre>", "", context: "Example 131\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example102()
+        public void LeafBlocksFencedCodeBlocks_Example132()
         {
-            // Example 102
+            // Example 132
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2598,13 +3174,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     aaa
             //     </code></pre>
 
-            TestParser.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>", "", context: "Example 102\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("  ```\naaa\n  aaa\naaa\n  ```", "<pre><code>aaa\naaa\naaa\n</code></pre>", "", context: "Example 132\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example103()
+        public void LeafBlocksFencedCodeBlocks_Example133()
         {
-            // Example 103
+            // Example 133
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2620,14 +3196,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     aaa
             //     </code></pre>
 
-            TestParser.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>", "", context: "Example 103\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("   ```\n   aaa\n    aaa\n  aaa\n   ```", "<pre><code>aaa\n aaa\naaa\n</code></pre>", "", context: "Example 133\nSection Leaf blocks / Fenced code blocks\n");
         }
 
-        // Four spaces indentation produces an indented code block:
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example104()
+        public void LeafBlocksFencedCodeBlocks_Example134()
         {
-            // Example 104
+            // Example 134
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2641,15 +3217,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ```
             //     </code></pre>
 
-            TestParser.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>", "", context: "Example 104\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("    ```\n    aaa\n    ```", "<pre><code>```\naaa\n```\n</code></pre>", "", context: "Example 134\nSection Leaf blocks / Fenced code blocks\n");
         }
 
-        // Closing fences may be indented by 0-3 spaces, and their indentation
-        // need not match that of the opening fence:
+        // Closing fences may be preceded by up to three spaces of indentation, and their
+        // indentation need not match that of the opening fence:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example105()
+        public void LeafBlocksFencedCodeBlocks_Example135()
         {
-            // Example 105
+            // Example 135
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2661,13 +3237,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>aaa
             //     </code></pre>
 
-            TestParser.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example 105\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example 135\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example106()
+        public void LeafBlocksFencedCodeBlocks_Example136()
         {
-            // Example 106
+            // Example 136
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2679,14 +3255,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>aaa
             //     </code></pre>
 
-            TestParser.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example 106\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("   ```\naaa\n  ```", "<pre><code>aaa\n</code></pre>", "", context: "Example 136\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // This is not a closing fence, because it is indented 4 spaces:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example107()
+        public void LeafBlocksFencedCodeBlocks_Example137()
         {
-            // Example 107
+            // Example 137
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2699,14 +3275,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //         ```
             //     </code></pre>
 
-            TestParser.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>", "", context: "Example 107\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\naaa\n    ```", "<pre><code>aaa\n    ```\n</code></pre>", "", context: "Example 137\nSection Leaf blocks / Fenced code blocks\n");
         }
 
-        // Code fences (opening and closing) cannot contain internal spaces:
+        // Code fences (opening and closing) cannot contain internal spaces or tabs:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example108()
+        public void LeafBlocksFencedCodeBlocks_Example138()
         {
-            // Example 108
+            // Example 138
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2717,13 +3293,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><code> </code>
             //     aaa</p>
 
-            TestParser.TestSpec("``` ```\naaa", "<p><code> </code>\naaa</p>", "", context: "Example 108\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("``` ```\naaa", "<p><code> </code>\naaa</p>", "", context: "Example 138\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example109()
+        public void LeafBlocksFencedCodeBlocks_Example139()
         {
-            // Example 109
+            // Example 139
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2736,15 +3312,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ~~~ ~~
             //     </code></pre>
 
-            TestParser.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>", "", context: "Example 109\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~~~~\naaa\n~~~ ~~", "<pre><code>aaa\n~~~ ~~\n</code></pre>", "", context: "Example 139\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Fenced code blocks can interrupt paragraphs, and can be followed
         // directly by paragraphs, without a blank line between:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example110()
+        public void LeafBlocksFencedCodeBlocks_Example140()
         {
-            // Example 110
+            // Example 140
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2760,15 +3336,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>baz</p>
 
-            TestParser.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>", "", context: "Example 110\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("foo\n```\nbar\n```\nbaz", "<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>", "", context: "Example 140\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Other blocks can also occur before and after fenced code blocks
         // without an intervening blank line:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example111()
+        public void LeafBlocksFencedCodeBlocks_Example141()
         {
-            // Example 111
+            // Example 141
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2785,7 +3361,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <h1>baz</h1>
 
-            TestParser.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>", "", context: "Example 111\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("foo\n---\n~~~\nbar\n~~~\n# baz", "<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>", "", context: "Example 141\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // An [info string] can be provided after the opening code fence.
@@ -2795,9 +3371,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // normally indicated by adding a class to the `code` element consisting
         // of `language-` followed by the language name.
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example112()
+        public void LeafBlocksFencedCodeBlocks_Example142()
         {
-            // Example 112
+            // Example 142
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2813,13 +3389,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     end
             //     </code></pre>
 
-            TestParser.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example 112\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```ruby\ndef foo(x)\n  return 3\nend\n```", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example 142\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example113()
+        public void LeafBlocksFencedCodeBlocks_Example143()
         {
-            // Example 113
+            // Example 143
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2835,13 +3411,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     end
             //     </code></pre>
 
-            TestParser.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example 113\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~", "<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>", "", context: "Example 143\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example114()
+        public void LeafBlocksFencedCodeBlocks_Example144()
         {
-            // Example 114
+            // Example 144
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2851,14 +3427,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <pre><code class="language-;"></code></pre>
 
-            TestParser.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>", "", context: "Example 114\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("````;\n````", "<pre><code class=\"language-;\"></code></pre>", "", context: "Example 144\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // [Info strings] for backtick code blocks cannot contain backticks:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example115()
+        public void LeafBlocksFencedCodeBlocks_Example145()
         {
-            // Example 115
+            // Example 145
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2869,14 +3445,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><code>aa</code>
             //     foo</p>
 
-            TestParser.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>", "", context: "Example 115\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("``` aa ```\nfoo", "<p><code>aa</code>\nfoo</p>", "", context: "Example 145\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // [Info strings] for tilde code blocks can contain backticks and tildes:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example116()
+        public void LeafBlocksFencedCodeBlocks_Example146()
         {
-            // Example 116
+            // Example 146
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2888,14 +3464,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code class="language-aa">foo
             //     </code></pre>
 
-            TestParser.TestSpec("~~~ aa ``` ~~~\nfoo\n~~~", "<pre><code class=\"language-aa\">foo\n</code></pre>", "", context: "Example 116\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("~~~ aa ``` ~~~\nfoo\n~~~", "<pre><code class=\"language-aa\">foo\n</code></pre>", "", context: "Example 146\nSection Leaf blocks / Fenced code blocks\n");
         }
 
         // Closing code fences cannot have [info strings]:
         [Test]
-        public void LeafBlocksFencedCodeBlocks_Example117()
+        public void LeafBlocksFencedCodeBlocks_Example147()
         {
-            // Example 117
+            // Example 147
             // Section: Leaf blocks / Fenced code blocks
             //
             // The following Markdown:
@@ -2907,7 +3483,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>``` aaa
             //     </code></pre>
 
-            TestParser.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>", "", context: "Example 117\nSection Leaf blocks / Fenced code blocks\n");
+            TestParser.TestSpec("```\n``` aaa\n```", "<pre><code>``` aaa\n</code></pre>", "", context: "Example 147\nSection Leaf blocks / Fenced code blocks\n");
         }
     }
 
@@ -2921,19 +3497,19 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // There are seven kinds of [HTML block], which can be defined by their
         // start and end conditions.  The block begins with a line that meets a
-        // [start condition](@) (after up to three spaces optional indentation).
-        // It ends with the first subsequent line that meets a matching [end
-        // condition](@), or the last line of the document, or the last line of
+        // [start condition](@) (after up to three optional spaces of indentation).
+        // It ends with the first subsequent line that meets a matching
+        // [end condition](@), or the last line of the document, or the last line of
         // the [container block](#container-blocks) containing the current HTML
         // block, if no line is encountered that meets the [end condition].  If
         // the first line meets both the [start condition] and the [end
         // condition], the block will contain just that line.
         // 
-        // 1.  **Start condition:**  line begins with the string `<script`,
-        // `<pre`, or `<style` (case-insensitive), followed by whitespace,
-        // the string `>`, or the end of the line.\
+        // 1.  **Start condition:**  line begins with the string `<pre`,
+        // `<script`, `<style`, or `<textarea` (case-insensitive), followed by a space,
+        // a tab, the string `>`, or the end of the line.\
         // **End condition:**  line contains an end tag
-        // `</script>`, `</pre>`, or `</style>` (case-insensitive; it
+        // `</pre>`, `</script>`, `</style>`, or `</textarea>` (case-insensitive; it
         // need not match the start tag).
         // 
         // 2.  **Start condition:** line begins with the string `<!--`.\
@@ -2943,14 +3519,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // **End condition:** line contains the string `?>`.
         // 
         // 4.  **Start condition:** line begins with the string `<!`
-        // followed by an uppercase ASCII letter.\
+        // followed by an ASCII letter.\
         // **End condition:** line contains the character `>`.
         // 
         // 5.  **Start condition:**  line begins with the string
         // `<![CDATA[`.\
         // **End condition:** line contains the string `]]>`.
         // 
-        // 6.  **Start condition:** line begins the string `<` or `</`
+        // 6.  **Start condition:** line begins with the string `<` or `</`
         // followed by one of the strings (case-insensitive) `address`,
         // `article`, `aside`, `base`, `basefont`, `blockquote`, `body`,
         // `caption`, `center`, `col`, `colgroup`, `dd`, `details`, `dialog`,
@@ -2961,14 +3537,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // `nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
         // `section`, `source`, `summary`, `table`, `tbody`, `td`,
         // `tfoot`, `th`, `thead`, `title`, `tr`, `track`, `ul`, followed
-        // by [whitespace], the end of the line, the string `>`, or
+        // by a space, a tab, the end of the line, the string `>`, or
         // the string `/>`.\
         // **End condition:** line is followed by a [blank line].
         // 
         // 7.  **Start condition:**  line begins with a complete [open tag]
-        // (with any [tag name] other than `script`,
-        // `style`, or `pre`) or a complete [closing tag],
-        // followed only by [whitespace] or the end of the line.\
+        // (with any [tag name] other than `pre`, `script`,
+        // `style`, or `textarea`) or a complete [closing tag],
+        // followed by zero or more spaces and tabs, followed by the end of the line.\
         // **End condition:** line is followed by a [blank line].
         // 
         // HTML blocks continue until they are closed by their appropriate
@@ -2978,13 +3554,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // be ignored by the parser and passed through as-is, without changing
         // the parser's state.
         // 
-        // For instance, `<pre>` within a HTML block started by `<table>` will not affect
+        // For instance, `<pre>` within an HTML block started by `<table>` will not affect
         // the parser state; as the HTML block was started in by start condition 6, it
         // will end at any blank line. This can be surprising:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example118()
+        public void LeafBlocksHTMLBlocks_Example148()
         {
-            // Example 118
+            // Example 148
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3004,10 +3580,10 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </pre></p>
             //     </td></tr></table>
 
-            TestParser.TestSpec("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>", "<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>", "", context: "Example 118\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>", "<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>", "", context: "Example 148\nSection Leaf blocks / HTML blocks\n");
         }
 
-        // In this case, the HTML block is terminated by the newline — the `**Hello**`
+        // In this case, the HTML block is terminated by the blank line — the `**Hello**`
         // text remains verbatim — and regular parsing resumes, with a paragraph,
         // emphasised `world` and inline and block HTML following.
         // 
@@ -3019,9 +3595,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // Some simple examples follow.  Here are some basic HTML blocks
         // of type 6:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example119()
+        public void LeafBlocksHTMLBlocks_Example149()
         {
-            // Example 119
+            // Example 149
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3045,13 +3621,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </table>
             //     <p>okay.</p>
 
-            TestParser.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>", "", context: "Example 119\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.", "<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>", "", context: "Example 149\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example120()
+        public void LeafBlocksHTMLBlocks_Example150()
         {
-            // Example 120
+            // Example 150
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3064,14 +3640,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       *hello*
             //              <foo><a>
 
-            TestParser.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>", "", context: "Example 120\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec(" <div>\n  *hello*\n         <foo><a>", " <div>\n  *hello*\n         <foo><a>", "", context: "Example 150\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A block can also start with a closing tag:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example121()
+        public void LeafBlocksHTMLBlocks_Example151()
         {
-            // Example 121
+            // Example 151
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3082,14 +3658,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </div>
             //     *foo*
 
-            TestParser.TestSpec("</div>\n*foo*", "</div>\n*foo*", "", context: "Example 121\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("</div>\n*foo*", "</div>\n*foo*", "", context: "Example 151\nSection Leaf blocks / HTML blocks\n");
         }
 
         // Here we have two HTML blocks with a Markdown paragraph between them:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example122()
+        public void LeafBlocksHTMLBlocks_Example152()
         {
-            // Example 122
+            // Example 152
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3104,15 +3680,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><em>Markdown</em></p>
             //     </DIV>
 
-            TestParser.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>", "", context: "Example 122\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>", "<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>", "", context: "Example 152\nSection Leaf blocks / HTML blocks\n");
         }
 
         // The tag on the first line can be partial, as long
         // as it is split where there would be whitespace:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example123()
+        public void LeafBlocksHTMLBlocks_Example153()
         {
-            // Example 123
+            // Example 153
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3125,13 +3701,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       class="bar">
             //     </div>
 
-            TestParser.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>", "", context: "Example 123\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div id=\"foo\"\n  class=\"bar\">\n</div>", "<div id=\"foo\"\n  class=\"bar\">\n</div>", "", context: "Example 153\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example124()
+        public void LeafBlocksHTMLBlocks_Example154()
         {
-            // Example 124
+            // Example 154
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3144,14 +3720,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       baz">
             //     </div>
 
-            TestParser.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "", context: "Example 124\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "<div id=\"foo\" class=\"bar\n  baz\">\n</div>", "", context: "Example 154\nSection Leaf blocks / HTML blocks\n");
         }
 
         // An open tag need not be closed:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example125()
+        public void LeafBlocksHTMLBlocks_Example155()
         {
-            // Example 125
+            // Example 155
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3165,15 +3741,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *foo*
             //     <p><em>bar</em></p>
 
-            TestParser.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>", "", context: "Example 125\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div>\n*foo*\n\n*bar*", "<div>\n*foo*\n<p><em>bar</em></p>", "", context: "Example 155\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A partial tag need not even be completed (garbage
         // in, garbage out):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example126()
+        public void LeafBlocksHTMLBlocks_Example156()
         {
-            // Example 126
+            // Example 156
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3184,13 +3760,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <div id="foo"
             //     *hi*
 
-            TestParser.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*", "", context: "Example 126\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div id=\"foo\"\n*hi*", "<div id=\"foo\"\n*hi*", "", context: "Example 156\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example127()
+        public void LeafBlocksHTMLBlocks_Example157()
         {
-            // Example 127
+            // Example 157
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3201,15 +3777,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <div class
             //     foo
 
-            TestParser.TestSpec("<div class\nfoo", "<div class\nfoo", "", context: "Example 127\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div class\nfoo", "<div class\nfoo", "", context: "Example 157\nSection Leaf blocks / HTML blocks\n");
         }
 
         // The initial tag doesn't even need to be a valid
         // tag, as long as it starts like one:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example128()
+        public void LeafBlocksHTMLBlocks_Example158()
         {
-            // Example 128
+            // Example 158
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3220,15 +3796,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <div *???-&&&-<---
             //     *foo*
 
-            TestParser.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*", "", context: "Example 128\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div *???-&&&-<---\n*foo*", "<div *???-&&&-<---\n*foo*", "", context: "Example 158\nSection Leaf blocks / HTML blocks\n");
         }
 
         // In type 6 blocks, the initial tag need not be on a line by
         // itself:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example129()
+        public void LeafBlocksHTMLBlocks_Example159()
         {
-            // Example 129
+            // Example 159
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3237,13 +3813,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <div><a href="bar">*foo*</a></div>
 
-            TestParser.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>", "", context: "Example 129\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div><a href=\"bar\">*foo*</a></div>", "<div><a href=\"bar\">*foo*</a></div>", "", context: "Example 159\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example130()
+        public void LeafBlocksHTMLBlocks_Example160()
         {
-            // Example 130
+            // Example 160
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3256,7 +3832,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     foo
             //     </td></tr></table>
 
-            TestParser.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>", "", context: "Example 130\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<table><tr><td>\nfoo\n</td></tr></table>", "<table><tr><td>\nfoo\n</td></tr></table>", "", context: "Example 160\nSection Leaf blocks / HTML blocks\n");
         }
 
         // Everything until the next blank line or end of document
@@ -3265,9 +3841,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // is actually part of the HTML block, which continues until a blank
         // line or the end of the document is reached:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example131()
+        public void LeafBlocksHTMLBlocks_Example161()
         {
-            // Example 131
+            // Example 161
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3282,16 +3858,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     int x = 33;
             //     ```
 
-            TestParser.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```", "", context: "Example 131\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div></div>\n``` c\nint x = 33;\n```", "<div></div>\n``` c\nint x = 33;\n```", "", context: "Example 161\nSection Leaf blocks / HTML blocks\n");
         }
 
         // To start an [HTML block] with a tag that is *not* in the
         // list of block-level tags in (6), you must put the tag by
         // itself on the first line (and it must be complete):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example132()
+        public void LeafBlocksHTMLBlocks_Example162()
         {
-            // Example 132
+            // Example 162
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3304,14 +3880,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *bar*
             //     </a>
 
-            TestParser.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>", "", context: "Example 132\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<a href=\"foo\">\n*bar*\n</a>", "<a href=\"foo\">\n*bar*\n</a>", "", context: "Example 162\nSection Leaf blocks / HTML blocks\n");
         }
 
         // In type 7 blocks, the [tag name] can be anything:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example133()
+        public void LeafBlocksHTMLBlocks_Example163()
         {
-            // Example 133
+            // Example 163
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3324,13 +3900,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *bar*
             //     </Warning>
 
-            TestParser.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>", "", context: "Example 133\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<Warning>\n*bar*\n</Warning>", "<Warning>\n*bar*\n</Warning>", "", context: "Example 163\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example134()
+        public void LeafBlocksHTMLBlocks_Example164()
         {
-            // Example 134
+            // Example 164
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3343,13 +3919,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *bar*
             //     </i>
 
-            TestParser.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>", "", context: "Example 134\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<i class=\"foo\">\n*bar*\n</i>", "<i class=\"foo\">\n*bar*\n</i>", "", context: "Example 164\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example135()
+        public void LeafBlocksHTMLBlocks_Example165()
         {
-            // Example 135
+            // Example 165
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3360,7 +3936,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ins>
             //     *bar*
 
-            TestParser.TestSpec("</ins>\n*bar*", "</ins>\n*bar*", "", context: "Example 135\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("</ins>\n*bar*", "</ins>\n*bar*", "", context: "Example 165\nSection Leaf blocks / HTML blocks\n");
         }
 
         // These rules are designed to allow us to work with tags that
@@ -3369,9 +3945,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // `<del>` tags in three different ways.  In this case, we get a raw
         // HTML block, because the `<del>` tag is on a line by itself:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example136()
+        public void LeafBlocksHTMLBlocks_Example166()
         {
-            // Example 136
+            // Example 166
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3384,16 +3960,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *foo*
             //     </del>
 
-            TestParser.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>", "", context: "Example 136\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<del>\n*foo*\n</del>", "<del>\n*foo*\n</del>", "", context: "Example 166\nSection Leaf blocks / HTML blocks\n");
         }
 
         // In this case, we get a raw HTML block that just includes
         // the `<del>` tag (because it ends with the following blank
         // line).  So the contents get interpreted as CommonMark:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example137()
+        public void LeafBlocksHTMLBlocks_Example167()
         {
-            // Example 137
+            // Example 167
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3408,7 +3984,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><em>foo</em></p>
             //     </del>
 
-            TestParser.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>", "", context: "Example 137\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<del>\n\n*foo*\n\n</del>", "<del>\n<p><em>foo</em></p>\n</del>", "", context: "Example 167\nSection Leaf blocks / HTML blocks\n");
         }
 
         // Finally, in this case, the `<del>` tags are interpreted
@@ -3416,9 +3992,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // the tag is not on a line by itself, we get inline HTML
         // rather than an [HTML block].)
         [Test]
-        public void LeafBlocksHTMLBlocks_Example138()
+        public void LeafBlocksHTMLBlocks_Example168()
         {
-            // Example 138
+            // Example 168
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3427,11 +4003,11 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><del><em>foo</em></del></p>
 
-            TestParser.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>", "", context: "Example 138\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<del>*foo*</del>", "<p><del><em>foo</em></del></p>", "", context: "Example 168\nSection Leaf blocks / HTML blocks\n");
         }
 
         // HTML tags designed to contain literal content
-        // (`script`, `style`, `pre`), comments, processing instructions,
+        // (`pre`, `script`, `style`, `textarea`), comments, processing instructions,
         // and declarations are treated somewhat differently.
         // Instead of ending at the first blank line, these blocks
         // end at the first line containing a corresponding end tag.
@@ -3439,9 +4015,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A pre tag (type 1):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example139()
+        public void LeafBlocksHTMLBlocks_Example169()
         {
-            // Example 139
+            // Example 169
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3462,14 +4038,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>okay</p>
 
-            TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "", context: "Example 139\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay", "<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>", "", context: "Example 169\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A script tag (type 1):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example140()
+        public void LeafBlocksHTMLBlocks_Example170()
         {
-            // Example 140
+            // Example 170
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3488,14 +4064,42 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </script>
             //     <p>okay</p>
 
-            TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "", context: "Example 140\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay", "<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>", "", context: "Example 170\nSection Leaf blocks / HTML blocks\n");
+        }
+
+        // A textarea tag (type 1):
+        [Test]
+        public void LeafBlocksHTMLBlocks_Example171()
+        {
+            // Example 171
+            // Section: Leaf blocks / HTML blocks
+            //
+            // The following Markdown:
+            //     <textarea>
+            //     
+            //     *foo*
+            //     
+            //     _bar_
+            //     
+            //     </textarea>
+            //
+            // Should be rendered as:
+            //     <textarea>
+            //     
+            //     *foo*
+            //     
+            //     _bar_
+            //     
+            //     </textarea>
+
+            TestParser.TestSpec("<textarea>\n\n*foo*\n\n_bar_\n\n</textarea>", "<textarea>\n\n*foo*\n\n_bar_\n\n</textarea>", "", context: "Example 171\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A style tag (type 1):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example141()
+        public void LeafBlocksHTMLBlocks_Example172()
         {
-            // Example 141
+            // Example 172
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3516,16 +4120,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </style>
             //     <p>okay</p>
 
-            TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "", context: "Example 141\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay", "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>", "", context: "Example 172\nSection Leaf blocks / HTML blocks\n");
         }
 
         // If there is no matching end tag, the block will end at the
         // end of the document (or the enclosing [block quote][block quotes]
         // or [list item][list items]):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example142()
+        public void LeafBlocksHTMLBlocks_Example173()
         {
-            // Example 142
+            // Example 173
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3540,13 +4144,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     
             //     foo
 
-            TestParser.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo", "", context: "Example 142\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<style\n  type=\"text/css\">\n\nfoo", "<style\n  type=\"text/css\">\n\nfoo", "", context: "Example 173\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example143()
+        public void LeafBlocksHTMLBlocks_Example174()
         {
-            // Example 143
+            // Example 174
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3562,13 +4166,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <p>bar</p>
 
-            TestParser.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>", "", context: "Example 143\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("> <div>\n> foo\n\nbar", "<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>", "", context: "Example 174\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example144()
+        public void LeafBlocksHTMLBlocks_Example175()
         {
-            // Example 144
+            // Example 175
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3583,14 +4187,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>foo</li>
             //     </ul>
 
-            TestParser.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>", "", context: "Example 144\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("- <div>\n- foo", "<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>", "", context: "Example 175\nSection Leaf blocks / HTML blocks\n");
         }
 
         // The end tag can occur on the same line as the start tag:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example145()
+        public void LeafBlocksHTMLBlocks_Example176()
         {
-            // Example 145
+            // Example 176
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3601,13 +4205,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <style>p{color:red;}</style>
             //     <p><em>foo</em></p>
 
-            TestParser.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>", "", context: "Example 145\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<style>p{color:red;}</style>\n*foo*", "<style>p{color:red;}</style>\n<p><em>foo</em></p>", "", context: "Example 176\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example146()
+        public void LeafBlocksHTMLBlocks_Example177()
         {
-            // Example 146
+            // Example 177
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3618,15 +4222,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <!-- foo -->*bar*
             //     <p><em>baz</em></p>
 
-            TestParser.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>", "", context: "Example 146\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<!-- foo -->*bar*\n*baz*", "<!-- foo -->*bar*\n<p><em>baz</em></p>", "", context: "Example 177\nSection Leaf blocks / HTML blocks\n");
         }
 
         // Note that anything on the last line after the
         // end tag will be included in the [HTML block]:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example147()
+        public void LeafBlocksHTMLBlocks_Example178()
         {
-            // Example 147
+            // Example 178
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3639,14 +4243,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     foo
             //     </script>1. *bar*
 
-            TestParser.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*", "", context: "Example 147\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<script>\nfoo\n</script>1. *bar*", "<script>\nfoo\n</script>1. *bar*", "", context: "Example 178\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A comment (type 2):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example148()
+        public void LeafBlocksHTMLBlocks_Example179()
         {
-            // Example 148
+            // Example 179
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3663,14 +4267,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //        baz -->
             //     <p>okay</p>
 
-            TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "", context: "Example 148\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<!-- Foo\n\nbar\n   baz -->\nokay", "<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>", "", context: "Example 179\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A processing instruction (type 3):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example149()
+        public void LeafBlocksHTMLBlocks_Example180()
         {
-            // Example 149
+            // Example 180
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3689,14 +4293,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ?>
             //     <p>okay</p>
 
-            TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "", context: "Example 149\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<?php\n\n  echo '>';\n\n?>\nokay", "<?php\n\n  echo '>';\n\n?>\n<p>okay</p>", "", context: "Example 180\nSection Leaf blocks / HTML blocks\n");
         }
 
         // A declaration (type 4):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example150()
+        public void LeafBlocksHTMLBlocks_Example181()
         {
-            // Example 150
+            // Example 181
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3705,14 +4309,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <!DOCTYPE html>
 
-            TestParser.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>", "", context: "Example 150\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<!DOCTYPE html>", "<!DOCTYPE html>", "", context: "Example 181\nSection Leaf blocks / HTML blocks\n");
         }
 
         // CDATA (type 5):
         [Test]
-        public void LeafBlocksHTMLBlocks_Example151()
+        public void LeafBlocksHTMLBlocks_Example182()
         {
-            // Example 151
+            // Example 182
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3745,14 +4349,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     ]]>
             //     <p>okay</p>
 
-            TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "", context: "Example 151\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay", "<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>", "", context: "Example 182\nSection Leaf blocks / HTML blocks\n");
         }
 
-        // The opening tag can be indented 1-3 spaces, but not 4:
+        // The opening tag can be preceded by up to three spaces of indentation, but not
+        // four:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example152()
+        public void LeafBlocksHTMLBlocks_Example183()
         {
-            // Example 152
+            // Example 183
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3765,13 +4370,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>&lt;!-- foo --&gt;
             //     </code></pre>
 
-            TestParser.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>", "", context: "Example 152\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("  <!-- foo -->\n\n    <!-- foo -->", "  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>", "", context: "Example 183\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example153()
+        public void LeafBlocksHTMLBlocks_Example184()
         {
-            // Example 153
+            // Example 184
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3784,15 +4389,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>&lt;div&gt;
             //     </code></pre>
 
-            TestParser.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>", "", context: "Example 153\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("  <div>\n\n    <div>", "  <div>\n<pre><code>&lt;div&gt;\n</code></pre>", "", context: "Example 184\nSection Leaf blocks / HTML blocks\n");
         }
 
         // An HTML block of types 1--6 can interrupt a paragraph, and need not be
         // preceded by a blank line.
         [Test]
-        public void LeafBlocksHTMLBlocks_Example154()
+        public void LeafBlocksHTMLBlocks_Example185()
         {
-            // Example 154
+            // Example 185
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3807,16 +4412,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     bar
             //     </div>
 
-            TestParser.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>", "", context: "Example 154\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("Foo\n<div>\nbar\n</div>", "<p>Foo</p>\n<div>\nbar\n</div>", "", context: "Example 185\nSection Leaf blocks / HTML blocks\n");
         }
 
         // However, a following blank line is needed, except at the end of
         // a document, and except for blocks of types 1--5, [above][HTML
         // block]:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example155()
+        public void LeafBlocksHTMLBlocks_Example186()
         {
-            // Example 155
+            // Example 186
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3831,14 +4436,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </div>
             //     *foo*
 
-            TestParser.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*", "", context: "Example 155\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div>\nbar\n</div>\n*foo*", "<div>\nbar\n</div>\n*foo*", "", context: "Example 186\nSection Leaf blocks / HTML blocks\n");
         }
 
         // HTML blocks of type 7 cannot interrupt a paragraph:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example156()
+        public void LeafBlocksHTMLBlocks_Example187()
         {
-            // Example 156
+            // Example 187
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3851,7 +4456,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <a href="bar">
             //     baz</p>
 
-            TestParser.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>", "", context: "Example 156\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("Foo\n<a href=\"bar\">\nbaz", "<p>Foo\n<a href=\"bar\">\nbaz</p>", "", context: "Example 187\nSection Leaf blocks / HTML blocks\n");
         }
 
         // This rule differs from John Gruber's original Markdown syntax
@@ -3860,7 +4465,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // > The only restrictions are that block-level HTML elements —
         // > e.g. `<div>`, `<table>`, `<pre>`, `<p>`, etc. — must be separated from
         // > surrounding content by blank lines, and the start and end tags of the
-        // > block should not be indented with tabs or spaces.
+        // > block should not be indented with spaces or tabs.
         // 
         // In some ways Gruber's rule is more restrictive than the one given
         // here:
@@ -3884,9 +4489,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Compare:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example157()
+        public void LeafBlocksHTMLBlocks_Example188()
         {
-            // Example 157
+            // Example 188
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3901,13 +4506,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><em>Emphasized</em> text.</p>
             //     </div>
 
-            TestParser.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>", "", context: "Example 157\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div>\n\n*Emphasized* text.\n\n</div>", "<div>\n<p><em>Emphasized</em> text.</p>\n</div>", "", context: "Example 188\nSection Leaf blocks / HTML blocks\n");
         }
 
         [Test]
-        public void LeafBlocksHTMLBlocks_Example158()
+        public void LeafBlocksHTMLBlocks_Example189()
         {
-            // Example 158
+            // Example 189
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3920,7 +4525,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     *Emphasized* text.
             //     </div>
 
-            TestParser.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>", "", context: "Example 158\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<div>\n*Emphasized* text.\n</div>", "<div>\n*Emphasized* text.\n</div>", "", context: "Example 189\nSection Leaf blocks / HTML blocks\n");
         }
 
         // Some Markdown implementations have adopted a convention of
@@ -3934,9 +4539,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // *in most cases* this will work fine, because the blank lines in
         // HTML are usually followed by HTML block tags.  For example:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example159()
+        public void LeafBlocksHTMLBlocks_Example190()
         {
-            // Example 159
+            // Example 190
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3961,16 +4566,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </tr>
             //     </table>
 
-            TestParser.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>", "", context: "Example 159\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>", "<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>", "", context: "Example 190\nSection Leaf blocks / HTML blocks\n");
         }
 
         // There are problems, however, if the inner tags are indented
         // *and* separated by spaces, as then they will be interpreted as
         // an indented code block:
         [Test]
-        public void LeafBlocksHTMLBlocks_Example160()
+        public void LeafBlocksHTMLBlocks_Example191()
         {
-            // Example 160
+            // Example 191
             // Section: Leaf blocks / HTML blocks
             //
             // The following Markdown:
@@ -3996,7 +4601,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //       </tr>
             //     </table>
 
-            TestParser.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>", "", context: "Example 160\nSection Leaf blocks / HTML blocks\n");
+            TestParser.TestSpec("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>", "<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>", "", context: "Example 191\nSection Leaf blocks / HTML blocks\n");
         }
     }
 
@@ -4011,14 +4616,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // ## Link reference definitions
         // 
         // A [link reference definition](@)
-        // consists of a [link label], indented up to three spaces, followed
-        // by a colon (`:`), optional [whitespace] (including up to one
+        // consists of a [link label], optionally preceded by up to three spaces of
+        // indentation, followed
+        // by a colon (`:`), optional spaces or tabs (including up to one
         // [line ending]), a [link destination],
-        // optional [whitespace] (including up to one
+        // optional spaces or tabs (including up to one
         // [line ending]), and an optional [link
         // title], which if it is present must be separated
-        // from the [link destination] by [whitespace].
-        // No further [non-whitespace characters] may occur on the line.
+        // from the [link destination] by spaces or tabs.
+        // No further character may occur.
         // 
         // A [link reference definition]
         // does not correspond to a structural element of a document.  Instead, it
@@ -4027,9 +4633,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // reference definitions] can come either before or after the links that use
         // them.
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example161()
+        public void LeafBlocksLinkReferenceDefinitions_Example192()
         {
-            // Example 161
+            // Example 192
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4040,13 +4646,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 161\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url \"title\"\n\n[foo]", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 192\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example162()
+        public void LeafBlocksLinkReferenceDefinitions_Example193()
         {
-            // Example 162
+            // Example 193
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4059,13 +4665,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="the title">foo</a></p>
 
-            TestParser.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>", "", context: "Example 162\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("   [foo]: \n      /url  \n           'the title'  \n\n[foo]", "<p><a href=\"/url\" title=\"the title\">foo</a></p>", "", context: "Example 193\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example163()
+        public void LeafBlocksLinkReferenceDefinitions_Example194()
         {
-            // Example 163
+            // Example 194
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4076,13 +4682,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="my_(url)" title="title (with parens)">Foo*bar]</a></p>
 
-            TestParser.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>", "", context: "Example 163\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]", "<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>", "", context: "Example 194\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example164()
+        public void LeafBlocksLinkReferenceDefinitions_Example195()
         {
-            // Example 164
+            // Example 195
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4095,14 +4701,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="my%20url" title="title">Foo bar</a></p>
 
-            TestParser.TestSpec("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>", "", context: "Example 164\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]", "<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>", "", context: "Example 195\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // The title may extend over multiple lines:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example165()
+        public void LeafBlocksLinkReferenceDefinitions_Example196()
         {
-            // Example 165
+            // Example 196
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4121,14 +4727,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     line2
             //     ">foo</a></p>
 
-            TestParser.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>", "", context: "Example 165\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]", "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>", "", context: "Example 196\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // However, it may not contain a [blank line]:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example166()
+        public void LeafBlocksLinkReferenceDefinitions_Example197()
         {
-            // Example 166
+            // Example 197
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4143,14 +4749,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>with blank line'</p>
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>", "", context: "Example 166\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url 'title\n\nwith blank line'\n\n[foo]", "<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>", "", context: "Example 197\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // The title may be omitted:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example167()
+        public void LeafBlocksLinkReferenceDefinitions_Example198()
         {
-            // Example 167
+            // Example 198
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4162,14 +4768,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url">foo</a></p>
 
-            TestParser.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>", "", context: "Example 167\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]:\n/url\n\n[foo]", "<p><a href=\"/url\">foo</a></p>", "", context: "Example 198\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // The link destination may not be omitted:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example168()
+        public void LeafBlocksLinkReferenceDefinitions_Example199()
         {
-            // Example 168
+            // Example 199
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4181,15 +4787,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[foo]:</p>
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>", "", context: "Example 168\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]:\n\n[foo]", "<p>[foo]:</p>\n<p>[foo]</p>", "", context: "Example 199\nSection Leaf blocks / Link reference definitions\n");
         }
 
         //  However, an empty link destination may be specified using
         //  angle brackets:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example169()
+        public void LeafBlocksLinkReferenceDefinitions_Example200()
         {
-            // Example 169
+            // Example 200
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4200,15 +4806,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="">foo</a></p>
 
-            TestParser.TestSpec("[foo]: <>\n\n[foo]", "<p><a href=\"\">foo</a></p>", "", context: "Example 169\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: <>\n\n[foo]", "<p><a href=\"\">foo</a></p>", "", context: "Example 200\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // The title must be separated from the link destination by
-        // whitespace:
+        // spaces or tabs:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example170()
+        public void LeafBlocksLinkReferenceDefinitions_Example201()
         {
-            // Example 170
+            // Example 201
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4220,15 +4826,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[foo]: <bar>(baz)</p>
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("[foo]: <bar>(baz)\n\n[foo]", "<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>", "", context: "Example 170\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: <bar>(baz)\n\n[foo]", "<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>", "", context: "Example 201\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // Both title and destination can contain backslash escapes
         // and literal backslashes:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example171()
+        public void LeafBlocksLinkReferenceDefinitions_Example202()
         {
-            // Example 171
+            // Example 202
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4239,14 +4845,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url%5Cbar*baz" title="foo&quot;bar\baz">foo</a></p>
 
-            TestParser.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>", "", context: "Example 171\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]", "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>", "", context: "Example 202\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // A link can come before its corresponding definition:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example172()
+        public void LeafBlocksLinkReferenceDefinitions_Example203()
         {
-            // Example 172
+            // Example 203
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4257,15 +4863,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="url">foo</a></p>
 
-            TestParser.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>", "", context: "Example 172\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]\n\n[foo]: url", "<p><a href=\"url\">foo</a></p>", "", context: "Example 203\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // If there are several matching definitions, the first one takes
         // precedence:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example173()
+        public void LeafBlocksLinkReferenceDefinitions_Example204()
         {
-            // Example 173
+            // Example 204
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4277,15 +4883,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="first">foo</a></p>
 
-            TestParser.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>", "", context: "Example 173\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]\n\n[foo]: first\n[foo]: second", "<p><a href=\"first\">foo</a></p>", "", context: "Example 204\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // As noted in the section on [Links], matching of labels is
         // case-insensitive (see [matches]).
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example174()
+        public void LeafBlocksLinkReferenceDefinitions_Example205()
         {
-            // Example 174
+            // Example 205
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4296,13 +4902,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url">Foo</a></p>
 
-            TestParser.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>", "", context: "Example 174\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[FOO]: /url\n\n[Foo]", "<p><a href=\"/url\">Foo</a></p>", "", context: "Example 205\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example175()
+        public void LeafBlocksLinkReferenceDefinitions_Example206()
         {
-            // Example 175
+            // Example 206
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4313,15 +4919,18 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
 
-            TestParser.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>", "", context: "Example 175\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[ΑΓΩ]: /φου\n\n[αγω]", "<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>", "", context: "Example 206\nSection Leaf blocks / Link reference definitions\n");
         }
 
-        // Here is a link reference definition with no corresponding link.
-        // It contributes nothing to the document.
+        // Whether something is a [link reference definition] is
+        // independent of whether the link reference it defines is
+        // used in the document.  Thus, for example, the following
+        // document contains just a link reference definition, and
+        // no visible content:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example176()
+        public void LeafBlocksLinkReferenceDefinitions_Example207()
         {
-            // Example 176
+            // Example 207
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4329,14 +4938,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //
             // Should be rendered as:
             //
-            TestParser.TestSpec("[foo]: /url", "", "", context: "Example 176\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url", "", "", context: "Example 207\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // Here is another one:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example177()
+        public void LeafBlocksLinkReferenceDefinitions_Example208()
         {
-            // Example 177
+            // Example 208
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4348,15 +4957,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>bar</p>
 
-            TestParser.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>", "", context: "Example 177\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[\nfoo\n]: /url\nbar", "<p>bar</p>", "", context: "Example 208\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // This is not a link reference definition, because there are
-        // [non-whitespace characters] after the title:
+        // characters other than spaces or tabs after the title:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example178()
+        public void LeafBlocksLinkReferenceDefinitions_Example209()
         {
-            // Example 178
+            // Example 209
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4365,14 +4974,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo]: /url &quot;title&quot; ok</p>
 
-            TestParser.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>", "", context: "Example 178\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url \"title\" ok", "<p>[foo]: /url &quot;title&quot; ok</p>", "", context: "Example 209\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // This is a link reference definition, but it has no title:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example179()
+        public void LeafBlocksLinkReferenceDefinitions_Example210()
         {
-            // Example 179
+            // Example 210
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4382,15 +4991,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&quot;title&quot; ok</p>
 
-            TestParser.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>", "", context: "Example 179\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url\n\"title\" ok", "<p>&quot;title&quot; ok</p>", "", context: "Example 210\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // This is not a link reference definition, because it is indented
         // four spaces:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example180()
+        public void LeafBlocksLinkReferenceDefinitions_Example211()
         {
-            // Example 180
+            // Example 211
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4403,15 +5012,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>", "", context: "Example 180\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("    [foo]: /url \"title\"\n\n[foo]", "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>", "", context: "Example 211\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // This is not a link reference definition, because it occurs inside
         // a code block:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example181()
+        public void LeafBlocksLinkReferenceDefinitions_Example212()
         {
-            // Example 181
+            // Example 212
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4426,14 +5035,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>", "", context: "Example 181\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("```\n[foo]: /url\n```\n\n[foo]", "<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>", "", context: "Example 212\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // A [link reference definition] cannot interrupt a paragraph.
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example182()
+        public void LeafBlocksLinkReferenceDefinitions_Example213()
         {
-            // Example 182
+            // Example 213
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4447,15 +5056,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     [bar]: /baz</p>
             //     <p>[bar]</p>
 
-            TestParser.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>", "", context: "Example 182\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("Foo\n[bar]: /baz\n\n[bar]", "<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>", "", context: "Example 213\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // However, it can directly follow other block elements, such as headings
         // and thematic breaks, and it need not be followed by a blank line.
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example183()
+        public void LeafBlocksLinkReferenceDefinitions_Example214()
         {
-            // Example 183
+            // Example 214
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4469,13 +5078,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 183\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("# [Foo]\n[foo]: /url\n> bar", "<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 214\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example184()
+        public void LeafBlocksLinkReferenceDefinitions_Example215()
         {
-            // Example 184
+            // Example 215
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4488,13 +5097,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <h1>bar</h1>
             //     <p><a href="/url">foo</a></p>
 
-            TestParser.TestSpec("[foo]: /url\nbar\n===\n[foo]", "<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>", "", context: "Example 184\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url\nbar\n===\n[foo]", "<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>", "", context: "Example 215\nSection Leaf blocks / Link reference definitions\n");
         }
 
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example185()
+        public void LeafBlocksLinkReferenceDefinitions_Example216()
         {
-            // Example 185
+            // Example 216
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4506,15 +5115,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>===
             //     <a href="/url">foo</a></p>
 
-            TestParser.TestSpec("[foo]: /url\n===\n[foo]", "<p>===\n<a href=\"/url\">foo</a></p>", "", context: "Example 185\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /url\n===\n[foo]", "<p>===\n<a href=\"/url\">foo</a></p>", "", context: "Example 216\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // Several [link reference definitions]
         // can occur one after another, without intervening blank lines.
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example186()
+        public void LeafBlocksLinkReferenceDefinitions_Example217()
         {
-            // Example 186
+            // Example 217
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4532,7 +5141,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <a href="/bar-url" title="bar">bar</a>,
             //     <a href="/baz-url">baz</a></p>
 
-            TestParser.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>", "", context: "Example 186\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]", "<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>", "", context: "Example 217\nSection Leaf blocks / Link reference definitions\n");
         }
 
         // [Link reference definitions] can occur
@@ -4540,9 +5149,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // affect the entire document, not just the container in which they
         // are defined:
         [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example187()
+        public void LeafBlocksLinkReferenceDefinitions_Example218()
         {
-            // Example 187
+            // Example 218
             // Section: Leaf blocks / Link reference definitions
             //
             // The following Markdown:
@@ -4555,26 +5164,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>", "", context: "Example 187\nSection Leaf blocks / Link reference definitions\n");
-        }
-
-        // Whether something is a [link reference definition] is
-        // independent of whether the link reference it defines is
-        // used in the document.  Thus, for example, the following
-        // document contains just a link reference definition, and
-        // no visible content:
-        [Test]
-        public void LeafBlocksLinkReferenceDefinitions_Example188()
-        {
-            // Example 188
-            // Section: Leaf blocks / Link reference definitions
-            //
-            // The following Markdown:
-            //     [foo]: /url
-            //
-            // Should be rendered as:
-            //
-            TestParser.TestSpec("[foo]: /url", "", "", context: "Example 188\nSection Leaf blocks / Link reference definitions\n");
+            TestParser.TestSpec("[foo]\n\n> [foo]: /url", "<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>", "", context: "Example 218\nSection Leaf blocks / Link reference definitions\n");
         }
     }
 
@@ -4588,13 +5178,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // The contents of the paragraph are the result of parsing the
         // paragraph's raw content as inlines.  The paragraph's raw content
         // is formed by concatenating the lines and removing initial and final
-        // [whitespace].
+        // spaces or tabs.
         // 
         // A simple example with two paragraphs:
         [Test]
-        public void LeafBlocksParagraphs_Example189()
+        public void LeafBlocksParagraphs_Example219()
         {
-            // Example 189
+            // Example 219
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4606,14 +5196,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa</p>
             //     <p>bbb</p>
 
-            TestParser.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example 189\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("aaa\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example 219\nSection Leaf blocks / Paragraphs\n");
         }
 
         // Paragraphs can contain multiple lines, but no blank lines:
         [Test]
-        public void LeafBlocksParagraphs_Example190()
+        public void LeafBlocksParagraphs_Example220()
         {
-            // Example 190
+            // Example 220
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4629,14 +5219,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>ccc
             //     ddd</p>
 
-            TestParser.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>", "", context: "Example 190\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("aaa\nbbb\n\nccc\nddd", "<p>aaa\nbbb</p>\n<p>ccc\nddd</p>", "", context: "Example 220\nSection Leaf blocks / Paragraphs\n");
         }
 
-        // Multiple blank lines between paragraph have no effect:
+        // Multiple blank lines between paragraphs have no effect:
         [Test]
-        public void LeafBlocksParagraphs_Example191()
+        public void LeafBlocksParagraphs_Example221()
         {
-            // Example 191
+            // Example 221
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4649,14 +5239,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa</p>
             //     <p>bbb</p>
 
-            TestParser.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example 191\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("aaa\n\n\nbbb", "<p>aaa</p>\n<p>bbb</p>", "", context: "Example 221\nSection Leaf blocks / Paragraphs\n");
         }
 
-        // Leading spaces are skipped:
+        // Leading spaces or tabs are skipped:
         [Test]
-        public void LeafBlocksParagraphs_Example192()
+        public void LeafBlocksParagraphs_Example222()
         {
-            // Example 192
+            // Example 222
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4667,15 +5257,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa
             //     bbb</p>
 
-            TestParser.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>", "", context: "Example 192\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("  aaa\n bbb", "<p>aaa\nbbb</p>", "", context: "Example 222\nSection Leaf blocks / Paragraphs\n");
         }
 
         // Lines after the first may be indented any amount, since indented
         // code blocks cannot interrupt paragraphs.
         [Test]
-        public void LeafBlocksParagraphs_Example193()
+        public void LeafBlocksParagraphs_Example223()
         {
-            // Example 193
+            // Example 223
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4688,15 +5278,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     bbb
             //     ccc</p>
 
-            TestParser.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>", "", context: "Example 193\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("aaa\n             bbb\n                                       ccc", "<p>aaa\nbbb\nccc</p>", "", context: "Example 223\nSection Leaf blocks / Paragraphs\n");
         }
 
-        // However, the first line may be indented at most three spaces,
-        // or an indented code block will be triggered:
+        // However, the first line may be preceded by up to three spaces of indentation.
+        // Four spaces of indentation is too many:
         [Test]
-        public void LeafBlocksParagraphs_Example194()
+        public void LeafBlocksParagraphs_Example224()
         {
-            // Example 194
+            // Example 224
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4707,13 +5297,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa
             //     bbb</p>
 
-            TestParser.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>", "", context: "Example 194\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("   aaa\nbbb", "<p>aaa\nbbb</p>", "", context: "Example 224\nSection Leaf blocks / Paragraphs\n");
         }
 
         [Test]
-        public void LeafBlocksParagraphs_Example195()
+        public void LeafBlocksParagraphs_Example225()
         {
-            // Example 195
+            // Example 225
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4725,16 +5315,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </code></pre>
             //     <p>bbb</p>
 
-            TestParser.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>", "", context: "Example 195\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("    aaa\nbbb", "<pre><code>aaa\n</code></pre>\n<p>bbb</p>", "", context: "Example 225\nSection Leaf blocks / Paragraphs\n");
         }
 
-        // Final spaces are stripped before inline parsing, so a paragraph
+        // Final spaces or tabs are stripped before inline parsing, so a paragraph
         // that ends with two or more spaces will not end with a [hard line
         // break]:
         [Test]
-        public void LeafBlocksParagraphs_Example196()
+        public void LeafBlocksParagraphs_Example226()
         {
-            // Example 196
+            // Example 226
             // Section: Leaf blocks / Paragraphs
             //
             // The following Markdown:
@@ -4745,7 +5335,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa<br />
             //     bbb</p>
 
-            TestParser.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>", "", context: "Example 196\nSection Leaf blocks / Paragraphs\n");
+            TestParser.TestSpec("aaa     \nbbb     ", "<p>aaa<br />\nbbb</p>", "", context: "Example 226\nSection Leaf blocks / Paragraphs\n");
         }
     }
 
@@ -4760,9 +5350,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Blank lines at the beginning and end of the document are also ignored.
         [Test]
-        public void LeafBlocksBlankLines_Example197()
+        public void LeafBlocksBlankLines_Example227()
         {
-            // Example 197
+            // Example 227
             // Section: Leaf blocks / Blank lines
             //
             // The following Markdown:
@@ -4779,7 +5369,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>aaa</p>
             //     <h1>aaa</h1>
 
-            TestParser.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>", "", context: "Example 197\nSection Leaf blocks / Blank lines\n");
+            TestParser.TestSpec("  \n\naaa\n  \n\n# aaa\n\n  ", "<p>aaa</p>\n<h1>aaa</h1>", "", context: "Example 227\nSection Leaf blocks / Blank lines\n");
         }
     }
 
@@ -4808,9 +5398,11 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // ## Block quotes
         // 
-        // A [block quote marker](@)
-        // consists of 0-3 spaces of initial indent, plus (a) the character `>` together
-        // with a following space, or (b) a single character `>` not followed by a space.
+        // A [block quote marker](@),
+        // optionally preceded by up to three spaces of indentation,
+        // consists of (a) the character `>` together with a following space of
+        // indentation, or (b) a single character `>` not followed by a space of
+        // indentation.
         // 
         // The following rules define [block quotes]:
         // 
@@ -4822,8 +5414,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 2.  **Laziness.**  If a string of lines *Ls* constitute a [block
         //     quote](#block-quotes) with contents *Bs*, then the result of deleting
         //     the initial [block quote marker] from one or
-        //     more lines in which the next [non-whitespace character] after the [block
-        //     quote marker] is [paragraph continuation
+        //     more lines in which the next character other than a space or tab after the
+        //     [block quote marker] is [paragraph continuation
         //     text] is a block quote with *Bs* as its content.
         //     [Paragraph continuation text](@) is text
         //     that will be parsed as part of the content of a paragraph, but does
@@ -4836,9 +5428,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here is a simple example:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example198()
+        public void ContainerBlocksBlockQuotes_Example228()
         {
-            // Example 198
+            // Example 228
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4853,14 +5445,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 198\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> # Foo\n> bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 228\nSection Container blocks / Block quotes\n");
         }
 
-        // The spaces after the `>` characters can be omitted:
+        // The space or tab after the `>` characters can be omitted:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example199()
+        public void ContainerBlocksBlockQuotes_Example229()
         {
-            // Example 199
+            // Example 229
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4875,14 +5467,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</p>
             //     </blockquote>
 
-            TestParser.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 199\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("># Foo\n>bar\n> baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 229\nSection Container blocks / Block quotes\n");
         }
 
-        // The `>` characters can be indented 1-3 spaces:
+        // The `>` characters can be preceded by up to three spaces of indentation:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example200()
+        public void ContainerBlocksBlockQuotes_Example230()
         {
-            // Example 200
+            // Example 230
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4897,14 +5489,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</p>
             //     </blockquote>
 
-            TestParser.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 200\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("   > # Foo\n   > bar\n > baz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 230\nSection Container blocks / Block quotes\n");
         }
 
-        // Four spaces gives us a code block:
+        // Four spaces of indentation is too many:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example201()
+        public void ContainerBlocksBlockQuotes_Example231()
         {
-            // Example 201
+            // Example 231
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4918,15 +5510,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     &gt; baz
             //     </code></pre>
 
-            TestParser.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "", context: "Example 201\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("    > # Foo\n    > bar\n    > baz", "<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>", "", context: "Example 231\nSection Container blocks / Block quotes\n");
         }
 
         // The Laziness clause allows us to omit the `>` before
         // [paragraph continuation text]:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example202()
+        public void ContainerBlocksBlockQuotes_Example232()
         {
-            // Example 202
+            // Example 232
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4941,15 +5533,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 202\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> # Foo\n> bar\nbaz", "<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 232\nSection Container blocks / Block quotes\n");
         }
 
         // A block quote can contain some lazy and some non-lazy
         // continuation lines:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example203()
+        public void ContainerBlocksBlockQuotes_Example233()
         {
-            // Example 203
+            // Example 233
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4964,7 +5556,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     foo</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>", "", context: "Example 203\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> bar\nbaz\n> foo", "<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>", "", context: "Example 233\nSection Container blocks / Block quotes\n");
         }
 
         // Laziness only applies to lines that would have been continuations of
@@ -4978,9 +5570,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // without changing the meaning:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example204()
+        public void ContainerBlocksBlockQuotes_Example234()
         {
-            // Example 204
+            // Example 234
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -4993,7 +5585,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <hr />
 
-            TestParser.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example 204\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />", "", context: "Example 234\nSection Container blocks / Block quotes\n");
         }
 
         // Similarly, if we omit the `> ` in the second line of
@@ -5005,9 +5597,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // then the block quote ends after the first line:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example205()
+        public void ContainerBlocksBlockQuotes_Example235()
         {
-            // Example 205
+            // Example 235
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5024,15 +5616,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ul>
 
-            TestParser.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 205\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> - foo\n- bar", "<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 235\nSection Container blocks / Block quotes\n");
         }
 
         // For the same reason, we can't omit the `> ` in front of
         // subsequent lines of an indented or fenced code block:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example206()
+        public void ContainerBlocksBlockQuotes_Example236()
         {
-            // Example 206
+            // Example 236
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5047,13 +5639,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>bar
             //     </code></pre>
 
-            TestParser.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>", "", context: "Example 206\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">     foo\n    bar", "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>", "", context: "Example 236\nSection Container blocks / Block quotes\n");
         }
 
         [Test]
-        public void ContainerBlocksBlockQuotes_Example207()
+        public void ContainerBlocksBlockQuotes_Example237()
         {
-            // Example 207
+            // Example 237
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5068,15 +5660,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo</p>
             //     <pre><code></code></pre>
 
-            TestParser.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "", context: "Example 207\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> ```\nfoo\n```", "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>", "", context: "Example 237\nSection Container blocks / Block quotes\n");
         }
 
         // Note that in the following case, we have a [lazy
         // continuation line]:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example208()
+        public void ContainerBlocksBlockQuotes_Example238()
         {
-            // Example 208
+            // Example 238
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5089,7 +5681,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     - bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>", "", context: "Example 208\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> foo\n    - bar", "<blockquote>\n<p>foo\n- bar</p>\n</blockquote>", "", context: "Example 238\nSection Container blocks / Block quotes\n");
         }
 
         // To see why, note that in
@@ -5105,9 +5697,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A block quote can be empty:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example209()
+        public void ContainerBlocksBlockQuotes_Example239()
         {
-            // Example 209
+            // Example 239
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5117,13 +5709,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec(">", "<blockquote>\n</blockquote>", "", context: "Example 209\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">", "<blockquote>\n</blockquote>", "", context: "Example 239\nSection Container blocks / Block quotes\n");
         }
 
         [Test]
-        public void ContainerBlocksBlockQuotes_Example210()
+        public void ContainerBlocksBlockQuotes_Example240()
         {
-            // Example 210
+            // Example 240
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5135,14 +5727,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>", "", context: "Example 210\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">\n>  \n> ", "<blockquote>\n</blockquote>", "", context: "Example 240\nSection Container blocks / Block quotes\n");
         }
 
         // A block quote can have initial or final blank lines:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example211()
+        public void ContainerBlocksBlockQuotes_Example241()
         {
-            // Example 211
+            // Example 241
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5155,14 +5747,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo</p>
             //     </blockquote>
 
-            TestParser.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>", "", context: "Example 211\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">\n> foo\n>  ", "<blockquote>\n<p>foo</p>\n</blockquote>", "", context: "Example 241\nSection Container blocks / Block quotes\n");
         }
 
         // A blank line always separates block quotes:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example212()
+        public void ContainerBlocksBlockQuotes_Example242()
         {
-            // Example 212
+            // Example 242
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5178,7 +5770,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 212\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> foo\n\n> bar", "<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 242\nSection Container blocks / Block quotes\n");
         }
 
         // (Most current Markdown implementations, including John Gruber's
@@ -5189,9 +5781,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // Consecutiveness means that if we put these block quotes together,
         // we get a single block quote:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example213()
+        public void ContainerBlocksBlockQuotes_Example243()
         {
-            // Example 213
+            // Example 243
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5204,14 +5796,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>", "", context: "Example 213\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> foo\n> bar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>", "", context: "Example 243\nSection Container blocks / Block quotes\n");
         }
 
         // To get a block quote with two paragraphs, use:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example214()
+        public void ContainerBlocksBlockQuotes_Example244()
         {
-            // Example 214
+            // Example 244
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5225,14 +5817,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>", "", context: "Example 214\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> foo\n>\n> bar", "<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>", "", context: "Example 244\nSection Container blocks / Block quotes\n");
         }
 
         // Block quotes can interrupt paragraphs:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example215()
+        public void ContainerBlocksBlockQuotes_Example245()
         {
-            // Example 215
+            // Example 245
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5245,15 +5837,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>bar</p>
             //     </blockquote>
 
-            TestParser.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 215\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("foo\n> bar", "<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>", "", context: "Example 245\nSection Container blocks / Block quotes\n");
         }
 
         // In general, blank lines are not needed before or after block
         // quotes:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example216()
+        public void ContainerBlocksBlockQuotes_Example246()
         {
-            // Example 216
+            // Example 246
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5270,15 +5862,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>bbb</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>", "", context: "Example 216\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> aaa\n***\n> bbb", "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>", "", context: "Example 246\nSection Container blocks / Block quotes\n");
         }
 
         // However, because of laziness, a blank line is needed between
         // a block quote and a following paragraph:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example217()
+        public void ContainerBlocksBlockQuotes_Example247()
         {
-            // Example 217
+            // Example 247
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5291,13 +5883,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 217\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> bar\nbaz", "<blockquote>\n<p>bar\nbaz</p>\n</blockquote>", "", context: "Example 247\nSection Container blocks / Block quotes\n");
         }
 
         [Test]
-        public void ContainerBlocksBlockQuotes_Example218()
+        public void ContainerBlocksBlockQuotes_Example248()
         {
-            // Example 218
+            // Example 248
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5311,13 +5903,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <p>baz</p>
 
-            TestParser.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example 218\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> bar\n\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example 248\nSection Container blocks / Block quotes\n");
         }
 
         [Test]
-        public void ContainerBlocksBlockQuotes_Example219()
+        public void ContainerBlocksBlockQuotes_Example249()
         {
-            // Example 219
+            // Example 249
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5331,16 +5923,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     <p>baz</p>
 
-            TestParser.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example 219\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> bar\n>\nbaz", "<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>", "", context: "Example 249\nSection Container blocks / Block quotes\n");
         }
 
         // It is a consequence of the Laziness rule that any number
         // of initial `>`s may be omitted on a continuation line of a
         // nested block quote:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example220()
+        public void ContainerBlocksBlockQuotes_Example250()
         {
-            // Example 220
+            // Example 250
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5357,13 +5949,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example 220\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec("> > > foo\nbar", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example 250\nSection Container blocks / Block quotes\n");
         }
 
         [Test]
-        public void ContainerBlocksBlockQuotes_Example221()
+        public void ContainerBlocksBlockQuotes_Example251()
         {
-            // Example 221
+            // Example 251
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5382,17 +5974,17 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example 221\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">>> foo\n> bar\n>>baz", "<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>", "", context: "Example 251\nSection Container blocks / Block quotes\n");
         }
 
         // When including an indented code block in a block quote,
         // remember that the [block quote marker] includes
-        // both the `>` and a following space.  So *five spaces* are needed after
-        // the `>`:
+        // both the `>` and a following space of indentation.  So *five spaces* are needed
+        // after the `>`:
         [Test]
-        public void ContainerBlocksBlockQuotes_Example222()
+        public void ContainerBlocksBlockQuotes_Example252()
         {
-            // Example 222
+            // Example 252
             // Section: Container blocks / Block quotes
             //
             // The following Markdown:
@@ -5409,7 +6001,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>not code</p>
             //     </blockquote>
 
-            TestParser.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>", "", context: "Example 222\nSection Container blocks / Block quotes\n");
+            TestParser.TestSpec(">     code\n\n>    not code", "<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>", "", context: "Example 252\nSection Container blocks / Block quotes\n");
         }
     }
 
@@ -5433,10 +6025,10 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // The following rules define [list items]:
         // 
         // 1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
-        //     blocks *Bs* starting with a [non-whitespace character], and *M* is a
-        //     list marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
-        //     of prepending *M* and the following spaces to the first line of
-        //     *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
+        //     blocks *Bs* starting with a character other than a space or tab, and *M* is
+        //     a list marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces of indentation,
+        //     then the result of prepending *M* and the following spaces to the first line
+        //     of Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
         //     list item with *Bs* as its contents.  The type of the list item
         //     (bullet or ordered) is determined by the type of its list marker.
         //     If the list item is ordered, then it is also assigned a start
@@ -5454,9 +6046,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // For example, let *Ls* be the lines
         [Test]
-        public void ContainerBlocksListItems_Example223()
+        public void ContainerBlocksListItems_Example253()
         {
-            // Example 223
+            // Example 253
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5476,16 +6068,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>A block quote.</p>
             //     </blockquote>
 
-            TestParser.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>", "", context: "Example 223\nSection Container blocks / List items\n");
+            TestParser.TestSpec("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.", "<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>", "", context: "Example 253\nSection Container blocks / List items\n");
         }
 
         // And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
         // that the following is an ordered list item with start number 1,
         // and the same contents as *Ls*:
         [Test]
-        public void ContainerBlocksListItems_Example224()
+        public void ContainerBlocksListItems_Example254()
         {
-            // Example 224
+            // Example 254
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5509,23 +6101,23 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 224\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 254\nSection Container blocks / List items\n");
         }
 
         // The most important thing to notice is that the position of
         // the text after the list marker determines how much indentation
         // is needed in subsequent blocks in the list item.  If the list
-        // marker takes up two spaces, and there are three spaces between
-        // the list marker and the next [non-whitespace character], then blocks
+        // marker takes up two spaces of indentation, and there are three spaces between
+        // the list marker and the next character other than a space or tab, then blocks
         // must be indented five spaces in order to fall under the list
         // item.
         // 
         // Here are some examples showing how far content must be indented to be
         // put under the list item:
         [Test]
-        public void ContainerBlocksListItems_Example225()
+        public void ContainerBlocksListItems_Example255()
         {
-            // Example 225
+            // Example 255
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5539,13 +6131,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ul>
             //     <p>two</p>
 
-            TestParser.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>", "", context: "Example 225\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- one\n\n two", "<ul>\n<li>one</li>\n</ul>\n<p>two</p>", "", context: "Example 255\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example226()
+        public void ContainerBlocksListItems_Example256()
         {
-            // Example 226
+            // Example 256
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5561,13 +6153,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example 226\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- one\n\n  two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example 256\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example227()
+        public void ContainerBlocksListItems_Example257()
         {
-            // Example 227
+            // Example 257
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5582,13 +6174,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code> two
             //     </code></pre>
 
-            TestParser.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>", "", context: "Example 227\nSection Container blocks / List items\n");
+            TestParser.TestSpec(" -    one\n\n     two", "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>", "", context: "Example 257\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example228()
+        public void ContainerBlocksListItems_Example258()
         {
-            // Example 228
+            // Example 258
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5604,20 +6196,20 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example 228\nSection Container blocks / List items\n");
+            TestParser.TestSpec(" -    one\n\n      two", "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>", "", context: "Example 258\nSection Container blocks / List items\n");
         }
 
         // It is tempting to think of this in terms of columns:  the continuation
-        // blocks must be indented at least to the column of the first
-        // [non-whitespace character] after the list marker. However, that is not quite right.
-        // The spaces after the list marker determine how much relative indentation
-        // is needed.  Which column this indentation reaches will depend on
+        // blocks must be indented at least to the column of the first character other than
+        // a space or tab after the list marker.  However, that is not quite right.
+        // The spaces of indentation after the list marker determine how much relative
+        // indentation is needed.  Which column this indentation reaches will depend on
         // how the list item is embedded in other constructions, as shown by
         // this example:
         [Test]
-        public void ContainerBlocksListItems_Example229()
+        public void ContainerBlocksListItems_Example259()
         {
-            // Example 229
+            // Example 259
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5637,7 +6229,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>", "", context: "Example 229\nSection Container blocks / List items\n");
+            TestParser.TestSpec("   > > 1.  one\n>>\n>>     two", "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>", "", context: "Example 259\nSection Container blocks / List items\n");
         }
 
         // Here `two` occurs in the same column as the list marker `1.`,
@@ -5649,9 +6241,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // it is not considered part of the list item, because it is not indented
         // far enough past the blockquote marker:
         [Test]
-        public void ContainerBlocksListItems_Example230()
+        public void ContainerBlocksListItems_Example260()
         {
-            // Example 230
+            // Example 260
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5669,15 +6261,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </blockquote>
             //     </blockquote>
 
-            TestParser.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>", "", context: "Example 230\nSection Container blocks / List items\n");
+            TestParser.TestSpec(">>- one\n>>\n  >  > two", "<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>", "", context: "Example 260\nSection Container blocks / List items\n");
         }
 
-        // Note that at least one space is needed between the list marker and
+        // Note that at least one space or tab is needed between the list marker and
         // any following content, so these are not list items:
         [Test]
-        public void ContainerBlocksListItems_Example231()
+        public void ContainerBlocksListItems_Example261()
         {
-            // Example 231
+            // Example 261
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5689,15 +6281,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>-one</p>
             //     <p>2.two</p>
 
-            TestParser.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "", context: "Example 231\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-one\n\n2.two", "<p>-one</p>\n<p>2.two</p>", "", context: "Example 261\nSection Container blocks / List items\n");
         }
 
         // A list item may contain blocks that are separated by more than
         // one blank line.
         [Test]
-        public void ContainerBlocksListItems_Example232()
+        public void ContainerBlocksListItems_Example262()
         {
-            // Example 232
+            // Example 262
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5714,14 +6306,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 232\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n\n\n  bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 262\nSection Container blocks / List items\n");
         }
 
         // A list item may contain any kind of block:
         [Test]
-        public void ContainerBlocksListItems_Example233()
+        public void ContainerBlocksListItems_Example263()
         {
-            // Example 233
+            // Example 263
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5748,15 +6340,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 233\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam", "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 263\nSection Container blocks / List items\n");
         }
 
         // A list item that contains an indented code block will preserve
         // empty lines within the code block verbatim.
         [Test]
-        public void ContainerBlocksListItems_Example234()
+        public void ContainerBlocksListItems_Example264()
         {
-            // Example 234
+            // Example 264
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5779,14 +6371,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "", context: "Example 234\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- Foo\n\n      bar\n\n\n      baz", "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>", "", context: "Example 264\nSection Container blocks / List items\n");
         }
 
         // Note that ordered list start numbers must be nine digits or less:
         [Test]
-        public void ContainerBlocksListItems_Example235()
+        public void ContainerBlocksListItems_Example265()
         {
-            // Example 235
+            // Example 265
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5797,13 +6389,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>ok</li>
             //     </ol>
 
-            TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "", context: "Example 235\nSection Container blocks / List items\n");
+            TestParser.TestSpec("123456789. ok", "<ol start=\"123456789\">\n<li>ok</li>\n</ol>", "", context: "Example 265\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example236()
+        public void ContainerBlocksListItems_Example266()
         {
-            // Example 236
+            // Example 266
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5812,14 +6404,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>1234567890. not ok</p>
 
-            TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "", context: "Example 236\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1234567890. not ok", "<p>1234567890. not ok</p>", "", context: "Example 266\nSection Container blocks / List items\n");
         }
 
         // A start number may begin with 0s:
         [Test]
-        public void ContainerBlocksListItems_Example237()
+        public void ContainerBlocksListItems_Example267()
         {
-            // Example 237
+            // Example 267
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5830,13 +6422,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>ok</li>
             //     </ol>
 
-            TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "", context: "Example 237\nSection Container blocks / List items\n");
+            TestParser.TestSpec("0. ok", "<ol start=\"0\">\n<li>ok</li>\n</ol>", "", context: "Example 267\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example238()
+        public void ContainerBlocksListItems_Example268()
         {
-            // Example 238
+            // Example 268
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5847,14 +6439,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>ok</li>
             //     </ol>
 
-            TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "", context: "Example 238\nSection Container blocks / List items\n");
+            TestParser.TestSpec("003. ok", "<ol start=\"3\">\n<li>ok</li>\n</ol>", "", context: "Example 268\nSection Container blocks / List items\n");
         }
 
         // A start number may not be negative:
         [Test]
-        public void ContainerBlocksListItems_Example239()
+        public void ContainerBlocksListItems_Example269()
         {
-            // Example 239
+            // Example 269
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5863,27 +6455,27 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>-1. not ok</p>
 
-            TestParser.TestSpec("-1. not ok", "<p>-1. not ok</p>", "", context: "Example 239\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-1. not ok", "<p>-1. not ok</p>", "", context: "Example 269\nSection Container blocks / List items\n");
         }
 
         // 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
         //     constitute a sequence of blocks *Bs* starting with an indented code
         //     block, and *M* is a list marker of width *W* followed by
-        //     one space, then the result of prepending *M* and the following
-        //     space to the first line of *Ls*, and indenting subsequent lines of
-        //     *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
+        //     one space of indentation, then the result of prepending *M* and the
+        //     following space to the first line of *Ls*, and indenting subsequent lines
+        //     of *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
         //     If a line is empty, then it need not be indented.  The type of the
         //     list item (bullet or ordered) is determined by the type of its list
         //     marker.  If the list item is ordered, then it is also assigned a
         //     start number, based on the ordered list marker.
         // 
-        // An indented code block will have to be indented four spaces beyond
-        // the edge of the region where text will be included in the list item.
+        // An indented code block will have to be preceded by four spaces of indentation
+        // beyond the edge of the region where text will be included in the list item.
         // In the following case that is 6 spaces:
         [Test]
-        public void ContainerBlocksListItems_Example240()
+        public void ContainerBlocksListItems_Example270()
         {
-            // Example 240
+            // Example 270
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5900,14 +6492,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "", context: "Example 240\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n\n      bar", "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>", "", context: "Example 270\nSection Container blocks / List items\n");
         }
 
         // And in this case it is 11 spaces:
         [Test]
-        public void ContainerBlocksListItems_Example241()
+        public void ContainerBlocksListItems_Example271()
         {
-            // Example 241
+            // Example 271
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5924,16 +6516,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "", context: "Example 241\nSection Container blocks / List items\n");
+            TestParser.TestSpec("  10.  foo\n\n           bar", "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>", "", context: "Example 271\nSection Container blocks / List items\n");
         }
 
         // If the *first* block in the list item is an indented code block,
-        // then by rule #2, the contents must be indented *one* space after the
-        // list marker:
+        // then by rule #2, the contents must be preceded by *one* space of indentation
+        // after the list marker:
         [Test]
-        public void ContainerBlocksListItems_Example242()
+        public void ContainerBlocksListItems_Example272()
         {
-            // Example 242
+            // Example 272
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5950,13 +6542,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>more code
             //     </code></pre>
 
-            TestParser.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "", context: "Example 242\nSection Container blocks / List items\n");
+            TestParser.TestSpec("    indented code\n\nparagraph\n\n    more code", "<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>", "", context: "Example 272\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example243()
+        public void ContainerBlocksListItems_Example273()
         {
-            // Example 243
+            // Example 273
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -5977,15 +6569,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example 243\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1.     indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example 273\nSection Container blocks / List items\n");
         }
 
-        // Note that an additional space indent is interpreted as space
+        // Note that an additional space of indentation is interpreted as space
         // inside the code block:
         [Test]
-        public void ContainerBlocksListItems_Example244()
+        public void ContainerBlocksListItems_Example274()
         {
-            // Example 244
+            // Example 274
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6006,20 +6598,20 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example 244\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1.      indented code\n\n   paragraph\n\n       more code", "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>", "", context: "Example 274\nSection Container blocks / List items\n");
         }
 
         // Note that rules #1 and #2 only apply to two cases:  (a) cases
         // in which the lines to be included in a list item begin with a
-        // [non-whitespace character], and (b) cases in which
+        // character other than a space or tab, and (b) cases in which
         // they begin with an indented code
         // block.  In a case like the following, where the first block begins with
-        // a three-space indent, the rules do not allow us to form a list item by
+        // three spaces of indentation, the rules do not allow us to form a list item by
         // indenting the whole thing and prepending a list marker:
         [Test]
-        public void ContainerBlocksListItems_Example245()
+        public void ContainerBlocksListItems_Example275()
         {
-            // Example 245
+            // Example 275
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6031,13 +6623,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo</p>
             //     <p>bar</p>
 
-            TestParser.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "", context: "Example 245\nSection Container blocks / List items\n");
+            TestParser.TestSpec("   foo\n\nbar", "<p>foo</p>\n<p>bar</p>", "", context: "Example 275\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example246()
+        public void ContainerBlocksListItems_Example276()
         {
-            // Example 246
+            // Example 276
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6051,17 +6643,17 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ul>
             //     <p>bar</p>
 
-            TestParser.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "", context: "Example 246\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-    foo\n\n  bar", "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>", "", context: "Example 276\nSection Container blocks / List items\n");
         }
 
-        // This is not a significant restriction, because when a block begins
-        // with 1-3 spaces indent, the indentation can always be removed without
+        // This is not a significant restriction, because when a block is preceded by up to
+        // three spaces of indentation, the indentation can always be removed without
         // a change in interpretation, allowing rule #1 to be applied.  So, in
         // the above case:
         [Test]
-        public void ContainerBlocksListItems_Example247()
+        public void ContainerBlocksListItems_Example277()
         {
-            // Example 247
+            // Example 277
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6077,16 +6669,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 247\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-  foo\n\n   bar", "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>", "", context: "Example 277\nSection Container blocks / List items\n");
         }
 
         // 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
         //     starting with a single [blank line] constitute a (possibly empty)
-        //     sequence of blocks *Bs*, not separated from each other by more than
-        //     one blank line, and *M* is a list marker of width *W*,
+        //     sequence of blocks *Bs*, and *M* is a list marker of width *W*,
         //     then the result of prepending *M* to the first line of *Ls*, and
-        //     indenting subsequent lines of *Ls* by *W + 1* spaces, is a list
-        //     item with *Bs* as its contents.
+        //     preceding subsequent lines of *Ls* by *W + 1* spaces of indentation, is a
+        //     list item with *Bs* as its contents.
         //     If a line is empty, then it need not be indented.  The type of the
         //     list item (bullet or ordered) is determined by the type of its list
         //     marker.  If the list item is ordered, then it is also assigned a
@@ -6094,9 +6685,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here are some list items that start with a blank line but are not empty:
         [Test]
-        public void ContainerBlocksListItems_Example248()
+        public void ContainerBlocksListItems_Example278()
         {
-            // Example 248
+            // Example 278
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6122,15 +6713,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "", context: "Example 248\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz", "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>", "", context: "Example 278\nSection Container blocks / List items\n");
         }
 
         // When the list item starts with a blank line, the number of spaces
         // following the list marker doesn't change the required indentation:
         [Test]
-        public void ContainerBlocksListItems_Example249()
+        public void ContainerBlocksListItems_Example279()
         {
-            // Example 249
+            // Example 279
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6142,16 +6733,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>foo</li>
             //     </ul>
 
-            TestParser.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "", context: "Example 249\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-   \n  foo", "<ul>\n<li>foo</li>\n</ul>", "", context: "Example 279\nSection Container blocks / List items\n");
         }
 
         // A list item can begin with at most one blank line.
         // In the following example, `foo` is not part of the list
         // item:
         [Test]
-        public void ContainerBlocksListItems_Example250()
+        public void ContainerBlocksListItems_Example280()
         {
-            // Example 250
+            // Example 280
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6165,14 +6756,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ul>
             //     <p>foo</p>
 
-            TestParser.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "", context: "Example 250\nSection Container blocks / List items\n");
+            TestParser.TestSpec("-\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>", "", context: "Example 280\nSection Container blocks / List items\n");
         }
 
         // Here is an empty bullet list item:
         [Test]
-        public void ContainerBlocksListItems_Example251()
+        public void ContainerBlocksListItems_Example281()
         {
-            // Example 251
+            // Example 281
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6187,14 +6778,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example 251\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n-\n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example 281\nSection Container blocks / List items\n");
         }
 
-        // It does not matter whether there are spaces following the [list marker]:
+        // It does not matter whether there are spaces or tabs following the [list marker]:
         [Test]
-        public void ContainerBlocksListItems_Example252()
+        public void ContainerBlocksListItems_Example282()
         {
-            // Example 252
+            // Example 282
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6209,14 +6800,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example 252\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n-   \n- bar", "<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>", "", context: "Example 282\nSection Container blocks / List items\n");
         }
 
         // Here is an empty ordered list item:
         [Test]
-        public void ContainerBlocksListItems_Example253()
+        public void ContainerBlocksListItems_Example283()
         {
-            // Example 253
+            // Example 283
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6231,14 +6822,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ol>
 
-            TestParser.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "", context: "Example 253\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1. foo\n2.\n3. bar", "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>", "", context: "Example 283\nSection Container blocks / List items\n");
         }
 
         // A list may start or end with an empty list item:
         [Test]
-        public void ContainerBlocksListItems_Example254()
+        public void ContainerBlocksListItems_Example284()
         {
-            // Example 254
+            // Example 284
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6249,14 +6840,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li></li>
             //     </ul>
 
-            TestParser.TestSpec("*", "<ul>\n<li></li>\n</ul>", "", context: "Example 254\nSection Container blocks / List items\n");
+            TestParser.TestSpec("*", "<ul>\n<li></li>\n</ul>", "", context: "Example 284\nSection Container blocks / List items\n");
         }
 
         // However, an empty list item cannot interrupt a paragraph:
         [Test]
-        public void ContainerBlocksListItems_Example255()
+        public void ContainerBlocksListItems_Example285()
         {
-            // Example 255
+            // Example 285
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6272,20 +6863,20 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo
             //     1.</p>
 
-            TestParser.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "", context: "Example 255\nSection Container blocks / List items\n");
+            TestParser.TestSpec("foo\n*\n\nfoo\n1.", "<p>foo\n*</p>\n<p>foo\n1.</p>", "", context: "Example 285\nSection Container blocks / List items\n");
         }
 
         // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
-        //     according to rule #1, #2, or #3, then the result of indenting each line
-        //     of *Ls* by 1-3 spaces (the same for each line) also constitutes a
-        //     list item with the same contents and attributes.  If a line is
+        //     according to rule #1, #2, or #3, then the result of preceding each line
+        //     of *Ls* by up to three spaces of indentation (the same for each line) also
+        //     constitutes a list item with the same contents and attributes.  If a line is
         //     empty, then it need not be indented.
         // 
         // Indented one space:
         [Test]
-        public void ContainerBlocksListItems_Example256()
+        public void ContainerBlocksListItems_Example286()
         {
-            // Example 256
+            // Example 286
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6309,14 +6900,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 256\nSection Container blocks / List items\n");
+            TestParser.TestSpec(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 286\nSection Container blocks / List items\n");
         }
 
         // Indented two spaces:
         [Test]
-        public void ContainerBlocksListItems_Example257()
+        public void ContainerBlocksListItems_Example287()
         {
-            // Example 257
+            // Example 287
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6340,14 +6931,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 257\nSection Container blocks / List items\n");
+            TestParser.TestSpec("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 287\nSection Container blocks / List items\n");
         }
 
         // Indented three spaces:
         [Test]
-        public void ContainerBlocksListItems_Example258()
+        public void ContainerBlocksListItems_Example288()
         {
-            // Example 258
+            // Example 288
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6371,14 +6962,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 258\nSection Container blocks / List items\n");
+            TestParser.TestSpec("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 288\nSection Container blocks / List items\n");
         }
 
         // Four spaces indent gives a code block:
         [Test]
-        public void ContainerBlocksListItems_Example259()
+        public void ContainerBlocksListItems_Example289()
         {
-            // Example 259
+            // Example 289
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6398,13 +6989,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //         &gt; A block quote.
             //     </code></pre>
 
-            TestParser.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>", "", context: "Example 259\nSection Container blocks / List items\n");
+            TestParser.TestSpec("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.", "<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>", "", context: "Example 289\nSection Container blocks / List items\n");
         }
 
         // 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
         //     item](#list-items) with contents *Bs*, then the result of deleting
         //     some or all of the indentation from one or more lines in which the
-        //     next [non-whitespace character] after the indentation is
+        //     next character other than a space or tab after the indentation is
         //     [paragraph continuation text] is a
         //     list item with the same contents and attributes.  The unindented
         //     lines are called
@@ -6412,9 +7003,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here is an example with [lazy continuation lines]:
         [Test]
-        public void ContainerBlocksListItems_Example260()
+        public void ContainerBlocksListItems_Example290()
         {
-            // Example 260
+            // Example 290
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6438,14 +7029,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 260\nSection Container blocks / List items\n");
+            TestParser.TestSpec("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.", "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>", "", context: "Example 290\nSection Container blocks / List items\n");
         }
 
         // Indentation can be partially deleted:
         [Test]
-        public void ContainerBlocksListItems_Example261()
+        public void ContainerBlocksListItems_Example291()
         {
-            // Example 261
+            // Example 291
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6458,14 +7049,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     with two lines.</li>
             //     </ol>
 
-            TestParser.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>", "", context: "Example 261\nSection Container blocks / List items\n");
+            TestParser.TestSpec("  1.  A paragraph\n    with two lines.", "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>", "", context: "Example 291\nSection Container blocks / List items\n");
         }
 
         // These examples show how laziness can work in nested structures:
         [Test]
-        public void ContainerBlocksListItems_Example262()
+        public void ContainerBlocksListItems_Example292()
         {
-            // Example 262
+            // Example 292
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6484,13 +7075,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ol>
             //     </blockquote>
 
-            TestParser.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example 262\nSection Container blocks / List items\n");
+            TestParser.TestSpec("> 1. > Blockquote\ncontinued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example 292\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example263()
+        public void ContainerBlocksListItems_Example293()
         {
-            // Example 263
+            // Example 293
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6509,7 +7100,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </ol>
             //     </blockquote>
 
-            TestParser.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example 263\nSection Container blocks / List items\n");
+            TestParser.TestSpec("> 1. > Blockquote\n> continued here.", "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>", "", context: "Example 293\nSection Container blocks / List items\n");
         }
 
         // 6.  **That's all.** Nothing that is not counted as a list item by rules
@@ -6517,14 +7108,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // The rules for sublists follow from the general rules
         // [above][List items].  A sublist must be indented the same number
-        // of spaces a paragraph would need to be in order to be included
+        // of spaces of indentation a paragraph would need to be in order to be included
         // in the list item.
         // 
         // So, in this case we need two spaces indent:
         [Test]
-        public void ContainerBlocksListItems_Example264()
+        public void ContainerBlocksListItems_Example294()
         {
-            // Example 264
+            // Example 294
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6550,14 +7141,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example 264\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n  - bar\n    - baz\n      - boo", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example 294\nSection Container blocks / List items\n");
         }
 
         // One is not enough:
         [Test]
-        public void ContainerBlocksListItems_Example265()
+        public void ContainerBlocksListItems_Example295()
         {
-            // Example 265
+            // Example 295
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6574,14 +7165,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>boo</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "", context: "Example 265\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- foo\n - bar\n  - baz\n   - boo", "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>", "", context: "Example 295\nSection Container blocks / List items\n");
         }
 
         // Here we need four, because the list marker is wider:
         [Test]
-        public void ContainerBlocksListItems_Example266()
+        public void ContainerBlocksListItems_Example296()
         {
-            // Example 266
+            // Example 296
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6597,14 +7188,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example 266\nSection Container blocks / List items\n");
+            TestParser.TestSpec("10) foo\n    - bar", "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>", "", context: "Example 296\nSection Container blocks / List items\n");
         }
 
         // Three is not enough:
         [Test]
-        public void ContainerBlocksListItems_Example267()
+        public void ContainerBlocksListItems_Example297()
         {
-            // Example 267
+            // Example 297
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6619,14 +7210,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bar</li>
             //     </ul>
 
-            TestParser.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 267\nSection Container blocks / List items\n");
+            TestParser.TestSpec("10) foo\n   - bar", "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>", "", context: "Example 297\nSection Container blocks / List items\n");
         }
 
         // A list may be the first block in a list item:
         [Test]
-        public void ContainerBlocksListItems_Example268()
+        public void ContainerBlocksListItems_Example298()
         {
-            // Example 268
+            // Example 298
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6641,13 +7232,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>", "", context: "Example 268\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- - foo", "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>", "", context: "Example 298\nSection Container blocks / List items\n");
         }
 
         [Test]
-        public void ContainerBlocksListItems_Example269()
+        public void ContainerBlocksListItems_Example299()
         {
-            // Example 269
+            // Example 299
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6666,14 +7257,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>", "", context: "Example 269\nSection Container blocks / List items\n");
+            TestParser.TestSpec("1. - 2. foo", "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>", "", context: "Example 299\nSection Container blocks / List items\n");
         }
 
         // A list item can contain a heading:
         [Test]
-        public void ContainerBlocksListItems_Example270()
+        public void ContainerBlocksListItems_Example300()
         {
-            // Example 270
+            // Example 300
             // Section: Container blocks / List items
             //
             // The following Markdown:
@@ -6692,7 +7283,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     baz</li>
             //     </ul>
 
-            TestParser.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>", "", context: "Example 270\nSection Container blocks / List items\n");
+            TestParser.TestSpec("- # Foo\n- Bar\n  ---\n  baz", "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>", "", context: "Example 300\nSection Container blocks / List items\n");
         }
     }
 
@@ -6804,8 +7395,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // not likely to be guessed, and it trips up beginners regularly.
         // 
         // Would it help to adopt a two-space rule?  The problem is that such
-        // a rule, together with the rule allowing 1--3 spaces indentation of the
-        // initial list marker, allows text that is indented *less than* the
+        // a rule, together with the rule allowing up to three spaces of indentation for
+        // the initial list marker, allows text that is indented *less than* the
         // original list marker to be included in the list item. For example,
         // `Markdown.pl` parses
         // 
@@ -6918,9 +7509,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Changing the bullet or ordered list delimiter starts a new list:
         [Test]
-        public void ContainerBlocksLists_Example271()
+        public void ContainerBlocksLists_Example301()
         {
-            // Example 271
+            // Example 301
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -6937,13 +7528,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>baz</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "", context: "Example 271\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- foo\n- bar\n+ baz", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>", "", context: "Example 301\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example272()
+        public void ContainerBlocksLists_Example302()
         {
-            // Example 272
+            // Example 302
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -6960,16 +7551,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>baz</li>
             //     </ol>
 
-            TestParser.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>", "", context: "Example 272\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("1. foo\n2. bar\n3) baz", "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>", "", context: "Example 302\nSection Container blocks / Lists\n");
         }
 
         // In CommonMark, a list can interrupt a paragraph. That is,
         // no blank line is needed to separate a paragraph from a following
         // list:
         [Test]
-        public void ContainerBlocksLists_Example273()
+        public void ContainerBlocksLists_Example303()
         {
-            // Example 273
+            // Example 303
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -6984,7 +7575,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>baz</li>
             //     </ul>
 
-            TestParser.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>", "", context: "Example 273\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("Foo\n- bar\n- baz", "<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>", "", context: "Example 303\nSection Container blocks / Lists\n");
         }
 
         // `Markdown.pl` does not allow this, through fear of triggering a list
@@ -7052,9 +7643,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // hard-wrapped numerals, we allow only lists starting with `1` to
         // interrupt paragraphs.  Thus,
         [Test]
-        public void ContainerBlocksLists_Example274()
+        public void ContainerBlocksLists_Example304()
         {
-            // Example 274
+            // Example 304
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7065,14 +7656,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>The number of windows in my house is
             //     14.  The number of doors is 6.</p>
 
-            TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "", context: "Example 274\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("The number of windows in my house is\n14.  The number of doors is 6.", "<p>The number of windows in my house is\n14.  The number of doors is 6.</p>", "", context: "Example 304\nSection Container blocks / Lists\n");
         }
 
         // We may still get an unintended result in cases like
         [Test]
-        public void ContainerBlocksLists_Example275()
+        public void ContainerBlocksLists_Example305()
         {
-            // Example 275
+            // Example 305
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7085,16 +7676,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>The number of doors is 6.</li>
             //     </ol>
 
-            TestParser.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "", context: "Example 275\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("The number of windows in my house is\n1.  The number of doors is 6.", "<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>", "", context: "Example 305\nSection Container blocks / Lists\n");
         }
 
         // but this rule should prevent most spurious list captures.
         // 
         // There can be any number of blank lines between items:
         [Test]
-        public void ContainerBlocksLists_Example276()
+        public void ContainerBlocksLists_Example306()
         {
-            // Example 276
+            // Example 306
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7118,13 +7709,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example 276\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- foo\n\n- bar\n\n\n- baz", "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example 306\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example277()
+        public void ContainerBlocksLists_Example307()
         {
-            // Example 277
+            // Example 307
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7151,7 +7742,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example 277\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- foo\n  - bar\n    - baz\n\n\n      bim", "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>", "", context: "Example 307\nSection Container blocks / Lists\n");
         }
 
         // To separate consecutive lists of the same type, or to separate a
@@ -7159,9 +7750,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // as a subparagraph of the final list item, you can insert a blank HTML
         // comment:
         [Test]
-        public void ContainerBlocksLists_Example278()
+        public void ContainerBlocksLists_Example308()
         {
-            // Example 278
+            // Example 308
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7184,13 +7775,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>bim</li>
             //     </ul>
 
-            TestParser.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "", context: "Example 278\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim", "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>", "", context: "Example 308\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example279()
+        public void ContainerBlocksLists_Example309()
         {
-            // Example 279
+            // Example 309
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7218,7 +7809,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>code
             //     </code></pre>
 
-            TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "", context: "Example 279\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code", "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>", "", context: "Example 309\nSection Container blocks / Lists\n");
         }
 
         // List items need not be indented to the same level.  The following
@@ -7226,9 +7817,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // since none is indented enough to belong to the previous list
         // item:
         [Test]
-        public void ContainerBlocksLists_Example280()
+        public void ContainerBlocksLists_Example310()
         {
-            // Example 280
+            // Example 310
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7251,13 +7842,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>g</li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>", "", context: "Example 280\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>", "", context: "Example 310\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example281()
+        public void ContainerBlocksLists_Example311()
         {
-            // Example 281
+            // Example 311
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7280,16 +7871,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1. a\n\n  2. b\n\n   3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>", "", context: "Example 281\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("1. a\n\n  2. b\n\n   3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>", "", context: "Example 311\nSection Container blocks / Lists\n");
         }
 
-        // Note, however, that list items may not be indented more than
-        // three spaces.  Here `- e` is treated as a paragraph continuation
+        // Note, however, that list items may not be preceded by more than
+        // three spaces of indentation.  Here `- e` is treated as a paragraph continuation
         // line, because it is indented more than three spaces:
         [Test]
-        public void ContainerBlocksLists_Example282()
+        public void ContainerBlocksLists_Example312()
         {
-            // Example 282
+            // Example 312
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7308,16 +7899,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     - e</li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n - b\n  - c\n   - d\n    - e", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>", "", context: "Example 282\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n - b\n  - c\n   - d\n    - e", "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>", "", context: "Example 312\nSection Container blocks / Lists\n");
         }
 
         // And here, `3. c` is treated as in indented code block,
         // because it is indented four spaces and preceded by a
         // blank line.
         [Test]
-        public void ContainerBlocksLists_Example283()
+        public void ContainerBlocksLists_Example313()
         {
-            // Example 283
+            // Example 313
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7339,15 +7930,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <pre><code>3. c
             //     </code></pre>
 
-            TestParser.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>", "", context: "Example 283\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("1. a\n\n  2. b\n\n    3. c", "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>", "", context: "Example 313\nSection Container blocks / Lists\n");
         }
 
         // This is a loose list, because there is a blank line between
         // two of the list items:
         [Test]
-        public void ContainerBlocksLists_Example284()
+        public void ContainerBlocksLists_Example314()
         {
-            // Example 284
+            // Example 314
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7369,14 +7960,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example 284\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n- b\n\n- c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example 314\nSection Container blocks / Lists\n");
         }
 
         // So is this, with a empty second item:
         [Test]
-        public void ContainerBlocksLists_Example285()
+        public void ContainerBlocksLists_Example315()
         {
-            // Example 285
+            // Example 315
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7396,16 +7987,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example 285\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("* a\n*\n\n* c", "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>", "", context: "Example 315\nSection Container blocks / Lists\n");
         }
 
-        // These are loose lists, even though there is no space between the items,
+        // These are loose lists, even though there are no blank lines between the items,
         // because one of the items directly contains two block-level elements
         // with a blank line between them:
         [Test]
-        public void ContainerBlocksLists_Example286()
+        public void ContainerBlocksLists_Example316()
         {
-            // Example 286
+            // Example 316
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7429,13 +8020,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example 286\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n- b\n\n  c\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example 316\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example287()
+        public void ContainerBlocksLists_Example317()
         {
-            // Example 287
+            // Example 317
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7458,14 +8049,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example 287\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n- b\n\n  [ref]: /url\n- d", "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>", "", context: "Example 317\nSection Container blocks / Lists\n");
         }
 
         // This is a tight list, because the blank lines are in a code block:
         [Test]
-        public void ContainerBlocksLists_Example288()
+        public void ContainerBlocksLists_Example318()
         {
-            // Example 288
+            // Example 318
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7489,16 +8080,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>c</li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>", "", context: "Example 288\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n- ```\n  b\n\n\n  ```\n- c", "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>", "", context: "Example 318\nSection Container blocks / Lists\n");
         }
 
         // This is a tight list, because the blank line is between two
         // paragraphs of a sublist.  So the sublist is loose while
         // the outer list is tight:
         [Test]
-        public void ContainerBlocksLists_Example289()
+        public void ContainerBlocksLists_Example319()
         {
-            // Example 289
+            // Example 319
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7521,15 +8112,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>d</li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>", "", context: "Example 289\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n  - b\n\n    c\n- d", "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>", "", context: "Example 319\nSection Container blocks / Lists\n");
         }
 
         // This is a tight list, because the blank line is inside the
         // block quote:
         [Test]
-        public void ContainerBlocksLists_Example290()
+        public void ContainerBlocksLists_Example320()
         {
-            // Example 290
+            // Example 320
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7548,15 +8139,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>c</li>
             //     </ul>
 
-            TestParser.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>", "", context: "Example 290\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("* a\n  > b\n  >\n* c", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>", "", context: "Example 320\nSection Container blocks / Lists\n");
         }
 
         // This list is tight, because the consecutive block elements
         // are not separated by blank lines:
         [Test]
-        public void ContainerBlocksLists_Example291()
+        public void ContainerBlocksLists_Example321()
         {
-            // Example 291
+            // Example 321
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7579,14 +8170,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>d</li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>", "", context: "Example 291\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n  > b\n  ```\n  c\n  ```\n- d", "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>", "", context: "Example 321\nSection Container blocks / Lists\n");
         }
 
         // A single-paragraph list is tight:
         [Test]
-        public void ContainerBlocksLists_Example292()
+        public void ContainerBlocksLists_Example322()
         {
-            // Example 292
+            // Example 322
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7597,13 +8188,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <li>a</li>
             //     </ul>
 
-            TestParser.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>", "", context: "Example 292\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a", "<ul>\n<li>a</li>\n</ul>", "", context: "Example 322\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example293()
+        public void ContainerBlocksLists_Example323()
         {
-            // Example 293
+            // Example 323
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7619,15 +8210,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>", "", context: "Example 293\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n  - b", "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>", "", context: "Example 323\nSection Container blocks / Lists\n");
         }
 
         // This list is loose, because of the blank line between the
         // two block elements in the list item:
         [Test]
-        public void ContainerBlocksLists_Example294()
+        public void ContainerBlocksLists_Example324()
         {
-            // Example 294
+            // Example 324
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7646,14 +8237,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ol>
 
-            TestParser.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>", "", context: "Example 294\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("1. ```\n   foo\n   ```\n\n   bar", "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>", "", context: "Example 324\nSection Container blocks / Lists\n");
         }
 
         // Here the outer list is loose, the inner list tight:
         [Test]
-        public void ContainerBlocksLists_Example295()
+        public void ContainerBlocksLists_Example325()
         {
-            // Example 295
+            // Example 325
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7673,13 +8264,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example 295\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("* foo\n  * bar\n\n  baz", "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>", "", context: "Example 325\nSection Container blocks / Lists\n");
         }
 
         [Test]
-        public void ContainerBlocksLists_Example296()
+        public void ContainerBlocksLists_Example326()
         {
-            // Example 296
+            // Example 326
             // Section: Container blocks / Lists
             //
             // The following Markdown:
@@ -7709,7 +8300,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     </li>
             //     </ul>
 
-            TestParser.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>", "", context: "Example 296\nSection Container blocks / Lists\n");
+            TestParser.TestSpec("- a\n  - b\n  - c\n\n- d\n  - e\n  - f", "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>", "", context: "Example 326\nSection Container blocks / Lists\n");
         }
     }
 
@@ -7722,9 +8313,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // stream to the end (left to right, in left-to-right languages).
         // Thus, for example, in
         [Test]
-        public void Inlines_Example297()
+        public void Inlines_Example327()
         {
-            // Example 297
+            // Example 327
             // Section: Inlines
             //
             // The following Markdown:
@@ -7733,591 +8324,18 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><code>hi</code>lo`</p>
 
-            TestParser.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>", "", context: "Example 297\nSection Inlines\n");
-        }
-    }
-
-    [TestFixture]
-    public class TestInlinesBackslashEscapes
-    {
-        // `hi` is parsed as code, leaving the backtick at the end as a literal
-        // backtick.
-        // 
-        // 
-        // ## Backslash escapes
-        // 
-        // Any ASCII punctuation character may be backslash-escaped:
-        [Test]
-        public void InlinesBackslashEscapes_Example298()
-        {
-            // Example 298
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
-            //
-            // Should be rendered as:
-            //     <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
-
-            TestParser.TestSpec("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~", "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>", "", context: "Example 298\nSection Inlines / Backslash escapes\n");
-        }
-
-        // Backslashes before other characters are treated as literal
-        // backslashes:
-        [Test]
-        public void InlinesBackslashEscapes_Example299()
-        {
-            // Example 299
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     \→\A\a\ \3\φ\«
-            //
-            // Should be rendered as:
-            //     <p>\→\A\a\ \3\φ\«</p>
-
-            TestParser.TestSpec("\\\t\\A\\a\\ \\3\\φ\\«", "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>", "", context: "Example 299\nSection Inlines / Backslash escapes\n");
-        }
-
-        // Escaped characters are treated as regular characters and do
-        // not have their usual Markdown meanings:
-        [Test]
-        public void InlinesBackslashEscapes_Example300()
-        {
-            // Example 300
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     \*not emphasized*
-            //     \<br/> not a tag
-            //     \[not a link](/foo)
-            //     \`not code`
-            //     1\. not a list
-            //     \* not a list
-            //     \# not a heading
-            //     \[foo]: /url "not a reference"
-            //     \&ouml; not a character entity
-            //
-            // Should be rendered as:
-            //     <p>*not emphasized*
-            //     &lt;br/&gt; not a tag
-            //     [not a link](/foo)
-            //     `not code`
-            //     1. not a list
-            //     * not a list
-            //     # not a heading
-            //     [foo]: /url &quot;not a reference&quot;
-            //     &amp;ouml; not a character entity</p>
-
-            TestParser.TestSpec("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity", "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>", "", context: "Example 300\nSection Inlines / Backslash escapes\n");
-        }
-
-        // If a backslash is itself escaped, the following character is not:
-        [Test]
-        public void InlinesBackslashEscapes_Example301()
-        {
-            // Example 301
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     \\*emphasis*
-            //
-            // Should be rendered as:
-            //     <p>\<em>emphasis</em></p>
-
-            TestParser.TestSpec("\\\\*emphasis*", "<p>\\<em>emphasis</em></p>", "", context: "Example 301\nSection Inlines / Backslash escapes\n");
-        }
-
-        // A backslash at the end of the line is a [hard line break]:
-        [Test]
-        public void InlinesBackslashEscapes_Example302()
-        {
-            // Example 302
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     foo\
-            //     bar
-            //
-            // Should be rendered as:
-            //     <p>foo<br />
-            //     bar</p>
-
-            TestParser.TestSpec("foo\\\nbar", "<p>foo<br />\nbar</p>", "", context: "Example 302\nSection Inlines / Backslash escapes\n");
-        }
-
-        // Backslash escapes do not work in code blocks, code spans, autolinks, or
-        // raw HTML:
-        [Test]
-        public void InlinesBackslashEscapes_Example303()
-        {
-            // Example 303
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     `` \[\` ``
-            //
-            // Should be rendered as:
-            //     <p><code>\[\`</code></p>
-
-            TestParser.TestSpec("`` \\[\\` ``", "<p><code>\\[\\`</code></p>", "", context: "Example 303\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example304()
-        {
-            // Example 304
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //         \[\]
-            //
-            // Should be rendered as:
-            //     <pre><code>\[\]
-            //     </code></pre>
-
-            TestParser.TestSpec("    \\[\\]", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example 304\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example305()
-        {
-            // Example 305
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     ~~~
-            //     \[\]
-            //     ~~~
-            //
-            // Should be rendered as:
-            //     <pre><code>\[\]
-            //     </code></pre>
-
-            TestParser.TestSpec("~~~\n\\[\\]\n~~~", "<pre><code>\\[\\]\n</code></pre>", "", context: "Example 305\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example306()
-        {
-            // Example 306
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     <http://example.com?find=\*>
-            //
-            // Should be rendered as:
-            //     <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
-
-            TestParser.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "", context: "Example 306\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example307()
-        {
-            // Example 307
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     <a href="/bar\/)">
-            //
-            // Should be rendered as:
-            //     <a href="/bar\/)">
-
-            TestParser.TestSpec("<a href=\"/bar\\/)\">", "<a href=\"/bar\\/)\">", "", context: "Example 307\nSection Inlines / Backslash escapes\n");
-        }
-
-        // But they work in all other contexts, including URLs and link titles,
-        // link references, and [info strings] in [fenced code blocks]:
-        [Test]
-        public void InlinesBackslashEscapes_Example308()
-        {
-            // Example 308
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     [foo](/bar\* "ti\*tle")
-            //
-            // Should be rendered as:
-            //     <p><a href="/bar*" title="ti*tle">foo</a></p>
-
-            TestParser.TestSpec("[foo](/bar\\* \"ti\\*tle\")", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example 308\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example309()
-        {
-            // Example 309
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     [foo]
-            //     
-            //     [foo]: /bar\* "ti\*tle"
-            //
-            // Should be rendered as:
-            //     <p><a href="/bar*" title="ti*tle">foo</a></p>
-
-            TestParser.TestSpec("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"", "<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>", "", context: "Example 309\nSection Inlines / Backslash escapes\n");
-        }
-
-        [Test]
-        public void InlinesBackslashEscapes_Example310()
-        {
-            // Example 310
-            // Section: Inlines / Backslash escapes
-            //
-            // The following Markdown:
-            //     ``` foo\+bar
-            //     foo
-            //     ```
-            //
-            // Should be rendered as:
-            //     <pre><code class="language-foo+bar">foo
-            //     </code></pre>
-
-            TestParser.TestSpec("``` foo\\+bar\nfoo\n```", "<pre><code class=\"language-foo+bar\">foo\n</code></pre>", "", context: "Example 310\nSection Inlines / Backslash escapes\n");
-        }
-    }
-
-    [TestFixture]
-    public class TestInlinesEntityAndNumericCharacterReferences
-    {
-        // ## Entity and numeric character references
-        // 
-        // Valid HTML entity references and numeric character references
-        // can be used in place of the corresponding Unicode character,
-        // with the following exceptions:
-        // 
-        // - Entity and character references are not recognized in code
-        //   blocks and code spans.
-        // 
-        // - Entity and character references cannot stand in place of
-        //   special characters that define structural elements in
-        //   CommonMark.  For example, although `&#42;` can be used
-        //   in place of a literal `*` character, `&#42;` cannot replace
-        //   `*` in emphasis delimiters, bullet list markers, or thematic
-        //   breaks.
-        // 
-        // Conforming CommonMark parsers need not store information about
-        // whether a particular character was represented in the source
-        // using a Unicode character or an entity reference.
-        // 
-        // [Entity references](@) consist of `&` + any of the valid
-        // HTML5 entity names + `;`. The
-        // document <https://html.spec.whatwg.org/multipage/entities.json>
-        // is used as an authoritative source for the valid entity
-        // references and their corresponding code points.
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example311()
-        {
-            // Example 311
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &nbsp; &amp; &copy; &AElig; &Dcaron;
-            //     &frac34; &HilbertSpace; &DifferentialD;
-            //     &ClockwiseContourIntegral; &ngE;
-            //
-            // Should be rendered as:
-            //     <p>  &amp; © Æ Ď
-            //     ¾ ℋ ⅆ
-            //     ∲ ≧̸</p>
-
-            TestParser.TestSpec("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;", "<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>", "", context: "Example 311\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // [Decimal numeric character
-        // references](@)
-        // consist of `&#` + a string of 1--7 arabic digits + `;`. A
-        // numeric character reference is parsed as the corresponding
-        // Unicode character. Invalid Unicode code points will be replaced by
-        // the REPLACEMENT CHARACTER (`U+FFFD`).  For security reasons,
-        // the code point `U+0000` will also be replaced by `U+FFFD`.
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example312()
-        {
-            // Example 312
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &#35; &#1234; &#992; &#0;
-            //
-            // Should be rendered as:
-            //     <p># Ӓ Ϡ �</p>
-
-            TestParser.TestSpec("&#35; &#1234; &#992; &#0;", "<p># Ӓ Ϡ �</p>", "", context: "Example 312\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // [Hexadecimal numeric character
-        // references](@) consist of `&#` +
-        // either `X` or `x` + a string of 1-6 hexadecimal digits + `;`.
-        // They too are parsed as the corresponding Unicode character (this
-        // time specified with a hexadecimal numeral instead of decimal).
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example313()
-        {
-            // Example 313
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &#X22; &#XD06; &#xcab;
-            //
-            // Should be rendered as:
-            //     <p>&quot; ആ ಫ</p>
-
-            TestParser.TestSpec("&#X22; &#XD06; &#xcab;", "<p>&quot; ആ ಫ</p>", "", context: "Example 313\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Here are some nonentities:
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example314()
-        {
-            // Example 314
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &nbsp &x; &#; &#x;
-            //     &#87654321;
-            //     &#abcdef0;
-            //     &ThisIsNotDefined; &hi?;
-            //
-            // Should be rendered as:
-            //     <p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
-            //     &amp;#87654321;
-            //     &amp;#abcdef0;
-            //     &amp;ThisIsNotDefined; &amp;hi?;</p>
-
-            TestParser.TestSpec("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;", "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>", "", context: "Example 314\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Although HTML5 does accept some entity references
-        // without a trailing semicolon (such as `&copy`), these are not
-        // recognized here, because it makes the grammar too ambiguous:
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example315()
-        {
-            // Example 315
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &copy
-            //
-            // Should be rendered as:
-            //     <p>&amp;copy</p>
-
-            TestParser.TestSpec("&copy", "<p>&amp;copy</p>", "", context: "Example 315\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Strings that are not on the list of HTML5 named entities are not
-        // recognized as entity references either:
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example316()
-        {
-            // Example 316
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &MadeUpEntity;
-            //
-            // Should be rendered as:
-            //     <p>&amp;MadeUpEntity;</p>
-
-            TestParser.TestSpec("&MadeUpEntity;", "<p>&amp;MadeUpEntity;</p>", "", context: "Example 316\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Entity and numeric character references are recognized in any
-        // context besides code spans or code blocks, including
-        // URLs, [link titles], and [fenced code block][] [info strings]:
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example317()
-        {
-            // Example 317
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     <a href="&ouml;&ouml;.html">
-            //
-            // Should be rendered as:
-            //     <a href="&ouml;&ouml;.html">
-
-            TestParser.TestSpec("<a href=\"&ouml;&ouml;.html\">", "<a href=\"&ouml;&ouml;.html\">", "", context: "Example 317\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example318()
-        {
-            // Example 318
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
-            //
-            // Should be rendered as:
-            //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
-
-            TestParser.TestSpec("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example 318\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example319()
-        {
-            // Example 319
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     [foo]
-            //     
-            //     [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
-            //
-            // Should be rendered as:
-            //     <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
-
-            TestParser.TestSpec("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"", "<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>", "", context: "Example 319\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example320()
-        {
-            // Example 320
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     ``` f&ouml;&ouml;
-            //     foo
-            //     ```
-            //
-            // Should be rendered as:
-            //     <pre><code class="language-föö">foo
-            //     </code></pre>
-
-            TestParser.TestSpec("``` f&ouml;&ouml;\nfoo\n```", "<pre><code class=\"language-föö\">foo\n</code></pre>", "", context: "Example 320\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Entity and numeric character references are treated as literal
-        // text in code spans and code blocks:
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example321()
-        {
-            // Example 321
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     `f&ouml;&ouml;`
-            //
-            // Should be rendered as:
-            //     <p><code>f&amp;ouml;&amp;ouml;</code></p>
-
-            TestParser.TestSpec("`f&ouml;&ouml;`", "<p><code>f&amp;ouml;&amp;ouml;</code></p>", "", context: "Example 321\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example322()
-        {
-            // Example 322
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //         f&ouml;f&ouml;
-            //
-            // Should be rendered as:
-            //     <pre><code>f&amp;ouml;f&amp;ouml;
-            //     </code></pre>
-
-            TestParser.TestSpec("    f&ouml;f&ouml;", "<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>", "", context: "Example 322\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        // Entity and numeric character references cannot be used
-        // in place of symbols indicating structure in CommonMark
-        // documents.
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example323()
-        {
-            // Example 323
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &#42;foo&#42;
-            //     *foo*
-            //
-            // Should be rendered as:
-            //     <p>*foo*
-            //     <em>foo</em></p>
-
-            TestParser.TestSpec("&#42;foo&#42;\n*foo*", "<p>*foo*\n<em>foo</em></p>", "", context: "Example 323\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example324()
-        {
-            // Example 324
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &#42; foo
-            //     
-            //     * foo
-            //
-            // Should be rendered as:
-            //     <p>* foo</p>
-            //     <ul>
-            //     <li>foo</li>
-            //     </ul>
-
-            TestParser.TestSpec("&#42; foo\n\n* foo", "<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>", "", context: "Example 324\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example325()
-        {
-            // Example 325
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     foo&#10;&#10;bar
-            //
-            // Should be rendered as:
-            //     <p>foo
-            //     
-            //     bar</p>
-
-            TestParser.TestSpec("foo&#10;&#10;bar", "<p>foo\n\nbar</p>", "", context: "Example 325\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example326()
-        {
-            // Example 326
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     &#9;foo
-            //
-            // Should be rendered as:
-            //     <p>→foo</p>
-
-            TestParser.TestSpec("&#9;foo", "<p>\tfoo</p>", "", context: "Example 326\nSection Inlines / Entity and numeric character references\n");
-        }
-
-        [Test]
-        public void InlinesEntityAndNumericCharacterReferences_Example327()
-        {
-            // Example 327
-            // Section: Inlines / Entity and numeric character references
-            //
-            // The following Markdown:
-            //     [a](url &quot;tit&quot;)
-            //
-            // Should be rendered as:
-            //     <p>[a](url &quot;tit&quot;)</p>
-
-            TestParser.TestSpec("[a](url &quot;tit&quot;)", "<p>[a](url &quot;tit&quot;)</p>", "", context: "Example 327\nSection Inlines / Entity and numeric character references\n");
+            TestParser.TestSpec("`hi`lo`", "<p><code>hi</code>lo`</p>", "", context: "Example 327\nSection Inlines\n");
         }
     }
 
     [TestFixture]
     public class TestInlinesCodeSpans
     {
+        // `hi` is parsed as code, leaving the backtick at the end as a literal
+        // backtick.
+        // 
+        // 
+        // 
         // ## Code spans
         // 
         // A [backtick string](@)
@@ -8326,7 +8344,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A [code span](@) begins with a backtick string and ends with
         // a backtick string of equal length.  The contents of the code span are
-        // the characters between the two backtick strings, normalized in the
+        // the characters between these two backtick strings, normalized in the
         // following ways:
         // 
         // - First, [line endings] are converted to [spaces].
@@ -8774,17 +8792,17 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A [left-flanking delimiter run](@) is
         // a [delimiter run] that is (1) not followed by [Unicode whitespace],
-        // and either (2a) not followed by a [punctuation character], or
-        // (2b) followed by a [punctuation character] and
-        // preceded by [Unicode whitespace] or a [punctuation character].
+        // and either (2a) not followed by a [Unicode punctuation character], or
+        // (2b) followed by a [Unicode punctuation character] and
+        // preceded by [Unicode whitespace] or a [Unicode punctuation character].
         // For purposes of this definition, the beginning and the end of
         // the line count as Unicode whitespace.
         // 
         // A [right-flanking delimiter run](@) is
         // a [delimiter run] that is (1) not preceded by [Unicode whitespace],
-        // and either (2a) not preceded by a [punctuation character], or
-        // (2b) preceded by a [punctuation character] and
-        // followed by [Unicode whitespace] or a [punctuation character].
+        // and either (2a) not preceded by a [Unicode punctuation character], or
+        // (2b) preceded by a [Unicode punctuation character] and
+        // followed by [Unicode whitespace] or a [Unicode punctuation character].
         // For purposes of this definition, the beginning and the end of
         // the line count as Unicode whitespace.
         // 
@@ -8839,7 +8857,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     it is part of a [left-flanking delimiter run]
         //     and either (a) not part of a [right-flanking delimiter run]
         //     or (b) part of a [right-flanking delimiter run]
-        //     preceded by punctuation.
+        //     preceded by a [Unicode punctuation character].
         // 
         // 3.  A single `*` character [can close emphasis](@)
         //     iff it is part of a [right-flanking delimiter run].
@@ -8848,7 +8866,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     it is part of a [right-flanking delimiter run]
         //     and either (a) not part of a [left-flanking delimiter run]
         //     or (b) part of a [left-flanking delimiter run]
-        //     followed by punctuation.
+        //     followed by a [Unicode punctuation character].
         // 
         // 5.  A double `**` [can open strong emphasis](@)
         //     iff it is part of a [left-flanking delimiter run].
@@ -8857,7 +8875,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     it is part of a [left-flanking delimiter run]
         //     and either (a) not part of a [right-flanking delimiter run]
         //     or (b) part of a [right-flanking delimiter run]
-        //     preceded by punctuation.
+        //     preceded by a [Unicode punctuation character].
         // 
         // 7.  A double `**` [can close strong emphasis](@)
         //     iff it is part of a [right-flanking delimiter run].
@@ -8866,7 +8884,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         //     it is part of a [right-flanking delimiter run]
         //     and either (a) not part of a [left-flanking delimiter run]
         //     or (b) part of a [left-flanking delimiter run]
-        //     followed by punctuation.
+        //     followed by a [Unicode punctuation character].
         // 
         // 9.  Emphasis begins with a delimiter that [can open emphasis] and ends
         //     with a delimiter that [can close emphasis], and that uses the same
@@ -9193,7 +9211,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "", context: "Example 365\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
-        // A newline also counts as whitespace:
+        // A line ending also counts as whitespace:
         [Test]
         public void InlinesEmphasisAndStrongEmphasis_Example366()
         {
@@ -9478,7 +9496,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "", context: "Example 382\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
-        // A newline counts as whitespace:
+        // A line ending counts as whitespace:
         [Test]
         public void InlinesEmphasisAndStrongEmphasis_Example383()
         {
@@ -9975,7 +9993,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
 
         // The same condition ensures that the following
         // cases are all strong emphasis nested inside
-        // emphasis, even when the interior spaces are
+        // emphasis, even when the interior whitespace is
         // omitted:
         [Test]
         public void InlinesEmphasisAndStrongEmphasis_Example412()
@@ -11084,13 +11102,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // A [link destination](@) consists of either
         // 
         // - a sequence of zero or more characters between an opening `<` and a
-        //   closing `>` that contains no line breaks or unescaped
+        //   closing `>` that contains no line endings or unescaped
         //   `<` or `>` characters, or
         // 
-        // - a nonempty sequence of characters that does not start with
-        //   `<`, does not include ASCII space or control characters, and
-        //   includes parentheses only if (a) they are backslash-escaped or
-        //   (b) they are part of a balanced pair of unescaped parentheses.
+        // - a nonempty sequence of characters that does not start with `<`,
+        //   does not include [ASCII control characters][ASCII control character]
+        //   or [space] character, and includes parentheses only if (a) they are
+        //   backslash-escaped or (b) they are part of a balanced pair of
+        //   unescaped parentheses.
         //   (Implementations may impose limits on parentheses nesting to
         //   avoid performance issues, but at least three levels of nesting
         //   should be supported.)
@@ -11113,10 +11132,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // a [blank line].
         // 
         // An [inline link](@) consists of a [link text] followed immediately
-        // by a left parenthesis `(`, optional [whitespace], an optional
-        // [link destination], an optional [link title] separated from the link
-        // destination by [whitespace], optional [whitespace], and a right
-        // parenthesis `)`. The link's text consists of the inlines contained
+        // by a left parenthesis `(`, an optional [link destination], an optional
+        // [link title], and a right parenthesis `)`.
+        // These four components may be separated by spaces, tabs, and up to one line
+        // ending.
+        // If both [link destination] and [link title] are present, they *must* be
+        // separated by spaces, tabs, and up to one line ending.
+        // 
+        // The link's text consists of the inlines contained
         // in the [link text] (excluding the enclosing square brackets).
         // The link's URI consists of the link destination, excluding enclosing
         // `<...>` if present, with backslash-escapes in effect as described
@@ -11140,7 +11163,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             TestParser.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 481\nSection Inlines / Links\n");
         }
 
-        // The title may be omitted:
+        // The title, the link text and even 
+        // the destination may be omitted:
         [Test]
         public void InlinesLinks_Example482()
         {
@@ -11156,7 +11180,6 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             TestParser.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "", context: "Example 482\nSection Inlines / Links\n");
         }
 
-        // Both the title and the destination may be omitted:
         [Test]
         public void InlinesLinks_Example483()
         {
@@ -11164,12 +11187,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link]()
+            //     [](./target.md)
             //
             // Should be rendered as:
-            //     <p><a href="">link</a></p>
+            //     <p><a href="./target.md"></a></p>
 
-            TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "", context: "Example 483\nSection Inlines / Links\n");
+            TestParser.TestSpec("[](./target.md)", "<p><a href=\"./target.md\"></a></p>", "", context: "Example 483\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11179,16 +11202,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link](<>)
+            //     [link]()
             //
             // Should be rendered as:
             //     <p><a href="">link</a></p>
 
-            TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "", context: "Example 484\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "", context: "Example 484\nSection Inlines / Links\n");
         }
 
-        // The destination can only contain spaces if it is
-        // enclosed in pointy brackets:
         [Test]
         public void InlinesLinks_Example485()
         {
@@ -11196,12 +11217,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link](/my uri)
+            //     [link](<>)
             //
             // Should be rendered as:
-            //     <p>[link](/my uri)</p>
+            //     <p><a href="">link</a></p>
 
-            TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "", context: "Example 485\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "", context: "Example 485\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11211,20 +11232,52 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     []()
+            //
+            // Should be rendered as:
+            //     <p><a href=""></a></p>
+
+            TestParser.TestSpec("[]()", "<p><a href=\"\"></a></p>", "", context: "Example 486\nSection Inlines / Links\n");
+        }
+
+        // The destination can only contain spaces if it is
+        // enclosed in pointy brackets:
+        [Test]
+        public void InlinesLinks_Example487()
+        {
+            // Example 487
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     [link](/my uri)
+            //
+            // Should be rendered as:
+            //     <p>[link](/my uri)</p>
+
+            TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "", context: "Example 487\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example488()
+        {
+            // Example 488
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     [link](</my uri>)
             //
             // Should be rendered as:
             //     <p><a href="/my%20uri">link</a></p>
 
-            TestParser.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "", context: "Example 486\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "", context: "Example 488\nSection Inlines / Links\n");
         }
 
-        // The destination cannot contain line breaks,
+        // The destination cannot contain line endings,
         // even if enclosed in pointy brackets:
         [Test]
-        public void InlinesLinks_Example487()
+        public void InlinesLinks_Example489()
         {
-            // Example 487
+            // Example 489
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11235,13 +11288,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[link](foo
             //     bar)</p>
 
-            TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "", context: "Example 487\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "", context: "Example 489\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example488()
+        public void InlinesLinks_Example490()
         {
-            // Example 488
+            // Example 490
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11252,15 +11305,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[link](<foo
             //     bar>)</p>
 
-            TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "", context: "Example 488\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "", context: "Example 490\nSection Inlines / Links\n");
         }
 
         // The destination can contain `)` if it is enclosed
         // in pointy brackets:
         [Test]
-        public void InlinesLinks_Example489()
+        public void InlinesLinks_Example491()
         {
-            // Example 489
+            // Example 491
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11269,14 +11322,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="b)c">a</a></p>
 
-            TestParser.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "", context: "Example 489\nSection Inlines / Links\n");
+            TestParser.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "", context: "Example 491\nSection Inlines / Links\n");
         }
 
         // Pointy brackets that enclose links must be unescaped:
         [Test]
-        public void InlinesLinks_Example490()
+        public void InlinesLinks_Example492()
         {
-            // Example 490
+            // Example 492
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11285,15 +11338,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[link](&lt;foo&gt;)</p>
 
-            TestParser.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "", context: "Example 490\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "", context: "Example 492\nSection Inlines / Links\n");
         }
 
         // These are not links, because the opening pointy bracket
         // is not matched properly:
         [Test]
-        public void InlinesLinks_Example491()
+        public void InlinesLinks_Example493()
         {
-            // Example 491
+            // Example 493
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11306,14 +11359,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     [a](&lt;b)c&gt;
             //     [a](<b>c)</p>
 
-            TestParser.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "", context: "Example 491\nSection Inlines / Links\n");
+            TestParser.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "", context: "Example 493\nSection Inlines / Links\n");
         }
 
         // Parentheses inside the link destination may be escaped:
         [Test]
-        public void InlinesLinks_Example492()
+        public void InlinesLinks_Example494()
         {
-            // Example 492
+            // Example 494
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11322,15 +11375,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="(foo)">link</a></p>
 
-            TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "", context: "Example 492\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "", context: "Example 494\nSection Inlines / Links\n");
         }
 
         // Any number of parentheses are allowed without escaping, as long as they are
         // balanced:
         [Test]
-        public void InlinesLinks_Example493()
+        public void InlinesLinks_Example495()
         {
-            // Example 493
+            // Example 495
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11339,15 +11392,30 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo(and(bar))">link</a></p>
 
-            TestParser.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "", context: "Example 493\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "", context: "Example 495\nSection Inlines / Links\n");
         }
 
         // However, if you have unbalanced parentheses, you need to escape or use the
         // `<...>` form:
         [Test]
-        public void InlinesLinks_Example494()
+        public void InlinesLinks_Example496()
         {
-            // Example 494
+            // Example 496
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     [link](foo(and(bar))
+            //
+            // Should be rendered as:
+            //     <p>[link](foo(and(bar))</p>
+
+            TestParser.TestSpec("[link](foo(and(bar))", "<p>[link](foo(and(bar))</p>", "", context: "Example 496\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example497()
+        {
+            // Example 497
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11356,13 +11424,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo(and(bar)">link</a></p>
 
-            TestParser.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 494\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 497\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example495()
+        public void InlinesLinks_Example498()
         {
-            // Example 495
+            // Example 498
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11371,15 +11439,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo(and(bar)">link</a></p>
 
-            TestParser.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 495\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 498\nSection Inlines / Links\n");
         }
 
         // Parentheses and other symbols can also be escaped, as usual
         // in Markdown:
         [Test]
-        public void InlinesLinks_Example496()
+        public void InlinesLinks_Example499()
         {
-            // Example 496
+            // Example 499
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11388,14 +11456,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo):">link</a></p>
 
-            TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "", context: "Example 496\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "", context: "Example 499\nSection Inlines / Links\n");
         }
 
         // A link can contain fragment identifiers and queries:
         [Test]
-        public void InlinesLinks_Example497()
+        public void InlinesLinks_Example500()
         {
-            // Example 497
+            // Example 500
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11410,15 +11478,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a href="http://example.com#fragment">link</a></p>
             //     <p><a href="http://example.com?foo=3#frag">link</a></p>
 
-            TestParser.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "", context: "Example 497\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "", context: "Example 500\nSection Inlines / Links\n");
         }
 
         // Note that a backslash before a non-escapable character is
         // just a backslash:
         [Test]
-        public void InlinesLinks_Example498()
+        public void InlinesLinks_Example501()
         {
-            // Example 498
+            // Example 501
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11427,7 +11495,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo%5Cbar">link</a></p>
 
-            TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "", context: "Example 498\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "", context: "Example 501\nSection Inlines / Links\n");
         }
 
         // URL-escaping should be left alone inside the destination, as all
@@ -11439,9 +11507,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // HTML or other formats.  Renderers may make different decisions
         // about how to escape or normalize URLs in the output.
         [Test]
-        public void InlinesLinks_Example499()
+        public void InlinesLinks_Example502()
         {
-            // Example 499
+            // Example 502
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11450,16 +11518,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="foo%20b%C3%A4">link</a></p>
 
-            TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "", context: "Example 499\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "", context: "Example 502\nSection Inlines / Links\n");
         }
 
         // Note that, because titles can often be parsed as destinations,
         // if you try to omit the destination and keep the title, you'll
         // get unexpected results:
         [Test]
-        public void InlinesLinks_Example500()
+        public void InlinesLinks_Example503()
         {
-            // Example 500
+            // Example 503
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11468,14 +11536,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="%22title%22">link</a></p>
 
-            TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "", context: "Example 500\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "", context: "Example 503\nSection Inlines / Links\n");
         }
 
         // Titles may be in single quotes, double quotes, or parentheses:
         [Test]
-        public void InlinesLinks_Example501()
+        public void InlinesLinks_Example504()
         {
-            // Example 501
+            // Example 504
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11488,15 +11556,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <a href="/url" title="title">link</a>
             //     <a href="/url" title="title">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "", context: "Example 501\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "", context: "Example 504\nSection Inlines / Links\n");
         }
 
         // Backslash escapes and entity and numeric character references
         // may be used in titles:
         [Test]
-        public void InlinesLinks_Example502()
+        public void InlinesLinks_Example505()
         {
-            // Example 502
+            // Example 505
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11505,15 +11573,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;&quot;">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "", context: "Example 502\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "", context: "Example 505\nSection Inlines / Links\n");
         }
 
-        // Titles must be separated from the link using a [whitespace].
+        // Titles must be separated from the link using spaces, tabs, and up to one line
+        // ending.
         // Other [Unicode whitespace] like non-breaking space doesn't work.
         [Test]
-        public void InlinesLinks_Example503()
+        public void InlinesLinks_Example506()
         {
-            // Example 503
+            // Example 506
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11522,14 +11591,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url%C2%A0%22title%22">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "", context: "Example 503\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "", context: "Example 506\nSection Inlines / Links\n");
         }
 
         // Nested balanced quotes are not allowed without escaping:
         [Test]
-        public void InlinesLinks_Example504()
+        public void InlinesLinks_Example507()
         {
-            // Example 504
+            // Example 507
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11538,14 +11607,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
 
-            TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "", context: "Example 504\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "", context: "Example 507\nSection Inlines / Links\n");
         }
 
         // But it is easy to work around this by using a different quote type:
         [Test]
-        public void InlinesLinks_Example505()
+        public void InlinesLinks_Example508()
         {
-            // Example 505
+            // Example 508
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11554,7 +11623,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 
-            TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "", context: "Example 505\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "", context: "Example 508\nSection Inlines / Links\n");
         }
 
         // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
@@ -11572,11 +11641,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // It seems preferable to adopt a simple, rational rule that works
         // the same way in inline links and link reference definitions.)
         // 
-        // [Whitespace] is allowed around the destination and title:
+        // Spaces, tabs, and up to one line ending is allowed around the destination and
+        // title:
         [Test]
-        public void InlinesLinks_Example506()
+        public void InlinesLinks_Example509()
         {
-            // Example 506
+            // Example 509
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11586,15 +11656,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 506\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 509\nSection Inlines / Links\n");
         }
 
         // But it is not allowed between the link text and the
         // following parenthesis:
         [Test]
-        public void InlinesLinks_Example507()
+        public void InlinesLinks_Example510()
         {
-            // Example 507
+            // Example 510
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11603,15 +11673,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[link] (/uri)</p>
 
-            TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "", context: "Example 507\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "", context: "Example 510\nSection Inlines / Links\n");
         }
 
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
         [Test]
-        public void InlinesLinks_Example508()
+        public void InlinesLinks_Example511()
         {
-            // Example 508
+            // Example 511
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11620,13 +11690,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 508\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 511\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example509()
+        public void InlinesLinks_Example512()
         {
-            // Example 509
+            // Example 512
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11635,53 +11705,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[link] bar](/uri)</p>
 
-            TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "", context: "Example 509\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example510()
-        {
-            // Example 510
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [link [bar](/uri)
-            //
-            // Should be rendered as:
-            //     <p>[link <a href="/uri">bar</a></p>
-
-            TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "", context: "Example 510\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example511()
-        {
-            // Example 511
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [link \[bar](/uri)
-            //
-            // Should be rendered as:
-            //     <p><a href="/uri">link [bar</a></p>
-
-            TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 511\nSection Inlines / Links\n");
-        }
-
-        // The link text may contain inline content:
-        [Test]
-        public void InlinesLinks_Example512()
-        {
-            // Example 512
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [link *foo **bar** `#`*](/uri)
-            //
-            // Should be rendered as:
-            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
-
-            TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 512\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "", context: "Example 512\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11691,15 +11715,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [![moon](moon.jpg)](/uri)
+            //     [link [bar](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
+            //     <p>[link <a href="/uri">bar</a></p>
 
-            TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 513\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "", context: "Example 513\nSection Inlines / Links\n");
         }
 
-        // However, links may not contain other links, at any level of nesting.
         [Test]
         public void InlinesLinks_Example514()
         {
@@ -11707,14 +11730,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo [bar](/uri)](/uri)
+            //     [link \[bar](/uri)
             //
             // Should be rendered as:
-            //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
+            //     <p><a href="/uri">link [bar</a></p>
 
-            TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "", context: "Example 514\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 514\nSection Inlines / Links\n");
         }
 
+        // The link text may contain inline content:
         [Test]
         public void InlinesLinks_Example515()
         {
@@ -11722,12 +11746,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
+            //     [link *foo **bar** `#`*](/uri)
             //
             // Should be rendered as:
-            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
+            //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "", context: "Example 515\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 515\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11737,16 +11761,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     ![[[foo](uri1)](uri2)](uri3)
+            //     [![moon](moon.jpg)](/uri)
             //
             // Should be rendered as:
-            //     <p><img src="uri3" alt="[foo](uri2)" /></p>
+            //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "", context: "Example 516\nSection Inlines / Links\n");
+            TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 516\nSection Inlines / Links\n");
         }
 
-        // These cases illustrate the precedence of link text grouping over
-        // emphasis grouping:
+        // However, links may not contain other links, at any level of nesting.
         [Test]
         public void InlinesLinks_Example517()
         {
@@ -11754,12 +11777,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     *[foo*](/uri)
+            //     [foo [bar](/uri)](/uri)
             //
             // Should be rendered as:
-            //     <p>*<a href="/uri">foo*</a></p>
+            //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
 
-            TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 517\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "", context: "Example 517\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11769,16 +11792,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo *bar](baz*)
+            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
             //
             // Should be rendered as:
-            //     <p><a href="baz*">foo *bar</a></p>
+            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
 
-            TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "", context: "Example 518\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "", context: "Example 518\nSection Inlines / Links\n");
         }
 
-        // Note that brackets that *aren't* part of links do not take
-        // precedence:
         [Test]
         public void InlinesLinks_Example519()
         {
@@ -11786,16 +11807,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     *foo [bar* baz]
+            //     ![[[foo](uri1)](uri2)](uri3)
             //
             // Should be rendered as:
-            //     <p><em>foo [bar</em> baz]</p>
+            //     <p><img src="uri3" alt="[foo](uri2)" /></p>
 
-            TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "", context: "Example 519\nSection Inlines / Links\n");
+            TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "", context: "Example 519\nSection Inlines / Links\n");
         }
 
-        // These cases illustrate the precedence of HTML tags, code spans,
-        // and autolinks over link grouping:
+        // These cases illustrate the precedence of link text grouping over
+        // emphasis grouping:
         [Test]
         public void InlinesLinks_Example520()
         {
@@ -11803,12 +11824,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo <bar attr="](baz)">
+            //     *[foo*](/uri)
             //
             // Should be rendered as:
-            //     <p>[foo <bar attr="](baz)"></p>
+            //     <p>*<a href="/uri">foo*</a></p>
 
-            TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "", context: "Example 520\nSection Inlines / Links\n");
+            TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 520\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11818,18 +11839,67 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     [foo *bar](baz*)
+            //
+            // Should be rendered as:
+            //     <p><a href="baz*">foo *bar</a></p>
+
+            TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "", context: "Example 521\nSection Inlines / Links\n");
+        }
+
+        // Note that brackets that *aren't* part of links do not take
+        // precedence:
+        [Test]
+        public void InlinesLinks_Example522()
+        {
+            // Example 522
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     *foo [bar* baz]
+            //
+            // Should be rendered as:
+            //     <p><em>foo [bar</em> baz]</p>
+
+            TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "", context: "Example 522\nSection Inlines / Links\n");
+        }
+
+        // These cases illustrate the precedence of HTML tags, code spans,
+        // and autolinks over link grouping:
+        [Test]
+        public void InlinesLinks_Example523()
+        {
+            // Example 523
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     [foo <bar attr="](baz)">
+            //
+            // Should be rendered as:
+            //     <p>[foo <bar attr="](baz)"></p>
+
+            TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "", context: "Example 523\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example524()
+        {
+            // Example 524
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     [foo`](/uri)`
             //
             // Should be rendered as:
             //     <p>[foo<code>](/uri)</code></p>
 
-            TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "", context: "Example 521\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "", context: "Example 524\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example522()
+        public void InlinesLinks_Example525()
         {
-            // Example 522
+            // Example 525
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11838,7 +11908,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
 
-            TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "", context: "Example 522\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "", context: "Example 525\nSection Inlines / Links\n");
         }
 
         // There are three kinds of [reference link](@)s:
@@ -11851,7 +11921,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // A [link label](@)  begins with a left bracket (`[`) and ends
         // with the first right bracket (`]`) that is not backslash-escaped.
-        // Between these brackets there must be at least one [non-whitespace character].
+        // Between these brackets there must be at least one character that is not a space,
+        // tab, or line ending.
         // Unescaped square bracket characters are not allowed inside the
         // opening and closing square brackets of [link labels].  A link
         // label can have at most 999 characters inside the square
@@ -11861,20 +11932,19 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // another just in case their normalized forms are equal.  To normalize a
         // label, strip off the opening and closing brackets,
         // perform the *Unicode case fold*, strip leading and trailing
-        // [whitespace] and collapse consecutive internal
-        // [whitespace] to a single space.  If there are multiple
+        // spaces, tabs, and line endings, and collapse consecutive internal
+        // spaces, tabs, and line endings to a single space.  If there are multiple
         // matching reference link definitions, the one that comes first in the
         // document is used.  (It is desirable in such cases to emit a warning.)
         // 
-        // The contents of the first link label are parsed as inlines, which are
-        // used as the link's text.  The link's URI and title are provided by the
-        // matching [link reference definition].
+        // The link's URI and title are provided by the matching [link
+        // reference definition].
         // 
         // Here is a simple example:
         [Test]
-        public void InlinesLinks_Example523()
+        public void InlinesLinks_Example526()
         {
-            // Example 523
+            // Example 526
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11885,7 +11955,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 523\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 526\nSection Inlines / Links\n");
         }
 
         // The rules for the [link text] are the same as with
@@ -11894,9 +11964,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
         [Test]
-        public void InlinesLinks_Example524()
+        public void InlinesLinks_Example527()
         {
-            // Example 524
+            // Example 527
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11907,13 +11977,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 524\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 527\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example525()
+        public void InlinesLinks_Example528()
         {
-            // Example 525
+            // Example 528
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11924,14 +11994,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">link [bar</a></p>
 
-            TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 525\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 528\nSection Inlines / Links\n");
         }
 
         // The link text may contain inline content:
         [Test]
-        public void InlinesLinks_Example526()
+        public void InlinesLinks_Example529()
         {
-            // Example 526
+            // Example 529
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11942,13 +12012,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 526\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 529\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example527()
+        public void InlinesLinks_Example530()
         {
-            // Example 527
+            // Example 530
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11959,14 +12029,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 527\nSection Inlines / Links\n");
+            TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 530\nSection Inlines / Links\n");
         }
 
         // However, links may not contain other links, at any level of nesting.
         [Test]
-        public void InlinesLinks_Example528()
+        public void InlinesLinks_Example531()
         {
-            // Example 528
+            // Example 531
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11977,13 +12047,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
 
-            TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "", context: "Example 528\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "", context: "Example 531\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example529()
+        public void InlinesLinks_Example532()
         {
-            // Example 529
+            // Example 532
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11994,7 +12064,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 
-            TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "", context: "Example 529\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "", context: "Example 532\nSection Inlines / Links\n");
         }
 
         // (In the examples above, we have two [shortcut reference links]
@@ -12003,9 +12073,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // The following cases illustrate the precedence of link text grouping over
         // emphasis grouping:
         [Test]
-        public void InlinesLinks_Example530()
+        public void InlinesLinks_Example533()
         {
-            // Example 530
+            // Example 533
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12016,32 +12086,32 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 530\nSection Inlines / Links\n");
+            TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 533\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example531()
+        public void InlinesLinks_Example534()
         {
-            // Example 531
+            // Example 534
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo *bar][ref]
+            //     [foo *bar][ref]*
             //     
             //     [ref]: /uri
             //
             // Should be rendered as:
-            //     <p><a href="/uri">foo *bar</a></p>
+            //     <p><a href="/uri">foo *bar</a>*</p>
 
-            TestParser.TestSpec("[foo *bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a></p>", "", context: "Example 531\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *bar][ref]*\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a>*</p>", "", context: "Example 534\nSection Inlines / Links\n");
         }
 
         // These cases illustrate the precedence of HTML tags, code spans,
         // and autolinks over link grouping:
         [Test]
-        public void InlinesLinks_Example532()
+        public void InlinesLinks_Example535()
         {
-            // Example 532
+            // Example 535
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12052,13 +12122,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo <bar attr="][ref]"></p>
 
-            TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "", context: "Example 532\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "", context: "Example 535\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example533()
+        public void InlinesLinks_Example536()
         {
-            // Example 533
+            // Example 536
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12069,13 +12139,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo<code>][ref]</code></p>
 
-            TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "", context: "Example 533\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "", context: "Example 536\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example534()
+        public void InlinesLinks_Example537()
         {
-            // Example 534
+            // Example 537
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12086,14 +12156,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
 
-            TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "", context: "Example 534\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "", context: "Example 537\nSection Inlines / Links\n");
         }
 
         // Matching is case-insensitive:
         [Test]
-        public void InlinesLinks_Example535()
+        public void InlinesLinks_Example538()
         {
-            // Example 535
+            // Example 538
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12104,33 +12174,33 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 535\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 538\nSection Inlines / Links\n");
         }
 
         // Unicode case fold is used:
         [Test]
-        public void InlinesLinks_Example536()
+        public void InlinesLinks_Example539()
         {
-            // Example 536
+            // Example 539
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [Толпой][Толпой] is a Russian word.
+            //     [ẞ]
             //     
-            //     [ТОЛПОЙ]: /url
+            //     [SS]: /url
             //
             // Should be rendered as:
-            //     <p><a href="/url">Толпой</a> is a Russian word.</p>
+            //     <p><a href="/url">ẞ</a></p>
 
-            TestParser.TestSpec("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url", "<p><a href=\"/url\">Толпой</a> is a Russian word.</p>", "", context: "Example 536\nSection Inlines / Links\n");
+            TestParser.TestSpec("[ẞ]\n\n[SS]: /url", "<p><a href=\"/url\">ẞ</a></p>", "", context: "Example 539\nSection Inlines / Links\n");
         }
 
-        // Consecutive internal [whitespace] is treated as one space for
+        // Consecutive internal spaces, tabs, and line endings are treated as one space for
         // purposes of determining matching:
         [Test]
-        public void InlinesLinks_Example537()
+        public void InlinesLinks_Example540()
         {
-            // Example 537
+            // Example 540
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12142,15 +12212,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url">Baz</a></p>
 
-            TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "", context: "Example 537\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "", context: "Example 540\nSection Inlines / Links\n");
         }
 
-        // No [whitespace] is allowed between the [link text] and the
+        // No spaces, tabs, or line endings are allowed between the [link text] and the
         // [link label]:
         [Test]
-        public void InlinesLinks_Example538()
+        public void InlinesLinks_Example541()
         {
-            // Example 538
+            // Example 541
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12161,13 +12231,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo] <a href="/url" title="title">bar</a></p>
 
-            TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 538\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 541\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example539()
+        public void InlinesLinks_Example542()
         {
-            // Example 539
+            // Example 542
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12180,7 +12250,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[foo]
             //     <a href="/url" title="title">bar</a></p>
 
-            TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 539\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 542\nSection Inlines / Links\n");
         }
 
         // This is a departure from John Gruber's original Markdown syntax
@@ -12213,9 +12283,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // When there are multiple matching [link reference definitions],
         // the first is used:
         [Test]
-        public void InlinesLinks_Example540()
+        public void InlinesLinks_Example543()
         {
-            // Example 540
+            // Example 543
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12228,16 +12298,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url1">bar</a></p>
 
-            TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "", context: "Example 540\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "", context: "Example 543\nSection Inlines / Links\n");
         }
 
         // Note that matching is performed on normalized strings, not parsed
         // inline content.  So the following does not match, even though the
         // labels define equivalent inline content:
         [Test]
-        public void InlinesLinks_Example541()
+        public void InlinesLinks_Example544()
         {
-            // Example 541
+            // Example 544
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12248,15 +12318,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[bar][foo!]</p>
 
-            TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "", context: "Example 541\nSection Inlines / Links\n");
+            TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "", context: "Example 544\nSection Inlines / Links\n");
         }
 
         // [Link labels] cannot contain brackets, unless they are
         // backslash-escaped:
         [Test]
-        public void InlinesLinks_Example542()
+        public void InlinesLinks_Example545()
         {
-            // Example 542
+            // Example 545
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12268,13 +12338,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[foo][ref[]</p>
             //     <p>[ref[]: /uri</p>
 
-            TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "", context: "Example 542\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "", context: "Example 545\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example543()
+        public void InlinesLinks_Example546()
         {
-            // Example 543
+            // Example 546
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12286,13 +12356,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[foo][ref[bar]]</p>
             //     <p>[ref[bar]]: /uri</p>
 
-            TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "", context: "Example 543\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "", context: "Example 546\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example544()
+        public void InlinesLinks_Example547()
         {
-            // Example 544
+            // Example 547
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12304,13 +12374,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[[[foo]]]</p>
             //     <p>[[[foo]]]: /url</p>
 
-            TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "", context: "Example 544\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "", context: "Example 547\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example545()
+        public void InlinesLinks_Example548()
         {
-            // Example 545
+            // Example 548
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12321,14 +12391,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">foo</a></p>
 
-            TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "", context: "Example 545\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "", context: "Example 548\nSection Inlines / Links\n");
         }
 
         // Note that in this example `]` is not backslash-escaped:
         [Test]
-        public void InlinesLinks_Example546()
+        public void InlinesLinks_Example549()
         {
-            // Example 546
+            // Example 549
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12339,14 +12409,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/uri">bar\</a></p>
 
-            TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "", context: "Example 546\nSection Inlines / Links\n");
+            TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "", context: "Example 549\nSection Inlines / Links\n");
         }
 
-        // A [link label] must contain at least one [non-whitespace character]:
+        // A [link label] must contain at least one character that is not a space, tab, or
+        // line ending:
         [Test]
-        public void InlinesLinks_Example547()
+        public void InlinesLinks_Example550()
         {
-            // Example 547
+            // Example 550
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12358,13 +12429,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[]</p>
             //     <p>[]: /uri</p>
 
-            TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "", context: "Example 547\nSection Inlines / Links\n");
+            TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "", context: "Example 550\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example548()
+        public void InlinesLinks_Example551()
         {
-            // Example 548
+            // Example 551
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12380,7 +12451,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>[
             //     ]: /uri</p>
 
-            TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "", context: "Example 548\nSection Inlines / Links\n");
+            TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "", context: "Example 551\nSection Inlines / Links\n");
         }
 
         // A [collapsed reference link](@)
@@ -12392,9 +12463,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // provided by the matching reference link definition.  Thus,
         // `[foo][]` is equivalent to `[foo][foo]`.
         [Test]
-        public void InlinesLinks_Example549()
+        public void InlinesLinks_Example552()
         {
-            // Example 549
+            // Example 552
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12405,13 +12476,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 549\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 552\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example550()
+        public void InlinesLinks_Example553()
         {
-            // Example 550
+            // Example 553
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12422,14 +12493,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 550\nSection Inlines / Links\n");
+            TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 553\nSection Inlines / Links\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesLinks_Example551()
+        public void InlinesLinks_Example554()
         {
-            // Example 551
+            // Example 554
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12440,15 +12511,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 551\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 554\nSection Inlines / Links\n");
         }
 
-        // As with full reference links, [whitespace] is not
+        // As with full reference links, spaces, tabs, or line endings are not
         // allowed between the two sets of brackets:
         [Test]
-        public void InlinesLinks_Example552()
+        public void InlinesLinks_Example555()
         {
-            // Example 552
+            // Example 555
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12461,7 +12532,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a href="/url" title="title">foo</a>
             //     []</p>
 
-            TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "", context: "Example 552\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "", context: "Example 555\nSection Inlines / Links\n");
         }
 
         // A [shortcut reference link](@)
@@ -12473,9 +12544,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // are provided by the matching link reference definition.
         // Thus, `[foo]` is equivalent to `[foo][]`.
         [Test]
-        public void InlinesLinks_Example553()
+        public void InlinesLinks_Example556()
         {
-            // Example 553
+            // Example 556
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12486,13 +12557,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 553\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 556\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example554()
+        public void InlinesLinks_Example557()
         {
-            // Example 554
+            // Example 557
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12503,13 +12574,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 554\nSection Inlines / Links\n");
+            TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 557\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example555()
+        public void InlinesLinks_Example558()
         {
-            // Example 555
+            // Example 558
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12520,13 +12591,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
 
-            TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "", context: "Example 555\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "", context: "Example 558\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example556()
+        public void InlinesLinks_Example559()
         {
-            // Example 556
+            // Example 559
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12537,14 +12608,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[[bar <a href="/url">foo</a></p>
 
-            TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "", context: "Example 556\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "", context: "Example 559\nSection Inlines / Links\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesLinks_Example557()
+        public void InlinesLinks_Example560()
         {
-            // Example 557
+            // Example 560
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12555,14 +12626,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 557\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 560\nSection Inlines / Links\n");
         }
 
         // A space after the link text should be preserved:
         [Test]
-        public void InlinesLinks_Example558()
+        public void InlinesLinks_Example561()
         {
-            // Example 558
+            // Example 561
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12573,15 +12644,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url">foo</a> bar</p>
 
-            TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "", context: "Example 558\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "", context: "Example 561\nSection Inlines / Links\n");
         }
 
         // If you just want bracketed text, you can backslash-escape the
         // opening bracket to avoid links:
         [Test]
-        public void InlinesLinks_Example559()
+        public void InlinesLinks_Example562()
         {
-            // Example 559
+            // Example 562
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12592,15 +12663,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "", context: "Example 559\nSection Inlines / Links\n");
+            TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "", context: "Example 562\nSection Inlines / Links\n");
         }
 
         // Note that this is a link, because a link label ends with the first
         // following closing bracket:
         [Test]
-        public void InlinesLinks_Example560()
+        public void InlinesLinks_Example563()
         {
-            // Example 560
+            // Example 563
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12611,15 +12682,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>*<a href="/url">foo*</a></p>
 
-            TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "", context: "Example 560\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "", context: "Example 563\nSection Inlines / Links\n");
         }
 
         // Full and compact references take precedence over shortcut
         // references:
         [Test]
-        public void InlinesLinks_Example561()
+        public void InlinesLinks_Example564()
         {
-            // Example 561
+            // Example 564
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12631,13 +12702,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url2">foo</a></p>
 
-            TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "", context: "Example 561\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "", context: "Example 564\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example562()
+        public void InlinesLinks_Example565()
         {
-            // Example 562
+            // Example 565
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12648,14 +12719,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url1">foo</a></p>
 
-            TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "", context: "Example 562\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "", context: "Example 565\nSection Inlines / Links\n");
         }
 
         // Inline links also take precedence:
         [Test]
-        public void InlinesLinks_Example563()
+        public void InlinesLinks_Example566()
         {
-            // Example 563
+            // Example 566
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12666,13 +12737,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="">foo</a></p>
 
-            TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "", context: "Example 563\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "", context: "Example 566\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example564()
+        public void InlinesLinks_Example567()
         {
-            // Example 564
+            // Example 567
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12683,15 +12754,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url1">foo</a>(not a link)</p>
 
-            TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "", context: "Example 564\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "", context: "Example 567\nSection Inlines / Links\n");
         }
 
         // In the following case `[bar][baz]` is parsed as a reference,
         // `[foo]` as normal text:
         [Test]
-        public void InlinesLinks_Example565()
+        public void InlinesLinks_Example568()
         {
-            // Example 565
+            // Example 568
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12702,15 +12773,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo]<a href="/url">bar</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "", context: "Example 565\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "", context: "Example 568\nSection Inlines / Links\n");
         }
 
         // Here, though, `[foo][bar]` is parsed as a reference, since
         // `[bar]` is defined:
         [Test]
-        public void InlinesLinks_Example566()
+        public void InlinesLinks_Example569()
         {
-            // Example 566
+            // Example 569
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12722,15 +12793,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "", context: "Example 566\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "", context: "Example 569\nSection Inlines / Links\n");
         }
 
         // Here `[foo]` is not parsed as a shortcut reference, because it
         // is followed by a link label (even though `[bar]` is not defined):
         [Test]
-        public void InlinesLinks_Example567()
+        public void InlinesLinks_Example570()
         {
-            // Example 567
+            // Example 570
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12742,7 +12813,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>[foo]<a href="/url1">bar</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "", context: "Example 567\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "", context: "Example 570\nSection Inlines / Links\n");
         }
     }
 
@@ -12761,9 +12832,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // as its contents.  When an image is rendered to HTML,
         // this is standardly used as the image's `alt` attribute.
         [Test]
-        public void InlinesImages_Example568()
+        public void InlinesImages_Example571()
         {
-            // Example 568
+            // Example 571
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12772,13 +12843,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 568\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 571\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example569()
+        public void InlinesImages_Example572()
         {
-            // Example 569
+            // Example 572
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12789,13 +12860,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 569\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 572\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example570()
+        public void InlinesImages_Example573()
         {
-            // Example 570
+            // Example 573
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12804,13 +12875,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 570\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 573\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example571()
+        public void InlinesImages_Example574()
         {
-            // Example 571
+            // Example 574
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12819,7 +12890,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 571\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 574\nSection Inlines / Images\n");
         }
 
         // Though this spec is concerned with parsing, not rendering, it is
@@ -12829,9 +12900,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string
         // content is rendered, without formatting.
         [Test]
-        public void InlinesImages_Example572()
+        public void InlinesImages_Example575()
         {
-            // Example 572
+            // Example 575
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12842,13 +12913,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 572\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 575\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example573()
+        public void InlinesImages_Example576()
         {
-            // Example 573
+            // Example 576
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12859,52 +12930,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 573\nSection Inlines / Images\n");
-        }
-
-        [Test]
-        public void InlinesImages_Example574()
-        {
-            // Example 574
-            // Section: Inlines / Images
-            //
-            // The following Markdown:
-            //     ![foo](train.jpg)
-            //
-            // Should be rendered as:
-            //     <p><img src="train.jpg" alt="foo" /></p>
-
-            TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "", context: "Example 574\nSection Inlines / Images\n");
-        }
-
-        [Test]
-        public void InlinesImages_Example575()
-        {
-            // Example 575
-            // Section: Inlines / Images
-            //
-            // The following Markdown:
-            //     My ![foo bar](/path/to/train.jpg  "title"   )
-            //
-            // Should be rendered as:
-            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
-
-            TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 575\nSection Inlines / Images\n");
-        }
-
-        [Test]
-        public void InlinesImages_Example576()
-        {
-            // Example 576
-            // Section: Inlines / Images
-            //
-            // The following Markdown:
-            //     ![foo](<url>)
-            //
-            // Should be rendered as:
-            //     <p><img src="url" alt="foo" /></p>
-
-            TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "", context: "Example 576\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 576\nSection Inlines / Images\n");
         }
 
         [Test]
@@ -12914,19 +12940,64 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Images
             //
             // The following Markdown:
+            //     ![foo](train.jpg)
+            //
+            // Should be rendered as:
+            //     <p><img src="train.jpg" alt="foo" /></p>
+
+            TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "", context: "Example 577\nSection Inlines / Images\n");
+        }
+
+        [Test]
+        public void InlinesImages_Example578()
+        {
+            // Example 578
+            // Section: Inlines / Images
+            //
+            // The following Markdown:
+            //     My ![foo bar](/path/to/train.jpg  "title"   )
+            //
+            // Should be rendered as:
+            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
+
+            TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 578\nSection Inlines / Images\n");
+        }
+
+        [Test]
+        public void InlinesImages_Example579()
+        {
+            // Example 579
+            // Section: Inlines / Images
+            //
+            // The following Markdown:
+            //     ![foo](<url>)
+            //
+            // Should be rendered as:
+            //     <p><img src="url" alt="foo" /></p>
+
+            TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "", context: "Example 579\nSection Inlines / Images\n");
+        }
+
+        [Test]
+        public void InlinesImages_Example580()
+        {
+            // Example 580
+            // Section: Inlines / Images
+            //
+            // The following Markdown:
             //     ![](/url)
             //
             // Should be rendered as:
             //     <p><img src="/url" alt="" /></p>
 
-            TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "", context: "Example 577\nSection Inlines / Images\n");
+            TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "", context: "Example 580\nSection Inlines / Images\n");
         }
 
         // Reference-style:
         [Test]
-        public void InlinesImages_Example578()
+        public void InlinesImages_Example581()
         {
-            // Example 578
+            // Example 581
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12937,13 +13008,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 578\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 581\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example579()
+        public void InlinesImages_Example582()
         {
-            // Example 579
+            // Example 582
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12954,14 +13025,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 579\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 582\nSection Inlines / Images\n");
         }
 
         // Collapsed:
         [Test]
-        public void InlinesImages_Example580()
+        public void InlinesImages_Example583()
         {
-            // Example 580
+            // Example 583
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12972,13 +13043,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 580\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 583\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example581()
+        public void InlinesImages_Example584()
         {
-            // Example 581
+            // Example 584
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12989,14 +13060,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 581\nSection Inlines / Images\n");
+            TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 584\nSection Inlines / Images\n");
         }
 
         // The labels are case-insensitive:
         [Test]
-        public void InlinesImages_Example582()
+        public void InlinesImages_Example585()
         {
-            // Example 582
+            // Example 585
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13007,15 +13078,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 582\nSection Inlines / Images\n");
+            TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 585\nSection Inlines / Images\n");
         }
 
-        // As with reference links, [whitespace] is not allowed
+        // As with reference links, spaces, tabs, and line endings, are not allowed
         // between the two sets of brackets:
         [Test]
-        public void InlinesImages_Example583()
+        public void InlinesImages_Example586()
         {
-            // Example 583
+            // Example 586
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13028,14 +13099,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><img src="/url" alt="foo" title="title" />
             //     []</p>
 
-            TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "", context: "Example 583\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "", context: "Example 586\nSection Inlines / Images\n");
         }
 
         // Shortcut:
         [Test]
-        public void InlinesImages_Example584()
+        public void InlinesImages_Example587()
         {
-            // Example 584
+            // Example 587
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13046,13 +13117,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 584\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 587\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example585()
+        public void InlinesImages_Example588()
         {
-            // Example 585
+            // Example 588
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13063,14 +13134,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 585\nSection Inlines / Images\n");
+            TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 588\nSection Inlines / Images\n");
         }
 
         // Note that link labels cannot contain unescaped brackets:
         [Test]
-        public void InlinesImages_Example586()
+        public void InlinesImages_Example589()
         {
-            // Example 586
+            // Example 589
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13082,14 +13153,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>![[foo]]</p>
             //     <p>[[foo]]: /url &quot;title&quot;</p>
 
-            TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "", context: "Example 586\nSection Inlines / Images\n");
+            TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "", context: "Example 589\nSection Inlines / Images\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesImages_Example587()
+        public void InlinesImages_Example590()
         {
-            // Example 587
+            // Example 590
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13100,15 +13171,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 587\nSection Inlines / Images\n");
+            TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 590\nSection Inlines / Images\n");
         }
 
         // If you just want a literal `!` followed by bracketed text, you can
         // backslash-escape the opening `[`:
         [Test]
-        public void InlinesImages_Example588()
+        public void InlinesImages_Example591()
         {
-            // Example 588
+            // Example 591
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13119,15 +13190,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>![foo]</p>
 
-            TestParser.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "", context: "Example 588\nSection Inlines / Images\n");
+            TestParser.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "", context: "Example 591\nSection Inlines / Images\n");
         }
 
         // If you want a link after a literal `!`, backslash-escape the
         // `!`:
         [Test]
-        public void InlinesImages_Example589()
+        public void InlinesImages_Example592()
         {
-            // Example 589
+            // Example 592
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13138,7 +13209,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>!<a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 589\nSection Inlines / Images\n");
+            TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 592\nSection Inlines / Images\n");
         }
     }
 
@@ -13157,9 +13228,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // An [absolute URI](@),
         // for these purposes, consists of a [scheme] followed by a colon (`:`)
-        // followed by zero or more characters other than ASCII
-        // [whitespace] and control characters, `<`, and `>`.  If
-        // the URI includes these characters, they must be percent-encoded
+        // followed by zero or more characters other than [ASCII control
+        // characters][ASCII control character], [space], `<`, and `>`.
+        // If the URI includes these characters, they must be percent-encoded
         // (e.g. `%20` for a space).
         // 
         // For purposes of this spec, a [scheme](@) is any sequence
@@ -13169,9 +13240,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here are some valid autolinks:
         [Test]
-        public void InlinesAutolinks_Example590()
+        public void InlinesAutolinks_Example593()
         {
-            // Example 590
+            // Example 593
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13180,13 +13251,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
 
-            TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "", context: "Example 590\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "", context: "Example 593\nSection Inlines / Autolinks\n");
         }
 
         [Test]
-        public void InlinesAutolinks_Example591()
+        public void InlinesAutolinks_Example594()
         {
-            // Example 591
+            // Example 594
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13195,57 +13266,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 
-            TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "", context: "Example 591\nSection Inlines / Autolinks\n");
-        }
-
-        [Test]
-        public void InlinesAutolinks_Example592()
-        {
-            // Example 592
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <irc://foo.bar:2233/baz>
-            //
-            // Should be rendered as:
-            //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
-
-            TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "", context: "Example 592\nSection Inlines / Autolinks\n");
-        }
-
-        // Uppercase is also fine:
-        [Test]
-        public void InlinesAutolinks_Example593()
-        {
-            // Example 593
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <MAILTO:FOO@BAR.BAZ>
-            //
-            // Should be rendered as:
-            //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
-
-            TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "", context: "Example 593\nSection Inlines / Autolinks\n");
-        }
-
-        // Note that many strings that count as [absolute URIs] for
-        // purposes of this spec are not valid URIs, because their
-        // schemes are not registered or because of other problems
-        // with their syntax:
-        [Test]
-        public void InlinesAutolinks_Example594()
-        {
-            // Example 594
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <a+b+c:d>
-            //
-            // Should be rendered as:
-            //     <p><a href="a+b+c:d">a+b+c:d</a></p>
-
-            TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "", context: "Example 594\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "", context: "Example 594\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13255,18 +13276,68 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
+            //     <irc://foo.bar:2233/baz>
+            //
+            // Should be rendered as:
+            //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
+
+            TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "", context: "Example 595\nSection Inlines / Autolinks\n");
+        }
+
+        // Uppercase is also fine:
+        [Test]
+        public void InlinesAutolinks_Example596()
+        {
+            // Example 596
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
+            //     <MAILTO:FOO@BAR.BAZ>
+            //
+            // Should be rendered as:
+            //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
+
+            TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "", context: "Example 596\nSection Inlines / Autolinks\n");
+        }
+
+        // Note that many strings that count as [absolute URIs] for
+        // purposes of this spec are not valid URIs, because their
+        // schemes are not registered or because of other problems
+        // with their syntax:
+        [Test]
+        public void InlinesAutolinks_Example597()
+        {
+            // Example 597
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
+            //     <a+b+c:d>
+            //
+            // Should be rendered as:
+            //     <p><a href="a+b+c:d">a+b+c:d</a></p>
+
+            TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "", context: "Example 597\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example598()
+        {
+            // Example 598
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
             //     <made-up-scheme://foo,bar>
             //
             // Should be rendered as:
             //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
 
-            TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "", context: "Example 595\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "", context: "Example 598\nSection Inlines / Autolinks\n");
         }
 
         [Test]
-        public void InlinesAutolinks_Example596()
+        public void InlinesAutolinks_Example599()
         {
-            // Example 596
+            // Example 599
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13275,13 +13346,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="http://../">http://../</a></p>
 
-            TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "", context: "Example 596\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "", context: "Example 599\nSection Inlines / Autolinks\n");
         }
 
         [Test]
-        public void InlinesAutolinks_Example597()
+        public void InlinesAutolinks_Example600()
         {
-            // Example 597
+            // Example 600
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13290,14 +13361,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
 
-            TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "", context: "Example 597\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "", context: "Example 600\nSection Inlines / Autolinks\n");
         }
 
         // Spaces are not allowed in autolinks:
         [Test]
-        public void InlinesAutolinks_Example598()
+        public void InlinesAutolinks_Example601()
         {
-            // Example 598
+            // Example 601
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13306,14 +13377,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;http://foo.bar/baz bim&gt;</p>
 
-            TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "", context: "Example 598\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "", context: "Example 601\nSection Inlines / Autolinks\n");
         }
 
         // Backslash-escapes do not work inside autolinks:
         [Test]
-        public void InlinesAutolinks_Example599()
+        public void InlinesAutolinks_Example602()
         {
-            // Example 599
+            // Example 602
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13322,7 +13393,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
 
-            TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "", context: "Example 599\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "", context: "Example 602\nSection Inlines / Autolinks\n");
         }
 
         // An [email autolink](@)
@@ -13340,9 +13411,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Examples of email autolinks:
         [Test]
-        public void InlinesAutolinks_Example600()
+        public void InlinesAutolinks_Example603()
         {
-            // Example 600
+            // Example 603
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13351,54 +13422,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
 
-            TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "", context: "Example 600\nSection Inlines / Autolinks\n");
-        }
-
-        [Test]
-        public void InlinesAutolinks_Example601()
-        {
-            // Example 601
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <foo+special@Bar.baz-bar0.com>
-            //
-            // Should be rendered as:
-            //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
-
-            TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "", context: "Example 601\nSection Inlines / Autolinks\n");
-        }
-
-        // Backslash-escapes do not work inside email autolinks:
-        [Test]
-        public void InlinesAutolinks_Example602()
-        {
-            // Example 602
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <foo\+@bar.example.com>
-            //
-            // Should be rendered as:
-            //     <p>&lt;foo+@bar.example.com&gt;</p>
-
-            TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "", context: "Example 602\nSection Inlines / Autolinks\n");
-        }
-
-        // These are not autolinks:
-        [Test]
-        public void InlinesAutolinks_Example603()
-        {
-            // Example 603
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <>
-            //
-            // Should be rendered as:
-            //     <p>&lt;&gt;</p>
-
-            TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "", context: "Example 603\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "", context: "Example 603\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13408,14 +13432,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     < http://foo.bar >
+            //     <foo+special@Bar.baz-bar0.com>
             //
             // Should be rendered as:
-            //     <p>&lt; http://foo.bar &gt;</p>
+            //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
 
-            TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "", context: "Example 604\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "", context: "Example 604\nSection Inlines / Autolinks\n");
         }
 
+        // Backslash-escapes do not work inside email autolinks:
         [Test]
         public void InlinesAutolinks_Example605()
         {
@@ -13423,14 +13448,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <m:abc>
+            //     <foo\+@bar.example.com>
             //
             // Should be rendered as:
-            //     <p>&lt;m:abc&gt;</p>
+            //     <p>&lt;foo+@bar.example.com&gt;</p>
 
-            TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "", context: "Example 605\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "", context: "Example 605\nSection Inlines / Autolinks\n");
         }
 
+        // These are not autolinks:
         [Test]
         public void InlinesAutolinks_Example606()
         {
@@ -13438,12 +13464,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <foo.bar.baz>
+            //     <>
             //
             // Should be rendered as:
-            //     <p>&lt;foo.bar.baz&gt;</p>
+            //     <p>&lt;&gt;</p>
 
-            TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "", context: "Example 606\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "", context: "Example 606\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13453,12 +13479,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     http://example.com
+            //     < http://foo.bar >
             //
             // Should be rendered as:
-            //     <p>http://example.com</p>
+            //     <p>&lt; http://foo.bar &gt;</p>
 
-            TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "", context: "Example 607\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "", context: "Example 607\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13468,12 +13494,57 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
+            //     <m:abc>
+            //
+            // Should be rendered as:
+            //     <p>&lt;m:abc&gt;</p>
+
+            TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "", context: "Example 608\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example609()
+        {
+            // Example 609
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
+            //     <foo.bar.baz>
+            //
+            // Should be rendered as:
+            //     <p>&lt;foo.bar.baz&gt;</p>
+
+            TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "", context: "Example 609\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example610()
+        {
+            // Example 610
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
+            //     http://example.com
+            //
+            // Should be rendered as:
+            //     <p>http://example.com</p>
+
+            TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "", context: "Example 610\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example611()
+        {
+            // Example 611
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
             //     foo@bar.example.com
             //
             // Should be rendered as:
             //     <p>foo@bar.example.com</p>
 
-            TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "", context: "Example 608\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "", context: "Example 611\nSection Inlines / Autolinks\n");
         }
     }
 
@@ -13493,7 +13564,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // followed by zero or more ASCII letters, digits, or
         // hyphens (`-`).
         // 
-        // An [attribute](@) consists of [whitespace],
+        // An [attribute](@) consists of spaces, tabs, and up to one line ending,
         // an [attribute name], and an optional
         // [attribute value specification].
         // 
@@ -13503,9 +13574,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // specification restricted to ASCII.  HTML5 is laxer.)
         // 
         // An [attribute value specification](@)
-        // consists of optional [whitespace],
-        // a `=` character, optional [whitespace], and an [attribute
-        // value].
+        // consists of optional spaces, tabs, and up to one line ending,
+        // a `=` character, optional spaces, tabs, and up to one line ending,
+        // and an [attribute value].
         // 
         // An [attribute value](@)
         // consists of an [unquoted attribute value],
@@ -13513,7 +13584,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // An [unquoted attribute value](@)
         // is a nonempty string of characters not
-        // including [whitespace], `"`, `'`, `=`, `<`, `>`, or `` ` ``.
+        // including spaces, tabs, line endings, `"`, `'`, `=`, `<`, `>`, or `` ` ``.
         // 
         // A [single-quoted attribute value](@)
         // consists of `'`, zero or more
@@ -13524,11 +13595,12 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // characters not including `"`, and a final `"`.
         // 
         // An [open tag](@) consists of a `<` character, a [tag name],
-        // zero or more [attributes], optional [whitespace], an optional `/`
-        // character, and a `>` character.
+        // zero or more [attributes], optional spaces, tabs, and up to one line ending,
+        // an optional `/` character, and a `>` character.
         // 
         // A [closing tag](@) consists of the string `</`, a
-        // [tag name], optional [whitespace], and the character `>`.
+        // [tag name], optional spaces, tabs, and up to one line ending, and the character
+        // `>`.
         // 
         // An [HTML comment](@) consists of `<!--` + *text* + `-->`,
         // where *text* does not start with `>` or `->`, does not end with `-`,
@@ -13540,10 +13612,8 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // of characters not including the string `?>`, and the string
         // `?>`.
         // 
-        // A [declaration](@) consists of the
-        // string `<!`, a name consisting of one or more uppercase ASCII letters,
-        // [whitespace], a string of characters not including the
-        // character `>`, and the character `>`.
+        // A [declaration](@) consists of the string `<!`, an ASCII letter, zero or more
+        // characters not including the character `>`, and the character `>`.
         // 
         // A [CDATA section](@) consists of
         // the string `<![CDATA[`, a string of characters not including the string
@@ -13555,9 +13625,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // 
         // Here are some simple open tags:
         [Test]
-        public void InlinesRawHTML_Example609()
+        public void InlinesRawHTML_Example612()
         {
-            // Example 609
+            // Example 612
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13566,14 +13636,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a><bab><c2c></p>
 
-            TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "", context: "Example 609\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "", context: "Example 612\nSection Inlines / Raw HTML\n");
         }
 
         // Empty elements:
         [Test]
-        public void InlinesRawHTML_Example610()
+        public void InlinesRawHTML_Example613()
         {
-            // Example 610
+            // Example 613
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13582,14 +13652,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><a/><b2/></p>
 
-            TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "", context: "Example 610\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "", context: "Example 613\nSection Inlines / Raw HTML\n");
         }
 
-        // [Whitespace] is allowed:
+        // Whitespace is allowed:
         [Test]
-        public void InlinesRawHTML_Example611()
+        public void InlinesRawHTML_Example614()
         {
-            // Example 611
+            // Example 614
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13600,14 +13670,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a  /><b2
             //     data="foo" ></p>
 
-            TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "", context: "Example 611\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "", context: "Example 614\nSection Inlines / Raw HTML\n");
         }
 
         // With attributes:
         [Test]
-        public void InlinesRawHTML_Example612()
+        public void InlinesRawHTML_Example615()
         {
-            // Example 612
+            // Example 615
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13618,14 +13688,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a foo="bar" bam = 'baz <em>"</em>'
             //     _boolean zoop:33=zoop:33 /></p>
 
-            TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "", context: "Example 612\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "", context: "Example 615\nSection Inlines / Raw HTML\n");
         }
 
         // Custom tag names can be used:
         [Test]
-        public void InlinesRawHTML_Example613()
+        public void InlinesRawHTML_Example616()
         {
-            // Example 613
+            // Example 616
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13634,14 +13704,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>Foo <responsive-image src="foo.jpg" /></p>
 
-            TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "", context: "Example 613\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "", context: "Example 616\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal tag names, not parsed as HTML:
         [Test]
-        public void InlinesRawHTML_Example614()
+        public void InlinesRawHTML_Example617()
         {
-            // Example 614
+            // Example 617
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13650,14 +13720,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;33&gt; &lt;__&gt;</p>
 
-            TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "", context: "Example 614\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "", context: "Example 617\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attribute names:
         [Test]
-        public void InlinesRawHTML_Example615()
+        public void InlinesRawHTML_Example618()
         {
-            // Example 615
+            // Example 618
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13666,14 +13736,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 
-            TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "", context: "Example 615\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "", context: "Example 618\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attribute values:
         [Test]
-        public void InlinesRawHTML_Example616()
+        public void InlinesRawHTML_Example619()
         {
-            // Example 616
+            // Example 619
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13682,14 +13752,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 
-            TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "", context: "Example 616\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "", context: "Example 619\nSection Inlines / Raw HTML\n");
         }
 
-        // Illegal [whitespace]:
+        // Illegal whitespace:
         [Test]
-        public void InlinesRawHTML_Example617()
+        public void InlinesRawHTML_Example620()
         {
-            // Example 617
+            // Example 620
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13704,14 +13774,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     &lt;foo bar=baz
             //     bim!bop /&gt;</p>
 
-            TestParser.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "", context: "Example 617\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "", context: "Example 620\nSection Inlines / Raw HTML\n");
         }
 
-        // Missing [whitespace]:
+        // Missing whitespace:
         [Test]
-        public void InlinesRawHTML_Example618()
+        public void InlinesRawHTML_Example621()
         {
-            // Example 618
+            // Example 621
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13720,14 +13790,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;a href='bar'title=title&gt;</p>
 
-            TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "", context: "Example 618\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "", context: "Example 621\nSection Inlines / Raw HTML\n");
         }
 
         // Closing tags:
         [Test]
-        public void InlinesRawHTML_Example619()
+        public void InlinesRawHTML_Example622()
         {
-            // Example 619
+            // Example 622
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13736,14 +13806,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p></a></foo ></p>
 
-            TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "", context: "Example 619\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "", context: "Example 622\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attributes in closing tag:
         [Test]
-        public void InlinesRawHTML_Example620()
+        public void InlinesRawHTML_Example623()
         {
-            // Example 620
+            // Example 623
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13752,14 +13822,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 
-            TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "", context: "Example 620\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "", context: "Example 623\nSection Inlines / Raw HTML\n");
         }
 
         // Comments:
         [Test]
-        public void InlinesRawHTML_Example621()
+        public void InlinesRawHTML_Example624()
         {
-            // Example 621
+            // Example 624
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13770,13 +13840,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo <!-- this is a
             //     comment - with hyphen --></p>
 
-            TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "", context: "Example 621\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "", context: "Example 624\nSection Inlines / Raw HTML\n");
         }
 
         [Test]
-        public void InlinesRawHTML_Example622()
+        public void InlinesRawHTML_Example625()
         {
-            // Example 622
+            // Example 625
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13785,14 +13855,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
 
-            TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "", context: "Example 622\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "", context: "Example 625\nSection Inlines / Raw HTML\n");
         }
 
         // Not comments:
         [Test]
-        public void InlinesRawHTML_Example623()
+        public void InlinesRawHTML_Example626()
         {
-            // Example 623
+            // Example 626
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13804,14 +13874,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo &lt;!--&gt; foo --&gt;</p>
             //     <p>foo &lt;!-- foo---&gt;</p>
 
-            TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "", context: "Example 623\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "", context: "Example 626\nSection Inlines / Raw HTML\n");
         }
 
         // Processing instructions:
         [Test]
-        public void InlinesRawHTML_Example624()
+        public void InlinesRawHTML_Example627()
         {
-            // Example 624
+            // Example 627
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13820,14 +13890,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo <?php echo $a; ?></p>
 
-            TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "", context: "Example 624\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <?php echo $a; ?>", "<p>foo <?php echo $a; ?></p>", "", context: "Example 627\nSection Inlines / Raw HTML\n");
         }
 
         // Declarations:
         [Test]
-        public void InlinesRawHTML_Example625()
+        public void InlinesRawHTML_Example628()
         {
-            // Example 625
+            // Example 628
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13836,14 +13906,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo <!ELEMENT br EMPTY></p>
 
-            TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "", context: "Example 625\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!ELEMENT br EMPTY>", "<p>foo <!ELEMENT br EMPTY></p>", "", context: "Example 628\nSection Inlines / Raw HTML\n");
         }
 
         // CDATA sections:
         [Test]
-        public void InlinesRawHTML_Example626()
+        public void InlinesRawHTML_Example629()
         {
-            // Example 626
+            // Example 629
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13852,15 +13922,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo <![CDATA[>&<]]></p>
 
-            TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "", context: "Example 626\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <![CDATA[>&<]]>", "<p>foo <![CDATA[>&<]]></p>", "", context: "Example 629\nSection Inlines / Raw HTML\n");
         }
 
         // Entity and numeric character references are preserved in HTML
         // attributes:
         [Test]
-        public void InlinesRawHTML_Example627()
+        public void InlinesRawHTML_Example630()
         {
-            // Example 627
+            // Example 630
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13869,14 +13939,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo <a href="&ouml;"></p>
 
-            TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "", context: "Example 627\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <a href=\"&ouml;\">", "<p>foo <a href=\"&ouml;\"></p>", "", context: "Example 630\nSection Inlines / Raw HTML\n");
         }
 
         // Backslash escapes do not work in HTML attributes:
         [Test]
-        public void InlinesRawHTML_Example628()
+        public void InlinesRawHTML_Example631()
         {
-            // Example 628
+            // Example 631
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13885,13 +13955,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo <a href="\*"></p>
 
-            TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "", context: "Example 628\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <a href=\"\\*\">", "<p>foo <a href=\"\\*\"></p>", "", context: "Example 631\nSection Inlines / Raw HTML\n");
         }
 
         [Test]
-        public void InlinesRawHTML_Example629()
+        public void InlinesRawHTML_Example632()
         {
-            // Example 629
+            // Example 632
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13900,7 +13970,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
 
-            TestParser.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "", context: "Example 629\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a href=\"\\\"\">", "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>", "", context: "Example 632\nSection Inlines / Raw HTML\n");
         }
     }
 
@@ -13909,14 +13979,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
     {
         // ## Hard line breaks
         // 
-        // A line break (not in a code span or HTML tag) that is preceded
+        // A line ending (not in a code span or HTML tag) that is preceded
         // by two or more spaces and does not occur at the end of a block
         // is parsed as a [hard line break](@) (rendered
         // in HTML as a `<br />` tag):
         [Test]
-        public void InlinesHardLineBreaks_Example630()
+        public void InlinesHardLineBreaks_Example633()
         {
-            // Example 630
+            // Example 633
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -13927,15 +13997,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo<br />
             //     baz</p>
 
-            TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 630\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo  \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 633\nSection Inlines / Hard line breaks\n");
         }
 
         // For a more visible alternative, a backslash before the
-        // [line ending] may be used instead of two spaces:
+        // [line ending] may be used instead of two or more spaces:
         [Test]
-        public void InlinesHardLineBreaks_Example631()
+        public void InlinesHardLineBreaks_Example634()
         {
-            // Example 631
+            // Example 634
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -13946,14 +14016,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo<br />
             //     baz</p>
 
-            TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 631\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo\\\nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 634\nSection Inlines / Hard line breaks\n");
         }
 
         // More than two spaces can be used:
         [Test]
-        public void InlinesHardLineBreaks_Example632()
+        public void InlinesHardLineBreaks_Example635()
         {
-            // Example 632
+            // Example 635
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -13964,14 +14034,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo<br />
             //     baz</p>
 
-            TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 632\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo       \nbaz", "<p>foo<br />\nbaz</p>", "", context: "Example 635\nSection Inlines / Hard line breaks\n");
         }
 
         // Leading spaces at the beginning of the next line are ignored:
         [Test]
-        public void InlinesHardLineBreaks_Example633()
+        public void InlinesHardLineBreaks_Example636()
         {
-            // Example 633
+            // Example 636
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -13982,13 +14052,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo<br />
             //     bar</p>
 
-            TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "", context: "Example 633\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo  \n     bar", "<p>foo<br />\nbar</p>", "", context: "Example 636\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example634()
+        public void InlinesHardLineBreaks_Example637()
         {
-            // Example 634
+            // Example 637
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -13999,15 +14069,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo<br />
             //     bar</p>
 
-            TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "", context: "Example 634\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo\\\n     bar", "<p>foo<br />\nbar</p>", "", context: "Example 637\nSection Inlines / Hard line breaks\n");
         }
 
-        // Line breaks can occur inside emphasis, links, and other constructs
+        // Hard line breaks can occur inside emphasis, links, and other constructs
         // that allow inline content:
         [Test]
-        public void InlinesHardLineBreaks_Example635()
+        public void InlinesHardLineBreaks_Example638()
         {
-            // Example 635
+            // Example 638
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14018,13 +14088,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><em>foo<br />
             //     bar</em></p>
 
-            TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example 635\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("*foo  \nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example 638\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example636()
+        public void InlinesHardLineBreaks_Example639()
         {
-            // Example 636
+            // Example 639
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14035,30 +14105,30 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><em>foo<br />
             //     bar</em></p>
 
-            TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example 636\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("*foo\\\nbar*", "<p><em>foo<br />\nbar</em></p>", "", context: "Example 639\nSection Inlines / Hard line breaks\n");
         }
 
-        // Line breaks do not occur inside code spans
+        // Hard line breaks do not occur inside code spans
         [Test]
-        public void InlinesHardLineBreaks_Example637()
+        public void InlinesHardLineBreaks_Example640()
         {
-            // Example 637
+            // Example 640
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
-            //     `code 
+            //     `code  
             //     span`
             //
             // Should be rendered as:
-            //     <p><code>code  span</code></p>
+            //     <p><code>code   span</code></p>
 
-            TestParser.TestSpec("`code \nspan`", "<p><code>code  span</code></p>", "", context: "Example 637\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("`code  \nspan`", "<p><code>code   span</code></p>", "", context: "Example 640\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example638()
+        public void InlinesHardLineBreaks_Example641()
         {
-            // Example 638
+            // Example 641
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14068,14 +14138,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p><code>code\ span</code></p>
 
-            TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "", context: "Example 638\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("`code\\\nspan`", "<p><code>code\\ span</code></p>", "", context: "Example 641\nSection Inlines / Hard line breaks\n");
         }
 
         // or HTML tags:
         [Test]
-        public void InlinesHardLineBreaks_Example639()
+        public void InlinesHardLineBreaks_Example642()
         {
-            // Example 639
+            // Example 642
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14086,13 +14156,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a href="foo  
             //     bar"></p>
 
-            TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "", context: "Example 639\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("<a href=\"foo  \nbar\">", "<p><a href=\"foo  \nbar\"></p>", "", context: "Example 642\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example640()
+        public void InlinesHardLineBreaks_Example643()
         {
-            // Example 640
+            // Example 643
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14103,16 +14173,16 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p><a href="foo\
             //     bar"></p>
 
-            TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "", context: "Example 640\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("<a href=\"foo\\\nbar\">", "<p><a href=\"foo\\\nbar\"></p>", "", context: "Example 643\nSection Inlines / Hard line breaks\n");
         }
 
         // Hard line breaks are for separating inline content within a block.
         // Neither syntax for hard line breaks works at the end of a paragraph or
         // other block element:
         [Test]
-        public void InlinesHardLineBreaks_Example641()
+        public void InlinesHardLineBreaks_Example644()
         {
-            // Example 641
+            // Example 644
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14121,13 +14191,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo\</p>
 
-            TestParser.TestSpec("foo\\", "<p>foo\\</p>", "", context: "Example 641\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo\\", "<p>foo\\</p>", "", context: "Example 644\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example642()
+        public void InlinesHardLineBreaks_Example645()
         {
-            // Example 642
+            // Example 645
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14136,13 +14206,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>foo</p>
 
-            TestParser.TestSpec("foo  ", "<p>foo</p>", "", context: "Example 642\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("foo  ", "<p>foo</p>", "", context: "Example 645\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example643()
+        public void InlinesHardLineBreaks_Example646()
         {
-            // Example 643
+            // Example 646
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14151,13 +14221,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h3>foo\</h3>
 
-            TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>", "", context: "Example 643\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("### foo\\", "<h3>foo\\</h3>", "", context: "Example 646\nSection Inlines / Hard line breaks\n");
         }
 
         [Test]
-        public void InlinesHardLineBreaks_Example644()
+        public void InlinesHardLineBreaks_Example647()
         {
-            // Example 644
+            // Example 647
             // Section: Inlines / Hard line breaks
             //
             // The following Markdown:
@@ -14166,7 +14236,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <h3>foo</h3>
 
-            TestParser.TestSpec("### foo  ", "<h3>foo</h3>", "", context: "Example 644\nSection Inlines / Hard line breaks\n");
+            TestParser.TestSpec("### foo  ", "<h3>foo</h3>", "", context: "Example 647\nSection Inlines / Hard line breaks\n");
         }
     }
 
@@ -14175,15 +14245,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
     {
         // ## Soft line breaks
         // 
-        // A regular line break (not in a code span or HTML tag) that is not
+        // A regular line ending (not in a code span or HTML tag) that is not
         // preceded by two or more spaces or a backslash is parsed as a
-        // [softbreak](@).  (A softbreak may be rendered in HTML either as a
+        // [softbreak](@).  (A soft line break may be rendered in HTML either as a
         // [line ending] or as a space. The result will be the same in
         // browsers. In the examples here, a [line ending] will be used.)
         [Test]
-        public void InlinesSoftLineBreaks_Example645()
+        public void InlinesSoftLineBreaks_Example648()
         {
-            // Example 645
+            // Example 648
             // Section: Inlines / Soft line breaks
             //
             // The following Markdown:
@@ -14194,15 +14264,15 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo
             //     baz</p>
 
-            TestParser.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "", context: "Example 645\nSection Inlines / Soft line breaks\n");
+            TestParser.TestSpec("foo\nbaz", "<p>foo\nbaz</p>", "", context: "Example 648\nSection Inlines / Soft line breaks\n");
         }
 
         // Spaces at the end of the line and beginning of the next line are
         // removed:
         [Test]
-        public void InlinesSoftLineBreaks_Example646()
+        public void InlinesSoftLineBreaks_Example649()
         {
-            // Example 646
+            // Example 649
             // Section: Inlines / Soft line breaks
             //
             // The following Markdown:
@@ -14213,7 +14283,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             //     <p>foo
             //     baz</p>
 
-            TestParser.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "", context: "Example 646\nSection Inlines / Soft line breaks\n");
+            TestParser.TestSpec("foo \n baz", "<p>foo\nbaz</p>", "", context: "Example 649\nSection Inlines / Soft line breaks\n");
         }
     }
 
@@ -14221,7 +14291,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
     public class TestInlinesTextualContent
     {
         // A conforming parser may render a soft line break in HTML either as a
-        // line break or as a space.
+        // line ending or as a space.
         // 
         // A renderer may also provide an option to render soft line breaks
         // as hard line breaks.
@@ -14231,9 +14301,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // Any characters not given an interpretation by the above rules will
         // be parsed as plain textual content.
         [Test]
-        public void InlinesTextualContent_Example647()
+        public void InlinesTextualContent_Example650()
         {
-            // Example 647
+            // Example 650
             // Section: Inlines / Textual content
             //
             // The following Markdown:
@@ -14242,13 +14312,13 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>hello $.;'there</p>
 
-            TestParser.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "", context: "Example 647\nSection Inlines / Textual content\n");
+            TestParser.TestSpec("hello $.;'there", "<p>hello $.;'there</p>", "", context: "Example 650\nSection Inlines / Textual content\n");
         }
 
         [Test]
-        public void InlinesTextualContent_Example648()
+        public void InlinesTextualContent_Example651()
         {
-            // Example 648
+            // Example 651
             // Section: Inlines / Textual content
             //
             // The following Markdown:
@@ -14257,14 +14327,14 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>Foo χρῆν</p>
 
-            TestParser.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "", context: "Example 648\nSection Inlines / Textual content\n");
+            TestParser.TestSpec("Foo χρῆν", "<p>Foo χρῆν</p>", "", context: "Example 651\nSection Inlines / Textual content\n");
         }
 
         // Internal spaces are preserved verbatim:
         [Test]
-        public void InlinesTextualContent_Example649()
+        public void InlinesTextualContent_Example652()
         {
-            // Example 649
+            // Example 652
             // Section: Inlines / Textual content
             //
             // The following Markdown:
@@ -14273,29 +14343,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
             // Should be rendered as:
             //     <p>Multiple     spaces</p>
 
-            TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "", context: "Example 649\nSection Inlines / Textual content\n");
-        }
-
-        // Within a blockquote a setext heading takes precedence
-        // over a thematic break:
-        [Test]
-        public void InlinesTextualContent_Example650()
-        {
-            // Example 650
-            // Section: Inlines / Textual content
-            //
-            // The following Markdown:
-            //     > Foo
-            //     > ---
-            //     > bar
-            //
-            // Should be rendered as:
-            //     <blockquote>
-            //     <h2>Foo</h2>
-            //     <p>bar</p>
-            //     </blockquote>
-
-            TestParser.TestSpec("> Foo\n> ---\n> bar", "<blockquote>\n<h2>Foo</h2>\n<p>bar</p>\n</blockquote>", "", context: "Example 650\nSection Inlines / Textual content\n");
+            TestParser.TestSpec("Multiple     spaces", "<p>Multiple     spaces</p>", "", context: "Example 652\nSection Inlines / Textual content\n");
         }
         // <!-- END TESTS -->
         // 
@@ -14372,7 +14420,7 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // blocks, we look for new block starts (e.g. `>` for a block quote).
         // If we encounter a new block start, we close any blocks unmatched
         // in step 1 before creating the new block as a child of the last
-        // matched block.
+        // matched container block.
         // 
         // 3.  Finally, we look at the remainder of the line (after block
         // markers like `>`, list markers, and indentation have been consumed).
@@ -14588,8 +14636,9 @@ namespace Markdig.Tests.Specs.CommonMarkV_0_29
         // is NULL).
         // 
         // We keep track of the `openers_bottom` for each delimiter
-        // type (`*`, `_`) and each length of the closing delimiter run
-        // (modulo 3).  Initialize this to `stack_bottom`.
+        // type (`*`, `_`), indexed to the length of the closing delimiter run
+        // (modulo 3) and to whether the closing delimiter can also be an
+        // opener.  Initialize this to `stack_bottom`.
         // 
         // Then we repeat the following until we run out of potential
         // closers:
