@@ -88,5 +88,25 @@ namespace Markdig.Tests
 
             Assert.Throws<ArgumentException>(() => container[0] = two); // two already has a parent
         }
+
+        [Test]
+        public void CopyToCopiesChildren()
+        {
+            ContainerBlock container = new MockContainerBlock();
+            var one = new ParagraphBlock();
+            container.Add(one);
+            var two = new ParagraphBlock();
+            container.Add(two);
+            var three = new ParagraphBlock();
+            container.Add(three);
+            Assert.AreEqual(3, container.Count);
+
+            var destination = new Block[3];
+            container.CopyTo(destination, 0);
+
+            Assert.AreSame(destination[0], one);
+            Assert.AreSame(destination[1], two);
+            Assert.AreSame(destination[2], three);
+        }
     }
 }

@@ -130,7 +130,7 @@ namespace Markdig.Syntax
             BlockWrapper[] children = _children;
             for (int i = 0; i < Count && i < children.Length; i++)
             {
-                array[arrayIndex + 1] = children[i].Block;
+                array[arrayIndex + i] = children[i].Block;
             }
         }
 
