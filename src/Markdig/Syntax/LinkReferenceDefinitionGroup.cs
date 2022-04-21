@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Markdig.Helpers;
 
 namespace Markdig.Syntax
@@ -15,12 +16,18 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class LinkReferenceDefinitionGroup : ContainerBlock
     {
+#if NET452
+        private static readonly StringComparer _unicodeIgnoreCaseComparer = StringComparer.InvariantCultureIgnoreCase;
+#else
+        private static readonly StringComparer _unicodeIgnoreCaseComparer = CultureInfo.InvariantCulture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
+#endif
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LinkReferenceDefinitionGroup"/> class.
         /// </summary>
         public LinkReferenceDefinitionGroup() : base(null)
         {
-            Links = new Dictionary<string, LinkReferenceDefinition>(StringComparer.OrdinalIgnoreCase);
+            Links = new Dictionary<string, LinkReferenceDefinition>(_unicodeIgnoreCaseComparer);
         }
 
         /// <summary>
