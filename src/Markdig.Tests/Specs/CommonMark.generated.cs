@@ -1,12 +1,12 @@
 
 // --------------------------------
-//        CommonMark v. 0.29
+//          CommonMarkSpecs
 // --------------------------------
 
 using System;
 using NUnit.Framework;
 
-namespace Markdig.Tests.Specs.CommonMarkV_0_29
+namespace Markdig.Tests.Specs.CommonMarkSpecs
 {
     [TestFixture]
     public class TestPreliminariesTabs
