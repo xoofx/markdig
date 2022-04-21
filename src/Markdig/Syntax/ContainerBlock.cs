@@ -130,7 +130,7 @@ namespace Markdig.Syntax
             BlockWrapper[] children = _children;
             for (int i = 0; i < Count && i < children.Length; i++)
             {
-                array[arrayIndex + 1] = children[i].Block;
+                array[arrayIndex + i] = children[i].Block;
             }
         }
 
@@ -193,7 +193,7 @@ namespace Markdig.Syntax
 
         public void RemoveAt(int index)
         {
-            if ((uint)index > (uint)Count)
+            if ((uint)index >= (uint)Count)
                 ThrowHelper.ArgumentOutOfRangeException_index();
 
             Count--;
