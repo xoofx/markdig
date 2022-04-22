@@ -88,5 +88,102 @@ namespace Markdig.Tests
 
             Assert.Throws<ArgumentException>(() => container[0] = two); // two already has a parent
         }
+
+        [Test]
+        public void Contains()
+        {
+            var container = new MockContainerBlock();
+            var block = new ParagraphBlock();
+
+            Assert.False(container.Contains(block));
+
+            container.Add(block);
+            Assert.True(container.Contains(block));
+
+            container.Add(new ParagraphBlock());
+            Assert.True(container.Contains(block));
+
+            container.Insert(0, new ParagraphBlock());
+            Assert.True(container.Contains(block));
+        }
+
+        [Test]
+        public void Remove()
+        {
+            var container = new MockContainerBlock();
+            var block = new ParagraphBlock();
+
+            Assert.False(container.Remove(block));
+            Assert.AreEqual(0, container.Count);
+            Assert.Throws<ArgumentOutOfRangeException>(() => container.RemoveAt(0));
+            Assert.AreEqual(0, container.Count);
+
+            container.Add(block);
+            Assert.AreEqual(1, container.Count);
+            Assert.True(container.Remove(block));
+            Assert.AreEqual(0, container.Count);
+            Assert.False(container.Remove(block));
+            Assert.AreEqual(0, container.Count);
+
+            container.Add(block);
+            Assert.AreEqual(1, container.Count);
+            container.RemoveAt(0);
+            Assert.AreEqual(0, container.Count);
+            Assert.Throws<ArgumentOutOfRangeException>(() => container.RemoveAt(0));
+            Assert.AreEqual(0, container.Count);
+
+            container.Add(new ParagraphBlock { Column = 1 });
+            container.Add(new ParagraphBlock { Column = 2 });
+            container.Add(new ParagraphBlock { Column = 3 });
+            container.Add(new ParagraphBlock { Column = 4 });
+            Assert.AreEqual(4, container.Count);
+
+            container.RemoveAt(2);
+            Assert.AreEqual(3, container.Count);
+            Assert.AreEqual(4, container[2].Column);
+
+            Assert.True(container.Remove(container[1]));
+            Assert.AreEqual(2, container.Count);
+            Assert.AreEqual(1, container[0].Column);
+            Assert.AreEqual(4, container[1].Column);
+            Assert.Throws<IndexOutOfRangeException>(() => _ = container[2]);
+        }
+
+        [Test]
+        public void CopyTo()
+        {
+            var container = new MockContainerBlock();
+
+            var destination = new Block[4];
+            container.CopyTo(destination, 0);
+            container.CopyTo(destination, 1);
+            container.CopyTo(destination, -1);
+            container.CopyTo(destination, 5);
+            Assert.Null(destination[0]);
+
+            container.Add(new ParagraphBlock());
+            container.CopyTo(destination, 0);
+            Assert.NotNull(destination[0]);
+            Assert.Null(destination[1]);
+            Assert.Null(destination[2]);
+            Assert.Null(destination[3]);
+
+            container.CopyTo(destination, 2);
+            Assert.NotNull(destination[0]);
+            Assert.Null(destination[1]);
+            Assert.NotNull(destination[2]);
+            Assert.Null(destination[3]);
+
+            Array.Clear(destination);
+
+            container.Add(new ParagraphBlock());
+            container.CopyTo(destination, 1);
+            Assert.Null(destination[0]);
+            Assert.NotNull(destination[1]);
+            Assert.NotNull(destination[2]);
+            Assert.Null(destination[3]);
+
+            Assert.Throws<IndexOutOfRangeException>(() => container.CopyTo(destination, 3));
+        }
     }
 }
