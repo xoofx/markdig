@@ -19,20 +19,7 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly struct KeyWrapper : IEquatable<KeyWrapper>
-        {
-            public readonly IntPtr Key;
-
-            public KeyWrapper(IntPtr key) => Key = key;
-
-            public bool Equals(KeyWrapper other) => Key == other.Key;
-
-            public override int GetHashCode() => Key.GetHashCode();
-
-            public override bool Equals(object? obj) => throw new NotImplementedException();
-        }
-
-        private readonly Dictionary<KeyWrapper, IMarkdownObjectRenderer?> _renderersPerType = new();
+        private readonly Dictionary<Type, IMarkdownObjectRenderer?> _renderersPerType = new();
         internal int _childrenDepth = 0;
 
         /// <summary>
@@ -42,13 +29,11 @@ namespace Markdig.Renderers
 
         private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
         {
-            KeyWrapper key = GetKeyForType(obj);
-            Type objectType = obj.GetType();
-
+            var key = obj.GetType();
             for (int i = 0; i < ObjectRenderers.Count; i++)
             {
                 var renderer = ObjectRenderers[i];
-                if (renderer.Accept(this, objectType))
+                if (renderer.Accept(this, key))
                 {
                     _renderersPerType[key] = renderer;
                     return renderer;
@@ -156,7 +141,7 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            if (!_renderersPerType.TryGetValue(GetKeyForType(obj), out IMarkdownObjectRenderer? renderer))
+            if (!_renderersPerType.TryGetValue(obj.GetType(), out IMarkdownObjectRenderer? renderer))
             {
                 renderer = GetRendererInstance(obj);
             }
@@ -177,55 +162,5 @@ namespace Markdig.Renderers
             // Calls after writing an object
             ObjectWriteAfter?.Invoke(this, obj);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static KeyWrapper GetKeyForType(MarkdownObject obj)
-        {
-#if NET
-            if (s_canUseMethodTablePointer)
-            {
-                IntPtr methodTablePtr = Unsafe.Add(ref Unsafe.As<RawData>(obj).Data, -1);
-                return new KeyWrapper(methodTablePtr);
-            }
-#endif
-
-            IntPtr typeHandle = Type.GetTypeHandle(obj).Value;
-            return new KeyWrapper(typeHandle);
-        }
-
-#if NET
-        private sealed class RawData
-        {
-            public IntPtr Data;
-        }
-
-        private static readonly bool s_canUseMethodTablePointer = GetCanUseMethodTablePointer();
-
-        private static bool GetCanUseMethodTablePointer()
-        {
-            if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
-            {
-                return false;
-            }
-
-            var obj1 = new LiteralInline();
-            var obj2 = new ParagraphBlock();
-            var obj3 = new LiteralInline();
-            IntPtr ptr1 = Unsafe.Add(ref Unsafe.As<RawData>(obj1).Data, -1);
-            IntPtr ptr2 = Unsafe.Add(ref Unsafe.As<RawData>(obj2).Data, -1);
-            IntPtr ptr3 = Unsafe.Add(ref Unsafe.As<RawData>(obj3).Data, -1);
-            GC.KeepAlive(obj1);
-            GC.KeepAlive(obj2);
-            GC.KeepAlive(obj3);
-
-            if (ptr1 == ptr2 || ptr1 != ptr3)
-            {
-                Debug.Fail("This platform doesn't support the MT pointer optimization");
-                return false;
-            }
-
-            return true;
-        }
-#endif
     }
 }
