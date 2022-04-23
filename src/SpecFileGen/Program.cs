@@ -63,7 +63,7 @@ namespace SpecFileGen
         // NOTE: Beware of Copy/Pasting spec files - some characters may change (non-breaking space into space)!
         static readonly Spec[] Specs = new[]
         {
-            new Spec("CommonMark v. 0.29",  "CommonMark.md",                ""),
+            new Spec("CommonMarkSpecs",     "CommonMark.md",                ""),
             new Spec("Pipe Tables",         "PipeTableSpecs.md",            "pipetables|advanced"),
             new Spec("GFM Pipe Tables",     "PipeTableGfmSpecs.md",         "gfm-pipetables"),
             new Spec("Footnotes",           "FootnotesSpecs.md",            "footnotes|advanced"),
