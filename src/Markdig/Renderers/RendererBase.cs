@@ -4,7 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -180,17 +182,50 @@ namespace Markdig.Renderers
         private static KeyWrapper GetKeyForType(MarkdownObject obj)
         {
 #if NET
-            IntPtr methodTablePtr = Unsafe.Add(ref Unsafe.As<RawData>(obj).Data, -1);
-            return new KeyWrapper(methodTablePtr);
-#else
+            if (s_canUseMethodTablePointer)
+            {
+                IntPtr methodTablePtr = Unsafe.Add(ref Unsafe.As<RawData>(obj).Data, -1);
+                return new KeyWrapper(methodTablePtr);
+            }
+#endif
+
             IntPtr typeHandle = Type.GetTypeHandle(obj).Value;
             return new KeyWrapper(typeHandle);
-#endif
         }
 
+#if NET
         private sealed class RawData
         {
             public IntPtr Data;
         }
+
+        private static readonly bool s_canUseMethodTablePointer = GetCanUseMethodTablePointer();
+
+        private static bool GetCanUseMethodTablePointer()
+        {
+            if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
+            {
+                return false;
+            }
+
+            var obj1 = new LiteralInline();
+            var obj2 = new ParagraphBlock();
+            var obj3 = new LiteralInline();
+            IntPtr ptr1 = Unsafe.Add(ref Unsafe.As<RawData>(obj1).Data, -1);
+            IntPtr ptr2 = Unsafe.Add(ref Unsafe.As<RawData>(obj2).Data, -1);
+            IntPtr ptr3 = Unsafe.Add(ref Unsafe.As<RawData>(obj3).Data, -1);
+            GC.KeepAlive(obj1);
+            GC.KeepAlive(obj2);
+            GC.KeepAlive(obj3);
+
+            if (ptr1 == ptr2 || ptr1 != ptr3)
+            {
+                Debug.Fail("This platform doesn't support the MT pointer optimization");
+                return false;
+            }
+
+            return true;
+        }
+#endif
     }
 }
