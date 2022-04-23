@@ -4,9 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -19,7 +17,7 @@ namespace Markdig.Renderers
     /// <seealso cref="IMarkdownRenderer" />
     public abstract class RendererBase : IMarkdownRenderer
     {
-        private readonly Dictionary<Type, IMarkdownObjectRenderer?> _renderersPerType = new();
+        private readonly Dictionary<RuntimeTypeHandle, IMarkdownObjectRenderer?> _renderersPerType = new();
         internal int _childrenDepth = 0;
 
         /// <summary>
@@ -124,10 +122,9 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            var objectType = obj.GetType();
-            if (!_renderersPerType.TryGetValue(objectType, out IMarkdownObjectRenderer? renderer))
+            if (!_renderersPerType.TryGetValue(Type.GetTypeHandle(obj), out IMarkdownObjectRenderer? renderer))
             {
-                renderer = GetRendererInstance(objectType);
+                renderer = GetRendererInstance(obj);
             }
 
             if (renderer is not null)
@@ -147,19 +144,21 @@ namespace Markdig.Renderers
             ObjectWriteAfter?.Invoke(this, obj);
         }
 
-        private IMarkdownObjectRenderer? GetRendererInstance(Type objectType)
+        private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
         {
-            var renderers = ObjectRenderers;
-            foreach (var renderer in renderers)
+            Type type = obj.GetType();
+            RuntimeTypeHandle key = Type.GetTypeHandle(obj);
+
+            foreach (var renderer in ObjectRenderers)
             {
-                if (renderer.Accept(this, objectType))
+                if (renderer.Accept(this, type))
                 {
-                    _renderersPerType[objectType] = renderer;
+                    _renderersPerType[key] = renderer;
                     return renderer;
                 }
             }
 
-            _renderersPerType[objectType] = null;
+            _renderersPerType[key] = null;
             return null;
         }
     }
