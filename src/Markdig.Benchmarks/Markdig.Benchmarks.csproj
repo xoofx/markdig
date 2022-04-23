@@ -9,26 +9,8 @@
     <None Remove="spec.md" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CommonMarkNew, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
-      <HintPath>lib\CommonMarkNew.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Aliases>newcmark</Aliases>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MoonShine">
-      <HintPath>lib\MoonShine.dll</HintPath>
-    </Reference>
-    <Reference Include="MarkdownDeep">
-      <HintPath>lib\MarkdownDeep.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="cmark.dll">
       <HintPath>cmark.dll</HintPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="libsundown.dll">
-      <HintPath>libsundown.dll</HintPath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="spec.md">
@@ -39,9 +21,9 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.1" />
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
+    <PackageReference Include="Markdown" Version="2.2.1" />
     <PackageReference Include="MarkdownSharp" Version="2.0.5" />
     <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.0.226801" />
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.74" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
