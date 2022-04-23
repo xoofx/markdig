@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
@@ -23,7 +23,7 @@ namespace Testamina.Markdig.Benchmarks
         }
 
         //[Benchmark(Description = "TestMarkdig", OperationsPerInvoke = 4096)]
-        [Benchmark]
+        [Benchmark(Description = "markdig")]
         public void TestMarkdig()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -31,7 +31,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        [Benchmark(Description = "cmark")]
         public void TestCommonMarkCpp()
         {
             //var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -39,7 +39,7 @@ namespace Testamina.Markdig.Benchmarks
             //File.WriteAllText("spec.html", writer.ToString());
         }
 
-        [Benchmark]
+        [Benchmark(Description = "CommonMark.NET")]
         public void TestCommonMarkNet()
         {
             ////var reader = new StreamReader(File.Open("spec.md", FileMode.Open));
@@ -53,7 +53,7 @@ namespace Testamina.Markdig.Benchmarks
             //writer.ToString();
         }
 
-        [Benchmark]
+        [Benchmark(Description = "MarkdownSharp")]
         public void TestMarkdownSharp()
         {
             new MarkdownSharp.Markdown().Transform(text);
