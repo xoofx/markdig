@@ -27,23 +27,6 @@ namespace Markdig.Renderers
         /// </summary>
         protected RendererBase() { }
 
-        private IMarkdownObjectRenderer? GetRendererInstance(MarkdownObject obj)
-        {
-            var key = obj.GetType();
-            for (int i = 0; i < ObjectRenderers.Count; i++)
-            {
-                var renderer = ObjectRenderers[i];
-                if (renderer.Accept(this, key))
-                {
-                    _renderersPerType[key] = renderer;
-                    return renderer;
-                }
-            }
-
-            _renderersPerType[key] = null;
-            return null;
-        }
-
         public ObjectRendererCollection ObjectRenderers { get; } = new();
 
         public abstract object Render(MarkdownObject markdownObject);
@@ -141,9 +124,10 @@ namespace Markdig.Renderers
             // Calls before writing an object
             ObjectWriteBefore?.Invoke(this, obj);
 
-            if (!_renderersPerType.TryGetValue(obj.GetType(), out IMarkdownObjectRenderer? renderer))
+            var objectType = obj.GetType();
+            if (!_renderersPerType.TryGetValue(objectType, out IMarkdownObjectRenderer? renderer))
             {
-                renderer = GetRendererInstance(obj);
+                renderer = GetRendererInstance(objectType);
             }
 
             if (renderer is not null)
@@ -161,6 +145,22 @@ namespace Markdig.Renderers
 
             // Calls after writing an object
             ObjectWriteAfter?.Invoke(this, obj);
+        }
+
+        private IMarkdownObjectRenderer? GetRendererInstance(Type objectType)
+        {
+            var renderers = ObjectRenderers;
+            foreach (var renderer in renderers)
+            {
+                if (renderer.Accept(this, objectType))
+                {
+                    _renderersPerType[objectType] = renderer;
+                    return renderer;
+                }
+            }
+
+            _renderersPerType[objectType] = null;
+            return null;
         }
     }
 }
