@@ -1,10 +1,9 @@
-﻿// Copyright (c) Alexandre Mutel. All rights reserved.
+// Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
 using Markdig.Parsers;
 using Markdig.Renderers;
-using Markdig.Renderers.Html;
 
 namespace Markdig.Extensions.Yaml
 {
@@ -24,9 +23,10 @@ namespace Markdig.Extensions.Yaml
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
-            if (!renderer.ObjectRenderers.Contains<YamlFrontMatterRenderer>())
+            if (!renderer.ObjectRenderers.Contains<YamlFrontMatterHtmlRenderer>())
             {
-                renderer.ObjectRenderers.InsertBefore<CodeBlockRenderer>(new YamlFrontMatterRenderer());
+                renderer.ObjectRenderers.InsertBefore<Renderers.Html.CodeBlockRenderer> (new YamlFrontMatterHtmlRenderer());
+                renderer.ObjectRenderers.InsertBefore<Renderers.Roundtrip.CodeBlockRenderer>(new YamlFrontMatterRoundtripRenderer());
             }
         }
     }
