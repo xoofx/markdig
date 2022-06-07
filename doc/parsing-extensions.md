@@ -125,34 +125,3 @@ public class BlinkExtension : IMarkdownExtension
     }
 }
 ```
-
-## Parsers
-
-Markdig has two types of parsers, both of which derive from `ParserBase<TProcessor>`. 
-
-Block parsers, derived from `BlockParser`, identify block elements from lines in the source text and push them onto the abstract syntax tree.  Inline parsers, derived from `InlineParser`, identify inline elements from `LeafBlock` elements and push them into an attached container.  
-
-Both inline and block parsers are regex-free, and instead work on finding opening characters and then making fast read-only views into the source text.
-
-### Block Parser
-
-**(The contents of this section I am very unsure of, this is from my reading of the code but I could use some guidance here)**
-
-**(Does `CanInterrupt` specifically refer to interrupting a paragraph block?)**
-
-In order to be added to the parsing pipeline, all block parsers must be derived from `BlockParser`.
-
-Internally, the main parsing algorithm will be stepping through the source text, using the `HasOpeningCharacter(char c)` method of the block parser collection to pre-identify parsers which *could* be opening a block at a given position in the text based on the active character.  Thus any derived implementation needs to set the value of the `char[]? OpeningCharacter` property with the initial characters that might begin the block.
-
-If a parser can potentially open a block at a place in the source text it should expect to have the `TryOpen(BlockProcessor processor)` method called.  This is a virtual method that must be implemented on any derived class.  The `BlockProcessor` argument is a reference to an object which stores the current state of parsing and the position in the source.
-
-**(What are the rules concerning how the `BlockState` return type should work for `TryOpen`? I see examples returning `None`, `Continue`, `BreakDiscard`, `ContinueDiscard`.  How does the return value change the algorithm behavior?)**
-
-**(Should a new block always be pushed into `processor.NewBlocks` in the `TryOpen` method?)**
-
-As the main parsing algorithm moves forward, it will then call `TryContinue(...)` on blocks that were opened in `TryOpen(..)`. 
-
-**(Is this where/how you close a block? Is there anything that needs to be done to perform that beyond `block.UpdateSpanEnd` and returning `BlockState.Break`?)**
-
-
-### Inline Parser

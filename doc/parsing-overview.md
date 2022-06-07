@@ -71,7 +71,7 @@ var pipeline = new MarkdownPipelineBuilder()
 var document = Markdown.Parse(markdownText, pipeline);
 ```
 
-## The Parser and the Pipeline
+## Markdown.Parse and the MarkdownPipeline
 
 As metioned in the [Introduction](#introduction), Markdig's parsing machinery involves two surface components: the `Markdown.Parse(...)` method, and the `MarkdownPipeline` type.  The main parsing algorithm (not to be confused with individual `BlockParser` and `InlineParser` components) lives in the `Markdown.Parse(...)` static method. The `MarkdownPipeline` is responsible for configuring the behavior of the parser.
 
@@ -117,6 +117,8 @@ This section discusses the pipeline builder and the concept of *extensions* in m
 
 ### Extensions (IMarkdownExtension)
 
+***Note**: This section discusses how to consume extensions by adding them to pipeline. For a discussion on how to implement an extension, refer to the [Extensions/Parsers](parsing-extensions.md) document.*
+
 Extensions are the primary mechanism for modifying the parsers in the pipeline.
 
 An extension is any class which implements the `IMarkdownExtension` interface found in [IMarkdownExtension.cs](https://github.com/xoofx/markdig/blob/master/src/Markdig/IMarkdownExtension.cs). This interface consists solely of two `Setup(...)` overloads, which both take a `MarkdownPipelineBuilder` as the first argument.
@@ -124,8 +126,6 @@ An extension is any class which implements the `IMarkdownExtension` interface fo
 When the `MarkdownPipelineBuilder.Build()` method is invoked as the final stage in pipeline construction, the builder runs through the list of registered extensions in order and calls the `Setup(...)` method on each of them.  The extension then has full access to modify both the parser collections themselves (by adding new parsers to it), or to find and modify existing parsers.  
 
 Because of this, *some* extensions may need to be ordered in relation to others, for instance if they modify a parser that gets added by a different extension. The `OrderedList<T>` class contains convenience methods to this end, which aid in finding other extensions by type and then being able to added an item before or after them.
-
-For a discussion on how to implement an extension, refer to the [Extensions/Parsers](parsing-extensions.md) document.
 
 ### The MarkdownPipelineBuilder
 
@@ -225,3 +225,112 @@ Internally, the fluent interface wraps manual operations on the three primary co
 All three collections are `OrderedList<T>`, which is a collection type custom to Markdig which contains special methods for finding and inserting derived types.  With the builder created, manual configuration can be performed by accessing these collections and their elements and modifying them as necessary.  
 
 ***Warning**: be aware that it should not be necessary to directly modify either the `BlockParsers` or the `InlineParsers` collections directly during the pipeline configuration. Rather, these can and should be modified whenever possible through the `Setup(...)` method of extensions, which will be deferred until the pipeline is actually built and will allow for ordering such that operations dependent on other operations can be accounted for.*
+
+## Block and Inline Parsers
+
+Let's dive deeper into the parsing system.  With a configured pipeline, the `Markdown.Parse` method will run through two two conceptual passes to produce the abstract syntax tree.
+
+1. First, `BlockProcessor.ProcessLine` is called on the file's lines, one by one, trying to identify block elements in the source
+2. Next, an `InlineProcessor` is created or borrowed and run on each block to identify inline elements.
+
+These two conceptual operations dictate Markdig's two types of parsers, both of which derive from `ParserBase<TProcessor>`. 
+
+Block parsers, derived from `BlockParser`, identify block elements from lines in the source text and push them onto the abstract syntax tree.  Inline parsers, derived from `InlineParser`, identify inline elements from `LeafBlock` elements and push them into an attached container: the `ContainerInline? LeafBlock.Inline` property.  
+
+Both inline and block parsers are regex-free, and instead work on finding opening characters and then making fast read-only views into the source text.
+
+### Block Parser
+
+**(The contents of this section I am very unsure of, this is from my reading of the code but I could use some guidance here)**
+
+**(Does `CanInterrupt` specifically refer to interrupting a paragraph block?)**
+
+In order to be added to the parsing pipeline, all block parsers must be derived from `BlockParser`.
+
+Internally, the main parsing algorithm will be stepping through the source text, using the `HasOpeningCharacter(char c)` method of the block parser collection to pre-identify parsers which *could* be opening a block at a given position in the text based on the active character.  Thus any derived implementation needs to set the value of the `char[]? OpeningCharacter` property with the initial characters that might begin the block.
+
+If a parser can potentially open a block at a place in the source text it should expect to have the `TryOpen(BlockProcessor processor)` method called.  This is a virtual method that must be implemented on any derived class.  The `BlockProcessor` argument is a reference to an object which stores the current state of parsing and the position in the source.
+
+**(What are the rules concerning how the `BlockState` return type should work for `TryOpen`? I see examples returning `None`, `Continue`, `BreakDiscard`, `ContinueDiscard`.  How does the return value change the algorithm behavior?)**
+
+**(Should a new block always be pushed into `processor.NewBlocks` in the `TryOpen` method?)**
+
+As the main parsing algorithm moves forward, it will then call `TryContinue(...)` on blocks that were opened in `TryOpen(..)`. 
+
+**(Is this where/how you close a block? Is there anything that needs to be done to perform that beyond `block.UpdateSpanEnd` and returning `BlockState.Break`?)**
+
+
+### Inline Parsers
+
+Inline parsers extract inline markdown elements from the source, but their starting point is the text of each individual `LeafBlock` produced by the block parsing process.  To understand the role of each inline parser it is necessary to first understand the inline parsing process as a whole.
+
+#### The Inline Parsing Process
+
+After the block parsing process has occurred, the abstract syntax tree of the document has been populated only with block elements, starting from the root `MarkdownDocument` node and ending with the individual `LeafBlock` derived block elements, most of which will be `ParagraphBlocks`, but also include things like `CodeBlocks`, `HeadingBlocks`, `FigureCaptions`, and so on.
+
+At this point, the parsing machinery will iterate through each `LeafBlock` one by one, creating and assigning its `LeafBlock.Inline` property with an empty `ContainerInline`, and then sweeping through the `LeafBlock`'s text running the inline parsers.  This occurs by the following process:
+
+Starting at the first character of the text it will run through all of its `InlineParser` objects which have that character as a possible opening character for the type of inline they extract.  The parsers will run in order (as such ordering is the *only* way which conflicts between parsers are resolved, and thus is important to the overall behavior of the parsing system) and the `Match(...)` method will be called on each candidate parser, in order, until one of them returns `true`.
+
+The `Match(...)` method will be passed a slice of the text beginning at the *specific character* being processed and running until the end of the `LeafBlock`'s complete text.  If the parser can create an `Inline` element it will do so and return `true`, otherwise it will return `false`.  The parser will store the created `Inline` object in the processor's `InlineProcessor.Inline` property, which as passed into the `Match(...)` method as an argument.  The parser will also advance the start of the working `StringSlice` by the characters consumed in the match.
+
+* If the parser has created an inline element and returned `true`, that element is pushed into the deepest open `ContainerInline`
+* If `false` was returned, a default `LiteralInlineParser` will run instead:
+    * If the `InlineProcessor.Inline` property already has an existing `LiteralInline` in it, these characters will be added to the existing `LiteralInline`, effectively growing it
+    * If no `LiteralInline` exists in the `InlineProcessor.Inline` property, a new one will be created containing the consumed characters and pushed into the deepest open `ContainerInline`
+
+After that, the working text of the `LeafBlock` has been conceptually shortened by the advancing start of the working `StringSlice`, moving the starting character forward.  If there is still text remaining, the process repeats from the new starting character until all of the text is consumed.
+
+At this point, when all of the source text from the `LeafBlock` has been consumed, a post-processing step occurs.  `InlineParser` objects in the pipeline which also implement `IPostInlineProcessor` are invoked on the `LeafBlock`'s root `ContainerInline`.  This, for example, is the mechanism by which the unstructured output of the `EmphasisInlineParser` is then restructured into cleanly nested `EmphasisInline` and `LiteralInline` elements.
+
+
+#### Responsibilities of an Inline Parser
+
+Like the block parsers, an inline parser must provide an array of opening characters with the `char[]? OpeningCharacter` property.
+
+However, inline parsers only require one other method, the `Match(InlineProcessor processor, ref StringSlice slice)` method, which is expected to determine if a match for the related inline is located at the starting character of the slice.
+
+Within the `Match` method a parser should:
+
+1. Determine if a match begins at the starting character of the `slice` argument
+2. If no match exists, the method should return `false` and not advance the `Start` property of the `slice` argument
+3. If a match does exist, perform the following actions: 
+    * Instantiate the appropriate `Inline` derived class and assign it to the processor argument with `processor.Inline = myInlineObject`
+    * Advance the `Start` property of the `slice` argument by the number of characters contained in the match, for example by using the `NextChar()`, `SkipChar()`, or other helper methods of the `StringSlice` class
+    * Return `true`
+
+While parsing, the `InlineProcessor` performing the processing, which is available to the `Match` function through the `processor` argument, contains a number of properties which can be used to access the current state of parsing.  For example, the `processor.Inline` property is the mechanism for returning a new inline element, but before assignment it contains the last created inline, which in turn can be accessed for its parents.
+
+Additionally, in the case of inlines which can be expected to contain other inlines, a possible strategy is to inject an inline element derived from `DelimiterInline` when the opening delimiter is detected, then to replace the opening delimiter with the final desired element when the closing delimiter is found.  This is the strategy used by the `LinkInlineParser`, for example.  In such cases the tools described in the next section, such as the `ReplaceBy` method, can be used.  Note that if this method is used the post-processing should be invoked on the `InlineProcessor` in order to finalize any emphasis elements.  For example, in the following code adapted from the `LinkInlineParser`:
+
+```csharp
+var parent = processor.Inline?.FirstParentOfType<MyDelimiterInline>();
+if (parent is null) return;
+
+var myInline = new MySpecialInline { /* set span and other parameters here */ };
+
+// Replace the delimiter inline with the final inline type, adopting all of its children
+parent.ReplaceBy(myInline);
+
+// Notifies processor as we are creating an inline locally
+processor.Inline = myInline;
+
+// Process emphasis delimiters
+processor.PostProcessInlines(0, myInline, null, false);
+```
+
+#### Inline Post-Processing
+
+The purpose of post-processing inlines is typically to re-structure inline elements after the initial parsing is complete and the entire structure of the inline elements within a parent container is now available in a way it was not during the parsing process.  Generally this consists of removing, replacing, and re-ordering `Inline` elements.
+
+To this end, the `Inline` abstract base class contains several helper methods intended to allow manipulation of inline elements during the post-processing phase.
+
+|Method|Purpose|
+|-|-|
+|`InsertAfter(...)`|Takes a new inline as an argument and inserts it into the same parent container after this instance|
+|`InsertBefore(...)`|Takes a new inline as an argument and inserts it into the same parent container before this instance|
+|`Remove()`|Removes this inline from its parent container|
+|`ReplaceBy(...)`|Removes this instance and replaces it with a new inline specified in the argument. Has an option to move all of the original inline's children into the new inline.|
+
+Additionally, the `PreviousSibling` and `NextSibling` properties can be used to determine the siblings of an inline element within its parent container.  The `FirstParentOfType<T>()` method can be used to search for a parent element, which is often useful when searching for `DelimiterInline` derived elements, which are implemented as containers.
+
