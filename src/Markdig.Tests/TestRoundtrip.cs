@@ -16,10 +16,12 @@ namespace Markdig.Tests
         {
             var pipelineBuilder = new MarkdownPipelineBuilder();
             pipelineBuilder.EnableTrackTrivia();
+            pipelineBuilder.UseYamlFrontMatter();
             MarkdownPipeline pipeline = pipelineBuilder.Build();
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
             var sw = new StringWriter();
             var nr = new RoundtripRenderer(sw);
+            pipeline.Setup(nr);
 
             nr.Write(markdownDocument);
 
