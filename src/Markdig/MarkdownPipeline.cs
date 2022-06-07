@@ -4,7 +4,7 @@
 
 using System;
 using System.IO;
-using System.Text;
+using Markdig.Extensions.SelfPipeline;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers;
@@ -13,11 +13,10 @@ namespace Markdig
 {
     /// <summary>
     /// This class is the Markdown pipeline build from a <see cref="MarkdownPipelineBuilder"/>.
+    /// <para>An instance of <see cref="MarkdownPipeline"/> is immutable, thread-safe, and should be reused when parsing multiple inputs.</para>
     /// </summary>
     public sealed class MarkdownPipeline
     {
-        // This class is immutable
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
         /// </summary>
@@ -36,6 +35,8 @@ namespace Markdig
             InlineParsers = inlineParsers;
             DebugLog = debugLog;
             DocumentProcessed = documentProcessed;
+
+            SelfPipeline = Extensions.Find<SelfPipelineExtension>();
         }
 
         internal bool PreciseSourceLocation { get; set; }
@@ -53,6 +54,8 @@ namespace Markdig
         internal TextWriter? DebugLog { get; }
 
         internal ProcessDocumentDelegate? DocumentProcessed;
+
+        internal SelfPipelineExtension? SelfPipeline;
 
         /// <summary>
         /// True to parse trivia such as whitespace, extra heading characters and unescaped

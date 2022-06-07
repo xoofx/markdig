@@ -3,7 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Markdig.Helpers
 {
@@ -13,14 +13,14 @@ namespace Markdig.Helpers
     /// <typeparam name="T">Type of the object to cache</typeparam>
     public abstract class ObjectCache<T> where T : class
     {
-        private readonly Stack<T> builders;
+        private readonly ConcurrentQueue<T> _builders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectCache{T}"/> class.
         /// </summary>
         protected ObjectCache()
         {
-            builders = new Stack<T>(4);
+            _builders = new ConcurrentQueue<T>();
         }
 
         /// <summary>
@@ -28,10 +28,7 @@ namespace Markdig.Helpers
         /// </summary>
         public void Clear()
         {
-            lock (builders)
-            {
-                builders.Clear();
-            }
+            _builders.Clear();
         }
 
         /// <summary>
@@ -40,12 +37,9 @@ namespace Markdig.Helpers
         /// <returns></returns>
         public T Get()
         {
-            lock (builders)
+            if (_builders.TryDequeue(out T instance))
             {
-                if (builders.Count > 0)
-                {
-                    return builders.Pop();
-                }
+                return instance;
             }
 
             return NewInstance();
@@ -60,10 +54,7 @@ namespace Markdig.Helpers
         {
             if (instance is null) ThrowHelper.ArgumentNullException(nameof(instance));
             Reset(instance);
-            lock (builders)
-            {
-                builders.Push(instance);
-            }
+            _builders.Enqueue(instance);
         }
 
         /// <summary>

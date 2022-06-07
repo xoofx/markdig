@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Markdig.Extensions.SelfPipeline;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers;
@@ -41,11 +40,11 @@ namespace Markdig
                 return DefaultPipeline;
             }
 
-            var selfPipeline = pipeline.Extensions.Find<SelfPipelineExtension>();
-            if (selfPipeline is not null)
+            if (pipeline.SelfPipeline is not null)
             {
-                return selfPipeline.CreatePipelineFromInput(markdown);
+                return pipeline.SelfPipeline.CreatePipelineFromInput(markdown);
             }
+
             return pipeline;
         }
 
