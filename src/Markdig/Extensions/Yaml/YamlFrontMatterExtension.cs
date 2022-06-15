@@ -25,7 +25,11 @@ namespace Markdig.Extensions.Yaml
         {
             if (!renderer.ObjectRenderers.Contains<YamlFrontMatterHtmlRenderer>())
             {
-                renderer.ObjectRenderers.InsertBefore<Renderers.Html.CodeBlockRenderer> (new YamlFrontMatterHtmlRenderer());
+                renderer.ObjectRenderers.InsertBefore<Renderers.Html.CodeBlockRenderer>(new YamlFrontMatterHtmlRenderer());
+            }
+
+            if (!renderer.ObjectRenderers.Contains<YamlFrontMatterRoundtripRenderer>())
+            {
                 renderer.ObjectRenderers.InsertBefore<Renderers.Roundtrip.CodeBlockRenderer>(new YamlFrontMatterRoundtripRenderer());
             }
         }
