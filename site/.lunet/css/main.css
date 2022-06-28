@@ -1,0 +1,162 @@
+/* main */
+:root {
+  --base-html-font-size: 62.5%;
+  --base-font-size: 1.65rem;
+  --container-xl-max-width: 160rem;
+  --site-logo-size: 45px;
+  --site-logo-url: url("/img/markdig.png");
+}
+
+/* make tocbot working with halfmoon */
+html, body, .page-wrapper, .content-wrapper {
+  position: static;
+}
+
+.page-wrapper {
+  overflow: visible;
+}
+
+/* disable any box around active headers with tocbot */
+h1:focus, h1:active,
+h2:focus, h2:active,
+h3:focus, h3:active,
+h4:focus, h4:active,
+h5:focus, h5:active,
+h6:focus, h6:active
+{
+  outline: none;
+}
+
+.nav-item.active {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--lm-navbar-link-active-text-color);
+}
+
+.main-row {
+  min-height: 92vh;
+}
+
+.nav-item.active .nav-link {
+    color: var(--lm-navbar-link-active-text-color);
+    background-color: var(--lm-navbar-link-active-bg-color);
+}
+
+.site-logo {
+  background: transparent var(--site-logo-url) no-repeat scroll 0px 0px / var(--site-logo-size) var(--site-logo-size);
+  display: block;
+  width: var(--site-logo-size);
+  height: var(--site-logo-size);
+}
+
+.in-this-article-nav {
+  position: fixed;
+  margin-right: 2rem;
+  z-index: 20;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.in-this-article-nav .title {
+  font-weight: bold;
+  font-size: 1em;
+  padding-bottom: 1em;
+}
+
+.content .is-active-link::before {
+  background-color: var(--primary-color);
+}
+
+.heading-anchor-hidden {
+  display: none !important;
+}
+
+@media (min-width: 1600px) {
+  html {
+      font-size: var(--base-html-font-size);
+  }
+}
+@media (min-width: 1920px) {
+  html {
+      font-size: var(--base-html-font-size);
+  }
+}
+
+table.api-dotnet-inherit, table.api-dotnet-implements, table.api-dotnet-derived {
+  margin-bottom: 1em;
+}
+
+.api-dotnet-inherit td, .api-dotnet-implements td, .api-dotnet-derived td {
+  vertical-align: top;
+}
+
+.api-dotnet-inherit div:not(:first-child):before {
+  content: " ᐅ ";
+  white-space: pre;
+}
+
+/*.api-dotnet-inherit td, .api-dotnet-inherit tr, .api-dotnet-implements td, .api-dotnet-implements tr, .api-dotnet-derived tr  {
+  display: flex;
+}
+*/
+
+.api-dotnet-inherit div, .api-dotnet-implements div
+{
+  display: inline-block;
+}
+
+.api-dotnet-inherit td:not(:first-child), .api-dotnet-implements td:not(:first-child), .api-dotnet-derived td:not(:first-child) {
+  padding-left: 1em;
+}
+
+.api-dotnet-implements div:not(:first-child):before {
+  content: ", ";
+  white-space: pre;
+}
+
+.api-dotnet-parameter-list {
+  display: flex;
+}
+
+.api-dotnet-parameter-list dd {
+  margin-left: 1em;
+}
+
+dl.api-dotnet-parameter-list {
+  margin-bottom: 0px;
+}
+
+table.api-dotnet-members-table {
+  width: 100%;
+}
+
+table.api-dotnet-members-table p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.api-dotnet-members-table tr td:first-child {
+  width: 33%;
+}
+
+div.api-dotnet {
+  width: 100%;
+}
+
+.api-dotnet-members-table tr:not(:first-child) {
+  border-top: 1px solid #ddd;
+}
+
+.api-dotnet-members-table td {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .api-dotnet-members-table tr:not(:first-child) {
+    border-top: 1px solid #777;
+  }
+}
+
+
+

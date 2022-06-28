@@ -242,3 +242,6 @@ _Pvt_Extensions
 
 # Remove artifacts produced by dotnet-releaser
 artifacts-dotnet-releaser/
+
+# Remove .lunet temp folder
+.lunet/build

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage" class="my-html-setup">
+  <head>
+    {{~ Head ~}}
+  </head>
+  <body class="with-custom-webkit-scrollbars with-custom-css-scrollbars">
+    <div class="page-wrapper with-transitions">
+        <div class="sticky-alerts"></div>
+        <div class="content-wrapper bg-light-lm bg-dark-dm">
+            <div class="container-xl bg-white-lm bg-dark-light-dm">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <nav class="navbar">
+                            <a class="site-logo navbar-brand" href="/"></a>
+                            <div id="navbarSupportedContent" class="collapse navbar-collapse justify-content-between">
+                                {{~ site.menu.home.render {
+                                        depth: 1,
+                                        kind: "nav",
+                                        list_class: "w-100"
+                                    }
+                                ~}}
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="row main-row">
+                    {{~ $main_content_col_size = 8 ~}}
+                    {{~ if page.nomenu; $main_content_col_size = $main_content_col_size + 2; end }}
+                    {{~ if page.notoc; $main_content_col_size = $main_content_col_size + 2; end }}
+                    {{~ if !page.nomenu ~}}
+                    <div class="col-xl-2 ">
+                        <div class="content">
+                            Menu
+                        </div>
+                    </div>
+                    {{~ end ~}}
+                    <div class="col-xl-{{ $main_content_col_size }} ">
+                        <div class="content js-toc-content">
+                            {{ content }}
+                        </div>
+                    </div>
+                    {{~ if !page.notoc ~}}
+                    <div class="col-xl-2 ">
+                        <div class="content">
+                            <div class="in-this-article-nav">
+                                <div class="title">In this article</div>
+                                <nav class="js-toc toc"></nav>
+                            </div>
+                        </div>
+                    </div>
+                    {{~ end ~}}
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <nav class="navbar navbar-fixed-bottom justify-content-center">
+                            <footer>Copyright &copy; 2009 - {{ date.now.year }}, Alexandre Mutel - Blog content licensed under the Creative Commons <a href="http://creativecommons.org/licenses/by/2.5/">CC BY 2.5</a> | Site powered by <a href="https://github.com/lunet-io/lunet">lunet</a></footer>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
+

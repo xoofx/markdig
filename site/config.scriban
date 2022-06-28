@@ -1,0 +1,70 @@
+# Site Settings
+author = "Alexandre Mutel"
+title = "markdig"
+description = "markdig website"
+
+html.head.title = do; ret page.title + " | " + site.title; end
+
+basepath = ""
+baseurl = baseurl ?? "https://markdig.net"
+
+# Github repository
+github_user = "xoofx"
+github_repo_url = "https://github.com/lunet-io/markdig/"
+
+with cards.twitter
+    enable = true
+    card = "summary_large_image"
+    user = "markdig"
+    image = "/images/twitter-banner.png"
+end
+
+# Resources bundle
+with bundle
+    fontawesome = resource "npm:font-awesome" "4.7.0"
+    halfmoon = resource "npm:halfmoon" "1.1.0"
+    tocbot = resource "npm:tocbot" "4.12.1"
+    anchorjs = resource "npm:anchor-js" "4.2.2"
+    prismjs = resource "npm:prismjs" "1.20.0"
+
+    # scss.includes.add fontawesome.path + "/scss"
+
+    # css files
+    css halfmoon "/css/halfmoon-variables.min.css"
+    css tocbot "/dist/tocbot.css"
+    css fontawesome "/css/font-awesome.min.css"
+    css "/css/prism.css"
+    css "/css/main.css"
+
+    # js files
+    js anchorjs "/anchor.min.js"
+    js halfmoon "/js/halfmoon.min.js"
+    js tocbot "/dist/tocbot.min.js"
+    js prismjs "/prism.js"
+    js prismjs "/components/prism-shell-session.min.js"
+    js prismjs "/components/prism-clike.min.js"
+    js prismjs "/components/prism-c.min.js"
+    js prismjs "/components/prism-cpp.min.js"
+    js prismjs "/components/prism-csharp.min.js"
+    js "/js/prism-stark.js"
+    js "/js/xoofx.js"
+
+    # copy font files
+    content fontawesome "/fonts/fontawesome-webfont.*" "/fonts/"
+
+    # concatenate css/js files
+    concat = true
+    minify = true
+end
+
+with attributes
+    # match "/blog/**/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*.md" {
+    #    url: "/:section/:year/:month/:day/:title:output_ext"
+    #}
+end
+
+with api.dotnet
+    title = "Markdig .NET API Reference"
+    projects = ["../src/Markdig/Markdig.csproj"]
+    properties = {TargetFramework: "netstandard2.0"}
+end

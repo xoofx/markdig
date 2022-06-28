@@ -1,0 +1,3 @@
+home:
+  - {path: readme.md}
+  - {path: api/readme.md, title: "Markdig API"}
