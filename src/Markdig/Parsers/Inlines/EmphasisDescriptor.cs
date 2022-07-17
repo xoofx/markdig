@@ -33,7 +33,7 @@ namespace Markdig.Parsers.Inlines
         /// <summary>
         /// The character of this emphasis.
         /// </summary>
-        public  char Character { get; }
+        public char Character { get; }
 
         /// <summary>
         /// The minimum number of character this emphasis is expected to have (must be >=1)
