@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
@@ -193,13 +194,33 @@ namespace Markdig.Helpers
                                 {
                                     return false;
                                 }
-                                if (c == ' ' || c == '\n' || c == '"' || c == '\'' || c == '=' || c == '<' || c == '>' || c == '`')
+                                if (IsSpaceOrSpecialHtmlChar(c))
                                 {
                                     break;
                                 }
                                 matchCount++;
                                 builder.Append(c);
                                 c = text.NextChar();
+                            }
+
+                            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                            static bool IsSpaceOrSpecialHtmlChar(char c)
+                            {
+                                if (c > '>')
+                                {
+                                    return c == '`';
+                                }
+
+                                const long BitMask =
+                                      (1L << ' ')
+                                    | (1L << '\n')
+                                    | (1L << '"')
+                                    | (1L << '\'')
+                                    | (1L << '=')
+                                    | (1L << '<')
+                                    | (1L << '>');
+
+                                return (BitMask & (1L << c)) != 0;
                             }
 
                             // We need at least one char after '='
@@ -227,13 +248,30 @@ namespace Markdig.Helpers
                         while (true)
                         {
                             c = text.NextChar();
-                            if (c.IsAlphaNumeric() || c == '_' || c == ':' || c == '.' || c == '-')
+                            if (c.IsAlphaNumeric() || IsCharToAppend(c))
                             {
                                 builder.Append(c);
                             }
                             else
                             {
                                 break;
+                            }
+
+                            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                            static bool IsCharToAppend(char c)
+                            {
+                                if ((uint)(c - '-') > '_' - '-')
+                                {
+                                    return false;
+                                }
+
+                                const long BitMask =
+                                      (1L << '_')
+                                    | (1L << ':')
+                                    | (1L << '.')
+                                    | (1L << '-');
+
+                                return (BitMask & (1L << c)) != 0;
                             }
                         }
 
