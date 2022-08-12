@@ -55,7 +55,7 @@ namespace Markdig.Helpers
         public static void ArgumentOutOfRangeException(string paramName) => throw new ArgumentOutOfRangeException(paramName);
 
         [DoesNotReturn]
-        public static void ArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(message, paramName);
+        public static void ArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(paramName, message);
 
         [DoesNotReturn]
         public static void ArgumentOutOfRangeException_index() => throw new ArgumentOutOfRangeException("index");

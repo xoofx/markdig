@@ -53,7 +53,7 @@ namespace Markdig.Helpers
 
             // A right-flanking delimiter run is a delimiter run that is
             // (1) not preceded by Unicode whitespace, and either
-            // (1a) not preceded by a punctuation character, or
+            // (2a) not preceded by a punctuation character, or
             // (2b) preceded by a punctuation character and followed by Unicode whitespace or a punctuation character.
             // For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
             canClose = !prevIsWhiteSpace &&
@@ -144,9 +144,37 @@ namespace Markdig.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhitespace(this char c)
         {
-            // 2.1 Characters and lines 
-            // A whitespace character is a space(U + 0020), tab(U + 0009), newline(U + 000A), line tabulation (U + 000B), form feed (U + 000C), or carriage return (U + 000D).
-            return c <= ' ' && (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
+            // 2.1 Characters and lines
+            // A Unicode whitespace character is any code point in the Unicode Zs general category,
+            // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
+            if (c <= ' ')
+            {
+                const long Mask =
+                    (1L << ' ') |
+                    (1L << '\t') |
+                    (1L << '\n') |
+                    (1L << '\f') |
+                    (1L << '\r');
+
+                return (Mask & (1L << c)) != 0;
+            }
+
+            return c >= '\u00A0' && IsWhitespaceRare(c);
+
+            static bool IsWhitespaceRare(char c)
+            {
+                // return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+
+                if (c < 5760)
+                {
+                    return c == '\u00A0';
+                }
+                else
+                {
+                    return c <= 12288 &&
+                        (c == 5760 || IsInInclusiveRange(c, 8192, 8202) || c == 8239 || c == 8287 || c == 12288);
+                }
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -171,46 +199,47 @@ namespace Markdig.Helpers
         // Check if a char is a space or a punctuation
         public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
         {
-            // Credits: code from CommonMark.NET
-            // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
-            // See license for details:  https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md
-            if (c <= 'ÿ')
+            if (IsWhitespace(c))
             {
-                space = c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085';
-                punctuation = c == '\0' || (c >= 33 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+                space = true;
+                punctuation = false;
+            }
+            else if (c <= 127)
+            {
+                space = c == '\0';
+                punctuation = c == '\0' || IsAsciiPunctuation(c);
             }
             else
             {
-                var category = CharUnicodeInfo.GetUnicodeCategory(c);
-                space = category == UnicodeCategory.SpaceSeparator
-                    || category == UnicodeCategory.LineSeparator
-                    || category == UnicodeCategory.ParagraphSeparator;
-                punctuation = !space &&
-                    (category == UnicodeCategory.ConnectorPunctuation
+                // A Unicode punctuation character is an ASCII punctuation character
+                // or anything in the general Unicode categories Pc, Pd, Pe, Pf, Pi, Po, or Ps.
+                space = false;
+                UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
+                punctuation = category == UnicodeCategory.ConnectorPunctuation
                     || category == UnicodeCategory.DashPunctuation
                     || category == UnicodeCategory.OpenPunctuation
                     || category == UnicodeCategory.ClosePunctuation
                     || category == UnicodeCategory.InitialQuotePunctuation
                     || category == UnicodeCategory.FinalQuotePunctuation
-                    || category == UnicodeCategory.OtherPunctuation);
+                    || category == UnicodeCategory.OtherPunctuation;
             }
         }
 
         // Same as CheckUnicodeCategory
         internal static bool IsSpaceOrPunctuation(this char c)
         {
-            if (c <= 'ÿ')
+            if (IsWhitespace(c))
             {
-                return c == '\0' || c == ' ' || (c >= '\t' && c <= '\r') || c == '\u00a0' || c == '\u0085' ||
-                    (c >= 33 && c <= 47 && c != 38) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+                return true;
+            }
+            else if (c <= 127)
+            {
+                return c == '\0' || IsAsciiPunctuation(c);
             }
             else
             {
                 var category = CharUnicodeInfo.GetUnicodeCategory(c);
-                return category == UnicodeCategory.SpaceSeparator
-                    || category == UnicodeCategory.LineSeparator
-                    || category == UnicodeCategory.ParagraphSeparator
-                    || category == UnicodeCategory.ConnectorPunctuation
+                return category == UnicodeCategory.ConnectorPunctuation
                     || category == UnicodeCategory.DashPunctuation
                     || category == UnicodeCategory.OpenPunctuation
                     || category == UnicodeCategory.ClosePunctuation
@@ -289,44 +318,16 @@ namespace Markdig.Helpers
         public static bool IsAsciiPunctuation(this char c)
         {
             // 2.1 Characters and lines 
-            // An ASCII punctuation character is !, ", #, $, %, &, ', (, ), *, +, ,, -, ., /, :, ;, <, =, >, ?, @, [, \, ], ^, _, `, {, |, }, or ~.
-            switch (c)
-            {
-                case '!':
-                case '"':
-                case '#':
-                case '$':
-                case '%':
-                case '&':
-                case '\'':
-                case '(':
-                case ')':
-                case '*':
-                case '+':
-                case ',':
-                case '-':
-                case '.':
-                case '/':
-                case ':':
-                case ';':
-                case '<':
-                case '=':
-                case '>':
-                case '?':
-                case '@':
-                case '[':
-                case '\\':
-                case ']':
-                case '^':
-                case '_':
-                case '`':
-                case '{':
-                case '|':
-                case '}':
-                case '~':
-                    return true;
-            }
-            return false;
+            // An ASCII punctuation character is
+            // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F),
+            // :, ;, <, =, >, ?, @ (U+003A–0040),
+            // [, \, ], ^, _, ` (U+005B–0060),
+            // {, |, }, or ~ (U+007B–007E).
+            return c <= 127 && (
+                IsInInclusiveRange(c, 33, 47) ||
+                IsInInclusiveRange(c, 58, 64) ||
+                IsInInclusiveRange(c, 91, 96) ||
+                IsInInclusiveRange(c, 123, 126));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
