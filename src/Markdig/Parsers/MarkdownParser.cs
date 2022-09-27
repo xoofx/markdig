@@ -65,7 +65,11 @@ namespace Markdig.Parsers
                         var noBlocksFoundBlock = new EmptyBlock(null);
                         List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
                         noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
-                        noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+                        if (linesBefore != null)
+                        {
+                            noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+                        }
+
                         document.Add(noBlocksFoundBlock);
                     }
                     else if (lastBlock != null && blockProcessor.LinesBefore != null)
