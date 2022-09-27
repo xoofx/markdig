@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig.Extensions.JiraLinks;
+using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 using NUnit.Framework;
 
@@ -65,6 +66,15 @@ namespace Markdig.Tests
             }
 
             TestDescendantsOrder.TestSchemas(specsSyntaxTrees);
+        }
+
+        [Test]
+        public void ParseEmptyDocumentWithTrackTriviaEnabled()
+        {
+            var document = Markdown.Parse("", trackTrivia: true);
+            using var sw = new StringWriter();
+            new RoundtripRenderer(sw).Render(document);
+            Assert.AreEqual("", sw.ToString());
         }
 
         public static void TestSpec(string inputText, string expectedOutputText, string extensions = null, bool plainText = false, string context = null)
