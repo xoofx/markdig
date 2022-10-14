@@ -110,7 +110,7 @@ namespace Markdig.Extensions.MediaLinks
                 {
                     htmlAttributes.AddPropertyIfNotExist("height", Options.Height);
                 }
-                if (Options.Controls)
+                if (Options.AddControlsProperty)
                 {
                     htmlAttributes.AddPropertyIfNotExist("controls", null);
                 }
