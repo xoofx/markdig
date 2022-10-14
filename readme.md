@@ -101,6 +101,10 @@ var result = Markdown.ToHtml("This is a text with some *emphasis*", pipeline);
 
 You can have a look at the [MarkdownExtensions](https://github.com/lunet-io/markdig/blob/master/src/Markdig/MarkdownExtensions.cs) that describes all actionable extensions (by modifying the MarkdownPipeline)
 
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated. For detailed contributing guidelines, please see [contributing.md](contributing.md).
+
 ## Build
 
 In order to build Markdig, you need to install [.NET 6.0](https://dotnet.microsoft.com/en-us/download)
