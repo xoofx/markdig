@@ -16,6 +16,7 @@ namespace Markdig.Extensions.MediaLinks
         {
             Width = "500";
             Height = "281";
+            AddControlsProperty = true;
             Class = "";
             ExtensionToMimeType = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -89,6 +90,8 @@ namespace Markdig.Extensions.MediaLinks
         public string Width { get; set; }
 
         public string Height { get; set; }
+
+        public bool AddControlsProperty { get; set; }
 
         public string Class { get; set; }
 
