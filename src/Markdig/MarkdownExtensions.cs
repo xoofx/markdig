@@ -571,6 +571,7 @@ namespace Markdig
                     case "footnotes":
                         pipeline.UseFootnotes();
                         break;
+                            OmitBackLink = false
                     case "footers":
                         pipeline.UseFooters();
                         break;
