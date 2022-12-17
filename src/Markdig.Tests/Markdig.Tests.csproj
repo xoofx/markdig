@@ -26,6 +26,8 @@
     <InputSpecFiles Include="NormalizeSpecs\*.md" />
     <InputSpecFiles Include="PlainTextSpecs\*.md" />
     <InputSpecFiles Include="RoundtripSpecs\*.md" />
+    <InputSpecFiles Remove="Specs\FootnotesLabelNoBacklinkSpecs.md" />
+    <InputSpecFiles Remove="Specs\FootnotesLabelSpecs.md" />
     <InputSpecFiles Remove="Specs\readme.md" />
     <!-- Allow Visual Studio up-to-date check to verify that nothing has changed - https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md -->
     <UpToDateCheckInput Include="@(InputSpecFiles)" />

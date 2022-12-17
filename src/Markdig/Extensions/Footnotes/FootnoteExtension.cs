@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Renderers;
+using System;
 
 namespace Markdig.Extensions.Footnotes
 {
@@ -12,6 +13,18 @@ namespace Markdig.Extensions.Footnotes
     /// <seealso cref="IMarkdownExtension" />
     public class FootnoteExtension : IMarkdownExtension
     {
+        public FootnoteExtension()
+        {
+            Options = new FootnoteOptions();
+        }
+
+        public FootnoteExtension(FootnoteOptions options)
+        {
+            Options = options;
+        }
+
+        public FootnoteOptions Options { get; private set; }
+
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.BlockParsers.Contains<FootnoteParser>())
@@ -25,8 +38,8 @@ namespace Markdig.Extensions.Footnotes
         {
             if (renderer is HtmlRenderer htmlRenderer)
             {
-                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer());
-                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteLinkRenderer());
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer(Options));
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteLinkRenderer(Options));
             }
         }
     }

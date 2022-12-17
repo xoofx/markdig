@@ -16,15 +16,18 @@ namespace Markdig.Extensions.Footnotes
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlFootnoteGroupRenderer"/> class.
         /// </summary>
-        public HtmlFootnoteGroupRenderer()
+        public HtmlFootnoteGroupRenderer(FootnoteOptions options)
         {
             GroupClass = "footnotes";
+            Options = options;
         }
 
         /// <summary>
         /// Gets or sets the CSS group class used when rendering the &lt;div&gt; of this instance.
         /// </summary>
         public string GroupClass { get; set; }
+
+        public FootnoteOptions Options { get; private set; }
 
         protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
         {
@@ -36,7 +39,8 @@ namespace Markdig.Extensions.Footnotes
             for (int i = 0; i < footnotes.Count; i++)
             {
                 var footnote = (Footnote)footnotes[i];
-                renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
+                string footnoteLabel = Options.GetFootnoteLabel(footnote.Order.ToString(), footnote.Label);
+                renderer.WriteLine($"<li id=\"fn:{footnoteLabel}\">");
                 renderer.WriteChildren(footnote);
                 renderer.WriteLine("</li>");
             }

@@ -371,6 +371,22 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Uses the footnotes extension.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="options">The FootnoteLabelOption to initialize the extension with.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseFootnotes(this MarkdownPipelineBuilder pipeline, FootnoteOptions options)
+        {
+            if (!pipeline.Extensions.Contains<FootnoteExtension>())
+            {
+                pipeline.Extensions.Add(new FootnoteExtension(options));
+            }
+
+            return pipeline;
+        }
+
+        /// <summary>
         /// Uses the softline break as hardline break extension
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -571,7 +587,21 @@ namespace Markdig
                     case "footnotes":
                         pipeline.UseFootnotes();
                         break;
-                            OmitBackLink = false
+                    case "footnotes-labels":
+                        FootnoteOptions options1 = new FootnoteOptions
+                        {
+                            LabelType = FootnoteLabelType.PreserveMarkdownLabel,
+                        };
+                        pipeline.UseFootnotes(options1);
+                        break;
+                    case "footnotes-labels-nobacklink":
+                        FootnoteOptions options2 = new FootnoteOptions
+                        {
+                            LabelType = FootnoteLabelType.PreserveMarkdownLabel,
+                            OmitBackLink = true
+                        };
+                        pipeline.UseFootnotes(options2);
+                        break;
                     case "footers":
                         pipeline.UseFooters();
                         break;
