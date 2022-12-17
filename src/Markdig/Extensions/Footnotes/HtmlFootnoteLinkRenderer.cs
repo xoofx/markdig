@@ -31,7 +31,7 @@ namespace Markdig.Extensions.Footnotes
 
         protected override void Write(HtmlRenderer renderer, FootnoteLink link)
         {
-            if (link.IsBackLink && Options.OmitBackLink)
+            if (link.IsBackLink && !Options.CreateBackLinks)
             {
                 return;
             }

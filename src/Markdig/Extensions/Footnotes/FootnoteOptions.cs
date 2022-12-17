@@ -12,9 +12,17 @@ namespace Markdig.Extensions.Footnotes
     public class FootnoteOptions
     {
         /// <summary>
+        /// Initializes a new instance of the FootnoteOptions class.
+        /// </summary>
+        public FootnoteOptions()
+        {
+            this.CreateBackLinks = true;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the backlink should be added to the footnote.
         /// </summary>
-        public bool OmitBackLink { get; set; }
+        public bool CreateBackLinks { get; set; }
 
         /// <summary>
         /// Gets or sets the type of label to use for footnotes.

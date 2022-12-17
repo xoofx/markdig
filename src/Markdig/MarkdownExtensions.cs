@@ -598,7 +598,7 @@ namespace Markdig
                         FootnoteOptions options2 = new FootnoteOptions
                         {
                             LabelType = FootnoteLabelType.PreserveMarkdownLabel,
-                            OmitBackLink = true
+                            CreateBackLinks = false
                         };
                         pipeline.UseFootnotes(options2);
                         break;
