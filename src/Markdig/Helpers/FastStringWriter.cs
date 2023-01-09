@@ -15,12 +15,8 @@ namespace Markdig.Helpers
 {
     internal sealed class FastStringWriter : TextWriter
     {
-#if NET452
-        private static Task CompletedTask => Task.FromResult(0);
-#else
         private static Task CompletedTask => Task.CompletedTask;
-#endif
-
+        
         public override Encoding Encoding => Encoding.Unicode;
 
         private char[] _chars;
@@ -165,7 +161,7 @@ namespace Markdig.Helpers
             return CompletedTask;
         }
 
-#if !(NET452 || NETSTANDARD2_0)
+#if !(NETFRAMEWORK || NETSTANDARD2_0)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Write(ReadOnlySpan<char> value)
         {
@@ -198,7 +194,7 @@ namespace Markdig.Helpers
         }
 #endif
 
-#if !(NET452 || NETSTANDARD2_0 || NETSTANDARD2_1)
+#if !(NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Write(StringBuilder? value)
         {
@@ -275,7 +271,7 @@ namespace Markdig.Helpers
 
         public override Task FlushAsync() => CompletedTask;
 
-#if !(NET452 || NETSTANDARD2_0)
+#if !(NETFRAMEWORK || NETSTANDARD2_0)
         public override ValueTask DisposeAsync() => default;
 #endif
 
