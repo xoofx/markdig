@@ -12,15 +12,6 @@ namespace Markdig.Helpers
         /// <summary>
         /// An empty array.
         /// </summary>
-#if NET452
-        public static T[] Empty<T>() => EmptyArray<T>.Value;
-
-        private static class EmptyArray<T>
-        {
-            public static readonly T[] Value = new T[0];
-        }
-#else
         public static T[] Empty<T>() => System.Array.Empty<T>();
-#endif
     }
 }

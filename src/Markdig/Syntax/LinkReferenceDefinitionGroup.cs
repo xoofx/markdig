@@ -16,7 +16,7 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class LinkReferenceDefinitionGroup : ContainerBlock
     {
-#if NET452
+#if NETFRAMEWORK
         private static readonly StringComparer _unicodeIgnoreCaseComparer = StringComparer.InvariantCultureIgnoreCase;
 #else
         private static readonly StringComparer _unicodeIgnoreCaseComparer = CultureInfo.InvariantCulture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
