@@ -80,9 +80,9 @@ namespace Markdig.Tests
 
                     if (containerBlock.Count == 0)
                     {
-                        Assert.AreSame(ArrayHelper.Empty<LiteralInline>(), containerBlock.Descendants<LiteralInline>());
-                        Assert.AreSame(ArrayHelper.Empty<LiteralInline>(), (containerBlock as Block).Descendants<LiteralInline>());
-                        Assert.AreSame(ArrayHelper.Empty<LiteralInline>(), (containerBlock as MarkdownObject).Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), containerBlock.Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), (containerBlock as Block).Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), (containerBlock as MarkdownObject).Descendants<LiteralInline>());
                     }
                 }
             }
