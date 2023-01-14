@@ -23,8 +23,8 @@ namespace Markdig.Syntax
         /// <returns>An iteration over the descendant elements</returns>
         public static IEnumerable<MarkdownObject> Descendants(this MarkdownObject markdownObject)
         {
-            Stack<MarkdownObject> stack = new Stack<MarkdownObject>();
-            Stack<bool> pushStack = new Stack<bool>();
+            var stack = new Stack<MarkdownObject>();
+            var pushStack = new Stack<bool>();
 
             stack.Push(markdownObject);
             pushStack.Push(false);
@@ -95,7 +95,7 @@ namespace Markdig.Syntax
                 }
             }
 
-            return ArrayHelper.Empty<T>();
+            return Array.Empty<T>();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Markdig.Syntax
             }
             else
             {
-                return ArrayHelper.Empty<T>();
+                return Array.Empty<T>();
             }
         }
 

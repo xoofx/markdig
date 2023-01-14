@@ -15,12 +15,6 @@ namespace Markdig.Helpers
 {
     internal sealed class FastStringWriter : TextWriter
     {
-#if NET452
-        private static Task CompletedTask => Task.FromResult(0);
-#else
-        private static Task CompletedTask => Task.CompletedTask;
-#endif
-
         public override Encoding Encoding => Encoding.Unicode;
 
         private char[] _chars;
@@ -66,13 +60,13 @@ namespace Markdig.Helpers
         public override Task WriteAsync(char value)
         {
             Write(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         public override Task WriteLineAsync(char value)
         {
             WriteLine(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -100,13 +94,13 @@ namespace Markdig.Helpers
         public override Task WriteAsync(string? value)
         {
             Write(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         public override Task WriteLineAsync(string? value)
         {
             WriteLine(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -156,16 +150,16 @@ namespace Markdig.Helpers
         public override Task WriteAsync(char[] buffer, int index, int count)
         {
             Write(buffer, index, count);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         public override Task WriteLineAsync(char[] buffer, int index, int count)
         {
             WriteLine(buffer, index, count);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
-#if !(NET452 || NETSTANDARD2_0)
+#if !(NETFRAMEWORK || NETSTANDARD2_0)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Write(ReadOnlySpan<char> value)
         {
@@ -188,17 +182,17 @@ namespace Markdig.Helpers
         public override Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             Write(buffer.Span);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         public override Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
         {
             WriteLine(buffer.Span);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 #endif
 
-#if !(NET452 || NETSTANDARD2_0 || NETSTANDARD2_1)
+#if !(NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Write(StringBuilder? value)
         {
@@ -225,13 +219,13 @@ namespace Markdig.Helpers
         public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             Write(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
         public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
         {
             WriteLine(value);
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 #endif
 
@@ -247,7 +241,7 @@ namespace Markdig.Helpers
         public override Task WriteLineAsync()
         {
             WriteLine();
-            return CompletedTask;
+            return Task.CompletedTask;
         }
 
 
@@ -273,9 +267,9 @@ namespace Markdig.Helpers
 
         public override void Close() { }
 
-        public override Task FlushAsync() => CompletedTask;
+        public override Task FlushAsync() => Task.CompletedTask;
 
-#if !(NET452 || NETSTANDARD2_0)
+#if !(NETFRAMEWORK || NETSTANDARD2_0)
         public override ValueTask DisposeAsync() => default;
 #endif
 
