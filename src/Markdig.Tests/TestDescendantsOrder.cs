@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -32,9 +32,9 @@ namespace Markdig.Tests
 
                 foreach (LiteralInline literalInline in syntaxTree.Descendants<LiteralInline>())
                 {
-                    Assert.AreSame(System.Array.Empty<ListBlock>(), literalInline.Descendants<ListBlock>());
-                    Assert.AreSame(System.Array.Empty<ParagraphBlock>(), literalInline.Descendants<ParagraphBlock>());
-                    Assert.AreSame(System.Array.Empty<ContainerInline>(), literalInline.Descendants<ContainerInline>());
+                    Assert.AreSame(Array.Empty<ListBlock>(), literalInline.Descendants<ListBlock>());
+                    Assert.AreSame(Array.Empty<ParagraphBlock>(), literalInline.Descendants<ParagraphBlock>());
+                    Assert.AreSame(Array.Empty<ContainerInline>(), literalInline.Descendants<ContainerInline>());
                 }
 
                 foreach (ContainerInline containerInline in syntaxTree.Descendants<ContainerInline>())
@@ -49,13 +49,13 @@ namespace Markdig.Tests
 
                     if (containerInline.FirstChild is null)
                     {
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), containerInline.Descendants<LiteralInline>());
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), containerInline.FindDescendants<LiteralInline>());
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), (containerInline as MarkdownObject).Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), containerInline.Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), containerInline.FindDescendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), (containerInline as MarkdownObject).Descendants<LiteralInline>());
                     }
 
-                    Assert.AreSame(System.Array.Empty<ListBlock>(), containerInline.Descendants<ListBlock>());
-                    Assert.AreSame(System.Array.Empty<ParagraphBlock>(), containerInline.Descendants<ParagraphBlock>());
+                    Assert.AreSame(Array.Empty<ListBlock>(), containerInline.Descendants<ListBlock>());
+                    Assert.AreSame(Array.Empty<ParagraphBlock>(), containerInline.Descendants<ParagraphBlock>());
                 }
 
                 foreach (ParagraphBlock paragraphBlock in syntaxTree.Descendants<ParagraphBlock>())
@@ -64,7 +64,7 @@ namespace Markdig.Tests
                         (paragraphBlock as MarkdownObject).Descendants<LiteralInline>(),
                         paragraphBlock.Descendants<LiteralInline>());
 
-                    Assert.AreSame(System.Array.Empty<ParagraphBlock>(), paragraphBlock.Descendants<ParagraphBlock>());
+                    Assert.AreSame(Array.Empty<ParagraphBlock>(), paragraphBlock.Descendants<ParagraphBlock>());
                 }
 
                 foreach (ContainerBlock containerBlock in syntaxTree.Descendants<ContainerBlock>())
@@ -79,9 +79,9 @@ namespace Markdig.Tests
 
                     if (containerBlock.Count == 0)
                     {
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), containerBlock.Descendants<LiteralInline>());
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), (containerBlock as Block).Descendants<LiteralInline>());
-                        Assert.AreSame(System.Array.Empty<LiteralInline>(), (containerBlock as MarkdownObject).Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), containerBlock.Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), (containerBlock as Block).Descendants<LiteralInline>());
+                        Assert.AreSame(Array.Empty<LiteralInline>(), (containerBlock as MarkdownObject).Descendants<LiteralInline>());
                     }
                 }
             }
