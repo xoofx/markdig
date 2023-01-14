@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System;
@@ -16,11 +16,7 @@ namespace Markdig.Syntax
     /// <seealso cref="ContainerBlock" />
     public class LinkReferenceDefinitionGroup : ContainerBlock
     {
-#if NET452
-        private static readonly StringComparer _unicodeIgnoreCaseComparer = StringComparer.InvariantCultureIgnoreCase;
-#else
         private static readonly StringComparer _unicodeIgnoreCaseComparer = CultureInfo.InvariantCulture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinkReferenceDefinitionGroup"/> class.

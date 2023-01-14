@@ -28,7 +28,7 @@ namespace Markdig.Syntax
         /// <param name="parser">The parser used to create this block.</param>
         protected ContainerBlock(BlockParser? parser) : base(parser)
         {
-            _children = ArrayHelper.Empty<BlockWrapper>();
+            _children = System.Array.Empty<BlockWrapper>();
             SetTypeKind(isInline: false, isContainer: true);
         }
 

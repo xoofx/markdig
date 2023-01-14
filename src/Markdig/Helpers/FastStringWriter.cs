@@ -15,11 +15,7 @@ namespace Markdig.Helpers
 {
     internal sealed class FastStringWriter : TextWriter
     {
-#if NET452
-        private static Task CompletedTask => Task.FromResult(0);
-#else
         private static Task CompletedTask => Task.CompletedTask;
-#endif
 
         public override Encoding Encoding => Encoding.Unicode;
 
