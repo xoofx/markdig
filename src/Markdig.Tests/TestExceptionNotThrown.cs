@@ -1,48 +1,45 @@
-using NUnit.Framework;
+namespace Markdig.Tests;
 
-namespace Markdig.Tests
+[TestFixture]
+public class TestExceptionNotThrown
 {
-    [TestFixture]
-    public class TestExceptionNotThrown
+    [Test]
+    public void DoesNotThrowIndexOutOfRangeException1()
     {
-        [Test]
-        public void DoesNotThrowIndexOutOfRangeException1()
+        Assert.DoesNotThrow(() =>
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-                Markdown.ToHtml("+-\n|\n+", pipeline);
-            });
-        }
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            Markdown.ToHtml("+-\n|\n+", pipeline);
+        });
+    }
 
-        [Test]
-        public void DoesNotThrowIndexOutOfRangeException2()
+    [Test]
+    public void DoesNotThrowIndexOutOfRangeException2()
+    {
+        Assert.DoesNotThrow(() =>
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-                Markdown.ToHtml("+--\n|\n+0", pipeline);
-            });
-        }
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            Markdown.ToHtml("+--\n|\n+0", pipeline);
+        });
+    }
 
-        [Test]
-        public void DoesNotThrowIndexOutOfRangeException3()
+    [Test]
+    public void DoesNotThrowIndexOutOfRangeException3()
+    {
+        Assert.DoesNotThrow(() =>
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-                Markdown.ToHtml("+-\n|\n+\n0", pipeline);
-            });
-        }
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            Markdown.ToHtml("+-\n|\n+\n0", pipeline);
+        });
+    }
 
-        [Test]
-        public void DoesNotThrowIndexOutOfRangeException4()
+    [Test]
+    public void DoesNotThrowIndexOutOfRangeException4()
+    {
+        Assert.DoesNotThrow(() =>
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-                Markdown.ToHtml("+-\n|\n+0", pipeline);
-            });
-        }
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            Markdown.ToHtml("+-\n|\n+0", pipeline);
+        });
     }
 }
