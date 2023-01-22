@@ -4,34 +4,33 @@
 
 using Markdig.Parsers;
 
-namespace Markdig.Syntax
+namespace Markdig.Syntax;
+
+/// <summary>
+/// Represents a paragraph.
+/// </summary>
+/// <remarks>
+/// Related to CommonMark spec: 4.8 Paragraphs
+/// </remarks>
+public class ParagraphBlock : LeafBlock
 {
     /// <summary>
-    /// Represents a paragraph.
+    /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
     /// </summary>
-    /// <remarks>
-    /// Related to CommonMark spec: 4.8 Paragraphs
-    /// </remarks>
-    public class ParagraphBlock : LeafBlock
+    public ParagraphBlock() : this(null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
-        /// </summary>
-        public ParagraphBlock() : this(null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public ParagraphBlock(BlockParser? parser) : base(parser)
-        {
-            // Inlines are processed for a paragraph
-            ProcessInlines = true;
-            IsParagraphBlock = true;
-        }
-
-        public int LastLine => Line + Lines.Count - 1;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ParagraphBlock"/> class.
+    /// </summary>
+    /// <param name="parser">The parser used to create this block.</param>
+    public ParagraphBlock(BlockParser? parser) : base(parser)
+    {
+        // Inlines are processed for a paragraph
+        ProcessInlines = true;
+        IsParagraphBlock = true;
+    }
+
+    public int LastLine => Line + Lines.Count - 1;
 }

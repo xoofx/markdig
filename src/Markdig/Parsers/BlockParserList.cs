@@ -4,20 +4,19 @@
 
 using System.Collections.Generic;
 
-namespace Markdig.Parsers
+namespace Markdig.Parsers;
+
+/// <summary>
+/// A List of <see cref="BlockParser"/>.
+/// </summary>
+/// <seealso cref="ParserList{BlockParser, BlockParserState}" />
+public class BlockParserList : ParserList<BlockParser, BlockProcessor>
 {
     /// <summary>
-    /// A List of <see cref="BlockParser"/>.
+    /// Initializes a new instance of the <see cref="BlockParserList"/> class.
     /// </summary>
-    /// <seealso cref="ParserList{BlockParser, BlockParserState}" />
-    public class BlockParserList : ParserList<BlockParser, BlockProcessor>
+    /// <param name="parsers">The parsers.</param>
+    public BlockParserList(IEnumerable<BlockParser> parsers) : base(parsers)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BlockParserList"/> class.
-        /// </summary>
-        /// <param name="parsers">The parsers.</param>
-        public BlockParserList(IEnumerable<BlockParser> parsers) : base(parsers)
-        {
-        }
     }
 }

@@ -5,40 +5,39 @@
 using System;
 using System.Diagnostics;
 
-namespace Markdig.Helpers
+namespace Markdig.Helpers;
+
+internal struct LazySubstring
 {
-    internal struct LazySubstring
+    private string _text;
+    public int Offset;
+    public int Length;
+
+    public LazySubstring(string text)
     {
-        private string _text;
-        public int Offset;
-        public int Length;
+        _text = text;
+        Offset = 0;
+        Length = text.Length;
+    }
 
-        public LazySubstring(string text)
+    public LazySubstring(string text, int offset, int length)
+    {
+        Debug.Assert((ulong)offset + (ulong)length <= (ulong)text.Length, $"{offset}-{length} in {text}");
+        _text = text;
+        Offset = offset;
+        Length = length;
+    }
+
+    public ReadOnlySpan<char> AsSpan() => _text.AsSpan(Offset, Length);
+
+    public override string ToString()
+    {
+        if (Offset != 0 || Length != _text.Length)
         {
-            _text = text;
+            _text = _text.Substring(Offset, Length);
             Offset = 0;
-            Length = text.Length;
         }
 
-        public LazySubstring(string text, int offset, int length)
-        {
-            Debug.Assert((ulong)offset + (ulong)length <= (ulong)text.Length, $"{offset}-{length} in {text}");
-            _text = text;
-            Offset = offset;
-            Length = length;
-        }
-
-        public ReadOnlySpan<char> AsSpan() => _text.AsSpan(Offset, Length);
-
-        public override string ToString()
-        {
-            if (Offset != 0 || Length != _text.Length)
-            {
-                _text = _text.Substring(Offset, Length);
-                Offset = 0;
-            }
-
-            return _text;
-        }
+        return _text;
     }
 }

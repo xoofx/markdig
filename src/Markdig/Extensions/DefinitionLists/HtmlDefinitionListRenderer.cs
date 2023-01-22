@@ -6,80 +6,79 @@ using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.DefinitionLists
+namespace Markdig.Extensions.DefinitionLists;
+
+/// <summary>
+/// A HTML renderer for <see cref="DefinitionList"/>, <see cref="DefinitionItem"/> and <see cref="DefinitionTerm"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{DefinitionList}" />
+public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
 {
-    /// <summary>
-    /// A HTML renderer for <see cref="DefinitionList"/>, <see cref="DefinitionItem"/> and <see cref="DefinitionTerm"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{DefinitionList}" />
-    public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
+    protected override void Write(HtmlRenderer renderer, DefinitionList list)
     {
-        protected override void Write(HtmlRenderer renderer, DefinitionList list)
+        renderer.EnsureLine();
+        renderer.Write("<dl").WriteAttributes(list).WriteLine('>');
+        foreach (var item in list)
         {
-            renderer.EnsureLine();
-            renderer.Write("<dl").WriteAttributes(list).WriteLine('>');
-            foreach (var item in list)
+            bool hasOpendd = false;
+            var definitionItem = (DefinitionItem) item;
+            int countdd = 0;
+            bool lastWasSimpleParagraph = false;
+            for (int i = 0; i < definitionItem.Count; i++)
             {
-                bool hasOpendd = false;
-                var definitionItem = (DefinitionItem) item;
-                int countdd = 0;
-                bool lastWasSimpleParagraph = false;
-                for (int i = 0; i < definitionItem.Count; i++)
+                var definitionTermOrContent = definitionItem[i];
+                var definitionTerm = definitionTermOrContent as DefinitionTerm;
+                if (definitionTerm != null)
                 {
-                    var definitionTermOrContent = definitionItem[i];
-                    var definitionTerm = definitionTermOrContent as DefinitionTerm;
-                    if (definitionTerm != null)
+                    if (hasOpendd)
                     {
-                        if (hasOpendd)
+                        if (!lastWasSimpleParagraph)
                         {
-                            if (!lastWasSimpleParagraph)
-                            {
-                                renderer.EnsureLine();
-                            }
-                            renderer.WriteLine("</dd>");
-                            lastWasSimpleParagraph = false;
-                            hasOpendd = false;
-                            countdd = 0;
+                            renderer.EnsureLine();
                         }
-                        renderer.Write("<dt").WriteAttributes(definitionTerm).Write('>');
-                        renderer.WriteLeafInline(definitionTerm);
-                        renderer.WriteLine("</dt>");
+                        renderer.WriteLine("</dd>");
+                        lastWasSimpleParagraph = false;
+                        hasOpendd = false;
+                        countdd = 0;
                     }
-                    else
-                    {
-                        if (!hasOpendd)
-                        {
-                            renderer.Write("<dd").WriteAttributes(definitionItem).Write('>');
-                            countdd = 0;
-                            hasOpendd = true;
-                        }
-
-                        var nextTerm = i + 1 < definitionItem.Count ? definitionItem[i + 1] : null;
-                        bool isSimpleParagraph = (nextTerm is null || nextTerm is DefinitionItem) && countdd == 0 &&
-                                                 definitionTermOrContent is ParagraphBlock;
-
-                        var saveImplicitParagraph = renderer.ImplicitParagraph;
-                        if (isSimpleParagraph)
-                        {
-                            renderer.ImplicitParagraph = true;
-                            lastWasSimpleParagraph = true;
-                        }
-                        renderer.Write(definitionTermOrContent);
-                        renderer.ImplicitParagraph = saveImplicitParagraph;
-                        countdd++;
-                    }
+                    renderer.Write("<dt").WriteAttributes(definitionTerm).Write('>');
+                    renderer.WriteLeafInline(definitionTerm);
+                    renderer.WriteLine("</dt>");
                 }
-                if (hasOpendd)
+                else
                 {
-                    if (!lastWasSimpleParagraph)
+                    if (!hasOpendd)
                     {
-                        renderer.EnsureLine();
+                        renderer.Write("<dd").WriteAttributes(definitionItem).Write('>');
+                        countdd = 0;
+                        hasOpendd = true;
                     }
-                    renderer.WriteLine("</dd>");
+
+                    var nextTerm = i + 1 < definitionItem.Count ? definitionItem[i + 1] : null;
+                    bool isSimpleParagraph = (nextTerm is null || nextTerm is DefinitionItem) && countdd == 0 &&
+                                             definitionTermOrContent is ParagraphBlock;
+
+                    var saveImplicitParagraph = renderer.ImplicitParagraph;
+                    if (isSimpleParagraph)
+                    {
+                        renderer.ImplicitParagraph = true;
+                        lastWasSimpleParagraph = true;
+                    }
+                    renderer.Write(definitionTermOrContent);
+                    renderer.ImplicitParagraph = saveImplicitParagraph;
+                    countdd++;
                 }
             }
-            renderer.EnsureLine();
-            renderer.WriteLine("</dl>");
+            if (hasOpendd)
+            {
+                if (!lastWasSimpleParagraph)
+                {
+                    renderer.EnsureLine();
+                }
+                renderer.WriteLine("</dd>");
+            }
         }
+        renderer.EnsureLine();
+        renderer.WriteLine("</dl>");
     }
 }

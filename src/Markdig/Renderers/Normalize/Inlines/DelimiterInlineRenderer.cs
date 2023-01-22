@@ -4,18 +4,17 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Normalize.Inlines
+namespace Markdig.Renderers.Normalize.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="DelimiterInline"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{DelimiterInline}" />
+public class DelimiterInlineRenderer : NormalizeObjectRenderer<DelimiterInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="DelimiterInline"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{DelimiterInline}" />
-    public class DelimiterInlineRenderer : NormalizeObjectRenderer<DelimiterInline>
+    protected override void Write(NormalizeRenderer renderer, DelimiterInline obj)
     {
-        protected override void Write(NormalizeRenderer renderer, DelimiterInline obj)
-        {
-            renderer.Write(obj.ToLiteral());
-            renderer.WriteChildren(obj);
-        }
+        renderer.Write(obj.ToLiteral());
+        renderer.WriteChildren(obj);
     }
 }

@@ -4,18 +4,17 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Html.Inlines
+namespace Markdig.Renderers.Html.Inlines;
+
+/// <summary>
+/// A HTML renderer for a <see cref="DelimiterInline"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{DelimiterInline}" />
+public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="DelimiterInline"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{DelimiterInline}" />
-    public class DelimiterInlineRenderer : HtmlObjectRenderer<DelimiterInline>
+    protected override void Write(HtmlRenderer renderer, DelimiterInline obj)
     {
-        protected override void Write(HtmlRenderer renderer, DelimiterInline obj)
-        {
-            renderer.WriteEscape(obj.ToLiteral());
-            renderer.WriteChildren(obj);
-        }
+        renderer.WriteEscape(obj.ToLiteral());
+        renderer.WriteChildren(obj);
     }
 }

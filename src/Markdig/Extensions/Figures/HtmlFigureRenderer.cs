@@ -5,20 +5,19 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.Figures
+namespace Markdig.Extensions.Figures;
+
+/// <summary>
+/// A HTML renderer for a <see cref="Figure"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{Figure}" />
+public class HtmlFigureRenderer : HtmlObjectRenderer<Figure>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="Figure"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{Figure}" />
-    public class HtmlFigureRenderer : HtmlObjectRenderer<Figure>
+    protected override void Write(HtmlRenderer renderer, Figure obj)
     {
-        protected override void Write(HtmlRenderer renderer, Figure obj)
-        {
-            renderer.EnsureLine();
-            renderer.Write("<figure").WriteAttributes(obj).WriteLine(">");
-            renderer.WriteChildren(obj);
-            renderer.WriteLine("</figure>");
-        }
+        renderer.EnsureLine();
+        renderer.Write("<figure").WriteAttributes(obj).WriteLine(">");
+        renderer.WriteChildren(obj);
+        renderer.WriteLine("</figure>");
     }
 }

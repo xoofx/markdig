@@ -5,27 +5,26 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.CustomContainers
+namespace Markdig.Extensions.CustomContainers;
+
+/// <summary>
+/// A HTML renderer for a <see cref="CustomContainer"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{CustomContainer}" />
+public class HtmlCustomContainerRenderer : HtmlObjectRenderer<CustomContainer>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="CustomContainer"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{CustomContainer}" />
-    public class HtmlCustomContainerRenderer : HtmlObjectRenderer<CustomContainer>
+    protected override void Write(HtmlRenderer renderer, CustomContainer obj)
     {
-        protected override void Write(HtmlRenderer renderer, CustomContainer obj)
+        renderer.EnsureLine();
+        if (renderer.EnableHtmlForBlock)
         {
-            renderer.EnsureLine();
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("<div").WriteAttributes(obj).Write('>');
-            }
-            // We don't escape a CustomContainer
-            renderer.WriteChildren(obj);
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.WriteLine("</div>");
-            }
+            renderer.Write("<div").WriteAttributes(obj).Write('>');
+        }
+        // We don't escape a CustomContainer
+        renderer.WriteChildren(obj);
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.WriteLine("</div>");
         }
     }
 }

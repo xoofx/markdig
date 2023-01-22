@@ -5,52 +5,87 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Figures
+namespace Markdig.Extensions.Figures;
+
+/// <summary>
+/// The block parser for a <see cref="Figure"/> block.
+/// </summary>
+/// <seealso cref="BlockParser" />
+public class FigureBlockParser : BlockParser
 {
     /// <summary>
-    /// The block parser for a <see cref="Figure"/> block.
+    /// Initializes a new instance of the <see cref="FencedBlockParserBase"/> class.
     /// </summary>
-    /// <seealso cref="BlockParser" />
-    public class FigureBlockParser : BlockParser
+    public FigureBlockParser()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FencedBlockParserBase"/> class.
-        /// </summary>
-        public FigureBlockParser()
+        OpeningCharacters = new[] { '^' };
+    }
+
+    public override BlockState TryOpen(BlockProcessor processor)
+    {
+        // We expect no indentation for a figure block.
+        if (processor.IsCodeIndent)
         {
-            OpeningCharacters = new[] { '^' };
+            return BlockState.None;
         }
 
-        public override BlockState TryOpen(BlockProcessor processor)
+        // Match fenced char
+        var line = processor.Line;
+        char openingChar = line.CurrentChar;
+        int count = line.CountAndSkipChar(openingChar);
+
+        // Requires at least 3 opening chars
+        if (count < 3)
         {
-            // We expect no indentation for a figure block.
-            if (processor.IsCodeIndent)
-            {
-                return BlockState.None;
-            }
+            return BlockState.None;
+        }
 
-            // Match fenced char
-            var line = processor.Line;
-            char openingChar = line.CurrentChar;
-            int count = line.CountAndSkipChar(openingChar);
+        int startPosition = processor.Start;
+        int column = processor.Column;
+        var figure = new Figure(this)
+        {
+            Span = new SourceSpan(startPosition, line.End),
+            Line = processor.LineIndex,
+            Column = column,
+            OpeningCharacter = openingChar,
+            OpeningCharacterCount = count
+        };
 
-            // Requires at least 3 opening chars
-            if (count < 3)
+        line.TrimStart();
+        if (!line.IsEmpty)
+        {
+            var caption = new FigureCaption(this)
             {
-                return BlockState.None;
-            }
-
-            int startPosition = processor.Start;
-            int column = processor.Column;
-            var figure = new Figure(this)
-            {
-                Span = new SourceSpan(startPosition, line.End),
+                Span = new SourceSpan(line.Start, line.End),
                 Line = processor.LineIndex,
-                Column = column,
-                OpeningCharacter = openingChar,
-                OpeningCharacterCount = count
+                Column = column + line.Start - startPosition,
+                IsOpen = false
             };
+            caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
+            figure.Add(caption);
+        }
+        processor.NewBlocks.Push(figure);
 
+        // Discard the current line as it is already parsed
+        return BlockState.ContinueDiscard;
+    }
+
+    public override BlockState TryContinue(BlockProcessor processor, Block block)
+    {
+        var figure = (Figure)block;
+        int count = figure.OpeningCharacterCount;
+        char matchChar = figure.OpeningCharacter;
+
+        int column = processor.Column;
+        // Match if we have a closing fence
+        var line = processor.Line;
+        int startPosition = line.Start;
+        count -= line.CountAndSkipChar(matchChar);
+
+        // If we have a closing fence, close it and discard the current line
+        // The line must contain only fence opening character followed only by whitespaces.
+        if (count <= 0 && !processor.IsCodeIndent)
+        {
             line.TrimStart();
             if (!line.IsEmpty)
             {
@@ -64,54 +99,18 @@ namespace Markdig.Extensions.Figures
                 caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
                 figure.Add(caption);
             }
-            processor.NewBlocks.Push(figure);
-
-            // Discard the current line as it is already parsed
-            return BlockState.ContinueDiscard;
-        }
-
-        public override BlockState TryContinue(BlockProcessor processor, Block block)
-        {
-            var figure = (Figure)block;
-            int count = figure.OpeningCharacterCount;
-            char matchChar = figure.OpeningCharacter;
-
-            int column = processor.Column;
-            // Match if we have a closing fence
-            var line = processor.Line;
-            int startPosition = line.Start;
-            count -= line.CountAndSkipChar(matchChar);
-
-            // If we have a closing fence, close it and discard the current line
-            // The line must contain only fence opening character followed only by whitespaces.
-            if (count <= 0 && !processor.IsCodeIndent)
-            {
-                line.TrimStart();
-                if (!line.IsEmpty)
-                {
-                    var caption = new FigureCaption(this)
-                    {
-                        Span = new SourceSpan(line.Start, line.End),
-                        Line = processor.LineIndex,
-                        Column = column + line.Start - startPosition,
-                        IsOpen = false
-                    };
-                    caption.AppendLine(ref line, caption.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
-                    figure.Add(caption);
-                }
-
-                figure.UpdateSpanEnd(line.End);
-
-                // Don't keep the last line
-                return BlockState.BreakDiscard;
-            }
-
-            // Reset the indentation to the column before the indent
-            processor.GoToColumn(processor.ColumnBeforeIndent);
 
             figure.UpdateSpanEnd(line.End);
 
-            return BlockState.Continue;
+            // Don't keep the last line
+            return BlockState.BreakDiscard;
         }
+
+        // Reset the indentation to the column before the indent
+        processor.GoToColumn(processor.ColumnBeforeIndent);
+
+        figure.UpdateSpanEnd(line.End);
+
+        return BlockState.Continue;
     }
 }

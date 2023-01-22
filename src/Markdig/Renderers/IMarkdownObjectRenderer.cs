@@ -5,26 +5,25 @@
 using Markdig.Syntax;
 using System;
 
-namespace Markdig.Renderers
+namespace Markdig.Renderers;
+
+/// <summary>
+/// Base interface for the renderer of a <see cref="MarkdownObject"/>.
+/// </summary>
+public interface IMarkdownObjectRenderer
 {
     /// <summary>
-    /// Base interface for the renderer of a <see cref="MarkdownObject"/>.
+    /// Accepts the specified <see cref="MarkdownObject"/>.
     /// </summary>
-    public interface IMarkdownObjectRenderer
-    {
-        /// <summary>
-        /// Accepts the specified <see cref="MarkdownObject"/>.
-        /// </summary>
-        /// <param name="renderer">The renderer.</param>
-        /// <param name="objectType">The <see cref="Type"/> of the Markdown object.</param>
-        /// <returns><c>true</c> If this renderer is accepting to render the specified Markdown object</returns>
-        bool Accept(RendererBase renderer, Type objectType);
+    /// <param name="renderer">The renderer.</param>
+    /// <param name="objectType">The <see cref="Type"/> of the Markdown object.</param>
+    /// <returns><c>true</c> If this renderer is accepting to render the specified Markdown object</returns>
+    bool Accept(RendererBase renderer, Type objectType);
 
-        /// <summary>
-        /// Writes the specified <see cref="MarkdownObject"/> to the <paramref name="renderer"/>.
-        /// </summary>
-        /// <param name="renderer">The renderer.</param>
-        /// <param name="objectToRender">The object to render.</param>
-        void Write(RendererBase renderer, MarkdownObject objectToRender);
-    }
+    /// <summary>
+    /// Writes the specified <see cref="MarkdownObject"/> to the <paramref name="renderer"/>.
+    /// </summary>
+    /// <param name="renderer">The renderer.</param>
+    /// <param name="objectToRender">The object to render.</param>
+    void Write(RendererBase renderer, MarkdownObject objectToRender);
 }

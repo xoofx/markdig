@@ -4,28 +4,27 @@
 
 using Markdig.Parsers;
 
-namespace Markdig.Extensions.CustomContainers
+namespace Markdig.Extensions.CustomContainers;
+
+/// <summary>
+/// The block parser for a <see cref="CustomContainer"/>.
+/// </summary>
+/// <seealso cref="FencedBlockParserBase{CustomContainer}" />
+public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
 {
     /// <summary>
-    /// The block parser for a <see cref="CustomContainer"/>.
+    /// Initializes a new instance of the <see cref="CustomContainerParser"/> class.
     /// </summary>
-    /// <seealso cref="FencedBlockParserBase{CustomContainer}" />
-    public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
+    public CustomContainerParser()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomContainerParser"/> class.
-        /// </summary>
-        public CustomContainerParser()
-        {
-            OpeningCharacters = new [] {':'};
+        OpeningCharacters = new [] {':'};
 
-            // We don't need a prefix
-            InfoPrefix = null;
-        }
+        // We don't need a prefix
+        InfoPrefix = null;
+    }
 
-        protected override CustomContainer CreateFencedBlock(BlockProcessor processor)
-        {
-            return new CustomContainer(this);
-        }
+    protected override CustomContainer CreateFencedBlock(BlockProcessor processor)
+    {
+        return new CustomContainer(this);
     }
 }

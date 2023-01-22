@@ -6,121 +6,120 @@ using System;
 using System.Linq;
 using System.Threading;
 
-namespace Markdig.Helpers
+namespace Markdig.Helpers;
+
+internal sealed class TransformedStringCache
 {
-    internal sealed class TransformedStringCache
+    internal const int InputLengthLimit = 20; // Avoid caching unreasonably long strings
+    internal const int MaxEntriesPerCharacter = 8; // Avoid growing too much
+
+    private readonly EntryGroup[] _groups; // One per ASCII character
+    private readonly Func<string, string> _transformation;
+
+    public TransformedStringCache(Func<string, string> transformation)
     {
-        internal const int InputLengthLimit = 20; // Avoid caching unreasonably long strings
-        internal const int MaxEntriesPerCharacter = 8; // Avoid growing too much
+        _transformation = transformation ?? throw new ArgumentNullException(nameof(transformation));
+        _groups = new EntryGroup[128];
+    }
 
-        private readonly EntryGroup[] _groups; // One per ASCII character
-        private readonly Func<string, string> _transformation;
-
-        public TransformedStringCache(Func<string, string> transformation)
+    public string Get(ReadOnlySpan<char> inputSpan)
+    {
+        if ((uint)(inputSpan.Length - 1) < InputLengthLimit) // Length: [1, LengthLimit]
         {
-            _transformation = transformation ?? throw new ArgumentNullException(nameof(transformation));
-            _groups = new EntryGroup[128];
+            int firstCharacter = inputSpan[0];
+            EntryGroup[] groups = _groups;
+            if ((uint)firstCharacter < (uint)groups.Length)
+            {
+                ref EntryGroup group = ref groups[firstCharacter];
+                string? transformed = group.TryGet(inputSpan);
+                if (transformed is null)
+                {
+                    string input = inputSpan.ToString();
+                    transformed = _transformation(input);
+                    group.TryAdd(input, transformed);
+                }
+                return transformed;
+            }
         }
 
-        public string Get(ReadOnlySpan<char> inputSpan)
+        return _transformation(inputSpan.ToString());
+    }
+
+    public string Get(string input)
+    {
+        if ((uint)(input.Length - 1) < InputLengthLimit) // Length: [1, LengthLimit]
         {
-            if ((uint)(inputSpan.Length - 1) < InputLengthLimit) // Length: [1, LengthLimit]
+            int firstCharacter = input[0];
+            EntryGroup[] groups = _groups;
+            if ((uint)firstCharacter < (uint)groups.Length)
             {
-                int firstCharacter = inputSpan[0];
-                EntryGroup[] groups = _groups;
-                if ((uint)firstCharacter < (uint)groups.Length)
+                ref EntryGroup group = ref groups[firstCharacter];
+                string? transformed = group.TryGet(input.AsSpan());
+                if (transformed is null)
                 {
-                    ref EntryGroup group = ref groups[firstCharacter];
-                    string? transformed = group.TryGet(inputSpan);
-                    if (transformed is null)
+                    transformed = _transformation(input);
+                    group.TryAdd(input, transformed);
+                }
+                return transformed;
+            }
+        }
+
+        return _transformation(input);
+    }
+
+    private struct EntryGroup
+    {
+        private struct Entry
+        {
+            public string Input;
+            public string Transformed;
+        }
+
+        private Entry[]? _entries;
+
+        public string? TryGet(ReadOnlySpan<char> inputSpan)
+        {
+            Entry[]? entries = _entries;
+            if (entries is not null)
+            {
+                for (int i = 0; i < entries.Length; i++)
+                {
+                    if (inputSpan.SequenceEqual(entries[i].Input.AsSpan()))
                     {
-                        string input = inputSpan.ToString();
-                        transformed = _transformation(input);
-                        group.TryAdd(input, transformed);
+                        return entries[i].Transformed;
                     }
-                    return transformed;
                 }
             }
-
-            return _transformation(inputSpan.ToString());
+            return null;
         }
 
-        public string Get(string input)
+        public void TryAdd(string input, string transformed)
         {
-            if ((uint)(input.Length - 1) < InputLengthLimit) // Length: [1, LengthLimit]
+            if (_entries is null)
             {
-                int firstCharacter = input[0];
-                EntryGroup[] groups = _groups;
-                if ((uint)firstCharacter < (uint)groups.Length)
-                {
-                    ref EntryGroup group = ref groups[firstCharacter];
-                    string? transformed = group.TryGet(input.AsSpan());
-                    if (transformed is null)
-                    {
-                        transformed = _transformation(input);
-                        group.TryAdd(input, transformed);
-                    }
-                    return transformed;
-                }
+                Interlocked.CompareExchange(ref _entries, new Entry[MaxEntriesPerCharacter], null);
             }
 
-            return _transformation(input);
-        }
-
-        private struct EntryGroup
-        {
-            private struct Entry
+            if (_entries[MaxEntriesPerCharacter - 1].Input is null) // There is still space
             {
-                public string Input;
-                public string Transformed;
-            }
-
-            private Entry[]? _entries;
-
-            public string? TryGet(ReadOnlySpan<char> inputSpan)
-            {
-                Entry[]? entries = _entries;
-                if (entries is not null)
+                lock (_entries)
                 {
-                    for (int i = 0; i < entries.Length; i++)
+                    for (int i = 0; i < _entries.Length; i++)
                     {
-                        if (inputSpan.SequenceEqual(entries[i].Input.AsSpan()))
+                        string? existingInput = _entries[i].Input;
+
+                        if (existingInput is null)
                         {
-                            return entries[i].Transformed;
+                            ref Entry entry = ref _entries[i];
+                            Volatile.Write(ref entry.Transformed, transformed);
+                            Volatile.Write(ref entry.Input, input);
+                            break;
                         }
-                    }
-                }
-                return null;
-            }
 
-            public void TryAdd(string input, string transformed)
-            {
-                if (_entries is null)
-                {
-                    Interlocked.CompareExchange(ref _entries, new Entry[MaxEntriesPerCharacter], null);
-                }
-
-                if (_entries[MaxEntriesPerCharacter - 1].Input is null) // There is still space
-                {
-                    lock (_entries)
-                    {
-                        for (int i = 0; i < _entries.Length; i++)
+                        if (input == existingInput)
                         {
-                            string? existingInput = _entries[i].Input;
-
-                            if (existingInput is null)
-                            {
-                                ref Entry entry = ref _entries[i];
-                                Volatile.Write(ref entry.Transformed, transformed);
-                                Volatile.Write(ref entry.Input, input);
-                                break;
-                            }
-
-                            if (input == existingInput)
-                            {
-                                // We lost a race and a different thread already added the same value
-                                break;
-                            }
+                            // We lost a race and a different thread already added the same value
+                            break;
                         }
                     }
                 }

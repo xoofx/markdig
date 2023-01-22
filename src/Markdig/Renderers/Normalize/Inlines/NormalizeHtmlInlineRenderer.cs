@@ -4,16 +4,15 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Normalize.Inlines
+namespace Markdig.Renderers.Normalize.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="HtmlInline"/>.
+/// </summary>
+public class NormalizeHtmlInlineRenderer : NormalizeObjectRenderer<HtmlInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="HtmlInline"/>.
-    /// </summary>
-    public class NormalizeHtmlInlineRenderer : NormalizeObjectRenderer<HtmlInline>
+    protected override void Write(NormalizeRenderer renderer, HtmlInline obj)
     {
-        protected override void Write(NormalizeRenderer renderer, HtmlInline obj)
-        {
-            renderer.Write(obj.Tag);
-        }
+        renderer.Write(obj.Tag);
     }
 }

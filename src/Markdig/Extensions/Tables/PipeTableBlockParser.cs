@@ -6,64 +6,63 @@ using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Tables
+namespace Markdig.Extensions.Tables;
+
+/// <summary>
+/// This block parsers for pipe tables is used to by-pass list items that could start by a single '-'
+/// and would disallow to detect a pipe tables at inline parsing time, so we are basically forcing a line
+/// that starts by a '-' and have at least a '|' (and have optional spaces) and is a continuation of a
+/// paragraph.
+/// </summary>
+/// <seealso cref="BlockParser" />
+public class PipeTableBlockParser : BlockParser
 {
     /// <summary>
-    /// This block parsers for pipe tables is used to by-pass list items that could start by a single '-'
-    /// and would disallow to detect a pipe tables at inline parsing time, so we are basically forcing a line
-    /// that starts by a '-' and have at least a '|' (and have optional spaces) and is a continuation of a
-    /// paragraph.
+    /// Initializes a new instance of the <see cref="PipeTableBlockParser"/> class.
     /// </summary>
-    /// <seealso cref="BlockParser" />
-    public class PipeTableBlockParser : BlockParser
+    public PipeTableBlockParser()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PipeTableBlockParser"/> class.
-        /// </summary>
-        public PipeTableBlockParser()
+        OpeningCharacters = new[] {'-'};
+    }
+
+    public override BlockState TryOpen(BlockProcessor processor)
+    {
+        // Only if we have already a paragraph
+        var paragraph = processor.CurrentBlock as ParagraphBlock;
+        if (processor.IsCodeIndent || paragraph  is null)
         {
-            OpeningCharacters = new[] {'-'};
+            return BlockState.None;
         }
 
-        public override BlockState TryOpen(BlockProcessor processor)
+        // We require at least a pipe (and we allow only : - | and space characters)
+        var line = processor.Line;
+        var countPipe = 0;
+        while (true)
         {
-            // Only if we have already a paragraph
-            var paragraph = processor.CurrentBlock as ParagraphBlock;
-            if (processor.IsCodeIndent || paragraph  is null)
+            var c = line.NextChar();
+            if (c == '\0')
             {
-                return BlockState.None;
-            }
-
-            // We require at least a pipe (and we allow only : - | and space characters)
-            var line = processor.Line;
-            var countPipe = 0;
-            while (true)
-            {
-                var c = line.NextChar();
-                if (c == '\0')
+                if (countPipe > 0)
                 {
-                    if (countPipe > 0)
-                    {
-                        // Mark the paragraph as open (important, otherwise we would have an infinite loop)
-                        paragraph.AppendLine(ref processor.Line, processor.Column, processor.LineIndex, processor.Line.Start, processor.TrackTrivia);
-                        paragraph.IsOpen = true;
-                        return BlockState.BreakDiscard;
-                    }
-
-                    return BlockState.None;
-                }
-                
-                if (c.IsSpace() || c == '-' || c == '|' || c == ':')
-                {
-                    if (c == '|')
-                    {
-                        countPipe++;
-                    }
-                    continue;
+                    // Mark the paragraph as open (important, otherwise we would have an infinite loop)
+                    paragraph.AppendLine(ref processor.Line, processor.Column, processor.LineIndex, processor.Line.Start, processor.TrackTrivia);
+                    paragraph.IsOpen = true;
+                    return BlockState.BreakDiscard;
                 }
 
                 return BlockState.None;
             }
+            
+            if (c.IsSpace() || c == '-' || c == '|' || c == ':')
+            {
+                if (c == '|')
+                {
+                    countPipe++;
+                }
+                continue;
+            }
+
+            return BlockState.None;
         }
     }
 }

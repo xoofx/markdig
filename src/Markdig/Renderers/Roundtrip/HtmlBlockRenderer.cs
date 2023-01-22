@@ -4,16 +4,15 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Roundtrip
+namespace Markdig.Renderers.Roundtrip;
+
+public class HtmlBlockRenderer : RoundtripObjectRenderer<HtmlBlock>
 {
-    public class HtmlBlockRenderer : RoundtripObjectRenderer<HtmlBlock>
+    protected override void Write(RoundtripRenderer renderer, HtmlBlock obj)
     {
-        protected override void Write(RoundtripRenderer renderer, HtmlBlock obj)
-        {
-            renderer.RenderLinesBefore(obj);
-            //renderer.Write(obj.BeforeWhitespace); // Lines content is written, including whitespace
-            renderer.WriteLeafRawLines(obj);
-            renderer.RenderLinesAfter(obj);
-        }
+        renderer.RenderLinesBefore(obj);
+        //renderer.Write(obj.BeforeWhitespace); // Lines content is written, including whitespace
+        renderer.WriteLeafRawLines(obj);
+        renderer.RenderLinesAfter(obj);
     }
 }

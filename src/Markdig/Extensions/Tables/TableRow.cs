@@ -4,24 +4,23 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Tables
+namespace Markdig.Extensions.Tables;
+
+/// <summary>
+/// Defines a row in a <see cref="Table"/>, contains <see cref="TableCell"/>, parent is <see cref="Table"/>.
+/// </summary>
+/// <seealso cref="ContainerBlock" />
+public class TableRow : ContainerBlock
 {
     /// <summary>
-    /// Defines a row in a <see cref="Table"/>, contains <see cref="TableCell"/>, parent is <see cref="Table"/>.
+    /// Initializes a new instance of the <see cref="TableRow"/> class.
     /// </summary>
-    /// <seealso cref="ContainerBlock" />
-    public class TableRow : ContainerBlock
+    public TableRow() : base(null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableRow"/> class.
-        /// </summary>
-        public TableRow() : base(null)
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is header row.
-        /// </summary>
-        public bool IsHeader { get; set; }
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is header row.
+    /// </summary>
+    public bool IsHeader { get; set; }
 }

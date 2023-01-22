@@ -4,30 +4,29 @@
 
 using System.Collections.Generic;
 
-namespace Markdig.Syntax
+namespace Markdig.Syntax;
+
+/// <summary>
+/// The root Markdown document.
+/// </summary>
+/// <seealso cref="ContainerBlock" />
+public class MarkdownDocument : ContainerBlock
 {
     /// <summary>
-    /// The root Markdown document.
+    /// Initializes a new instance of the <see cref="MarkdownDocument"/> class.
     /// </summary>
-    /// <seealso cref="ContainerBlock" />
-    public class MarkdownDocument : ContainerBlock
+    public MarkdownDocument() : base(null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownDocument"/> class.
-        /// </summary>
-        public MarkdownDocument() : base(null)
-        {
-        }
-
-        /// <summary>
-        /// Gets the number of lines in this <see cref="MarkdownDocument"/>
-        /// </summary>
-        public int LineCount;
-
-        /// <summary>
-        /// Gets a list of zero-based indexes of line beginnings in the source span
-        /// <para>Available if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is used, otherwise null</para>
-        /// </summary>
-        public List<int>? LineStartIndexes { get; set; }
     }
+
+    /// <summary>
+    /// Gets the number of lines in this <see cref="MarkdownDocument"/>
+    /// </summary>
+    public int LineCount;
+
+    /// <summary>
+    /// Gets a list of zero-based indexes of line beginnings in the source span
+    /// <para>Available if <see cref="MarkdownPipelineBuilder.PreciseSourceLocation"/> is used, otherwise null</para>
+    /// </summary>
+    public List<int>? LineStartIndexes { get; set; }
 }

@@ -5,20 +5,19 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Yaml
+namespace Markdig.Extensions.Yaml;
+
+/// <summary>
+/// A YAML frontmatter block.
+/// </summary>
+/// <seealso cref="CodeBlock" />
+public class YamlFrontMatterBlock : CodeBlock
 {
     /// <summary>
-    /// A YAML frontmatter block.
+    /// Initializes a new instance of the <see cref="YamlFrontMatterBlock"/> class.
     /// </summary>
-    /// <seealso cref="CodeBlock" />
-    public class YamlFrontMatterBlock : CodeBlock
+    /// <param name="parser">The parser.</param>
+    public YamlFrontMatterBlock(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="YamlFrontMatterBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser.</param>
-        public YamlFrontMatterBlock(BlockParser parser) : base(parser)
-        {
-        }
     }
 }

@@ -4,28 +4,27 @@
 
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Tables
-{
-    /// <summary>
-    /// Extension that allows to use grid tables.
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class GridTableExtension : IMarkdownExtension
-    {
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            if (!pipeline.BlockParsers.Contains<GridTableParser>())
-            {
-                pipeline.BlockParsers.Insert(0, new GridTableParser());
-            }
-        }
+namespace Markdig.Extensions.Tables;
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+/// <summary>
+/// Extension that allows to use grid tables.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class GridTableExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (!pipeline.BlockParsers.Contains<GridTableParser>())
         {
-            if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
-            {
-                htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
-            }
+            pipeline.BlockParsers.Insert(0, new GridTableParser());
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
+        {
+            htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
         }
     }
 }

@@ -5,25 +5,24 @@
 using Markdig.Helpers;
 using Markdig.Parsers;
 
-namespace Markdig.Syntax
+namespace Markdig.Syntax;
+
+/// <summary>
+/// Represents a thematic break (Section 4.1 CommonMark specs).
+/// </summary>
+public class ThematicBreakBlock : LeafBlock
 {
     /// <summary>
-    /// Represents a thematic break (Section 4.1 CommonMark specs).
+    /// Initializes a new instance of the <see cref="ThematicBreakBlock"/> class.
     /// </summary>
-    public class ThematicBreakBlock : LeafBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public ThematicBreakBlock(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThematicBreakBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public ThematicBreakBlock(BlockParser parser) : base(parser)
-        {
-        }
-
-        public char ThematicChar { get; set; }
-
-        public int ThematicCharCount { get; set; }
-
-        public StringSlice Content;
     }
+
+    public char ThematicChar { get; set; }
+
+    public int ThematicCharCount { get; set; }
+
+    public StringSlice Content;
 }

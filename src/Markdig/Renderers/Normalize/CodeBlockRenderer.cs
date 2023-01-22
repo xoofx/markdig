@@ -5,51 +5,50 @@
 using System;
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Normalize
+namespace Markdig.Renderers.Normalize;
+
+/// <summary>
+/// An Normalize renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{CodeBlock}" />
+public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
 {
-    /// <summary>
-    /// An Normalize renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{CodeBlock}" />
-    public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
+    public bool OutputAttributesOnPre { get; set; }
+
+    protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
     {
-        public bool OutputAttributesOnPre { get; set; }
-
-        protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
+        if (obj is FencedCodeBlock fencedCodeBlock)
         {
-            if (obj is FencedCodeBlock fencedCodeBlock)
+            var fencedCharCount = Math.Min(fencedCodeBlock.OpeningFencedCharCount, fencedCodeBlock.ClosingFencedCharCount);
+            var opening = new string(fencedCodeBlock.FencedChar, fencedCharCount);
+            renderer.Write(opening);
+            if (fencedCodeBlock.Info != null)
             {
-                var fencedCharCount = Math.Min(fencedCodeBlock.OpeningFencedCharCount, fencedCodeBlock.ClosingFencedCharCount);
-                var opening = new string(fencedCodeBlock.FencedChar, fencedCharCount);
-                renderer.Write(opening);
-                if (fencedCodeBlock.Info != null)
-                {
-                    renderer.Write(fencedCodeBlock.Info);
-                }
-                if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
-                {
-                    renderer.Write(' ').Write(fencedCodeBlock.Arguments);
-                }
-
-                /* TODO do we need this causes a empty space and would render html attributes to markdown.
-                var attributes = obj.TryGetAttributes();
-                if (attributes != null)
-                {
-                    renderer.Write(' ');
-                    renderer.Write(attributes);
-                }
-                */
-                renderer.WriteLine();
-
-                renderer.WriteLeafRawLines(obj, true);
-                renderer.Write(opening);
+                renderer.Write(fencedCodeBlock.Info);
             }
-            else
+            if (!string.IsNullOrEmpty(fencedCodeBlock.Arguments))
             {
-                renderer.WriteLeafRawLines(obj, false, true);
+                renderer.Write(' ').Write(fencedCodeBlock.Arguments);
             }
 
-            renderer.FinishBlock(renderer.Options.EmptyLineAfterCodeBlock);
+            /* TODO do we need this causes a empty space and would render html attributes to markdown.
+            var attributes = obj.TryGetAttributes();
+            if (attributes != null)
+            {
+                renderer.Write(' ');
+                renderer.Write(attributes);
+            }
+            */
+            renderer.WriteLine();
+
+            renderer.WriteLeafRawLines(obj, true);
+            renderer.Write(opening);
         }
+        else
+        {
+            renderer.WriteLeafRawLines(obj, false, true);
+        }
+
+        renderer.FinishBlock(renderer.Options.EmptyLineAfterCodeBlock);
     }
 }

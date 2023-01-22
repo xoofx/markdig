@@ -4,17 +4,16 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Html
+namespace Markdig.Renderers.Html;
+
+/// <summary>
+/// A HTML renderer for a <see cref="HtmlBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{HtmlBlock}" />
+public class HtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="HtmlBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{HtmlBlock}" />
-    public class HtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
+    protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
     {
-        protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
-        {
-            renderer.WriteLeafRawLines(obj, true, false);
-        }
+        renderer.WriteLeafRawLines(obj, true, false);
     }
 }

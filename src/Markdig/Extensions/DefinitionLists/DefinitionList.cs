@@ -5,20 +5,19 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.DefinitionLists
+namespace Markdig.Extensions.DefinitionLists;
+
+/// <summary>
+/// A definition list contains <see cref="DefinitionItem"/> children.
+/// </summary>
+/// <seealso cref="ContainerBlock" />
+public class DefinitionList : ContainerBlock
 {
     /// <summary>
-    /// A definition list contains <see cref="DefinitionItem"/> children.
+    /// Initializes a new instance of the <see cref="DefinitionList"/> class.
     /// </summary>
-    /// <seealso cref="ContainerBlock" />
-    public class DefinitionList : ContainerBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public DefinitionList(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefinitionList"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public DefinitionList(BlockParser parser) : base(parser)
-        {
-        }
     }
 }

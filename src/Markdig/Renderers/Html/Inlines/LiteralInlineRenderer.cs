@@ -4,24 +4,23 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Html.Inlines
+namespace Markdig.Renderers.Html.Inlines;
+
+/// <summary>
+/// A HTML renderer for a <see cref="LiteralInline"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{LiteralInline}" />
+public class LiteralInlineRenderer : HtmlObjectRenderer<LiteralInline>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="LiteralInline"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{LiteralInline}" />
-    public class LiteralInlineRenderer : HtmlObjectRenderer<LiteralInline>
+    protected override void Write(HtmlRenderer renderer, LiteralInline obj)
     {
-        protected override void Write(HtmlRenderer renderer, LiteralInline obj)
+        if (renderer.EnableHtmlEscape)
         {
-            if (renderer.EnableHtmlEscape)
-            {
-                renderer.WriteEscape(ref obj.Content);
-            }
-            else
-            {
-                renderer.Write(ref obj.Content);
-            }
+            renderer.WriteEscape(ref obj.Content);
+        }
+        else
+        {
+            renderer.Write(ref obj.Content);
         }
     }
 }

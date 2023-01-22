@@ -5,26 +5,25 @@
 using Markdig.Parsers;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Tables
+namespace Markdig.Extensions.Tables;
+
+/// <summary>
+/// The delimiter used to separate the columns of a pipe table.
+/// </summary>
+/// <seealso cref="DelimiterInline" />
+public class PipeTableDelimiterInline : DelimiterInline
 {
-    /// <summary>
-    /// The delimiter used to separate the columns of a pipe table.
-    /// </summary>
-    /// <seealso cref="DelimiterInline" />
-    public class PipeTableDelimiterInline : DelimiterInline
+    public PipeTableDelimiterInline(InlineParser parser) : base(parser)
     {
-        public PipeTableDelimiterInline(InlineParser parser) : base(parser)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Gets or sets the index of line where this delimiter was found relative to the current block.
-        /// </summary>
-        public int LocalLineIndex { get; set; }
+    /// <summary>
+    /// Gets or sets the index of line where this delimiter was found relative to the current block.
+    /// </summary>
+    public int LocalLineIndex { get; set; }
 
-        public override string ToLiteral()
-        {
-            return "|";
-        }
+    public override string ToLiteral()
+    {
+        return "|";
     }
 }

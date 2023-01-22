@@ -4,24 +4,23 @@
 
 using System.Collections.Generic;
 
-namespace Markdig
+namespace Markdig;
+
+/// <summary>
+/// Provides a context that can be used as part of parsing Markdown documents.
+/// </summary>
+public class MarkdownParserContext
 {
     /// <summary>
-    /// Provides a context that can be used as part of parsing Markdown documents.
+    /// Gets or sets the context property collection.
     /// </summary>
-    public class MarkdownParserContext
-    {
-        /// <summary>
-        /// Gets or sets the context property collection.
-        /// </summary>
-        public Dictionary<object, object> Properties { get; }
+    public Dictionary<object, object> Properties { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownParserContext" /> class.
-        /// </summary>
-        public MarkdownParserContext()
-        {
-            Properties = new Dictionary<object, object>();
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MarkdownParserContext" /> class.
+    /// </summary>
+    public MarkdownParserContext()
+    {
+        Properties = new Dictionary<object, object>();
     }
 }

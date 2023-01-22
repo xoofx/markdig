@@ -5,56 +5,55 @@
 using System.Diagnostics;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.SmartyPants
+namespace Markdig.Extensions.SmartyPants;
+
+/// <summary>
+/// An inline for SmartyPant.
+/// </summary>
+[DebuggerDisplay("SmartyPant {ToString()}")]
+public class SmartyPant : LeafInline
 {
+    public char OpeningCharacter { get; set; }
+
+    public SmartyPantType Type { get; set; }
+
     /// <summary>
-    /// An inline for SmartyPant.
+    /// Converts this instance to a literal text.
     /// </summary>
-    [DebuggerDisplay("SmartyPant {ToString()}")]
-    public class SmartyPant : LeafInline
+    /// <returns></returns>
+    public override string ToString()
     {
-        public char OpeningCharacter { get; set; }
-
-        public SmartyPantType Type { get; set; }
-
-        /// <summary>
-        /// Converts this instance to a literal text.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        switch (Type)
         {
-            switch (Type)
-            {
-                case SmartyPantType.Quote:
-                case SmartyPantType.LeftQuote:
-                case SmartyPantType.RightQuote:
-                    return "'";
-                case SmartyPantType.DoubleQuote:
-                    return "\"";
-                case SmartyPantType.LeftDoubleQuote:
-                    return OpeningCharacter == '`' ? "``" : "\"";
-                case SmartyPantType.RightDoubleQuote:
-                    return OpeningCharacter == '\'' ? "''" : "\"";
-                case SmartyPantType.Dash2:
-                    return "--";
-                case SmartyPantType.Dash3:
-                    return "--";
-                case SmartyPantType.LeftAngleQuote:
-                    return "<<";
-                case SmartyPantType.RightAngleQuote:
-                    return ">>";
-            }
-            return OpeningCharacter != 0 ? OpeningCharacter.ToString() : string.Empty;
+            case SmartyPantType.Quote:
+            case SmartyPantType.LeftQuote:
+            case SmartyPantType.RightQuote:
+                return "'";
+            case SmartyPantType.DoubleQuote:
+                return "\"";
+            case SmartyPantType.LeftDoubleQuote:
+                return OpeningCharacter == '`' ? "``" : "\"";
+            case SmartyPantType.RightDoubleQuote:
+                return OpeningCharacter == '\'' ? "''" : "\"";
+            case SmartyPantType.Dash2:
+                return "--";
+            case SmartyPantType.Dash3:
+                return "--";
+            case SmartyPantType.LeftAngleQuote:
+                return "<<";
+            case SmartyPantType.RightAngleQuote:
+                return ">>";
         }
+        return OpeningCharacter != 0 ? OpeningCharacter.ToString() : string.Empty;
+    }
 
-        public LiteralInline AsLiteralInline()
+    public LiteralInline AsLiteralInline()
+    {
+        return new LiteralInline(ToString())
         {
-            return new LiteralInline(ToString())
-            {
-                Span = Span,
-                Line = Line,
-                Column = Column,
-            };
-        }
+            Span = Span,
+            Line = Line,
+            Column = Column,
+        };
     }
 }

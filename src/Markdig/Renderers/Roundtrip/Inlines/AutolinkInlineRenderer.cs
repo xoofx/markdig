@@ -4,17 +4,16 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Roundtrip.Inlines
+namespace Markdig.Renderers.Roundtrip.Inlines;
+
+/// <summary>
+/// A Normalize renderer for an <see cref="AutolinkInline"/>.
+/// </summary>
+/// <seealso cref="RoundtripObjectRenderer{AutolinkInline}" />
+public class AutolinkInlineRenderer : RoundtripObjectRenderer<AutolinkInline>
 {
-    /// <summary>
-    /// A Normalize renderer for an <see cref="AutolinkInline"/>.
-    /// </summary>
-    /// <seealso cref="RoundtripObjectRenderer{AutolinkInline}" />
-    public class AutolinkInlineRenderer : RoundtripObjectRenderer<AutolinkInline>
+    protected override void Write(RoundtripRenderer renderer, AutolinkInline obj)
     {
-        protected override void Write(RoundtripRenderer renderer, AutolinkInline obj)
-        {
-            renderer.Write('<').Write(obj.Url).Write('>');
-        }
+        renderer.Write('<').Write(obj.Url).Write('>');
     }
 }

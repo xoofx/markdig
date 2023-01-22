@@ -4,13 +4,12 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Roundtrip
+namespace Markdig.Renderers.Roundtrip;
+
+public class LinkReferenceDefinitionGroupRenderer : RoundtripObjectRenderer<LinkReferenceDefinitionGroup>
 {
-    public class LinkReferenceDefinitionGroupRenderer : RoundtripObjectRenderer<LinkReferenceDefinitionGroup>
+    protected override void Write(RoundtripRenderer renderer, LinkReferenceDefinitionGroup obj)
     {
-        protected override void Write(RoundtripRenderer renderer, LinkReferenceDefinitionGroup obj)
-        {
-            renderer.WriteChildren(obj);
-        }
+        renderer.WriteChildren(obj);
     }
 }

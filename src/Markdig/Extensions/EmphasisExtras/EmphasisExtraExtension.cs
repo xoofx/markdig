@@ -8,117 +8,116 @@ using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax.Inlines;
 using System.Diagnostics;
 
-namespace Markdig.Extensions.EmphasisExtras
+namespace Markdig.Extensions.EmphasisExtras;
+
+/// <summary>
+/// Extension for strikethrough, subscript, superscript, inserted and marked.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class EmphasisExtraExtension : IMarkdownExtension
 {
     /// <summary>
-    /// Extension for strikethrough, subscript, superscript, inserted and marked.
+    /// Initializes a new instance of the <see cref="EmphasisExtraExtension"/> class.
     /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class EmphasisExtraExtension : IMarkdownExtension
+    /// <param name="options">The options.</param>
+    public EmphasisExtraExtension(EmphasisExtraOptions options = EmphasisExtraOptions.Default)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmphasisExtraExtension"/> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public EmphasisExtraExtension(EmphasisExtraOptions options = EmphasisExtraOptions.Default)
-        {
-            Options = options;
-        }
+        Options = options;
+    }
 
-        /// <summary>
-        /// Gets the options.
-        /// </summary>
-        public EmphasisExtraOptions Options { get; }
+    /// <summary>
+    /// Gets the options.
+    /// </summary>
+    public EmphasisExtraOptions Options { get; }
 
-        public void Setup(MarkdownPipelineBuilder pipeline)
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
+        if (parser != null)
         {
-            var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
-            if (parser != null)
+            var hasTilde = false;
+            var hasSup = false;
+            var hasPlus = false;
+            var hasEqual = false;
+
+            var requireTilde = ((Options & EmphasisExtraOptions.Strikethrough) != 0 ||
+                                (Options & EmphasisExtraOptions.Subscript) != 0);
+
+            var requireSup = (Options & EmphasisExtraOptions.Superscript) != 0;
+            var requirePlus = (Options & EmphasisExtraOptions.Inserted) != 0;
+            var requireEqual = (Options & EmphasisExtraOptions.Marked) != 0;
+
+            foreach (var emphasis in parser.EmphasisDescriptors)
             {
-                var hasTilde = false;
-                var hasSup = false;
-                var hasPlus = false;
-                var hasEqual = false;
-
-                var requireTilde = ((Options & EmphasisExtraOptions.Strikethrough) != 0 ||
-                                    (Options & EmphasisExtraOptions.Subscript) != 0);
-
-                var requireSup = (Options & EmphasisExtraOptions.Superscript) != 0;
-                var requirePlus = (Options & EmphasisExtraOptions.Inserted) != 0;
-                var requireEqual = (Options & EmphasisExtraOptions.Marked) != 0;
-
-                foreach (var emphasis in parser.EmphasisDescriptors)
+                if (requireTilde && emphasis.Character == '~')
                 {
-                    if (requireTilde && emphasis.Character == '~')
-                    {
-                        hasTilde = true;
-                    }
-                    if (requireSup && emphasis.Character == '^')
-                    {
-                        hasSup = true;
-                    }
-                    if (requirePlus && emphasis.Character == '+')
-                    {
-                        hasPlus = true;
-                    }
-                    if (requireEqual && emphasis.Character == '=')
-                    {
-                        hasEqual = true;
-                    }
+                    hasTilde = true;
                 }
-
-                if (requireTilde && !hasTilde)
+                if (requireSup && emphasis.Character == '^')
                 {
-                    int minimumCount = (Options & EmphasisExtraOptions.Subscript) != 0 ? 1 : 2;
-                    int maximumCount = (Options & EmphasisExtraOptions.Strikethrough) != 0 ? 2 : 1;
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', minimumCount, maximumCount, true));
+                    hasSup = true;
                 }
-                if (requireSup && !hasSup)
+                if (requirePlus && emphasis.Character == '+')
                 {
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('^', 1, 1, true));
+                    hasPlus = true;
                 }
-                if (requirePlus && !hasPlus)
+                if (requireEqual && emphasis.Character == '=')
                 {
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('+', 2, 2, true));
-                }
-                if (requireEqual && !hasEqual)
-                {
-                    parser.EmphasisDescriptors.Add(new EmphasisDescriptor('=', 2, 2, true));
+                    hasEqual = true;
                 }
             }
-        }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-            if (renderer is HtmlRenderer htmlRenderer)
+            if (requireTilde && !hasTilde)
             {
-                // Extend the rendering here.
-                var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
-                if (emphasisRenderer != null)
-                {
-                    var previousTag = emphasisRenderer.GetTag;
-                    emphasisRenderer.GetTag = inline => GetTag(inline) ?? previousTag(inline);
-                }
+                int minimumCount = (Options & EmphasisExtraOptions.Subscript) != 0 ? 1 : 2;
+                int maximumCount = (Options & EmphasisExtraOptions.Strikethrough) != 0 ? 2 : 1;
+                parser.EmphasisDescriptors.Add(new EmphasisDescriptor('~', minimumCount, maximumCount, true));
+            }
+            if (requireSup && !hasSup)
+            {
+                parser.EmphasisDescriptors.Add(new EmphasisDescriptor('^', 1, 1, true));
+            }
+            if (requirePlus && !hasPlus)
+            {
+                parser.EmphasisDescriptors.Add(new EmphasisDescriptor('+', 2, 2, true));
+            }
+            if (requireEqual && !hasEqual)
+            {
+                parser.EmphasisDescriptors.Add(new EmphasisDescriptor('=', 2, 2, true));
             }
         }
+    }
 
-        private string? GetTag(EmphasisInline emphasisInline)
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer)
         {
-            var c = emphasisInline.DelimiterChar;
-            switch (c)
+            // Extend the rendering here.
+            var emphasisRenderer = htmlRenderer.ObjectRenderers.FindExact<EmphasisInlineRenderer>();
+            if (emphasisRenderer != null)
             {
-                case '~':
-                    Debug.Assert(emphasisInline.DelimiterCount <= 2);
-                    return emphasisInline.DelimiterCount == 2 ? "del" : "sub";
-                case '^':
-                    return "sup";
-                case '+':
-                    return "ins";
-                case '=':
-                    return "mark";
+                var previousTag = emphasisRenderer.GetTag;
+                emphasisRenderer.GetTag = inline => GetTag(inline) ?? previousTag(inline);
             }
-
-            return null;
         }
+    }
+
+    private string? GetTag(EmphasisInline emphasisInline)
+    {
+        var c = emphasisInline.DelimiterChar;
+        switch (c)
+        {
+            case '~':
+                Debug.Assert(emphasisInline.DelimiterCount <= 2);
+                return emphasisInline.DelimiterCount == 2 ? "del" : "sub";
+            case '^':
+                return "sup";
+            case '+':
+                return "ins";
+            case '=':
+                return "mark";
+        }
+
+        return null;
     }
 }

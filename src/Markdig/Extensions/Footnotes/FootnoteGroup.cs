@@ -5,22 +5,21 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Footnotes
+namespace Markdig.Extensions.Footnotes;
+
+/// <summary>
+/// A block that contains all the footnotes at the end of a <see cref="MarkdownDocument"/>.
+/// </summary>
+/// <seealso cref="ContainerBlock" />
+public class FootnoteGroup : ContainerBlock
 {
     /// <summary>
-    /// A block that contains all the footnotes at the end of a <see cref="MarkdownDocument"/>.
+    /// Initializes a new instance of the <see cref="FootnoteGroup"/> class.
     /// </summary>
-    /// <seealso cref="ContainerBlock" />
-    public class FootnoteGroup : ContainerBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public FootnoteGroup(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FootnoteGroup"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public FootnoteGroup(BlockParser parser) : base(parser)
-        {
-        }
-
-        internal int CurrentOrder { get; set; }
     }
+
+    internal int CurrentOrder { get; set; }
 }

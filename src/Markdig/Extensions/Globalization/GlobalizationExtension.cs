@@ -12,114 +12,113 @@ using Markdig.Syntax.Inlines;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Markdig.Extensions.Globalization
+namespace Markdig.Extensions.Globalization;
+
+/// <summary>
+/// Extension to add support for RTL content.
+/// </summary>
+public class GlobalizationExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to add support for RTL content.
-    /// </summary>
-    public class GlobalizationExtension : IMarkdownExtension
+
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        // Make sure we don't have a delegate twice
+        pipeline.DocumentProcessed -= Pipeline_DocumentProcessed;
+        pipeline.DocumentProcessed += Pipeline_DocumentProcessed;
+    }
+
+    private void Pipeline_DocumentProcessed(MarkdownDocument document)
+    {
+        foreach (var node in document.Descendants())
+        {
+            if (node is TableRow || node is TableCell || node is ListItemBlock)
+                continue;
+
+            if (ShouldBeRightToLeft(node))
+            {
+                var attributes = node.GetAttributes();
+                attributes.AddPropertyIfNotExist("dir", "rtl");
+
+                if (node is Table)
+                {
+                    attributes.AddPropertyIfNotExist("align", "right");
+                }
+            }
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
 
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            // Make sure we don't have a delegate twice
-            pipeline.DocumentProcessed -= Pipeline_DocumentProcessed;
-            pipeline.DocumentProcessed += Pipeline_DocumentProcessed;
-        }
+    }
 
-        private void Pipeline_DocumentProcessed(MarkdownDocument document)
+    private static bool ShouldBeRightToLeft(MarkdownObject item)
+    {
+        if (item is IEnumerable<MarkdownObject> container)
         {
-            foreach (var node in document.Descendants())
+            foreach (var child in container)
             {
-                if (node is TableRow || node is TableCell || node is ListItemBlock)
+                // TaskList items contain an "X", which will cause
+                // the function to always return false.
+                if (child is TaskList)
                     continue;
 
-                if (ShouldBeRightToLeft(node))
-                {
-                    var attributes = node.GetAttributes();
-                    attributes.AddPropertyIfNotExist("dir", "rtl");
+                return ShouldBeRightToLeft(child);
+            }
+        }
+        else if (item is LeafBlock leaf)
+        {
+            return ShouldBeRightToLeft(leaf.Inline!);
+        }
+        else if (item is LiteralInline literal)
+        {
+            return StartsWithRtlCharacter(literal.Content);
+        }
 
-                    if (node is Table)
-                    {
-                        attributes.AddPropertyIfNotExist("align", "right");
-                    }
+        foreach (var paragraph in item.Descendants<ParagraphBlock>())
+        {
+            foreach (var inline in paragraph.Inline!)
+            {
+                if (inline is LiteralInline literal)
+                {
+                    return StartsWithRtlCharacter(literal.Content);
                 }
             }
         }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+        return false;
+    }
+
+    private static bool StartsWithRtlCharacter(StringSlice slice)
+    {
+        for (int i = slice.Start; i <= slice.End; i++)
         {
-
-        }
-
-        private static bool ShouldBeRightToLeft(MarkdownObject item)
-        {
-            if (item is IEnumerable<MarkdownObject> container)
+            char c = slice[i];
+            if (c < 128)
             {
-                foreach (var child in container)
+                if (CharHelper.IsAlpha(c))
                 {
-                    // TaskList items contain an "X", which will cause
-                    // the function to always return false.
-                    if (child is TaskList)
-                        continue;
-
-                    return ShouldBeRightToLeft(child);
-                }
-            }
-            else if (item is LeafBlock leaf)
-            {
-                return ShouldBeRightToLeft(leaf.Inline!);
-            }
-            else if (item is LiteralInline literal)
-            {
-                return StartsWithRtlCharacter(literal.Content);
-            }
-
-            foreach (var paragraph in item.Descendants<ParagraphBlock>())
-            {
-                foreach (var inline in paragraph.Inline!)
-                {
-                    if (inline is LiteralInline literal)
-                    {
-                        return StartsWithRtlCharacter(literal.Content);
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private static bool StartsWithRtlCharacter(StringSlice slice)
-        {
-            for (int i = slice.Start; i <= slice.End; i++)
-            {
-                char c = slice[i];
-                if (c < 128)
-                {
-                    if (CharHelper.IsAlpha(c))
-                    {
-                        return false;
-                    }
-
-                    continue;
-                }
-
-                int rune = c;
-                if (CharHelper.IsHighSurrogate(c) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
-                {
-                    Debug.Assert(char.IsSurrogatePair(c, slice[i + 1]));
-                    rune = char.ConvertToUtf32(c, slice[i + 1]);
-                    i++;
-                }
-
-                if (CharHelper.IsRightToLeft(rune))
-                    return true;
-
-                if (CharHelper.IsLeftToRight(rune))
                     return false;
+                }
+
+                continue;
             }
 
-            return false;
+            int rune = c;
+            if (CharHelper.IsHighSurrogate(c) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
+            {
+                Debug.Assert(char.IsSurrogatePair(c, slice[i + 1]));
+                rune = char.ConvertToUtf32(c, slice[i + 1]);
+                i++;
+            }
+
+            if (CharHelper.IsRightToLeft(rune))
+                return true;
+
+            if (CharHelper.IsLeftToRight(rune))
+                return false;
         }
+
+        return false;
     }
 }

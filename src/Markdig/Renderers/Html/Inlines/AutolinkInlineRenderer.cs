@@ -5,76 +5,75 @@
 using Markdig.Syntax.Inlines;
 using System;
 
-namespace Markdig.Renderers.Html.Inlines
+namespace Markdig.Renderers.Html.Inlines;
+
+/// <summary>
+/// A HTML renderer for an <see cref="AutolinkInline"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{AutolinkInline}" />
+public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
 {
     /// <summary>
-    /// A HTML renderer for an <see cref="AutolinkInline"/>.
+    /// Gets or sets a value indicating whether to always add rel="nofollow" for links or not.
     /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{AutolinkInline}" />
-    public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
+    [Obsolete("AutoRelNoFollow is obsolete. Please write \"nofollow\" into Property Rel.")]
+    public bool AutoRelNoFollow
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether to always add rel="nofollow" for links or not.
-        /// </summary>
-        [Obsolete("AutoRelNoFollow is obsolete. Please write \"nofollow\" into Property Rel.")]
-        public bool AutoRelNoFollow
+        get
         {
-            get
-            {
-                return Rel is not null && Rel.Contains("nofollow");
-            }
-            set
-            {
-                const string NoFollow = "nofollow";
+            return Rel is not null && Rel.Contains("nofollow");
+        }
+        set
+        {
+            const string NoFollow = "nofollow";
 
-                if (value)
+            if (value)
+            {
+                if (string.IsNullOrEmpty(Rel))
                 {
-                    if (string.IsNullOrEmpty(Rel))
-                    {
-                        Rel = NoFollow;
-                    }
-                    else if (!Rel!.Contains(NoFollow))
-                    {
-                        Rel += $" {NoFollow}";
-                    }
+                    Rel = NoFollow;
                 }
-                else
+                else if (!Rel!.Contains(NoFollow))
                 {
-                    Rel = Rel?.Replace(NoFollow, string.Empty);
+                    Rel += $" {NoFollow}";
                 }
+            }
+            else
+            {
+                Rel = Rel?.Replace(NoFollow, string.Empty);
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the literal string in property rel for links
-        /// </summary>
-        public string? Rel { get; set; }
+    /// <summary>
+    /// Gets or sets the literal string in property rel for links
+    /// </summary>
+    public string? Rel { get; set; }
 
-        protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
+    protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
+    {
+        if (renderer.EnableHtmlForInline)
         {
-            if (renderer.EnableHtmlForInline)
+            renderer.Write(obj.IsEmail ? "<a href=\"mailto:" : "<a href=\"");
+            renderer.WriteEscapeUrl(obj.Url);
+            renderer.WriteRaw('"');
+            renderer.WriteAttributes(obj);
+
+            if (!obj.IsEmail && !string.IsNullOrWhiteSpace(Rel))
             {
-                renderer.Write(obj.IsEmail ? "<a href=\"mailto:" : "<a href=\"");
-                renderer.WriteEscapeUrl(obj.Url);
+                renderer.WriteRaw(" rel=\"");
+                renderer.WriteRaw(Rel);
                 renderer.WriteRaw('"');
-                renderer.WriteAttributes(obj);
-
-                if (!obj.IsEmail && !string.IsNullOrWhiteSpace(Rel))
-                {
-                    renderer.WriteRaw(" rel=\"");
-                    renderer.WriteRaw(Rel);
-                    renderer.WriteRaw('"');
-                }
-
-                renderer.WriteRaw('>');
             }
 
-            renderer.WriteEscape(obj.Url);
+            renderer.WriteRaw('>');
+        }
 
-            if (renderer.EnableHtmlForInline)
-            {
-                renderer.WriteRaw("</a>");
-            }
+        renderer.WriteEscape(obj.Url);
+
+        if (renderer.EnableHtmlForInline)
+        {
+            renderer.WriteRaw("</a>");
         }
     }
 }

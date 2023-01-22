@@ -4,32 +4,31 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Html.Inlines
+namespace Markdig.Renderers.Html.Inlines;
+
+/// <summary>
+/// A HTML renderer for a <see cref="LineBreakInline"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{LineBreakInline}" />
+public class LineBreakInlineRenderer : HtmlObjectRenderer<LineBreakInline>
 {
     /// <summary>
-    /// A HTML renderer for a <see cref="LineBreakInline"/>.
+    /// Gets or sets a value indicating whether to render this softline break as a HTML hardline break tag (&lt;br /&gt;)
     /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{LineBreakInline}" />
-    public class LineBreakInlineRenderer : HtmlObjectRenderer<LineBreakInline>
+    public bool RenderAsHardlineBreak { get; set; }
+
+    protected override void Write(HtmlRenderer renderer, LineBreakInline obj)
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether to render this softline break as a HTML hardline break tag (&lt;br /&gt;)
-        /// </summary>
-        public bool RenderAsHardlineBreak { get; set; }
+        if (renderer.IsLastInContainer) return;
 
-        protected override void Write(HtmlRenderer renderer, LineBreakInline obj)
+        if (renderer.EnableHtmlForInline)
         {
-            if (renderer.IsLastInContainer) return;
-
-            if (renderer.EnableHtmlForInline)
+            if (obj.IsHard || RenderAsHardlineBreak)
             {
-                if (obj.IsHard || RenderAsHardlineBreak)
-                {
-                    renderer.WriteLine("<br />");
-                }
+                renderer.WriteLine("<br />");
             }
-
-            renderer.EnsureLine();
         }
+
+        renderer.EnsureLine();
     }
 }

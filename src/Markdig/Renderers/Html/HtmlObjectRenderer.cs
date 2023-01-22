@@ -4,14 +4,13 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Html
+namespace Markdig.Renderers.Html;
+
+/// <summary>
+/// A base class for HTML rendering <see cref="Block"/> and <see cref="Syntax.Inlines.Inline"/> Markdown objects.
+/// </summary>
+/// <typeparam name="TObject">The type of the object.</typeparam>
+/// <seealso cref="IMarkdownObjectRenderer" />
+public abstract class HtmlObjectRenderer<TObject> : MarkdownObjectRenderer<HtmlRenderer, TObject> where TObject : MarkdownObject
 {
-    /// <summary>
-    /// A base class for HTML rendering <see cref="Block"/> and <see cref="Syntax.Inlines.Inline"/> Markdown objects.
-    /// </summary>
-    /// <typeparam name="TObject">The type of the object.</typeparam>
-    /// <seealso cref="IMarkdownObjectRenderer" />
-    public abstract class HtmlObjectRenderer<TObject> : MarkdownObjectRenderer<HtmlRenderer, TObject> where TObject : MarkdownObject
-    {
-    }
 }

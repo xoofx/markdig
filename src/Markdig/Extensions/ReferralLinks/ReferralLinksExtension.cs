@@ -8,36 +8,35 @@ using System.Linq;
 using Markdig.Renderers;
 using Markdig.Renderers.Html.Inlines;
 
-namespace Markdig.Extensions.ReferralLinks
+namespace Markdig.Extensions.ReferralLinks;
+
+public class ReferralLinksExtension : IMarkdownExtension
 {
-    public class ReferralLinksExtension : IMarkdownExtension
+    public ReferralLinksExtension(string[] rels)
     {
-        public ReferralLinksExtension(string[] rels)
+        Rels = rels?.ToList() ?? throw new ArgumentNullException(nameof(rels));
+    }
+
+    public List<string> Rels { get; }
+
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        string relString = string.Join(" ", Rels.Where(r => !string.IsNullOrEmpty(r)));
+
+        var linkRenderer = renderer.ObjectRenderers.Find<LinkInlineRenderer>();
+        if (linkRenderer != null)
         {
-            Rels = rels?.ToList() ?? throw new ArgumentNullException(nameof(rels));
+            linkRenderer.Rel = relString;
         }
 
-        public List<string> Rels { get; }
-
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        var autolinkRenderer = renderer.ObjectRenderers.Find<AutolinkInlineRenderer>();
+        if (autolinkRenderer != null)
         {
-        }
-
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-            string relString = string.Join(" ", Rels.Where(r => !string.IsNullOrEmpty(r)));
-
-            var linkRenderer = renderer.ObjectRenderers.Find<LinkInlineRenderer>();
-            if (linkRenderer != null)
-            {
-                linkRenderer.Rel = relString;
-            }
-
-            var autolinkRenderer = renderer.ObjectRenderers.Find<AutolinkInlineRenderer>();
-            if (autolinkRenderer != null)
-            {
-                autolinkRenderer.Rel = relString;
-            }
+            autolinkRenderer.Rel = relString;
         }
     }
 }

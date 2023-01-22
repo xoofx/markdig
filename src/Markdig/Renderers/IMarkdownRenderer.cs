@@ -6,33 +6,32 @@ using System;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers
+namespace Markdig.Renderers;
+
+/// <summary>
+/// Base interface for a renderer for a Markdown <see cref="MarkdownDocument"/>.
+/// </summary>
+public interface IMarkdownRenderer
 {
     /// <summary>
-    /// Base interface for a renderer for a Markdown <see cref="MarkdownDocument"/>.
+    /// Occurs when before writing an object.
     /// </summary>
-    public interface IMarkdownRenderer
-    {
-        /// <summary>
-        /// Occurs when before writing an object.
-        /// </summary>
-        event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteBefore;
+    event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteBefore;
 
-        /// <summary>
-        /// Occurs when after writing an object.
-        /// </summary>
-        event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteAfter;
+    /// <summary>
+    /// Occurs when after writing an object.
+    /// </summary>
+    event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteAfter;
 
-        /// <summary>
-        /// Gets the object renderers that will render <see cref="Block"/> and <see cref="Inline"/> elements.
-        /// </summary>
-        ObjectRendererCollection ObjectRenderers { get; }
+    /// <summary>
+    /// Gets the object renderers that will render <see cref="Block"/> and <see cref="Inline"/> elements.
+    /// </summary>
+    ObjectRendererCollection ObjectRenderers { get; }
 
-        /// <summary>
-        /// Renders the specified markdown object.
-        /// </summary>
-        /// <param name="markdownObject">The markdown object.</param>
-        /// <returns>The result of the rendering.</returns>
-        object Render(MarkdownObject markdownObject);
-    }
+    /// <summary>
+    /// Renders the specified markdown object.
+    /// </summary>
+    /// <param name="markdownObject">The markdown object.</param>
+    /// <returns>The result of the rendering.</returns>
+    object Render(MarkdownObject markdownObject);
 }

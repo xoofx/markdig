@@ -4,52 +4,51 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Normalize.Inlines
+namespace Markdig.Renderers.Normalize.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="CodeInline"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{CodeInline}" />
+public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="CodeInline"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{CodeInline}" />
-    public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
+    protected override void Write(NormalizeRenderer renderer, CodeInline obj)
     {
-        protected override void Write(NormalizeRenderer renderer, CodeInline obj)
+        var delimiterCount = 0;
+        string content = obj.Content;
+        for (var i = 0; i < content.Length; i++)
         {
-            var delimiterCount = 0;
-            string content = obj.Content;
-            for (var i = 0; i < content.Length; i++)
-            {
-                var index = content.IndexOf(obj.Delimiter, i);
-                if (index == -1) break;
+            var index = content.IndexOf(obj.Delimiter, i);
+            if (index == -1) break;
 
-                var count = 1;
-                for (i = index + 1; i < content.Length; i++)
-                {
-                    if (content[i] == obj.Delimiter) count++;
-                    else break;
-                }
-
-                if (delimiterCount < count)
-                    delimiterCount = count;
-            }
-            var delimiterRun = new string(obj.Delimiter, delimiterCount + 1);
-            renderer.Write(delimiterRun);
-            if (content.Length != 0)
+            var count = 1;
+            for (i = index + 1; i < content.Length; i++)
             {
-                if (content[0] == obj.Delimiter)
-                {
-                    renderer.Write(' ');
-                }
-                renderer.Write(content);
-                if (content[content.Length - 1] == obj.Delimiter)
-                {
-                    renderer.Write(' ');
-                }
+                if (content[i] == obj.Delimiter) count++;
+                else break;
             }
-            else
+
+            if (delimiterCount < count)
+                delimiterCount = count;
+        }
+        var delimiterRun = new string(obj.Delimiter, delimiterCount + 1);
+        renderer.Write(delimiterRun);
+        if (content.Length != 0)
+        {
+            if (content[0] == obj.Delimiter)
             {
                 renderer.Write(' ');
             }
-            renderer.Write(delimiterRun);
+            renderer.Write(content);
+            if (content[content.Length - 1] == obj.Delimiter)
+            {
+                renderer.Write(' ');
+            }
         }
+        else
+        {
+            renderer.Write(' ');
+        }
+        renderer.Write(delimiterRun);
     }
 }

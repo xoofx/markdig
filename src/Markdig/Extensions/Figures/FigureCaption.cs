@@ -5,21 +5,20 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Figures
+namespace Markdig.Extensions.Figures;
+
+/// <summary>
+/// Defines a figure caption.
+/// </summary>
+/// <seealso cref="LeafBlock" />
+public class FigureCaption : LeafBlock
 {
     /// <summary>
-    /// Defines a figure caption.
+    /// Initializes a new instance of the <see cref="FigureCaption"/> class.
     /// </summary>
-    /// <seealso cref="LeafBlock" />
-    public class FigureCaption : LeafBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public FigureCaption(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FigureCaption"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public FigureCaption(BlockParser parser) : base(parser)
-        {
-            ProcessInlines = true;
-        }
+        ProcessInlines = true;
     }
 }

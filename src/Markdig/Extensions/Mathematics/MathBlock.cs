@@ -5,20 +5,19 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Mathematics
+namespace Markdig.Extensions.Mathematics;
+
+/// <summary>
+/// A math block.
+/// </summary>
+/// <seealso cref="FencedCodeBlock" />
+public class MathBlock : FencedCodeBlock
 {
     /// <summary>
-    /// A math block.
+    /// Initializes a new instance of the <see cref="MathBlock"/> class.
     /// </summary>
-    /// <seealso cref="FencedCodeBlock" />
-    public class MathBlock : FencedCodeBlock
+    /// <param name="parser">The parser.</param>
+    public MathBlock(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MathBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser.</param>
-        public MathBlock(BlockParser parser) : base(parser)
-        {
-        }
     }
 }

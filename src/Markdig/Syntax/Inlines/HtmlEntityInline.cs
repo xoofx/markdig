@@ -5,23 +5,22 @@
 using System.Diagnostics;
 using Markdig.Helpers;
 
-namespace Markdig.Syntax.Inlines
+namespace Markdig.Syntax.Inlines;
+
+/// <summary>
+/// An entity HTML.
+/// </summary>
+/// <seealso cref="LeafInline" />
+[DebuggerDisplay("{Original} -> {Transcoded}")]
+public class HtmlEntityInline : LeafInline
 {
     /// <summary>
-    /// An entity HTML.
+    /// Gets or sets the original HTML entity name
     /// </summary>
-    /// <seealso cref="LeafInline" />
-    [DebuggerDisplay("{Original} -> {Transcoded}")]
-    public class HtmlEntityInline : LeafInline
-    {
-        /// <summary>
-        /// Gets or sets the original HTML entity name
-        /// </summary>
-        public StringSlice Original { get; set; }
+    public StringSlice Original { get; set; }
 
-        /// <summary>
-        /// Gets or sets the transcoded literal that will be used for output
-        /// </summary>
-        public StringSlice Transcoded { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the transcoded literal that will be used for output
+    /// </summary>
+    public StringSlice Transcoded { get; set; }
 }

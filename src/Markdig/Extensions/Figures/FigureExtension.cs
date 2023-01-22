@@ -5,37 +5,36 @@
 using Markdig.Extensions.Footers;
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Figures
+namespace Markdig.Extensions.Figures;
+
+/// <summary>
+/// Extension to allow usage of figures and figure captions.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class FigureExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to allow usage of figures and figure captions.
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class FigureExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        if (!pipeline.BlockParsers.Contains<FigureBlockParser>())
         {
-            if (!pipeline.BlockParsers.Contains<FigureBlockParser>())
+            // The Figure extension must come before the Footer extension
+            if (pipeline.BlockParsers.Contains<FooterBlockParser>())
             {
-                // The Figure extension must come before the Footer extension
-                if (pipeline.BlockParsers.Contains<FooterBlockParser>())
-                {
-                    pipeline.BlockParsers.InsertBefore<FooterBlockParser>(new FigureBlockParser());
-                }
-                else
-                {
-                    pipeline.BlockParsers.Insert(0, new FigureBlockParser());
-                }
+                pipeline.BlockParsers.InsertBefore<FooterBlockParser>(new FigureBlockParser());
+            }
+            else
+            {
+                pipeline.BlockParsers.Insert(0, new FigureBlockParser());
             }
         }
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer)
         {
-            if (renderer is HtmlRenderer htmlRenderer)
-            {
-                htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFigureRenderer>();
-                htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFigureCaptionRenderer>();
-            }
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFigureRenderer>();
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFigureCaptionRenderer>();
         }
     }
 }

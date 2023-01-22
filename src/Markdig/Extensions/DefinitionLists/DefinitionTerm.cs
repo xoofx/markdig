@@ -5,21 +5,20 @@
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.DefinitionLists
+namespace Markdig.Extensions.DefinitionLists;
+
+/// <summary>
+/// A definition term contains a single line with the term to define.
+/// </summary>
+/// <seealso cref="LeafBlock" />
+public class DefinitionTerm : LeafBlock
 {
     /// <summary>
-    /// A definition term contains a single line with the term to define.
+    /// Initializes a new instance of the <see cref="DefinitionTerm"/> class.
     /// </summary>
-    /// <seealso cref="LeafBlock" />
-    public class DefinitionTerm : LeafBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public DefinitionTerm(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefinitionTerm"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public DefinitionTerm(BlockParser parser) : base(parser)
-        {
-            ProcessInlines = true;
-        }
+        ProcessInlines = true;
     }
 }

@@ -11,277 +11,276 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Markdig.Helpers
+namespace Markdig.Helpers;
+
+internal sealed class FastStringWriter : TextWriter
 {
-    internal sealed class FastStringWriter : TextWriter
+    public override Encoding Encoding => Encoding.Unicode;
+
+    private char[] _chars;
+    private int _pos;
+    private string _newLine;
+
+    public FastStringWriter()
     {
-        public override Encoding Encoding => Encoding.Unicode;
+        _chars = new char[1024];
+        _newLine = "\n";
+    }
 
-        private char[] _chars;
-        private int _pos;
-        private string _newLine;
+    [AllowNull]
+    public override string NewLine
+    {
+        get => _newLine;
+        set => _newLine = value ?? Environment.NewLine;
+    }
 
-        public FastStringWriter()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(char value)
+    {
+        char[] chars = _chars;
+        int pos = _pos;
+        if ((uint)pos < (uint)chars.Length)
         {
-            _chars = new char[1024];
-            _newLine = "\n";
+            chars[pos] = value;
+            _pos = pos + 1;
         }
-
-        [AllowNull]
-        public override string NewLine
+        else
         {
-            get => _newLine;
-            set => _newLine = value ?? Environment.NewLine;
+            GrowAndAppend(value);
         }
+    }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(char value)
-        {
-            char[] chars = _chars;
-            int pos = _pos;
-            if ((uint)pos < (uint)chars.Length)
-            {
-                chars[pos] = value;
-                _pos = pos + 1;
-            }
-            else
-            {
-                GrowAndAppend(value);
-            }
-        }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(char value)
+    {
+        Write(value);
+        WriteLine();
+    }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(char value)
-        {
-            Write(value);
-            WriteLine();
-        }
+    public override Task WriteAsync(char value)
+    {
+        Write(value);
+        return Task.CompletedTask;
+    }
 
-        public override Task WriteAsync(char value)
-        {
-            Write(value);
-            return Task.CompletedTask;
-        }
+    public override Task WriteLineAsync(char value)
+    {
+        WriteLine(value);
+        return Task.CompletedTask;
+    }
 
-        public override Task WriteLineAsync(char value)
-        {
-            WriteLine(value);
-            return Task.CompletedTask;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(string? value)
-        {
-            if (value is not null)
-            {
-                if (_pos > _chars.Length - value.Length)
-                {
-                    Grow(value.Length);
-                }
-
-                value.AsSpan().CopyTo(_chars.AsSpan(_pos));
-                _pos += value.Length;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(string? value)
-        {
-            Write(value);
-            WriteLine();
-        }
-
-        public override Task WriteAsync(string? value)
-        {
-            Write(value);
-            return Task.CompletedTask;
-        }
-
-        public override Task WriteLineAsync(string? value)
-        {
-            WriteLine(value);
-            return Task.CompletedTask;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(char[]? buffer)
-        {
-            if (buffer is not null)
-            {
-                if (_pos > _chars.Length - buffer.Length)
-                {
-                    Grow(buffer.Length);
-                }
-
-                buffer.CopyTo(_chars.AsSpan(_pos));
-                _pos += buffer.Length;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(char[]? buffer)
-        {
-            Write(buffer);
-            WriteLine();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(char[] buffer, int index, int count)
-        {
-            if (buffer is not null)
-            {
-                if (_pos > _chars.Length - count)
-                {
-                    Grow(buffer.Length);
-                }
-
-                buffer.AsSpan(index, count).CopyTo(_chars.AsSpan(_pos));
-                _pos += count;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(char[] buffer, int index, int count)
-        {
-            Write(buffer, index, count);
-            WriteLine();
-        }
-
-        public override Task WriteAsync(char[] buffer, int index, int count)
-        {
-            Write(buffer, index, count);
-            return Task.CompletedTask;
-        }
-
-        public override Task WriteLineAsync(char[] buffer, int index, int count)
-        {
-            WriteLine(buffer, index, count);
-            return Task.CompletedTask;
-        }
-
-#if !(NETFRAMEWORK || NETSTANDARD2_0)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(ReadOnlySpan<char> value)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(string? value)
+    {
+        if (value is not null)
         {
             if (_pos > _chars.Length - value.Length)
             {
                 Grow(value.Length);
             }
 
-            value.CopyTo(_chars.AsSpan(_pos));
+            value.AsSpan().CopyTo(_chars.AsSpan(_pos));
             _pos += value.Length;
         }
+    }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(ReadOnlySpan<char> buffer)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(string? value)
+    {
+        Write(value);
+        WriteLine();
+    }
+
+    public override Task WriteAsync(string? value)
+    {
+        Write(value);
+        return Task.CompletedTask;
+    }
+
+    public override Task WriteLineAsync(string? value)
+    {
+        WriteLine(value);
+        return Task.CompletedTask;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(char[]? buffer)
+    {
+        if (buffer is not null)
         {
-            Write(buffer);
-            WriteLine();
+            if (_pos > _chars.Length - buffer.Length)
+            {
+                Grow(buffer.Length);
+            }
+
+            buffer.CopyTo(_chars.AsSpan(_pos));
+            _pos += buffer.Length;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(char[]? buffer)
+    {
+        Write(buffer);
+        WriteLine();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(char[] buffer, int index, int count)
+    {
+        if (buffer is not null)
+        {
+            if (_pos > _chars.Length - count)
+            {
+                Grow(buffer.Length);
+            }
+
+            buffer.AsSpan(index, count).CopyTo(_chars.AsSpan(_pos));
+            _pos += count;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(char[] buffer, int index, int count)
+    {
+        Write(buffer, index, count);
+        WriteLine();
+    }
+
+    public override Task WriteAsync(char[] buffer, int index, int count)
+    {
+        Write(buffer, index, count);
+        return Task.CompletedTask;
+    }
+
+    public override Task WriteLineAsync(char[] buffer, int index, int count)
+    {
+        WriteLine(buffer, index, count);
+        return Task.CompletedTask;
+    }
+
+#if !(NETFRAMEWORK || NETSTANDARD2_0)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(ReadOnlySpan<char> value)
+    {
+        if (_pos > _chars.Length - value.Length)
+        {
+            Grow(value.Length);
         }
 
-        public override Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
-        {
-            Write(buffer.Span);
-            return Task.CompletedTask;
-        }
+        value.CopyTo(_chars.AsSpan(_pos));
+        _pos += value.Length;
+    }
 
-        public override Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
-        {
-            WriteLine(buffer.Span);
-            return Task.CompletedTask;
-        }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(ReadOnlySpan<char> buffer)
+    {
+        Write(buffer);
+        WriteLine();
+    }
+
+    public override Task WriteAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+    {
+        Write(buffer.Span);
+        return Task.CompletedTask;
+    }
+
+    public override Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+    {
+        WriteLine(buffer.Span);
+        return Task.CompletedTask;
+    }
 #endif
 
 #if !(NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(StringBuilder? value)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void Write(StringBuilder? value)
+    {
+        if (value is not null)
         {
-            if (value is not null)
+            int length = value.Length;
+            if (_pos > _chars.Length - length)
             {
-                int length = value.Length;
-                if (_pos > _chars.Length - length)
-                {
-                    Grow(length);
-                }
-
-                value.CopyTo(0, _chars.AsSpan(_pos), length);
-                _pos += length;
+                Grow(length);
             }
-        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine(StringBuilder? value)
-        {
-            Write(value);
-            WriteLine();
+            value.CopyTo(0, _chars.AsSpan(_pos), length);
+            _pos += length;
         }
+    }
 
-        public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
-        {
-            Write(value);
-            return Task.CompletedTask;
-        }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine(StringBuilder? value)
+    {
+        Write(value);
+        WriteLine();
+    }
 
-        public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
-        {
-            WriteLine(value);
-            return Task.CompletedTask;
-        }
+    public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+    {
+        Write(value);
+        return Task.CompletedTask;
+    }
+
+    public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = default)
+    {
+        WriteLine(value);
+        return Task.CompletedTask;
+    }
 #endif
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void WriteLine()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override void WriteLine()
+    {
+        foreach (char c in _newLine)
         {
-            foreach (char c in _newLine)
-            {
-                Write(c);
-            }
+            Write(c);
         }
+    }
 
-        public override Task WriteLineAsync()
-        {
-            WriteLine();
-            return Task.CompletedTask;
-        }
-
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void GrowAndAppend(char value)
-        {
-            Grow(1);
-            Write(value);
-        }
-
-        private void Grow(int additionalCapacityBeyondPos)
-        {
-            Debug.Assert(additionalCapacityBeyondPos > 0);
-            Debug.Assert(_pos > _chars.Length - additionalCapacityBeyondPos, "No resize is needed.");
-
-            char[] newArray = new char[(int)Math.Max((uint)(_pos + additionalCapacityBeyondPos), (uint)_chars.Length * 2)];
-            _chars.AsSpan(0, _pos).CopyTo(newArray);
-            _chars = newArray;
-        }
+    public override Task WriteLineAsync()
+    {
+        WriteLine();
+        return Task.CompletedTask;
+    }
 
 
-        public override void Flush() { }
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void GrowAndAppend(char value)
+    {
+        Grow(1);
+        Write(value);
+    }
 
-        public override void Close() { }
+    private void Grow(int additionalCapacityBeyondPos)
+    {
+        Debug.Assert(additionalCapacityBeyondPos > 0);
+        Debug.Assert(_pos > _chars.Length - additionalCapacityBeyondPos, "No resize is needed.");
 
-        public override Task FlushAsync() => Task.CompletedTask;
+        char[] newArray = new char[(int)Math.Max((uint)(_pos + additionalCapacityBeyondPos), (uint)_chars.Length * 2)];
+        _chars.AsSpan(0, _pos).CopyTo(newArray);
+        _chars = newArray;
+    }
+
+
+    public override void Flush() { }
+
+    public override void Close() { }
+
+    public override Task FlushAsync() => Task.CompletedTask;
 
 #if !(NETFRAMEWORK || NETSTANDARD2_0)
-        public override ValueTask DisposeAsync() => default;
+    public override ValueTask DisposeAsync() => default;
 #endif
 
 
-        public void Reset()
-        {
-            _pos = 0;
-        }
+    public void Reset()
+    {
+        _pos = 0;
+    }
 
-        public override string ToString()
-        {
-            return _chars.AsSpan(0, _pos).ToString();
-        }
+    public override string ToString()
+    {
+        return _chars.AsSpan(0, _pos).ToString();
     }
 }

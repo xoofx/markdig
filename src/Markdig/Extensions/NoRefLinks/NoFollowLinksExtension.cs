@@ -6,28 +6,28 @@ using Markdig.Extensions.ReferralLinks;
 using Markdig.Renderers;
 using System;
 
-namespace Markdig.Extensions.NoRefLinks
+namespace Markdig.Extensions.NoRefLinks;
+
+/// <summary>
+/// Extension to automatically render rel=nofollow to all links in an HTML output.
+/// </summary>
+[Obsolete("Use ReferralLinksExtension class instead")]
+public class NoFollowLinksExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to automatically render rel=nofollow to all links in an HTML output.
-    /// </summary>
-    [Obsolete("Use ReferralLinksExtension class instead")]
-    public class NoFollowLinksExtension : IMarkdownExtension
+    private ReferralLinksExtension _referralLinksExtension;
+
+    public NoFollowLinksExtension()
     {
-        private ReferralLinksExtension _referralLinksExtension;
+        _referralLinksExtension = new ReferralLinksExtension(new[] { "nofollow" });
+    }
 
-        public NoFollowLinksExtension()
-        {
-            _referralLinksExtension = new ReferralLinksExtension(new[] { "nofollow" });
-        }
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            _referralLinksExtension.Setup(pipeline);
-        }
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        _referralLinksExtension.Setup(pipeline);
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-            _referralLinksExtension.Setup(pipeline, renderer);
-        }
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        _referralLinksExtension.Setup(pipeline, renderer);
     }
 }

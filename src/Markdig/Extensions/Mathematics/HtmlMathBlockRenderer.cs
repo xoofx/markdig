@@ -5,30 +5,29 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.Mathematics
+namespace Markdig.Extensions.Mathematics;
+
+/// <summary>
+/// A HTML renderer for a <see cref="MathBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{T}" />
+public class HtmlMathBlockRenderer : HtmlObjectRenderer<MathBlock>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="MathBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{T}" />
-    public class HtmlMathBlockRenderer : HtmlObjectRenderer<MathBlock>
+    protected override void Write(HtmlRenderer renderer, MathBlock obj)
     {
-        protected override void Write(HtmlRenderer renderer, MathBlock obj)
+        renderer.EnsureLine();
+        if (renderer.EnableHtmlForBlock)
         {
-            renderer.EnsureLine();
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("<div").WriteAttributes(obj).WriteLine(">");
-                renderer.WriteLine("\\[");
-            }
+            renderer.Write("<div").WriteAttributes(obj).WriteLine(">");
+            renderer.WriteLine("\\[");
+        }
 
-            renderer.WriteLeafRawLines(obj, true, renderer.EnableHtmlEscape);
+        renderer.WriteLeafRawLines(obj, true, renderer.EnableHtmlEscape);
 
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("\\]");
-                renderer.WriteLine("</div>");
-            }
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.Write("\\]");
+            renderer.WriteLine("</div>");
         }
     }
 }
