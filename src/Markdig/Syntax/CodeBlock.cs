@@ -4,7 +4,6 @@
 
 using Markdig.Helpers;
 using Markdig.Parsers;
-using System.Collections.Generic;
 
 namespace Markdig.Syntax;
 

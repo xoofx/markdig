@@ -4,7 +4,6 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
-using System;
 
 namespace Markdig.Renderers;
 

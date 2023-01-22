@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
-using System;
 
 namespace Markdig.Renderers;
 

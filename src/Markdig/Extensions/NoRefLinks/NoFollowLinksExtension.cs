@@ -4,7 +4,6 @@
 
 using Markdig.Extensions.ReferralLinks;
 using Markdig.Renderers;
-using System;
 
 namespace Markdig.Extensions.NoRefLinks;
 

@@ -4,7 +4,7 @@
 
 using Markdig.Helpers;
 using Markdig.Syntax;
-using System.Collections.Generic;
+
 using static Markdig.Syntax.CodeBlock;
 
 namespace Markdig.Parsers;
