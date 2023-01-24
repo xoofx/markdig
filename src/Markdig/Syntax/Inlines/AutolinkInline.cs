@@ -4,33 +4,32 @@
 
 using System.Diagnostics;
 
-namespace Markdig.Syntax.Inlines
+namespace Markdig.Syntax.Inlines;
+
+/// <summary>
+/// An autolink (Section 6.7 CommonMark specs)
+/// </summary>
+/// <seealso cref="LeafInline" />
+[DebuggerDisplay("<{Url}>")]
+public sealed class AutolinkInline : LeafInline
 {
-    /// <summary>
-    /// An autolink (Section 6.7 CommonMark specs)
-    /// </summary>
-    /// <seealso cref="LeafInline" />
-    [DebuggerDisplay("<{Url}>")]
-    public sealed class AutolinkInline : LeafInline
+    public AutolinkInline(string url)
     {
-        public AutolinkInline(string url)
-        {
-            Url = url;
-        }
+        Url = url;
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is an email link.
-        /// </summary>
-        public bool IsEmail { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is an email link.
+    /// </summary>
+    public bool IsEmail { get; set; }
 
-        /// <summary>
-        /// Gets or sets the URL of this link.
-        /// </summary>
-        public string Url { get; set; }
+    /// <summary>
+    /// Gets or sets the URL of this link.
+    /// </summary>
+    public string Url { get; set; }
 
-        public override string ToString()
-        {
-            return Url;
-        }
+    public override string ToString()
+    {
+        return Url;
     }
 }

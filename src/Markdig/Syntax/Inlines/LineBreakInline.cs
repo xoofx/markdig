@@ -4,18 +4,17 @@
 
 using Markdig.Helpers;
 
-namespace Markdig.Syntax.Inlines
+namespace Markdig.Syntax.Inlines;
+
+/// <summary>
+/// A base class for a line break.
+/// </summary>
+/// <seealso cref="LeafInline" />
+public class LineBreakInline : LeafInline
 {
-    /// <summary>
-    /// A base class for a line break.
-    /// </summary>
-    /// <seealso cref="LeafInline" />
-    public class LineBreakInline : LeafInline
-    {
-        public bool IsHard { get; set; }
+    public bool IsHard { get; set; }
 
-        public bool IsBackslash { get; set; }
+    public bool IsBackslash { get; set; }
 
-        public NewLine NewLine { get; set; }
-    }
+    public NewLine NewLine { get; set; }
 }

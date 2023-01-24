@@ -4,21 +4,20 @@
 
 using System.Text;
 
-namespace Markdig.Helpers
+namespace Markdig.Helpers;
+
+/// <summary>
+/// Extensions for StringBuilder
+/// </summary>
+public static class StringBuilderExtensions
 {
     /// <summary>
-    /// Extensions for StringBuilder
+    /// Appends the specified slice to this <see cref="StringBuilder"/> instance.
     /// </summary>
-    public static class StringBuilderExtensions
+    /// <param name="builder">The builder.</param>
+    /// <param name="slice">The slice.</param>
+    public static StringBuilder Append(this StringBuilder builder, StringSlice slice)
     {
-        /// <summary>
-        /// Appends the specified slice to this <see cref="StringBuilder"/> instance.
-        /// </summary>
-        /// <param name="builder">The builder.</param>
-        /// <param name="slice">The slice.</param>
-        public static StringBuilder Append(this StringBuilder builder, StringSlice slice)
-        {
-            return builder.Append(slice.Text, slice.Start, slice.Length);
-        }
+        return builder.Append(slice.Text, slice.Start, slice.Length);
     }
 }

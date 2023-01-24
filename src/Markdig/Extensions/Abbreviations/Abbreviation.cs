@@ -7,36 +7,35 @@ using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Abbreviations
+namespace Markdig.Extensions.Abbreviations;
+
+/// <summary>
+/// An abbreviation object stored at the document level. See extension methods in <see cref="AbbreviationHelper"/>.
+/// </summary>
+/// <seealso cref="LeafBlock" />
+[DebuggerDisplay("Abbr {Label} => {Text}")]
+public class Abbreviation : LeafBlock
 {
     /// <summary>
-    /// An abbreviation object stored at the document level. See extension methods in <see cref="AbbreviationHelper"/>.
+    /// Initializes a new instance of the <see cref="Abbreviation"/> class.
     /// </summary>
-    /// <seealso cref="LeafBlock" />
-    [DebuggerDisplay("Abbr {Label} => {Text}")]
-    public class Abbreviation : LeafBlock
+    /// <param name="parser">The parser used to create this block.</param>
+    public Abbreviation(BlockParser parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Abbreviation"/> class.
-        /// </summary>
-        /// <param name="parser">The parser used to create this block.</param>
-        public Abbreviation(BlockParser parser) : base(parser)
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the label.
-        /// </summary>
-        public string? Label { get; set; }
-
-        /// <summary>
-        /// The text associated to this label.
-        /// </summary>
-        public StringSlice Text;
-
-        /// <summary>
-        /// The label span
-        /// </summary>
-        public SourceSpan LabelSpan;
     }
+
+    /// <summary>
+    /// Gets or sets the label.
+    /// </summary>
+    public string? Label { get; set; }
+
+    /// <summary>
+    /// The text associated to this label.
+    /// </summary>
+    public StringSlice Text;
+
+    /// <summary>
+    /// The label span
+    /// </summary>
+    public SourceSpan LabelSpan;
 }

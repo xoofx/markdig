@@ -6,33 +6,32 @@ using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
 
-namespace Markdig.Extensions.TaskLists
+namespace Markdig.Extensions.TaskLists;
+
+/// <summary>
+/// Extension to enable TaskList.
+/// </summary>
+public class TaskListExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to enable TaskList.
-    /// </summary>
-    public class TaskListExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        if (!pipeline.InlineParsers.Contains<TaskListInlineParser>())
         {
-            if (!pipeline.InlineParsers.Contains<TaskListInlineParser>())
-            {
-                // Insert the parser after the code span parser
-                pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new TaskListInlineParser());
-            }
+            // Insert the parser after the code span parser
+            pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new TaskListInlineParser());
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer)
+        {
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlTaskListRenderer>();
         }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+        if (renderer is NormalizeRenderer normalizeRenderer)
         {
-            if (renderer is HtmlRenderer htmlRenderer)
-            {
-                htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlTaskListRenderer>();
-            }
-
-            if (renderer is NormalizeRenderer normalizeRenderer)
-            {
-                normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeTaskListRenderer>();
-            }
+            normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeTaskListRenderer>();
         }
     }
 }

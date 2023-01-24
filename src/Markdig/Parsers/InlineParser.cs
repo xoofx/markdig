@@ -4,20 +4,19 @@
 
 using Markdig.Helpers;
 
-namespace Markdig.Parsers
+namespace Markdig.Parsers;
+
+/// <summary>
+/// Base class for parsing an <see cref="Syntax.Inlines.Inline"/>.
+/// </summary>
+/// <seealso cref="InlineProcessor" />
+public abstract class InlineParser : ParserBase<InlineProcessor>, IInlineParser<InlineProcessor>
 {
     /// <summary>
-    /// Base class for parsing an <see cref="Syntax.Inlines.Inline"/>.
+    /// Tries to match the specified slice.
     /// </summary>
-    /// <seealso cref="InlineProcessor" />
-    public abstract class InlineParser : ParserBase<InlineProcessor>, IInlineParser<InlineProcessor>
-    {
-        /// <summary>
-        /// Tries to match the specified slice.
-        /// </summary>
-        /// <param name="processor">The parser processor.</param>
-        /// <param name="slice">The text slice.</param>
-        /// <returns><c>true</c> if this parser found a match; <c>false</c> otherwise</returns>
-        public abstract bool Match(InlineProcessor processor, ref StringSlice slice);
-    }
+    /// <param name="processor">The parser processor.</param>
+    /// <param name="slice">The text slice.</param>
+    /// <returns><c>true</c> if this parser found a match; <c>false</c> otherwise</returns>
+    public abstract bool Match(InlineProcessor processor, ref StringSlice slice);
 }

@@ -4,25 +4,24 @@
 
 using Markdig.Parsers;
 
-namespace Markdig.Syntax
+namespace Markdig.Syntax;
+
+/// <summary>
+/// Represents a group of lines that is treated as raw HTML (and will not be escaped in HTML output).
+/// </summary>
+/// <seealso cref="LeafBlock" />
+public class HtmlBlock : LeafBlock
 {
     /// <summary>
-    /// Represents a group of lines that is treated as raw HTML (and will not be escaped in HTML output).
+    /// Initializes a new instance of the <see cref="HtmlBlock"/> class.
     /// </summary>
-    /// <seealso cref="LeafBlock" />
-    public class HtmlBlock : LeafBlock
+    /// <param name="parser">The parser.</param>
+    public HtmlBlock(BlockParser? parser) : base(parser)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser.</param>
-        public HtmlBlock(BlockParser? parser) : base(parser)
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the type of block.
-        /// </summary>
-        public HtmlBlockType Type { get; set; }
     }
+
+    /// <summary>
+    /// Gets or sets the type of block.
+    /// </summary>
+    public HtmlBlockType Type { get; set; }
 }

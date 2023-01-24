@@ -4,13 +4,12 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Normalize
+namespace Markdig.Renderers.Normalize;
+
+public class HtmlBlockRenderer : NormalizeObjectRenderer<HtmlBlock>
 {
-    public class HtmlBlockRenderer : NormalizeObjectRenderer<HtmlBlock>
+    protected override void Write(NormalizeRenderer renderer, HtmlBlock obj)
     {
-        protected override void Write(NormalizeRenderer renderer, HtmlBlock obj)
-        {
-            renderer.WriteLeafRawLines(obj, true, false);
-        }
+        renderer.WriteLeafRawLines(obj, true, false);
     }
 }

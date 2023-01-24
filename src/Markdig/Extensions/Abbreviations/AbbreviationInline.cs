@@ -5,24 +5,23 @@
 using System.Diagnostics;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Abbreviations
+namespace Markdig.Extensions.Abbreviations;
+
+/// <summary>
+/// The inline abbreviation.
+/// </summary>
+/// <seealso cref="LeafInline" />
+[DebuggerDisplay("{Abbreviation}")]
+public class AbbreviationInline : LeafInline
 {
     /// <summary>
-    /// The inline abbreviation.
+    /// Initializes a new instance of the <see cref="AbbreviationInline"/> class.
     /// </summary>
-    /// <seealso cref="LeafInline" />
-    [DebuggerDisplay("{Abbreviation}")]
-    public class AbbreviationInline : LeafInline
+    /// <param name="abbreviation">The abbreviation.</param>
+    public AbbreviationInline(Abbreviation abbreviation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbbreviationInline"/> class.
-        /// </summary>
-        /// <param name="abbreviation">The abbreviation.</param>
-        public AbbreviationInline(Abbreviation abbreviation)
-        {
-            Abbreviation = abbreviation;
-        }
-
-        public Abbreviation Abbreviation { get; set; }
+        Abbreviation = abbreviation;
     }
+
+    public Abbreviation Abbreviation { get; set; }
 }

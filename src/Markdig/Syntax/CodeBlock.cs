@@ -4,32 +4,30 @@
 
 using Markdig.Helpers;
 using Markdig.Parsers;
-using System.Collections.Generic;
 
-namespace Markdig.Syntax
+namespace Markdig.Syntax;
+
+/// <summary>
+/// Represents an indented code block.
+/// </summary>
+/// <remarks>
+/// Related to CommonMark spec: 4.4 Indented code blocks
+/// </remarks>
+public class CodeBlock : LeafBlock
 {
-    /// <summary>
-    /// Represents an indented code block.
-    /// </summary>
-    /// <remarks>
-    /// Related to CommonMark spec: 4.4 Indented code blocks
-    /// </remarks>
-    public class CodeBlock : LeafBlock
+    public class CodeBlockLine
     {
-        public class CodeBlockLine
-        {
-            public StringSlice TriviaBefore { get; set; }
-        }
+        public StringSlice TriviaBefore { get; set; }
+    }
 
-        private List<CodeBlockLine>? _codeBlockLines;
-        public List<CodeBlockLine> CodeBlockLines => _codeBlockLines ??= new();
+    private List<CodeBlockLine>? _codeBlockLines;
+    public List<CodeBlockLine> CodeBlockLines => _codeBlockLines ??= new();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CodeBlock"/> class.
-        /// </summary>
-        /// <param name="parser">The parser.</param>
-        public CodeBlock(BlockParser parser) : base(parser)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CodeBlock"/> class.
+    /// </summary>
+    /// <param name="parser">The parser.</param>
+    public CodeBlock(BlockParser parser) : base(parser)
+    {
     }
 }

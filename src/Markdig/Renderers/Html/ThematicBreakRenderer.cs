@@ -4,22 +4,21 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Html
+namespace Markdig.Renderers.Html;
+
+/// <summary>
+/// A HTML renderer for a <see cref="ThematicBreakBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{ThematicBreakBlock}" />
+public class ThematicBreakRenderer : HtmlObjectRenderer<ThematicBreakBlock>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="ThematicBreakBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{ThematicBreakBlock}" />
-    public class ThematicBreakRenderer : HtmlObjectRenderer<ThematicBreakBlock>
+    protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)
     {
-        protected override void Write(HtmlRenderer renderer, ThematicBreakBlock obj)
+        if (renderer.EnableHtmlForBlock)
         {
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("<hr");
-                renderer.WriteAttributes(obj);
-                renderer.WriteLine(" />");
-            }
+            renderer.Write("<hr");
+            renderer.WriteAttributes(obj);
+            renderer.WriteLine(" />");
         }
     }
 }

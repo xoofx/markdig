@@ -5,43 +5,42 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.Footnotes
+namespace Markdig.Extensions.Footnotes;
+
+/// <summary>
+/// A HTML renderer for a <see cref="FootnoteGroup"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{FootnoteGroup}" />
+public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
 {
     /// <summary>
-    /// A HTML renderer for a <see cref="FootnoteGroup"/>.
+    /// Initializes a new instance of the <see cref="HtmlFootnoteGroupRenderer"/> class.
     /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{FootnoteGroup}" />
-    public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
+    public HtmlFootnoteGroupRenderer()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlFootnoteGroupRenderer"/> class.
-        /// </summary>
-        public HtmlFootnoteGroupRenderer()
+        GroupClass = "footnotes";
+    }
+
+    /// <summary>
+    /// Gets or sets the CSS group class used when rendering the &lt;div&gt; of this instance.
+    /// </summary>
+    public string GroupClass { get; set; }
+
+    protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
+    {
+        renderer.EnsureLine();
+        renderer.WriteLine($"<div class=\"{GroupClass}\">");
+        renderer.WriteLine("<hr />");
+        renderer.WriteLine("<ol>");
+
+        for (int i = 0; i < footnotes.Count; i++)
         {
-            GroupClass = "footnotes";
+            var footnote = (Footnote)footnotes[i];
+            renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
+            renderer.WriteChildren(footnote);
+            renderer.WriteLine("</li>");
         }
-
-        /// <summary>
-        /// Gets or sets the CSS group class used when rendering the &lt;div&gt; of this instance.
-        /// </summary>
-        public string GroupClass { get; set; }
-
-        protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
-        {
-            renderer.EnsureLine();
-            renderer.WriteLine($"<div class=\"{GroupClass}\">");
-            renderer.WriteLine("<hr />");
-            renderer.WriteLine("<ol>");
-
-            for (int i = 0; i < footnotes.Count; i++)
-            {
-                var footnote = (Footnote)footnotes[i];
-                renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
-                renderer.WriteChildren(footnote);
-                renderer.WriteLine("</li>");
-            }
-            renderer.WriteLine("</ol>");
-            renderer.WriteLine("</div>");
-        }
+        renderer.WriteLine("</ol>");
+        renderer.WriteLine("</div>");
     }
 }

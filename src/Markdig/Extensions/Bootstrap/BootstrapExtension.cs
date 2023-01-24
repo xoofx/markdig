@@ -7,57 +7,56 @@ using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Bootstrap
+namespace Markdig.Extensions.Bootstrap;
+
+/// <summary>
+/// Extension for tagging some HTML elements with bootstrap classes.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class BootstrapExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension for tagging some HTML elements with bootstrap classes.
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class BootstrapExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            // Make sure we don't have a delegate twice
-            pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
-            pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
-        }
+        // Make sure we don't have a delegate twice
+        pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
+        pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-        }
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
 
-        private static void PipelineOnDocumentProcessed(MarkdownDocument document)
+    private static void PipelineOnDocumentProcessed(MarkdownDocument document)
+    {
+        foreach (var node in document.Descendants())
         {
-            foreach (var node in document.Descendants())
+            if (node.IsInline)
             {
-                if (node.IsInline)
+                if (node.IsContainerInline && node is LinkInline link && link.IsImage)
                 {
-                    if (node.IsContainerInline && node is LinkInline link && link.IsImage)
-                    {
-                        link.GetAttributes().AddClass("img-fluid");
-                    }
+                    link.GetAttributes().AddClass("img-fluid");
                 }
-                else if (node.IsContainerBlock)
+            }
+            else if (node.IsContainerBlock)
+            {
+                if (node is Tables.Table)
                 {
-                    if (node is Tables.Table)
-                    {
-                        node.GetAttributes().AddClass("table");
-                    }
-                    else if (node is QuoteBlock)
-                    {
-                        node.GetAttributes().AddClass("blockquote");
-                    }
-                    else if (node is Figures.Figure)
-                    {
-                        node.GetAttributes().AddClass("figure");
-                    }
+                    node.GetAttributes().AddClass("table");
                 }
-                else
+                else if (node is QuoteBlock)
                 {
-                    if (node is Figures.FigureCaption)
-                    {
-                        node.GetAttributes().AddClass("figure-caption");
-                    }
+                    node.GetAttributes().AddClass("blockquote");
+                }
+                else if (node is Figures.Figure)
+                {
+                    node.GetAttributes().AddClass("figure");
+                }
+            }
+            else
+            {
+                if (node is Figures.FigureCaption)
+                {
+                    node.GetAttributes().AddClass("figure-caption");
                 }
             }
         }

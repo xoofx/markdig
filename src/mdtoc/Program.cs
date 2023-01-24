@@ -1,100 +1,94 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
-namespace mdtoc
+namespace mdtoc;
+
+/// <summary>
+/// A tool to generate a markdown TOC from a markdown local file or a github link to a markdown file.
+/// </summary>
+class Program
 {
-    /// <summary>
-    /// A tool to generate a markdown TOC from a markdown local file or a github link to a markdown file.
-    /// </summary>
-    class Program
+    static void Error(string message)
     {
-        static void Error(string message)
+        Console.WriteLine(message);
+        Environment.Exit(1);
+    }
+
+    static void Main(string[] args)
+    {
+        if (args.Length != 1 || args[0] is "--help" or "-help" or "/?" or "/help")
         {
-            Console.WriteLine(message);
-            Environment.Exit(1);
+            Error("Usage: mdtoc [markdown file path | http github URL]");
+            return;
         }
 
-        static void Main(string[] args)
+        var path = args[0];
+        string? markdown = null;
+        if (path.StartsWith("https:"))
         {
-            if (args.Length != 1 || args[0] == "--help" || args[0] == "-help" || args[0] == "/?" || args[0] == "/help")
+            if (!Uri.TryCreate(path, UriKind.Absolute, out Uri? uri))
             {
-                Error("Usage: mdtoc [markdown file path | http github URL]");
+                Error($"Unable to parse Uri `{path}`");
                 return;
             }
-
-            var path = args[0];
-            string markdown = null;
-            if (path.StartsWith("https:"))
+            // Special handling of github URL to access the raw content instead
+            if (uri.Host == "github.com")
             {
-                if (!Uri.TryCreate(path, UriKind.Absolute, out Uri uri))
+                // https://github.com/lunet-io/scriban/blob/master/doc/language.md
+                // https://raw.githubusercontent.com/lunet-io/scriban/master/doc/language.md
+                var newPath = uri.AbsolutePath;
+                var paths = new List<string>(newPath.Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries));
+                if (paths.Count < 5 || paths[2] != "blob")
                 {
-                    Error($"Unable to parse Uri `{path}`");
+                    Error($"Invalid github.com URL `{path}`");
                     return;
                 }
-                // Special handling of github URL to access the raw content instead
-                if (uri.Host == "github.com")
-                {
-                    // https://github.com/lunet-io/scriban/blob/master/doc/language.md
-                    // https://raw.githubusercontent.com/lunet-io/scriban/master/doc/language.md
-                    var newPath = uri.AbsolutePath;
-                    var paths = new List<string>(newPath.Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries));
-                    if (paths.Count < 5 || paths[2] != "blob")
-                    {
-                        Error($"Invalid github.com URL `{path}`");
-                        return;
-                    }
-                    paths.RemoveAt(2); // remove blob
-                    uri = new Uri($"https://raw.githubusercontent.com/{(string.Join("/", paths))}");
-                }
-
-                var httpClient = new HttpClient();
-                markdown = httpClient.GetStringAsync(uri).ConfigureAwait(false).GetAwaiter().GetResult();
+                paths.RemoveAt(2); // remove blob
+                uri = new Uri($"https://raw.githubusercontent.com/{(string.Join("/", paths))}");
             }
-            else
+
+            var httpClient = new HttpClient();
+            markdown = httpClient.GetStringAsync(uri).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+        else
+        {
+            markdown = File.ReadAllText(path);
+        }
+
+        var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub).Build();
+        var doc = Markdown.Parse(markdown, pipeline);
+
+        // Precomputes the minHeading
+        var headings = doc.Descendants<HeadingBlock>().ToList();
+        int minHeading = int.MaxValue;
+        int maxHeading = int.MinValue;
+        foreach (var heading in headings)
+        {
+            minHeading = Math.Min(minHeading, heading.Level);
+            maxHeading = Math.Max(maxHeading, heading.Level);
+        }
+
+        var writer = Console.Out;
+        // Use this htmlWriter to write content of headings into link label
+        var htmlWriter = new HtmlRenderer(writer) {EnableHtmlForInline = true};
+        foreach (var heading in headings)
+        {
+            var indent = heading.Level - minHeading;
+            for (int i = 0; i < indent; i++)
             {
-                markdown = File.ReadAllText(path);
+                //            - Start Of Heading
+                writer.Write("  ");
             }
-
-            var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub).Build();
-            var doc = Markdown.Parse(markdown, pipeline);
-
-            // Precomputes the minHeading
-            var headings = doc.Descendants<HeadingBlock>().ToList();
-            int minHeading = int.MaxValue;
-            int maxHeading = int.MinValue;
-            foreach (var heading in headings)
-            {
-                minHeading = Math.Min(minHeading, heading.Level);
-                maxHeading = Math.Max(maxHeading, heading.Level);
-            }
-
-            var writer = Console.Out;
-            // Use this htmlWriter to write content of headings into link label
-            var htmlWriter = new HtmlRenderer(writer) {EnableHtmlForInline = true};
-            foreach (var heading in headings)
-            {
-                var indent = heading.Level - minHeading;
-                for (int i = 0; i < indent; i++)
-                {
-                    //            - Start Of Heading
-                    writer.Write("  ");
-                }
-                writer.Write("- [");
-                htmlWriter.WriteLeafInline(heading);
-                writer.Write($"](#{heading.GetAttributes().Id})");
-                writer.WriteLine();
-            }
+            writer.Write("- [");
+            htmlWriter.WriteLeafInline(heading);
+            writer.Write($"](#{heading.GetAttributes().Id})");
+            writer.WriteLine();
         }
     }
 }

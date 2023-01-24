@@ -5,23 +5,22 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.Footers
+namespace Markdig.Extensions.Footers;
+
+/// <summary>
+/// A HTML renderer for a <see cref="FooterBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{FooterBlock}" />
+public class HtmlFooterBlockRenderer : HtmlObjectRenderer<FooterBlock>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="FooterBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{FooterBlock}" />
-    public class HtmlFooterBlockRenderer : HtmlObjectRenderer<FooterBlock>
+    protected override void Write(HtmlRenderer renderer, FooterBlock footer)
     {
-        protected override void Write(HtmlRenderer renderer, FooterBlock footer)
-        {
-            renderer.EnsureLine();
-            renderer.Write("<footer").WriteAttributes(footer).Write(">");
-            var implicitParagraph = renderer.ImplicitParagraph;
-            renderer.ImplicitParagraph = true;
-            renderer.WriteChildren(footer);
-            renderer.ImplicitParagraph = implicitParagraph;
-            renderer.WriteLine("</footer>");
-        }
+        renderer.EnsureLine();
+        renderer.Write("<footer").WriteAttributes(footer).Write(">");
+        var implicitParagraph = renderer.ImplicitParagraph;
+        renderer.ImplicitParagraph = true;
+        renderer.WriteChildren(footer);
+        renderer.ImplicitParagraph = implicitParagraph;
+        renderer.WriteLine("</footer>");
     }
 }

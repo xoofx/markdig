@@ -4,16 +4,15 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Roundtrip.Inlines
+namespace Markdig.Renderers.Roundtrip.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="HtmlEntityInline"/>.
+/// </summary>
+public class RoundtripHtmlEntityInlineRenderer : RoundtripObjectRenderer<HtmlEntityInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="HtmlEntityInline"/>.
-    /// </summary>
-    public class RoundtripHtmlEntityInlineRenderer : RoundtripObjectRenderer<HtmlEntityInline>
+    protected override void Write(RoundtripRenderer renderer, HtmlEntityInline obj)
     {
-        protected override void Write(RoundtripRenderer renderer, HtmlEntityInline obj)
-        {
-            renderer.Write(obj.Original);
-        }
+        renderer.Write(obj.Original);
     }
 }

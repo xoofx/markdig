@@ -7,54 +7,53 @@ using Markdig.Parsers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.Mathematics
+namespace Markdig.Extensions.Mathematics;
+
+/// <summary>
+/// The block parser for a <see cref="MathBlock"/>.
+/// </summary>
+/// <seealso cref="MathBlock" />
+public class MathBlockParser : FencedBlockParserBase<MathBlock>
 {
     /// <summary>
-    /// The block parser for a <see cref="MathBlock"/>.
+    /// Initializes a new instance of the <see cref="MathBlockParser"/> class.
     /// </summary>
-    /// <seealso cref="MathBlock" />
-    public class MathBlockParser : FencedBlockParserBase<MathBlock>
+    public MathBlockParser()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MathBlockParser"/> class.
-        /// </summary>
-        public MathBlockParser()
+        OpeningCharacters = new [] {'$'};
+        // We expect to match only a $$, no less, no more
+        MinimumMatchCount = 2;
+        MaximumMatchCount = 2;
+
+        InfoParser = NoInfoParser;
+
+        DefaultClass = "math";
+
+        // We don't need a prefix
+        InfoPrefix = null;
+    }
+
+    public string DefaultClass { get; set; }
+
+    protected override MathBlock CreateFencedBlock(BlockProcessor processor)
+    {
+        var block = new MathBlock(this);
+        if (DefaultClass != null)
         {
-            OpeningCharacters = new [] {'$'};
-            // We expect to match only a $$, no less, no more
-            MinimumMatchCount = 2;
-            MaximumMatchCount = 2;
-
-            InfoParser = NoInfoParser;
-
-            DefaultClass = "math";
-
-            // We don't need a prefix
-            InfoPrefix = null;
+            block.GetAttributes().AddClass(DefaultClass);
         }
+        return block;
+    }
 
-        public string DefaultClass { get; set; }
-
-        protected override MathBlock CreateFencedBlock(BlockProcessor processor)
+    private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
+    {
+        for (int i = line.Start; i <= line.End; i++)
         {
-            var block = new MathBlock(this);
-            if (DefaultClass != null)
+            if (!line.Text[i].IsSpaceOrTab())
             {
-                block.GetAttributes().AddClass(DefaultClass);
+                return false;
             }
-            return block;
         }
-
-        private static bool NoInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
-        {
-            for (int i = line.Start; i <= line.End; i++)
-            {
-                if (!line.Text[i].IsSpaceOrTab())
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        return true;
     }
 }

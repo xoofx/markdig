@@ -5,36 +5,35 @@
 using Markdig.Extensions.Figures;
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Footers
+namespace Markdig.Extensions.Footers;
+
+/// <summary>
+/// Extension that provides footer.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class FooterExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension that provides footer.
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class FooterExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        if (!pipeline.BlockParsers.Contains<FooterBlockParser>())
         {
-            if (!pipeline.BlockParsers.Contains<FooterBlockParser>())
+            // The Figure extension must come before the Footer extension
+            if (pipeline.BlockParsers.Contains<FigureBlockParser>())
             {
-                // The Figure extension must come before the Footer extension
-                if (pipeline.BlockParsers.Contains<FigureBlockParser>())
-                {
-                    pipeline.BlockParsers.InsertAfter<FigureBlockParser>(new FooterBlockParser());
-                }
-                else
-                {
-                    pipeline.BlockParsers.Insert(0, new FooterBlockParser());
-                }
+                pipeline.BlockParsers.InsertAfter<FigureBlockParser>(new FooterBlockParser());
+            }
+            else
+            {
+                pipeline.BlockParsers.Insert(0, new FooterBlockParser());
             }
         }
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer)
         {
-            if (renderer is HtmlRenderer htmlRenderer)
-            {
-                htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFooterBlockRenderer());
-            }
+            htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFooterBlockRenderer());
         }
     }
 }

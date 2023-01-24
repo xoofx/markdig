@@ -5,49 +5,48 @@
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Tables
+namespace Markdig.Extensions.Tables;
+
+/// <summary>
+/// Extension that allows to use pipe tables.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class PipeTableExtension : IMarkdownExtension
 {
     /// <summary>
-    /// Extension that allows to use pipe tables.
+    /// Initializes a new instance of the <see cref="PipeTableExtension"/> class.
     /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class PipeTableExtension : IMarkdownExtension
+    /// <param name="options">The options.</param>
+    public PipeTableExtension(PipeTableOptions? options = null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PipeTableExtension"/> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public PipeTableExtension(PipeTableOptions? options = null)
+        Options = options ?? new PipeTableOptions();
+    }
+
+    /// <summary>
+    /// Gets the options.
+    /// </summary>
+    public PipeTableOptions Options { get; }
+
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        // Pipe tables require precise source location
+        pipeline.PreciseSourceLocation = true;
+        if (!pipeline.BlockParsers.Contains<PipeTableBlockParser>())
         {
-            Options = options ?? new PipeTableOptions();
+            pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());
         }
-
-        /// <summary>
-        /// Gets the options.
-        /// </summary>
-        public PipeTableOptions Options { get; }
-
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
+        if (!pipeline.InlineParsers.Contains<PipeTableParser>())
         {
-            // Pipe tables require precise source location
-            pipeline.PreciseSourceLocation = true;
-            if (!pipeline.BlockParsers.Contains<PipeTableBlockParser>())
-            {
-                pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());
-            }
-            var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
-            if (!pipeline.InlineParsers.Contains<PipeTableParser>())
-            {
-                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
-            }
+            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
         }
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
         {
-            if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())
-            {
-                htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
-            }
+            htmlRenderer.ObjectRenderers.Add(new HtmlTableRenderer());
         }
     }
 }

@@ -4,32 +4,31 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Html
+namespace Markdig.Renderers.Html;
+
+/// <summary>
+/// A HTML renderer for a <see cref="QuoteBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
+public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="QuoteBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
-    public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
+    protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
     {
-        protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
+        renderer.EnsureLine();
+        if (renderer.EnableHtmlForBlock)
         {
-            renderer.EnsureLine();
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("<blockquote");
-                renderer.WriteAttributes(obj);
-                renderer.WriteLine('>');
-            }
-            var savedImplicitParagraph = renderer.ImplicitParagraph;
-            renderer.ImplicitParagraph = false;
-            renderer.WriteChildren(obj);
-            renderer.ImplicitParagraph = savedImplicitParagraph;
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.WriteLine("</blockquote>");
-            }
-            renderer.EnsureLine();
+            renderer.Write("<blockquote");
+            renderer.WriteAttributes(obj);
+            renderer.WriteLine('>');
         }
+        var savedImplicitParagraph = renderer.ImplicitParagraph;
+        renderer.ImplicitParagraph = false;
+        renderer.WriteChildren(obj);
+        renderer.ImplicitParagraph = savedImplicitParagraph;
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.WriteLine("</blockquote>");
+        }
+        renderer.EnsureLine();
     }
 }

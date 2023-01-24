@@ -4,22 +4,21 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Extensions.AutoIdentifiers
-{
-    /// <summary>
-    /// A link reference definition to a <see cref="HeadingBlock"/> stored at the <see cref="MarkdownDocument"/> level.
-    /// </summary>
-    /// <seealso cref="LinkReferenceDefinition" />
-    public class HeadingLinkReferenceDefinition : LinkReferenceDefinition
-    {
-        public HeadingLinkReferenceDefinition(HeadingBlock headling)
-        {
-            Heading = headling;
-        }
+namespace Markdig.Extensions.AutoIdentifiers;
 
-        /// <summary>
-        /// Gets or sets the heading related to this link reference definition.
-        /// </summary>
-        public HeadingBlock Heading { get; set; }
+/// <summary>
+/// A link reference definition to a <see cref="HeadingBlock"/> stored at the <see cref="MarkdownDocument"/> level.
+/// </summary>
+/// <seealso cref="LinkReferenceDefinition" />
+public class HeadingLinkReferenceDefinition : LinkReferenceDefinition
+{
+    public HeadingLinkReferenceDefinition(HeadingBlock headling)
+    {
+        Heading = headling;
     }
+
+    /// <summary>
+    /// Gets or sets the heading related to this link reference definition.
+    /// </summary>
+    public HeadingBlock Heading { get; set; }
 }

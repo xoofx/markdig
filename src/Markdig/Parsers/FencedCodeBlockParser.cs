@@ -5,59 +5,58 @@
 using Markdig.Helpers;
 using Markdig.Syntax;
 
-namespace Markdig.Parsers
+namespace Markdig.Parsers;
+
+/// <summary>
+/// Parser for a <see cref="FencedCodeBlock"/>.
+/// </summary>
+/// <seealso cref="BlockParser" />
+public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
 {
+    public const string DefaultInfoPrefix = "language-";
+
     /// <summary>
-    /// Parser for a <see cref="FencedCodeBlock"/>.
+    /// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
     /// </summary>
-    /// <seealso cref="BlockParser" />
-    public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
+    public FencedCodeBlockParser()
     {
-        public const string DefaultInfoPrefix = "language-";
+        OpeningCharacters = new[] {'`', '~'};
+        InfoPrefix = DefaultInfoPrefix;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
-        /// </summary>
-        public FencedCodeBlockParser()
+    protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
+    {
+        var codeBlock = new FencedCodeBlock(this)
         {
-            OpeningCharacters = new[] {'`', '~'};
-            InfoPrefix = DefaultInfoPrefix;
+            IndentCount = processor.Indent,
+        };
+
+        if (processor.TrackTrivia)
+        {
+            codeBlock.LinesBefore = processor.UseLinesBefore();
+            codeBlock.TriviaBefore = processor.UseTrivia(processor.Start - 1);
+            codeBlock.NewLine = processor.Line.NewLine;
         }
 
-        protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
-        {
-            var codeBlock = new FencedCodeBlock(this)
-            {
-                IndentCount = processor.Indent,
-            };
+        return codeBlock;
+    }
 
-            if (processor.TrackTrivia)
+    public override BlockState TryContinue(BlockProcessor processor, Block block)
+    {
+        var result = base.TryContinue(processor, block);
+        if (result == BlockState.Continue && !processor.TrackTrivia)
+        {
+            var fence = (FencedCodeBlock)block;
+            // Remove any indent spaces
+            var c = processor.CurrentChar;
+            var indentCount = fence.IndentCount;
+            while (indentCount > 0 && c.IsSpace())
             {
-                codeBlock.LinesBefore = processor.UseLinesBefore();
-                codeBlock.TriviaBefore = processor.UseTrivia(processor.Start - 1);
-                codeBlock.NewLine = processor.Line.NewLine;
+                indentCount--;
+                c = processor.NextChar();
             }
-
-            return codeBlock;
         }
 
-        public override BlockState TryContinue(BlockProcessor processor, Block block)
-        {
-            var result = base.TryContinue(processor, block);
-            if (result == BlockState.Continue && !processor.TrackTrivia)
-            {
-                var fence = (FencedCodeBlock)block;
-                // Remove any indent spaces
-                var c = processor.CurrentChar;
-                var indentCount = fence.IndentCount;
-                while (indentCount > 0 && c.IsSpace())
-                {
-                    indentCount--;
-                    c = processor.NextChar();
-                }
-            }
-
-            return result;
-        }
+        return result;
     }
 }

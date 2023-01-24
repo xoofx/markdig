@@ -5,26 +5,25 @@
 using Markdig.Helpers;
 using Markdig.Syntax;
 
-namespace Markdig.Parsers
+namespace Markdig.Parsers;
+
+/// <summary>
+/// A delegates that allows to process attached attributes at <see cref="BlockParser"/> time.
+/// </summary>
+/// <param name="processor">The processor.</param>
+/// <param name="slice">The slice to look for attached attributes.</param>
+/// <param name="block">The block.</param>
+/// <returns><c>true</c> if attributes were found; otherwise <c>false</c></returns>
+public delegate bool TryParseAttributesDelegate(
+    BlockProcessor processor, ref StringSlice slice, IBlock block);
+
+/// <summary>
+/// An interface used to tag <see cref="BlockParser"/> that supports parsing <see cref="Renderers.Html.HtmlAttributes"/>
+/// </summary>
+public interface IAttributesParseable
 {
     /// <summary>
-    /// A delegates that allows to process attached attributes at <see cref="BlockParser"/> time.
+    /// A delegates that allows to process attached attributes
     /// </summary>
-    /// <param name="processor">The processor.</param>
-    /// <param name="slice">The slice to look for attached attributes.</param>
-    /// <param name="block">The block.</param>
-    /// <returns><c>true</c> if attributes were found; otherwise <c>false</c></returns>
-    public delegate bool TryParseAttributesDelegate(
-        BlockProcessor processor, ref StringSlice slice, IBlock block);
-
-    /// <summary>
-    /// An interface used to tag <see cref="BlockParser"/> that supports parsing <see cref="Renderers.Html.HtmlAttributes"/>
-    /// </summary>
-    public interface IAttributesParseable
-    {
-        /// <summary>
-        /// A delegates that allows to process attached attributes
-        /// </summary>
-        TryParseAttributesDelegate? TryParseAttributes { get; set; }
-    }
+    TryParseAttributesDelegate? TryParseAttributes { get; set; }
 }

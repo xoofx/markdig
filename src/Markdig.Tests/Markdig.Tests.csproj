@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <StartupObject>Markdig.Tests.Program</StartupObject>
     <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.dll</SpecExecutable>
     <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.timestamp</SpecTimestamp>
@@ -18,6 +19,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
     <ProjectReference Include="..\SpecFileGen\SpecFileGen.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
   </ItemGroup>
 
   <ItemGroup>

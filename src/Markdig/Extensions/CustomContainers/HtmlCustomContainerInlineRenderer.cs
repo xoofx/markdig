@@ -5,19 +5,18 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Markdig.Extensions.CustomContainers
+namespace Markdig.Extensions.CustomContainers;
+
+/// <summary>
+/// A HTML renderer for a <see cref="CustomContainerInline"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{CustomContainerInline}" />
+public class HtmlCustomContainerInlineRenderer : HtmlObjectRenderer<CustomContainerInline>
 {
-    /// <summary>
-    /// A HTML renderer for a <see cref="CustomContainerInline"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{CustomContainerInline}" />
-    public class HtmlCustomContainerInlineRenderer : HtmlObjectRenderer<CustomContainerInline>
+    protected override void Write(HtmlRenderer renderer, CustomContainerInline obj)
     {
-        protected override void Write(HtmlRenderer renderer, CustomContainerInline obj)
-        {
-            renderer.Write("<span").WriteAttributes(obj).Write('>');
-            renderer.WriteChildren(obj);
-            renderer.Write("</span>");
-        }
+        renderer.Write("<span").WriteAttributes(obj).Write('>');
+        renderer.WriteChildren(obj);
+        renderer.Write("</span>");
     }
 }

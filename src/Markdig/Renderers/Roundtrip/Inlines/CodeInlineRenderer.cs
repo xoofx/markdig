@@ -4,23 +4,22 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Roundtrip.Inlines
+namespace Markdig.Renderers.Roundtrip.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="CodeInline"/>.
+/// </summary>
+/// <seealso cref="RoundtripObjectRenderer{CodeInline}" />
+public class CodeInlineRenderer : RoundtripObjectRenderer<CodeInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="CodeInline"/>.
-    /// </summary>
-    /// <seealso cref="RoundtripObjectRenderer{CodeInline}" />
-    public class CodeInlineRenderer : RoundtripObjectRenderer<CodeInline>
+    protected override void Write(RoundtripRenderer renderer, CodeInline obj)
     {
-        protected override void Write(RoundtripRenderer renderer, CodeInline obj)
+        var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
+        renderer.Write(delimiterRun);
+        if (!obj.ContentSpan.IsEmpty)
         {
-            var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
-            renderer.Write(delimiterRun);
-            if (!obj.ContentSpan.IsEmpty)
-            {
-                renderer.Write(obj.ContentWithTrivia);
-            }
-            renderer.Write(delimiterRun);
+            renderer.Write(obj.ContentWithTrivia);
         }
+        renderer.Write(delimiterRun);
     }
 }

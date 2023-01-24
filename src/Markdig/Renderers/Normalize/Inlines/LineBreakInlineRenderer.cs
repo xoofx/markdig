@@ -4,26 +4,25 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Normalize.Inlines
+namespace Markdig.Renderers.Normalize.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="LineBreakInline"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{LineBreakInline}" />
+public class LineBreakInlineRenderer : NormalizeObjectRenderer<LineBreakInline>
 {
     /// <summary>
-    /// A Normalize renderer for a <see cref="LineBreakInline"/>.
+    /// Gets or sets a value indicating whether to render this softline break as a Normalize hardline break tag (&lt;br /&gt;)
     /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{LineBreakInline}" />
-    public class LineBreakInlineRenderer : NormalizeObjectRenderer<LineBreakInline>
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether to render this softline break as a Normalize hardline break tag (&lt;br /&gt;)
-        /// </summary>
-        public bool RenderAsHardlineBreak { get; set; }
+    public bool RenderAsHardlineBreak { get; set; }
 
-        protected override void Write(NormalizeRenderer renderer, LineBreakInline obj)
+    protected override void Write(NormalizeRenderer renderer, LineBreakInline obj)
+    {
+        if (obj.IsHard)
         {
-            if (obj.IsHard)
-            {
-                renderer.Write(obj.IsBackslash ? "\\" : "  ");
-            }
-            renderer.WriteLine();
+            renderer.Write(obj.IsBackslash ? "\\" : "  ");
         }
+        renderer.WriteLine();
     }
 }

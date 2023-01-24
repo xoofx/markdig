@@ -5,35 +5,34 @@
 using Markdig.Helpers;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.Emoji
+namespace Markdig.Extensions.Emoji;
+
+/// <summary>
+/// An emoji inline.
+/// </summary>
+/// <seealso cref="Inline" />
+public class EmojiInline : LiteralInline
 {
+    // Inherit from LiteralInline so that rendering is already handled by default
+
     /// <summary>
-    /// An emoji inline.
+    /// Initializes a new instance of the <see cref="EmojiInline"/> class.
     /// </summary>
-    /// <seealso cref="Inline" />
-    public class EmojiInline : LiteralInline
+    public EmojiInline()
     {
-        // Inherit from LiteralInline so that rendering is already handled by default
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmojiInline"/> class.
-        /// </summary>
-        public EmojiInline()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmojiInline"/> class.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        public EmojiInline(string content)
-        {
-            Content = new StringSlice(content);
-        }
-
-        /// <summary>
-        /// Gets or sets the original match string (either an emoji shortcode or a text smiley)
-        /// </summary>
-        public string? Match { get; set; }
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmojiInline"/> class.
+    /// </summary>
+    /// <param name="content">The content.</param>
+    public EmojiInline(string content)
+    {
+        Content = new StringSlice(content);
+    }
+
+    /// <summary>
+    /// Gets or sets the original match string (either an emoji shortcode or a text smiley)
+    /// </summary>
+    public string? Match { get; set; }
 }

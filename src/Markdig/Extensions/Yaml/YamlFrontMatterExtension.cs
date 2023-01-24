@@ -5,33 +5,32 @@
 using Markdig.Parsers;
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Yaml
+namespace Markdig.Extensions.Yaml;
+
+/// <summary>
+/// Extension to discard a YAML frontmatter at the beginning of a Markdown document.
+/// </summary>
+public class YamlFrontMatterExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to discard a YAML frontmatter at the beginning of a Markdown document.
-    /// </summary>
-    public class YamlFrontMatterExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
+        if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
         {
-            if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
-            {
-                // Insert the YAML parser before the thematic break parser, as it is also triggered on a --- dash
-                pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser());
-            }
+            // Insert the YAML parser before the thematic break parser, as it is also triggered on a --- dash
+            pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser());
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (!renderer.ObjectRenderers.Contains<YamlFrontMatterHtmlRenderer>())
+        {
+            renderer.ObjectRenderers.InsertBefore<Renderers.Html.CodeBlockRenderer>(new YamlFrontMatterHtmlRenderer());
         }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+        if (!renderer.ObjectRenderers.Contains<YamlFrontMatterRoundtripRenderer>())
         {
-            if (!renderer.ObjectRenderers.Contains<YamlFrontMatterHtmlRenderer>())
-            {
-                renderer.ObjectRenderers.InsertBefore<Renderers.Html.CodeBlockRenderer>(new YamlFrontMatterHtmlRenderer());
-            }
-
-            if (!renderer.ObjectRenderers.Contains<YamlFrontMatterRoundtripRenderer>())
-            {
-                renderer.ObjectRenderers.InsertBefore<Renderers.Roundtrip.CodeBlockRenderer>(new YamlFrontMatterRoundtripRenderer());
-            }
+            renderer.ObjectRenderers.InsertBefore<Renderers.Roundtrip.CodeBlockRenderer>(new YamlFrontMatterRoundtripRenderer());
         }
     }
 }

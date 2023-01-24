@@ -4,19 +4,18 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Normalize
-{
-    /// <summary>
-    /// A Normalize renderer for a <see cref="ThematicBreakBlock"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{ThematicBreakBlock}" />
-    public class ThematicBreakRenderer : NormalizeObjectRenderer<ThematicBreakBlock>
-    {
-        protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)
-        {
-            renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
+namespace Markdig.Renderers.Normalize;
 
-            renderer.FinishBlock(renderer.Options.EmptyLineAfterThematicBreak);
-        }
+/// <summary>
+/// A Normalize renderer for a <see cref="ThematicBreakBlock"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{ThematicBreakBlock}" />
+public class ThematicBreakRenderer : NormalizeObjectRenderer<ThematicBreakBlock>
+{
+    protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)
+    {
+        renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));
+
+        renderer.FinishBlock(renderer.Options.EmptyLineAfterThematicBreak);
     }
 }

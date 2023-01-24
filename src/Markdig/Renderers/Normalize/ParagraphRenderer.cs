@@ -4,18 +4,17 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Normalize
+namespace Markdig.Renderers.Normalize;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="ParagraphBlock"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
+public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="ParagraphBlock"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
-    public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
+    protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
     {
-        protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
-        {
-            renderer.WriteLeafInline(obj);
-            renderer.FinishBlock(!renderer.CompactParagraph);
-        }
+        renderer.WriteLeafInline(obj);
+        renderer.FinishBlock(!renderer.CompactParagraph);
     }
 }

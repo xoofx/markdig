@@ -4,13 +4,12 @@
 
 using Markdig.Helpers;
 
-namespace Markdig.Renderers
+namespace Markdig.Renderers;
+
+/// <summary>
+/// A collection of <see cref="IMarkdownObjectRenderer"/>.
+/// </summary>
+/// <seealso cref="OrderedList{IMarkdownObjectRenderer}" />
+public class ObjectRendererCollection : OrderedList<IMarkdownObjectRenderer>
 {
-    /// <summary>
-    /// A collection of <see cref="IMarkdownObjectRenderer"/>.
-    /// </summary>
-    /// <seealso cref="OrderedList{IMarkdownObjectRenderer}" />
-    public class ObjectRendererCollection : OrderedList<IMarkdownObjectRenderer>
-    {
-    }
 }

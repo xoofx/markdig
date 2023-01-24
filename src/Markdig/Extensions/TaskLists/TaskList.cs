@@ -5,14 +5,13 @@
 using System.Diagnostics;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.TaskLists
+namespace Markdig.Extensions.TaskLists;
+
+/// <summary>
+/// An inline for TaskList.
+/// </summary>
+[DebuggerDisplay("TaskList {Checked}")]
+public class TaskList : LeafInline
 {
-    /// <summary>
-    /// An inline for TaskList.
-    /// </summary>
-    [DebuggerDisplay("TaskList {Checked}")]
-    public class TaskList : LeafInline
-    {
-        public bool Checked { get; set; }
-    }
+    public bool Checked { get; set; }
 }

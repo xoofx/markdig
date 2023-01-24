@@ -4,23 +4,22 @@
 
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.NonAsciiNoEscape
-{
-    /// <summary>
-    /// Extension that will disable URI escape with % characters for non-US-ASCII characters in order to workaround a bug under IE/Edge with local file links containing non US-ASCII chars. DO NOT USE OTHERWISE.
-    /// </summary>
-    public class NonAsciiNoEscapeExtension : IMarkdownExtension
-    {
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-        }
+namespace Markdig.Extensions.NonAsciiNoEscape;
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+/// <summary>
+/// Extension that will disable URI escape with % characters for non-US-ASCII characters in order to workaround a bug under IE/Edge with local file links containing non US-ASCII chars. DO NOT USE OTHERWISE.
+/// </summary>
+public class NonAsciiNoEscapeExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is HtmlRenderer htmlRenderer)
         {
-            if (renderer is HtmlRenderer htmlRenderer)
-            {
-                htmlRenderer.UseNonAsciiNoEscape = true;
-            }
+            htmlRenderer.UseNonAsciiNoEscape = true;
         }
     }
 }

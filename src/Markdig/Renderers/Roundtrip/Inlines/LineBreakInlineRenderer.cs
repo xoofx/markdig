@@ -4,21 +4,20 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Roundtrip.Inlines
+namespace Markdig.Renderers.Roundtrip.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="LineBreakInline"/>.
+/// </summary>
+/// <seealso cref="RoundtripObjectRenderer{LineBreakInline}" />
+public class LineBreakInlineRenderer : RoundtripObjectRenderer<LineBreakInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="LineBreakInline"/>.
-    /// </summary>
-    /// <seealso cref="RoundtripObjectRenderer{LineBreakInline}" />
-    public class LineBreakInlineRenderer : RoundtripObjectRenderer<LineBreakInline>
+    protected override void Write(RoundtripRenderer renderer, LineBreakInline obj)
     {
-        protected override void Write(RoundtripRenderer renderer, LineBreakInline obj)
+        if (obj.IsHard && obj.IsBackslash)
         {
-            if (obj.IsHard && obj.IsBackslash)
-            {
-                renderer.Write("\\");
-            }
-            renderer.WriteLine(obj.NewLine);
+            renderer.Write("\\");
         }
+        renderer.WriteLine(obj.NewLine);
     }
 }

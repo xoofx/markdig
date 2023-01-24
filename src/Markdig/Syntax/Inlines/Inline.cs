@@ -2,315 +2,313 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+
 using Markdig.Helpers;
 
-namespace Markdig.Syntax.Inlines
+namespace Markdig.Syntax.Inlines;
+
+/// <summary>
+/// Base class for all syntax tree inlines.
+/// </summary>
+/// <seealso cref="MarkdownObject" />
+public abstract class Inline : MarkdownObject, IInline
 {
-    /// <summary>
-    /// Base class for all syntax tree inlines.
-    /// </summary>
-    /// <seealso cref="MarkdownObject" />
-    public abstract class Inline : MarkdownObject, IInline
+    protected Inline()
     {
-        protected Inline()
+        SetTypeKind(isInline: true, isContainer: false);
+    }
+
+    /// <summary>
+    /// Gets the parent container of this inline.
+    /// </summary>
+    public ContainerInline? Parent { get; internal set; }
+
+    /// <summary>
+    /// Gets the previous inline.
+    /// </summary>
+    public Inline? PreviousSibling { get; private set; }
+
+    /// <summary>
+    /// Gets the next sibling inline.
+    /// </summary>
+    public Inline? NextSibling { get; internal set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is closed.
+    /// </summary>
+    public bool IsClosed
+    {
+        get => IsClosedInternal;
+        set => IsClosedInternal = value;
+    }
+
+    /// <summary>
+    /// Inserts the specified inline after this instance.
+    /// </summary>
+    /// <param name="next">The inline to insert after this instance.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException">Inline has already a parent</exception>
+    public void InsertAfter(Inline next)
+    {
+        if (next is null) ThrowHelper.ArgumentNullException(nameof(next));
+        if (next.Parent != null)
         {
-            SetTypeKind(isInline: true, isContainer: false);
+            ThrowHelper.ArgumentException("Inline has already a parent", nameof(next));
         }
 
-        /// <summary>
-        /// Gets the parent container of this inline.
-        /// </summary>
-        public ContainerInline? Parent { get; internal set; }
-
-        /// <summary>
-        /// Gets the previous inline.
-        /// </summary>
-        public Inline? PreviousSibling { get; private set; }
-
-        /// <summary>
-        /// Gets the next sibling inline.
-        /// </summary>
-        public Inline? NextSibling { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is closed.
-        /// </summary>
-        public bool IsClosed
+        var previousNext = NextSibling;
+        if (previousNext != null)
         {
-            get => IsClosedInternal;
-            set => IsClosedInternal = value;
+            previousNext.PreviousSibling = next;
         }
 
-        /// <summary>
-        /// Inserts the specified inline after this instance.
-        /// </summary>
-        /// <param name="next">The inline to insert after this instance.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException">Inline has already a parent</exception>
-        public void InsertAfter(Inline next)
+        next.PreviousSibling = this;
+        next.NextSibling = previousNext;
+        NextSibling = next;
+
+        if (Parent != null)
         {
-            if (next is null) ThrowHelper.ArgumentNullException(nameof(next));
-            if (next.Parent != null)
-            {
-                ThrowHelper.ArgumentException("Inline has already a parent", nameof(next));
-            }
+            Parent.OnChildInsert(next);
+            next.Parent = Parent;
+        }
+    }
 
-            var previousNext = NextSibling;
-            if (previousNext != null)
-            {
-                previousNext.PreviousSibling = next;
-            }
-
-            next.PreviousSibling = this;
-            next.NextSibling = previousNext;
-            NextSibling = next;
-
-            if (Parent != null)
-            {
-                Parent.OnChildInsert(next);
-                next.Parent = Parent;
-            }
+    /// <summary>
+    /// Inserts the specified inline before this instance.
+    /// </summary>
+    /// <param name="previous">The inline previous to insert before this instance.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException">Inline has already a parent</exception>
+    public void InsertBefore(Inline previous)
+    {
+        if (previous is null) ThrowHelper.ArgumentNullException(nameof(previous));
+        if (previous.Parent != null)
+        {
+            ThrowHelper.ArgumentException("Inline has already a parent", nameof(previous));
         }
 
-        /// <summary>
-        /// Inserts the specified inline before this instance.
-        /// </summary>
-        /// <param name="previous">The inline previous to insert before this instance.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException">Inline has already a parent</exception>
-        public void InsertBefore(Inline previous)
+        var previousSibling = PreviousSibling;
+        if (previousSibling != null)
         {
-            if (previous is null) ThrowHelper.ArgumentNullException(nameof(previous));
-            if (previous.Parent != null)
-            {
-                ThrowHelper.ArgumentException("Inline has already a parent", nameof(previous));
-            }
-
-            var previousSibling = PreviousSibling;
-            if (previousSibling != null)
-            {
-                previousSibling.NextSibling = previous;
-            }
-
-            PreviousSibling = previous;
-            previous.NextSibling = this;
-
-            if (Parent != null)
-            {
-                Parent.OnChildInsert(previous);
-                previous.Parent = Parent;
-            }
+            previousSibling.NextSibling = previous;
         }
 
-        /// <summary>
-        /// Removes this instance from the current list and its parent
-        /// </summary>
-        public void Remove()
+        PreviousSibling = previous;
+        previous.NextSibling = this;
+
+        if (Parent != null)
         {
-            if (PreviousSibling != null)
-            {
-                PreviousSibling.NextSibling = NextSibling;
-            }
+            Parent.OnChildInsert(previous);
+            previous.Parent = Parent;
+        }
+    }
 
-            if (NextSibling != null)
-            {
-                NextSibling.PreviousSibling = PreviousSibling;
-            }
-
-            if (Parent != null)
-            {
-                Parent.OnChildRemove(this);
-
-                PreviousSibling = null;
-                NextSibling = null;
-                Parent = null;
-            }
+    /// <summary>
+    /// Removes this instance from the current list and its parent
+    /// </summary>
+    public void Remove()
+    {
+        if (PreviousSibling != null)
+        {
+            PreviousSibling.NextSibling = NextSibling;
         }
 
-        /// <summary>
-        /// Replaces this inline by the specified inline.
-        /// </summary>
-        /// <param name="inline">The inline.</param>
-        /// <param name="copyChildren">if set to <c>true</c> the children of this instance are copied to the specified inline.</param>
-        /// <returns>The last children</returns>
-        /// <exception cref="ArgumentNullException">If inline is null</exception>
-        public Inline ReplaceBy(Inline inline, bool copyChildren = true)
+        if (NextSibling != null)
         {
-            if (inline is null) ThrowHelper.ArgumentNullException(nameof(inline));
+            NextSibling.PreviousSibling = PreviousSibling;
+        }
 
-            // Save sibling
-            var parent = Parent;
-            var previousSibling = PreviousSibling;
-            var nextSibling = NextSibling;
-            Remove();
+        if (Parent != null)
+        {
+            Parent.OnChildRemove(this);
 
-            if (previousSibling != null)
+            PreviousSibling = null;
+            NextSibling = null;
+            Parent = null;
+        }
+    }
+
+    /// <summary>
+    /// Replaces this inline by the specified inline.
+    /// </summary>
+    /// <param name="inline">The inline.</param>
+    /// <param name="copyChildren">if set to <c>true</c> the children of this instance are copied to the specified inline.</param>
+    /// <returns>The last children</returns>
+    /// <exception cref="ArgumentNullException">If inline is null</exception>
+    public Inline ReplaceBy(Inline inline, bool copyChildren = true)
+    {
+        if (inline is null) ThrowHelper.ArgumentNullException(nameof(inline));
+
+        // Save sibling
+        var parent = Parent;
+        var previousSibling = PreviousSibling;
+        var nextSibling = NextSibling;
+        Remove();
+
+        if (previousSibling != null)
+        {
+            previousSibling.InsertAfter(inline);
+        }
+        else if (nextSibling != null)
+        {
+            nextSibling.InsertBefore(inline);
+        }
+        else if (parent != null)
+        {
+            parent.AppendChild(inline);
+        }
+
+        if (copyChildren && IsContainerInline)
+        {
+            var container = Unsafe.As<ContainerInline>(this);
+
+            ContainerInline? newContainer = inline.IsContainerInline && !inline.IsClosed
+                ? Unsafe.As<ContainerInline>(inline)
+                : null;
+
+            // TODO: This part is not efficient as it is using child.Remove()
+            // We need a method to quickly move all children without having to mess Next/Prev sibling
+            var child = container.FirstChild;
+            var lastChild = inline;
+            while (child != null)
             {
-                previousSibling.InsertAfter(inline);
-            }
-            else if (nextSibling != null)
-            {
-                nextSibling.InsertBefore(inline);
-            }
-            else if (parent != null)
-            {
-                parent.AppendChild(inline);
-            }
-
-            if (copyChildren && IsContainerInline)
-            {
-                var container = Unsafe.As<ContainerInline>(this);
-
-                ContainerInline? newContainer = inline.IsContainerInline && !inline.IsClosed
-                    ? Unsafe.As<ContainerInline>(inline)
-                    : null;
-
-                // TODO: This part is not efficient as it is using child.Remove()
-                // We need a method to quickly move all children without having to mess Next/Prev sibling
-                var child = container.FirstChild;
-                var lastChild = inline;
-                while (child != null)
+                var nextChild = child.NextSibling;
+                child.Remove();
+                if (newContainer != null)
                 {
-                    var nextChild = child.NextSibling;
-                    child.Remove();
-                    if (newContainer != null)
-                    {
-                        newContainer.AppendChild(child);
-                    }
-                    else
-                    {
-                        lastChild.InsertAfter(child);
-                    }
-                    lastChild = child;
-                    child = nextChild;
+                    newContainer.AppendChild(child);
                 }
-
-                return lastChild;
-            }
-
-            return inline;
-        }
-
-        /// <summary>
-        /// Determines whether this instance contains a parent of the specified type.
-        /// </summary>
-        /// <typeparam name="T">Type of the parent to check</typeparam>
-        /// <returns><c>true</c> if this instance contains a parent of the specified type; <c>false</c> otherwise</returns>
-        public bool ContainsParentOfType<T>() where T : Inline
-        {
-            var inline = this;
-            while (inline != null)
-            {
-                var delimiter = inline as T;
-                if (delimiter != null)
+                else
                 {
-                    return true;
+                    lastChild.InsertAfter(child);
                 }
-                inline = inline.Parent;
+                lastChild = child;
+                child = nextChild;
             }
-            return false;
+
+            return lastChild;
         }
 
-        /// <summary>
-        /// Iterates on parents of the specified type.
-        /// </summary>
-        /// <typeparam name="T">Type of the parent to iterate over</typeparam>
-        /// <returns>An enumeration on the parents of the specified type</returns>
-        public IEnumerable<T> FindParentOfType<T>() where T : Inline
+        return inline;
+    }
+
+    /// <summary>
+    /// Determines whether this instance contains a parent of the specified type.
+    /// </summary>
+    /// <typeparam name="T">Type of the parent to check</typeparam>
+    /// <returns><c>true</c> if this instance contains a parent of the specified type; <c>false</c> otherwise</returns>
+    public bool ContainsParentOfType<T>() where T : Inline
+    {
+        var inline = this;
+        while (inline != null)
         {
-            var inline = this;
-            while (inline != null)
+            var delimiter = inline as T;
+            if (delimiter != null)
             {
-                if (inline is T inlineOfT)
-                {
-                    yield return inlineOfT;
-                }
-                inline = inline.Parent;
+                return true;
             }
+            inline = inline.Parent;
         }
+        return false;
+    }
 
-        public T? FirstParentOfType<T>() where T : notnull, Inline
+    /// <summary>
+    /// Iterates on parents of the specified type.
+    /// </summary>
+    /// <typeparam name="T">Type of the parent to iterate over</typeparam>
+    /// <returns>An enumeration on the parents of the specified type</returns>
+    public IEnumerable<T> FindParentOfType<T>() where T : Inline
+    {
+        var inline = this;
+        while (inline != null)
         {
-            var inline = this;
-            while (inline != null)
+            if (inline is T inlineOfT)
             {
-                if (inline is T inlineOfT)
-                {
-                    return inlineOfT;
-                }
-                inline = inline.Parent;
+                yield return inlineOfT;
             }
-            return null;
+            inline = inline.Parent;
         }
+    }
 
-        public Inline FindBestParent()
+    public T? FirstParentOfType<T>() where T : notnull, Inline
+    {
+        var inline = this;
+        while (inline != null)
         {
-            var current = this;
-
-            while (current.Parent != null || current.PreviousSibling != null)
+            if (inline is T inlineOfT)
             {
-                if (current.Parent != null)
-                {
-                    current = current.Parent;
-                    continue;
-                }
-
-                current = current.PreviousSibling!;
+                return inlineOfT;
             }
-
-            return current;
+            inline = inline.Parent;
         }
+        return null;
+    }
 
-        protected virtual void OnChildRemove(Inline child)
+    public Inline FindBestParent()
+    {
+        var current = this;
+
+        while (current.Parent != null || current.PreviousSibling != null)
         {
-
-        }
-
-        protected virtual void OnChildInsert(Inline child)
-        {
-        }
-
-        /// <summary>
-        /// Dumps this instance to <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void DumpTo(TextWriter writer)
-        {
-            if (writer is null) ThrowHelper.ArgumentNullException_writer();
-            DumpTo(writer, 0);
-        }
-
-        /// <summary>
-        /// Dumps this instance to <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="level">The level of indent.</param>
-        /// <exception cref="ArgumentNullException">if writer is null</exception>
-        public void DumpTo(TextWriter writer, int level)
-        {
-            if (writer is null) ThrowHelper.ArgumentNullException_writer();
-            for (int i = 0; i < level; i++)
+            if (current.Parent != null)
             {
-                writer.Write(' ');
+                current = current.Parent;
+                continue;
             }
 
-            writer.WriteLine("-> " + this.GetType().Name + " = " + this);
-
-            DumpChildTo(writer, level + 1);
-
-            if (NextSibling != null)
-            {
-                NextSibling.DumpTo(writer, level);
-            }
+            current = current.PreviousSibling!;
         }
 
-        protected virtual void DumpChildTo(TextWriter writer, int level)
+        return current;
+    }
+
+    protected virtual void OnChildRemove(Inline child)
+    {
+
+    }
+
+    protected virtual void OnChildInsert(Inline child)
+    {
+    }
+
+    /// <summary>
+    /// Dumps this instance to <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="writer">The writer.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public void DumpTo(TextWriter writer)
+    {
+        if (writer is null) ThrowHelper.ArgumentNullException_writer();
+        DumpTo(writer, 0);
+    }
+
+    /// <summary>
+    /// Dumps this instance to <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="writer">The writer.</param>
+    /// <param name="level">The level of indent.</param>
+    /// <exception cref="ArgumentNullException">if writer is null</exception>
+    public void DumpTo(TextWriter writer, int level)
+    {
+        if (writer is null) ThrowHelper.ArgumentNullException_writer();
+        for (int i = 0; i < level; i++)
         {
+            writer.Write(' ');
         }
+
+        writer.WriteLine("-> " + this.GetType().Name + " = " + this);
+
+        DumpChildTo(writer, level + 1);
+
+        if (NextSibling != null)
+        {
+            NextSibling.DumpTo(writer, level);
+        }
+    }
+
+    protected virtual void DumpChildTo(TextWriter writer, int level)
+    {
     }
 }

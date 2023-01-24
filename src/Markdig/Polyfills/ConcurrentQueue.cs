@@ -3,14 +3,13 @@
 // See the license.txt file in the project root for more information.
 
 #if NETFRAMEWORK || NETSTANDARD2_0
-namespace System.Collections.Concurrent
+namespace System.Collections.Concurrent;
+
+internal static class ConcurrentQueueExtensions
 {
-    internal static class ConcurrentQueueExtensions
+    public static void Clear<T>(this ConcurrentQueue<T> queue)
     {
-        public static void Clear<T>(this ConcurrentQueue<T> queue)
-        {
-            while (queue.TryDequeue(out _)) { }
-        }
+        while (queue.TryDequeue(out _)) { }
     }
 }
 #endif

@@ -4,61 +4,60 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Normalize.Inlines
+namespace Markdig.Renderers.Normalize.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="LinkInline"/>.
+/// </summary>
+/// <seealso cref="NormalizeObjectRenderer{LinkInline}" />
+public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="LinkInline"/>.
-    /// </summary>
-    /// <seealso cref="NormalizeObjectRenderer{LinkInline}" />
-    public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
+    protected override void Write(NormalizeRenderer renderer, LinkInline link)
     {
-        protected override void Write(NormalizeRenderer renderer, LinkInline link)
+        if (link.IsAutoLink && !renderer.Options.ExpandAutoLinks)
         {
-            if (link.IsAutoLink && !renderer.Options.ExpandAutoLinks)
-            {
-                renderer.Write(link.Url);
-                return;
-            }
+            renderer.Write(link.Url);
+            return;
+        }
 
-            if (link.IsImage)
-            {
-                renderer.Write('!');
-            }
-            renderer.Write('[');
-            renderer.WriteChildren(link);
-            renderer.Write(']');
+        if (link.IsImage)
+        {
+            renderer.Write('!');
+        }
+        renderer.Write('[');
+        renderer.WriteChildren(link);
+        renderer.Write(']');
 
-            if (link.Label != null)
+        if (link.Label != null)
+        {
+            if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
             {
-                if (link.FirstChild is LiteralInline literal && literal.Content.Length == link.Label.Length && literal.Content.Match(link.Label))
+                // collapsed reference and shortcut links
+                if (!link.IsShortcut)
                 {
-                    // collapsed reference and shortcut links
-                    if (!link.IsShortcut)
-                    {
-                        renderer.Write("[]");
-                    }
-                }
-                else
-                {
-                    // full link
-                    renderer.Write('[').Write(link.Label).Write(']');
+                    renderer.Write("[]");
                 }
             }
             else
             {
-                if (!string.IsNullOrEmpty(link.Url))
+                // full link
+                renderer.Write('[').Write(link.Label).Write(']');
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(link.Url))
+            {
+                renderer.Write('(').Write(link.Url);
+
+                if (link.Title is { Length: > 0 })
                 {
-                    renderer.Write('(').Write(link.Url);
-
-                    if (link.Title is { Length: > 0 })
-                    {
-                        renderer.Write(" \"");
-                        renderer.Write(link.Title.Replace(@"""", @"\"""));
-                        renderer.Write('"');
-                    }
-
-                    renderer.Write(')');
+                    renderer.Write(" \"");
+                    renderer.Write(link.Title.Replace(@"""", @"\"""));
+                    renderer.Write('"');
                 }
+
+                renderer.Write(')');
             }
         }
     }

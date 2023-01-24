@@ -4,49 +4,48 @@
 
 using Markdig.Syntax;
 
-namespace Markdig.Renderers.Html
+namespace Markdig.Renderers.Html;
+
+/// <summary>
+/// An HTML renderer for a <see cref="HeadingBlock"/>.
+/// </summary>
+/// <seealso cref="HtmlObjectRenderer{HeadingBlock}" />
+public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
 {
-    /// <summary>
-    /// An HTML renderer for a <see cref="HeadingBlock"/>.
-    /// </summary>
-    /// <seealso cref="HtmlObjectRenderer{HeadingBlock}" />
-    public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
+    private static readonly string[] HeadingTexts = {
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+    };
+
+    protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
     {
-        private static readonly string[] HeadingTexts = {
-            "h1",
-            "h2",
-            "h3",
-            "h4",
-            "h5",
-            "h6",
-        };
+        int index = obj.Level - 1;
+        string[] headings = HeadingTexts;
+        string headingText = ((uint)index < (uint)headings.Length)
+            ? headings[index]
+            : $"h{obj.Level}";
 
-        protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
+        if (renderer.EnableHtmlForBlock)
         {
-            int index = obj.Level - 1;
-            string[] headings = HeadingTexts;
-            string headingText = ((uint)index < (uint)headings.Length)
-                ? headings[index]
-                : $"h{obj.Level}";
-
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write('<');
-                renderer.WriteRaw(headingText);
-                renderer.WriteAttributes(obj);
-                renderer.WriteRaw('>');
-            }
-
-            renderer.WriteLeafInline(obj);
-
-            if (renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("</");
-                renderer.WriteRaw(headingText);
-                renderer.WriteLine('>');
-            }
-
-            renderer.EnsureLine();
+            renderer.Write('<');
+            renderer.WriteRaw(headingText);
+            renderer.WriteAttributes(obj);
+            renderer.WriteRaw('>');
         }
+
+        renderer.WriteLeafInline(obj);
+
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.Write("</");
+            renderer.WriteRaw(headingText);
+            renderer.WriteLine('>');
+        }
+
+        renderer.EnsureLine();
     }
 }

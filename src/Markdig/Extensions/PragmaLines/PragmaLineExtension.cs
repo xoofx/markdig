@@ -8,70 +8,69 @@ using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Extensions.PragmaLines
+namespace Markdig.Extensions.PragmaLines;
+
+/// <summary>
+/// Extension to a span for each line containing the original line id (using id = pragma-line#line_number_zero_based)
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class PragmaLineExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to a span for each line containing the original line id (using id = pragma-line#line_number_zero_based)
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class PragmaLineExtension : IMarkdownExtension
+    public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
-            pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
-        }
+        pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
+        pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-        }
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
 
-        private static void PipelineOnDocumentProcessed(MarkdownDocument document)
-        {
-            int index = 0;
-            AddPragmas(document, ref index);
-        }
+    private static void PipelineOnDocumentProcessed(MarkdownDocument document)
+    {
+        int index = 0;
+        AddPragmas(document, ref index);
+    }
 
-        private static void AddPragmas(Block block, ref int index)
+    private static void AddPragmas(Block block, ref int index)
+    {
+        var attribute = block.GetAttributes();
+        var pragmaId = GetPragmaId(block);
+        if ( attribute.Id is null)
         {
-            var attribute = block.GetAttributes();
-            var pragmaId = GetPragmaId(block);
-            if ( attribute.Id is null)
+            attribute.Id = pragmaId;
+        }
+        else if (block.Parent != null)
+        {
+            var heading = block as HeadingBlock;
+
+            // If we have a heading, we will try to add the tag inside it
+            // otherwise we will add it just before
+            var tag = $"<a id=\"{pragmaId}\"></a>";
+            if (heading?.Inline?.FirstChild != null)
             {
-                attribute.Id = pragmaId;
+                heading.Inline.FirstChild.InsertBefore(new HtmlInline(tag));
             }
-            else if (block.Parent != null)
+            else
             {
-                var heading = block as HeadingBlock;
-
-                // If we have a heading, we will try to add the tag inside it
-                // otherwise we will add it just before
-                var tag = $"<a id=\"{pragmaId}\"></a>";
-                if (heading?.Inline?.FirstChild != null)
-                {
-                    heading.Inline.FirstChild.InsertBefore(new HtmlInline(tag));
-                }
-                else
-                {
-                    block.Parent.Insert(index, new HtmlBlock(null) { Lines = new StringLineGroup(tag) });
-                    index++;
-                }
-            }
-
-            var container = block as ContainerBlock;
-            if (container != null)
-            {
-                for (int i = 0; i < container.Count; i++)
-                {
-                    var subBlock = container[i];
-                    AddPragmas(subBlock, ref i);
-                }
+                block.Parent.Insert(index, new HtmlBlock(null) { Lines = new StringLineGroup(tag) });
+                index++;
             }
         }
 
-        private static string GetPragmaId(Block block)
+        var container = block as ContainerBlock;
+        if (container != null)
         {
-            return $"pragma-line-{block.Line}";
+            for (int i = 0; i < container.Count; i++)
+            {
+                var subBlock = container[i];
+                AddPragmas(subBlock, ref i);
+            }
         }
+    }
+
+    private static string GetPragmaId(Block block)
+    {
+        return $"pragma-line-{block.Line}";
     }
 }

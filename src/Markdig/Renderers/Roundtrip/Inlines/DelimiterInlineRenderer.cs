@@ -4,18 +4,17 @@
 
 using Markdig.Syntax.Inlines;
 
-namespace Markdig.Renderers.Roundtrip.Inlines
+namespace Markdig.Renderers.Roundtrip.Inlines;
+
+/// <summary>
+/// A Normalize renderer for a <see cref="DelimiterInline"/>.
+/// </summary>
+/// <seealso cref="RoundtripObjectRenderer{DelimiterInline}" />
+public class DelimiterInlineRenderer : RoundtripObjectRenderer<DelimiterInline>
 {
-    /// <summary>
-    /// A Normalize renderer for a <see cref="DelimiterInline"/>.
-    /// </summary>
-    /// <seealso cref="RoundtripObjectRenderer{DelimiterInline}" />
-    public class DelimiterInlineRenderer : RoundtripObjectRenderer<DelimiterInline>
+    protected override void Write(RoundtripRenderer renderer, DelimiterInline obj)
     {
-        protected override void Write(RoundtripRenderer renderer, DelimiterInline obj)
-        {
-            renderer.Write(obj.ToLiteral());
-            renderer.WriteChildren(obj);
-        }
+        renderer.Write(obj.ToLiteral());
+        renderer.WriteChildren(obj);
     }
 }

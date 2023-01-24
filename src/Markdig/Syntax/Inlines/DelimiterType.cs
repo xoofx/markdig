@@ -2,29 +2,26 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using System;
+namespace Markdig.Syntax.Inlines;
 
-namespace Markdig.Syntax.Inlines
+/// <summary>
+/// Gets the type of a <see cref="DelimiterInline"/>.
+/// </summary>
+[Flags]
+public enum DelimiterType : byte
 {
     /// <summary>
-    /// Gets the type of a <see cref="DelimiterInline"/>.
+    /// An undefined open or close delimiter.
     /// </summary>
-    [Flags]
-    public enum DelimiterType : byte
-    {
-        /// <summary>
-        /// An undefined open or close delimiter.
-        /// </summary>
-        Undefined,
+    Undefined,
 
-        /// <summary>
-        /// An open delimiter.
-        /// </summary>
-        Open,
+    /// <summary>
+    /// An open delimiter.
+    /// </summary>
+    Open,
 
-        /// <summary>
-        /// A close delimiter.
-        /// </summary>
-        Close,
-    }
+    /// <summary>
+    /// A close delimiter.
+    /// </summary>
+    Close,
 }

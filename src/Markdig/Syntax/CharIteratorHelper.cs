@@ -4,52 +4,51 @@
 
 using Markdig.Helpers;
 
-namespace Markdig.Syntax
-{
-    /// <summary>
-    /// Helpers for the <see cref="ICharIterator"/> class.
-    /// </summary>
-    public static class CharIteratorHelper
-    {
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
-        {
-            return TrimStartAndCountNewLines(ref iterator, out countNewLines, out _);
-        }
+namespace Markdig.Syntax;
 
-        public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine lastLine) where T : ICharIterator
+/// <summary>
+/// Helpers for the <see cref="ICharIterator"/> class.
+/// </summary>
+public static class CharIteratorHelper
+{
+    public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
+    {
+        return TrimStartAndCountNewLines(ref iterator, out countNewLines, out _);
+    }
+
+    public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine lastLine) where T : ICharIterator
+    {
+        countNewLines = 0;
+        var c = iterator.CurrentChar;
+        bool hasWhitespaces = false;
+        lastLine = NewLine.None;
+        while (c != '\0' && c.IsWhitespace())
         {
-            countNewLines = 0;
-            var c = iterator.CurrentChar;
-            bool hasWhitespaces = false;
-            lastLine = NewLine.None;
-            while (c != '\0' && c.IsWhitespace())
+            if (c == '\n' || c == '\r')
             {
-                if (c == '\n' || c == '\r')
+                if (c == '\r' && iterator.PeekChar() == '\n')
                 {
-                    if (c == '\r' && iterator.PeekChar() == '\n')
-                    {
-                        lastLine = NewLine.CarriageReturnLineFeed;
-                        iterator.SkipChar(); // skip \n
-                    }
-                    else if (c == '\n')
-                    {
-                        lastLine = NewLine.LineFeed;
-                    }
-                    else if (c == '\r')
-                    {
-                        lastLine = NewLine.CarriageReturn;
-                    }
-                    countNewLines++;
+                    lastLine = NewLine.CarriageReturnLineFeed;
+                    iterator.SkipChar(); // skip \n
                 }
-                else
+                else if (c == '\n')
                 {
-                    // reset last line if if have a whitespace after
-                    lastLine = NewLine.None;
+                    lastLine = NewLine.LineFeed;
                 }
-                hasWhitespaces = true;
-                c = iterator.NextChar();
+                else if (c == '\r')
+                {
+                    lastLine = NewLine.CarriageReturn;
+                }
+                countNewLines++;
             }
-            return hasWhitespaces;
+            else
+            {
+                // reset last line if if have a whitespace after
+                lastLine = NewLine.None;
+            }
+            hasWhitespaces = true;
+            c = iterator.NextChar();
         }
+        return hasWhitespaces;
     }
 }

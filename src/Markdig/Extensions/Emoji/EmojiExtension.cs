@@ -4,32 +4,31 @@
 
 using Markdig.Renderers;
 
-namespace Markdig.Extensions.Emoji
+namespace Markdig.Extensions.Emoji;
+
+/// <summary>
+/// Extension to allow emoji shortcodes and smileys replacement.
+/// </summary>
+/// <seealso cref="IMarkdownExtension" />
+public class EmojiExtension : IMarkdownExtension
 {
-    /// <summary>
-    /// Extension to allow emoji shortcodes and smileys replacement.
-    /// </summary>
-    /// <seealso cref="IMarkdownExtension" />
-    public class EmojiExtension : IMarkdownExtension
+    public EmojiExtension(EmojiMapping emojiMapping)
     {
-        public EmojiExtension(EmojiMapping emojiMapping)
-        {
-            EmojiMapping = emojiMapping;
-        }
+        EmojiMapping = emojiMapping;
+    }
 
-        public EmojiMapping EmojiMapping { get; }
+    public EmojiMapping EmojiMapping { get; }
 
-        public void Setup(MarkdownPipelineBuilder pipeline)
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (!pipeline.InlineParsers.Contains<EmojiParser>())
         {
-            if (!pipeline.InlineParsers.Contains<EmojiParser>())
-            {
-                // Insert the parser before any other parsers
-                pipeline.InlineParsers.Insert(0, new EmojiParser(EmojiMapping));
-            }
+            // Insert the parser before any other parsers
+            pipeline.InlineParsers.Insert(0, new EmojiParser(EmojiMapping));
         }
+    }
 
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-        }
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
     }
 }
