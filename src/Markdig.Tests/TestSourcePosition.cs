@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Text;
@@ -125,6 +125,17 @@ literal      ( 0,12) 12-15
 heading      ( 0, 0)  0-5
 literal      ( 0, 2)  2-5
 ");
+    }
+
+    [Test]
+    public void TestSetextHeading()
+    {
+        //     01 2 34 5
+        Check("A\n\n-\n-", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+heading      ( 3, 0)  3-5
+literal      ( 3, 0)  3-3");
     }
 
     [Test]
@@ -322,7 +333,7 @@ html         ( 0, 6)  6-9
     [Test]
     public void TestHtmlInline1()
     {
-        //     0         
+        //     0
         //     0123456789
         Check("0<!--A-->1", @"
 paragraph    ( 0, 0)  0-9
@@ -788,7 +799,7 @@ literal      ( 1, 4)  8-8
     [Test]
     public void TestDocument()
     {
-        //     L0       L0           L1L2         L3         L4         L5L6                    L7L8         
+        //     L0       L0           L1L2         L3         L4         L5L6                    L7L8
         //     0        10        20          30         40         50          60        70          80        90
         //     012345678901234567890 1 2345678901 2345678901 2345678901 2 345678901234567890123 4 5678901234567890123
         Check("# This is a document\n\n1) item 1\n2) item 2\n3) item 4\n\nWith an **emphasis**\n\n> and a blockquote\n", @"

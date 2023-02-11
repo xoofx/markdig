@@ -131,7 +131,7 @@ public class ParagraphBlockParser : BlockParser
                 var heading = new HeadingBlock(this)
                 {
                     Column = paragraph.Column,
-                    Span = new SourceSpan(paragraph.Span.Start, line.Start),
+                    Span = new SourceSpan(paragraph.Span.Start, line.End),
                     Level = level,
                     Lines = paragraph.Lines,
                     IsSetext = true,
