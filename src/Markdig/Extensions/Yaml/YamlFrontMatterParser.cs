@@ -17,6 +17,11 @@ public class YamlFrontMatterParser : BlockParser
     // We reuse a FencedCodeBlock parser to grab a frontmatter, only active if it happens on the first line of the document.
 
     /// <summary>
+    /// Allows the <see cref="YamlFrontMatterBlock"/> to appear in the middle of the markdown file.
+    /// </summary>
+    public bool AllowInMiddleOfDocument { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="YamlFrontMatterParser"/> class.
     /// </summary>
     public YamlFrontMatterParser()
@@ -48,7 +53,7 @@ public class YamlFrontMatterParser : BlockParser
         }
 
         // Only accept a frontmatter at the beginning of the file
-        if (processor.Start != 0)
+        if (!AllowInMiddleOfDocument && processor.Start != 0)
         {
             return BlockState.None;
         }
