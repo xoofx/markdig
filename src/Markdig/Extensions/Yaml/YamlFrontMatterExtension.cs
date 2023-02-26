@@ -12,12 +12,17 @@ namespace Markdig.Extensions.Yaml;
 /// </summary>
 public class YamlFrontMatterExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Allows the <see cref="YamlFrontMatterBlock"/> to appear in the middle of the markdown file.
+    /// </summary>
+    public bool AllowInMiddleOfDocument { get; set; }
+
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
         {
             // Insert the YAML parser before the thematic break parser, as it is also triggered on a --- dash
-            pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser());
+            pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser { AllowInMiddleOfDocument = AllowInMiddleOfDocument });
         }
     }
 

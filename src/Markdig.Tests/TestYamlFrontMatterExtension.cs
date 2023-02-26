@@ -18,6 +18,19 @@ public class TestYamlFrontMatterExtension
         Assert.That(markdownRenderer.ObjectRenderers.Contains<YamlFrontMatterRoundtripRenderer>(), Is.EqualTo(hasYamlFrontMatterRoundtripRenderer));
     }
 
+    [Test]
+    public void AllowYamlFrontMatterInMiddleOfDocument()
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .Use(new YamlFrontMatterExtension { AllowInMiddleOfDocument = true })
+            .Build();
+
+        TestParser.TestSpec(
+            "This is a text1\n---\nthis: is a frontmatter\n---\nThis is a text2",
+            "<p>This is a text1</p>\n<p>This is a text2</p>",
+            pipeline);
+    }
+
     private static IEnumerable<TestCaseData> TestCases()
     {
         yield return new TestCaseData(new IMarkdownObjectRenderer[]
