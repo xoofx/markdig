@@ -17,7 +17,8 @@ namespace Markdig.Tests.Specs.GridTables
         // 
         // ## Grid Table
         // 
-        // A grid table allows to have multiple lines per cells and allows to span cells over multiple columns. The following shows a simple grid table  
+        // A grid table allows having multiple lines per cells and allows spanning cells over multiple columns.
+        // The following shows a simple grid table:
         // 
         // ```
         // +---------+---------+
@@ -38,17 +39,20 @@ namespace Markdig.Tests.Specs.GridTables
         // ```
         // 
         // **Rule #1**
-        // The first line of a grid table must a **row separator**. It must start with the column separator character `+` used to separate columns in a row separator. Each column separator is:
-        //   - starting by optional spaces
-        //   - followed by an optional `:` to specify left align, followed by optional spaces
-        //   - followed by a sequence of at least one `-` character, followed by optional spaces
-        //   - followed by an optional `:` to specify right align (or center align if left align is also defined)
-        //   - ending by optional spaces
+        // The first line of a grid table must be a **row separator**.
+        // It must start with the column separator character `+` used to separate columns in a row separator.
         // 
-        // The first row separator must be followed by a *regular row*. A regular row must start with the character `|` that is starting at the same position than the column separator `+` of the first row separator.
+        // Each column separator:
+        // - starts with optional spaces
+        // - followed by an optional `:` to specify left align, followed by optional spaces
+        // - followed by a sequence of one or more `-` characters, followed by optional spaces
+        // - followed by an optional `:` to specify right align (or center align if left align is also defined)
+        // - ends with optional spaces
         // 
+        // The first row separator must be followed by a *regular row*.
+        // A regular row must start with a `|` character starting at the same position as the column separator `+` of the first row separator.
         // 
-        // The following is a valid row separator 
+        // The following is a valid row separator:
         [Test]
         public void ExtensionsGridTable_Example001()
         {
@@ -74,7 +78,7 @@ namespace Markdig.Tests.Specs.GridTables
             TestParser.TestSpec("+---------+---------+\n| This is | a table |", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example 1\nSection Extensions / Grid Table\n");
         }
 
-        // The following is not a valid row separator 
+        // The following is not a valid row separator:
         [Test]
         public void ExtensionsGridTable_Example002()
         {
@@ -93,7 +97,8 @@ namespace Markdig.Tests.Specs.GridTables
         }
 
         // **Rule #2**
-        // A regular row can continue a previous regular row when column separator `|` are positioned at the same  position than the previous line. If they are positioned at the same location, the column may span over multiple columns:
+        // A regular row can continue a previous regular row when the column separators `|` are positioned at the same position as those of the previous line.
+        // If they are positioned at the same location, the column may span over multiple columns:
         [Test]
         public void ExtensionsGridTable_Example003()
         {
@@ -187,15 +192,13 @@ namespace Markdig.Tests.Specs.GridTables
             TestParser.TestSpec("+---------+---------+\n| This is | a table with a longer text in the second column", "<table>\n<col style=\"width:50%\" />\n<col style=\"width:50%\" />\n<tbody>\n<tr>\n<td>This is</td>\n<td>a table with a longer text in the second column</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example 5\nSection Extensions / Grid Table\n");
         }
 
-        // The respective width of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
+        // The respective widths of the columns are calculated from the ratio between the total size of the first table row without counting the `+`: `+----+--------+----+` would be divided between:
         // 
-        // Total size is : 16 
+        // - `----` → 4 characters
+        // - `--------` → 8 characters
+        // - `----` → 4 characters
         // 
-        // - `----` -> 4
-        // - `--------` -> 8
-        // - `----` -> 4
-        // 
-        // So the width would be 4/16 = 25%, 8/16 = 50%, 4/16 = 25%
+        // The total size is 16 characters, so the widths would be 4/16 = 25%, 8/16 = 50%, and 4/16 = 25%.
         [Test]
         public void ExtensionsGridTable_Example006()
         {
@@ -296,7 +299,7 @@ namespace Markdig.Tests.Specs.GridTables
             TestParser.TestSpec("+---+---+---+\n| AAAAA | B |\n+---+---+ B +\n| D | E | B |\n+ D +---+---+\n| D | CCCCC |\n+---+---+---+", "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td colspan=\"2\">AAAAA</td>\n<td rowspan=\"2\">B\nB\nB</td>\n</tr>\n<tr>\n<td rowspan=\"2\">D\nD\nD</td>\n<td>E</td>\n</tr>\n<tr>\n<td colspan=\"2\">CCCCC</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example 8\nSection Extensions / Grid Table\n");
         }
 
-        // A grid table may have cells with both colspan and rowspan:
+        // A grid table may have cells with both `colspan` and `rowspan`:
         [Test]
         public void ExtensionsGridTable_Example009()
         {
