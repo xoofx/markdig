@@ -334,7 +334,7 @@ public struct StringLineGroup : IEnumerable
             goto Return;
 
         MoveToNewLine:
-            if (SliceIndex < _lines.Count - 1)
+            if (SliceIndex < _lines.Lines.Length - 1)
             {
                 SliceIndex++;
                 _offset = -1;
