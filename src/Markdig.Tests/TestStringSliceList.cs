@@ -180,4 +180,39 @@ public class TestStringSliceList
             Assert.AreEqual('\0', iterator.CurrentChar); iterator.SkipChar();
         }
     }
+
+    [Test]
+    public void TestStringLineGroupCharIteratorAtCapacity()
+    {
+        string str = "ABCDEFGHI";
+        var text = new StringLineGroup(1)
+        {
+            // Will store the following line at capacity
+            new StringSlice(str, NewLine.CarriageReturnLineFeed) { Start = 0, End = 2 },
+        };
+
+        var iterator = text.ToCharIterator();
+        var chars = ToString(iterator);
+        TextAssert.AreEqual("ABC\r\n", chars.ToString());
+        TextAssert.AreEqual("ABC", text.ToString());
+    }
+
+    [Test]
+    public void TestStringLineGroupCharIteratorForcingIncreaseCapacity()
+    {
+        string str = "ABCDEFGHI";
+        var text = new StringLineGroup(1)
+        {
+            // Will store the following line at capacity
+            new StringSlice(str, NewLine.CarriageReturnLineFeed) { Start = 0, End = 2 },
+
+            // Will force increase capacity to 2 and store the line at capacity
+            new StringSlice(str, NewLine.CarriageReturnLineFeed) { Start = 3, End = 3 },
+        };
+
+        var iterator = text.ToCharIterator();
+        var chars = ToString(iterator);
+        TextAssert.AreEqual("ABC\r\nD\r\n", chars.ToString());
+        TextAssert.AreEqual("ABC\r\nD", text.ToString());
+    }
 }
