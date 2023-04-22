@@ -83,4 +83,28 @@ public class TestYamlFrontMatterExtension
             return null;
         }
     }
+
+    [TestCase("---\nkey1: value1\nkey2: value2\n---\n\n# Content\n")]
+    [TestCase("---\nkey1: value1\nkey2: value2\nkey3: value3\nkey4: value4\nkey5: value5\nkey6: value6\nkey7: value7\nkey8: value8\n---\n\n# Content\n")]
+    public void FrontMatterBlockLinesCharIterator(string value)
+    {
+        var builder = new MarkdownPipelineBuilder();
+        builder.Extensions.Add(new YamlFrontMatterExtension());
+        var markdownDocument = Markdown.Parse(value, builder.Build());
+
+        var yamlBlocks = markdownDocument.Descendants<YamlFrontMatterBlock>();
+        Assert.True(yamlBlocks.Any());
+
+        foreach (var yamlBlock in yamlBlocks)
+        {
+            var iterator = yamlBlock.Lines.ToCharIterator();
+            while(iterator.CurrentChar != '\0')
+            {
+                iterator.NextChar();
+            }
+        }
+
+        Assert.Pass("No exception parsing and iterating through YAML front matter block lines");
+    }
+
 }
