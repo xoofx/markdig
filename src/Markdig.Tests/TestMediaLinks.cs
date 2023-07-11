@@ -36,6 +36,16 @@ public class TestMediaLinks
         Assert.AreEqual(html, expected);
     }
 
+    [TestCase("![static video relative path](./video.mp4)",
+        "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"./video.mp4\"></source></video></p>\n")]
+    [TestCase("![static audio relative path](./audio.mp3)",
+        "<p><audio width=\"500\" controls=\"\"><source type=\"audio/mpeg\" src=\"./audio.mp3\"></source></audio></p>\n")]
+    public void TestBuiltInHostsWithRelativePaths(string markdown, string expected)
+    {
+        string html = Markdown.ToHtml(markdown, GetPipeline());
+        Assert.AreEqual(html, expected);
+    }
+    
     private class TestHostProvider : IHostProvider
     {
         public string Class { get; } = "regex";
