@@ -98,11 +98,9 @@ public class MediaLinkExtension : IMarkdownExtension
 
     private bool TryGuessAudioVideoFile(Uri uri, bool isSchemaRelative, HtmlRenderer renderer, LinkInline linkInline)
     {
-        string path;
-        if (uri.IsAbsoluteUri)
-            path = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped);
-        else
-            path = uri.ToString();
+        string path = uri.IsAbsoluteUri
+            ? uri.GetComponents(UriComponents.Path, UriFormat.Unescaped)
+            : uri.ToString();
         
         // Otherwise try to detect if we have an audio/video from the file extension
         var lastDot = path.LastIndexOf('.');
