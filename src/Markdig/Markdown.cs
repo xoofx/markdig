@@ -17,7 +17,7 @@ namespace Markdig;
 /// <summary>
 /// Provides methods for parsing a Markdown string to a syntax tree and converting it to other formats.
 /// </summary>
-public static partial class Markdown
+public static class Markdown
 {
     public static string Version
     {
@@ -268,7 +268,7 @@ public static partial class Markdown
     }
 
     /// <summary>
-    /// Converts a Markdown string to HTML.
+    /// Converts a Markdown string to Plain text by using a <see cref="StringWriter"/> .
     /// </summary>
     /// <param name="markdown">A Markdown text.</param>
     /// <param name="pipeline">The pipeline used for the conversion.</param>
