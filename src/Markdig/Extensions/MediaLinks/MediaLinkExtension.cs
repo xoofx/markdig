@@ -50,27 +50,32 @@ public class MediaLinkExtension : IMarkdownExtension
             return false;
         }
 
+        var url = linkInline.Url;
         bool isSchemaRelative = false;
-        // Only process absolute Uri
-        if (!Uri.TryCreate(linkInline.Url, UriKind.RelativeOrAbsolute, out Uri? uri) || !uri.IsAbsoluteUri)
+
+        // force // schema to an absolute url
+        if (url.StartsWith("//", StringComparison.Ordinal))
         {
-            // see https://tools.ietf.org/html/rfc3986#section-4.2
-            // since relative uri doesn't support many properties, "http" is used as a placeholder here.
-            if (linkInline.Url.StartsWith("//", StringComparison.Ordinal) && Uri.TryCreate("http:" + linkInline.Url, UriKind.Absolute, out uri))
+            url = "https:" + url;
+            isSchemaRelative = true;
+        }
+
+        // Make sure we have a valid absolute/relative url
+        if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri? uri)) // || !uri.IsAbsoluteUri)
+        {
+            return false;
+        }
+        
+        // iFrame has to be absolute path
+        if (uri.IsAbsoluteUri)
+        {
+            if (TryRenderIframeFromKnownProviders(uri, isSchemaRelative, renderer, linkInline))
             {
-                isSchemaRelative = true;
-            }
-            else
-            {
-                return false;
+                return true;
             }
         }
 
-        if (TryRenderIframeFromKnownProviders(uri, isSchemaRelative, renderer, linkInline))
-        {
-            return true;
-        }
-
+        // audio/video has can have relative path
         if (TryGuessAudioVideoFile(uri, isSchemaRelative, renderer, linkInline))
         {
             return true;
@@ -93,7 +98,10 @@ public class MediaLinkExtension : IMarkdownExtension
 
     private bool TryGuessAudioVideoFile(Uri uri, bool isSchemaRelative, HtmlRenderer renderer, LinkInline linkInline)
     {
-        var path = uri.GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        string path = uri.IsAbsoluteUri
+            ? uri.GetComponents(UriComponents.Path, UriFormat.Unescaped)
+            : uri.ToString();
+        
         // Otherwise try to detect if we have an audio/video from the file extension
         var lastDot = path.LastIndexOf('.');
         if (lastDot >= 0 &&
