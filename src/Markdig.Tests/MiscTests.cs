@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 
 using Markdig.Extensions.AutoLinks;
-
+using Markdig.Syntax;
 using NUnit.Framework;
 
 namespace Markdig.Tests;
@@ -198,9 +198,9 @@ $$
 <div class=""math"">
 \begin{align}
 \sqrt{37} & = \sqrt{\frac{73^2-1}{12^2}} \\
- & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\ 
+ & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\
  & = \sqrt{\frac{73^2}{12^2}}\sqrt{\frac{73^2-1}{73^2}} \\
- & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\ 
+ & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\
  & \approx \frac{73}{12}\left(1 - \frac{1}{2\cdot73^2}\right)
 \end{align}
 </div>
@@ -290,5 +290,17 @@ $$
 
         TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
         TestParser.TestSpec("www.foo.bar", "<p><a href=\"https://www.foo.bar\">www.foo.bar</a></p>", httpsPipeline);
+    }
+
+    [Test]
+    public void RootInlineHasCorrectSourceSpan()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
+        pipeline.TrackTrivia = true;
+
+        var document = Markdown.Parse("0123456789\n", pipeline);
+
+        var expectedSourceSpan = new SourceSpan(0, 10);
+        Assert.That(((LeafBlock)document.LastChild).Inline.Span == expectedSourceSpan);
     }
 }

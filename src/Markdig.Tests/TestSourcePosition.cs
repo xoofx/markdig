@@ -68,6 +68,28 @@ literal      ( 2, 0) 12-21
     }
 
     [Test]
+    public void TestParagraphWithEndNewLine()
+    {
+        Check("0123456789\n", @"
+paragraph    ( 0, 0)  0-10
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+", trackTrivia: true);
+
+        Check("0123456789\r", @"
+paragraph    ( 0, 0)  0-10
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+", trackTrivia: true);
+
+        Check("0123456789\r\n", @"
+paragraph    ( 0, 0)  0-11
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-11
+", trackTrivia: true);
+    }
+
+    [Test]
     public void TestEmphasis()
     {
         Check("012**3456789**", @"
@@ -825,9 +847,10 @@ literal      ( 8, 2) 77-92
 ");
     }
 
-    private static void Check(string text, string expectedResult, string extensions = null)
+    private static void Check(string text, string expectedResult, string extensions = null, bool trackTrivia = false)
     {
         var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
+        pipelineBuilder.TrackTrivia = trackTrivia;
         if (extensions != null)
         {
             pipelineBuilder.Configure(extensions);
