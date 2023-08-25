@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 
 using Markdig.Extensions.AutoLinks;
+using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 using NUnit.Framework;
 
@@ -302,5 +303,18 @@ $$
 
         var expectedSourceSpan = new SourceSpan(0, 10);
         Assert.That(((LeafBlock)document.LastChild).Inline.Span == expectedSourceSpan);
+    }
+
+    [Test]
+    public void RootInlineInTableCellHasCorrectSourceSpan()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseAdvancedExtensions().Build();
+        pipeline.TrackTrivia = true;
+
+        var document = Markdown.Parse("| a | b |\n| --- | --- |\n| <span id=\"dest\"></span><span id=\"DEST\"></span>*dest*<br/> | \\[in\\] The address of the result of the operation.<br/> |", pipeline);
+
+        var paragraph = (ParagraphBlock)((TableCell)((TableRow)((Table)document.LastChild).LastChild).First()).LastChild;
+        Assert.That(paragraph.Inline.Span.Start == paragraph.Inline.FirstChild.Span.Start);
+        Assert.That(paragraph.Inline.Span.End == paragraph.Inline.LastChild.Span.End);
     }
 }

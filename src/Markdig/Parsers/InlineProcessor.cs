@@ -348,9 +348,8 @@ public class InlineProcessor
         if (leafBlock.Inline.LastChild is not null)
         {
             leafBlock.Inline.Span.End = leafBlock.Inline.LastChild.Span.End;
+            leafBlock.UpdateSpanEnd(leafBlock.Inline.Span.End);
         }
-
-        leafBlock.UpdateSpanEnd(leafBlock.Inline.Span.End);
     }
 
     public void PostProcessInlines(int startingIndex, Inline? root, Inline? lastChild, bool isFinalProcessing)
