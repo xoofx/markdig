@@ -225,6 +225,7 @@ public class InlineProcessor
         previousLineIndexForSliceOffset = 0;
         lineOffsets.Clear();
         var text = leafBlock.Lines.ToSlice(lineOffsets);
+        var textEnd = text.Length;
         leafBlock.Lines.Release();
         int previousStart = -1;
 
@@ -319,7 +320,8 @@ public class InlineProcessor
                 var newLine = leafBlock.NewLine;
                 if (newLine != NewLine.None)
                 {
-                    leafBlock.Inline.AppendChild(new LineBreakInline { NewLine = newLine });
+                    var position = GetSourcePosition(textEnd, out int line, out int column);
+                    leafBlock.Inline.AppendChild(new LineBreakInline { NewLine = newLine, Line = line, Column = column, Span = { Start = position, End = position + (newLine == NewLine.CarriageReturnLineFeed ? 1 : 0) } });
                 }
             }
         }
@@ -342,6 +344,12 @@ public class InlineProcessor
         //    DebugLog.WriteLine("** Dump after Emphasis:");
         //    leafBlock.Inline.DumpTo(DebugLog);
         //}
+
+        if (leafBlock.Inline.LastChild is not null)
+        {
+            leafBlock.Inline.Span.End = leafBlock.Inline.LastChild.Span.End;
+            leafBlock.UpdateSpanEnd(leafBlock.Inline.Span.End);
+        }
     }
 
     public void PostProcessInlines(int startingIndex, Inline? root, Inline? lastChild, bool isFinalProcessing)

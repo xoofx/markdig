@@ -443,6 +443,11 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         {
             var paragraph = (ParagraphBlock) cell[0];
             state.PostProcessInlines(postInlineProcessorIndex + 1, paragraph.Inline, null, true);
+            if (paragraph.Inline?.LastChild is not null)
+            {
+                paragraph.Inline.Span.End = paragraph.Inline.LastChild.Span.End;
+                paragraph.UpdateSpanEnd(paragraph.Inline.LastChild.Span.End);
+            }
         }
 
         // Clear cells when we are done
@@ -520,7 +525,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 // Create aligns until we may have a header row
 
                 aligns ??= new List<TableColumnDefinition>();
-                
+
                 aligns.Add(new TableColumnDefinition() { Alignment =  align });
 
                 // If this is the last delimiter, we need to check the right side of the `|` delimiter

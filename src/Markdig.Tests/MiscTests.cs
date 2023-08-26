@@ -1,7 +1,8 @@
 using System.Text.RegularExpressions;
 
 using Markdig.Extensions.AutoLinks;
-
+using Markdig.Extensions.Tables;
+using Markdig.Syntax;
 using NUnit.Framework;
 
 namespace Markdig.Tests;
@@ -198,9 +199,9 @@ $$
 <div class=""math"">
 \begin{align}
 \sqrt{37} & = \sqrt{\frac{73^2-1}{12^2}} \\
- & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\ 
+ & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\
  & = \sqrt{\frac{73^2}{12^2}}\sqrt{\frac{73^2-1}{73^2}} \\
- & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\ 
+ & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\
  & \approx \frac{73}{12}\left(1 - \frac{1}{2\cdot73^2}\right)
 \end{align}
 </div>
@@ -290,5 +291,30 @@ $$
 
         TestParser.TestSpec("www.foo.bar", "<p><a href=\"http://www.foo.bar\">www.foo.bar</a></p>", pipeline);
         TestParser.TestSpec("www.foo.bar", "<p><a href=\"https://www.foo.bar\">www.foo.bar</a></p>", httpsPipeline);
+    }
+
+    [Test]
+    public void RootInlineHasCorrectSourceSpan()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().Build();
+        pipeline.TrackTrivia = true;
+
+        var document = Markdown.Parse("0123456789\n", pipeline);
+
+        var expectedSourceSpan = new SourceSpan(0, 10);
+        Assert.That(((LeafBlock)document.LastChild).Inline.Span == expectedSourceSpan);
+    }
+
+    [Test]
+    public void RootInlineInTableCellHasCorrectSourceSpan()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseAdvancedExtensions().Build();
+        pipeline.TrackTrivia = true;
+
+        var document = Markdown.Parse("| a | b |\n| --- | --- |\n| <span id=\"dest\"></span><span id=\"DEST\"></span>*dest*<br/> | \\[in\\] The address of the result of the operation.<br/> |", pipeline);
+
+        var paragraph = (ParagraphBlock)((TableCell)((TableRow)((Table)document.LastChild).LastChild).First()).LastChild;
+        Assert.That(paragraph.Inline.Span.Start == paragraph.Inline.FirstChild.Span.Start);
+        Assert.That(paragraph.Inline.Span.End == paragraph.Inline.LastChild.Span.End);
     }
 }
