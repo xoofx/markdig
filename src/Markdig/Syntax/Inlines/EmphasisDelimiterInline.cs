@@ -30,6 +30,13 @@ public class EmphasisDelimiterInline : DelimiterInline
         Content = new StringSlice(ToLiteral());
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmphasisDelimiterInline" /> class.
+    /// </summary>
+    /// <param name="parser">The parser.</param>
+    /// <param name="descriptor">The descriptor.</param>
+    /// <param name="content">The content.</param>
+    /// <exception cref="ArgumentNullException"></exception>
     internal EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor, StringSlice content) : base(parser)
     {
         if (descriptor is null)
