@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
@@ -29,6 +29,16 @@ public class EmphasisDelimiterInline : DelimiterInline
         DelimiterChar = descriptor.Character;
     }
 
+    internal EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor, StringSlice content) : base(parser)
+    {
+        if (descriptor is null)
+            ThrowHelper.ArgumentNullException(nameof(descriptor));
+
+        Descriptor = descriptor;
+        DelimiterChar = descriptor.Character;
+        Content = content;
+    }
+
     /// <summary>
     /// Gets the descriptor for this emphasis.
     /// </summary>
@@ -44,6 +54,11 @@ public class EmphasisDelimiterInline : DelimiterInline
     /// </summary>
     public int DelimiterCount { get; set; }
 
+    /// <summary>
+    /// The content as a <see cref="StringSlice"/>.
+    /// </summary>
+    public StringSlice Content;
+
     public override string ToLiteral()
     {
         return DelimiterCount > 0 ? new string(DelimiterChar, DelimiterCount) : string.Empty;
@@ -53,7 +68,7 @@ public class EmphasisDelimiterInline : DelimiterInline
     {
         return new LiteralInline()
         {
-            Content = new StringSlice(ToLiteral()),
+            Content = Content,
             IsClosed = true,
             Span = Span,
             Line = Line,

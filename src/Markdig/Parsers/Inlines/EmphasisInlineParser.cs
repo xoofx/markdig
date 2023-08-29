@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics;
@@ -109,7 +109,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         var child = container.FirstChild;
         while (child != null)
         {
-            // Stop the search on the delimitation child 
+            // Stop the search on the delimitation child
             if (child == lastChild)
             {
                 break;
@@ -197,7 +197,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
             if (canOpen) delimiterType |= DelimiterType.Open;
             if (canClose) delimiterType |= DelimiterType.Close;
 
-            var delimiter = new EmphasisDelimiterInline(this, emphasisDesc)
+            var delimiter = new EmphasisDelimiterInline(this, emphasisDesc, new StringSlice(slice.Text, startPosition, slice.Start - 1))
             {
                 DelimiterCount = delimiterCount,
                 Type = delimiterType,
@@ -221,7 +221,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 
         // TODO: Benchmark difference between using List and LinkedList here since there could be a few Remove calls
 
-        // Move current_position forward in the delimiter stack (if needed) until 
+        // Move current_position forward in the delimiter stack (if needed) until
         // we find the first potential closer with delimiter * or _. (This will be the potential closer closest to the beginning of the input – the first one in parse order.)
         for (int i = 0; i < delimiters.Count; i++)
         {
@@ -237,7 +237,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
             {
                 while (true)
                 {
-                    // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type) 
+                    // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type)
                     // for the first matching potential opener (“matching” means same delimiter).
                     EmphasisDelimiterInline? openDelimiter = null;
                     int openDelimiterIndex = -1;
@@ -307,8 +307,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                         emphasis.Column = openDelimiter.Column;
                         emphasis.Span.End = closeDelimiter.Span.End - closeDelimitercount + delimiterDelta;
 
+                        openDelimiter.Content.Start += delimiterDelta;
                         openDelimiter.Span.Start += delimiterDelta;
                         openDelimiter.Column += delimiterDelta;
+                        closeDelimiter.Content.Start += delimiterDelta;
                         closeDelimiter.Span.Start += delimiterDelta;
                         closeDelimiter.Column += delimiterDelta;
 
@@ -331,7 +333,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                         for (int k = i - 1; k >= openDelimiterIndex + 1; k--)
                         {
                             var literalDelimiter = delimiters[k];
-                            literalDelimiter.ReplaceBy(literalDelimiter.AsLiteralInline());                                
+                            literalDelimiter.ReplaceBy(literalDelimiter.AsLiteralInline());
                             delimiters.RemoveAt(k);
                             i--;
                         }
