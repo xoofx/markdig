@@ -27,6 +27,7 @@ public class EmphasisDelimiterInline : DelimiterInline
 
         Descriptor = descriptor;
         DelimiterChar = descriptor.Character;
+        Content = new StringSlice(ToLiteral());
     }
 
     internal EmphasisDelimiterInline(InlineParser parser, EmphasisDescriptor descriptor, StringSlice content) : base(parser)
