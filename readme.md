@@ -12,7 +12,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
 
 - **Very fast parser and html renderer** (no-regexp), very lightweight in terms of GC pressure. See benchmarks
 - **Abstract Syntax Tree** with precise source code location for syntax tree, useful when building a Markdown editor.
-  - Checkout [MarkdownEditor for Visual Studio](https://visualstudiogallery.msdn.microsoft.com/eaab33c3-437b-4918-8354-872dfe5d1bfe) powered by Markdig!
+  - Checkout [Markdown Editor v2 for Visual Studio 2022](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.MarkdownEditor2) powered by Markdig!
 - Converter to **HTML**
 - Passing more than **600+ tests** from the latest [CommonMark specs (0.30)](http://spec.commonmark.org/)
 - Includes all the core elements of CommonMark:
