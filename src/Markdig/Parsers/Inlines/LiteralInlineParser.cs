@@ -32,14 +32,12 @@ public sealed class LiteralInlineParser : InlineParser
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
-        var text = slice.Text;
+        string text = slice.Text;
 
-        var startPosition = processor.GetSourcePosition(slice.Start, out int line, out int column);
-
-        var nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
+        int nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
         int length;
 
-        if (nextStart < 0)
+        if ((uint)nextStart >= (uint)text.Length)
         {
             nextStart = slice.End + 1;
             length = nextStart - slice.Start;
@@ -48,10 +46,10 @@ public sealed class LiteralInlineParser : InlineParser
         {
             // Remove line endings if the next char is a new line
             length = nextStart - slice.Start;
+
             if (!processor.TrackTrivia)
             {
-                var nextText = text[nextStart];
-                if (nextText == '\n' || nextText == '\r')
+                if (text[nextStart] is '\n' or '\r')
                 {
                     int end = nextStart - 1;
                     while (length > 0 && text[end].IsSpace())
@@ -84,7 +82,7 @@ public sealed class LiteralInlineParser : InlineParser
                 processor.Inline = new LiteralInline
                 {
                     Content = length > 0 ? newSlice : StringSlice.Empty,
-                    Span = new SourceSpan(startPosition, processor.GetSourcePosition(endPosition)),
+                    Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out int line, out int column), processor.GetSourcePosition(endPosition)),
                     Line = line,
                     Column = column,
                 };
