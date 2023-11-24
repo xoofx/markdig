@@ -20,8 +20,6 @@ namespace Markdig.Renderers;
 /// <seealso cref="TextRendererBase{HtmlRenderer}" />
 public class HtmlRenderer : TextRendererBase<HtmlRenderer>
 {
-    private static readonly char[] s_writeEscapeIndexOfAnyChars = new[] { '<', '>', '&', '"' };
-
     /// <summary>
     /// Initializes a new instance of the <see cref="HtmlRenderer"/> class.
     /// </summary>
@@ -149,69 +147,36 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     {
         if (!content.IsEmpty)
         {
-            int nextIndex = content.IndexOfAny(s_writeEscapeIndexOfAnyChars);
-            if (nextIndex == -1)
-            {
-                Write(content);
-            }
-            else
-            {
-                WriteEscapeSlow(content, softEscape);
-            }
-        }
-    }
+            WriteIndent();
 
-    private void WriteEscapeSlow(ReadOnlySpan<char> content, bool softEscape = false)
-    {
-        WriteIndent();
-
-        int previousOffset = 0;
-        for (int i = 0; i < content.Length; i++)
-        {
-            switch (content[i])
+            while (true)
             {
-                case '<':
-                    WriteRaw(content.Slice(previousOffset, i - previousOffset));
-                    if (EnableHtmlEscape)
+                int indexOfCharToEscape = softEscape
+                    ? content.IndexOfAny('<', '&')
+                    : content.IndexOfAny("<>&\"");
+
+                if ((uint)indexOfCharToEscape >= (uint)content.Length)
+                {
+                    WriteRaw(content);
+                    return;
+                }
+
+                WriteRaw(content.Slice(0, indexOfCharToEscape));
+
+                if (EnableHtmlEscape)
+                {
+                    WriteRaw(content[indexOfCharToEscape] switch
                     {
-                        WriteRaw("&lt;");
-                    }
-                    previousOffset = i + 1;
-                    break;
-                case '>':
-                    if (!softEscape)
-                    {
-                        WriteRaw(content.Slice(previousOffset, i - previousOffset));
-                        if (EnableHtmlEscape)
-                        {
-                            WriteRaw("&gt;");
-                        }
-                        previousOffset = i + 1;
-                    }
-                    break;
-                case '&':
-                    WriteRaw(content.Slice(previousOffset, i - previousOffset));
-                    if (EnableHtmlEscape)
-                    {
-                        WriteRaw("&amp;");
-                    }
-                    previousOffset = i + 1;
-                    break;
-                case '"':
-                    if (!softEscape)
-                    {
-                        WriteRaw(content.Slice(previousOffset, i - previousOffset));
-                        if (EnableHtmlEscape)
-                        {
-                            WriteRaw("&quot;");
-                        }
-                        previousOffset = i + 1;
-                    }
-                    break;
+                        '<' => "&lt;",
+                        '>' => "&gt;",
+                        '&' => "&amp;",
+                        _ => "&quot;",
+                    });
+                }
+
+                content = content.Slice(indexOfCharToEscape + 1);
             }
         }
-
-        WriteRaw(content.Slice(previousOffset));
     }
 
     private static readonly IdnMapping IdnMapping = new IdnMapping();
