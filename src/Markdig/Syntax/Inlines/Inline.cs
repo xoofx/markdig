@@ -20,6 +20,8 @@ public abstract class Inline : MarkdownObject, IInline
         SetTypeKind(isInline: true, isContainer: false);
     }
 
+    private protected Inline(bool dummySkipTypeKind) { }
+
     /// <summary>
     /// Gets the parent container of this inline.
     /// </summary>

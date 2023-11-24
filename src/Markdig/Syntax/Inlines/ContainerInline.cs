@@ -16,7 +16,7 @@ namespace Markdig.Syntax.Inlines;
 /// <seealso cref="Inline" />
 public class ContainerInline : Inline, IEnumerable<Inline>
 {
-    public ContainerInline()
+    public ContainerInline() : base(dummySkipTypeKind: true)
     {
         SetTypeKind(isInline: true, isContainer: true);
     }

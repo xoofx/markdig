@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 using Markdig.Helpers;
@@ -36,7 +37,8 @@ public abstract class MarkdownObject : IMarkdownObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected void SetTypeKind(bool isInline, bool isContainer)
     {
-        _lineBits |= (isInline ? IsInlineMask : 0) | (isContainer ? IsContainerMask : 0);
+        Debug.Assert(_lineBits == 0);
+        _lineBits = (isInline ? IsInlineMask : 0) | (isContainer ? IsContainerMask : 0);
     }
 
     private protected bool IsClosedInternal
