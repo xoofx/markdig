@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Buffers;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -20,6 +21,11 @@ namespace Markdig.Renderers;
 /// <seealso cref="TextRendererBase{HtmlRenderer}" />
 public class HtmlRenderer : TextRendererBase<HtmlRenderer>
 {
+    private static readonly IdnMapping s_idnMapping = new();
+
+    private static readonly SearchValues<char> s_asciiNonEscapeChars =
+        SearchValues.Create("!#$%()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz");
+
     /// <summary>
     /// Initializes a new instance of the <see cref="HtmlRenderer"/> class.
     /// </summary>
@@ -179,8 +185,6 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
         }
     }
 
-    private static readonly IdnMapping IdnMapping = new IdnMapping();
-
     /// <summary>
     /// Writes the URL escaped for HTML.
     /// </summary>
@@ -204,120 +208,107 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
             content = LinkRewriter(content);
         }
 
-        // a://c.d = 7 chars
-        int schemeOffset = content.Length < 7 ? -1 : content.IndexOf("://", StringComparison.Ordinal);
-        if (schemeOffset != -1) // This is an absolute URL
+        if (!Ascii.IsValid(content))
         {
-            schemeOffset += 3; // skip ://
-            WriteEscapeUrl(content, 0, schemeOffset);
-
-            bool idnaEncodeDomain = false;
-            int endOfDomain = schemeOffset;
-            for (; endOfDomain < content.Length; endOfDomain++)
+            int schemeOffset = content.IndexOf("://", StringComparison.Ordinal);
+            if (schemeOffset > 0) // This is an absolute URL
             {
-                char c = content[endOfDomain];
-                if (c == '/' || c == '?' || c == '#' || c == ':') // End of domain part
-                {
-                    break;
-                }
-                if (c > 127)
-                {
-                    idnaEncodeDomain = true;
-                }
-            }
+                schemeOffset += 3; // skip ://
 
-            if (idnaEncodeDomain)
-            {
-                string domainName;
+                int domainLength = content.AsSpan(schemeOffset).IndexOfAny("/?#:");
+                if (domainLength < 0)
+                {
+                    domainLength = content.Length - schemeOffset;
+                }
+
+                string? domainName = null;
 
                 try
                 {
-                    domainName = IdnMapping.GetAscii(content, schemeOffset, endOfDomain - schemeOffset);
+                    domainName = s_idnMapping.GetAscii(content, schemeOffset, domainLength);
                 }
-                catch
+                catch { }
+
+                if (domainName is not null)
                 {
-                    // Not a valid IDN, fallback to non-punycode encoding
-                    WriteEscapeUrl(content, schemeOffset, content.Length);
+                    WriteEscapeUrlCore(content.AsSpan(0, schemeOffset));
+                    WriteEscapeUrlCore(domainName.AsSpan());
+                    WriteEscapeUrlCore(content.AsSpan(schemeOffset + domainLength));
                     return this;
                 }
 
-                // Escape the characters (see Commonmark example 327 and think of it with a non-ascii symbol)
-                int previousPosition = 0;
-                for (int i = 0; i < domainName.Length; i++)
-                {
-                    var escape = HtmlHelper.EscapeUrlCharacter(domainName[i]);
-                    if (escape != null)
-                    {
-                        Write(domainName, previousPosition, i - previousPosition);
-                        previousPosition = i + 1;
-                        Write(escape);
-                    }
-                }
-                Write(domainName, previousPosition, domainName.Length - previousPosition);
-                WriteEscapeUrl(content, endOfDomain, content.Length);
+                // Not a valid IDN, fallback to non-punycode encoding
             }
-            else
-            {
-                WriteEscapeUrl(content, schemeOffset, content.Length);
-            }
-        }
-        else // This is a relative URL
-        {
-            WriteEscapeUrl(content, 0, content.Length);
         }
 
+        WriteEscapeUrlCore(content.AsSpan());
         return this;
     }
 
-    private void WriteEscapeUrl(string content, int start, int length)
+    private void WriteEscapeUrlCore(ReadOnlySpan<char> content)
     {
-        int previousPosition = start;
-        for (var i = previousPosition; i < length; i++)
+        WriteIndent();
+
+        while (true)
         {
-            var c = content[i];
+            int i = content.IndexOfAnyExcept(s_asciiNonEscapeChars);
+
+            if ((uint)i >= (uint)content.Length)
+            {
+                WriteRaw(content);
+                break;
+            }
+
+            WriteRaw(content.Slice(0, i));
+
+            char c = content[i];
 
             if (c < 128)
             {
-                var escape = HtmlHelper.EscapeUrlCharacter(c);
-                if (escape != null)
-                {
-                    Write(content, previousPosition, i - previousPosition);
-                    previousPosition = i + 1;
-                    Write(escape);
-                }
+                WriteRaw(HtmlHelper.EscapeUrlCharacter(c));
+            }
+            else if (UseNonAsciiNoEscape)
+            {
+                // Special case for Edge/IE workaround for MarkdownEditor, don't escape non-ASCII chars to make image links working
+                WriteRaw(c);
             }
             else
             {
-                Write(content, previousPosition, i - previousPosition);
-                previousPosition = i + 1;
-
-                // Special case for Edge/IE workaround for MarkdownEditor, don't escape non-ASCII chars to make image links working
-                if (UseNonAsciiNoEscape)
-                {
-                    Write(c);
-                }
-                else
-                {
-                    byte[] bytes;
-                    if (c >= '\ud800' && c <= '\udfff' && previousPosition < length)
-                    {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c, content[previousPosition] });
-                        // Skip next char as it is decoded above
-                        i++;
-                        previousPosition = i + 1;
-                    }
-                    else
-                    {
-                        bytes = Encoding.UTF8.GetBytes(new[] { c });
-                    }
-                    for (var j = 0; j < bytes.Length; j++)
-                    {
-                        Write($"%{bytes[j]:X2}");
-                    }
-                }
+                i = WriteEscapedUtf8Bytes(this, content, c, i);
             }
+
+            content = content.Slice(i + 1);
         }
-        Write(content, previousPosition, length - previousPosition);
+
+        static int WriteEscapedUtf8Bytes(HtmlRenderer renderer, ReadOnlySpan<char> content, char c, int i)
+        {
+            scoped ReadOnlySpan<char> chars;
+
+            if (CharHelper.IsHighSurrogate(c) && (uint)(i + 1) < (uint)content.Length)
+            {
+                chars = stackalloc char[] { c, content[i + 1] };
+                i++;
+            }
+            else
+            {
+                chars = stackalloc char[] { c };
+            }
+
+            Span<byte> utf8Buffer = stackalloc byte[4];
+            int utf8Length = Encoding.UTF8.GetBytes(chars, utf8Buffer);
+            utf8Buffer = utf8Buffer.Slice(0, utf8Length);
+
+            Span<char> escapedBuffer = stackalloc char[3];
+            escapedBuffer[0] = '%';
+
+            foreach (byte b in utf8Buffer)
+            {
+                HexConverter.ToCharsBuffer(b, escapedBuffer, startingIndex: 1);
+                renderer.WriteRaw(escapedBuffer);
+            }
+
+            return i;
+        }
     }
 
     /// <summary>

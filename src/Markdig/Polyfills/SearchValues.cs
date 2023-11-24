@@ -11,25 +11,24 @@ namespace System.Buffers;
 
 internal static class SearchValues
 {
-    public static SearchValues<char> Create(ReadOnlySpan<char> values)
-    {
-        return new PreNet8CompatSearchValues(values);
-    }
+    public static SearchValues<char> Create(string values) =>
+        Create(values.AsSpan());
 
-    public static int IndexOfAny(this ReadOnlySpan<char> span, SearchValues<char> values)
-    {
-        return values.IndexOfAny(span);
-    }
+    public static SearchValues<char> Create(ReadOnlySpan<char> values) =>
+        new PreNet8CompatSearchValues(values);
 
-    public static int IndexOfAny(this Span<char> span, SearchValues<char> values)
-    {
-        return values.IndexOfAny(span);
-    }
+    public static int IndexOfAny(this ReadOnlySpan<char> span, SearchValues<char> values) =>
+        values.IndexOfAny(span);
+
+    public static int IndexOfAnyExcept(this ReadOnlySpan<char> span, SearchValues<char> values) =>
+        values.IndexOfAnyExcept(span);
 }
 
 internal abstract class SearchValues<T>
 {
     public abstract int IndexOfAny(ReadOnlySpan<char> span);
+
+    public abstract int IndexOfAnyExcept(ReadOnlySpan<char> span);
 }
 
 internal sealed class PreNet8CompatSearchValues : SearchValues<char>
@@ -74,6 +73,36 @@ internal sealed class PreNet8CompatSearchValues : SearchValues<char>
                 char c = span[i];
 
                 if (c < 128 ? _ascii[c] : _nonAscii.Contains(c))
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public override int IndexOfAnyExcept(ReadOnlySpan<char> span)
+    {
+        if (_nonAscii is null)
+        {
+            for (int i = 0; i < span.Length; i++)
+            {
+                char c = span[i];
+
+                if (c >= 128 || !_ascii[c])
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < span.Length; i++)
+            {
+                char c = span[i];
+
+                if (c < 128 ? !_ascii[c] : !_nonAscii.Contains(c))
                 {
                     return i;
                 }
