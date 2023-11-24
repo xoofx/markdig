@@ -36,7 +36,7 @@ public abstract class ObjectCache<T> where T : class
     /// <returns></returns>
     public T Get()
     {
-        if (_builders.TryDequeue(out T instance))
+        if (_builders.TryDequeue(out T? instance))
         {
             return instance;
         }
