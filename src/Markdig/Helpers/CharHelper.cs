@@ -30,15 +30,17 @@ public static class CharHelper
         { 'I', 1 }, { 'V', 5 }, { 'X', 10 }
     };
 
-    private static readonly char[] punctuationExceptions = { '−', '-', '†', '‡' };
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsPunctuationException(char c) =>
+        c is '−' or '-' or '†' or '‡';
 
     public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
 
-        var prevIsExcepted = prevIsPunctuation && punctuationExceptions.Contains(pc);
-        var nextIsExcepted = nextIsPunctuation && punctuationExceptions.Contains(c);
+        var prevIsExcepted = prevIsPunctuation && IsPunctuationException(pc);
+        var nextIsExcepted = nextIsPunctuation && IsPunctuationException(c);
 
         // A left-flanking delimiter run is a delimiter run that is
         // (1) not followed by Unicode whitespace, and either
@@ -127,19 +129,6 @@ public static class CharHelper
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Contains(this char[] charList, char c)
-    {
-        foreach (char ch in charList)
-        {
-            if (ch == c)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhitespace(this char c)
     {
         // 2.1 Characters and lines
@@ -178,7 +167,7 @@ public static class CharHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsControl(this char c)
     {
-        return c < ' ' || char.IsControl(c);
+        return char.IsControl(c);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -211,15 +200,17 @@ public static class CharHelper
         {
             // A Unicode punctuation character is an ASCII punctuation character
             // or anything in the general Unicode categories Pc, Pd, Pe, Pf, Pi, Po, or Ps.
+            const int PunctuationCategoryMask =
+                1 << (int)UnicodeCategory.ConnectorPunctuation |
+                1 << (int)UnicodeCategory.DashPunctuation |
+                1 << (int)UnicodeCategory.OpenPunctuation |
+                1 << (int)UnicodeCategory.ClosePunctuation |
+                1 << (int)UnicodeCategory.InitialQuotePunctuation |
+                1 << (int)UnicodeCategory.FinalQuotePunctuation |
+                1 << (int)UnicodeCategory.OtherPunctuation;
+
             space = false;
-            UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
-            punctuation = category == UnicodeCategory.ConnectorPunctuation
-                || category == UnicodeCategory.DashPunctuation
-                || category == UnicodeCategory.OpenPunctuation
-                || category == UnicodeCategory.ClosePunctuation
-                || category == UnicodeCategory.InitialQuotePunctuation
-                || category == UnicodeCategory.FinalQuotePunctuation
-                || category == UnicodeCategory.OtherPunctuation;
+            punctuation = (PunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
         }
     }
 
@@ -236,14 +227,16 @@ public static class CharHelper
         }
         else
         {
-            var category = CharUnicodeInfo.GetUnicodeCategory(c);
-            return category == UnicodeCategory.ConnectorPunctuation
-                || category == UnicodeCategory.DashPunctuation
-                || category == UnicodeCategory.OpenPunctuation
-                || category == UnicodeCategory.ClosePunctuation
-                || category == UnicodeCategory.InitialQuotePunctuation
-                || category == UnicodeCategory.FinalQuotePunctuation
-                || category == UnicodeCategory.OtherPunctuation;
+            const int PunctuationCategoryMask =
+                1 << (int)UnicodeCategory.ConnectorPunctuation |
+                1 << (int)UnicodeCategory.DashPunctuation |
+                1 << (int)UnicodeCategory.OpenPunctuation |
+                1 << (int)UnicodeCategory.ClosePunctuation |
+                1 << (int)UnicodeCategory.InitialQuotePunctuation |
+                1 << (int)UnicodeCategory.FinalQuotePunctuation |
+                1 << (int)UnicodeCategory.OtherPunctuation;
+
+            return (PunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
         }
     }
 
