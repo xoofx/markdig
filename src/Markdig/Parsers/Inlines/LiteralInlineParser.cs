@@ -36,9 +36,7 @@ public sealed class LiteralInlineParser : InlineParser
 
         var startPosition = processor.GetSourcePosition(slice.Start, out int line, out int column);
 
-        // Slightly faster to perform our own search for opening characters
         var nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
-        //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
         int length;
 
         if (nextStart < 0)
