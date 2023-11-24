@@ -69,7 +69,21 @@ public class EmphasisDelimiterInline : DelimiterInline
 
     public override string ToLiteral()
     {
-        return DelimiterCount > 0 ? new string(DelimiterChar, DelimiterCount) : string.Empty;
+        if (DelimiterCount == 1)
+        {
+            return DelimiterChar switch
+            {
+                '*' => "*",
+                '_' => "_",
+                '~' => "~",
+                '^' => "^",
+                '+' => "+",
+                '=' => "=",
+                _ => DelimiterChar.ToString()
+            };
+        }
+
+        return new string(DelimiterChar, DelimiterCount);
     }
 
     public LiteralInline AsLiteralInline()
