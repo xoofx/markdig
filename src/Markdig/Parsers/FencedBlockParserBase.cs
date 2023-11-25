@@ -40,7 +40,8 @@ public abstract class FencedBlockParserBase : BlockParser, IAttributesParseable
 /// <seealso cref="BlockParser" />
 public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T : Block, IFencedBlock
 {
-    private static readonly TransformedStringCache _infoStringCache = new(static infoString => HtmlHelper.Unescape(infoString));
+    private static readonly TransformedStringCache s_infoStringCache = new(static infoString => HtmlHelper.Unescape(infoString));
+    private static readonly TransformedStringCache s_argumentsStringCache = new(static argumentsString => HtmlHelper.Unescape(argumentsString));
     private TransformedStringCache? _infoPrefixCache;
 
     /// <summary>
@@ -176,7 +177,7 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
 
     end:
         fenced.TriviaAfterFencedChar = afterFence;
-        fenced.Info = _infoStringCache.Get(info.AsSpan());
+        fenced.Info = s_infoStringCache.Get(info.AsSpan());
         fenced.UnescapedInfo = info;
         fenced.TriviaAfterInfo = afterInfo;
         fenced.Arguments = HtmlHelper.Unescape(arg.ToString());
@@ -197,71 +198,47 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
     /// <returns><c>true</c> if parsing of the line is successfull; <c>false</c> otherwise</returns>
     public static bool DefaultInfoParser(BlockProcessor state, ref StringSlice line, IFencedBlock fenced, char openingCharacter)
     {
-        // An info string cannot contain any backticks (unless it is a tilde block)
         int firstSpace = -1;
-        if (openingCharacter == '`')
+        ReadOnlySpan<char> lineSpan = line.AsSpan();
+
+        if (!lineSpan.IsEmpty)
         {
-            for (int i = line.Start; i <= line.End; i++)
+            if (openingCharacter == '`')
             {
-                char c = line.Text[i];
-                if (c == '`')
+                firstSpace = lineSpan.IndexOfAny(' ', '\t', '`');
+
+                // An info string cannot contain any backticks (unless it is a tilde block)
+                if (firstSpace >= 0 && lineSpan.Slice(firstSpace).Contains('`'))
                 {
                     return false;
                 }
-
-                if (firstSpace < 0 && c.IsSpaceOrTab())
-                {
-                    firstSpace = i;
-                }
             }
-        }
-        else
-        {
-            for (int i = line.Start; i <= line.End; i++)
+            else
             {
-                if (line.Text[i].IsSpaceOrTab())
-                {
-                    firstSpace = i;
-                    break;
-                }
+                firstSpace = lineSpan.IndexOfAny(' ', '\t');
             }
         }
 
         StringSlice infoStringSlice;
-        string? argString = null;
 
-        if (firstSpace > 0)
+        if (firstSpace >= 0)
         {
+            firstSpace += line.Start;
             infoStringSlice = new StringSlice(line.Text, line.Start, firstSpace - 1);
-
-            // Skip any spaces after info string
-            firstSpace++;
-            while (firstSpace <= line.End)
-            {
-                char c = line[firstSpace];
-                if (c.IsSpaceOrTab())
-                {
-                    firstSpace++;
-                }
-                else
-                {
-                    break;
-                }
-            }
 
             var argStringSlice = new StringSlice(line.Text, firstSpace, line.End);
             argStringSlice.Trim();
-            argString = argStringSlice.ToString();
+            fenced.Arguments = s_argumentsStringCache.Get(argStringSlice.AsSpan());
         }
         else
         {
             infoStringSlice = line;
+            fenced.Arguments = string.Empty;
         }
 
         infoStringSlice.Trim();
 
-        fenced.Info = _infoStringCache.Get(infoStringSlice.AsSpan());
-        fenced.Arguments = HtmlHelper.Unescape(argString);
+        fenced.Info = s_infoStringCache.Get(infoStringSlice.AsSpan());
 
         return true;
     }
@@ -303,17 +280,19 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
         // Try to parse any attached attributes
         TryParseAttributes?.Invoke(processor, ref line, fenced);
 
-        // If the info parser was not successfull, early exit
+        // If the info parser was not successful, early exit
         if (InfoParser != null && !InfoParser(processor, ref line, fenced, matchChar))
         {
             return BlockState.None;
         }
 
         // Add the language as an attribute by default
-        if (!string.IsNullOrEmpty(fenced.Info))
+        string? info = fenced.Info;
+
+        if (!string.IsNullOrEmpty(info))
         {
             Debug.Assert(_infoPrefixCache is not null || InfoPrefix is null);
-            string infoWithPrefix = _infoPrefixCache?.Get(fenced.Info!) ?? fenced.Info!;
+            string infoWithPrefix = _infoPrefixCache?.Get(info!) ?? info!;
             fenced.GetAttributes().AddClass(infoWithPrefix);
         }
 
