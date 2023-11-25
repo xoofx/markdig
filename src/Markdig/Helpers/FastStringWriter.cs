@@ -278,8 +278,7 @@ internal sealed class FastStringWriter : TextWriter
         _pos = 0;
     }
 
-    public override string ToString()
-    {
-        return _chars.AsSpan(0, _pos).ToString();
-    }
+    public override string ToString() => AsSpan().ToString();
+
+    public ReadOnlySpan<char> AsSpan() => _chars.AsSpan(0, _pos);
 }

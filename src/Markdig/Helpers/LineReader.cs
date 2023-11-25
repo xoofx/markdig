@@ -53,7 +53,7 @@ public struct LineReader
         else
         {
 #if NETCOREAPP3_1_OR_GREATER
-            ReadOnlySpan<char> span = MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), sourcePosition), end - sourcePosition);
+            ReadOnlySpan<char> span = MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(in text.GetPinnableReference()), sourcePosition), end - sourcePosition);
 #else
             ReadOnlySpan<char> span = text.AsSpan(sourcePosition);
 #endif
@@ -65,7 +65,7 @@ public struct LineReader
                 newSourcePosition = end + 1;
 
 #if NETCOREAPP3_1_OR_GREATER
-                if (Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), end) == '\r')
+                if (Unsafe.Add(ref Unsafe.AsRef(in text.GetPinnableReference()), end) == '\r')
 #else
                 if ((uint)end < (uint)text.Length && text[end] == '\r')
 #endif

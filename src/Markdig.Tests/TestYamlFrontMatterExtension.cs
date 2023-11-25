@@ -75,8 +75,11 @@ public class TestYamlFrontMatterExtension
             ObjectRenderers = new ObjectRendererCollection();
         }
 
+#pragma warning disable CS0067 // ObjectWriteBefore/ObjectWriteAfter is never used
         public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteBefore;
         public event Action<IMarkdownRenderer, MarkdownObject> ObjectWriteAfter;
+#pragma warning restore CS0067
+
         public ObjectRendererCollection ObjectRenderers { get; }
         public object Render(MarkdownObject markdownObject)
         {

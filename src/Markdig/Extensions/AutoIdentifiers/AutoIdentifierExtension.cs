@@ -20,8 +20,10 @@ namespace Markdig.Extensions.AutoIdentifiers;
 public class AutoIdentifierExtension : IMarkdownExtension
 {
     private const string AutoIdentifierKey = "AutoIdentifier";
-    private readonly AutoIdentifierOptions options;
-    private readonly StripRendererCache rendererCache = new StripRendererCache();
+
+    private static readonly StripRendererCache _rendererCache = new();
+
+    private readonly AutoIdentifierOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AutoIdentifierExtension"/> class.
@@ -29,7 +31,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
     /// <param name="options">The options.</param>
     public AutoIdentifierExtension(AutoIdentifierOptions options)
     {
-        this.options = options;
+        _options = options;
     }
 
     public void Setup(MarkdownPipelineBuilder pipeline)
@@ -68,7 +70,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
         }
 
         // If the AutoLink options is set, we register a LinkReferenceDefinition at the document level
-        if ((options & AutoIdentifierOptions.AutoLink) != 0)
+        if ((_options & AutoIdentifierOptions.AutoLink) != 0)
         {
             var headingLine = headingBlock.Lines.Lines[0];
 
@@ -157,16 +159,17 @@ public class AutoIdentifierExtension : IMarkdownExtension
         }
 
         // Use internally a HtmlRenderer to strip links from a heading
-        var stripRenderer = rendererCache.Get();
+        var stripRenderer = _rendererCache.Get();
 
         stripRenderer.Render(headingBlock.Inline);
-        var headingText = stripRenderer.Writer.ToString()!;
-        rendererCache.Release(stripRenderer);
+        ReadOnlySpan<char> rawHeadingText = ((FastStringWriter)stripRenderer.Writer).AsSpan();
 
         // Urilize the link
-        headingText = (options & AutoIdentifierOptions.GitHub) != 0
-            ? LinkHelper.UrilizeAsGfm(headingText)
-            : LinkHelper.Urilize(headingText, (options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
+        string headingText = (_options & AutoIdentifierOptions.GitHub) != 0
+            ? LinkHelper.UrilizeAsGfm(rawHeadingText)
+            : LinkHelper.Urilize(rawHeadingText, (_options & AutoIdentifierOptions.AllowOnlyAscii) != 0);
+
+        _rendererCache.Release(stripRenderer);
 
         // If the heading is empty, use the word "section" instead
         var baseHeadingId = string.IsNullOrEmpty(headingText) ? "section" : headingText;
@@ -197,7 +200,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
     {
         protected override HtmlRenderer NewInstance()
         {
-            var headingWriter = new StringWriter();
+            var headingWriter = new FastStringWriter();
             var stripRenderer = new HtmlRenderer(headingWriter)
             {
                 // Set to false both to avoid having any HTML tags in the output
@@ -209,7 +212,9 @@ public class AutoIdentifierExtension : IMarkdownExtension
 
         protected override void Reset(HtmlRenderer instance)
         {
-            instance.Reset();
+            instance.ResetInternal();
+
+            ((FastStringWriter)instance.Writer).Reset();
         }
     }
 }

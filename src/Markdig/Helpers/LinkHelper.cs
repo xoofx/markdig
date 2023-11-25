@@ -20,6 +20,11 @@ public static class LinkHelper
 
     public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
     {
+        return Urilize(headingText.AsSpan(), allowOnlyAscii, keepOpeningDigits);
+    }
+
+    public static string Urilize(ReadOnlySpan<char> headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
+    {
         var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
         bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
         bool previousIsSpace = false;
@@ -96,14 +101,23 @@ public static class LinkHelper
 
     public static string UrilizeAsGfm(string headingText)
     {
+        return UrilizeAsGfm(headingText.AsSpan());
+    }
+
+    public static string UrilizeAsGfm(ReadOnlySpan<char> headingText)
+    {
         // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
         var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
         for (int i = 0; i < headingText.Length; i++)
         {
             var c = headingText[i];
-            if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+            if (char.IsLetterOrDigit(c) || c == '-' || c == '_')
             {
-                headingBuffer.Append(c == ' ' ? '-' : char.ToLowerInvariant(c));
+                headingBuffer.Append(char.ToLowerInvariant(c));
+            }
+            else if (c == ' ')
+            {
+                headingBuffer.Append('-');
             }
         }
         return headingBuffer.ToString();

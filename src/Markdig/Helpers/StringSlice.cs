@@ -475,7 +475,7 @@ public struct StringSlice : ICharIterator
         }
 
 #if NETCOREAPP3_1_OR_GREATER
-        return MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(text.GetPinnableReference()), start), length);
+        return MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(in text.GetPinnableReference()), start), length);
 #else
         return text.AsSpan(start, length);
 #endif

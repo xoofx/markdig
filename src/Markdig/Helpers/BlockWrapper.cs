@@ -22,7 +22,7 @@ internal readonly struct BlockWrapper : IEquatable<BlockWrapper>
 
     public bool Equals(BlockWrapper other) => ReferenceEquals(Block, other.Block);
 
-    public override bool Equals(object obj) => Block.Equals(obj);
+    public override bool Equals(object? obj) => Block.Equals(obj);
 
     public override int GetHashCode() => Block.GetHashCode();
 }

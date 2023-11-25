@@ -19,16 +19,10 @@ namespace Markdig;
 /// </summary>
 public static class Markdown
 {
-    public static string Version
-    {
-        get
-        {
-            if (_Version == null)
-                _Version = ((AssemblyFileVersionAttribute)typeof(Markdown).Assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false).FirstOrDefault())?.Version ?? "Unknown";
-            return _Version;
-        }
-    }
-    private static string? _Version;
+    public static string Version =>
+        s_version ??= typeof(Markdown).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
+
+    private static string? s_version;
 
     internal static readonly MarkdownPipeline DefaultPipeline = new MarkdownPipelineBuilder().Build();
     private static readonly MarkdownPipeline _defaultTrackTriviaPipeline = new MarkdownPipelineBuilder().EnableTrackTrivia().Build();
