@@ -4,7 +4,7 @@
 
 #if !NET8_0_OR_GREATER
 
-namespace System;
+namespace System.Text;
 
 internal static class Ascii
 {
