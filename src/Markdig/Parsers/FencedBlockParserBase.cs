@@ -308,34 +308,32 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var fence = (IFencedBlock)block;
-        var openingCount = fence.OpeningFencedCharCount;
 
         // Match if we have a closing fence
         var line = processor.Line;
         var sourcePosition = processor.Start;
         var closingCount = line.CountAndSkipChar(fence.FencedChar);
-        var diff = openingCount - closingCount;
 
         char c = line.CurrentChar;
-        var lastFenceCharPosition = processor.Start + closingCount;
 
         // If we have a closing fence, close it and discard the current line
         // The line must contain only fence opening character followed only by whitespaces.
         var startBeforeTrim = line.Start;
-        var endBeforeTrim = line.End;
-        var trimmed = line.TrimEnd();
-        if (diff <= 0 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && trimmed)
+
+        if (fence.OpeningFencedCharCount <= closingCount &&
+            !processor.IsCodeIndent &&
+            (c == '\0' || c.IsWhitespace()) &&
+            line.TrimEnd())
         {
             block.UpdateSpanEnd(startBeforeTrim - 1);
 
-            var fencedBlock = (IFencedBlock)block;
-            fencedBlock.ClosingFencedCharCount = closingCount;
+            fence.ClosingFencedCharCount = closingCount;
 
             if (processor.TrackTrivia)
             {
-                fencedBlock.NewLine = processor.Line.NewLine;
-                fencedBlock.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
-                fencedBlock.TriviaAfter = new StringSlice(processor.Line.Text, lastFenceCharPosition, endBeforeTrim);
+                fence.NewLine = line.NewLine;
+                fence.TriviaBeforeClosingFence = processor.UseTrivia(sourcePosition - 1);
+                fence.TriviaAfter = new StringSlice(line.Text, processor.Start + closingCount, processor.Line.End);
             }
 
             // Don't keep the last line
