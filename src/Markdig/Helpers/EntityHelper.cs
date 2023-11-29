@@ -31,6 +31,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.Text;
+
 namespace Markdig.Helpers;
 
 /// <summary>
@@ -57,41 +59,31 @@ public static class EntityHelper
     /// <returns>The unicode character set or <c>null</c> if the entity was not recognized.</returns>
     public static string DecodeEntity(int utf32)
     {
-        if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+        if (utf32 == 0 || !UnicodeUtility.IsValidUnicodeScalar((uint)utf32))
             return CharHelper.ReplacementCharString;
 
-        if (utf32 < 65536)
+        if (UnicodeUtility.IsBmpCodePoint((uint)utf32))
             return char.ToString((char)utf32);
 
-        utf32 -= 65536;
-        return new string(
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-            stackalloc
-#else
-            new
-#endif
-            char[]
-        {
-            (char)((uint)utf32 / 1024 + 55296),
-            (char)((uint)utf32 % 1024 + 56320)
-        });
+        UnicodeUtility.GetUtf16SurrogatesFromSupplementaryPlaneScalar((uint)utf32, out char high, out char low);
+        return new string([high, low]);
     }
 
     internal static void DecodeEntity(int utf32, ref ValueStringBuilder sb)
     {
-        if (!CharHelper.IsInInclusiveRange(utf32, 1, 1114111) || CharHelper.IsInInclusiveRange(utf32, 55296, 57343))
+        if (utf32 == 0 || !UnicodeUtility.IsValidUnicodeScalar((uint)utf32))
         {
             sb.Append(CharHelper.ReplacementChar);
         }
-        else if (utf32 < 65536)
+        else if (UnicodeUtility.IsBmpCodePoint((uint)utf32))
         {
             sb.Append((char)utf32);
         }
         else
         {
-            utf32 -= 65536;
-            sb.Append((char)((uint)utf32 / 1024 + 55296));
-            sb.Append((char)((uint)utf32 % 1024 + 56320));
+            UnicodeUtility.GetUtf16SurrogatesFromSupplementaryPlaneScalar((uint)utf32, out char high, out char low);
+            sb.Append(high);
+            sb.Append(low);
         }
     }
 

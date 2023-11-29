@@ -41,6 +41,13 @@ internal static class IndexOfHelpers
         return -1;
     }
 #endif
+
+#if !NET6_0_OR_GREATER
+    public static bool Contains<T>(this ReadOnlySpan<T> span, T value) where T : IEquatable<T>
+    {
+        return span.IndexOf(value) >= 0;
+    }
+#endif
 }
 
 #endif

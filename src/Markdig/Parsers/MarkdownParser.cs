@@ -53,34 +53,11 @@ public static class MarkdownParser
         {
             blockProcessor.Open(document);
 
-            ProcessBlocks(blockProcessor, new LineReader(text));
+            ProcessBlocks(blockProcessor, text);
 
             if (pipeline.TrackTrivia)
             {
-                Block? lastBlock = blockProcessor.LastBlock;
-                if (lastBlock is null && document.Count == 0)
-                {
-                    // this means we have unassigned characters
-                    var noBlocksFoundBlock = new EmptyBlock(null);
-                    List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
-                    noBlocksFoundBlock.LinesAfter = new List<StringSlice>();
-                    if (linesBefore != null)
-                    {
-                        noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
-                    }
-
-                    document.Add(noBlocksFoundBlock);
-                }
-                else if (lastBlock != null && blockProcessor.LinesBefore != null)
-                {
-                    // this means we're out of lines, but still have unassigned empty lines.
-                    // thus, we'll assign the empty unsassigned lines to the last block
-                    // of the document.
-                    var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
-                    rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
-                    var linesBefore = blockProcessor.UseLinesBefore();
-                    rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
-                }
+                ProcessBlocksTrivia(blockProcessor, document);
             }
 
             // At this point the LineIndex is the same as the number of lines in the document
@@ -117,12 +94,15 @@ public static class MarkdownParser
         return text.Replace('\0', CharHelper.ReplacementChar);
     }
 
-    private static void ProcessBlocks(BlockProcessor blockProcessor, LineReader lineReader)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ProcessBlocks(BlockProcessor blockProcessor, string text)
     {
+        var lineReader = new LineReader(text);
+
         while (true)
         {
-            // Get the precise position of the begining of the line
-            var lineText = lineReader.ReadLine();
+            // Get the precise position of the beginning of the line
+            StringSlice lineText = lineReader.ReadLine();
 
             // If this is the end of file and the last line is empty
             if (lineText.Text is null)
@@ -132,9 +112,39 @@ public static class MarkdownParser
 
             blockProcessor.ProcessLine(lineText);
         }
+
         blockProcessor.CloseAll(true);
     }
 
+    private static void ProcessBlocksTrivia(BlockProcessor blockProcessor, MarkdownDocument document)
+    {
+        Block? lastBlock = blockProcessor.LastBlock;
+        if (lastBlock is null && document.Count == 0)
+        {
+            // this means we have unassigned characters
+            var noBlocksFoundBlock = new EmptyBlock(null);
+            List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
+            noBlocksFoundBlock.LinesAfter = [];
+            if (linesBefore != null)
+            {
+                noBlocksFoundBlock.LinesAfter.AddRange(linesBefore);
+            }
+
+            document.Add(noBlocksFoundBlock);
+        }
+        else if (lastBlock != null && blockProcessor.LinesBefore != null)
+        {
+            // this means we're out of lines, but still have unassigned empty lines.
+            // thus, we'll assign the empty unsassigned lines to the last block
+            // of the document.
+            var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
+            rootMostContainerBlock.LinesAfter ??= [];
+            var linesBefore = blockProcessor.UseLinesBefore();
+            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void ProcessInlines(InlineProcessor inlineProcessor, MarkdownDocument document)
     {
         // "stackless" processor

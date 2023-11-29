@@ -80,7 +80,7 @@ internal static class ThrowHelper
         if (depth > limit)
             DepthLimitExceeded();
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [DoesNotReturn]
         static void DepthLimitExceeded() => throw new ArgumentException("Markdown elements in the input are too deeply nested - depth limit exceeded. Input is most likely not sensible or is a very large table.");
     }
 
