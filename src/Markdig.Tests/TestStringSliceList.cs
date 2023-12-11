@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 
 using Markdig.Helpers;
@@ -214,5 +215,21 @@ public class TestStringSliceList
         var chars = ToString(iterator);
         TextAssert.AreEqual("ABC\r\nD\r\n", chars.ToString());
         TextAssert.AreEqual("ABC\r\nD", text.ToString());
+    }
+
+    [Test]
+    public void TestStringLineGroup_EnumeratorReturnsRealLines()
+    {
+        string str = "A\r\n";
+        var text = new StringLineGroup(4)
+        {
+            new StringSlice(str, NewLine.CarriageReturnLineFeed) { Start = 0, End = 0 }
+        };
+
+        var enumerator = ((IEnumerable)text).GetEnumerator();
+        Assert.True(enumerator.MoveNext());
+        StringLine currentLine = (StringLine)enumerator.Current;
+        TextAssert.AreEqual("A", currentLine.ToString());
+        Assert.False(enumerator.MoveNext());
     }
 }

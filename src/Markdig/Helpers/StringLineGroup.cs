@@ -187,9 +187,40 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
+    private struct Enumerator : IEnumerator
+    {
+        private readonly StringLineGroup _parent;
+        private int _index;
+
+        public Enumerator(StringLineGroup parent)
+        {
+            _parent = parent;
+            _index = -1;
+        }
+
+        public object Current => _parent.Lines[_index];
+
+        public bool MoveNext()
+        {
+            if (++_index < _parent.Count)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void Reset()
+        {
+            _index = -1;
+        }
+    }
+
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return Lines.GetEnumerator();
+        return new Enumerator(this);
     }
 
     private void IncreaseCapacity()
