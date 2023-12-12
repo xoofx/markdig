@@ -187,7 +187,7 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
-    private struct Enumerator : IEnumerator
+    public struct Enumerator : IEnumerator
     {
         private readonly StringLineGroup _parent;
         private int _index;
@@ -210,10 +210,15 @@ public struct StringLineGroup : IEnumerable
             _index = -1;
         }
     }
-
-    IEnumerator IEnumerable.GetEnumerator()
+    
+    public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() 
+    {
+        (IEnumerator)GetEnumerator();
     }
 
     private void IncreaseCapacity()
