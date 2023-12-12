@@ -231,5 +231,12 @@ public class TestStringSliceList
         StringLine currentLine = (StringLine)enumerator.Current;
         TextAssert.AreEqual("A", currentLine.ToString());
         Assert.False(enumerator.MoveNext());
+        
+        var nonBoxedEnumerator = text.GetEnumerator();
+
+        Assert.True(nonBoxedEnumerator.MoveNext());
+        currentLine = (StringLine)nonBoxedEnumerator.Current;
+        TextAssert.AreEqual("A", currentLine.ToString());
+        Assert.False(nonBoxedEnumerator.MoveNext());
     }
 }
