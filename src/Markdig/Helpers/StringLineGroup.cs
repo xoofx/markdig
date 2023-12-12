@@ -202,14 +202,7 @@ public struct StringLineGroup : IEnumerable
 
         public bool MoveNext()
         {
-            if (++_index < _parent.Count)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ++_index < _parent.Count;
         }
 
         public void Reset()
