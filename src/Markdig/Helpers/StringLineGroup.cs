@@ -218,7 +218,7 @@ public struct StringLineGroup : IEnumerable
 
     IEnumerator IEnumerable.GetEnumerator() 
     {
-        (IEnumerator)GetEnumerator();
+        return GetEnumerator();
     }
 
     private void IncreaseCapacity()
