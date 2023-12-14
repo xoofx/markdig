@@ -225,7 +225,7 @@ public class InlineProcessor
         previousLineIndexForSliceOffset = 0;
         lineOffsets.Clear();
         var text = leafBlock.Lines.ToSlice(lineOffsets);
-        var textEnd = text.Length;
+        var textEnd = text.End;
         leafBlock.Lines.Release();
         int previousStart = -1;
 
@@ -320,7 +320,7 @@ public class InlineProcessor
                 var newLine = leafBlock.NewLine;
                 if (newLine != NewLine.None)
                 {
-                    var position = GetSourcePosition(textEnd, out int line, out int column);
+                    var position = GetSourcePosition(textEnd + 1, out int line, out int column);
                     leafBlock.Inline.AppendChild(new LineBreakInline { NewLine = newLine, Line = line, Column = column, Span = { Start = position, End = position + (newLine == NewLine.CarriageReturnLineFeed ? 1 : 0) } });
                 }
             }
