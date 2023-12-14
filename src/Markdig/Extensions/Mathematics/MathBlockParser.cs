@@ -20,7 +20,7 @@ public class MathBlockParser : FencedBlockParserBase<MathBlock>
     /// </summary>
     public MathBlockParser()
     {
-        OpeningCharacters = new [] {'$'};
+        OpeningCharacters = ['$'];
         // We expect to match only a $$, no less, no more
         MinimumMatchCount = 2;
         MaximumMatchCount = 2;

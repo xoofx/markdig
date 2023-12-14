@@ -22,7 +22,7 @@ public class FootnoteParser : BlockParser
 
     public FootnoteParser()
     {
-        OpeningCharacters = new [] {'['};
+        OpeningCharacters = ['['];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

@@ -26,7 +26,7 @@ public delegate void ProcessInlineDelegate(InlineProcessor processor, Inline? in
 /// </summary>
 public class InlineProcessor
 {
-    private readonly List<StringLineGroup.LineOffset> lineOffsets = new();
+    private readonly List<StringLineGroup.LineOffset> lineOffsets = [];
     private int previousSliceOffset;
     private int previousLineIndexForSliceOffset;
 

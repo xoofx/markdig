@@ -20,7 +20,7 @@ public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
     /// </summary>
     public FencedCodeBlockParser()
     {
-        OpeningCharacters = new[] {'`', '~'};
+        OpeningCharacters = ['`', '~'];
         InfoPrefix = DefaultInfoPrefix;
     }
 

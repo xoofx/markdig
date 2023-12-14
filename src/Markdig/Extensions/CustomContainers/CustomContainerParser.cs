@@ -17,7 +17,7 @@ public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
     /// </summary>
     public CustomContainerParser()
     {
-        OpeningCharacters = new [] {':'};
+        OpeningCharacters = [':'];
 
         // We don't need a prefix
         InfoPrefix = null;
