@@ -89,6 +89,38 @@ linebreak    ( 0,10) 10-11
 ", trackTrivia: true);
     }
 
+
+    [Test]
+    public void TestMultipleParagraphsWithEndNewLine()
+    {
+        Check("0123456789\n\n0123456789\n\n", @"
+paragraph    ( 0, 0)  0-10
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+paragraph    ( 2, 0) 12-22
+literal      ( 2, 0) 12-21
+linebreak    ( 2,10) 22-22
+", trackTrivia: true);
+
+        Check("0123456789\r\r0123456789\r\r", @"
+paragraph    ( 0, 0)  0-10
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-10
+paragraph    ( 2, 0) 12-22
+literal      ( 2, 0) 12-21
+linebreak    ( 2,10) 22-22
+", trackTrivia: true);
+
+        Check("0123456789\r\n\r\n0123456789\r\n\r\n", @"
+paragraph    ( 0, 0)  0-11
+literal      ( 0, 0)  0-9
+linebreak    ( 0,10) 10-11
+paragraph    ( 2, 0) 14-25
+literal      ( 2, 0) 14-23
+linebreak    ( 2,10) 24-25
+", trackTrivia: true);
+    }
+
     [Test]
     public void TestEmphasis()
     {
