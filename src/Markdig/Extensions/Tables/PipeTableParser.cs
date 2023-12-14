@@ -25,12 +25,12 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     /// <summary>
     /// Initializes a new instance of the <see cref="PipeTableParser" /> class.
     /// </summary>
-    /// <param name="lineBreakParser">The linebreak parser to use</param>
+    /// <param name="lineBreakParser">The line break parser to use</param>
     /// <param name="options">The options.</param>
     public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions? options = null)
     {
         this.lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
-        OpeningCharacters = new[] { '|', '\n', '\r' };
+        OpeningCharacters = ['|', '\n', '\r'];
         Options = options ?? new PipeTableOptions();
     }
 
@@ -637,10 +637,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         public int LineIndex { get; set; }
 
-        public List<Inline> ColumnAndLineDelimiters { get; } = new();
+        public List<Inline> ColumnAndLineDelimiters { get; } = [];
 
-        public List<TableCell> Cells { get; } = new();
+        public List<TableCell> Cells { get; } = [];
 
-        public List<Inline> EndOfLines { get; } = new();
+        public List<Inline> EndOfLines { get; } = [];
     }
 }

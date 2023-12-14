@@ -35,7 +35,7 @@ public sealed class CharacterMap<T> where T : class
             charSet.Add(map.Key);
         }
 
-        OpeningCharacters = charSet.ToArray();
+        OpeningCharacters = [.. charSet];
         Array.Sort(OpeningCharacters);
 
         _asciiMap = new T[128];

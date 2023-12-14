@@ -24,8 +24,8 @@ public class MarkdownPipelineBuilder
     public MarkdownPipelineBuilder()
     {
         // Add all default parsers
-        BlockParsers = new OrderedList<BlockParser>()
-        {
+        BlockParsers =
+        [
             new ThematicBreakParser(),
             new HeadingBlockParser(),
             new QuoteBlockParser(),
@@ -35,10 +35,10 @@ public class MarkdownPipelineBuilder
             new FencedCodeBlockParser(),
             new IndentedCodeBlockParser(),
             new ParagraphBlockParser(),
-        };
+        ];
 
-        InlineParsers = new OrderedList<InlineParser>()
-        {
+        InlineParsers =
+        [
             new HtmlEntityParser(),
             new LinkInlineParser(),
             new EscapeInlineParser(),
@@ -46,7 +46,7 @@ public class MarkdownPipelineBuilder
             new CodeInlineParser(),
             new AutolinkInlineParser(),
             new LineBreakInlineParser(),
-        };
+        ];
 
         Extensions = new OrderedList<IMarkdownExtension>();
     }
