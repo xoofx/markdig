@@ -23,7 +23,7 @@ public class GenericAttributesParser : InlineParser
     /// </summary>
     public GenericAttributesParser()
     {
-        OpeningCharacters = new[] { '{' };
+        OpeningCharacters = ['{'];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -136,10 +136,7 @@ public class GenericAttributesParser : InlineParser
                 var text = slice.Text.Substring(start, end - start + 1);
                 if (isClass)
                 {
-                    if (classes is null)
-                    {
-                        classes = new List<string>();
-                    }
+                    classes ??= new List<string>();
                     classes.Add(text);
                 }
                 else

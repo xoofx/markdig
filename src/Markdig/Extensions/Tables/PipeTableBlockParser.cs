@@ -22,7 +22,7 @@ public class PipeTableBlockParser : BlockParser
     /// </summary>
     public PipeTableBlockParser()
     {
-        OpeningCharacters = new[] {'-'};
+        OpeningCharacters = ['-'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

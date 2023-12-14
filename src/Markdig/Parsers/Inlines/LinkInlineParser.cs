@@ -19,7 +19,7 @@ public class LinkInlineParser : InlineParser
     /// </summary>
     public LinkInlineParser()
     {
-        OpeningCharacters = new[] {'[', ']', '!'};
+        OpeningCharacters = ['[', ']', '!'];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -322,7 +322,7 @@ public class LinkInlineParser : InlineParser
 
         if (label != null || LinkHelper.TryParseLabelTrivia(ref text, true, out label, out labelSpan))
         {
-            SourceSpan labelWithTrivia = new SourceSpan(labelSpan.Start, labelSpan.End);
+            var labelWithTrivia = new SourceSpan(labelSpan.Start, labelSpan.End);
             if (isLabelSpanLocal)
             {
                 labelSpan = inlineState.GetSourcePositionFromLocalSpan(labelSpan);

@@ -15,7 +15,7 @@ public class EscapeInlineParser : InlineParser
 {
     public EscapeInlineParser()
     {
-        OpeningCharacters = new[] {'\\'};
+        OpeningCharacters = ['\\'];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)

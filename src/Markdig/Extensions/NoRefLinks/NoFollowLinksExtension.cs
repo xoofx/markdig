@@ -17,7 +17,7 @@ public class NoFollowLinksExtension : IMarkdownExtension
 
     public NoFollowLinksExtension()
     {
-        _referralLinksExtension = new ReferralLinksExtension(new[] { "nofollow" });
+        _referralLinksExtension = new ReferralLinksExtension(["nofollow"]);
     }
 
     public void Setup(MarkdownPipelineBuilder pipeline)

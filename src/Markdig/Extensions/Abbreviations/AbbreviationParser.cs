@@ -20,7 +20,7 @@ public class AbbreviationParser : BlockParser
     /// </summary>
     public AbbreviationParser()
     {
-        OpeningCharacters = new[] { '*' };
+        OpeningCharacters = ['*'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

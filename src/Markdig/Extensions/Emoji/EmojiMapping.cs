@@ -1786,6 +1786,6 @@ public class EmojiMapping
                 ThrowHelper.ArgumentException(string.Format("Smiley {0} is already present in the emoji mapping", smiley.Key));
         }
 
-        OpeningCharacters = new List<char>(firstChars).ToArray();
+        OpeningCharacters = [.. firstChars];
     }
 }

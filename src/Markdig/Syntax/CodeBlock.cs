@@ -21,7 +21,7 @@ public class CodeBlock : LeafBlock
     }
 
     private List<CodeBlockLine>? _codeBlockLines;
-    public List<CodeBlockLine> CodeBlockLines => _codeBlockLines ??= new();
+    public List<CodeBlockLine> CodeBlockLines => _codeBlockLines ??= [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeBlock"/> class.

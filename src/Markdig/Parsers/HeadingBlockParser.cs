@@ -20,7 +20,7 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
     /// </summary>
     public HeadingBlockParser()
     {
-        OpeningCharacters = new[] {'#'};
+        OpeningCharacters = ['#'];
     }
 
     /// <summary>

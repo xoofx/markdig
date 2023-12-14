@@ -12,7 +12,7 @@ public class GridTableParser : BlockParser
 {
     public GridTableParser()
     {
-        OpeningCharacters = new[] { '+' };
+        OpeningCharacters = ['+'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

@@ -19,7 +19,7 @@ public class TaskListInlineParser : InlineParser
     /// </summary>
     public TaskListInlineParser()
     {
-        OpeningCharacters = new[] {'['};
+        OpeningCharacters = ['['];
         ListClass = "contains-task-list";
         ListItemClass = "task-list-item";
     }
