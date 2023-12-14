@@ -12,14 +12,14 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{HeadingBlock}" />
 public class HeadingRenderer : NormalizeObjectRenderer<HeadingBlock>
 {
-    private static readonly string[] HeadingTexts = {
+    private static readonly string[] HeadingTexts = [
         "#",
         "##",
         "###",
         "####",
         "#####",
         "######",
-    };
+    ];
 
     protected override void Write(NormalizeRenderer renderer, HeadingBlock obj)
     {

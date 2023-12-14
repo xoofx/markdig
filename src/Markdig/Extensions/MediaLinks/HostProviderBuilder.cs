@@ -71,7 +71,7 @@ public class HostProviderBuilder
 
     #region Known providers
 
-    private static readonly string[] SplitAnd = { "&" };
+    private static readonly string[] SplitAnd = ["&"];
     private static string[] SplitQuery(Uri uri)
     {
         var query = uri.Query.Substring(uri.Query.IndexOf('?') + 1);
