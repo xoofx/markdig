@@ -144,6 +144,8 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
         return this;
     }
 
+    private static readonly SearchValues<char> s_escapedChars = SearchValues.Create("<>&\"");
+
     /// <summary>
     /// Writes the content escaped for HTML.
     /// </summary>
@@ -159,7 +161,7 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
             {
                 int indexOfCharToEscape = softEscape
                     ? content.IndexOfAny('<', '&')
-                    : content.IndexOfAny("<>&\"");
+                    : content.IndexOfAny(s_escapedChars);
 
                 if ((uint)indexOfCharToEscape >= (uint)content.Length)
                 {
