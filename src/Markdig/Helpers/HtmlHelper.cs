@@ -13,7 +13,7 @@ namespace Markdig.Helpers;
 public static class HtmlHelper
 {
     private static readonly char[] SearchBackAndAmp = ['\\', '&'];
-    private static readonly char[] SearchAmp = { '&' };
+    private static readonly char[] SearchAmp = ['&'];
     private static readonly string[] EscapeUrlsForAscii = new string[128];
 
     static HtmlHelper()

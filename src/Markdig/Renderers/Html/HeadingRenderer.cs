@@ -12,14 +12,14 @@ namespace Markdig.Renderers.Html;
 /// <seealso cref="HtmlObjectRenderer{HeadingBlock}" />
 public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
 {
-    private static readonly string[] HeadingTexts = {
+    private static readonly string[] HeadingTexts = [
         "h1",
         "h2",
         "h3",
         "h4",
         "h5",
         "h6",
-    };
+    ];
 
     protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
     {

@@ -18,7 +18,7 @@ public class QuoteBlockParser : BlockParser
     /// </summary>
     public QuoteBlockParser()
     {
-        OpeningCharacters = new[] {'>'};
+        OpeningCharacters = ['>'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

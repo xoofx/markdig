@@ -21,7 +21,7 @@ public class CodeInlineParser : InlineParser
     /// </summary>
     public CodeInlineParser()
     {
-        OpeningCharacters = new[] { '`' };
+        OpeningCharacters = ['`'];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
