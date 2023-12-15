@@ -187,16 +187,10 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
-    public struct Enumerator : IEnumerator
+    public struct Enumerator(StringLineGroup parent) : IEnumerator
     {
-        private readonly StringLineGroup _parent;
-        private int _index;
-
-        public Enumerator(StringLineGroup parent)
-        {
-            _parent = parent;
-            _index = -1;
-        }
+        private readonly StringLineGroup _parent = parent;
+        private int _index = -1;
 
         public object Current => _parent.Lines[_index];
 
@@ -452,25 +446,21 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
-    public readonly struct LineOffset
+    public readonly struct LineOffset(
+        int linePosition,
+        int column,
+        int offset,
+        int start,
+        int end)
     {
-        public LineOffset(int linePosition, int column, int offset, int start, int end)
-        {
-            LinePosition = linePosition;
-            Column = column;
-            Offset = offset;
-            Start = start;
-            End = end;
-        }
+        public readonly int LinePosition = linePosition;
 
-        public readonly int LinePosition;
+        public readonly int Column = column;
 
-        public readonly int Column;
+        public readonly int Offset = offset;
 
-        public readonly int Offset;
+        public readonly int Start = start;
 
-        public readonly int Start;
-
-        public readonly int End;
+        public readonly int End = end;
     }
 }

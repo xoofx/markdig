@@ -210,16 +210,10 @@ public static class MarkdownParser
         }
     }
 
-    private struct ContainerItem
+    private struct ContainerItem(ContainerBlock container)
     {
-        public ContainerItem(ContainerBlock container)
-        {
-            Container = container;
-            Index = 0;
-        }
+        public readonly ContainerBlock Container = container;
 
-        public readonly ContainerBlock Container;
-
-        public int Index;
+        public int Index = 0;
     }
 }

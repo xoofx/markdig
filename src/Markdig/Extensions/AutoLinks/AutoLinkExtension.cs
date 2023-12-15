@@ -11,14 +11,9 @@ namespace Markdig.Extensions.AutoLinks;
 /// Extension to automatically create <see cref="LinkInline"/> when a link url http: or mailto: is found.
 /// </summary>
 /// <seealso cref="IMarkdownExtension" />
-public class AutoLinkExtension : IMarkdownExtension
+public class AutoLinkExtension(AutoLinkOptions? options) : IMarkdownExtension
 {
-    public readonly AutoLinkOptions Options;
-
-    public AutoLinkExtension(AutoLinkOptions? options)
-    {
-        Options = options ?? new AutoLinkOptions();
-    }
+    public readonly AutoLinkOptions Options = options ?? new AutoLinkOptions();
 
     public void Setup(MarkdownPipelineBuilder pipeline)
     {

@@ -95,18 +95,14 @@ public sealed class MarkdownPipeline
         return new RentedHtmlRenderer(cache, renderer);
     }
 
-    internal sealed class HtmlRendererCache : ObjectCache<HtmlRenderer>
+    internal sealed class HtmlRendererCache(
+        MarkdownPipeline pipeline,
+        bool customWriter = false) : ObjectCache<HtmlRenderer>
     {
-        private static readonly TextWriter s_dummyWriter = new FastStringWriter();
+        private static readonly FastStringWriter s_dummyWriter = new();
 
-        private readonly MarkdownPipeline _pipeline;
-        private readonly bool _customWriter;
-
-        public HtmlRendererCache(MarkdownPipeline pipeline, bool customWriter = false)
-        {
-            _pipeline = pipeline;
-            _customWriter = customWriter;
-        }
+        private readonly MarkdownPipeline _pipeline = pipeline;
+        private readonly bool _customWriter = customWriter;
 
         protected override HtmlRenderer NewInstance()
         {
