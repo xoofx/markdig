@@ -273,10 +273,7 @@ public class GridTableParser : BlockParser
                         ColumnIndex = i
                     };
 
-                    if (columnSlice.BlockProcessor is null)
-                    {
-                        columnSlice.BlockProcessor = processor.CreateChild();
-                    }
+                    columnSlice.BlockProcessor ??= processor.CreateChild();
 
                     // Ensure that the BlockParser is aware that the TableCell is the top-level container
                     columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);

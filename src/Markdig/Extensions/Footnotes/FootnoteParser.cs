@@ -49,7 +49,7 @@ public class FootnoteParser : BlockParser
 
         // Advance the column
         int deltaColumn = processor.Start - start;
-        processor.Column = processor.Column + deltaColumn;
+        processor.Column += deltaColumn;
 
         processor.NextChar(); // Skip ':'
 
@@ -170,10 +170,8 @@ public class FootnoteParser : BlockParser
                 paragraphBlock = new ParagraphBlock();
                 footnote.Add(paragraphBlock);
             }
-            if (paragraphBlock.Inline == null)
-            {
-                paragraphBlock.Inline = new ContainerInline();
-            }
+
+            paragraphBlock.Inline ??= new ContainerInline();
 
             foreach (var link in footnote.Links)
             {
