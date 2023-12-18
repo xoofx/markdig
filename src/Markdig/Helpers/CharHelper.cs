@@ -722,11 +722,11 @@ public static class CharHelper
     }
 
     // Used by ListExtraItemParser to format numbers from 1 - 26
-    private static readonly string[] smallNumberStringCache = {
+    private static readonly string[] smallNumberStringCache = [
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
         "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
         "20", "21", "22", "23", "24", "25", "26",
-    };
+    ];
 
     internal static string SmallNumberToString(int number)
     {

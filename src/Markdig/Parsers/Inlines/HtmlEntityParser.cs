@@ -21,7 +21,7 @@ public class HtmlEntityParser : InlineParser
     /// </summary>
     public HtmlEntityParser()
     {
-        OpeningCharacters = new[] {'&'};
+        OpeningCharacters = ['&'];
     }
 
     public static bool TryParse(ref StringSlice slice, [NotNullWhen(true)] out string? literal, out int match)

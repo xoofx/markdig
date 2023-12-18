@@ -18,7 +18,7 @@ public class FigureBlockParser : BlockParser
     /// </summary>
     public FigureBlockParser()
     {
-        OpeningCharacters = new[] { '^' };
+        OpeningCharacters = ['^'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

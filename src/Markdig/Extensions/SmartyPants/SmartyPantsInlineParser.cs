@@ -19,7 +19,7 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     public SmartyPantsInlineParser()
     {
-        OpeningCharacters = new[] {'\'', '"', '<', '>', '.', '-'};
+        OpeningCharacters = ['\'', '"', '<', '>', '.', '-'];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)

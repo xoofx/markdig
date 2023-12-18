@@ -42,7 +42,7 @@ public class QuoteBlock : ContainerBlock
 public class QuoteBlockLine
 {
     /// <summary>
-    /// Gets or sets trivia occuring before the first quote character.
+    /// Gets or sets trivia occurring before the first quote character.
     /// </summary>
     public StringSlice TriviaBefore { get; set; }
 

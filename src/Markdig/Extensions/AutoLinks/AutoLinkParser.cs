@@ -22,14 +22,14 @@ public class AutoLinkParser : InlineParser
     {
         Options = options ?? throw new ArgumentNullException(nameof(options));
 
-        OpeningCharacters = new char[]
-        {
+        OpeningCharacters =
+        [
             'h', // for http:// and https://
             'f', // for ftp://
             'm', // for mailto:
             't', // for tel:
             'w', // for www.
-        };
+        ];
 
         _listOfCharCache = new ListOfCharCache();
     }

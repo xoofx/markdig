@@ -12,7 +12,7 @@ public class GridTableParser : BlockParser
 {
     public GridTableParser()
     {
-        OpeningCharacters = new[] { '+' };
+        OpeningCharacters = ['+'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)
@@ -144,7 +144,7 @@ public class GridTableParser : BlockParser
                 line.Start = lineStart + columnSlice.Start + 1;
                 line.End = lineStart + columnSlice.End - 1;
                 line.Trim();
-                if (line.IsEmptyOrWhitespace() || !IsRowSeperator(line))
+                if (line.IsEmptyOrWhitespace() || !IsRowSeparator(line))
                 {
                     hasRowSpan = true;
                     columnSlice.CurrentCell.RowSpan++;
@@ -158,7 +158,7 @@ public class GridTableParser : BlockParser
         }
     }
 
-    private static bool IsRowSeperator(StringSlice slice)
+    private static bool IsRowSeparator(StringSlice slice)
     {
         char c = slice.CurrentChar;
         do
@@ -263,7 +263,7 @@ public class GridTableParser : BlockParser
             }
             sliceForCell.TrimEnd();
 
-            if (!isRowLine || !IsRowSeperator(sliceForCell))
+            if (!isRowLine || !IsRowSeparator(sliceForCell))
             {
                 if (columnSlice.CurrentCell is null)
                 {
@@ -273,10 +273,7 @@ public class GridTableParser : BlockParser
                         ColumnIndex = i
                     };
 
-                    if (columnSlice.BlockProcessor is null)
-                    {
-                        columnSlice.BlockProcessor = processor.CreateChild();
-                    }
+                    columnSlice.BlockProcessor ??= processor.CreateChild();
 
                     // Ensure that the BlockParser is aware that the TableCell is the top-level container
                     columnSlice.BlockProcessor.Open(columnSlice.CurrentCell);

@@ -23,7 +23,7 @@ internal sealed class AllowNullAttribute : Attribute { }
 #if !NET5_0_OR_GREATER
 internal sealed class MemberNotNullAttribute : Attribute
 {
-    public MemberNotNullAttribute(string member) => Members = new[] { member };
+    public MemberNotNullAttribute(string member) => Members = [member];
 
     public MemberNotNullAttribute(params string[] members) => Members = members;
 

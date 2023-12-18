@@ -16,14 +16,14 @@ public class ThematicBreakParser : BlockParser
     /// <summary>
     /// A singleton instance used by other parsers.
     /// </summary>
-    public static readonly ThematicBreakParser Default = new ThematicBreakParser();
+    public static readonly ThematicBreakParser Default = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ThematicBreakParser"/> class.
     /// </summary>
     public ThematicBreakParser()
     {
-        OpeningCharacters = new[] {'-', '_', '*'};
+        OpeningCharacters = ['-', '_', '*'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

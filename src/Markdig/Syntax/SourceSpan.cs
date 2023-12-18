@@ -37,26 +37,26 @@ public struct SourceSpan : IEquatable<SourceSpan>
     /// <summary>
     /// Gets the character length of this element within the original source code.
     /// </summary>
-    public int Length => End - Start + 1;
+    public readonly int Length => End - Start + 1;
 
-    public bool IsEmpty => Start > End;
+    public readonly bool IsEmpty => Start > End;
 
     public SourceSpan MoveForward(int count)
     {
         return new SourceSpan(Start + count, End + count);
     }
 
-    public bool Equals(SourceSpan other)
+    public readonly bool Equals(SourceSpan other)
     {
         return Start == other.Start && End == other.End;
     }
 
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is SourceSpan sourceSpan && Equals(sourceSpan);
     }
 
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         unchecked
         {
@@ -74,7 +74,7 @@ public struct SourceSpan : IEquatable<SourceSpan>
         return !left.Equals(right);
     }
 
-    public override string ToString()
+    public override readonly string ToString()
     {
         return $"{Start}-{End}";
     }

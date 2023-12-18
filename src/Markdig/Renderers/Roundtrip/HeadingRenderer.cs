@@ -12,14 +12,14 @@ namespace Markdig.Renderers.Roundtrip;
 /// <seealso cref="RoundtripObjectRenderer{HeadingBlock}" />
 public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
 {
-    private static readonly string[] HeadingTexts = {
+    private static readonly string[] HeadingTexts = [
         "#",
         "##",
         "###",
         "####",
         "#####",
         "######",
-    };
+    ];
 
     protected override void Write(RoundtripRenderer renderer, HeadingBlock obj)
     {

@@ -155,16 +155,10 @@ public abstract class MarkdownObject : IMarkdownObject
 
     private class DataEntriesAndTrivia
     {
-        private struct DataEntry
+        private struct DataEntry(object key, object value)
         {
-            public readonly object Key;
-            public object Value;
-
-            public DataEntry(object key, object value)
-            {
-                Key = key;
-                Value = value;
-            }
+            public readonly object Key = key;
+            public object Value = value;
         }
 
         private DataEntry[]? _entries;

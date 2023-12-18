@@ -18,7 +18,7 @@ public class DefinitionListParser : BlockParser
     /// </summary>
     public DefinitionListParser()
     {
-        OpeningCharacters = new [] {':', '~'};
+        OpeningCharacters = [':', '~'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

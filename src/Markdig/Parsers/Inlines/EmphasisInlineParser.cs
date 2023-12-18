@@ -20,7 +20,7 @@ namespace Markdig.Parsers.Inlines;
 public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 {
     private CharacterMap<EmphasisDescriptor>? emphasisMap;
-    private readonly DelimitersObjectCache inlinesCache = new DelimitersObjectCache();
+    private readonly DelimitersObjectCache inlinesCache = new();
 
     [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
     public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
@@ -31,11 +31,11 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     public EmphasisInlineParser()
     {
-        EmphasisDescriptors = new List<EmphasisDescriptor>()
-        {
+        EmphasisDescriptors =
+        [
             new EmphasisDescriptor('*', 1, 2, true),
             new EmphasisDescriptor('_', 1, 2, false)
-        };
+        ];
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
     public CreateEmphasisInlineDelegate? CreateEmphasisInline { get; set; }
-    public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = new List<TryCreateEmphasisInlineDelegate>();
+    public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = [];
 
     public override void Initialize()
     {

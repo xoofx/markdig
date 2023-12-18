@@ -7,14 +7,9 @@ using Markdig.Syntax;
 namespace Markdig.Helpers;
 
 // Used to avoid the overhead of type covariance checks
-internal readonly struct BlockWrapper : IEquatable<BlockWrapper>
+internal readonly struct BlockWrapper(Block block) : IEquatable<BlockWrapper>
 {
-    public readonly Block Block;
-
-    public BlockWrapper(Block block)
-    {
-        Block = block;
-    }
+    public readonly Block Block = block;
 
     public static implicit operator Block(BlockWrapper wrapper) => wrapper.Block;
 

@@ -18,7 +18,7 @@ public class HtmlBlockParser : BlockParser
     /// </summary>
     public HtmlBlockParser()
     {
-        OpeningCharacters = new[] { '<' };
+        OpeningCharacters = ['<'];
     }
        
     public override BlockState TryOpen(BlockProcessor processor)

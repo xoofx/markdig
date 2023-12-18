@@ -19,7 +19,7 @@ public class FooterBlockParser : BlockParser
     /// </summary>
     public FooterBlockParser()
     {
-        OpeningCharacters = new[] {'^'};
+        OpeningCharacters = ['^'];
     }
 
     public override BlockState TryOpen(BlockProcessor processor)

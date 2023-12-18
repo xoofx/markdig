@@ -26,7 +26,7 @@ public class YamlFrontMatterParser : BlockParser
     /// </summary>
     public YamlFrontMatterParser()
     {
-        this.OpeningCharacters = new[] { '-' };
+        OpeningCharacters = ['-'];
     }
 
     /// <summary>

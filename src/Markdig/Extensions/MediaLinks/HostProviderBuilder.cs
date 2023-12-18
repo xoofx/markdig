@@ -11,23 +11,19 @@ namespace Markdig.Extensions.MediaLinks;
 
 public class HostProviderBuilder
 {
-    private sealed class DelegateProvider : IHostProvider
+    private sealed class DelegateProvider(
+        string hostPrefix,
+        Func<Uri, string?> handler,
+        bool allowFullscreen = true,
+        string? className = null) : IHostProvider
     {
-        public DelegateProvider(string hostPrefix, Func<Uri, string?> handler, bool allowFullscreen = true, string? className = null)
-        {
-            HostPrefix = hostPrefix;
-            Delegate = handler;
-            AllowFullScreen = allowFullscreen;
-            Class = className;
-        }
+        public string HostPrefix { get; } = hostPrefix;
 
-        public string HostPrefix { get; }
+        public Func<Uri, string?> Delegate { get; } = handler;
 
-        public Func<Uri, string?> Delegate { get; }
+        public bool AllowFullScreen { get; } = allowFullscreen;
 
-        public bool AllowFullScreen { get; }
-
-        public string? Class { get; }
+        public string? Class { get; } = className;
 
         public bool TryHandle(Uri mediaUri, bool isSchemaRelative, [NotNullWhen(true)] out string? iframeUrl)
         {
@@ -71,7 +67,7 @@ public class HostProviderBuilder
 
     #region Known providers
 
-    private static readonly string[] SplitAnd = { "&" };
+    private static readonly string[] SplitAnd = ["&"];
     private static string[] SplitQuery(Uri uri)
     {
         var query = uri.Query.Substring(uri.Query.IndexOf('?') + 1);

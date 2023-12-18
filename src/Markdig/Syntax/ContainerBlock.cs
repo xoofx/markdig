@@ -27,7 +27,7 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
     /// <param name="parser">The parser used to create this block.</param>
     protected ContainerBlock(BlockParser? parser) : base(parser)
     {
-        _children = Array.Empty<BlockWrapper>();
+        _children = [];
         SetTypeKind(isInline: false, isContainer: true);
     }
 
@@ -301,14 +301,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 
     #endregion
 
-    private sealed class BlockComparisonWrapper : IComparer<BlockWrapper>
+    private sealed class BlockComparisonWrapper(Comparison<Block> comparison) : IComparer<BlockWrapper>
     {
-        private readonly Comparison<Block> _comparison;
-
-        public BlockComparisonWrapper(Comparison<Block> comparison)
-        {
-            _comparison = comparison;
-        }
+        private readonly Comparison<Block> _comparison = comparison;
 
         public int Compare(BlockWrapper x, BlockWrapper y)
         {
@@ -316,14 +311,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
-    private sealed class BlockComparerWrapper : IComparer<BlockWrapper>
+    private sealed class BlockComparerWrapper(IComparer<Block> comparer) : IComparer<BlockWrapper>
     {
-        private readonly IComparer<Block> _comparer;
-
-        public BlockComparerWrapper(IComparer<Block> comparer)
-        {
-            _comparer = comparer;
-        }
+        private readonly IComparer<Block> _comparer = comparer;
 
         public int Compare(BlockWrapper x, BlockWrapper y)
         {

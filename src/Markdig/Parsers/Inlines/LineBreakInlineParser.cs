@@ -18,7 +18,7 @@ public class LineBreakInlineParser : InlineParser
     /// </summary>
     public LineBreakInlineParser()
     {
-        OpeningCharacters = new[] { '\n', '\r' };
+        OpeningCharacters = ['\n', '\r'];
     }
 
     /// <summary>

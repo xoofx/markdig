@@ -19,7 +19,7 @@ public class AutolinkInlineParser : InlineParser
     /// </summary>
     public AutolinkInlineParser()
     {
-        OpeningCharacters = new[] {'<'};
+        OpeningCharacters = ['<'];
         EnableHtmlParsing = true;
     }
 

@@ -15,7 +15,7 @@ public class UnorderedListItemParser : ListItemParser
     /// </summary>
     public UnorderedListItemParser()
     {
-        OpeningCharacters = new [] {'-', '+', '*'};
+        OpeningCharacters = ['-', '+', '*'];
     }
 
     public override bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result)

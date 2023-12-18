@@ -15,7 +15,7 @@ public abstract class OrderedListItemParser : ListItemParser
     /// </summary>
     protected OrderedListItemParser()
     {
-        OrderedDelimiters = new[] { '.', ')' };
+        OrderedDelimiters = ['.', ')'];
     }
 
     /// <summary>

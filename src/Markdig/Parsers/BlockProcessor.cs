@@ -152,7 +152,7 @@ public class BlockProcessor
     /// <summary>
     /// Gets the current stack of <see cref="Block"/> being processed.
     /// </summary>
-    private List<BlockWrapper> OpenedBlocks { get; } = new();
+    private List<BlockWrapper> OpenedBlocks { get; } = [];
 
     private bool ContinueProcessingLine { get; set; }
 

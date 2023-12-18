@@ -21,7 +21,7 @@ public class MathInlineParser : InlineParser
     /// </summary>
     public MathInlineParser()
     {
-        OpeningCharacters = new[] { '$' };
+        OpeningCharacters = ['$'];
         DefaultClass = "math";
     }
 
