@@ -12,14 +12,14 @@ namespace Markdig.Renderers.Roundtrip;
 /// <seealso cref="RoundtripObjectRenderer{HeadingBlock}" />
 public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
 {
-    private static readonly string[] HeadingTexts = {
+    private static readonly string[] HeadingTexts = [
         "#",
         "##",
         "###",
         "####",
         "#####",
         "######",
-    };
+    ];
 
     protected override void Write(RoundtripRenderer renderer, HeadingBlock obj)
     {
@@ -28,12 +28,11 @@ public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
             renderer.RenderLinesBefore(obj);
 
             var headingChar = obj.Level == 1 ? '=' : '-';
-            var line = new string(headingChar, obj.HeaderCharCount);
 
             renderer.WriteLeafInline(obj);
             renderer.WriteLine(obj.SetextNewline);
             renderer.Write(obj.TriviaBefore);
-            renderer.Write(line);
+            renderer.Write(headingChar, obj.HeaderCharCount);
             renderer.WriteLine(obj.NewLine);
             renderer.Write(obj.TriviaAfter);
 
@@ -43,12 +42,17 @@ public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
         {
             renderer.RenderLinesBefore(obj);
 
-            var headingText = obj.Level > 0 && obj.Level <= 6
-                ? HeadingTexts[obj.Level - 1]
-                : new string('#', obj.Level);
-
             renderer.Write(obj.TriviaBefore);
-            renderer.Write(headingText);
+
+            if (obj.Level is > 0 and <= 6)
+            {
+                renderer.Write(HeadingTexts[obj.Level - 1]);
+            }
+            else
+            {
+                renderer.Write('#', obj.Level);
+            }
+
             renderer.Write(obj.TriviaAfterAtxHeaderChar);
             renderer.WriteLeafInline(obj);
             renderer.Write(obj.TriviaAfter);

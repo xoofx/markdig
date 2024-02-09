@@ -14,9 +14,8 @@ public class EmphasisInlineRenderer : NormalizeObjectRenderer<EmphasisInline>
 {
     protected override void Write(NormalizeRenderer renderer, EmphasisInline obj)
     {
-        var emphasisText = new string(obj.DelimiterChar, obj.DelimiterCount);
-        renderer.Write(emphasisText);
+        renderer.Write(obj.DelimiterChar, obj.DelimiterCount);
         renderer.WriteChildren(obj);
-        renderer.Write(emphasisText);
+        renderer.Write(obj.DelimiterChar, obj.DelimiterCount);
     }
 }

@@ -18,9 +18,9 @@ public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
     {
         if (obj is FencedCodeBlock fencedCodeBlock)
         {
-            var fencedCharCount = Math.Min(fencedCodeBlock.OpeningFencedCharCount, fencedCodeBlock.ClosingFencedCharCount);
-            var opening = new string(fencedCodeBlock.FencedChar, fencedCharCount);
-            renderer.Write(opening);
+            int fencedCharCount = Math.Min(fencedCodeBlock.OpeningFencedCharCount, fencedCodeBlock.ClosingFencedCharCount);
+
+            renderer.Write(fencedCodeBlock.FencedChar, fencedCharCount);
             if (fencedCodeBlock.Info != null)
             {
                 renderer.Write(fencedCodeBlock.Info);
@@ -41,7 +41,7 @@ public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
             renderer.WriteLine();
 
             renderer.WriteLeafRawLines(obj, true);
-            renderer.Write(opening);
+            renderer.Write(fencedCodeBlock.FencedChar, fencedCharCount);
         }
         else
         {
