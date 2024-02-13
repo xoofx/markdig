@@ -52,6 +52,16 @@ public class TestNormalize
     }
 
     [Test]
+    public void SyntaxHeadlineLevel7()
+    {
+        AssertSyntax("####### Headline", new HeadingBlock(null) {
+            HeaderChar = '#',
+            Level = 7,
+            Inline = new ContainerInline().AppendChild(new LiteralInline("Headline")),
+        });
+    }
+
+    [Test]
     public void SyntaxParagraph()
     {
         AssertSyntax("This is a normal paragraph", new ParagraphBlock()

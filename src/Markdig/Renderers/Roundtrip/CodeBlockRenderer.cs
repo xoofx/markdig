@@ -19,8 +19,7 @@ public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
         if (obj is FencedCodeBlock fencedCodeBlock)
         {
             renderer.Write(obj.TriviaBefore);
-            var opening = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
-            renderer.Write(opening);
+            renderer.Write(fencedCodeBlock.FencedChar, fencedCodeBlock.OpeningFencedCharCount);
 
             if (!fencedCodeBlock.TriviaAfterFencedChar.IsEmpty)
             {
@@ -56,9 +55,8 @@ public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
             renderer.WriteLeafRawLines(obj);
 
             renderer.Write(fencedCodeBlock.TriviaBeforeClosingFence);
-            var closing = new string(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
-            renderer.Write(closing);
-            if (!string.IsNullOrEmpty(closing))
+            renderer.Write(fencedCodeBlock.FencedChar, fencedCodeBlock.ClosingFencedCharCount);
+            if (fencedCodeBlock.ClosingFencedCharCount > 0)
             {
                 // See example 207: "> ```\nfoo\n```"
                 renderer.WriteLine(obj.NewLine);

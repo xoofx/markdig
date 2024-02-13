@@ -14,12 +14,11 @@ public class CodeInlineRenderer : RoundtripObjectRenderer<CodeInline>
 {
     protected override void Write(RoundtripRenderer renderer, CodeInline obj)
     {
-        var delimiterRun = new string(obj.Delimiter, obj.DelimiterCount);
-        renderer.Write(delimiterRun);
+        renderer.Write(obj.Delimiter, obj.DelimiterCount);
         if (!obj.ContentSpan.IsEmpty)
         {
             renderer.Write(obj.ContentWithTrivia);
         }
-        renderer.Write(delimiterRun);
+        renderer.Write(obj.Delimiter, obj.DelimiterCount);
     }
 }

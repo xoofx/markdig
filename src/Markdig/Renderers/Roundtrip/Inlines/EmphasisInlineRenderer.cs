@@ -14,9 +14,8 @@ public class EmphasisInlineRenderer : RoundtripObjectRenderer<EmphasisInline>
 {
     protected override void Write(RoundtripRenderer renderer, EmphasisInline obj)
     {
-        var emphasisText = new string(obj.DelimiterChar, obj.DelimiterCount);
-        renderer.Write(emphasisText);
+        renderer.Write(obj.DelimiterChar, obj.DelimiterCount);
         renderer.WriteChildren(obj);
-        renderer.Write(emphasisText);
+        renderer.Write(obj.DelimiterChar, obj.DelimiterCount);
     }
 }

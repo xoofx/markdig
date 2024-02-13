@@ -31,8 +31,8 @@ public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
             if (delimiterCount < count)
                 delimiterCount = count;
         }
-        var delimiterRun = new string(obj.Delimiter, delimiterCount + 1);
-        renderer.Write(delimiterRun);
+
+        renderer.Write(obj.Delimiter, delimiterCount + 1);
         if (content.Length != 0)
         {
             if (content[0] == obj.Delimiter)
@@ -49,6 +49,6 @@ public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
         {
             renderer.Write(' ');
         }
-        renderer.Write(delimiterRun);
+        renderer.Write(obj.Delimiter, delimiterCount + 1);
     }
 }

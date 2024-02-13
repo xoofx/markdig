@@ -212,6 +212,25 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     }
 
     /// <summary>
+    /// Writes the specified char repeated a specified number of times.
+    /// </summary>
+    /// <param name="c">The char to write.</param>
+    /// <param name="count">The number of times to write the char.</param>
+    /// <returns>This instance</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal T Write(char c, int count)
+    {
+        WriteIndent();        
+        
+        for (int i = 0; i < count; i++)
+        {
+            Writer.Write(c);
+        }        
+
+        return (T)this;
+    }
+
+    /// <summary>
     /// Writes the specified slice.
     /// </summary>
     /// <param name="slice">The slice.</param>
