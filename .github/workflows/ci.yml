@@ -31,5 +31,5 @@ jobs:
     - name: Build, Test, Pack, Publish
       shell: bash
       run: |
-        dotnet tool install -g dotnet-releaser
+        dotnet tool install -g dotnet-releaser --configfile .github/workflows/nuget_org_only.config
         dotnet-releaser run --nuget-token "${{secrets.NUGET_TOKEN}}" --github-token "${{secrets.GITHUB_TOKEN}}" src/dotnet-releaser.toml
