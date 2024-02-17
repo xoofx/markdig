@@ -6,8 +6,8 @@
     <IsPackable>false</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
     <StartupObject>Markdig.Tests.Program</StartupObject>
-    <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.dll</SpecExecutable>
-    <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net6.0\SpecFileGen.timestamp</SpecTimestamp>
+    <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net8.0\SpecFileGen.dll</SpecExecutable>
+    <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net8.0\SpecFileGen.timestamp</SpecTimestamp>
   </PropertyGroup>
 
   <ItemGroup>
