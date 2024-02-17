@@ -15,17 +15,16 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
 
-    - name: Install .NET 6.0, 7.0, and 8.0
-      uses: actions/setup-dotnet@v1
+    - name: Install .NET 6.0, and 8.0
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           6.0.x
-          7.0.x
           8.0.x
 
     - name: Build, Test, Pack, Publish
