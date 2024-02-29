@@ -127,7 +127,7 @@ $$ math $$ starting at a line
 
 ## Math Block
 
-The match block can spawn on multiple lines by having a $$ starting on a line.
+The math block can spawn on multiple lines by having a $$ starting on a line.
 It is working as a fenced code block.
 
 ```````````````````````````````` example
