@@ -279,7 +279,7 @@ namespace Markdig.Tests.Specs.Math
     {
         // ## Math Block
         // 
-        // The match block can spawn on multiple lines by having a $$ starting on a line.
+        // The math block can spawn on multiple lines by having a $$ starting on a line.
         // It is working as a fenced code block.
         [Test]
         public void ExtensionsMathBlock_Example017()

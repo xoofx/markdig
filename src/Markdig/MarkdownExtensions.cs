@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Extensions.Abbreviations;
+using Markdig.Extensions.Alerts;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.AutoLinks;
 using Markdig.Extensions.Bootstrap;
@@ -34,6 +35,7 @@ using Markdig.Extensions.Yaml;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using Markdig.Renderers;
 
 namespace Markdig;
 
@@ -74,6 +76,7 @@ public static class MarkdownExtensions
     public static MarkdownPipelineBuilder UseAdvancedExtensions(this MarkdownPipelineBuilder pipeline)
     {
         return pipeline
+            .UseAlertBlocks()
             .UseAbbreviations()
             .UseAutoIdentifiers()
             .UseCitations()
@@ -94,6 +97,18 @@ public static class MarkdownExtensions
             .UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
     }
 
+    /// <summary>
+    /// Uses this extension to enable alert blocks.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="renderKind">Replace the default renderer for the kind with a custom renderer</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseAlertBlocks(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer, StringSlice>? renderKind = null)
+    {
+        pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AlertExtension() { RenderKind = renderKind });
+        return pipeline;
+    }
+    
     /// <summary>
     /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
     /// </summary>
@@ -551,6 +566,9 @@ public static class MarkdownExtensions
                     break;
                 case "advanced":
                     pipeline.UseAdvancedExtensions();
+                    break;
+                case "alerts":
+                    pipeline.UseAlertBlocks();
                     break;
                 case "pipetables":
                     pipeline.UsePipeTables();
