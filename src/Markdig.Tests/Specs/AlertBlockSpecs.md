@@ -46,6 +46,8 @@ This is supporting the [GitHub Alert blocks](https://github.com/orgs/community/d
 
 An alert inline (e.g `[!NOTE]`) must come first in a quote block, and must be followed by optional spaces with a new line. If no new lines are found, it will not be considered as an alert block.
 
+Followed by space and new line:
+
 ```````````````````````````````` example
 > [!NOTE] This is invalid because no new line
 > Highlights information that users should take into account, even when skimming.
@@ -55,3 +57,17 @@ An alert inline (e.g `[!NOTE]`) must come first in a quote block, and must be fo
 Highlights information that users should take into account, even when skimming.</p>
 </blockquote>
 ````````````````````````````````
+
+Must come first in a quote block:
+
+```````````````````````````````` example
+> This is not a [!NOTE]
+> Highlights information that users should take into account, even when skimming.
+.
+<blockquote>
+<p>This is not a [!NOTE]
+Highlights information that users should take into account, even when skimming.</p>
+</blockquote>
+````````````````````````````````
+
+

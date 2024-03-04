@@ -66,6 +66,8 @@ namespace Markdig.Tests.Specs.AlertBlocks
         }
 
         // An alert inline (e.g `[!NOTE]`) must come first in a quote block, and must be followed by optional spaces with a new line. If no new lines are found, it will not be considered as an alert block.
+        // 
+        // Followed by space and new line:
         [Test]
         public void ExtensionsAlertBlocks_Example002()
         {
@@ -83,6 +85,26 @@ namespace Markdig.Tests.Specs.AlertBlocks
             //     </blockquote>
 
             TestParser.TestSpec("> [!NOTE] This is invalid because no new line\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>[!NOTE] This is invalid because no new line\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 2\nSection Extensions / Alert Blocks\n");
+        }
+
+        // Must come first in a quote block:
+        [Test]
+        public void ExtensionsAlertBlocks_Example003()
+        {
+            // Example 3
+            // Section: Extensions / Alert Blocks
+            //
+            // The following Markdown:
+            //     > This is not a [!NOTE]
+            //     > Highlights information that users should take into account, even when skimming.
+            //
+            // Should be rendered as:
+            //     <blockquote>
+            //     <p>This is not a [!NOTE]
+            //     Highlights information that users should take into account, even when skimming.</p>
+            //     </blockquote>
+
+            TestParser.TestSpec("> This is not a [!NOTE]\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>This is not a [!NOTE]\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 3\nSection Extensions / Alert Blocks\n");
         }
     }
 }
