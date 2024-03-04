@@ -10,9 +10,9 @@ using Markdig.Syntax;
 namespace Markdig.Extensions.Alerts;
 
 /// <summary>
-/// A HTML renderer for a <see cref="QuoteBlock"/>.
+/// A HTML renderer for a <see cref="AlertBlock"/>.
 /// </summary>
-/// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
+/// <seealso cref="HtmlObjectRenderer{AlertBlock}" />
 public class AlertBlockRenderer : HtmlObjectRenderer<AlertBlock>
 {
     /// <summary>
