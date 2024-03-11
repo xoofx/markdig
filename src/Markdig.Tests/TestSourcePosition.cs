@@ -699,13 +699,14 @@ literal      ( 0, 2)  2-3
     public void TestMathematicsInline()
     {
         //     01 23456789AB
-        Check("0\n012 $abcd$", @"
-paragraph    ( 0, 0)  0-11
+        Check("0\n012 $abcd$ 321", @"
+paragraph    ( 0, 0)  0-15
 literal      ( 0, 0)  0-0
 linebreak    ( 0, 1)  1-1
 literal      ( 1, 0)  2-5
 math         ( 1, 4)  6-11
 attributes   ( 0, 0)  0--1
+literal      ( 1,10) 12-15
 ", "mathematics");
     }
 
