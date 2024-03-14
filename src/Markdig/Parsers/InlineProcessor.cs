@@ -29,6 +29,8 @@ public class InlineProcessor
     private readonly List<StringLineGroup.LineOffset> lineOffsets = [];
     private int previousSliceOffset;
     private int previousLineIndexForSliceOffset;
+    internal ContainerBlock? PreviousContainerToReplace;
+    internal ContainerBlock? NewContainerToReplace;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
@@ -204,12 +206,33 @@ public class InlineProcessor
     }
 
     /// <summary>
+    /// Replace a parent container. This method is experimental and should be used with caution.
+    /// </summary>
+    /// <param name="previousParentContainer">The previous parent container to replace</param>
+    /// <param name="newParentContainer">The new parent container</param>
+    /// <exception cref="InvalidOperationException">If a new parent container has been already setup.</exception>
+    internal void ReplaceParentContainer(ContainerBlock previousParentContainer, ContainerBlock newParentContainer)
+    {
+        // Limitation for now, only one parent container can be replaced.
+        if (PreviousContainerToReplace != null)
+        {
+            throw new InvalidOperationException("A block is already being replaced");
+        }
+
+        PreviousContainerToReplace = previousParentContainer;
+        NewContainerToReplace = newParentContainer;
+    }
+
+    /// <summary>
     /// Processes the inline of the specified <see cref="LeafBlock"/>.
     /// </summary>
     /// <param name="leafBlock">The leaf block.</param>
     public void ProcessInlineLeaf(LeafBlock leafBlock)
     {
         if (leafBlock is null) ThrowHelper.ArgumentNullException_leafBlock();
+
+        PreviousContainerToReplace = null;
+        NewContainerToReplace = null;
 
         // clear parser states
         Array.Clear(ParserStates, 0, ParserStates.Length);

@@ -170,6 +170,39 @@ public static class MarkdownParser
                     if (leafBlock.ProcessInlines)
                     {
                         inlineProcessor.ProcessInlineLeaf(leafBlock);
+
+                        // Experimental code to handle a replacement of a parent container
+                        // Not satisfied with this code, so we are keeping it internal for now
+                        if (inlineProcessor.PreviousContainerToReplace != null)
+                        {
+                            if (container == inlineProcessor.PreviousContainerToReplace)
+                            {
+                                item = new ContainerItem(inlineProcessor.NewContainerToReplace!) { Index = item.Index };
+                                container = item.Container;
+                            }
+                            else
+                            {
+                                bool parentBlockFound = false;
+                                for (int i = blockCount - 2; i >= 0; i--)
+                                {
+                                    ref var parentBlock = ref blocks[i];
+                                    if (parentBlock.Container == inlineProcessor.PreviousContainerToReplace)
+                                    {
+                                        parentBlock = new ContainerItem(inlineProcessor.NewContainerToReplace!) { Index = parentBlock.Index };
+                                        break;
+                                    }
+                                }
+
+                                if (!parentBlockFound)
+                                {
+                                    throw new InvalidOperationException("Cannot find the parent block to replace");
+                                }
+                            }
+
+                            inlineProcessor.PreviousContainerToReplace = null;
+                            inlineProcessor.NewContainerToReplace = null;
+                        }
+
                         if (leafBlock.RemoveAfterProcessInlines)
                         {
                             container.RemoveAt(item.Index);

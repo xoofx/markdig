@@ -118,6 +118,10 @@ public class AlertInlineParser : InlineParser
             alertBlock.Add(block);
         }
 
+        // Workaround to replace the parent container
+        // Experimental API, so we are keeping it internal for now until we are sure it's the way we want to go
+        processor.ReplaceParentContainer(quoteBlock, alertBlock);
+
         return true;
     }
 }

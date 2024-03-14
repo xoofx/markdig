@@ -88,19 +88,59 @@ namespace Markdig.Tests.Specs.AlertBlocks
             //     Testing rendering for multiple lines</p>
             //     <pre><code class="language-csharp">var test = &quot;I can also add code to panels
             //     </code></pre>
-            //     <p></p>
+            //     <p><code>Inline code testing</code></p>
             //     </div>
 
-            TestParser.TestSpec("> [!NOTE]\n> Highlights information that users should take into account, even when skimming.\n> Testing rendering for multiple lines\n> ```csharp\n> var test = \"I can also add code to panels\n> ```\n> `Inline code testing`", "<div class=\"markdown-alert markdown-alert-note\">\n<p class=\"markdown-alert-title\"><svg viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p>\n<p>Highlights information that users should take into account, even when skimming.\nTesting rendering for multiple lines</p>\n<pre><code class=\"language-csharp\">var test = &quot;I can also add code to panels\n</code></pre>\n<p></p>\n</div>", "advanced", context: "Example 2\nSection Extensions / Alert Blocks\n");
+            TestParser.TestSpec("> [!NOTE]\n> Highlights information that users should take into account, even when skimming.\n> Testing rendering for multiple lines\n> ```csharp\n> var test = \"I can also add code to panels\n> ```\n> `Inline code testing`", "<div class=\"markdown-alert markdown-alert-note\">\n<p class=\"markdown-alert-title\"><svg viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p>\n<p>Highlights information that users should take into account, even when skimming.\nTesting rendering for multiple lines</p>\n<pre><code class=\"language-csharp\">var test = &quot;I can also add code to panels\n</code></pre>\n<p><code>Inline code testing</code></p>\n</div>", "advanced", context: "Example 2\nSection Extensions / Alert Blocks\n");
+        }
+
+        // Multiline:
+        [Test]
+        public void ExtensionsAlertBlocks_Example003()
+        {
+            // Example 3
+            // Section: Extensions / Alert Blocks
+            //
+            // The following Markdown:
+            //     > [!NOTE]
+            //     > Highlights information that users should take into account, even when skimming.
+            //     > 
+            //     > Testing rendering for multiple lines
+            //     > 
+            //     > `Inline code testing`
+            //     > 
+            //     > Other line
+            //     > 
+            //     > > Nested quote
+            //     > >
+            //     > > Final nested quote line
+            //     > 
+            //     > Final line of alert
+            //
+            // Should be rendered as:
+            //     <div class="markdown-alert markdown-alert-note">
+            //     <p class="markdown-alert-title"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+            //     <p>Highlights information that users should take into account, even when skimming.</p>
+            //     <p>Testing rendering for multiple lines</p>
+            //     <p><code>Inline code testing</code></p>
+            //     <p>Other line</p>
+            //     <blockquote>
+            //     <p>Nested quote</p>
+            //     <p>Final nested quote line</p>
+            //     </blockquote>
+            //     <p>Final line of alert</p>
+            //     </div>
+
+            TestParser.TestSpec("> [!NOTE]\n> Highlights information that users should take into account, even when skimming.\n> \n> Testing rendering for multiple lines\n> \n> `Inline code testing`\n> \n> Other line\n> \n> > Nested quote\n> >\n> > Final nested quote line\n> \n> Final line of alert", "<div class=\"markdown-alert markdown-alert-note\">\n<p class=\"markdown-alert-title\"><svg viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p>\n<p>Highlights information that users should take into account, even when skimming.</p>\n<p>Testing rendering for multiple lines</p>\n<p><code>Inline code testing</code></p>\n<p>Other line</p>\n<blockquote>\n<p>Nested quote</p>\n<p>Final nested quote line</p>\n</blockquote>\n<p>Final line of alert</p>\n</div>", "advanced", context: "Example 3\nSection Extensions / Alert Blocks\n");
         }
 
         // An alert inline (e.g `[!NOTE]`) must come first in a quote block, and must be followed by optional spaces with a new line. If no new lines are found, it will not be considered as an alert block.
         // 
         // Followed by space and new line:
         [Test]
-        public void ExtensionsAlertBlocks_Example003()
+        public void ExtensionsAlertBlocks_Example004()
         {
-            // Example 3
+            // Example 4
             // Section: Extensions / Alert Blocks
             //
             // The following Markdown:
@@ -113,14 +153,14 @@ namespace Markdig.Tests.Specs.AlertBlocks
             //     Highlights information that users should take into account, even when skimming.</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> [!NOTE] This is invalid because no new line\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>[!NOTE] This is invalid because no new line\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 3\nSection Extensions / Alert Blocks\n");
+            TestParser.TestSpec("> [!NOTE] This is invalid because no new line\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>[!NOTE] This is invalid because no new line\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 4\nSection Extensions / Alert Blocks\n");
         }
 
         // Must come first in a quote block:
         [Test]
-        public void ExtensionsAlertBlocks_Example004()
+        public void ExtensionsAlertBlocks_Example005()
         {
-            // Example 4
+            // Example 5
             // Section: Extensions / Alert Blocks
             //
             // The following Markdown:
@@ -133,7 +173,7 @@ namespace Markdig.Tests.Specs.AlertBlocks
             //     Highlights information that users should take into account, even when skimming.</p>
             //     </blockquote>
 
-            TestParser.TestSpec("> This is not a [!NOTE]\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>This is not a [!NOTE]\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 4\nSection Extensions / Alert Blocks\n");
+            TestParser.TestSpec("> This is not a [!NOTE]\n> Highlights information that users should take into account, even when skimming.", "<blockquote>\n<p>This is not a [!NOTE]\nHighlights information that users should take into account, even when skimming.</p>\n</blockquote>", "advanced", context: "Example 5\nSection Extensions / Alert Blocks\n");
         }
     }
 }
