@@ -105,7 +105,7 @@ public static class MarkdownExtensions
     /// <returns>The modified pipeline</returns>
     public static MarkdownPipelineBuilder UseAlertBlocks(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer, StringSlice>? renderKind = null)
     {
-        pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AlertExtension() { RenderKind = renderKind });
+        pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
         return pipeline;
     }
     
