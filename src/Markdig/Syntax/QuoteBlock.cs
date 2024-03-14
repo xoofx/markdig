@@ -19,7 +19,7 @@ public class QuoteBlock : ContainerBlock
     /// Initializes a new instance of the <see cref="QuoteBlock"/> class.
     /// </summary>
     /// <param name="parser">The parser used to create this block.</param>
-    public QuoteBlock(BlockParser parser) : base(parser)
+    public QuoteBlock(BlockParser? parser) : base(parser)
     {
     }
 

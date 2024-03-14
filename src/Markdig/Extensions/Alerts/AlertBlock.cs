@@ -16,7 +16,7 @@ public class AlertBlock : QuoteBlock
     /// Creates a new instance of this block.
     /// </summary>
     /// <param name="kind"></param>
-    public AlertBlock(StringSlice kind) : base(null!)
+    public AlertBlock(StringSlice kind) : base(null)
     {
         Kind = kind;
     }
