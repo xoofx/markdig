@@ -61,6 +61,7 @@ class Program
     static readonly Spec[] Specs = new[]
     {
         new Spec("CommonMarkSpecs",     "CommonMark.md",                ""),
+        new Spec("Alert Blocks",        "AlertBlockSpecs.md",           "advanced"),
         new Spec("Pipe Tables",         "PipeTableSpecs.md",            "pipetables|advanced"),
         new Spec("GFM Pipe Tables",     "PipeTableGfmSpecs.md",         "gfm-pipetables"),
         new Spec("Footnotes",           "FootnotesSpecs.md",            "footnotes|advanced"),
