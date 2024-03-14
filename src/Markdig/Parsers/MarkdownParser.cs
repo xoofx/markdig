@@ -189,6 +189,7 @@ public static class MarkdownParser
                                     if (parentBlock.Container == inlineProcessor.PreviousContainerToReplace)
                                     {
                                         parentBlock = new ContainerItem(inlineProcessor.NewContainerToReplace!) { Index = parentBlock.Index };
+                                        parentBlockFound = true;
                                         break;
                                     }
                                 }
