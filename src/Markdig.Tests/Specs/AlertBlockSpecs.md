@@ -44,6 +44,28 @@ This is supporting the [GitHub Alert blocks](https://github.com/orgs/community/d
 </div>
 ````````````````````````````````
 
+Example with code blocks and mix formatting:
+
+
+```````````````````````````````` example
+> [!NOTE]
+> Highlights information that users should take into account, even when skimming.
+> Testing rendering for multiple lines
+> ```csharp
+> var test = "I can also add code to panels
+> ```
+> `Inline code testing`
+.
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>Highlights information that users should take into account, even when skimming.
+Testing rendering for multiple lines</p>
+<pre><code class="language-csharp">var test = &quot;I can also add code to panels
+</code></pre>
+<p></p>
+</div>
+````````````````````````````````
+
 An alert inline (e.g `[!NOTE]`) must come first in a quote block, and must be followed by optional spaces with a new line. If no new lines are found, it will not be considered as an alert block.
 
 Followed by space and new line:

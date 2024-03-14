@@ -29,12 +29,10 @@ public class AlertInlineParser : InlineParser
         // We expect the alert to be the first child of a quote block. Example:
         // > [!NOTE]
         // > This is a note
-        if (!(processor.Block is ParagraphBlock paragraphBlock) || !(paragraphBlock.Parent is QuoteBlock quoteBlock) || quoteBlock.Count != 1 || paragraphBlock.Inline?.FirstChild != null)
+        if (processor.Block is not ParagraphBlock paragraphBlock || paragraphBlock.Parent is not QuoteBlock quoteBlock || paragraphBlock.Inline?.FirstChild != null)
         {
             return false;
         }
-
-        var startPosition = processor.GetSourcePosition(slice.Start, out int line, out int column);
 
         var saved = slice;
         var c = slice.NextChar();
@@ -99,10 +97,10 @@ public class AlertInlineParser : InlineParser
 
         var alertBlock = new AlertBlock(alertType)
         {
-            Span = new SourceSpan(startPosition, processor.GetSourcePosition(slice.Start - 1)),
+            Span = quoteBlock.Span,
             TriviaSpaceAfterKind = new StringSlice(slice.Text, start, end),
-            Line = line,
-            Column = column
+            Line = quoteBlock.Line,
+            Column = quoteBlock.Column,
         };
 
         alertBlock.GetAttributes().AddClass("markdown-alert");
@@ -111,8 +109,7 @@ public class AlertInlineParser : InlineParser
         // Replace the quote block with the alert block
         var parentQuoteBlock = quoteBlock.Parent!;
         var indexOfQuoteBlock = parentQuoteBlock.IndexOf(quoteBlock);
-        parentQuoteBlock.RemoveAt(indexOfQuoteBlock);
-        parentQuoteBlock.Insert(indexOfQuoteBlock, alertBlock);
+        parentQuoteBlock[indexOfQuoteBlock] = alertBlock;
 
         while (quoteBlock.Count > 0)
         {
