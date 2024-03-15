@@ -1,7 +1,8 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Extensions.Alerts;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -24,6 +25,15 @@ public class BootstrapExtension : IMarkdownExtension
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
+        if (renderer is HtmlRenderer htmlRenderer)
+        {
+            // We only want to add our renderer if we already support alert blocks
+            if (htmlRenderer.ObjectRenderers.Contains<AlertBlockRenderer>())
+            {
+                // Needs to be inserted before the original renderer
+                htmlRenderer.ObjectRenderers.Insert(0, new BootstrapAlertRenderer());
+            }
+        }
     }
 
     private static void PipelineOnDocumentProcessed(MarkdownDocument document)
@@ -43,7 +53,7 @@ public class BootstrapExtension : IMarkdownExtension
                 {
                     node.GetAttributes().AddClass("table");
                 }
-                else if (node is QuoteBlock)
+                else if (node is QuoteBlock and not AlertBlock)
                 {
                     node.GetAttributes().AddClass("blockquote");
                 }
