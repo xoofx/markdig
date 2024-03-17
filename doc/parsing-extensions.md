@@ -1,6 +1,6 @@
 # Extensions and Parsers
 
-Markdig was [implemented in such a way](http://xoofx.com/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/) as to be extremely pluggable, with even basic behaviors being mutable and extendable.
+Markdig was [implemented in such a way](http://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/) as to be extremely pluggable, with even basic behaviors being mutable and extendable.
 
 The basic mechanism for extension of Markdig is the `IMarkdownExtension` interface, which allows any implementing class to be registered with the pipeline builder and thus to directly modify the collections of `BlockParser` and `InlineParser` objects which end up in the pipeline.
 
