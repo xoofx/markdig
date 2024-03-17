@@ -70,7 +70,7 @@ If you are looking for support for an old .NET Framework 3.5 or 4.0, you can dow
 
 While there is not yet a dedicated documentation, you can find from the [specs documentation](src/Markdig.Tests/Specs/readme.md) how to use these extensions.
 
-In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](http://xoofx.com/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
+In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](http://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
 
 ## Download
 
@@ -164,4 +164,4 @@ Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markd
 Thanks to the work done by @clarkd on the JIRA Link extension (https://github.com/clarkd/MarkdigJiraLinker), now included with this project!
 ## Author
 
-Alexandre MUTEL aka [xoofx](http://xoofx.com)
+Alexandre MUTEL aka [xoofx](http://xoofx.github.io)
