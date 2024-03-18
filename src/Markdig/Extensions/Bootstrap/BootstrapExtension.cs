@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using System.Linq;
 using Markdig.Extensions.Alerts;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -27,12 +28,14 @@ public class BootstrapExtension : IMarkdownExtension
     {
         if (renderer is HtmlRenderer htmlRenderer)
         {
-            // We only want to add our renderer if we already support alert blocks
-            if (htmlRenderer.ObjectRenderers.Contains<AlertBlockRenderer>())
+            var alertRenderer = htmlRenderer.ObjectRenderers.OfType<AlertBlockRenderer>().FirstOrDefault();
+            if (alertRenderer == null)
             {
-                // Needs to be inserted before the original renderer
-                htmlRenderer.ObjectRenderers.Insert(0, new BootstrapAlertRenderer());
+                alertRenderer = new AlertBlockRenderer();
+                renderer.ObjectRenderers.InsertBefore<QuoteBlockRenderer>(new AlertBlockRenderer());
             }
+
+            alertRenderer.RenderKind = (_, _) => { };
         }
     }
 
@@ -53,7 +56,30 @@ public class BootstrapExtension : IMarkdownExtension
                 {
                     node.GetAttributes().AddClass("table");
                 }
-                else if (node is QuoteBlock and not AlertBlock)
+                else if (node is AlertBlock alertBlock) // Needs to be before QuoteBlock
+                {
+                    var attributes = node.GetAttributes();
+                    attributes.AddClass("alert");
+                    attributes.AddProperty("role", "alert");
+                    string? @class = alertBlock.Kind.AsSpan() switch
+                    {
+                        "NOTE" => "alert-primary",
+                        "TIP" => "alert-success",
+                        "IMPORTANT" => "alert-info",
+                        "WARNING" => "alert-warning",
+                        "CAUTION" => "alert-danger",
+                        _ => null,
+                    };
+
+                    if (@class is not null)
+                    {
+                        attributes.AddClass(@class);
+                    }
+
+                    var lastParagraph = alertBlock.Descendants().OfType<ParagraphBlock>().LastOrDefault();
+                    lastParagraph?.GetAttributes().AddClass("mb-0");
+                }
+                else if (node is QuoteBlock)
                 {
                     node.GetAttributes().AddClass("blockquote");
                 }
