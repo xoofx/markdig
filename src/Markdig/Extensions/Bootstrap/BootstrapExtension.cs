@@ -1,7 +1,9 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using System.Linq;
+using Markdig.Extensions.Alerts;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -24,6 +26,17 @@ public class BootstrapExtension : IMarkdownExtension
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
+        if (renderer is HtmlRenderer htmlRenderer)
+        {
+            var alertRenderer = htmlRenderer.ObjectRenderers.OfType<AlertBlockRenderer>().FirstOrDefault();
+            if (alertRenderer == null)
+            {
+                alertRenderer = new AlertBlockRenderer();
+                renderer.ObjectRenderers.InsertBefore<QuoteBlockRenderer>(new AlertBlockRenderer());
+            }
+
+            alertRenderer.RenderKind = (_, _) => { };
+        }
     }
 
     private static void PipelineOnDocumentProcessed(MarkdownDocument document)
@@ -42,6 +55,29 @@ public class BootstrapExtension : IMarkdownExtension
                 if (node is Tables.Table)
                 {
                     node.GetAttributes().AddClass("table");
+                }
+                else if (node is AlertBlock alertBlock) // Needs to be before QuoteBlock
+                {
+                    var attributes = node.GetAttributes();
+                    attributes.AddClass("alert");
+                    attributes.AddProperty("role", "alert");
+                    string? @class = alertBlock.Kind.AsSpan() switch
+                    {
+                        "NOTE" => "alert-primary",
+                        "TIP" => "alert-success",
+                        "IMPORTANT" => "alert-info",
+                        "WARNING" => "alert-warning",
+                        "CAUTION" => "alert-danger",
+                        _ => null,
+                    };
+
+                    if (@class is not null)
+                    {
+                        attributes.AddClass(@class);
+                    }
+
+                    var lastParagraph = alertBlock.Descendants().OfType<ParagraphBlock>().LastOrDefault();
+                    lastParagraph?.GetAttributes().AddClass("mb-0");
                 }
                 else if (node is QuoteBlock)
                 {
