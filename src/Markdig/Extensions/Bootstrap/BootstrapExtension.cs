@@ -61,7 +61,10 @@ public class BootstrapExtension : IMarkdownExtension
                     var attributes = node.GetAttributes();
                     attributes.AddClass("alert");
                     attributes.AddProperty("role", "alert");
-                    string? @class = alertBlock.Kind.AsSpan() switch
+
+                    Span<char> upperKind = new char[alertBlock.Kind.Length];
+                    alertBlock.Kind.AsSpan().ToUpperInvariant(upperKind);
+                    string? @class = upperKind switch
                     {
                         "NOTE" => "alert-primary",
                         "TIP" => "alert-success",

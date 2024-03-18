@@ -46,7 +46,7 @@ public class AlertInlineParser : InlineParser
 
         var start = slice.Start;
         var end = start;
-        while (c.IsAlphaUpper())
+        while (c.IsAlpha())
         {
             end = slice.Start;
             c = slice.NextChar();
@@ -86,7 +86,7 @@ public class AlertInlineParser : InlineParser
                 }
                 break;
             }
-            else if (!c.IsSpaceOrTab()) 
+            else if (!c.IsSpaceOrTab())
             {
                 slice = saved;
                 return false;
