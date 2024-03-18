@@ -50,6 +50,7 @@ public class AlertBlockRenderer : HtmlObjectRenderer<AlertBlock>
         {
             renderer.WriteLine("</div>");
         }
+
         renderer.EnsureLine();
     }
 
@@ -61,6 +62,11 @@ public class AlertBlockRenderer : HtmlObjectRenderer<AlertBlock>
     /// <param name="kind">The kind of the alert to render</param>
     public static void DefaultRenderKind(HtmlRenderer renderer, StringSlice kind)
     {
+        if (kind.Length >= 16)
+        {
+            return;
+        }
+
         Span<char> upperKind = stackalloc char[kind.Length];
         kind.AsSpan().ToUpperInvariant(upperKind);
         string? html = upperKind switch
