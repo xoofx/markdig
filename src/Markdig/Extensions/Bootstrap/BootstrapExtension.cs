@@ -41,6 +41,7 @@ public class BootstrapExtension : IMarkdownExtension
 
     private static void PipelineOnDocumentProcessed(MarkdownDocument document)
     {
+        Span<char> upperKind = new char[16];
         foreach (var node in document.Descendants())
         {
             if (node.IsInline)
@@ -61,22 +62,23 @@ public class BootstrapExtension : IMarkdownExtension
                     var attributes = node.GetAttributes();
                     attributes.AddClass("alert");
                     attributes.AddProperty("role", "alert");
-
-                    Span<char> upperKind = new char[alertBlock.Kind.Length];
-                    alertBlock.Kind.AsSpan().ToUpperInvariant(upperKind);
-                    string? @class = upperKind switch
+                    if (alertBlock.Kind.Length <= upperKind.Length)
                     {
-                        "NOTE" => "alert-primary",
-                        "TIP" => "alert-success",
-                        "IMPORTANT" => "alert-info",
-                        "WARNING" => "alert-warning",
-                        "CAUTION" => "alert-danger",
-                        _ => null,
-                    };
+                        alertBlock.Kind.AsSpan().ToUpperInvariant(upperKind);
+                        string? @class = upperKind.Slice(0, alertBlock.Kind.Length) switch
+                        {
+                            "NOTE" => "alert-primary",
+                            "TIP" => "alert-success",
+                            "IMPORTANT" => "alert-info",
+                            "WARNING" => "alert-warning",
+                            "CAUTION" => "alert-danger",
+                            _ => null,
+                        };
 
-                    if (@class is not null)
-                    {
-                        attributes.AddClass(@class);
+                        if (@class is not null)
+                        {
+                            attributes.AddClass(@class);
+                        }
                     }
 
                     var lastParagraph = alertBlock.Descendants().OfType<ParagraphBlock>().LastOrDefault();
