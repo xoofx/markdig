@@ -698,7 +698,7 @@ literal      ( 0, 2)  2-3
     [Test]
     public void TestMathematicsInline()
     {
-        //     01 23456789AB
+        //     01 23456789ABCDEF
         Check("0\n012 $abcd$ 321", @"
 paragraph    ( 0, 0)  0-15
 literal      ( 0, 0)  0-0
@@ -707,6 +707,13 @@ literal      ( 1, 0)  2-5
 math         ( 1, 4)  6-11
 attributes   ( 0, 0)  0--1
 literal      ( 1,10) 12-15
+", "mathematics");
+
+        //     012345678
+        Check("$ abcd $", @"
+paragraph    ( 0, 0)  0-7
+math         ( 0, 0)  0-7
+attributes   ( 0, 0)  0--1
 ", "mathematics");
     }
 
