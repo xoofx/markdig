@@ -65,20 +65,15 @@ public class BootstrapExtension : IMarkdownExtension
                     if (alertBlock.Kind.Length <= upperKind.Length)
                     {
                         alertBlock.Kind.AsSpan().ToUpperInvariant(upperKind);
-                        string? @class = upperKind.Slice(0, alertBlock.Kind.Length) switch
+                        attributes.AddClass(upperKind.Slice(0, alertBlock.Kind.Length) switch
                         {
                             "NOTE" => "alert-primary",
                             "TIP" => "alert-success",
                             "IMPORTANT" => "alert-info",
                             "WARNING" => "alert-warning",
                             "CAUTION" => "alert-danger",
-                            _ => null,
-                        };
-
-                        if (@class is not null)
-                        {
-                            attributes.AddClass(@class);
-                        }
+                            _ => "alert-dark",
+                        });
                     }
 
                     var lastParagraph = alertBlock.Descendants().OfType<ParagraphBlock>().LastOrDefault();
