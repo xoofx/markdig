@@ -41,6 +41,7 @@ public class BootstrapExtension : IMarkdownExtension
 
     private static void PipelineOnDocumentProcessed(MarkdownDocument document)
     {
+        Span<char> upperKind = new char[16];
         foreach (var node in document.Descendants())
         {
             if (node.IsInline)
@@ -61,19 +62,18 @@ public class BootstrapExtension : IMarkdownExtension
                     var attributes = node.GetAttributes();
                     attributes.AddClass("alert");
                     attributes.AddProperty("role", "alert");
-                    string? @class = alertBlock.Kind.AsSpan() switch
+                    if (alertBlock.Kind.Length <= upperKind.Length)
                     {
-                        "NOTE" => "alert-primary",
-                        "TIP" => "alert-success",
-                        "IMPORTANT" => "alert-info",
-                        "WARNING" => "alert-warning",
-                        "CAUTION" => "alert-danger",
-                        _ => null,
-                    };
-
-                    if (@class is not null)
-                    {
-                        attributes.AddClass(@class);
+                        alertBlock.Kind.AsSpan().ToUpperInvariant(upperKind);
+                        attributes.AddClass(upperKind.Slice(0, alertBlock.Kind.Length) switch
+                        {
+                            "NOTE" => "alert-primary",
+                            "TIP" => "alert-success",
+                            "IMPORTANT" => "alert-info",
+                            "WARNING" => "alert-warning",
+                            "CAUTION" => "alert-danger",
+                            _ => "alert-dark",
+                        });
                     }
 
                     var lastParagraph = alertBlock.Descendants().OfType<ParagraphBlock>().LastOrDefault();
