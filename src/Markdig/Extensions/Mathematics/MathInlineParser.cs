@@ -152,7 +152,7 @@ public class MathInlineParser : InlineParser
             // Create a new MathInline
             var inline = new MathInline()
             {
-                Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(end)),
+                Span = new SourceSpan(processor.GetSourcePosition(startPosition, out int line, out int column), processor.GetSourcePosition(slice.Start - 1)),
                 Line = line,
                 Column = column,
                 Delimiter = match,
