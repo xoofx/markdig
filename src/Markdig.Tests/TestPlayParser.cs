@@ -9,6 +9,13 @@ namespace Markdig.Tests;
 [TestFixture]
 public class TestPlayParser
 {
+
+    [Test]
+    public void TestInvalidSetext()
+    {
+        TestParser.TestSpec("test\n===n", "<p>test\n===n</p>", "advanced");
+    }
+
     [Test]
     public void TestBugWithEmphasisAndTable()
     {

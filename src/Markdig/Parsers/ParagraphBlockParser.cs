@@ -171,13 +171,9 @@ public class ParagraphBlockParser : BlockParser
         {
             count = line.CountAndSkipChar(headingChar);
 
-            if (line.IsEmpty)
+            while (line.CurrentChar.IsSpaceOrTab())
             {
-                return headingChar;
-            }
-
-            while (line.NextChar().IsSpaceOrTab())
-            {
+                line.NextChar();
             }
 
             if (line.IsEmpty)
