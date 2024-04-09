@@ -58,6 +58,7 @@ public class HostProviderBuilder
     internal static Dictionary<string, IHostProvider> KnownHosts { get; }
         = new Dictionary<string, IHostProvider>(StringComparer.OrdinalIgnoreCase)
         {
+            ["YouTubeShort"] = Create("www.youtube.com", YouTubeShort, iframeClass: "youtubeshort"),
             ["YouTube"] = Create("www.youtube.com", YouTube, iframeClass: "youtube"),
             ["YouTubeShortened"] = Create("youtu.be", YouTubeShortened, iframeClass: "youtube"),
             ["Vimeo"] = Create("vimeo.com", Vimeo, iframeClass: "vimeo"),
@@ -90,6 +91,19 @@ public class HostProviderBuilder
             queryParams.FirstOrDefault(p => p.StartsWith("v=", StringComparison.Ordinal))?.Substring(2),
             queryParams.FirstOrDefault(p => p.StartsWith("t=", StringComparison.Ordinal))?.Substring(2)
         );
+    }
+
+    private static string? YouTubeShort(Uri uri)
+    {
+        string uriPath = uri.AbsolutePath;
+        bool isYouTubeShort = uriPath.StartsWith("/shorts/", StringComparison.OrdinalIgnoreCase);
+        if (!isYouTubeShort)
+        {
+            return null;
+        }
+
+        var shortId = uriPath.Substring("/shorts/".Length).Split('?').FirstOrDefault(); // the format might be "/shorts/6BUptHVuvyI?feature=share"
+        return BuildYouTubeIframeUrl(shortId, null);
     }
 
     private static string? YouTubeShortened(Uri uri)

@@ -25,6 +25,7 @@ public class TestMediaLinks
     [Test]
     [TestCase("![static mp4](https://sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://sample.com/video.mp4\"></source></video></p>\n")]
     [TestCase("![static mp4](//sample.com/video.mp4)", "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"//sample.com/video.mp4\"></source></video></p>\n")]
+    [TestCase(@"![youtube short](https://www.youtube.com/shorts/6BUptHVuvyI?feature=share)", "<p><iframe src=\"https://www.youtube.com/embed/6BUptHVuvyI\" class=\"youtubeshort\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
     [TestCase(@"![youtube.com](https://www.youtube.com/watch?v=mswPy5bt3TQ)", "<p><iframe src=\"https://www.youtube.com/embed/mswPy5bt3TQ\" class=\"youtube\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
     [TestCase("![yandex.ru](https://music.yandex.ru/album/411845/track/4402274)", "<p><iframe src=\"https://music.yandex.ru/iframe/#track/4402274/411845/\" class=\"yandex\" width=\"500\" height=\"281\" frameborder=\"0\"></iframe></p>\n")]
     [TestCase("![vimeo](https://vimeo.com/8607834)", "<p><iframe src=\"https://player.vimeo.com/video/8607834\" class=\"vimeo\" width=\"500\" height=\"281\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>\n")]
@@ -33,7 +34,7 @@ public class TestMediaLinks
     public void TestBuiltInHosts(string markdown, string expected)
     {
         string html = Markdown.ToHtml(markdown, GetPipeline());
-        Assert.AreEqual(html, expected);
+        Assert.AreEqual(expected, html);
     }
 
     [TestCase("![static video relative path](./video.mp4)",
@@ -43,7 +44,7 @@ public class TestMediaLinks
     public void TestBuiltInHostsWithRelativePaths(string markdown, string expected)
     {
         string html = Markdown.ToHtml(markdown, GetPipeline());
-        Assert.AreEqual(html, expected);
+        Assert.AreEqual(expected, html);
     }
     
     private class TestHostProvider : IHostProvider
