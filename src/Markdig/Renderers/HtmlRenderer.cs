@@ -202,7 +202,16 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
             // this is the proper cross-platform way to check whether a uri is absolute or not:
             && Uri.TryCreate(content, UriKind.RelativeOrAbsolute, out var contentUri) && !contentUri.IsAbsoluteUri)
         {
-            content = new Uri(BaseUrl, contentUri).AbsoluteUri;
+            if (BaseUrl.IsAbsoluteUri)
+                content = new Uri(BaseUrl, contentUri).AbsoluteUri;
+            else
+            {
+                var builder = new UriBuilder(BaseUrl);
+                if (!builder.Path.EndsWith("/"))
+                    builder.Path += "/";
+                builder.Path += contentUri.ToString();
+                content = builder.Uri.ToString();
+            }
         }
 
         if (LinkRewriter != null)
