@@ -48,7 +48,7 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
         ObjectRenderers.Add(new EmphasisInlineRenderer());
         ObjectRenderers.Add(new LineBreakInlineRenderer());
         ObjectRenderers.Add(new HtmlInlineRenderer());
-        ObjectRenderers.Add(new HtmlEntityInlineRenderer());            
+        ObjectRenderers.Add(new HtmlEntityInlineRenderer());
         ObjectRenderers.Add(new LinkInlineRenderer());
         ObjectRenderers.Add(new LiteralInlineRenderer());
 
@@ -206,11 +206,11 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
                 content = new Uri(BaseUrl, contentUri).AbsoluteUri;
             else
             {
-                var builder = new UriBuilder(BaseUrl);
-                if (!builder.Path.EndsWith("/"))
-                    builder.Path += "/";
-                builder.Path += contentUri.ToString();
-                content = builder.Uri.ToString();
+                var baseUrl = BaseUrl.ToString();
+                content = baseUrl;
+                if (!baseUrl.EndsWith("/"))
+                    content += "/";
+                content += contentUri.ToString();
             }
         }
 
