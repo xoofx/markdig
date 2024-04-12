@@ -7,6 +7,7 @@ using System.IO;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using Markdig.Renderers;
 
 namespace Markdig;
 
@@ -89,6 +90,8 @@ public class MarkdownPipelineBuilder
 
     internal ProcessDocumentDelegate? GetDocumentProcessed => DocumentProcessed;
 
+    internal Action<HtmlRenderer>? ConfigureHtmlRenderer;
+
     /// <summary>
     /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
     /// </summary>
@@ -120,7 +123,8 @@ public class MarkdownPipelineBuilder
             new BlockParserList(BlockParsers),
             new InlineParserList(InlineParsers),
             DebugLog,
-            GetDocumentProcessed)
+            GetDocumentProcessed,
+            ConfigureHtmlRenderer)
         {
             PreciseSourceLocation = PreciseSourceLocation,
             TrackTrivia = TrackTrivia,

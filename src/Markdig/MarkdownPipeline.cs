@@ -25,7 +25,8 @@ public sealed class MarkdownPipeline
         BlockParserList blockParsers,
         InlineParserList inlineParsers,
         TextWriter? debugLog,
-        ProcessDocumentDelegate? documentProcessed)
+        ProcessDocumentDelegate? documentProcessed,
+        Action<HtmlRenderer>? configureHtmlRenderer)
     {
         if (blockParsers is null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
         if (inlineParsers is null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
@@ -35,6 +36,7 @@ public sealed class MarkdownPipeline
         InlineParsers = inlineParsers;
         DebugLog = debugLog;
         DocumentProcessed = documentProcessed;
+        ConfigureHtmlRenderer = configureHtmlRenderer;
 
         SelfPipeline = Extensions.Find<SelfPipelineExtension>();
     }
@@ -56,6 +58,8 @@ public sealed class MarkdownPipeline
     internal ProcessDocumentDelegate? DocumentProcessed;
 
     internal SelfPipelineExtension? SelfPipeline;
+
+    internal Action<HtmlRenderer>? ConfigureHtmlRenderer;
 
     /// <summary>
     /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -82,8 +86,8 @@ public sealed class MarkdownPipeline
     internal RentedHtmlRenderer RentHtmlRenderer(TextWriter? writer = null)
     {
         HtmlRendererCache cache = writer is null
-            ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false)
-            : _rendererCacheForCustomWriter ??= new HtmlRendererCache(this, customWriter: true);
+            ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false, ConfigureHtmlRenderer)
+            : _rendererCacheForCustomWriter ??= new HtmlRendererCache(this, customWriter: true, ConfigureHtmlRenderer);
 
         HtmlRenderer renderer = cache.Get();
 
@@ -97,17 +101,21 @@ public sealed class MarkdownPipeline
 
     internal sealed class HtmlRendererCache(
         MarkdownPipeline pipeline,
-        bool customWriter = false) : ObjectCache<HtmlRenderer>
+        bool customWriter = false,
+        Action<HtmlRenderer>? configureRenderer = null) : ObjectCache<HtmlRenderer>
     {
         private static readonly FastStringWriter s_dummyWriter = new();
 
         private readonly MarkdownPipeline _pipeline = pipeline;
         private readonly bool _customWriter = customWriter;
 
+        private readonly Action<HtmlRenderer>? ConfigureRenderer = configureRenderer;
+
         protected override HtmlRenderer NewInstance()
         {
             TextWriter writer = _customWriter ? s_dummyWriter : new FastStringWriter();
             var renderer = new HtmlRenderer(writer);
+            ConfigureRenderer?.Invoke(renderer);
             _pipeline.Setup(renderer);
             return renderer;
         }
