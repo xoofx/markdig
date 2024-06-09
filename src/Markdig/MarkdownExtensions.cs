@@ -108,7 +108,7 @@ public static class MarkdownExtensions
         pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
         return pipeline;
     }
-    
+
     /// <summary>
     /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
     /// </summary>
@@ -711,7 +711,7 @@ public static class MarkdownExtensions
 
     public static MarkdownPipelineBuilder ConfigureHtmlRenderer(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer> configureHtmlRenderer)
     {
-        pipeline.ConfigureHtmlRenderer = configureHtmlRenderer;
+        pipeline.ConfigureHtmlRendererAction = configureHtmlRenderer;
         return pipeline;
     }
 }

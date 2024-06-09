@@ -90,7 +90,7 @@ public class MarkdownPipelineBuilder
 
     internal ProcessDocumentDelegate? GetDocumentProcessed => DocumentProcessed;
 
-    internal Action<HtmlRenderer>? ConfigureHtmlRenderer;
+    internal Action<HtmlRenderer>? ConfigureHtmlRendererAction;
 
     /// <summary>
     /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
@@ -124,7 +124,7 @@ public class MarkdownPipelineBuilder
             new InlineParserList(InlineParsers),
             DebugLog,
             GetDocumentProcessed,
-            ConfigureHtmlRenderer)
+            ConfigureHtmlRendererAction)
         {
             PreciseSourceLocation = PreciseSourceLocation,
             TrackTrivia = TrackTrivia,
