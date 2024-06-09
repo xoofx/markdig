@@ -709,9 +709,19 @@ public static class MarkdownExtensions
         return pipeline;
     }
 
-    public static MarkdownPipelineBuilder ConfigureHtmlRenderer(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer> configureHtmlRenderer)
+    public static MarkdownPipelineBuilder ConfigureHtmlRenderer(
+        this MarkdownPipelineBuilder pipeline,
+        Func<HtmlRendererBuilder, HtmlRendererBuilder> configureRenderer)
     {
-        pipeline.ConfigureHtmlRendererAction = configureHtmlRenderer;
+        pipeline.RendererBuilder = configureRenderer(new HtmlRendererBuilder());
+        return pipeline;
+    }
+
+    public static MarkdownPipelineBuilder UseRendererBuilder(
+        this MarkdownPipelineBuilder pipeline,
+        IMarkdownRendererBuilder rendererBuilder)
+    {
+        pipeline.RendererBuilder = rendererBuilder;
         return pipeline;
     }
 }

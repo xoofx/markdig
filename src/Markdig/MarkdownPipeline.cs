@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.IO;
@@ -26,7 +26,7 @@ public sealed class MarkdownPipeline
         InlineParserList inlineParsers,
         TextWriter? debugLog,
         ProcessDocumentDelegate? documentProcessed,
-        Action<HtmlRenderer>? configureHtmlRenderer)
+        IMarkdownRendererBuilder? rendererBuilder)
     {
         if (blockParsers is null) ThrowHelper.ArgumentNullException(nameof(blockParsers));
         if (inlineParsers is null) ThrowHelper.ArgumentNullException(nameof(inlineParsers));
@@ -36,7 +36,7 @@ public sealed class MarkdownPipeline
         InlineParsers = inlineParsers;
         DebugLog = debugLog;
         DocumentProcessed = documentProcessed;
-        ConfigureHtmlRenderer = configureHtmlRenderer;
+        RendererBuilder = rendererBuilder;
 
         SelfPipeline = Extensions.Find<SelfPipelineExtension>();
     }
@@ -59,7 +59,7 @@ public sealed class MarkdownPipeline
 
     internal SelfPipelineExtension? SelfPipeline;
 
-    internal Action<HtmlRenderer>? ConfigureHtmlRenderer;
+    internal IMarkdownRendererBuilder? RendererBuilder;
 
     /// <summary>
     /// True to parse trivia such as whitespace, extra heading characters and unescaped
@@ -86,10 +86,10 @@ public sealed class MarkdownPipeline
     internal RentedHtmlRenderer RentHtmlRenderer(TextWriter? writer = null)
     {
         HtmlRendererCache cache = writer is null
-            ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false, ConfigureHtmlRenderer)
-            : _rendererCacheForCustomWriter ??= new HtmlRendererCache(this, customWriter: true, ConfigureHtmlRenderer);
+            ? _rendererCache ??= new HtmlRendererCache(this, customWriter: false, RendererBuilder)
+            : _rendererCacheForCustomWriter ??= new HtmlRendererCache(this, customWriter: true, RendererBuilder);
 
-        HtmlRenderer renderer = cache.Get();
+        TextRendererBase renderer = cache.Get();
 
         if (writer is not null)
         {
@@ -102,25 +102,25 @@ public sealed class MarkdownPipeline
     internal sealed class HtmlRendererCache(
         MarkdownPipeline pipeline,
         bool customWriter = false,
-        Action<HtmlRenderer>? configureRenderer = null) : ObjectCache<HtmlRenderer>
+        IMarkdownRendererBuilder? rendererBuilder = null) : ObjectCache<TextRendererBase>
     {
         private static readonly FastStringWriter s_dummyWriter = new();
 
         private readonly MarkdownPipeline _pipeline = pipeline;
         private readonly bool _customWriter = customWriter;
 
-        private readonly Action<HtmlRenderer>? ConfigureRenderer = configureRenderer;
+        private readonly IMarkdownRendererBuilder RendererBuilder =
+            rendererBuilder ?? new HtmlRendererBuilder();
 
-        protected override HtmlRenderer NewInstance()
+        protected override TextRendererBase NewInstance()
         {
             TextWriter writer = _customWriter ? s_dummyWriter : new FastStringWriter();
-            var renderer = new HtmlRenderer(writer);
-            ConfigureRenderer?.Invoke(renderer);
+            var renderer = RendererBuilder.Build(writer);
             _pipeline.Setup(renderer);
             return renderer;
         }
 
-        protected override void Reset(HtmlRenderer instance)
+        protected override void Reset(TextRendererBase instance)
         {
             instance.ResetInternal();
 
@@ -138,9 +138,9 @@ public sealed class MarkdownPipeline
     internal readonly struct RentedHtmlRenderer : IDisposable
     {
         private readonly HtmlRendererCache _cache;
-        public readonly HtmlRenderer Instance;
+        public readonly TextRendererBase Instance;
 
-        internal RentedHtmlRenderer(HtmlRendererCache cache, HtmlRenderer renderer)
+        internal RentedHtmlRenderer(HtmlRendererCache cache, TextRendererBase renderer)
         {
             _cache = cache;
             Instance = renderer;

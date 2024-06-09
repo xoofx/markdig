@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.IO;
@@ -90,7 +90,7 @@ public class MarkdownPipelineBuilder
 
     internal ProcessDocumentDelegate? GetDocumentProcessed => DocumentProcessed;
 
-    internal Action<HtmlRenderer>? ConfigureHtmlRendererAction;
+    internal IMarkdownRendererBuilder? RendererBuilder;
 
     /// <summary>
     /// Builds a pipeline from this instance. Once the pipeline is build, it cannot be modified.
@@ -124,7 +124,7 @@ public class MarkdownPipelineBuilder
             new InlineParserList(InlineParsers),
             DebugLog,
             GetDocumentProcessed,
-            ConfigureHtmlRendererAction)
+            RendererBuilder)
         {
             PreciseSourceLocation = PreciseSourceLocation,
             TrackTrivia = TrackTrivia,
