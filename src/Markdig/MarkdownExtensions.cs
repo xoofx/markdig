@@ -37,6 +37,7 @@ using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Roundtrip;
 
 namespace Markdig;
 
@@ -733,6 +734,16 @@ public static class MarkdownExtensions
         Func<NormalizeRendererBuilder, NormalizeRendererBuilder> configureRenderer)
     {
         pipeline.RendererBuilder = configureRenderer(new NormalizeRendererBuilder());
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Configure the pipeline with a <see cref="RoundtripRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    public static MarkdownPipelineBuilder ConfigureRoundtripRenderer(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.RendererBuilder = new RoundtripRendererBuilder();
         return pipeline;
     }
 
