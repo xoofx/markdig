@@ -17,6 +17,7 @@ public class HtmlRendererBuilder : IMarkdownRendererBuilder
     private bool? enableHtmlForBlock;
     private bool? enableHtmlForInline;
     private bool? useNonAsciiNoEscape;
+    public Func<string, string>? linkRewriter;
 
     public HtmlRenderer Build(TextWriter writer)
     {
@@ -27,6 +28,7 @@ public class HtmlRendererBuilder : IMarkdownRendererBuilder
         if (enableHtmlForBlock != null) htmlRenderer.EnableHtmlForBlock = enableHtmlForBlock.Value;
         if (enableHtmlForInline != null) htmlRenderer.EnableHtmlForInline = enableHtmlForInline.Value;
         if (useNonAsciiNoEscape != null) htmlRenderer.UseNonAsciiNoEscape = useNonAsciiNoEscape.Value;
+        if (linkRewriter != null) htmlRenderer.LinkRewriter = linkRewriter;
 
         return htmlRenderer;
     }
@@ -72,6 +74,13 @@ public class HtmlRendererBuilder : IMarkdownRendererBuilder
     public HtmlRendererBuilder UseNonAsciiNoEscape(bool enable)
     {
         useNonAsciiNoEscape = enable;
+        return this;
+    }
+
+    /// <inheritdoc cref="HtmlRenderer.LinkRewriter"/>
+    public HtmlRendererBuilder UseLinkRewriter(Func<string,string> linkRewriter)
+    {
+        this.linkRewriter = linkRewriter;
         return this;
     }
 }
