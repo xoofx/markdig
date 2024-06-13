@@ -36,6 +36,7 @@ using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
 
 namespace Markdig;
 
@@ -719,6 +720,19 @@ public static class MarkdownExtensions
         Func<HtmlRendererBuilder, HtmlRendererBuilder> configureRenderer)
     {
         pipeline.RendererBuilder = configureRenderer(new HtmlRendererBuilder());
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Configure the pipeline with a <see cref="NormalizeRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="configureRenderer">An action which configures the <c>NormalizeRenderer</c>.</param>
+    public static MarkdownPipelineBuilder ConfigureNormalizeRenderer(
+        this MarkdownPipelineBuilder pipeline,
+        Func<NormalizeRendererBuilder, NormalizeRendererBuilder> configureRenderer)
+    {
+        pipeline.RendererBuilder = configureRenderer(new NormalizeRendererBuilder());
         return pipeline;
     }
 
