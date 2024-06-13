@@ -12,18 +12,14 @@ internal static class TestRoundtrip
 
     internal static void RoundTrip(string markdown, string context = null)
     {
-        var pipelineBuilder = new MarkdownPipelineBuilder();
-        pipelineBuilder.EnableTrackTrivia();
-        pipelineBuilder.UseYamlFrontMatter();
-        MarkdownPipeline pipeline = pipelineBuilder.Build();
+        var pipeline = new MarkdownPipelineBuilder()
+            .EnableTrackTrivia()
+            .UseYamlFrontMatter()
+            .ConfigureRoundtripRenderer()
+            .Build();
         MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
-        var sw = new StringWriter();
-        var nr = new RoundtripRenderer(sw);
-        pipeline.Setup(nr);
 
-        nr.Write(markdownDocument);
-
-        var result = sw.ToString();
+        var result = Markdown.ToHtml(markdownDocument, pipeline);
         TestParser.PrintAssertExpected("", result, markdown, context);
     }
 }

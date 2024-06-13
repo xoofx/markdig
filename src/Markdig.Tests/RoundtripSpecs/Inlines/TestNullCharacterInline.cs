@@ -22,16 +22,15 @@ namespace Markdig.Tests.RoundtripSpecs.Inlines
         // do not unintentionally use the expected parameter
         private static void RoundTrip(string markdown, string expected)
         {
-            var pipelineBuilder = new MarkdownPipelineBuilder();
-            pipelineBuilder.EnableTrackTrivia();
-            MarkdownPipeline pipeline = pipelineBuilder.Build();
+            var pipeline = new MarkdownPipelineBuilder()
+                .EnableTrackTrivia()
+                .ConfigureRoundtripRenderer()
+                .Build();
+
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, pipeline);
-            var sw = new StringWriter();
-            var rr = new RoundtripRenderer(sw);
+            var result = Markdown.ToHtml(markdownDocument, pipeline);
 
-            rr.Write(markdownDocument);
-
-            Assert.AreEqual(expected, sw.ToString());
+            Assert.AreEqual(expected, result);
         }
     }
 }
