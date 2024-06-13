@@ -719,10 +719,7 @@ public static class MarkdownExtensions
     public static MarkdownPipelineBuilder ConfigureHtmlRenderer(
         this MarkdownPipelineBuilder pipeline,
         Func<HtmlRendererBuilder, HtmlRendererBuilder> configureRenderer)
-    {
-        pipeline.RendererBuilder = configureRenderer(new HtmlRendererBuilder());
-        return pipeline;
-    }
+        => pipeline.UseRendererBuilder(configureRenderer(new HtmlRendererBuilder()));
 
     /// <summary>
     /// Configure the pipeline with a <see cref="NormalizeRenderer"/>.
@@ -732,20 +729,14 @@ public static class MarkdownExtensions
     public static MarkdownPipelineBuilder ConfigureNormalizeRenderer(
         this MarkdownPipelineBuilder pipeline,
         Func<NormalizeRendererBuilder, NormalizeRendererBuilder> configureRenderer)
-    {
-        pipeline.RendererBuilder = configureRenderer(new NormalizeRendererBuilder());
-        return pipeline;
-    }
+        => pipeline.UseRendererBuilder(configureRenderer(new NormalizeRendererBuilder()));
 
     /// <summary>
     /// Configure the pipeline with a <see cref="RoundtripRenderer"/>.
     /// </summary>
     /// <param name="pipeline">The pipeline.</param>
     public static MarkdownPipelineBuilder ConfigureRoundtripRenderer(this MarkdownPipelineBuilder pipeline)
-    {
-        pipeline.RendererBuilder = new RoundtripRendererBuilder();
-        return pipeline;
-    }
+        => pipeline.UseRendererBuilder(new RoundtripRendererBuilder());
 
     /// <summary>
     /// Configure the pipeline to use a <see cref="IMarkdownRendererBuilder"/> to construct the renderer.
