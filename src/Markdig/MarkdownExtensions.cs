@@ -709,6 +709,11 @@ public static class MarkdownExtensions
         return pipeline;
     }
 
+    /// <summary>
+    /// Configure the pipeline with a <see cref="HtmlRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="configureRenderer">An action which configures the <c>HtmlRenderer</c>.</param>
     public static MarkdownPipelineBuilder ConfigureHtmlRenderer(
         this MarkdownPipelineBuilder pipeline,
         Func<HtmlRendererBuilder, HtmlRendererBuilder> configureRenderer)
@@ -717,6 +722,11 @@ public static class MarkdownExtensions
         return pipeline;
     }
 
+    /// <summary>
+    /// Configure the pipeline to use a <see cref="IMarkdownRendererBuilder"/> to construct the renderer.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="rendererBuilder">The builder for the renderer.</param>
     public static MarkdownPipelineBuilder UseRendererBuilder(
         this MarkdownPipelineBuilder pipeline,
         IMarkdownRendererBuilder rendererBuilder)
