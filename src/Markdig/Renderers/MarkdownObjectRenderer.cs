@@ -28,15 +28,15 @@ public abstract class MarkdownObjectRenderer<TRenderer, TObject> : IMarkdownObje
 
     public virtual void Write(RendererBase renderer, MarkdownObject obj)
     {
-        var htmlRenderer = (TRenderer)renderer;
+        var typedRenderer = (TRenderer)renderer;
         var typedObj = (TObject)obj;
 
-        if (_tryWriters is not null && TryWrite(htmlRenderer, typedObj))
+        if (_tryWriters is not null && TryWrite(typedRenderer, typedObj))
         {
             return;
         }
 
-        Write(htmlRenderer, typedObj);
+        Write(typedRenderer, typedObj);
     }
 
     private bool TryWrite(TRenderer renderer, TObject obj)
