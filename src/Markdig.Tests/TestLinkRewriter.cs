@@ -24,17 +24,13 @@ public class TestLinkRewriter
 
     public static void TestSpec(Func<string,string> linkRewriter, string markdown, string expectedLink)
     {
-        var pipeline = new MarkdownPipelineBuilder().Build();
-
-        var writer = new StringWriter();
-        var renderer = new HtmlRenderer(writer);
-        renderer.LinkRewriter = linkRewriter;
-        pipeline.Setup(renderer);
+        var pipeline = new MarkdownPipelineBuilder()
+            .ConfigureHtmlRenderer(r => r.UseLinkRewriter(linkRewriter))
+            .Build();
 
         var document = MarkdownParser.Parse(markdown, pipeline);
-        renderer.Render(document);
-        writer.Flush();
+        var html = Markdown.ToHtml(document, pipeline);
 
-        Assert.That(writer.ToString(), Contains.Substring("=\"" + expectedLink + "\""));
+        Assert.That(html, Contains.Substring("=\"" + expectedLink + "\""));
     }
 }
