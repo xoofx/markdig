@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Renderers;
@@ -22,8 +22,7 @@ public class DiagramExtension : IMarkdownExtension
         if (renderer is HtmlRenderer htmlRenderer)
         {
             var codeRenderer = htmlRenderer.ObjectRenderers.FindExact<CodeBlockRenderer>()!;
-            // TODO: Add other well known diagram languages
-            codeRenderer.BlocksAsDiv.Add("mermaid");
+            codeRenderer.BlockMapping["mermaid"] = "pre";
             codeRenderer.BlocksAsDiv.Add("nomnoml");
         }
     }

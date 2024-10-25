@@ -4,7 +4,7 @@ Adds support for diagrams extension:
 
 ## Mermaid diagrams
  
-Using a fenced code block with the `mermaid` language info will output a `<div class='mermaid'>` instead of a `pre/code` block:
+Using a fenced code block with the `mermaid` language info will output a `<pre class='mermaid'>` block (which is the default for other code block):
 
 ```````````````````````````````` example
 ```mermaid
@@ -15,12 +15,12 @@ graph TD;
     C-->D;
 ```
 .
-<div class="mermaid">graph TD;
+<pre class="mermaid">graph TD;
     A-->B;
     A-->C;
     B-->D;
     C-->D;
-</div>
+</pre>
 ````````````````````````````````
 
 ## nomnoml diagrams
