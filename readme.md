@@ -144,12 +144,12 @@ AMD Ryzen 9 5950X, 1 CPU, 32 logical and 16 physical cores
 - Markdig is roughly **x100 times faster than MarkdownSharp**
 - **20% faster than the reference cmark C implementation** 
 
+## Sponsors
 
-## Donate
+Supports this project with a monthly donation and help me continue improving it. \[[Become a sponsor](https://github.com/sponsors/xoofx)\]
 
-If you are using this library and find it useful for your project, please consider a donation for it!
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
+[<img src="https://github.com/lilith.png?size=200" width="64px;" style="border-radius: 50%" alt="lilith"/>](https://github.com/lilith) Lilith River, author of [Imageflow Server, an easy on-demand
+image editing, optimization, and delivery server](https://github.com/imazen/imageflow-server)
 
 ## Credits
 
