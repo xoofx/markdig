@@ -17,7 +17,7 @@ namespace Markdig.Tests.Specs.Diagrams
         // 
         // ## Mermaid diagrams
         //  
-        // Using a fenced code block with the `mermaid` language info will output a `<div class='mermaid'>` instead of a `pre/code` block:
+        // Using a fenced code block with the `mermaid` language info will output a `<pre class='mermaid'>` block (which is the default for other code block):
         [Test]
         public void ExtensionsMermaidDiagrams_Example001()
         {
@@ -34,14 +34,14 @@ namespace Markdig.Tests.Specs.Diagrams
             //     ```
             //
             // Should be rendered as:
-            //     <div class="mermaid">graph TD;
+            //     <pre class="mermaid">graph TD;
             //         A-->B;
             //         A-->C;
             //         B-->D;
             //         C-->D;
-            //     </div>
+            //     </pre>
 
-            TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<div class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</div>", "diagrams|advanced", context: "Example 1\nSection Extensions / Mermaid diagrams\n");
+            TestParser.TestSpec("```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```", "<pre class=\"mermaid\">graph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n</pre>", "diagrams|advanced", context: "Example 1\nSection Extensions / Mermaid diagrams\n");
         }
     }
 

@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Parsers;
@@ -13,8 +13,6 @@ namespace Markdig.Renderers.Html;
 /// <seealso cref="HtmlObjectRenderer{CodeBlock}" />
 public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
 {
-    private HashSet<string>? _blocksAsDiv;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeBlockRenderer"/> class.
     /// </summary>
@@ -25,23 +23,32 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     /// <summary>
     /// Gets a map of fenced code block infos that should be rendered as div blocks instead of pre/code blocks.
     /// </summary>
-    public HashSet<string> BlocksAsDiv => _blocksAsDiv ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> BlocksAsDiv { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets a map of custom block mapping to render as custom blocks instead of pre/code blocks.
+    /// For example defining {"mermaid", "pre"} will render a block with info `mermaid` as a `pre` block but without the code HTML element.
+    /// </summary>
+    public Dictionary<string, string> BlockMapping { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
         renderer.EnsureLine();
 
-        if (_blocksAsDiv is not null && (obj as FencedCodeBlock)?.Info is string info && _blocksAsDiv.Contains(info))
+        if ((obj as FencedCodeBlock)?.Info is string info && (BlocksAsDiv.Contains(info) || BlockMapping.ContainsKey(info)))
         {
             var infoPrefix = (obj.Parser as FencedCodeBlockParser)?.InfoPrefix ??
                              FencedCodeBlockParser.DefaultInfoPrefix;
+
+            var htmlBlock = BlockMapping.TryGetValue(info, out var blockType) ? blockType : "div";
 
             // We are replacing the HTML attribute `language-mylang` by `mylang` only for a div block
             // NOTE that we are allocating a closure here
 
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.Write("<div")
+                renderer.WriteRaw('<');
+                renderer.Write(htmlBlock)
                         .WriteAttributes(obj.TryGetAttributes(),
                             cls => cls.StartsWith(infoPrefix, StringComparison.Ordinal) ? cls.Substring(infoPrefix.Length) : cls)
                         .WriteRaw('>');
@@ -51,7 +58,7 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
 
             if (renderer.EnableHtmlForBlock)
             {
-                renderer.WriteLine("</div>");
+                renderer.Write("</").Write(htmlBlock).WriteLine(">");
             }
         }
         else
