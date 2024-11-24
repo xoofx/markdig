@@ -82,6 +82,14 @@ public class TestLinkHelper
     }
 
     [Test]
+    public void TestTitleMultiline()
+    {
+        var text = new StringSlice("'this\ris\r\na\ntitle'");
+        Assert.True(LinkHelper.TryParseTitle(ref text, out string title, out _));
+        Assert.AreEqual("this\ris\r\na\ntitle", title);
+    }
+
+    [Test]
     public void TestUrlAndTitle()
     {
         //                           0         1         2         3

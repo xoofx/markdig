@@ -567,6 +567,7 @@ public static class LinkHelper
                     if (c == '\r' && text.PeekChar() == '\n')
                     {
                         buffer.Append('\n');
+                        text.SkipChar();
                     }
                     continue;
                 }
@@ -663,6 +664,7 @@ public static class LinkHelper
                     if (c == '\r' && text.PeekChar() == '\n')
                     {
                         buffer.Append('\n');
+                        text.SkipChar();
                     }
                     continue;
                 }
