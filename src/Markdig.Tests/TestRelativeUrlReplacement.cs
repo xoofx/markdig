@@ -27,18 +27,13 @@ public class TestRelativeUrlReplacement
 
     public static void TestSpec(string baseUrl, string markdown, string expectedLink)
     {
-        var pipeline = new MarkdownPipelineBuilder().Build();
-
-        var writer = new StringWriter();
-        var renderer = new HtmlRenderer(writer);
-        if (baseUrl != null)
-            renderer.BaseUrl = new Uri(baseUrl);
-        pipeline.Setup(renderer);
+        var pipeline = new MarkdownPipelineBuilder()
+            .ConfigureHtmlRenderer(b => b.UseBaseUrl(baseUrl))
+            .Build();
 
         var document = MarkdownParser.Parse(markdown, pipeline);
-        renderer.Render(document);
-        writer.Flush();
+        var html = Markdown.ToHtml(document, pipeline);
 
-        Assert.That(writer.ToString(), Contains.Substring("=\"" + expectedLink + "\""));
+        Assert.That(html, Contains.Substring("=\"" + expectedLink + "\""));
     }
 }
