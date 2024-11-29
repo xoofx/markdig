@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net462;net6.0;net8.0;net9.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>13.0</LangVersion>
     <StartupObject>Markdig.Tests.Program</StartupObject>
     <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net8.0\SpecFileGen.dll</SpecExecutable>
     <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\net8.0\SpecFileGen.timestamp</SpecTimestamp>
@@ -18,14 +19,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
-    <ProjectReference Include="..\SpecFileGen\SpecFileGen.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' OR  '$(TargetFramework)' == 'net9.0'">
+    <ProjectReference Include="..\SpecFileGen\SpecFileGen.csproj" />
     <ItemSpecExecutable Include="$(SpecExecutable)" />
     <InputSpecFiles Include="Specs\*.md" />
     <InputSpecFiles Include="NormalizeSpecs\*.md" />
@@ -37,7 +38,7 @@
     <OutputSpecFiles Include="@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')" />
   </ItemGroup>
 
-  <Target Name="GeneratedSpecsFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="@(ItemSpecExecutable);@(InputSpecFiles)" Outputs="@(ItemSpecExecutable->'%(RelativeDir)%(Filename).timestamp');@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')">
+  <Target Condition=" '$(TargetFramework)' == 'net8.0' OR  '$(TargetFramework)' == 'net9.0'" Name="GeneratedSpecsFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="@(ItemSpecExecutable);@(InputSpecFiles)" Outputs="@(ItemSpecExecutable->'%(RelativeDir)%(Filename).timestamp');@(InputSpecFiles->'%(RelativeDir)%(Filename).generated.cs')">
     <Message Importance="high" Text="Regenerating Specs Files" />
     <Exec Command="dotnet $(SpecExecutable)" />
     <WriteLinesToFile File="$(SpecTimestamp)" Lines="$([System.DateTime]::Now)" />

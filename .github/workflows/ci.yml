@@ -13,6 +13,6 @@ jobs:
   build:
     uses: xoofx/.github/.github/workflows/dotnet.yml@main
     with:
-      dotnet-version: '6.0 8.0'
+      dotnet-version: '6.0 8.0 9.0'
     secrets:
       NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}    
