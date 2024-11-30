@@ -172,7 +172,7 @@ public class TestContainerBlocks
         Assert.NotNull(destination[2]);
         Assert.Null(destination[3]);
 
-        Array.Clear(destination, 0, destination.Length);
+        Array.Clear(destination);
 
         container.Add(new ParagraphBlock());
         container.CopyTo(destination, 1);

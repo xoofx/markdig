@@ -1,7 +1,6 @@
 using System.Text;
-using Markdig.Helpers;
 
-#if NET6_0_OR_GREATER
+using Markdig.Helpers;
 
 namespace Markdig.Tests;
 
@@ -185,4 +184,3 @@ public class TestFastStringWriter
         AssertToString("foobar\nbazfoo\nfoo" + new string('a', 1050));
     }
 }
-#endif
