@@ -161,6 +161,17 @@ literal      ( 0, 8)  8-8
     }
 
     [Test]
+    public void TestEmphasis4()
+    {
+        Check("**foo*", @"
+paragraph    ( 0, 0)  0-5
+literal      ( 0, 0)  0-0
+emphasis     ( 0, 1)  1-5
+literal      ( 0, 2)  2-4
+");
+    }
+
+    [Test]
     public void TestEmphasisFalse()
     {
         Check("0123456789**0123", @"
