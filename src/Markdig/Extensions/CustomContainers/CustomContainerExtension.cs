@@ -30,7 +30,11 @@ public class CustomContainerExtension : IMarkdownExtension
             {
                 if (delimiterCount == 2 && emphasisChar == ':')
                 {
-                    return new CustomContainerInline();
+                    return new CustomContainerInline
+                    {
+                        DelimiterChar = ':',
+                        DelimiterCount = 2
+                    };
                 }
                 return null;
             });
