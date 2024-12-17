@@ -256,7 +256,7 @@ public class GridTableParser : BlockParser
                 {
                     sliceForCell.End = line.Start + columnEnd - 1;
                 }
-                else if (line.PeekCharExtra(line.End) == '|')
+                else if (line.PeekCharExtra(line.End - line.Start) == '|')
                 {
                     sliceForCell.End = line.End - 1;
                 }
