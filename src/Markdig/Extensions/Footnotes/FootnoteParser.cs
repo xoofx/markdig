@@ -57,6 +57,8 @@ public class FootnoteParser : BlockParser
         {
             Label = label,
             LabelSpan = labelSpan,
+            Column = processor.Column,
+            Span = new SourceSpan(processor.Start, processor.Line.End),
         };
 
         // Maintain a list of all footnotes at document level
@@ -74,6 +76,7 @@ public class FootnoteParser : BlockParser
         {
             CreateLinkInline = CreateLinkToFootnote,
             Line = processor.LineIndex,
+            Column = saved,
             Span = new SourceSpan(start, processor.Start - 2), // account for ]:
             LabelSpan = labelSpan,
             Label = label
