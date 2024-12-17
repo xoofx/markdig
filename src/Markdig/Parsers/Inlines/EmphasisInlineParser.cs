@@ -302,14 +302,13 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                         var openDelimitercount = openDelimiter.DelimiterCount;
                         var closeDelimitercount = closeDelimiter.DelimiterCount;
 
-                        emphasis!.Span.Start = openDelimiter.Span.Start;
+                        emphasis!.Span.Start = openDelimiter.Span.Start + openDelimitercount - delimiterDelta;
                         emphasis.Line = openDelimiter.Line;
-                        emphasis.Column = openDelimiter.Column;
+                        emphasis.Column = openDelimiter.Column + openDelimitercount - delimiterDelta;
                         emphasis.Span.End = closeDelimiter.Span.End - closeDelimitercount + delimiterDelta;
 
-                        openDelimiter.Content.Start += delimiterDelta;
-                        openDelimiter.Span.Start += delimiterDelta;
-                        openDelimiter.Column += delimiterDelta;
+                        openDelimiter.Span.End -= delimiterDelta;
+                        openDelimiter.Content.End -= delimiterDelta;
                         closeDelimiter.Content.Start += delimiterDelta;
                         closeDelimiter.Span.Start += delimiterDelta;
                         closeDelimiter.Column += delimiterDelta;
