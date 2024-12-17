@@ -107,7 +107,7 @@ public class TestYamlFrontMatterExtension
             }
         }
 
-        Assert.Pass("No exception parsing and iterating through YAML front matter block lines");
+        // No exception parsing and iterating through YAML front matter block lines
     }
 
 }

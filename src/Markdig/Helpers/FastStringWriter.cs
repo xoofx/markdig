@@ -30,7 +30,7 @@ internal sealed class FastStringWriter : TextWriter
     public override string NewLine
     {
         get => _newLine;
-        set => _newLine = value ?? Environment.NewLine;
+        set => base.NewLine = _newLine = value ?? Environment.NewLine;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
