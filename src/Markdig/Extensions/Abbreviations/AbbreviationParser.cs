@@ -171,7 +171,7 @@ public class AbbreviationParser : BlockParser
                     // Process the remaining literal
                     literal = new LiteralInline()
                     {
-                        Span = new SourceSpan(abbrInline.Span.End + 1, literal.Span.End),
+                        Span = new SourceSpan(abbrInline.Span.End + 1, container.Span.End),
                         Line = line,
                         Column = column + match.Length,
                     };
