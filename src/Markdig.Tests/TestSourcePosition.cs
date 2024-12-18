@@ -808,6 +808,29 @@ literal      ( 4, 2) 13-13
     }
 
     [Test]
+    public void TestPipeTable3()
+    {
+        //     01234 5678 9ABCD
+        Check("|a|b\n-|-\n0|1|\n", @"
+table        ( 0, 0)  0-12
+tablerow     ( 0, 1)  1-3
+tablecell    ( 0, 1)  1-1
+paragraph    ( 0, 1)  1-1
+literal      ( 0, 1)  1-1
+tablecell    ( 0, 3)  3-3
+paragraph    ( 0, 3)  3-3
+literal      ( 0, 3)  3-3
+tablerow     ( 2, 0)  9-11
+tablecell    ( 2, 0)  9-9
+paragraph    ( 2, 0)  9-9
+literal      ( 2, 0)  9-9
+tablecell    ( 2, 2) 11-11
+paragraph    ( 2, 2) 11-11
+literal      ( 2, 2) 11-11
+", "pipetables");
+    }
+
+    [Test]
     public void TestIndentedCode()
     {
         //     01 2 345678 9ABCDE
