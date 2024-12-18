@@ -280,6 +280,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             tableState.EndOfLines.Add(endOfTable);
         }
 
+        int lastPipePos = 0;
+
         // Cell loop
         // Reconstruct the table from the delimiters
         TableRow? row = null;
@@ -302,6 +304,12 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 if (pipeSeparator != null && (delimiter.PreviousSibling is null || delimiter.PreviousSibling is LineBreakInline))
                 {
                     delimiter.Remove();
+                    if (table.Span.IsEmpty)
+                    {
+                        table.Span = delimiter.Span;
+                        table.Line = delimiter.Line;
+                        table.Column = delimiter.Column;
+                    }
                     continue;
                 }
             }
@@ -354,6 +362,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     // If the delimiter is a pipe, we need to remove it from the tree
                     // so that previous loop looking for a parent will not go further on subsequent cells
                     delimiter.Remove();
+                    lastPipePos = delimiter.Span.End;
                 }
 
                 // We trim whitespace at the beginning and ending of the cell
@@ -419,6 +428,11 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 table.Add(row!);
                 row = null;
             }
+        }
+
+        if (lastPipePos > table.Span.End)
+        {
+          table.UpdateSpanEnd(lastPipePos);
         }
 
         // Once we are done with the cells, we can remove all end of lines in the table tree
