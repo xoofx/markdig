@@ -117,7 +117,7 @@ public static class Markdown
         pipeline ??= DefaultPipeline;
 
         using var rentedRenderer = pipeline.RentHtmlRenderer();
-        HtmlRenderer renderer = rentedRenderer.Instance;
+        var renderer = rentedRenderer.Instance;
 
         renderer.Render(document);
         renderer.Writer.Flush();
@@ -141,7 +141,7 @@ public static class Markdown
         pipeline ??= DefaultPipeline;
 
         using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
-        HtmlRenderer renderer = rentedRenderer.Instance;
+        var renderer = rentedRenderer.Instance;
 
         renderer.Render(document);
         renderer.Writer.Flush();
@@ -166,7 +166,7 @@ public static class Markdown
         var document = MarkdownParser.Parse(markdown, pipeline, context);
 
         using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
-        HtmlRenderer renderer = rentedRenderer.Instance;
+        var renderer = rentedRenderer.Instance;
 
         renderer.Render(document);
         writer.Flush();

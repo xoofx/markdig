@@ -36,6 +36,8 @@ using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
+using Markdig.Renderers.Roundtrip;
 
 namespace Markdig;
 
@@ -108,7 +110,7 @@ public static class MarkdownExtensions
         pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
         return pipeline;
     }
-    
+
     /// <summary>
     /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
     /// </summary>
@@ -706,6 +708,46 @@ public static class MarkdownExtensions
         {
             parser.InfoParser = FencedCodeBlockParser.RoundtripInfoParser;
         }
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Configure the pipeline with a <see cref="HtmlRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="configureRenderer">An action which configures the <c>HtmlRenderer</c>.</param>
+    public static MarkdownPipelineBuilder ConfigureHtmlRenderer(
+        this MarkdownPipelineBuilder pipeline,
+        Func<HtmlRendererBuilder, HtmlRendererBuilder> configureRenderer)
+        => pipeline.UseRendererBuilder(configureRenderer(new HtmlRendererBuilder()));
+
+    /// <summary>
+    /// Configure the pipeline with a <see cref="NormalizeRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="configureRenderer">An action which configures the <c>NormalizeRenderer</c>.</param>
+    public static MarkdownPipelineBuilder ConfigureNormalizeRenderer(
+        this MarkdownPipelineBuilder pipeline,
+        Func<NormalizeRendererBuilder, NormalizeRendererBuilder> configureRenderer)
+        => pipeline.UseRendererBuilder(configureRenderer(new NormalizeRendererBuilder()));
+
+    /// <summary>
+    /// Configure the pipeline with a <see cref="RoundtripRenderer"/>.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    public static MarkdownPipelineBuilder ConfigureRoundtripRenderer(this MarkdownPipelineBuilder pipeline)
+        => pipeline.UseRendererBuilder(new RoundtripRendererBuilder());
+
+    /// <summary>
+    /// Configure the pipeline to use a <see cref="IMarkdownRendererBuilder"/> to construct the renderer.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="rendererBuilder">The builder for the renderer.</param>
+    public static MarkdownPipelineBuilder UseRendererBuilder(
+        this MarkdownPipelineBuilder pipeline,
+        IMarkdownRendererBuilder rendererBuilder)
+    {
+        pipeline.RendererBuilder = rendererBuilder;
         return pipeline;
     }
 }
