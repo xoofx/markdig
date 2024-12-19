@@ -89,6 +89,7 @@ public class AbbreviationParser : BlockParser
         {
             var literal = (LiteralInline)processor.Inline!;
             var originalLiteral = literal;
+            var originalSpanEnd = literal.Span.End;
 
             ContainerInline? container = null;
 
@@ -171,7 +172,7 @@ public class AbbreviationParser : BlockParser
                     // Process the remaining literal
                     literal = new LiteralInline()
                     {
-                        Span = new SourceSpan(abbrInline.Span.End + 1, literal.Span.End),
+                        Span = new SourceSpan(abbrInline.Span.End + 1, originalSpanEnd),
                         Line = line,
                         Column = column + match.Length,
                     };

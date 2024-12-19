@@ -533,13 +533,17 @@ literal      ( 1, 6)  8-9
     [Test]
     public void TestAbbreviations()
     {
-        Check("*[HTML]: Hypertext Markup Language\r\n\r\nLater in a text we are using HTML and it becomes an abbr tag HTML", @"
+        Check("*[HTML]: Hypertext Markup Language\r\n\r\nLater in a text we are using HTML and it becomes an abbr tag HTML\r\n\r\nHTML abbreviation at the beginning of a line", @"
 paragraph    ( 2, 0) 38-102
 container    ( 2, 0) 38-102
 literal      ( 2, 0) 38-66
 abbreviation ( 2,29) 67-70
 literal      ( 2,33) 71-98
 abbreviation ( 2,61) 99-102
+paragraph    ( 4, 0) 107-150
+container    ( 4, 0) 107-150
+abbreviation ( 4, 0) 107-110
+literal      ( 4, 4) 111-150
 ", "abbreviations");
     }
 
