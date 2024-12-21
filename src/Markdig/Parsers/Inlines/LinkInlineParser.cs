@@ -385,7 +385,7 @@ public class LinkInlineParser : InlineParser
                 return new LinkInline()
                 {
                     TriviaBeforeUrl = wsBeforeLink,
-                    Url = HtmlHelper.Unescape(url, false),
+                    Url = HtmlHelper.Unescape(url, removeBackSlash: false),
                     UnescapedUrl = unescapedUrl,
                     UrlHasPointyBrackets = urlHasPointyBrackets,
                     TriviaAfterUrl = wsAfterLink,
