@@ -1129,7 +1129,7 @@ public static class LinkHelper
             c = text.NextChar();
         }
 
-        if (c != '\0' && c != '\n' && (c != '\r' || text.PeekChar() != '\n'))
+        if (c != '\0' && c != '\n' && c != '\r')
         {
             // If we were able to parse the url but the title doesn't end with space, 
             // we are still returning a valid definition
@@ -1269,7 +1269,7 @@ public static class LinkHelper
             c = text.NextChar();
         }
 
-        if (c != '\0' && c != '\n' && (c != '\r' || text.PeekChar() != '\n'))
+        if (c != '\0' && c != '\n' && c != '\r')
         {
             // If we were able to parse the url but the title doesn't end with space, 
             // we are still returning a valid definition
