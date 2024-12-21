@@ -259,8 +259,8 @@ public class LinkInlineParser : InlineParser
                     // Inline Link
                     link = new LinkInline()
                     {
-                        Url = HtmlHelper.Unescape(url, false),
-                        Title = HtmlHelper.Unescape(title, false),
+                        Url = HtmlHelper.Unescape(url, removeBackSlash: false),
+                        Title = HtmlHelper.Unescape(title, removeBackSlash: false),
                         IsImage = openParent.IsImage,
                         LabelSpan = openParent.LabelSpan,
                         UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
