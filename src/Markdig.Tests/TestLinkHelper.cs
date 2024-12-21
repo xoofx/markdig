@@ -90,6 +90,14 @@ public class TestLinkHelper
     }
 
     [Test]
+    public void TestTitleMultilineWithSpaceAndBackslash()
+    {
+        var text = new StringSlice("'a\n\\ \\\ntitle'");
+        Assert.True(LinkHelper.TryParseTitle(ref text, out string title, out _));
+        Assert.AreEqual("a\n\\ \\\ntitle", title);
+    }
+
+    [Test]
     public void TestUrlAndTitle()
     {
         //                           0         1         2         3
@@ -236,6 +244,13 @@ public class TestLinkHelper
         Assert.AreEqual(new SourceSpan(7, 11), urlSpan);
         Assert.AreEqual(new SourceSpan(13, 19), titleSpan);
 
+    }
+
+    [Test]
+    public void TestlLinkReferenceDefinitionInvalid()
+    {
+        var text = new StringSlice("[foo]: /url (title) x\n");
+        Assert.False(LinkHelper.TryParseLinkReferenceDefinition(ref text, out _, out _, out _, out _, out _, out _));
     }
 
     [Test]

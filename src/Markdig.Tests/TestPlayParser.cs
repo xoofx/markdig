@@ -47,6 +47,14 @@ public class TestPlayParser
     }
 
     [Test]
+    public void TestLinkWithMultipleBackslashesInTitle()
+    {
+        var doc = Markdown.Parse(@"[link](/uri '\\\\127.0.0.1')");
+        var link = doc.Descendants<ParagraphBlock>().SelectMany(x => x.Inline.Descendants<LinkInline>()).FirstOrDefault();
+        Assert.AreEqual(@"\\127.0.0.1", link?.Title);
+    }
+
+    [Test]
     public void TestListBug2()
     {
         TestParser.TestSpec("10.\t*test* – test\n\n11.\t__test__ test\n\n", @"<ol start=""10"">
