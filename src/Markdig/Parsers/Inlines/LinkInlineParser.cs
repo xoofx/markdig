@@ -148,8 +148,8 @@ public class LinkInlineParser : InlineParser
             // Inline Link
             var linkInline = new LinkInline()
             {
-                Url = HtmlHelper.Unescape(linkRef.Url, false),
-                Title = HtmlHelper.Unescape(linkRef.Title, false),
+                Url = HtmlHelper.Unescape(linkRef.Url, removeBackSlash: false),
+                Title = HtmlHelper.Unescape(linkRef.Title, removeBackSlash: false),
                 Label = label,
                 LabelSpan = labelSpan,
                 UrlSpan = linkRef.UrlSpan,
