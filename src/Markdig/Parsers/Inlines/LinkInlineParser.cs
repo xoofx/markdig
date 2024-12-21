@@ -389,7 +389,7 @@ public class LinkInlineParser : InlineParser
                     UnescapedUrl = unescapedUrl,
                     UrlHasPointyBrackets = urlHasPointyBrackets,
                     TriviaAfterUrl = wsAfterLink,
-                    Title = HtmlHelper.Unescape(title, false),
+                    Title = HtmlHelper.Unescape(title, removeBackSlash: false),
                     UnescapedTitle = unescapedTitle,
                     TitleEnclosingCharacter = titleEnclosingCharacter,
                     TriviaAfterTitle = wsAfterTitle,
