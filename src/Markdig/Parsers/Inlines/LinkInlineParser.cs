@@ -137,6 +137,9 @@ public class LinkInlineParser : InlineParser
         if (linkRef.CreateLinkInline != null)
         {
             link = linkRef.CreateLinkInline(state, linkRef, parent.FirstChild);
+            link.Span = new SourceSpan(parent.Span.Start, endPosition);
+            link.Line = parent.Line;
+            link.Column = parent.Column;
         }
 
         // Create a default link if the callback was not found
@@ -145,8 +148,8 @@ public class LinkInlineParser : InlineParser
             // Inline Link
             var linkInline = new LinkInline()
             {
-                Url = HtmlHelper.Unescape(linkRef.Url),
-                Title = HtmlHelper.Unescape(linkRef.Title),
+                Url = HtmlHelper.Unescape(linkRef.Url, removeBackSlash: false),
+                Title = HtmlHelper.Unescape(linkRef.Title, removeBackSlash: false),
                 Label = label,
                 LabelSpan = labelSpan,
                 UrlSpan = linkRef.UrlSpan,
@@ -256,8 +259,8 @@ public class LinkInlineParser : InlineParser
                     // Inline Link
                     link = new LinkInline()
                     {
-                        Url = HtmlHelper.Unescape(url),
-                        Title = HtmlHelper.Unescape(title),
+                        Url = HtmlHelper.Unescape(url, removeBackSlash: false),
+                        Title = HtmlHelper.Unescape(title, removeBackSlash: false),
                         IsImage = openParent.IsImage,
                         LabelSpan = openParent.LabelSpan,
                         UrlSpan = inlineState.GetSourcePositionFromLocalSpan(linkSpan),
@@ -382,11 +385,11 @@ public class LinkInlineParser : InlineParser
                 return new LinkInline()
                 {
                     TriviaBeforeUrl = wsBeforeLink,
-                    Url = HtmlHelper.Unescape(url),
+                    Url = HtmlHelper.Unescape(url, removeBackSlash: false),
                     UnescapedUrl = unescapedUrl,
                     UrlHasPointyBrackets = urlHasPointyBrackets,
                     TriviaAfterUrl = wsAfterLink,
-                    Title = HtmlHelper.Unescape(title),
+                    Title = HtmlHelper.Unescape(title, removeBackSlash: false),
                     UnescapedTitle = unescapedTitle,
                     TitleEnclosingCharacter = titleEnclosingCharacter,
                     TriviaAfterTitle = wsAfterTitle,

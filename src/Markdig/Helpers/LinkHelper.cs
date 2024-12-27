@@ -545,88 +545,70 @@ public static class LinkHelper
             enclosingCharacter = c;
             var closingQuote = c == '(' ? ')' : c;
             bool hasEscape = false;
-            // -1: undefined
-            //  0: has only spaces
-            //  1: has other characters
-            int hasOnlyWhiteSpacesSinceLastLine = -1;
-            while (true)
+            bool isLineBlank = false; // the first line is never blank
+            while ((c = text.NextChar()) != '\0')
             {
-                c = text.NextChar();
-
                 if (c == '\r' || c == '\n')
                 {
-                    if (hasOnlyWhiteSpacesSinceLastLine >= 0)
+                    if (isLineBlank)
                     {
-                        if (hasOnlyWhiteSpacesSinceLastLine == 1)
-                        {
-                            break;
-                        }
-                        hasOnlyWhiteSpacesSinceLastLine = -1;
+                        break;
                     }
+
+                    if (hasEscape)
+                    {
+                        hasEscape = false;
+                        buffer.Append('\\');
+                    }
+
                     buffer.Append(c);
+
                     if (c == '\r' && text.PeekChar() == '\n')
                     {
                         buffer.Append('\n');
                         text.SkipChar();
                     }
-                    continue;
-                }
 
-                if (c == '\0')
-                {
-                    break;
+                    isLineBlank = true;
                 }
-
-                if (c == closingQuote)
+                else if (hasEscape)
                 {
-                    if (hasEscape)
+                    hasEscape = false;
+
+                    if (!c.IsAsciiPunctuation())
                     {
-                        buffer.Append(closingQuote);
-                        hasEscape = false;
-                        continue;
+                        buffer.Append('\\');
                     }
 
+                    buffer.Append(c);
+                }
+                else if (c == closingQuote)
+                {
                     // Skip last quote
                     text.SkipChar();
-                    goto ReturnValid;
+                    title = buffer.ToString();
+                    return true;
                 }
-
-                if (hasEscape && !c.IsAsciiPunctuation())
-                {
-                    buffer.Append('\\');
-                }
-
-                if (c == '\\')
+                else if (c == '\\')
                 {
                     hasEscape = true;
-                    continue;
+                    isLineBlank = false;
                 }
-
-                hasEscape = false;
-
-                if (c.IsSpaceOrTab())
+                else
                 {
-                    if (hasOnlyWhiteSpacesSinceLastLine < 0)
+                    if (isLineBlank && !c.IsSpaceOrTab())
                     {
-                        hasOnlyWhiteSpacesSinceLastLine = 1;
+                        isLineBlank = false;
                     }
-                }
-                else if (c != '\n' && c != '\r' && text.PeekChar() != '\n')
-                {
-                    hasOnlyWhiteSpacesSinceLastLine = 0;
-                }
 
-                buffer.Append(c);
+                    buffer.Append(c);
+                }
             }
         }
 
         buffer.Dispose();
         title = null;
         return false;
-
-    ReturnValid:
-        title = buffer.ToString();
-        return true;
     }
 
     public static bool TryParseTitleTrivia<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
@@ -642,88 +624,70 @@ public static class LinkHelper
             enclosingCharacter = c;
             var closingQuote = c == '(' ? ')' : c;
             bool hasEscape = false;
-            // -1: undefined
-            //  0: has only spaces
-            //  1: has other characters
-            int hasOnlyWhiteSpacesSinceLastLine = -1;
-            while (true)
+            bool isLineBlank = false; // the first line is never blank
+            while ((c = text.NextChar()) != '\0')
             {
-                c = text.NextChar();
-
                 if (c == '\r' || c == '\n')
                 {
-                    if (hasOnlyWhiteSpacesSinceLastLine >= 0)
+                    if (isLineBlank)
                     {
-                        if (hasOnlyWhiteSpacesSinceLastLine == 1)
-                        {
-                            break;
-                        }
-                        hasOnlyWhiteSpacesSinceLastLine = -1;
+                        break;
                     }
+
+                    if (hasEscape)
+                    {
+                        hasEscape = false;
+                        buffer.Append('\\');
+                    }
+
                     buffer.Append(c);
+
                     if (c == '\r' && text.PeekChar() == '\n')
                     {
                         buffer.Append('\n');
                         text.SkipChar();
                     }
-                    continue;
-                }
 
-                if (c == '\0')
-                {
-                    break;
+                    isLineBlank = true;
                 }
-
-                if (c == closingQuote)
+                else if (hasEscape)
                 {
-                    if (hasEscape)
+                    hasEscape = false;
+
+                    if (!c.IsAsciiPunctuation())
                     {
-                        buffer.Append(closingQuote);
-                        hasEscape = false;
-                        continue;
+                        buffer.Append('\\');
                     }
 
+                    buffer.Append(c);
+                }
+                else if (c == closingQuote)
+                {
                     // Skip last quote
                     text.SkipChar();
-                    goto ReturnValid;
+                    title = buffer.ToString();
+                    return true;
                 }
-
-                if (hasEscape && !c.IsAsciiPunctuation())
-                {
-                    buffer.Append('\\');
-                }
-
-                if (c == '\\')
+                else if (c == '\\')
                 {
                     hasEscape = true;
-                    continue;
+                    isLineBlank = false;
                 }
-
-                hasEscape = false;
-
-                if (c.IsSpaceOrTab())
+                else
                 {
-                    if (hasOnlyWhiteSpacesSinceLastLine < 0)
+                    if (isLineBlank && !c.IsSpaceOrTab())
                     {
-                        hasOnlyWhiteSpacesSinceLastLine = 1;
+                        isLineBlank = false;
                     }
-                }
-                else if (c != '\n' && c != '\r' && text.PeekChar() != '\n')
-                {
-                    hasOnlyWhiteSpacesSinceLastLine = 0;
-                }
 
-                buffer.Append(c);
+                    buffer.Append(c);
+                }
             }
         }
 
         buffer.Dispose();
         title = null;
         return false;
-
-    ReturnValid:
-        title = buffer.ToString();
-        return true;
     }
 
     public static bool TryParseUrl<T>(T text, [NotNullWhen(true)] out string? link) where T : ICharIterator
@@ -760,12 +724,15 @@ public static class LinkHelper
                     break;
                 }
 
-                if (hasEscape && !c.IsAsciiPunctuation())
+                if (hasEscape)
                 {
-                    buffer.Append('\\');
+                    hasEscape = false;
+                    if (!c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                    }
                 }
-
-                if (c == '\\')
+                else if (c == '\\')
                 {
                     hasEscape = true;
                     continue;
@@ -775,8 +742,6 @@ public static class LinkHelper
                 {
                     break;
                 }
-
-                hasEscape = false;
 
                 buffer.Append(c);
 
@@ -816,20 +781,21 @@ public static class LinkHelper
 
                 if (!isAutoLink)
                 {
-                    if (hasEscape && !c.IsAsciiPunctuation())
+                    if (hasEscape)
                     {
-                        buffer.Append('\\');
+                        hasEscape = false;
+                        if (!c.IsAsciiPunctuation())
+                        {
+                            buffer.Append('\\');
+                        }
                     }
-
                     // If we have an escape
-                    if (c == '\\')
+                    else if (c == '\\')
                     {
                         hasEscape = true;
                         c = text.NextChar();
                         continue;
                     }
-
-                    hasEscape = false;
                 }
 
                 if (IsEndOfUri(c, isAutoLink))
@@ -907,12 +873,15 @@ public static class LinkHelper
                     break;
                 }
 
-                if (hasEscape && !c.IsAsciiPunctuation())
+                if (hasEscape)
                 {
-                    buffer.Append('\\');
+                    hasEscape = false;
+                    if (!c.IsAsciiPunctuation())
+                    {
+                        buffer.Append('\\');
+                    }
                 }
-
-                if (c == '\\')
+                else if (c == '\\')
                 {
                     hasEscape = true;
                     continue;
@@ -922,8 +891,6 @@ public static class LinkHelper
                 {
                     break;
                 }
-
-                hasEscape = false;
 
                 buffer.Append(c);
 
@@ -963,20 +930,21 @@ public static class LinkHelper
 
                 if (!isAutoLink)
                 {
-                    if (hasEscape && !c.IsAsciiPunctuation())
+                    if (hasEscape)
                     {
-                        buffer.Append('\\');
+                        hasEscape = false;
+                        if (!c.IsAsciiPunctuation())
+                        {
+                            buffer.Append('\\');
+                        }
                     }
-
                     // If we have an escape
-                    if (c == '\\')
+                    else if (c == '\\')
                     {
                         hasEscape = true;
                         c = text.NextChar();
                         continue;
                     }
-
-                    hasEscape = false;
                 }
 
                 if (IsEndOfUri(c, isAutoLink))
@@ -1161,7 +1129,7 @@ public static class LinkHelper
             c = text.NextChar();
         }
 
-        if (c != '\0' && c != '\n' && c != '\r' && text.PeekChar() != '\n')
+        if (c != '\0' && c != '\n' && c != '\r')
         {
             // If we were able to parse the url but the title doesn't end with space, 
             // we are still returning a valid definition
@@ -1301,7 +1269,7 @@ public static class LinkHelper
             c = text.NextChar();
         }
 
-        if (c != '\0' && c != '\n' && c != '\r' && text.PeekChar() != '\n')
+        if (c != '\0' && c != '\n' && c != '\r')
         {
             // If we were able to parse the url but the title doesn't end with space, 
             // we are still returning a valid definition
