@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics.CodeAnalysis;
@@ -174,9 +174,11 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
 
     public void PopIndent()
     {
-        // TODO: Check
-        indents.RemoveAt(indents.Count - 1);
+        if (this.indents.Count > 0)
+            indents.RemoveAt(indents.Count - 1);
     }
+
+    public void ClearIndent() => indents.Clear();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected void WriteIndent()
@@ -220,12 +222,12 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal T Write(char c, int count)
     {
-        WriteIndent();        
-        
+        WriteIndent();
+
         for (int i = 0; i < count; i++)
         {
             Writer.Write(c);
-        }        
+        }
 
         return (T)this;
     }
