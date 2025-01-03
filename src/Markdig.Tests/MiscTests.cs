@@ -317,4 +317,26 @@ $$
         Assert.That(paragraph.Inline.Span.Start == paragraph.Inline.FirstChild.Span.Start);
         Assert.That(paragraph.Inline.Span.End == paragraph.Inline.LastChild.Span.End);
     }
+
+    [Test]
+    public void TestDefinitionListInListItemWithBlankLine()
+    {
+        var input = @"
+- 
+
+  term
+  :   definition
+";
+
+        var expected = @"<ul>
+<li>
+<dl>
+<dt>term</dt>
+<dd>definition</dd>
+</dl>
+</li>
+</ul>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseDefinitionLists().Build());
+    }
 }
