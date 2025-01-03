@@ -317,4 +317,24 @@ $$
         Assert.That(paragraph.Inline.Span.Start == paragraph.Inline.FirstChild.Span.Start);
         Assert.That(paragraph.Inline.Span.End == paragraph.Inline.LastChild.Span.End);
     }
+
+    [Test]
+    public void TestGridTableShortLine()
+    {
+        var input = @"
++--+
+|  |
++-";
+
+        var expected = @"<table>
+<col style=""width:100%"" />
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
+    }
 }
