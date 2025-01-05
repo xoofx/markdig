@@ -29,7 +29,8 @@ public class AlertInlineParser : InlineParser
         // We expect the alert to be the first child of a quote block. Example:
         // > [!NOTE]
         // > This is a note
-        if (processor.Block is not ParagraphBlock paragraphBlock || paragraphBlock.Parent is not QuoteBlock quoteBlock || paragraphBlock.Inline?.FirstChild != null)
+        if (processor.Block is not ParagraphBlock paragraphBlock || paragraphBlock.Parent is not QuoteBlock quoteBlock || paragraphBlock.Inline?.FirstChild != null
+            || quoteBlock is AlertBlock || quoteBlock.Parent is not MarkdownDocument)
         {
             return false;
         }
