@@ -105,13 +105,20 @@ public class DefinitionListParser : BlockParser
     {
         var index = previousParent.IndexOf(paragraphBlock) - 1;
         if (index < 0) return null;
-        var lastBlock = previousParent[index];
-        if (lastBlock is BlankLineBlock)
+        switch (previousParent[index])
         {
-            lastBlock = previousParent[index - 1];
-            previousParent.RemoveAt(index);
+            case DefinitionList definitionList:
+                return definitionList;
+
+            case BlankLineBlock:
+                if (index > 0 && previousParent[index - 1] is DefinitionList definitionList2)
+                {
+                    previousParent.RemoveAt(index);
+                    return definitionList2;
+                }
+                break;
         }
-        return lastBlock as DefinitionList;
+        return null;
     }
 
     public override BlockState TryContinue(BlockProcessor processor, Block block)
