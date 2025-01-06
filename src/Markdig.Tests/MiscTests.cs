@@ -319,6 +319,28 @@ $$
     }
 
     [Test]
+    public void TestDefinitionListInListItemWithBlankLine()
+    {
+        var input = @"
+- 
+
+  term
+  :   definition
+";
+
+        var expected = @"<ul>
+<li>
+<dl>
+<dt>term</dt>
+<dd>definition</dd>
+</dl>
+</li>
+</ul>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseDefinitionLists().Build());
+    }
+
+    [Test]
     public void TestAlertWithinAlertOrNestedBlock()
     {
         var input = @"
