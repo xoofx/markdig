@@ -135,6 +135,7 @@ public class GridTableParser : BlockParser
     private static void SetRowSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line, out bool isHeaderRow, out bool hasRowSpan)
     {
         var lineStart = line.Start;
+        var lineEnd = line.End;
         isHeaderRow = line.PeekChar() == '=' || line.PeekChar(2) == '=';
         hasRowSpan = false;
         foreach (var columnSlice in columns)
@@ -142,7 +143,7 @@ public class GridTableParser : BlockParser
             if (columnSlice.CurrentCell != null)
             {
                 line.Start = lineStart + columnSlice.Start + 1;
-                line.End = lineStart + columnSlice.End - 1;
+                line.End = Math.Min(lineStart + columnSlice.End - 1, lineEnd);
                 line.Trim();
                 if (line.IsEmptyOrWhitespace() || !IsRowSeparator(line))
                 {

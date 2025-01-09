@@ -319,6 +319,26 @@ $$
     }
 
     [Test]
+    public void TestGridTableShortLine()
+    {
+        var input = @"
++--+
+|  |
++-";
+
+        var expected = @"<table>
+<col style=""width:100%"" />
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
+    }
+  
+    [Test]
     public void TestDefinitionListInListItemWithBlankLine()
     {
         var input = @"
