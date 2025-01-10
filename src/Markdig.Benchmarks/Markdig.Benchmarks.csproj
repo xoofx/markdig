@@ -19,12 +19,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.12" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.14.0" />
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
     <PackageReference Include="Markdown" Version="2.2.1" />
     <PackageReference Include="MarkdownSharp" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.506101" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.512801" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Markdig\Markdig.csproj" />
