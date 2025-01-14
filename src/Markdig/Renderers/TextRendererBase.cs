@@ -176,6 +176,8 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     {
         if (this.indents.Count > 0)
             indents.RemoveAt(indents.Count - 1);
+        else
+            throw new InvalidOperationException("No indent to pop");
     }
 
     public void ClearIndent() => indents.Clear();
