@@ -201,6 +201,14 @@ public class TestCharHelper
             CharHelper.IsEmailUsernameSpecialChar);
     }
 
+    [Test]
+    public void IsEmailUsernameSpecialCharOrDigit()
+    {
+        Test(
+            c => CharHelper.IsDigit(c) || ".!#$%&'*+/=?^_`{|}~-+.~".Contains(c),
+            CharHelper.IsEmailUsernameSpecialCharOrDigit);
+    }
+
     private static void Test(Func<char, bool> expected, Func<char, bool> actual)
     {
         for (int i = char.MinValue; i <= char.MaxValue; i++)

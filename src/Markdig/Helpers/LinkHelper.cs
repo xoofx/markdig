@@ -166,7 +166,7 @@ public static class LinkHelper
         if (!c.IsAlpha())
         {
             // We may have an email char?
-            if (c.IsDigit() || CharHelper.IsEmailUsernameSpecialChar(c))
+            if (CharHelper.IsEmailUsernameSpecialCharOrDigit(c))
             {
                 state = -1;
             }
@@ -1019,7 +1019,7 @@ public static class LinkHelper
         bool segmentHasCharacters = false;
         int lastUnderscoreSegment = -1;
 
-        for (int i = prefixLength; i < link.Length; i++)
+        for (int i = prefixLength; (uint)i < (uint)link.Length; i++)
         {
             char c = link[i];
 
