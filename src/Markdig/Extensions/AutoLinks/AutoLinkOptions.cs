@@ -22,4 +22,9 @@ public class AutoLinkOptions
     /// Should a www link be prefixed with https:// instead of http:// (false by default)
     /// </summary>
     public bool UseHttpsForWWWLinks { get; set; }
+
+    /// <summary>
+    /// Should a link host name with no period, e.g. https://localhost, be allowed (false by default)
+    /// </summary>
+    public bool AllowDomainWithoutPeriod { get; set; }
 }
