@@ -22,6 +22,8 @@ public class AutoIdentifierExtension : IMarkdownExtension
     private static readonly StripRendererCache _rendererCache = new();
 
     private readonly AutoIdentifierOptions _options;
+    private readonly ProcessInlineDelegate _processInlinesBegin;
+    private readonly ProcessInlineDelegate _processInlinesEnd;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AutoIdentifierExtension"/> class.
@@ -30,6 +32,8 @@ public class AutoIdentifierExtension : IMarkdownExtension
     public AutoIdentifierExtension(AutoIdentifierOptions options)
     {
         _options = options;
+        _processInlinesBegin = DocumentOnProcessInlinesBegin;
+        _processInlinesEnd = HeadingBlock_ProcessInlinesEnd;
     }
 
     public void Setup(MarkdownPipelineBuilder pipeline)
@@ -85,19 +89,19 @@ public class AutoIdentifierExtension : IMarkdownExtension
             {
                 dictionary = new Dictionary<string, HeadingLinkReferenceDefinition>();
                 doc.SetData(this, dictionary);
-                doc.ProcessInlinesBegin += DocumentOnProcessInlinesBegin;
+                doc.ProcessInlinesBegin += _processInlinesBegin;
             }
             dictionary[text] = linkRef;
         }
 
         // Then we register after inline have been processed to actually generate the proper #id
-        headingBlock.ProcessInlinesEnd += HeadingBlock_ProcessInlinesEnd;
+        headingBlock.ProcessInlinesEnd += _processInlinesEnd;
     }
 
     private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline? inline)
     {
         var doc = processor.Document;
-        doc.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
+        doc.ProcessInlinesBegin -= _processInlinesBegin;
         var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this)!;
         foreach (var keyPair in dictionary)
         {
@@ -117,7 +121,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
     /// Callback when there is a reference to found to a heading.
     /// Note that reference are only working if they are declared after.
     /// </summary>
-    private Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline? child)
+    private static Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline? child)
     {
         var headingRef = (HeadingLinkReferenceDefinition) linkRef;
         return new LinkInline()
