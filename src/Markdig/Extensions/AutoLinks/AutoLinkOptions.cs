@@ -24,7 +24,7 @@ public class AutoLinkOptions
     public bool UseHttpsForWWWLinks { get; set; }
 
     /// <summary>
-    /// Should a link host name with no period, e.g. https://localhost, be allowed (false by default)
+    /// Should auto-linking allow a domain with no period, e.g. https://localhost (false by default)
     /// </summary>
     public bool AllowDomainWithoutPeriod { get; set; }
 }
