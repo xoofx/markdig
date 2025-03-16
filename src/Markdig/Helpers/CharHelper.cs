@@ -24,12 +24,6 @@ public static class CharHelper
     private const char LowSurrogateStart = '\udc00';
     private const char LowSurrogateEnd = '\udfff';
 
-    // We don't support LCDM
-    private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int>(6) {
-        { 'i', 1 }, { 'v', 5 }, { 'x', 10 },
-        { 'I', 1 }, { 'V', 5 }, { 'X', 10 }
-    };
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPunctuationException(char c) =>
         c is '−' or '-' or '†' or '‡';
@@ -101,8 +95,8 @@ public static class CharHelper
         int result = 0;
         for (int i = 0; i < text.Length; i++)
         {
-            var candidate = romanMap[text[i]];
-            if ((uint)(i + 1) < text.Length && candidate < romanMap[text[i + 1]])
+            int candidate = RomanToArabic(text[i]);
+            if ((uint)(i + 1) < text.Length && candidate < RomanToArabic(text[i + 1]))
             {
                 result -= candidate;
             }
@@ -112,6 +106,20 @@ public static class CharHelper
             }
         }
         return result;
+
+        // We don't support LCDM
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static int RomanToArabic(char c)
+        {
+            Debug.Assert(IsRomanLetterPartial(c));
+
+            return (c | 0x20) switch
+            {
+                'i' => 1,
+                'v' => 5,
+                _ => 10
+            };
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
