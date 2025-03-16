@@ -8,7 +8,7 @@ public class ApiController : Controller
 {
     [HttpGet()]
     [Route("")]
-    public string Empty()
+    public new string Empty()
     {
         return string.Empty;
     }
