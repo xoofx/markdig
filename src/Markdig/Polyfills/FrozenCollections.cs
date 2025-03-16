@@ -22,4 +22,17 @@ internal static class FrozenDictionaryExtensions
     }
 }
 
+internal sealed class FrozenSet<T> : HashSet<T>
+{
+    public FrozenSet(HashSet<T> set, IEqualityComparer<T> comparer) : base(set, comparer) { }
+}
+
+internal static class FrozenSetExtensions
+{
+    public static FrozenSet<T> ToFrozenSet<T>(this HashSet<T> set, IEqualityComparer<T> comparer)
+    {
+        return new FrozenSet<T>(set, comparer);
+    }
+}
+
 #endif

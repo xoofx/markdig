@@ -31,11 +31,27 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     /// </summary>
     public Dictionary<string, string> BlockMapping { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+    private FrozenSet<string>? _specialBlockMapping;
+
+    private FrozenSet<string> SpecialBlockMapping
+    {
+        get
+        {
+            return _specialBlockMapping ?? CreateNew();
+
+            FrozenSet<string> CreateNew()
+            {
+                HashSet<string> set = [.. BlocksAsDiv, .. BlockMapping.Keys];
+                return _specialBlockMapping = set.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+            }
+        }
+    }
+
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
         renderer.EnsureLine();
 
-        if ((obj as FencedCodeBlock)?.Info is string info && (BlocksAsDiv.Contains(info) || BlockMapping.ContainsKey(info)))
+        if ((obj as FencedCodeBlock)?.Info is string info && SpecialBlockMapping.Contains(info))
         {
             var infoPrefix = (obj.Parser as FencedCodeBlockParser)?.InfoPrefix ??
                              FencedCodeBlockParser.DefaultInfoPrefix;
