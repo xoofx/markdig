@@ -1006,7 +1006,7 @@ public static class LinkHelper
         return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
     }
 
-    public static bool IsValidDomain(string link, int prefixLength)
+    public static bool IsValidDomain(string link, int prefixLength, bool allowDomainWithoutPeriod = false)
     {
         // https://github.github.com/gfm/#extended-www-autolink
         // A valid domain consists of alphanumeric characters, underscores (_), hyphens (-) and periods (.).
@@ -1052,7 +1052,7 @@ public static class LinkHelper
             segmentHasCharacters = true;
         }
 
-        return segmentCount != 1 && // At least one dot was present
+        return (segmentCount != 1 || allowDomainWithoutPeriod) && // At least one dot was present
             segmentHasCharacters && // Last segment has valid characters
             segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
     }

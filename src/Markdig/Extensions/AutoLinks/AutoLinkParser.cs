@@ -164,7 +164,7 @@ public class AutoLinkParser : InlineParser
             }
 
             // Do not need to check if a telephone number is a valid domain
-            if (c != 't' && !LinkHelper.IsValidDomain(link, domainOffset))
+            if (c != 't' && !LinkHelper.IsValidDomain(link, domainOffset, Options.AllowDomainWithoutPeriod))
             {
                 return false;
             }
