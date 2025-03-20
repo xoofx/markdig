@@ -8,11 +8,11 @@
     <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <PackageTags>Markdown CommonMark md html md2html</PackageTags>
-    <PackageReleaseNotes>https://github.com/lunet-io/markdig/blob/master/changelog.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/xoofx/markdig/blob/master/changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageIcon>markdig.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/lunet-io/markdig</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/xoofx/markdig</PackageProjectUrl>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
