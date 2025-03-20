@@ -61,6 +61,12 @@ public abstract class TextRendererBase : RendererBase
         Write(markdownObject);
         return Writer;
     }
+
+    internal virtual void ResetInternal()
+    {
+
+    }
+
 }
 
 /// <summary>
@@ -134,7 +140,7 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         ResetInternal();
     }
 
-    internal void ResetInternal()
+    internal override void ResetInternal()
     {
         _childrenDepth = 0;
         previousWasLine = true;
