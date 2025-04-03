@@ -231,7 +231,7 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
-    /// Peeks a character at the specified offset from the current begining of the slice
+    /// Peeks a character at the specified offset from the current beginning of the slice
     /// without using the range <see cref="Start"/> or <see cref="End"/>, returns `\0` if outside the <see cref="Text"/>.
     /// </summary>
     /// <param name="offset">The offset.</param>
