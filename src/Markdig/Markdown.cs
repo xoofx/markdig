@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 
@@ -18,13 +19,13 @@ namespace Markdig;
 /// </summary>
 public static class Markdown
 {
-    public static string Version =>
-        s_version ??= typeof(Markdown).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
-
-    private static string? s_version;
+    [field: MaybeNull]
+    public static string Version => field ??= typeof(Markdown).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
 
     internal static readonly MarkdownPipeline DefaultPipeline = new MarkdownPipelineBuilder().Build();
-    private static readonly MarkdownPipeline _defaultTrackTriviaPipeline = new MarkdownPipelineBuilder().EnableTrackTrivia().Build();
+
+    [field: MaybeNull]
+    private static MarkdownPipeline DefaultTrackTriviaPipeline => field ??= new MarkdownPipelineBuilder().EnableTrackTrivia().Build();
 
     private static MarkdownPipeline GetPipeline(MarkdownPipeline? pipeline, string markdown)
     {
@@ -201,7 +202,7 @@ public static class Markdown
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
 
-        MarkdownPipeline? pipeline = trackTrivia ? _defaultTrackTriviaPipeline : null;
+        MarkdownPipeline? pipeline = trackTrivia ? DefaultTrackTriviaPipeline : null;
 
         return Parse(markdown, pipeline);
     }

@@ -16,7 +16,7 @@ namespace Markdig;
 /// <remarks>NOTE: A pipeline is not thread-safe.</remarks>
 public class MarkdownPipelineBuilder
 {
-    private MarkdownPipeline? pipeline;
+    private MarkdownPipeline? _pipeline;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
@@ -95,9 +95,9 @@ public class MarkdownPipelineBuilder
     /// <exception cref="InvalidOperationException">An extension cannot be null</exception>
     public MarkdownPipeline Build()
     {
-        if (pipeline != null)
+        if (_pipeline != null)
         {
-            return pipeline;
+            return _pipeline;
         }
 
         // TODO: Review the whole initialization process for extensions
@@ -115,7 +115,7 @@ public class MarkdownPipelineBuilder
             extension.Setup(this);
         }
 
-        pipeline = new MarkdownPipeline(
+        _pipeline = new MarkdownPipeline(
             new OrderedList<IMarkdownExtension>(Extensions),
             new BlockParserList(BlockParsers),
             new InlineParserList(InlineParsers),
@@ -125,6 +125,6 @@ public class MarkdownPipelineBuilder
             PreciseSourceLocation = PreciseSourceLocation,
             TrackTrivia = TrackTrivia,
         };
-        return pipeline;
+        return _pipeline;
     }
 }

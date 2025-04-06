@@ -14,7 +14,7 @@
     <PackageIcon>markdig.png</PackageIcon>
     <PackageProjectUrl>https://github.com/xoofx/markdig</PackageProjectUrl>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>13</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
