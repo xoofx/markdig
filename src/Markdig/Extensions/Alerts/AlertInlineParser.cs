@@ -6,7 +6,6 @@ using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.Alerts;
 

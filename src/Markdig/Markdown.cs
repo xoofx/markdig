@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 using Markdig.Helpers;
@@ -90,8 +89,8 @@ public static class Markdown
     /// <param name="markdown">A Markdown text.</param>
     /// <param name="pipeline">The pipeline used for the conversion.</param>
     /// <param name="context">A parser context used for the parsing.</param>
-    /// <returns>The result of the conversion</returns>
-    /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
+    /// <returns>The HTML string.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="markdown"/> is null.</exception>
     public static string ToHtml(string markdown, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
@@ -108,8 +107,8 @@ public static class Markdown
     /// </summary>
     /// <param name="document">A Markdown document.</param>
     /// <param name="pipeline">The pipeline used for the conversion.</param>
-    /// <returns>The result of the conversion</returns>
-    /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
+    /// <returns>The HTML string.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="document"/> is null.</exception>
     public static string ToHtml(this MarkdownDocument document, MarkdownPipeline? pipeline = null)
     {
         if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
@@ -131,8 +130,8 @@ public static class Markdown
     /// <param name="document">A Markdown document.</param>
     /// <param name="writer">The destination <see cref="TextWriter"/> that will receive the result of the conversion.</param>
     /// <param name="pipeline">The pipeline used for the conversion.</param>
-    /// <returns>The result of the conversion</returns>
-    /// <exception cref="ArgumentNullException">if markdown document variable is null</exception>
+    /// <returns>The HTML string.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="document"/> is null.</exception>
     public static void ToHtml(this MarkdownDocument document, TextWriter writer, MarkdownPipeline? pipeline = null)
     {
         if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
@@ -165,11 +164,7 @@ public static class Markdown
 
         var document = MarkdownParser.Parse(markdown, pipeline, context);
 
-        using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
-        HtmlRenderer renderer = rentedRenderer.Instance;
-
-        renderer.Render(document);
-        writer.Flush();
+        ToHtml(document, writer, pipeline);
 
         return document;
     }
