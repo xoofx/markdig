@@ -37,6 +37,7 @@ public static class CharHelper
     // {, |, }, or ~ (U+007B–007E).
     private const string AsciiPunctuationChars = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
+    // We're not currently using these SearchValues instances for vectorized IndexOfAny-like searches, but for their efficient single Contains(char) checks.
     private static readonly SearchValues<char> s_emailUsernameSpecialChar = SearchValues.Create(EmailUsernameSpecialChars);
     private static readonly SearchValues<char> s_emailUsernameSpecialCharOrDigit = SearchValues.Create(EmailUsernameSpecialChars + "0123456789");
     private static readonly SearchValues<char> s_asciiPunctuationChars = SearchValues.Create(AsciiPunctuationChars);
@@ -162,33 +163,47 @@ public static class CharHelper
         // 2.1 Characters and lines
         // A Unicode whitespace character is any code point in the Unicode Zs general category,
         // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
-        if (c <= ' ')
+        if (c < '\u00A0')
         {
-            const long Mask =
-                (1L << ' ') |
-                (1L << '\t') |
-                (1L << '\n') |
-                (1L << '\f') |
-                (1L << '\r');
-
-            return (Mask & (1L << c)) != 0;
+            // Matches any of "\t\n\f\r ". See comments in HexConverter.IsHexChar for how these checks work:
+            // https://github.com/dotnet/runtime/blob/a2e1d21bb4faf914363968b812c990329ba92d8e/src/libraries/Common/src/System/HexConverter.cs#L392-L415
+            // https://gist.github.com/MihaZupan/b93ba180c2b5fbaaed993db2ade76b49
+            ulong shift = 30399299632234496UL << c;
+            ulong mask = (ulong)c - 64;
+            return (long)(shift & mask) < 0;
         }
 
-        return c >= '\u00A0' && IsWhitespaceRare(c);
+        return IsWhitespaceRare(c);
+    }
 
-        static bool IsWhitespaceRare(char c)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsWhiteSpaceOrZero(this char c)
+    {
+        if (c < '\u00A0')
         {
-            // return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+            // Matches any of "\0\t\n\f\r ".
+            ulong shift = 9253771336487010304UL << c;
+            ulong mask = (ulong)c - 64;
+            return (long)(shift & mask) < 0;
+        }
 
-            if (c < 5760)
-            {
-                return c == '\u00A0';
-            }
-            else
-            {
-                return c <= 12288 &&
-                    (c == 5760 || IsInInclusiveRange(c, 8192, 8202) || c == 8239 || c == 8287 || c == 12288);
-            }
+        return IsWhitespaceRare(c);
+    }
+
+    private static bool IsWhitespaceRare(char c)
+    {
+        Debug.Assert(c >= '\u00A0');
+
+        // return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+
+        if (c < 5760)
+        {
+            return c == '\u00A0';
+        }
+        else
+        {
+            return c <= 12288 &&
+                (c == 5760 || IsInInclusiveRange(c, 8192, 8202) || c == 8239 || c == 8287 || c == 12288);
         }
     }
 
@@ -203,12 +218,6 @@ public static class CharHelper
     {
         // char.IsSymbol also works with Unicode symbols that cannot be escaped based on the specification.
         return s_escapableSymbolChars.Contains(c);
-    }
-
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsWhiteSpaceOrZero(this char c)
-    {
-        return IsZero(c) || IsWhitespace(c);
     }
 
     // Check if a char is a space or a punctuation
