@@ -139,8 +139,7 @@ public class HtmlBlockParser : BlockParser
             c = line.NextChar();
         }
 
-        if (
-            !(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar() == '>') || c.IsWhiteSpaceOrZero()))
+        if (!(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar() == '>') || c.IsWhiteSpaceOrZero()))
         {
             return BlockState.None;
         }
