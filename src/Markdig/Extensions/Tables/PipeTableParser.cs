@@ -481,9 +481,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         return false;
     }
 
-    private static bool ParseHeaderString(Inline? inline, out TableColumnAlign? align)
+    private static bool ParseHeaderString(Inline? inline, out TableColumnAlign? align, out int delimiterCount)
     {
         align = 0;
+        delimiterCount = 0;
         var literal = inline as LiteralInline;
         if (literal is null)
         {
@@ -492,7 +493,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         // Work on a copy of the slice
         var line = literal.Content;
-        if (TableHelper.ParseColumnHeader(ref line, '-', out align))
+        if (TableHelper.ParseColumnHeader(ref line, '-', out align, out delimiterCount))
         {
             if (line.CurrentChar != '\0')
             {
@@ -507,7 +508,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     private List<TableColumnDefinition>? FindHeaderRow(List<Inline> delimiters)
     {
         bool isValidRow = false;
-        List<TableColumnDefinition>? aligns = null;
+        int totalDelimiterCount = 0;
+        List<TableColumnDefinition>? columnDefinitions = null;
         for (int i = 0; i < delimiters.Count; i++)
         {
             if (!IsLine(delimiters[i]))
@@ -529,18 +531,19 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
                 // Check the left side of a `|` delimiter
                 TableColumnAlign? align = null;
+                int delimiterCount = 0;
                 if (delimiter.PreviousSibling != null &&
                     !(delimiter.PreviousSibling is LiteralInline li && li.Content.IsEmptyOrWhitespace()) && // ignore parsed whitespace
-                    !ParseHeaderString(delimiter.PreviousSibling, out align))
+                    !ParseHeaderString(delimiter.PreviousSibling, out align, out delimiterCount))
                 {
                     break;
                 }
 
                 // Create aligns until we may have a header row
 
-                aligns ??= new List<TableColumnDefinition>();
-
-                aligns.Add(new TableColumnDefinition() { Alignment =  align });
+                columnDefinitions ??= new List<TableColumnDefinition>();
+                totalDelimiterCount += delimiterCount;
+                columnDefinitions.Add(new TableColumnDefinition() { Alignment =  align, Width = delimiterCount});
 
                 // If this is the last delimiter, we need to check the right side of the `|` delimiter
                 if (nextDelimiter is null)
@@ -556,13 +559,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                         break;
                     }
 
-                    if (!ParseHeaderString(nextSibling, out align))
+                    if (!ParseHeaderString(nextSibling, out align, out delimiterCount))
                     {
                         break;
                     }
-
+                    totalDelimiterCount += delimiterCount;
                     isValidRow = true;
-                    aligns.Add(new TableColumnDefinition() { Alignment = align });
+                    columnDefinitions.Add(new TableColumnDefinition() { Alignment = align, Width = delimiterCount});
                     break;
                 }
 
@@ -576,7 +579,27 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             break;
         }
 
-        return isValidRow ? aligns : null;
+        // calculate the width of the columns in percent based on the delimiter count
+        if (!isValidRow || columnDefinitions == null)
+        {
+            return null;
+        }
+
+        if (Options.InferColumnWidthsFromSeparator)
+        {
+            foreach (var columnDefinition in columnDefinitions)
+            {
+                columnDefinition.Width = (columnDefinition.Width * 100) / totalDelimiterCount;
+            }
+        }
+        else
+        {
+            foreach (var columnDefinition in columnDefinitions)
+            {
+                columnDefinition.Width = 0;
+            }
+        }
+        return columnDefinitions;
     }
 
     private static bool IsLine(Inline inline)

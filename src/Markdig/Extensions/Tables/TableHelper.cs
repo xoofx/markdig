@@ -17,12 +17,13 @@ public static class TableHelper
     /// <param name="slice">The text slice.</param>
     /// <param name="delimiterChar">The delimiter character (either `-` or `=`).</param>
     /// <param name="align">The alignment of the column.</param>
+    /// <param name="delimiterCount">The number of delimiters.</param>
     /// <returns>
     ///   <c>true</c> if parsing was successful
     /// </returns>
-    public static bool ParseColumnHeader(ref StringSlice slice, char delimiterChar, out TableColumnAlign? align)
+    public static bool ParseColumnHeader(ref StringSlice slice, char delimiterChar, out TableColumnAlign? align, out int delimiterCount)
     {
-        return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
+        return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align, out delimiterCount);
     }
 
     /// <summary>
@@ -37,7 +38,7 @@ public static class TableHelper
     public static bool ParseColumnHeaderAuto(ref StringSlice slice, out char delimiterChar, out TableColumnAlign? align)
     {
         delimiterChar = '\0';
-        return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align);
+        return ParseColumnHeaderDetect(ref slice, ref delimiterChar, out align, out _);
     }
 
     /// <summary>
@@ -49,10 +50,10 @@ public static class TableHelper
     /// <returns>
     ///   <c>true</c> if parsing was successful
     /// </returns>
-    public static bool ParseColumnHeaderDetect(ref StringSlice slice, ref char delimiterChar, out TableColumnAlign? align)
+    public static bool ParseColumnHeaderDetect(ref StringSlice slice, ref char delimiterChar, out TableColumnAlign? align, out int delimiterCount)
     {
         align = null;
-
+        delimiterCount = 0;
         slice.TrimStart();
         var c = slice.CurrentChar;
         bool hasLeft = false;
@@ -80,7 +81,8 @@ public static class TableHelper
         }
 
         // We expect at least one `-` delimiter char
-        if (slice.CountAndSkipChar(delimiterChar) == 0)
+        delimiterCount = slice.CountAndSkipChar(delimiterChar);
+        if (delimiterCount == 0)
         {
             return false;
         }

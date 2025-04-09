@@ -43,7 +43,7 @@ public class GridTableParser : BlockParser
             }
 
             // Parse a column alignment
-            if (!TableHelper.ParseColumnHeader(ref line, '-', out TableColumnAlign? columnAlign))
+            if (!TableHelper.ParseColumnHeader(ref line, '-', out TableColumnAlign? columnAlign, out _))
             {
                 return BlockState.None;
             }
