@@ -71,7 +71,7 @@ public class YamlFrontMatterParser : BlockParser
 
         // If three dashes (optionally followed by whitespace)
         // this is a YAML front matter block
-        if (count == 3 && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+        if (count == 3 && c.IsWhiteSpaceOrZero() && line.TrimEnd())
         {
             bool hasFullYamlFrontMatter = false;
             // We make sure that there is a closing frontmatter somewhere in the document
@@ -146,7 +146,7 @@ public class YamlFrontMatterParser : BlockParser
 
             // If we have a closing fence, close it and discard the current line
             // The line must contain only fence characters and optional following whitespace.
-            if (count == 3 && !processor.IsCodeIndent && (c == '\0' || c.IsWhitespace()) && line.TrimEnd())
+            if (count == 3 && !processor.IsCodeIndent && c.IsWhiteSpaceOrZero() && line.TrimEnd())
             {
                 block.UpdateSpanEnd(line.Start - 1);
 

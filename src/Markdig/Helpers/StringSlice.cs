@@ -291,7 +291,7 @@ public struct StringSlice : ICharIterator
             var c = Text[i];
             if (c.IsWhitespace())
             {
-                if (c == '\0' || c == '\n' || (c == '\r' && i + 1 <= End && Text[i + 1] != '\n'))
+                if (c == '\n' || (c == '\r' && i + 1 <= End && Text[i + 1] != '\n'))
                 {
                     return true;
                 }

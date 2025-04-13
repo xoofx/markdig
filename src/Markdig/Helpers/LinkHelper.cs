@@ -1023,18 +1023,18 @@ public static class LinkHelper
         {
             char c = link[i];
 
-            if (c == '.') // New segment
-            {
-                if (!segmentHasCharacters)
-                    return false;
-
-                segmentCount++;
-                segmentHasCharacters = false;
-                continue;
-            }
-
             if (!c.IsAlphaNumeric())
             {
+                if (c == '.') // New segment
+                {
+                    if (!segmentHasCharacters)
+                        return false;
+
+                    segmentCount++;
+                    segmentHasCharacters = false;
+                    continue;
+                }
+
                 if (c == '/' || c == '?' || c == '#' || c == ':') // End of domain name
                     break;
 

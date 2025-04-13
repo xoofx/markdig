@@ -124,7 +124,7 @@ public class GenericAttributesParser : InlineParser
                 var start = line.Start;
                 // Get all non-whitespace characters following a #
                 // But stop if we found a } or \0
-                while (c != '}' && c != '\0' && !c.IsWhitespace())
+                while (c != '}' && !c.IsWhiteSpaceOrZero())
                 {
                     c = line.NextChar();
                 }

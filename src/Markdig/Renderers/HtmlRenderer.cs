@@ -286,7 +286,7 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
         {
             scoped ReadOnlySpan<char> chars;
 
-            if (CharHelper.IsHighSurrogate(c) && (uint)(i + 1) < (uint)content.Length)
+            if (char.IsHighSurrogate(c) && (uint)(i + 1) < (uint)content.Length)
             {
                 chars = stackalloc char[] { c, content[i + 1] };
                 i++;

@@ -24,6 +24,13 @@ public static class CharHelper
     private const char LowSurrogateStart = '\udc00';
     private const char LowSurrogateEnd = '\udfff';
 
+    // 2.1 Characters and lines
+    // A Unicode whitespace character is any code point in the Unicode Zs general category,
+    // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
+    // CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+    private const string AsciiWhitespaceChars = "\t\n\f\r ";
+    internal const string WhitespaceChars = AsciiWhitespaceChars + "\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000";
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPunctuationException(char c) =>
         c is '−' or '-' or '†' or '‡';
@@ -312,6 +319,11 @@ public static class CharHelper
     public static bool IsDigit(this char c)
     {
         return (uint)(c - '0') <= ('9' - '0');
+    }
+
+    internal static bool IsAsciiPunctuationOrZero(this char c)
+    {
+        return c == '\0' || IsAsciiPunctuation(c);
     }
 
     public static bool IsAsciiPunctuation(this char c)
