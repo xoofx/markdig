@@ -25,7 +25,7 @@ public class QuoteBlock : ContainerBlock
 
     /// <summary>
     /// Gets or sets the trivia per line of this QuoteBlock.
-    /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled, otherwise null.
+    /// Trivia: only parsed when <see cref="MarkdownPipeline.TrackTrivia"/> is enabled.
     /// </summary>
     public List<QuoteBlockLine> QuoteLines => Trivia;
 

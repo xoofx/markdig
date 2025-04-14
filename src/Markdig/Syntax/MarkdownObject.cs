@@ -153,7 +153,7 @@ public abstract class MarkdownObject : IMarkdownObject
         return Unsafe.As<T>(storage.Trivia);
     }
 
-    private class DataEntriesAndTrivia
+    private sealed class DataEntriesAndTrivia
     {
         private struct DataEntry(object key, object value)
         {

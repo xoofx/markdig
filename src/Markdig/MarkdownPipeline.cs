@@ -127,7 +127,7 @@ public sealed class MarkdownPipeline
         }
     }
 
-    internal readonly struct RentedHtmlRenderer : IDisposable
+    internal readonly ref struct RentedHtmlRenderer : IDisposable
     {
         private readonly HtmlRendererCache _cache;
         public readonly HtmlRenderer Instance;
