@@ -78,7 +78,7 @@ class Program
         //var newValues = new Dictionary<int, char>(values.Count)
         //{
         //    {15, 'a'}
-        //}
+        //}.ToFrozenDictionary();
         Trace.WriteLine($"CodeToAscii = new Dictionary<char, string>({values.Count})");
         Trace.WriteLine("{");
         foreach (var pair in values)
@@ -86,7 +86,7 @@ class Program
             var escape = pair.Value.Replace("\\", @"\\").Replace("\"", "\\\"");
             Trace.WriteLine($"    {{'{pair.Key}',\"{escape}\"}},");
         }
-        Trace.WriteLine("};");
+        Trace.WriteLine("}.ToFrozenDictionary();");
 
         //Trace.WriteLine("count: " + count);
         //Trace.WriteLine("max: " + max);

@@ -4,7 +4,6 @@
 
 using System.Buffers;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers;
@@ -17,7 +16,7 @@ public sealed class CharacterMap<T> where T : class
 {
     private readonly SearchValues<char> _values;
     private readonly T[] _asciiMap;
-    private readonly Dictionary<uint, T>? _nonAsciiMap;
+    private readonly FrozenDictionary<uint, T>? _nonAsciiMap;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CharacterMap{T}"/> class.
@@ -39,6 +38,7 @@ public sealed class CharacterMap<T> where T : class
         Array.Sort(OpeningCharacters);
 
         _asciiMap = new T[128];
+        Dictionary<uint, T>? nonAsciiMap = null;
 
         foreach (var state in maps)
         {
@@ -49,16 +49,21 @@ public sealed class CharacterMap<T> where T : class
             }
             else
             {
-                _nonAsciiMap ??= new Dictionary<uint, T>();
+                nonAsciiMap ??= [];
 
-                if (!_nonAsciiMap.ContainsKey(openingChar))
+                if (!nonAsciiMap.ContainsKey(openingChar))
                 {
-                    _nonAsciiMap[openingChar] = state.Value;
+                    nonAsciiMap[openingChar] = state.Value;
                 }
             }
         }
 
         _values = SearchValues.Create(OpeningCharacters);
+
+        if (nonAsciiMap is not null)
+        {
+            _nonAsciiMap = nonAsciiMap.ToFrozenDictionary();
+        }
     }
 
     /// <summary>

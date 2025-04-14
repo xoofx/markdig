@@ -55,16 +55,15 @@ public class HostProviderBuilder
         return new DelegateProvider(hostPrefix, handler, allowFullScreen, iframeClass);
     }
 
-    internal static Dictionary<string, IHostProvider> KnownHosts { get; }
-        = new Dictionary<string, IHostProvider>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["YouTubeShort"] = Create("www.youtube.com", YouTubeShort, iframeClass: "youtubeshort"),
-            ["YouTube"] = Create("www.youtube.com", YouTube, iframeClass: "youtube"),
-            ["YouTubeShortened"] = Create("youtu.be", YouTubeShortened, iframeClass: "youtube"),
-            ["Vimeo"] = Create("vimeo.com", Vimeo, iframeClass: "vimeo"),
-            ["Yandex"] = Create("music.yandex.ru", Yandex, allowFullScreen: false, iframeClass: "yandex"),
-            ["Odnoklassniki"] = Create("ok.ru", Odnoklassniki, iframeClass: "odnoklassniki"),
-        };
+    internal static readonly IHostProvider[] KnownHosts =
+    [
+        Create("www.youtube.com", YouTubeShort, iframeClass: "youtubeshort"),
+        Create("www.youtube.com", YouTube, iframeClass: "youtube"),
+        Create("youtu.be", YouTubeShortened, iframeClass: "youtube"),
+        Create("vimeo.com", Vimeo, iframeClass: "vimeo"),
+        Create("music.yandex.ru", Yandex, allowFullScreen: false, iframeClass: "yandex"),
+        Create("ok.ru", Odnoklassniki, iframeClass: "odnoklassniki"),
+    ];
 
     #region Known providers
 

@@ -105,7 +105,7 @@ public class GlobalizationExtension : IMarkdownExtension
             }
 
             int rune = c;
-            if (CharHelper.IsHighSurrogate(c) && i < slice.End && CharHelper.IsLowSurrogate(slice[i + 1]))
+            if (char.IsHighSurrogate(c) && i < slice.End && char.IsLowSurrogate(slice[i + 1]))
             {
                 Debug.Assert(char.IsSurrogatePair(c, slice[i + 1]));
                 rune = char.ConvertToUtf32(c, slice[i + 1]);

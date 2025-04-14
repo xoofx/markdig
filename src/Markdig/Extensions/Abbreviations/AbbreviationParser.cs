@@ -203,20 +203,17 @@ public class AbbreviationParser : BlockParser
         while (index <= contentNew.End)
         {
             var c = contentNew.PeekCharAbsolute(index);
-            if (!(c == '\0' || c.IsWhitespace() || c.IsAsciiPunctuation()))
-            {
-                return false;
-            }
-
-            if (c.IsAlphaNumeric())
-            {
-                return false;
-            }
 
             if (c.IsWhitespace())
             {
                 break;
             }
+
+            if (!c.IsAsciiPunctuationOrZero())
+            {
+                return false;
+            }
+
             index++;
         }
         return true;

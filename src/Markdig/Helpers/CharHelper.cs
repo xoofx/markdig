@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -19,16 +20,30 @@ public static class CharHelper
 
     public const string ReplacementCharString = "\uFFFD";
 
-    private const char HighSurrogateStart = '\ud800';
-    private const char HighSurrogateEnd = '\udbff';
-    private const char LowSurrogateStart = '\udc00';
-    private const char LowSurrogateEnd = '\udfff';
+    private const string EmailUsernameSpecialChars = ".!#$%&'*+/=?^_`{|}~-+.~";
 
-    // We don't support LCDM
-    private static readonly Dictionary<char, int> romanMap = new Dictionary<char, int>(6) {
-        { 'i', 1 }, { 'v', 5 }, { 'x', 10 },
-        { 'I', 1 }, { 'V', 5 }, { 'X', 10 }
-    };
+    // 2.1 Characters and lines
+    // A Unicode whitespace character is any code point in the Unicode Zs general category,
+    // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
+    // CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+    private const string AsciiWhitespaceChars = "\t\n\f\r ";
+    internal const string WhitespaceChars = AsciiWhitespaceChars + "\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000";
+
+    // 2.1 Characters and lines
+    // An ASCII punctuation character is
+    // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F),
+    // :, ;, <, =, >, ?, @ (U+003A–0040),
+    // [, \, ], ^, _, ` (U+005B–0060),
+    // {, |, }, or ~ (U+007B–007E).
+    private const string AsciiPunctuationChars = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+    // We're not currently using these SearchValues instances for vectorized IndexOfAny-like searches, but for their efficient single Contains(char) checks.
+    private static readonly SearchValues<char> s_emailUsernameSpecialChar = SearchValues.Create(EmailUsernameSpecialChars);
+    private static readonly SearchValues<char> s_emailUsernameSpecialCharOrDigit = SearchValues.Create(EmailUsernameSpecialChars + "0123456789");
+    private static readonly SearchValues<char> s_asciiPunctuationChars = SearchValues.Create(AsciiPunctuationChars);
+    private static readonly SearchValues<char> s_asciiPunctuationCharsOrZero = SearchValues.Create(AsciiPunctuationChars + '\0');
+    private static readonly SearchValues<char> s_asciiPunctuationOrWhitespaceCharsOrZero = SearchValues.Create(AsciiPunctuationChars + AsciiWhitespaceChars + '\0');
+    private static readonly SearchValues<char> s_escapableSymbolChars = SearchValues.Create("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~•");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPunctuationException(char c) =>
@@ -101,8 +116,8 @@ public static class CharHelper
         int result = 0;
         for (int i = 0; i < text.Length; i++)
         {
-            var candidate = romanMap[text[i]];
-            if ((uint)(i + 1) < text.Length && candidate < romanMap[text[i + 1]])
+            int candidate = RomanToArabic(text[i]);
+            if ((uint)(i + 1) < text.Length && candidate < RomanToArabic(text[i + 1]))
             {
                 result -= candidate;
             }
@@ -112,6 +127,20 @@ public static class CharHelper
             }
         }
         return result;
+
+        // We don't support LCDM
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static int RomanToArabic(char c)
+        {
+            Debug.Assert(IsRomanLetterPartial(c));
+
+            return (c | 0x20) switch
+            {
+                'i' => 1,
+                'v' => 5,
+                _ => 10
+            };
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -134,33 +163,47 @@ public static class CharHelper
         // 2.1 Characters and lines
         // A Unicode whitespace character is any code point in the Unicode Zs general category,
         // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
-        if (c <= ' ')
+        if (c < '\u00A0')
         {
-            const long Mask =
-                (1L << ' ') |
-                (1L << '\t') |
-                (1L << '\n') |
-                (1L << '\f') |
-                (1L << '\r');
-
-            return (Mask & (1L << c)) != 0;
+            // Matches any of "\t\n\f\r ". See comments in HexConverter.IsHexChar for how these checks work:
+            // https://github.com/dotnet/runtime/blob/a2e1d21bb4faf914363968b812c990329ba92d8e/src/libraries/Common/src/System/HexConverter.cs#L392-L415
+            // https://gist.github.com/MihaZupan/b93ba180c2b5fbaaed993db2ade76b49
+            ulong shift = 30399299632234496UL << c;
+            ulong mask = (ulong)c - 64;
+            return (long)(shift & mask) < 0;
         }
 
-        return c >= '\u00A0' && IsWhitespaceRare(c);
+        return IsWhitespaceRare(c);
+    }
 
-        static bool IsWhitespaceRare(char c)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsWhiteSpaceOrZero(this char c)
+    {
+        if (c < '\u00A0')
         {
-            // return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+            // Matches any of "\0\t\n\f\r ".
+            ulong shift = 9253771336487010304UL << c;
+            ulong mask = (ulong)c - 64;
+            return (long)(shift & mask) < 0;
+        }
 
-            if (c < 5760)
-            {
-                return c == '\u00A0';
-            }
-            else
-            {
-                return c <= 12288 &&
-                    (c == 5760 || IsInInclusiveRange(c, 8192, 8202) || c == 8239 || c == 8287 || c == 12288);
-            }
+        return IsWhitespaceRare(c);
+    }
+
+    private static bool IsWhitespaceRare(char c)
+    {
+        Debug.Assert(c >= '\u00A0');
+
+        // return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+
+        if (c < 5760)
+        {
+            return c == '\u00A0';
+        }
+        else
+        {
+            return c <= 12288 &&
+                (c == 5760 || IsInInclusiveRange(c, 8192, 8202) || c == 8239 || c == 8287 || c == 12288);
         }
     }
 
@@ -174,13 +217,7 @@ public static class CharHelper
     public static bool IsEscapableSymbol(this char c)
     {
         // char.IsSymbol also works with Unicode symbols that cannot be escaped based on the specification.
-        return (c > ' ' && c < '0') || (c > '9' && c < 'A') || (c > 'Z' && c < 'a') || (c > 'z' && c < 127) || c == '•';
-    }
-
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsWhiteSpaceOrZero(this char c)
-    {
-        return IsZero(c) || IsWhitespace(c);
+        return s_escapableSymbolChars.Contains(c);
     }
 
     // Check if a char is a space or a punctuation
@@ -194,7 +231,7 @@ public static class CharHelper
         else if (c <= 127)
         {
             space = c == '\0';
-            punctuation = c == '\0' || IsAsciiPunctuation(c);
+            punctuation = IsAsciiPunctuationOrZero(c);
         }
         else
         {
@@ -215,15 +252,12 @@ public static class CharHelper
     }
 
     // Same as CheckUnicodeCategory
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool IsSpaceOrPunctuation(this char c)
     {
-        if (IsWhitespace(c))
+        if (c <= 127)
         {
-            return true;
-        }
-        else if (c <= 127)
-        {
-            return c == '\0' || IsAsciiPunctuation(c);
+            return s_asciiPunctuationOrWhitespaceCharsOrZero.Contains(c);
         }
         else
         {
@@ -234,7 +268,8 @@ public static class CharHelper
                 1 << (int)UnicodeCategory.ClosePunctuation |
                 1 << (int)UnicodeCategory.InitialQuotePunctuation |
                 1 << (int)UnicodeCategory.FinalQuotePunctuation |
-                1 << (int)UnicodeCategory.OtherPunctuation;
+                1 << (int)UnicodeCategory.OtherPunctuation |
+                1 << (int)UnicodeCategory.SpaceSeparator;
 
             return (PunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
         }
@@ -279,7 +314,7 @@ public static class CharHelper
     {
         // 2.3 Insecure characters
         // For security reasons, the Unicode character U+0000 must be replaced with the REPLACEMENT CHARACTER (U+FFFD).
-        return c == '\0' ? '\ufffd' : c;
+        return c == '\0' ? ReplacementChar : c;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -306,46 +341,33 @@ public static class CharHelper
         return (uint)(c - '0') <= ('9' - '0');
     }
 
-    public static bool IsAsciiPunctuation(this char c)
-    {
-        // 2.1 Characters and lines 
-        // An ASCII punctuation character is
-        // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F),
-        // :, ;, <, =, >, ?, @ (U+003A–0040),
-        // [, \, ], ^, _, ` (U+005B–0060),
-        // {, |, }, or ~ (U+007B–007E).
-        return c <= 127 && (
-            IsInInclusiveRange(c, 33, 47) ||
-            IsInInclusiveRange(c, 58, 64) ||
-            IsInInclusiveRange(c, 91, 96) ||
-            IsInInclusiveRange(c, 123, 126));
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool IsAsciiPunctuationOrZero(this char c) =>
+        s_asciiPunctuationCharsOrZero.Contains(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsEmailUsernameSpecialChar(char c)
-    {
-        return ".!#$%&'*+/=?^_`{|}~-+.~".IndexOf(c) >= 0;
-    }
+    public static bool IsAsciiPunctuation(this char c) =>
+        s_asciiPunctuationChars.Contains(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsHighSurrogate(char c)
-    {
-        return IsInInclusiveRange(c, HighSurrogateStart, HighSurrogateEnd);
-    }
+    public static bool IsEmailUsernameSpecialChar(char c) =>
+        s_emailUsernameSpecialChar.Contains(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsLowSurrogate(char c)
-    {
-        return IsInInclusiveRange(c, LowSurrogateStart, LowSurrogateEnd);
-    }
+    internal static bool IsEmailUsernameSpecialCharOrDigit(char c) =>
+        s_emailUsernameSpecialCharOrDigit.Contains(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsInInclusiveRange(char c, char min, char max)
-        => (uint)(c - min) <= (uint)(max - min);
+    public static bool IsHighSurrogate(char c) =>
+        char.IsHighSurrogate(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool IsInInclusiveRange(int value, uint min, uint max)
-        => ((uint)value - min) <= (max - min);
+    public static bool IsLowSurrogate(char c) =>
+        char.IsLowSurrogate(c);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static bool IsInInclusiveRange(int value, uint min, uint max) =>
+        ((uint)value - min) <= (max - min);
 
     public static bool IsRightToLeft(int c)
     {

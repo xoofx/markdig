@@ -322,7 +322,7 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
 
         if (fence.OpeningFencedCharCount <= closingCount &&
             !processor.IsCodeIndent &&
-            (c == '\0' || c.IsWhitespace()) &&
+            c.IsWhiteSpaceOrZero() &&
             line.TrimEnd())
         {
             block.UpdateSpanEnd(startBeforeTrim - 1);

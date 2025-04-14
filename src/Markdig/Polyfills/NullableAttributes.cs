@@ -18,6 +18,9 @@ internal sealed class NotNullWhenAttribute : Attribute
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, Inherited = false)]
 internal sealed class AllowNullAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
+internal sealed class MaybeNullAttribute : Attribute { }
 #endif
 
 #if !NET5_0_OR_GREATER

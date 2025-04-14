@@ -26,6 +26,8 @@ internal static class SearchValues
 
 internal abstract class SearchValues<T>
 {
+    public abstract bool Contains(T value);
+
     public abstract int IndexOfAny(ReadOnlySpan<char> span);
 
     public abstract int IndexOfAnyExcept(ReadOnlySpan<char> span);
@@ -51,6 +53,10 @@ internal sealed class PreNet8CompatSearchValues : SearchValues<char>
             }
         }
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Contains(char value) =>
+        value < 128 ? _ascii[value] : (_nonAscii is { } nonAscii && nonAscii.Contains(value));
 
     public override int IndexOfAny(ReadOnlySpan<char> span)
     {

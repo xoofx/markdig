@@ -4,6 +4,8 @@
 
 using Markdig.Parsers;
 using Markdig.Syntax;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Markdig.Renderers.Html;
 
@@ -31,11 +33,27 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     /// </summary>
     public Dictionary<string, string> BlockMapping { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+    [field: MaybeNull]
+    private FrozenSet<string> SpecialBlockMapping
+    {
+        get
+        {
+            return field ?? CreateNew();
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            FrozenSet<string> CreateNew()
+            {
+                HashSet<string> set = [.. BlocksAsDiv, .. BlockMapping.Keys];
+                return field = set.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+            }
+        }
+    }
+
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
         renderer.EnsureLine();
 
-        if ((obj as FencedCodeBlock)?.Info is string info && (BlocksAsDiv.Contains(info) || BlockMapping.ContainsKey(info)))
+        if (obj is FencedCodeBlock { Info: string info } && SpecialBlockMapping.Contains(info))
         {
             var infoPrefix = (obj.Parser as FencedCodeBlockParser)?.InfoPrefix ??
                              FencedCodeBlockParser.DefaultInfoPrefix;

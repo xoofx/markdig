@@ -22,7 +22,7 @@ public static class CharIteratorHelper
         var c = iterator.CurrentChar;
         bool hasWhitespaces = false;
         lastLine = NewLine.None;
-        while (c != '\0' && c.IsWhitespace())
+        while (c.IsWhitespace())
         {
             if (c == '\n' || c == '\r')
             {

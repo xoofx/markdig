@@ -43,19 +43,73 @@ public class TestCharHelper
     {
         // A Unicode whitespace character is any code point in the Unicode Zs general category,
         // or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
-        return c == '\t' || c == '\n' || c == '\u000C' || c == '\r' ||
+        return c == '\t' || c == '\n' || c == '\f' || c == '\r' ||
             CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.SpaceSeparator;
+    }
+
+    [Test]
+    public void IsAcrossTab()
+    {
+        Assert.False(CharHelper.IsAcrossTab(0));
+        Assert.True(CharHelper.IsAcrossTab(1));
+        Assert.True(CharHelper.IsAcrossTab(2));
+        Assert.True(CharHelper.IsAcrossTab(3));
+        Assert.False(CharHelper.IsAcrossTab(4));
+    }
+
+    [Test]
+    public void AddTab()
+    {
+        Assert.AreEqual(4, CharHelper.AddTab(0));
+        Assert.AreEqual(4, CharHelper.AddTab(1));
+        Assert.AreEqual(4, CharHelper.AddTab(2));
+        Assert.AreEqual(4, CharHelper.AddTab(3));
+        Assert.AreEqual(8, CharHelper.AddTab(4));
+        Assert.AreEqual(8, CharHelper.AddTab(5));
     }
 
     [Test]
     public void IsWhitespace()
     {
-        for (int i = char.MinValue; i <= char.MaxValue; i++)
-        {
-            char c = (char)i;
+        Test(
+            ExpectedIsWhitespace,
+            CharHelper.IsWhitespace);
 
-            Assert.AreEqual(ExpectedIsWhitespace(c), CharHelper.IsWhitespace(c));
-        }
+        Test(
+            ExpectedIsWhitespace,
+            CharHelper.WhitespaceChars.Contains);
+    }
+
+    [Test]
+    public void IsWhiteSpaceOrZero()
+    {
+        Test(
+            c => ExpectedIsWhitespace(c) || c == 0,
+            CharHelper.IsWhiteSpaceOrZero);
+    }
+
+    [Test]
+    public void IsAsciiPunctuation()
+    {
+        Test(
+            c => char.IsAscii(c) && ExpectedIsPunctuation(c),
+            CharHelper.IsAsciiPunctuation);
+    }
+
+    [Test]
+    public void IsAsciiPunctuationOrZero()
+    {
+        Test(
+            c => char.IsAscii(c) && (ExpectedIsPunctuation(c) || c == 0),
+            CharHelper.IsAsciiPunctuationOrZero);
+    }
+
+    [Test]
+    public void IsSpaceOrPunctuation()
+    {
+        Test(
+            c => c == 0 || ExpectedIsWhitespace(c) || ExpectedIsPunctuation(c),
+            CharHelper.IsSpaceOrPunctuation);
     }
 
     [Test]
@@ -76,15 +130,91 @@ public class TestCharHelper
     }
 
     [Test]
-    public void IsSpaceOrPunctuation()
+    public void IsControl()
+    {
+        Test(
+            char.IsControl,
+            CharHelper.IsControl);
+    }
+
+    [Test]
+    public void IsAlpha()
+    {
+        Test(
+            c => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'),
+            CharHelper.IsAlpha);
+    }
+
+    [Test]
+    public void IsAlphaUpper()
+    {
+        Test(
+            c => c >= 'A' && c <= 'Z',
+            CharHelper.IsAlphaUpper);
+    }
+
+    [Test]
+    public void IsAlphaNumeric()
+    {
+        Test(
+            c => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'),
+            CharHelper.IsAlphaNumeric);
+    }
+
+    [Test]
+    public void IsDigit()
+    {
+        Test(
+            c => c >= '0' && c <= '9',
+            CharHelper.IsDigit);
+    }
+
+    [Test]
+    public void IsNewLineOrLineFeed()
+    {
+        Test(
+            c => c is '\r' or '\n',
+            CharHelper.IsNewLineOrLineFeed);
+    }
+
+    [Test]
+    public void IsSpaceOrTab()
+    {
+        Test(
+            c => c is ' ' or '\t',
+            CharHelper.IsSpaceOrTab);
+    }
+
+    [Test]
+    public void IsEscapableSymbol()
+    {
+        Test(
+            "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~•".Contains,
+            CharHelper.IsEscapableSymbol);
+    }
+
+    [Test]
+    public void IsEmailUsernameSpecialChar()
+    {
+        Test(
+            ".!#$%&'*+/=?^_`{|}~-+.~".Contains,
+            CharHelper.IsEmailUsernameSpecialChar);
+    }
+
+    [Test]
+    public void IsEmailUsernameSpecialCharOrDigit()
+    {
+        Test(
+            c => CharHelper.IsDigit(c) || ".!#$%&'*+/=?^_`{|}~-+.~".Contains(c),
+            CharHelper.IsEmailUsernameSpecialCharOrDigit);
+    }
+
+    private static void Test(Func<char, bool> expected, Func<char, bool> actual)
     {
         for (int i = char.MinValue; i <= char.MaxValue; i++)
         {
             char c = (char)i;
-
-            bool expected = c == 0 || ExpectedIsWhitespace(c) || ExpectedIsPunctuation(c);
-
-            Assert.AreEqual(expected, CharHelper.IsSpaceOrPunctuation(c));
+            Assert.AreEqual(expected(c), actual(c));
         }
     }
 }

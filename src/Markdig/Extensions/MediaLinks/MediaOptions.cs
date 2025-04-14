@@ -81,7 +81,7 @@ public class MediaOptions
             {".au", "audio/basic"},
             {".wav", "audio/x-wav"},
         };
-        Hosts = new List<IHostProvider>(HostProviderBuilder.KnownHosts.Values);
+        Hosts = new List<IHostProvider>(HostProviderBuilder.KnownHosts);
     }
 
     public string Width { get; set; }
