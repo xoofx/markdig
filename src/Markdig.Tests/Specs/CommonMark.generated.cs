@@ -14,9 +14,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // ---
         // title: CommonMark Spec
         // author: John MacFarlane
-        // version: '0.30'
-        // date: '2021-06-19'
-        // license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
+        // version: '0.31.2'
+        // date: '2024-01-28'
+        // license: '[CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)'
         // ...
         // 
         // # Introduction
@@ -27,7 +27,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // based on conventions for indicating formatting in email
         // and usenet posts.  It was developed by John Gruber (with
         // help from Aaron Swartz) and released in 2004 in the form of a
-        // [syntax description](http://daringfireball.net/projects/markdown/syntax)
+        // [syntax description](https://daringfireball.net/projects/markdown/syntax)
         // and a Perl script (`Markdown.pl`) for converting Markdown to
         // HTML.  In the next decade, dozens of implementations were
         // developed in many languages.  Some extended the original
@@ -47,10 +47,10 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // > Markdown-formatted document should be publishable as-is, as
         // > plain text, without looking like it's been marked up with tags
         // > or formatting instructions.
-        // > (<http://daringfireball.net/projects/markdown/>)
+        // > (<https://daringfireball.net/projects/markdown/>)
         // 
         // The point can be illustrated by comparing a sample of
-        // [AsciiDoc](http://www.methods.co.nz/asciidoc/) with
+        // [AsciiDoc](https://asciidoc.org/) with
         // an equivalent sample of Markdown.  Here is a sample of
         // AsciiDoc from the AsciiDoc manual:
         // 
@@ -116,7 +116,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // ## Why is a spec needed?
         // 
         // John Gruber's [canonical description of Markdown's
-        // syntax](http://daringfireball.net/projects/markdown/syntax)
+        // syntax](https://daringfireball.net/projects/markdown/syntax)
         // does not specify the syntax unambiguously.  Here are some examples of
         // questions it does not answer:
         // 
@@ -329,9 +329,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // The following definitions of character classes will be used in this spec:
         // 
-        // A [Unicode whitespace character](@) is
-        // any code point in the Unicode `Zs` general category, or a tab (`U+0009`),
-        // line feed (`U+000A`), form feed (`U+000C`), or carriage return (`U+000D`).
+        // A [Unicode whitespace character](@) is a character in the Unicode `Zs` general
+        // category, or a tab (`U+0009`), line feed (`U+000A`), form feed (`U+000C`), or
+        // carriage return (`U+000D`).
         // 
         // [Unicode whitespace](@) is a sequence of one or more
         // [Unicode whitespace characters].
@@ -350,9 +350,8 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // `[`, `\`, `]`, `^`, `_`, `` ` `` (U+005B–0060), 
         // `{`, `|`, `}`, or `~` (U+007B–007E).
         // 
-        // A [Unicode punctuation character](@) is an [ASCII
-        // punctuation character] or anything in
-        // the general Unicode categories  `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or `Ps`.
+        // A [Unicode punctuation character](@) is a character in the Unicode `P`
+        // (puncuation) or `S` (symbol) general categories.
         // 
         // ## Tabs
         // 
@@ -754,12 +753,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Preliminaries / Backslash escapes
             //
             // The following Markdown:
-            //     <http://example.com?find=\*>
+            //     <https://example.com?find=\*>
             //
             // Should be rendered as:
-            //     <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
+            //     <p><a href="https://example.com?find=%5C*">https://example.com?find=\*</a></p>
 
-            TestParser.TestSpec("<http://example.com?find=\\*>", "<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>", "", context: "Example 20\nSection Preliminaries / Backslash escapes\n");
+            TestParser.TestSpec("<https://example.com?find=\\*>", "<p><a href=\"https://example.com?find=%5C*\">https://example.com?find=\\*</a></p>", "", context: "Example 20\nSection Preliminaries / Backslash escapes\n");
         }
 
         [Test]
@@ -2879,7 +2878,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // opening code fence until the end of the containing block (or
         // document).  (An alternative spec would require backtracking in the
         // event that a closing code fence is not found.  But this makes parsing
-        // much less efficient, and there seems to be no real down side to the
+        // much less efficient, and there seems to be no real downside to the
         // behavior described here.)
         // 
         // A fenced code block may interrupt a paragraph, and does not require
@@ -3535,7 +3534,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `head`, `header`, `hr`,
         // `html`, `iframe`, `legend`, `li`, `link`, `main`, `menu`, `menuitem`,
         // `nav`, `noframes`, `ol`, `optgroup`, `option`, `p`, `param`,
-        // `section`, `source`, `summary`, `table`, `tbody`, `td`,
+        // `search`, `section`, `summary`, `table`, `tbody`, `td`,
         // `tfoot`, `th`, `thead`, `title`, `tr`, `track`, `ul`, followed
         // by a space, a tab, the end of the line, the string `>`, or
         // the string `/>`.\
@@ -6028,7 +6027,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         //     blocks *Bs* starting with a character other than a space or tab, and *M* is
         //     a list marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces of indentation,
         //     then the result of prepending *M* and the following spaces to the first line
-        //     of Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
+        //     of *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
         //     list item with *Bs* as its contents.  The type of the list item
         //     (bullet or ordered) is determined by the type of its list marker.
         //     If the list item is ordered, then it is also assigned a start
@@ -7635,11 +7634,11 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // Since it is well established Markdown practice to allow lists to
         // interrupt paragraphs inside list items, the [principle of
         // uniformity] requires us to allow this outside list items as
-        // well.  ([reStructuredText](http://docutils.sourceforge.net/rst.html)
+        // well.  ([reStructuredText](https://docutils.sourceforge.net/rst.html)
         // takes a different approach, requiring blank lines before lists
         // even inside other list items.)
         // 
-        // In order to solve of unwanted lists in paragraphs with
+        // In order to solve the problem of unwanted lists in paragraphs with
         // hard-wrapped numerals, we allow only lists starting with `1` to
         // interrupt paragraphs.  Thus,
         [Test]
@@ -8661,12 +8660,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Code spans
             //
             // The following Markdown:
-            //     `<http://foo.bar.`baz>`
+            //     `<https://foo.bar.`baz>`
             //
             // Should be rendered as:
-            //     <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
+            //     <p><code>&lt;https://foo.bar.</code>baz&gt;`</p>
 
-            TestParser.TestSpec("`<http://foo.bar.`baz>`", "<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>", "", context: "Example 345\nSection Inlines / Code spans\n");
+            TestParser.TestSpec("`<https://foo.bar.`baz>`", "<p><code>&lt;https://foo.bar.</code>baz&gt;`</p>", "", context: "Example 345\nSection Inlines / Code spans\n");
         }
 
         // But this is an autolink:
@@ -8677,12 +8676,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Code spans
             //
             // The following Markdown:
-            //     <http://foo.bar.`baz>`
+            //     <https://foo.bar.`baz>`
             //
             // Should be rendered as:
-            //     <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
+            //     <p><a href="https://foo.bar.%60baz">https://foo.bar.`baz</a>`</p>
 
-            TestParser.TestSpec("<http://foo.bar.`baz>`", "<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>", "", context: "Example 346\nSection Inlines / Code spans\n");
+            TestParser.TestSpec("<https://foo.bar.`baz>`", "<p><a href=\"https://foo.bar.%60baz\">https://foo.bar.`baz</a>`</p>", "", context: "Example 346\nSection Inlines / Code spans\n");
         }
 
         // When a backtick string is not closed by a matching backtick string,
@@ -8741,7 +8740,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // ## Emphasis and strong emphasis
         // 
         // John Gruber's original [Markdown syntax
-        // description](http://daringfireball.net/projects/markdown/syntax#em) says:
+        // description](https://daringfireball.net/projects/markdown/syntax#em) says:
         // 
         // > Markdown treats asterisks (`*`) and underscores (`_`) as indicators of
         // > emphasis. Text wrapped with one `*` or `_` will be wrapped with an HTML
@@ -8843,7 +8842,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // (The idea of distinguishing left-flanking and right-flanking
         // delimiter runs based on the character before and the character
         // after comes from Roopesh Chander's
-        // [vfmd](http://www.vfmd.org/vfmd-spec/specification/#procedure-for-identifying-emphasis-tags).
+        // [vfmd](https://web.archive.org/web/20220608143320/http://www.vfmd.org/vfmd-spec/specification/#procedure-for-identifying-emphasis-tags).
         // vfmd uses the terminology "emphasis indicator string" instead of "delimiter
         // run," and its rules for distinguishing left- and right-flanking runs
         // are a bit more complex than the ones given here.)
@@ -9013,11 +9012,33 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             TestParser.TestSpec("* a *", "<p>* a *</p>", "", context: "Example 353\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
-        // Intraword emphasis with `*` is permitted:
+        // Unicode symbols count as punctuation, too:
         [Test]
         public void InlinesEmphasisAndStrongEmphasis_Example354()
         {
             // Example 354
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
+            //     *$*alpha.
+            //     
+            //     *£*bravo.
+            //     
+            //     *€*charlie.
+            //
+            // Should be rendered as:
+            //     <p>*$*alpha.</p>
+            //     <p>*£*bravo.</p>
+            //     <p>*€*charlie.</p>
+
+            TestParser.TestSpec("*$*alpha.\n\n*£*bravo.\n\n*€*charlie.", "<p>*$*alpha.</p>\n<p>*£*bravo.</p>\n<p>*€*charlie.</p>", "", context: "Example 354\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        // Intraword emphasis with `*` is permitted:
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example355()
+        {
+            // Example 355
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9026,13 +9047,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo<em>bar</em></p>
 
-            TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "", context: "Example 354\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo*bar*", "<p>foo<em>bar</em></p>", "", context: "Example 355\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example355()
+        public void InlinesEmphasisAndStrongEmphasis_Example356()
         {
-            // Example 355
+            // Example 356
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9041,14 +9062,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>5<em>6</em>78</p>
 
-            TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "", context: "Example 355\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("5*6*78", "<p>5<em>6</em>78</p>", "", context: "Example 356\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 2:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example356()
+        public void InlinesEmphasisAndStrongEmphasis_Example357()
         {
-            // Example 356
+            // Example 357
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9057,15 +9078,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo bar</em></p>
 
-            TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "", context: "Example 356\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo bar_", "<p><em>foo bar</em></p>", "", context: "Example 357\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not emphasis, because the opening `_` is followed by
         // whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example357()
+        public void InlinesEmphasisAndStrongEmphasis_Example358()
         {
-            // Example 357
+            // Example 358
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9074,15 +9095,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>_ foo bar_</p>
 
-            TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "", context: "Example 357\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_ foo bar_", "<p>_ foo bar_</p>", "", context: "Example 358\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not emphasis, because the opening `_` is preceded
         // by an alphanumeric and followed by punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example358()
+        public void InlinesEmphasisAndStrongEmphasis_Example359()
         {
-            // Example 358
+            // Example 359
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9091,14 +9112,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>a_&quot;foo&quot;_</p>
 
-            TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "", context: "Example 358\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("a_\"foo\"_", "<p>a_&quot;foo&quot;_</p>", "", context: "Example 359\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Emphasis with `_` is not allowed inside words:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example359()
+        public void InlinesEmphasisAndStrongEmphasis_Example360()
         {
-            // Example 359
+            // Example 360
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9107,22 +9128,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo_bar_</p>
 
-            TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>", "", context: "Example 359\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example360()
-        {
-            // Example 360
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     5_6_78
-            //
-            // Should be rendered as:
-            //     <p>5_6_78</p>
-
-            TestParser.TestSpec("5_6_78", "<p>5_6_78</p>", "", context: "Example 360\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo_bar_", "<p>foo_bar_</p>", "", context: "Example 360\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9132,20 +9138,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     5_6_78
+            //
+            // Should be rendered as:
+            //     <p>5_6_78</p>
+
+            TestParser.TestSpec("5_6_78", "<p>5_6_78</p>", "", context: "Example 361\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example362()
+        {
+            // Example 362
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     пристаням_стремятся_
             //
             // Should be rendered as:
             //     <p>пристаням_стремятся_</p>
 
-            TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "", context: "Example 361\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("пристаням_стремятся_", "<p>пристаням_стремятся_</p>", "", context: "Example 362\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Here `_` does not generate emphasis, because the first delimiter run
         // is right-flanking and the second left-flanking:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example362()
+        public void InlinesEmphasisAndStrongEmphasis_Example363()
         {
-            // Example 362
+            // Example 363
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9154,16 +9175,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>aa_&quot;bb&quot;_cc</p>
 
-            TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "", context: "Example 362\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("aa_\"bb\"_cc", "<p>aa_&quot;bb&quot;_cc</p>", "", context: "Example 363\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is emphasis, even though the opening delimiter is
         // both left- and right-flanking, because it is preceded by
         // punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example363()
+        public void InlinesEmphasisAndStrongEmphasis_Example364()
         {
-            // Example 363
+            // Example 364
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9172,7 +9193,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo-<em>(bar)</em></p>
 
-            TestParser.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "", context: "Example 363\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo-_(bar)_", "<p>foo-<em>(bar)</em></p>", "", context: "Example 364\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 3:
@@ -9180,9 +9201,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // This is not emphasis, because the closing delimiter does
         // not match the opening delimiter:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example364()
+        public void InlinesEmphasisAndStrongEmphasis_Example365()
         {
-            // Example 364
+            // Example 365
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9191,15 +9212,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>_foo*</p>
 
-            TestParser.TestSpec("_foo*", "<p>_foo*</p>", "", context: "Example 364\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo*", "<p>_foo*</p>", "", context: "Example 365\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not emphasis, because the closing `*` is preceded by
         // whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example365()
+        public void InlinesEmphasisAndStrongEmphasis_Example366()
         {
-            // Example 365
+            // Example 366
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9208,14 +9229,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*foo bar *</p>
 
-            TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "", context: "Example 365\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo bar *", "<p>*foo bar *</p>", "", context: "Example 366\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // A line ending also counts as whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example366()
+        public void InlinesEmphasisAndStrongEmphasis_Example367()
         {
-            // Example 366
+            // Example 367
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9226,16 +9247,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>*foo bar
             //     *</p>
 
-            TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "", context: "Example 366\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo bar\n*", "<p>*foo bar\n*</p>", "", context: "Example 367\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not emphasis, because the second `*` is
         // preceded by punctuation and followed by an alphanumeric
         // (hence it is not part of a [right-flanking delimiter run]:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example367()
+        public void InlinesEmphasisAndStrongEmphasis_Example368()
         {
-            // Example 367
+            // Example 368
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9244,15 +9265,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*(*foo)</p>
 
-            TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>", "", context: "Example 367\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*(*foo)", "<p>*(*foo)</p>", "", context: "Example 368\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // The point of this restriction is more easily appreciated
         // with this example:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example368()
+        public void InlinesEmphasisAndStrongEmphasis_Example369()
         {
-            // Example 368
+            // Example 369
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9261,14 +9282,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>(<em>foo</em>)</em></p>
 
-            TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example 368\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*(*foo*)*", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example 369\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword emphasis with `*` is allowed:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example369()
+        public void InlinesEmphasisAndStrongEmphasis_Example370()
         {
-            // Example 369
+            // Example 370
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9277,7 +9298,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo</em>bar</p>
 
-            TestParser.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "", context: "Example 369\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo*bar", "<p><em>foo</em>bar</p>", "", context: "Example 370\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 4:
@@ -9285,9 +9306,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // This is not emphasis, because the closing `_` is preceded by
         // whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example370()
+        public void InlinesEmphasisAndStrongEmphasis_Example371()
         {
-            // Example 370
+            // Example 371
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9296,15 +9317,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>_foo bar _</p>
 
-            TestParser.TestSpec("_foo bar _", "<p>_foo bar _</p>", "", context: "Example 370\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo bar _", "<p>_foo bar _</p>", "", context: "Example 371\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not emphasis, because the second `_` is
         // preceded by punctuation and followed by an alphanumeric:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example371()
+        public void InlinesEmphasisAndStrongEmphasis_Example372()
         {
-            // Example 371
+            // Example 372
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9313,14 +9334,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>_(_foo)</p>
 
-            TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>", "", context: "Example 371\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_(_foo)", "<p>_(_foo)</p>", "", context: "Example 372\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is emphasis within emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example372()
+        public void InlinesEmphasisAndStrongEmphasis_Example373()
         {
-            // Example 372
+            // Example 373
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9329,14 +9350,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>(<em>foo</em>)</em></p>
 
-            TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example 372\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_(_foo_)_", "<p><em>(<em>foo</em>)</em></p>", "", context: "Example 373\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword emphasis is disallowed for `_`:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example373()
+        public void InlinesEmphasisAndStrongEmphasis_Example374()
         {
-            // Example 373
+            // Example 374
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9345,22 +9366,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>_foo_bar</p>
 
-            TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>", "", context: "Example 373\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example374()
-        {
-            // Example 374
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     _пристаням_стремятся
-            //
-            // Should be rendered as:
-            //     <p>_пристаням_стремятся</p>
-
-            TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "", context: "Example 374\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo_bar", "<p>_foo_bar</p>", "", context: "Example 374\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9370,21 +9376,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     _пристаням_стремятся
+            //
+            // Should be rendered as:
+            //     <p>_пристаням_стремятся</p>
+
+            TestParser.TestSpec("_пристаням_стремятся", "<p>_пристаням_стремятся</p>", "", context: "Example 375\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example376()
+        {
+            // Example 376
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     _foo_bar_baz_
             //
             // Should be rendered as:
             //     <p><em>foo_bar_baz</em></p>
 
-            TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "", context: "Example 375\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo_bar_baz_", "<p><em>foo_bar_baz</em></p>", "", context: "Example 376\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is emphasis, even though the closing delimiter is
         // both left- and right-flanking, because it is followed by
         // punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example376()
+        public void InlinesEmphasisAndStrongEmphasis_Example377()
         {
-            // Example 376
+            // Example 377
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9393,14 +9414,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>(bar)</em>.</p>
 
-            TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "", context: "Example 376\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_(bar)_.", "<p><em>(bar)</em>.</p>", "", context: "Example 377\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 5:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example377()
+        public void InlinesEmphasisAndStrongEmphasis_Example378()
         {
-            // Example 377
+            // Example 378
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9409,15 +9430,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo bar</strong></p>
 
-            TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "", context: "Example 377\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo bar**", "<p><strong>foo bar</strong></p>", "", context: "Example 378\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not strong emphasis, because the opening delimiter is
         // followed by whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example378()
+        public void InlinesEmphasisAndStrongEmphasis_Example379()
         {
-            // Example 378
+            // Example 379
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9426,16 +9447,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>** foo bar**</p>
 
-            TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>", "", context: "Example 378\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("** foo bar**", "<p>** foo bar**</p>", "", context: "Example 379\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not strong emphasis, because the opening `**` is preceded
         // by an alphanumeric and followed by punctuation, and hence
         // not part of a [left-flanking delimiter run]:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example379()
+        public void InlinesEmphasisAndStrongEmphasis_Example380()
         {
-            // Example 379
+            // Example 380
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9444,14 +9465,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>a**&quot;foo&quot;**</p>
 
-            TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "", context: "Example 379\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("a**\"foo\"**", "<p>a**&quot;foo&quot;**</p>", "", context: "Example 380\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword strong emphasis with `**` is permitted:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example380()
+        public void InlinesEmphasisAndStrongEmphasis_Example381()
         {
-            // Example 380
+            // Example 381
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9460,14 +9481,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo<strong>bar</strong></p>
 
-            TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "", context: "Example 380\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo**bar**", "<p>foo<strong>bar</strong></p>", "", context: "Example 381\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 6:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example381()
+        public void InlinesEmphasisAndStrongEmphasis_Example382()
         {
-            // Example 381
+            // Example 382
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9476,15 +9497,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo bar</strong></p>
 
-            TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "", context: "Example 381\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo bar__", "<p><strong>foo bar</strong></p>", "", context: "Example 382\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not strong emphasis, because the opening delimiter is
         // followed by whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example382()
+        public void InlinesEmphasisAndStrongEmphasis_Example383()
         {
-            // Example 382
+            // Example 383
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9493,14 +9514,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>__ foo bar__</p>
 
-            TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "", context: "Example 382\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__ foo bar__", "<p>__ foo bar__</p>", "", context: "Example 383\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // A line ending counts as whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example383()
+        public void InlinesEmphasisAndStrongEmphasis_Example384()
         {
-            // Example 383
+            // Example 384
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9511,15 +9532,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>__
             //     foo bar__</p>
 
-            TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "", context: "Example 383\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__\nfoo bar__", "<p>__\nfoo bar__</p>", "", context: "Example 384\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not strong emphasis, because the opening `__` is preceded
         // by an alphanumeric and followed by punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example384()
+        public void InlinesEmphasisAndStrongEmphasis_Example385()
         {
-            // Example 384
+            // Example 385
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9528,14 +9549,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>a__&quot;foo&quot;__</p>
 
-            TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "", context: "Example 384\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("a__\"foo\"__", "<p>a__&quot;foo&quot;__</p>", "", context: "Example 385\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword strong emphasis is forbidden with `__`:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example385()
+        public void InlinesEmphasisAndStrongEmphasis_Example386()
         {
-            // Example 385
+            // Example 386
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9544,22 +9565,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo__bar__</p>
 
-            TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>", "", context: "Example 385\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example386()
-        {
-            // Example 386
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     5__6__78
-            //
-            // Should be rendered as:
-            //     <p>5__6__78</p>
-
-            TestParser.TestSpec("5__6__78", "<p>5__6__78</p>", "", context: "Example 386\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo__bar__", "<p>foo__bar__</p>", "", context: "Example 386\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9569,12 +9575,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     пристаням__стремятся__
+            //     5__6__78
             //
             // Should be rendered as:
-            //     <p>пристаням__стремятся__</p>
+            //     <p>5__6__78</p>
 
-            TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "", context: "Example 387\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("5__6__78", "<p>5__6__78</p>", "", context: "Example 387\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9584,21 +9590,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     пристаням__стремятся__
+            //
+            // Should be rendered as:
+            //     <p>пристаням__стремятся__</p>
+
+            TestParser.TestSpec("пристаням__стремятся__", "<p>пристаням__стремятся__</p>", "", context: "Example 388\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example389()
+        {
+            // Example 389
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     __foo, __bar__, baz__
             //
             // Should be rendered as:
             //     <p><strong>foo, <strong>bar</strong>, baz</strong></p>
 
-            TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "", context: "Example 388\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo, __bar__, baz__", "<p><strong>foo, <strong>bar</strong>, baz</strong></p>", "", context: "Example 389\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is strong emphasis, even though the opening delimiter is
         // both left- and right-flanking, because it is preceded by
         // punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example389()
+        public void InlinesEmphasisAndStrongEmphasis_Example390()
         {
-            // Example 389
+            // Example 390
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9607,7 +9628,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo-<strong>(bar)</strong></p>
 
-            TestParser.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "", context: "Example 389\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo-__(bar)__", "<p>foo-<strong>(bar)</strong></p>", "", context: "Example 390\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 7:
@@ -9615,9 +9636,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // This is not strong emphasis, because the closing delimiter is preceded
         // by whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example390()
+        public void InlinesEmphasisAndStrongEmphasis_Example391()
         {
-            // Example 390
+            // Example 391
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9626,7 +9647,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>**foo bar **</p>
 
-            TestParser.TestSpec("**foo bar **", "<p>**foo bar **</p>", "", context: "Example 390\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo bar **", "<p>**foo bar **</p>", "", context: "Example 391\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // (Nor can it be interpreted as an emphasized `*foo bar *`, because of
@@ -9635,9 +9656,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // This is not strong emphasis, because the second `**` is
         // preceded by punctuation and followed by an alphanumeric:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example391()
+        public void InlinesEmphasisAndStrongEmphasis_Example392()
         {
-            // Example 391
+            // Example 392
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9646,15 +9667,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>**(**foo)</p>
 
-            TestParser.TestSpec("**(**foo)", "<p>**(**foo)</p>", "", context: "Example 391\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**(**foo)", "<p>**(**foo)</p>", "", context: "Example 392\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // The point of this restriction is more easily appreciated
         // with these examples:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example392()
+        public void InlinesEmphasisAndStrongEmphasis_Example393()
         {
-            // Example 392
+            // Example 393
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9663,13 +9684,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>(<strong>foo</strong>)</em></p>
 
-            TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example 392\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*(**foo**)*", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example 393\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example393()
+        public void InlinesEmphasisAndStrongEmphasis_Example394()
         {
-            // Example 393
+            // Example 394
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9680,13 +9701,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
             //     <em>Asclepias physocarpa</em>)</strong></p>
 
-            TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "", context: "Example 393\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**", "<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>", "", context: "Example 394\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example394()
+        public void InlinesEmphasisAndStrongEmphasis_Example395()
         {
-            // Example 394
+            // Example 395
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9695,14 +9716,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
 
-            TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "", context: "Example 394\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo \"*bar*\" foo**", "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>", "", context: "Example 395\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example395()
+        public void InlinesEmphasisAndStrongEmphasis_Example396()
         {
-            // Example 395
+            // Example 396
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9711,7 +9732,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo</strong>bar</p>
 
-            TestParser.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "", context: "Example 395\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo**bar", "<p><strong>foo</strong>bar</p>", "", context: "Example 396\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 8:
@@ -9719,9 +9740,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // This is not strong emphasis, because the closing delimiter is
         // preceded by whitespace:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example396()
+        public void InlinesEmphasisAndStrongEmphasis_Example397()
         {
-            // Example 396
+            // Example 397
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9730,15 +9751,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>__foo bar __</p>
 
-            TestParser.TestSpec("__foo bar __", "<p>__foo bar __</p>", "", context: "Example 396\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo bar __", "<p>__foo bar __</p>", "", context: "Example 397\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is not strong emphasis, because the second `__` is
         // preceded by punctuation and followed by an alphanumeric:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example397()
+        public void InlinesEmphasisAndStrongEmphasis_Example398()
         {
-            // Example 397
+            // Example 398
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9747,15 +9768,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>__(__foo)</p>
 
-            TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>", "", context: "Example 397\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__(__foo)", "<p>__(__foo)</p>", "", context: "Example 398\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // The point of this restriction is more easily appreciated
         // with this example:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example398()
+        public void InlinesEmphasisAndStrongEmphasis_Example399()
         {
-            // Example 398
+            // Example 399
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9764,14 +9785,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>(<strong>foo</strong>)</em></p>
 
-            TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example 398\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_(__foo__)_", "<p><em>(<strong>foo</strong>)</em></p>", "", context: "Example 399\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Intraword strong emphasis is forbidden with `__`:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example399()
+        public void InlinesEmphasisAndStrongEmphasis_Example400()
         {
-            // Example 399
+            // Example 400
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9780,22 +9801,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>__foo__bar</p>
 
-            TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>", "", context: "Example 399\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example400()
-        {
-            // Example 400
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     __пристаням__стремятся
-            //
-            // Should be rendered as:
-            //     <p>__пристаням__стремятся</p>
-
-            TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "", context: "Example 400\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo__bar", "<p>__foo__bar</p>", "", context: "Example 400\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9805,21 +9811,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     __пристаням__стремятся
+            //
+            // Should be rendered as:
+            //     <p>__пристаням__стремятся</p>
+
+            TestParser.TestSpec("__пристаням__стремятся", "<p>__пристаням__стремятся</p>", "", context: "Example 401\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example402()
+        {
+            // Example 402
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     __foo__bar__baz__
             //
             // Should be rendered as:
             //     <p><strong>foo__bar__baz</strong></p>
 
-            TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "", context: "Example 401\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo__bar__baz__", "<p><strong>foo__bar__baz</strong></p>", "", context: "Example 402\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // This is strong emphasis, even though the closing delimiter is
         // both left- and right-flanking, because it is followed by
         // punctuation:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example402()
+        public void InlinesEmphasisAndStrongEmphasis_Example403()
         {
-            // Example 402
+            // Example 403
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9828,7 +9849,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>(bar)</strong>.</p>
 
-            TestParser.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "", context: "Example 402\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__(bar)__.", "<p><strong>(bar)</strong>.</p>", "", context: "Example 403\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 9:
@@ -9836,9 +9857,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // Any nonempty sequence of inline elements can be the contents of an
         // emphasized span.
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example403()
+        public void InlinesEmphasisAndStrongEmphasis_Example404()
         {
-            // Example 403
+            // Example 404
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9847,13 +9868,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo <a href="/url">bar</a></em></p>
 
-            TestParser.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "", context: "Example 403\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo [bar](/url)*", "<p><em>foo <a href=\"/url\">bar</a></em></p>", "", context: "Example 404\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example404()
+        public void InlinesEmphasisAndStrongEmphasis_Example405()
         {
-            // Example 404
+            // Example 405
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9864,15 +9885,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><em>foo
             //     bar</em></p>
 
-            TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "", context: "Example 404\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo\nbar*", "<p><em>foo\nbar</em></p>", "", context: "Example 405\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // In particular, emphasis and strong emphasis can be nested
         // inside emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example405()
+        public void InlinesEmphasisAndStrongEmphasis_Example406()
         {
-            // Example 405
+            // Example 406
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9881,22 +9902,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo <strong>bar</strong> baz</em></p>
 
-            TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example 405\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example406()
-        {
-            // Example 406
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     _foo _bar_ baz_
-            //
-            // Should be rendered as:
-            //     <p><em>foo <em>bar</em> baz</em></p>
-
-            TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "", context: "Example 406\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo __bar__ baz_", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example 406\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9906,12 +9912,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     __foo_ bar_
+            //     _foo _bar_ baz_
             //
             // Should be rendered as:
-            //     <p><em><em>foo</em> bar</em></p>
+            //     <p><em>foo <em>bar</em> baz</em></p>
 
-            TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "", context: "Example 407\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo _bar_ baz_", "<p><em>foo <em>bar</em> baz</em></p>", "", context: "Example 407\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9921,12 +9927,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     *foo *bar**
+            //     __foo_ bar_
             //
             // Should be rendered as:
-            //     <p><em>foo <em>bar</em></em></p>
+            //     <p><em><em>foo</em> bar</em></p>
 
-            TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "", context: "Example 408\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo_ bar_", "<p><em><em>foo</em> bar</em></p>", "", context: "Example 408\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9936,12 +9942,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     *foo **bar** baz*
+            //     *foo *bar**
             //
             // Should be rendered as:
-            //     <p><em>foo <strong>bar</strong> baz</em></p>
+            //     <p><em>foo <em>bar</em></em></p>
 
-            TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example 409\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo *bar**", "<p><em>foo <em>bar</em></em></p>", "", context: "Example 409\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -9951,12 +9957,27 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     *foo **bar** baz*
+            //
+            // Should be rendered as:
+            //     <p><em>foo <strong>bar</strong> baz</em></p>
+
+            TestParser.TestSpec("*foo **bar** baz*", "<p><em>foo <strong>bar</strong> baz</em></p>", "", context: "Example 410\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example411()
+        {
+            // Example 411
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     *foo**bar**baz*
             //
             // Should be rendered as:
             //     <p><em>foo<strong>bar</strong>baz</em></p>
 
-            TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "", context: "Example 410\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo**bar**baz*", "<p><em>foo<strong>bar</strong>baz</em></p>", "", context: "Example 411\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Note that in the preceding case, the interpretation
@@ -9977,9 +9998,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // For the same reason, we don't get two consecutive
         // emphasis sections in this example:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example411()
+        public void InlinesEmphasisAndStrongEmphasis_Example412()
         {
-            // Example 411
+            // Example 412
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -9988,7 +10009,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo**bar</em></p>
 
-            TestParser.TestSpec("*foo**bar*", "<p><em>foo**bar</em></p>", "", context: "Example 411\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo**bar*", "<p><em>foo**bar</em></p>", "", context: "Example 412\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // The same condition ensures that the following
@@ -9996,9 +10017,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // emphasis, even when the interior whitespace is
         // omitted:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example412()
+        public void InlinesEmphasisAndStrongEmphasis_Example413()
         {
-            // Example 412
+            // Example 413
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10007,22 +10028,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em><strong>foo</strong> bar</em></p>
 
-            TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "", context: "Example 412\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example413()
-        {
-            // Example 413
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     *foo **bar***
-            //
-            // Should be rendered as:
-            //     <p><em>foo <strong>bar</strong></em></p>
-
-            TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "", context: "Example 413\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("***foo** bar*", "<p><em><strong>foo</strong> bar</em></p>", "", context: "Example 413\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10032,21 +10038,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     *foo **bar***
+            //
+            // Should be rendered as:
+            //     <p><em>foo <strong>bar</strong></em></p>
+
+            TestParser.TestSpec("*foo **bar***", "<p><em>foo <strong>bar</strong></em></p>", "", context: "Example 414\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example415()
+        {
+            // Example 415
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     *foo**bar***
             //
             // Should be rendered as:
             //     <p><em>foo<strong>bar</strong></em></p>
 
-            TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "", context: "Example 414\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo**bar***", "<p><em>foo<strong>bar</strong></em></p>", "", context: "Example 415\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // When the lengths of the interior closing and opening
         // delimiter runs are *both* multiples of 3, though,
         // they can match to create emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example415()
+        public void InlinesEmphasisAndStrongEmphasis_Example416()
         {
-            // Example 415
+            // Example 416
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10055,13 +10076,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo<em><strong>bar</strong></em>baz</p>
 
-            TestParser.TestSpec("foo***bar***baz", "<p>foo<em><strong>bar</strong></em>baz</p>", "", context: "Example 415\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo***bar***baz", "<p>foo<em><strong>bar</strong></em>baz</p>", "", context: "Example 416\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example416()
+        public void InlinesEmphasisAndStrongEmphasis_Example417()
         {
-            // Example 416
+            // Example 417
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10070,14 +10091,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
 
-            TestParser.TestSpec("foo******bar*********baz", "<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>", "", context: "Example 416\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo******bar*********baz", "<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>", "", context: "Example 417\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Indefinite levels of nesting are possible:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example417()
+        public void InlinesEmphasisAndStrongEmphasis_Example418()
         {
-            // Example 417
+            // Example 418
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10086,13 +10107,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
 
-            TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "", context: "Example 417\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo **bar *baz* bim** bop*", "<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>", "", context: "Example 418\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example418()
+        public void InlinesEmphasisAndStrongEmphasis_Example419()
         {
-            // Example 418
+            // Example 419
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10101,14 +10122,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo <a href="/url"><em>bar</em></a></em></p>
 
-            TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "", context: "Example 418\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo [*bar*](/url)*", "<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>", "", context: "Example 419\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // There can be no empty emphasis or strong emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example419()
+        public void InlinesEmphasisAndStrongEmphasis_Example420()
         {
-            // Example 419
+            // Example 420
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10117,13 +10138,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>** is not an empty emphasis</p>
 
-            TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "", context: "Example 419\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("** is not an empty emphasis", "<p>** is not an empty emphasis</p>", "", context: "Example 420\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example420()
+        public void InlinesEmphasisAndStrongEmphasis_Example421()
         {
-            // Example 420
+            // Example 421
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10132,7 +10153,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>**** is not an empty strong emphasis</p>
 
-            TestParser.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "", context: "Example 420\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**** is not an empty strong emphasis", "<p>**** is not an empty strong emphasis</p>", "", context: "Example 421\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 10:
@@ -10140,9 +10161,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // Any nonempty sequence of inline elements can be the contents of an
         // strongly emphasized span.
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example421()
+        public void InlinesEmphasisAndStrongEmphasis_Example422()
         {
-            // Example 421
+            // Example 422
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10151,13 +10172,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo <a href="/url">bar</a></strong></p>
 
-            TestParser.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "", context: "Example 421\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo [bar](/url)**", "<p><strong>foo <a href=\"/url\">bar</a></strong></p>", "", context: "Example 422\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example422()
+        public void InlinesEmphasisAndStrongEmphasis_Example423()
         {
-            // Example 422
+            // Example 423
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10168,15 +10189,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><strong>foo
             //     bar</strong></p>
 
-            TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "", context: "Example 422\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo\nbar**", "<p><strong>foo\nbar</strong></p>", "", context: "Example 423\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // In particular, emphasis and strong emphasis can be nested
         // inside strong emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example423()
+        public void InlinesEmphasisAndStrongEmphasis_Example424()
         {
-            // Example 423
+            // Example 424
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10185,22 +10206,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo <em>bar</em> baz</strong></p>
 
-            TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example 423\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example424()
-        {
-            // Example 424
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     __foo __bar__ baz__
-            //
-            // Should be rendered as:
-            //     <p><strong>foo <strong>bar</strong> baz</strong></p>
-
-            TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "", context: "Example 424\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo _bar_ baz__", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example 424\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10210,12 +10216,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     ____foo__ bar__
+            //     __foo __bar__ baz__
             //
             // Should be rendered as:
-            //     <p><strong><strong>foo</strong> bar</strong></p>
+            //     <p><strong>foo <strong>bar</strong> baz</strong></p>
 
-            TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "", context: "Example 425\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo __bar__ baz__", "<p><strong>foo <strong>bar</strong> baz</strong></p>", "", context: "Example 425\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10225,12 +10231,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **foo **bar****
+            //     ____foo__ bar__
             //
             // Should be rendered as:
-            //     <p><strong>foo <strong>bar</strong></strong></p>
+            //     <p><strong><strong>foo</strong> bar</strong></p>
 
-            TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "", context: "Example 426\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("____foo__ bar__", "<p><strong><strong>foo</strong> bar</strong></p>", "", context: "Example 426\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10240,12 +10246,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **foo *bar* baz**
+            //     **foo **bar****
             //
             // Should be rendered as:
-            //     <p><strong>foo <em>bar</em> baz</strong></p>
+            //     <p><strong>foo <strong>bar</strong></strong></p>
 
-            TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example 427\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo **bar****", "<p><strong>foo <strong>bar</strong></strong></p>", "", context: "Example 427\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10255,12 +10261,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **foo*bar*baz**
+            //     **foo *bar* baz**
             //
             // Should be rendered as:
-            //     <p><strong>foo<em>bar</em>baz</strong></p>
+            //     <p><strong>foo <em>bar</em> baz</strong></p>
 
-            TestParser.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "", context: "Example 428\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo *bar* baz**", "<p><strong>foo <em>bar</em> baz</strong></p>", "", context: "Example 428\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10270,12 +10276,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     ***foo* bar**
+            //     **foo*bar*baz**
             //
             // Should be rendered as:
-            //     <p><strong><em>foo</em> bar</strong></p>
+            //     <p><strong>foo<em>bar</em>baz</strong></p>
 
-            TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "", context: "Example 429\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo*bar*baz**", "<p><strong>foo<em>bar</em>baz</strong></p>", "", context: "Example 429\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10285,19 +10291,34 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     ***foo* bar**
+            //
+            // Should be rendered as:
+            //     <p><strong><em>foo</em> bar</strong></p>
+
+            TestParser.TestSpec("***foo* bar**", "<p><strong><em>foo</em> bar</strong></p>", "", context: "Example 430\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example431()
+        {
+            // Example 431
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     **foo *bar***
             //
             // Should be rendered as:
             //     <p><strong>foo <em>bar</em></strong></p>
 
-            TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "", context: "Example 430\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo *bar***", "<p><strong>foo <em>bar</em></strong></p>", "", context: "Example 431\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Indefinite levels of nesting are possible:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example431()
+        public void InlinesEmphasisAndStrongEmphasis_Example432()
         {
-            // Example 431
+            // Example 432
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10308,13 +10329,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><strong>foo <em>bar <strong>baz</strong>
             //     bim</em> bop</strong></p>
 
-            TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "", context: "Example 431\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo *bar **baz**\nbim* bop**", "<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>", "", context: "Example 432\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example432()
+        public void InlinesEmphasisAndStrongEmphasis_Example433()
         {
-            // Example 432
+            // Example 433
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10323,14 +10344,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
 
-            TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "", context: "Example 432\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo [*bar*](/url)**", "<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>", "", context: "Example 433\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // There can be no empty emphasis or strong emphasis:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example433()
+        public void InlinesEmphasisAndStrongEmphasis_Example434()
         {
-            // Example 433
+            // Example 434
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10339,13 +10360,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>__ is not an empty emphasis</p>
 
-            TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "", context: "Example 433\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__ is not an empty emphasis", "<p>__ is not an empty emphasis</p>", "", context: "Example 434\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example434()
+        public void InlinesEmphasisAndStrongEmphasis_Example435()
         {
-            // Example 434
+            // Example 435
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10354,14 +10375,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>____ is not an empty strong emphasis</p>
 
-            TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "", context: "Example 434\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("____ is not an empty strong emphasis", "<p>____ is not an empty strong emphasis</p>", "", context: "Example 435\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 11:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example435()
+        public void InlinesEmphasisAndStrongEmphasis_Example436()
         {
-            // Example 435
+            // Example 436
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10370,22 +10391,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo ***</p>
 
-            TestParser.TestSpec("foo ***", "<p>foo ***</p>", "", context: "Example 435\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example436()
-        {
-            // Example 436
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     foo *\**
-            //
-            // Should be rendered as:
-            //     <p>foo <em>*</em></p>
-
-            TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "", context: "Example 436\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo ***", "<p>foo ***</p>", "", context: "Example 436\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10395,12 +10401,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo *_*
+            //     foo *\**
             //
             // Should be rendered as:
-            //     <p>foo <em>_</em></p>
+            //     <p>foo <em>*</em></p>
 
-            TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "", context: "Example 437\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo *\\**", "<p>foo <em>*</em></p>", "", context: "Example 437\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10410,12 +10416,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo *****
+            //     foo *_*
             //
             // Should be rendered as:
-            //     <p>foo *****</p>
+            //     <p>foo <em>_</em></p>
 
-            TestParser.TestSpec("foo *****", "<p>foo *****</p>", "", context: "Example 438\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo *_*", "<p>foo <em>_</em></p>", "", context: "Example 438\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10425,12 +10431,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo **\***
+            //     foo *****
             //
             // Should be rendered as:
-            //     <p>foo <strong>*</strong></p>
+            //     <p>foo *****</p>
 
-            TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "", context: "Example 439\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo *****", "<p>foo *****</p>", "", context: "Example 439\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10440,21 +10446,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     foo **\***
+            //
+            // Should be rendered as:
+            //     <p>foo <strong>*</strong></p>
+
+            TestParser.TestSpec("foo **\\***", "<p>foo <strong>*</strong></p>", "", context: "Example 440\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example441()
+        {
+            // Example 441
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     foo **_**
             //
             // Should be rendered as:
             //     <p>foo <strong>_</strong></p>
 
-            TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "", context: "Example 440\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo **_**", "<p>foo <strong>_</strong></p>", "", context: "Example 441\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Note that when delimiters do not match evenly, Rule 11 determines
         // that the excess literal `*` characters will appear outside of the
         // emphasis, rather than inside it:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example441()
+        public void InlinesEmphasisAndStrongEmphasis_Example442()
         {
-            // Example 441
+            // Example 442
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10463,22 +10484,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*<em>foo</em></p>
 
-            TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>", "", context: "Example 441\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example442()
-        {
-            // Example 442
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     *foo**
-            //
-            // Should be rendered as:
-            //     <p><em>foo</em>*</p>
-
-            TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>", "", context: "Example 442\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo*", "<p>*<em>foo</em></p>", "", context: "Example 442\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10488,12 +10494,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     ***foo**
+            //     *foo**
             //
             // Should be rendered as:
-            //     <p>*<strong>foo</strong></p>
+            //     <p><em>foo</em>*</p>
 
-            TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "", context: "Example 443\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo**", "<p><em>foo</em>*</p>", "", context: "Example 443\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10503,12 +10509,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     ****foo*
+            //     ***foo**
             //
             // Should be rendered as:
-            //     <p>***<em>foo</em></p>
+            //     <p>*<strong>foo</strong></p>
 
-            TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>", "", context: "Example 444\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("***foo**", "<p>*<strong>foo</strong></p>", "", context: "Example 444\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10518,12 +10524,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **foo***
+            //     ****foo*
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong>*</p>
+            //     <p>***<em>foo</em></p>
 
-            TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "", context: "Example 445\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("****foo*", "<p>***<em>foo</em></p>", "", context: "Example 445\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10533,19 +10539,34 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     **foo***
+            //
+            // Should be rendered as:
+            //     <p><strong>foo</strong>*</p>
+
+            TestParser.TestSpec("**foo***", "<p><strong>foo</strong>*</p>", "", context: "Example 446\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example447()
+        {
+            // Example 447
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     *foo****
             //
             // Should be rendered as:
             //     <p><em>foo</em>***</p>
 
-            TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>", "", context: "Example 446\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo****", "<p><em>foo</em>***</p>", "", context: "Example 447\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 12:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example447()
+        public void InlinesEmphasisAndStrongEmphasis_Example448()
         {
-            // Example 447
+            // Example 448
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10554,22 +10575,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>foo ___</p>
 
-            TestParser.TestSpec("foo ___", "<p>foo ___</p>", "", context: "Example 447\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example448()
-        {
-            // Example 448
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     foo _\__
-            //
-            // Should be rendered as:
-            //     <p>foo <em>_</em></p>
-
-            TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "", context: "Example 448\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo ___", "<p>foo ___</p>", "", context: "Example 448\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10579,12 +10585,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo _*_
+            //     foo _\__
             //
             // Should be rendered as:
-            //     <p>foo <em>*</em></p>
+            //     <p>foo <em>_</em></p>
 
-            TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "", context: "Example 449\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo _\\__", "<p>foo <em>_</em></p>", "", context: "Example 449\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10594,12 +10600,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo _____
+            //     foo _*_
             //
             // Should be rendered as:
-            //     <p>foo _____</p>
+            //     <p>foo <em>*</em></p>
 
-            TestParser.TestSpec("foo _____", "<p>foo _____</p>", "", context: "Example 450\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo _*_", "<p>foo <em>*</em></p>", "", context: "Example 450\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10609,12 +10615,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo __\___
+            //     foo _____
             //
             // Should be rendered as:
-            //     <p>foo <strong>_</strong></p>
+            //     <p>foo _____</p>
 
-            TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "", context: "Example 451\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo _____", "<p>foo _____</p>", "", context: "Example 451\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10624,12 +10630,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     foo __*__
+            //     foo __\___
             //
             // Should be rendered as:
-            //     <p>foo <strong>*</strong></p>
+            //     <p>foo <strong>_</strong></p>
 
-            TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "", context: "Example 452\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("foo __\\___", "<p>foo <strong>_</strong></p>", "", context: "Example 452\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10639,21 +10645,36 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     foo __*__
+            //
+            // Should be rendered as:
+            //     <p>foo <strong>*</strong></p>
+
+            TestParser.TestSpec("foo __*__", "<p>foo <strong>*</strong></p>", "", context: "Example 453\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example454()
+        {
+            // Example 454
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     __foo_
             //
             // Should be rendered as:
             //     <p>_<em>foo</em></p>
 
-            TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>", "", context: "Example 453\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__foo_", "<p>_<em>foo</em></p>", "", context: "Example 454\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Note that when delimiters do not match evenly, Rule 12 determines
         // that the excess literal `_` characters will appear outside of the
         // emphasis, rather than inside it:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example454()
+        public void InlinesEmphasisAndStrongEmphasis_Example455()
         {
-            // Example 454
+            // Example 455
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10662,22 +10683,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo</em>_</p>
 
-            TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>", "", context: "Example 454\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example455()
-        {
-            // Example 455
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     ___foo__
-            //
-            // Should be rendered as:
-            //     <p>_<strong>foo</strong></p>
-
-            TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "", context: "Example 455\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo__", "<p><em>foo</em>_</p>", "", context: "Example 455\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10687,12 +10693,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     ____foo_
+            //     ___foo__
             //
             // Should be rendered as:
-            //     <p>___<em>foo</em></p>
+            //     <p>_<strong>foo</strong></p>
 
-            TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>", "", context: "Example 456\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("___foo__", "<p>_<strong>foo</strong></p>", "", context: "Example 456\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10702,12 +10708,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     __foo___
+            //     ____foo_
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong>_</p>
+            //     <p>___<em>foo</em></p>
 
-            TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "", context: "Example 457\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("____foo_", "<p>___<em>foo</em></p>", "", context: "Example 457\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10717,20 +10723,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     __foo___
+            //
+            // Should be rendered as:
+            //     <p><strong>foo</strong>_</p>
+
+            TestParser.TestSpec("__foo___", "<p><strong>foo</strong>_</p>", "", context: "Example 458\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example459()
+        {
+            // Example 459
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     _foo____
             //
             // Should be rendered as:
             //     <p><em>foo</em>___</p>
 
-            TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>", "", context: "Example 458\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo____", "<p><em>foo</em>___</p>", "", context: "Example 459\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 13 implies that if you want emphasis nested directly inside
         // emphasis, you must use different delimiters:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example459()
+        public void InlinesEmphasisAndStrongEmphasis_Example460()
         {
-            // Example 459
+            // Example 460
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10739,22 +10760,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong>foo</strong></p>
 
-            TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>", "", context: "Example 459\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example460()
-        {
-            // Example 460
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     *_foo_*
-            //
-            // Should be rendered as:
-            //     <p><em><em>foo</em></em></p>
-
-            TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "", context: "Example 460\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo**", "<p><strong>foo</strong></p>", "", context: "Example 460\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10764,12 +10770,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     __foo__
+            //     *_foo_*
             //
             // Should be rendered as:
-            //     <p><strong>foo</strong></p>
+            //     <p><em><em>foo</em></em></p>
 
-            TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>", "", context: "Example 461\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*_foo_*", "<p><em><em>foo</em></em></p>", "", context: "Example 461\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10779,20 +10785,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
+            //     __foo__
+            //
+            // Should be rendered as:
+            //     <p><strong>foo</strong></p>
+
+            TestParser.TestSpec("__foo__", "<p><strong>foo</strong></p>", "", context: "Example 462\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example463()
+        {
+            // Example 463
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
             //     _*foo*_
             //
             // Should be rendered as:
             //     <p><em><em>foo</em></em></p>
 
-            TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "", context: "Example 462\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_*foo*_", "<p><em><em>foo</em></em></p>", "", context: "Example 463\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // However, strong emphasis within strong emphasis is possible without
         // switching delimiters:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example463()
+        public void InlinesEmphasisAndStrongEmphasis_Example464()
         {
-            // Example 463
+            // Example 464
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10801,13 +10822,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong><strong>foo</strong></strong></p>
 
-            TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example 463\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("****foo****", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example 464\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example464()
+        public void InlinesEmphasisAndStrongEmphasis_Example465()
         {
-            // Example 464
+            // Example 465
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10816,15 +10837,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong><strong>foo</strong></strong></p>
 
-            TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example 464\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("____foo____", "<p><strong><strong>foo</strong></strong></p>", "", context: "Example 465\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 13 can be applied to arbitrarily long sequences of
         // delimiters:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example465()
+        public void InlinesEmphasisAndStrongEmphasis_Example466()
         {
-            // Example 465
+            // Example 466
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10833,14 +10854,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><strong><strong><strong>foo</strong></strong></strong></p>
 
-            TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "", context: "Example 465\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("******foo******", "<p><strong><strong><strong>foo</strong></strong></strong></p>", "", context: "Example 466\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 14:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example466()
+        public void InlinesEmphasisAndStrongEmphasis_Example467()
         {
-            // Example 466
+            // Example 467
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10849,13 +10870,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em><strong>foo</strong></em></p>
 
-            TestParser.TestSpec("***foo***", "<p><em><strong>foo</strong></em></p>", "", context: "Example 466\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("***foo***", "<p><em><strong>foo</strong></em></p>", "", context: "Example 467\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example467()
+        public void InlinesEmphasisAndStrongEmphasis_Example468()
         {
-            // Example 467
+            // Example 468
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10864,14 +10885,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em><strong><strong>foo</strong></strong></em></p>
 
-            TestParser.TestSpec("_____foo_____", "<p><em><strong><strong>foo</strong></strong></em></p>", "", context: "Example 467\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_____foo_____", "<p><em><strong><strong>foo</strong></strong></em></p>", "", context: "Example 468\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 15:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example468()
+        public void InlinesEmphasisAndStrongEmphasis_Example469()
         {
-            // Example 468
+            // Example 469
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10880,13 +10901,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo _bar</em> baz_</p>
 
-            TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "", context: "Example 468\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo _bar* baz_", "<p><em>foo _bar</em> baz_</p>", "", context: "Example 469\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example469()
+        public void InlinesEmphasisAndStrongEmphasis_Example470()
         {
-            // Example 469
+            // Example 470
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10895,14 +10916,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo <strong>bar *baz bim</strong> bam</em></p>
 
-            TestParser.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>", "", context: "Example 469\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo __bar *baz bim__ bam*", "<p><em>foo <strong>bar *baz bim</strong> bam</em></p>", "", context: "Example 470\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 16:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example470()
+        public void InlinesEmphasisAndStrongEmphasis_Example471()
         {
-            // Example 470
+            // Example 471
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10911,13 +10932,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>**foo <strong>bar baz</strong></p>
 
-            TestParser.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>", "", context: "Example 470\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**foo **bar baz**", "<p>**foo <strong>bar baz</strong></p>", "", context: "Example 471\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example471()
+        public void InlinesEmphasisAndStrongEmphasis_Example472()
         {
-            // Example 471
+            // Example 472
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10926,14 +10947,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*foo <em>bar baz</em></p>
 
-            TestParser.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>", "", context: "Example 471\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*foo *bar baz*", "<p>*foo <em>bar baz</em></p>", "", context: "Example 472\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         // Rule 17:
         [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example472()
+        public void InlinesEmphasisAndStrongEmphasis_Example473()
         {
-            // Example 472
+            // Example 473
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
@@ -10942,22 +10963,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*<a href="/url">bar*</a></p>
 
-            TestParser.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>", "", context: "Example 472\nSection Inlines / Emphasis and strong emphasis\n");
-        }
-
-        [Test]
-        public void InlinesEmphasisAndStrongEmphasis_Example473()
-        {
-            // Example 473
-            // Section: Inlines / Emphasis and strong emphasis
-            //
-            // The following Markdown:
-            //     _foo [bar_](/url)
-            //
-            // Should be rendered as:
-            //     <p>_foo <a href="/url">bar_</a></p>
-
-            TestParser.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>", "", context: "Example 473\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*[bar*](/url)", "<p>*<a href=\"/url\">bar*</a></p>", "", context: "Example 473\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10967,12 +10973,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     *<img src="foo" title="*"/>
+            //     _foo [bar_](/url)
             //
             // Should be rendered as:
-            //     <p>*<img src="foo" title="*"/></p>
+            //     <p>_foo <a href="/url">bar_</a></p>
 
-            TestParser.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>", "", context: "Example 474\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_foo [bar_](/url)", "<p>_foo <a href=\"/url\">bar_</a></p>", "", context: "Example 474\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10982,12 +10988,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **<a href="**">
+            //     *<img src="foo" title="*"/>
             //
             // Should be rendered as:
-            //     <p>**<a href="**"></p>
+            //     <p>*<img src="foo" title="*"/></p>
 
-            TestParser.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>", "", context: "Example 475\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*<img src=\"foo\" title=\"*\"/>", "<p>*<img src=\"foo\" title=\"*\"/></p>", "", context: "Example 475\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -10997,12 +11003,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     __<a href="__">
+            //     **<a href="**">
             //
             // Should be rendered as:
-            //     <p>__<a href="__"></p>
+            //     <p>**<a href="**"></p>
 
-            TestParser.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>", "", context: "Example 476\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**<a href=\"**\">", "<p>**<a href=\"**\"></p>", "", context: "Example 476\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -11012,12 +11018,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     *a `*`*
+            //     __<a href="__">
             //
             // Should be rendered as:
-            //     <p><em>a <code>*</code></em></p>
+            //     <p>__<a href="__"></p>
 
-            TestParser.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>", "", context: "Example 477\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("__<a href=\"__\">", "<p>__<a href=\"__\"></p>", "", context: "Example 477\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -11027,12 +11033,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     _a `_`_
+            //     *a `*`*
             //
             // Should be rendered as:
-            //     <p><em>a <code>_</code></em></p>
+            //     <p><em>a <code>*</code></em></p>
 
-            TestParser.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>", "", context: "Example 478\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("*a `*`*", "<p><em>a <code>*</code></em></p>", "", context: "Example 478\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -11042,12 +11048,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     **a<http://foo.bar/?q=**>
+            //     _a `_`_
             //
             // Should be rendered as:
-            //     <p>**a<a href="http://foo.bar/?q=**">http://foo.bar/?q=**</a></p>
+            //     <p><em>a <code>_</code></em></p>
 
-            TestParser.TestSpec("**a<http://foo.bar/?q=**>", "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>", "", context: "Example 479\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("_a `_`_", "<p><em>a <code>_</code></em></p>", "", context: "Example 479\nSection Inlines / Emphasis and strong emphasis\n");
         }
 
         [Test]
@@ -11057,12 +11063,27 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Emphasis and strong emphasis
             //
             // The following Markdown:
-            //     __a<http://foo.bar/?q=__>
+            //     **a<https://foo.bar/?q=**>
             //
             // Should be rendered as:
-            //     <p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>
+            //     <p>**a<a href="https://foo.bar/?q=**">https://foo.bar/?q=**</a></p>
 
-            TestParser.TestSpec("__a<http://foo.bar/?q=__>", "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>", "", context: "Example 480\nSection Inlines / Emphasis and strong emphasis\n");
+            TestParser.TestSpec("**a<https://foo.bar/?q=**>", "<p>**a<a href=\"https://foo.bar/?q=**\">https://foo.bar/?q=**</a></p>", "", context: "Example 480\nSection Inlines / Emphasis and strong emphasis\n");
+        }
+
+        [Test]
+        public void InlinesEmphasisAndStrongEmphasis_Example481()
+        {
+            // Example 481
+            // Section: Inlines / Emphasis and strong emphasis
+            //
+            // The following Markdown:
+            //     __a<https://foo.bar/?q=__>
+            //
+            // Should be rendered as:
+            //     <p>__a<a href="https://foo.bar/?q=__">https://foo.bar/?q=__</a></p>
+
+            TestParser.TestSpec("__a<https://foo.bar/?q=__>", "<p>__a<a href=\"https://foo.bar/?q=__\">https://foo.bar/?q=__</a></p>", "", context: "Example 481\nSection Inlines / Emphasis and strong emphasis\n");
         }
     }
 
@@ -11149,9 +11170,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // Here is a simple inline link:
         [Test]
-        public void InlinesLinks_Example481()
+        public void InlinesLinks_Example482()
         {
-            // Example 481
+            // Example 482
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11160,15 +11181,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            TestParser.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 481\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/uri \"title\")", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 482\nSection Inlines / Links\n");
         }
 
         // The title, the link text and even 
         // the destination may be omitted:
         [Test]
-        public void InlinesLinks_Example482()
+        public void InlinesLinks_Example483()
         {
-            // Example 482
+            // Example 483
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11177,22 +11198,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link</a></p>
 
-            TestParser.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "", context: "Example 482\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example483()
-        {
-            // Example 483
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [](./target.md)
-            //
-            // Should be rendered as:
-            //     <p><a href="./target.md"></a></p>
-
-            TestParser.TestSpec("[](./target.md)", "<p><a href=\"./target.md\"></a></p>", "", context: "Example 483\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/uri)", "<p><a href=\"/uri\">link</a></p>", "", context: "Example 483\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11202,12 +11208,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link]()
+            //     [](./target.md)
             //
             // Should be rendered as:
-            //     <p><a href="">link</a></p>
+            //     <p><a href="./target.md"></a></p>
 
-            TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "", context: "Example 484\nSection Inlines / Links\n");
+            TestParser.TestSpec("[](./target.md)", "<p><a href=\"./target.md\"></a></p>", "", context: "Example 484\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11217,12 +11223,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link](<>)
+            //     [link]()
             //
             // Should be rendered as:
             //     <p><a href="">link</a></p>
 
-            TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "", context: "Example 485\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link]()", "<p><a href=\"\">link</a></p>", "", context: "Example 485\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11232,20 +11238,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     [link](<>)
+            //
+            // Should be rendered as:
+            //     <p><a href="">link</a></p>
+
+            TestParser.TestSpec("[link](<>)", "<p><a href=\"\">link</a></p>", "", context: "Example 486\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example487()
+        {
+            // Example 487
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     []()
             //
             // Should be rendered as:
             //     <p><a href=""></a></p>
 
-            TestParser.TestSpec("[]()", "<p><a href=\"\"></a></p>", "", context: "Example 486\nSection Inlines / Links\n");
+            TestParser.TestSpec("[]()", "<p><a href=\"\"></a></p>", "", context: "Example 487\nSection Inlines / Links\n");
         }
 
         // The destination can only contain spaces if it is
         // enclosed in pointy brackets:
         [Test]
-        public void InlinesLinks_Example487()
+        public void InlinesLinks_Example488()
         {
-            // Example 487
+            // Example 488
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11254,13 +11275,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[link](/my uri)</p>
 
-            TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "", context: "Example 487\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/my uri)", "<p>[link](/my uri)</p>", "", context: "Example 488\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example488()
+        public void InlinesLinks_Example489()
         {
-            // Example 488
+            // Example 489
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11269,15 +11290,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/my%20uri">link</a></p>
 
-            TestParser.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "", context: "Example 488\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](</my uri>)", "<p><a href=\"/my%20uri\">link</a></p>", "", context: "Example 489\nSection Inlines / Links\n");
         }
 
         // The destination cannot contain line endings,
         // even if enclosed in pointy brackets:
         [Test]
-        public void InlinesLinks_Example489()
+        public void InlinesLinks_Example490()
         {
-            // Example 489
+            // Example 490
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11288,13 +11309,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[link](foo
             //     bar)</p>
 
-            TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "", context: "Example 489\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\nbar)", "<p>[link](foo\nbar)</p>", "", context: "Example 490\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example490()
+        public void InlinesLinks_Example491()
         {
-            // Example 490
+            // Example 491
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11305,15 +11326,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[link](<foo
             //     bar>)</p>
 
-            TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "", context: "Example 490\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo\nbar>)", "<p>[link](<foo\nbar>)</p>", "", context: "Example 491\nSection Inlines / Links\n");
         }
 
         // The destination can contain `)` if it is enclosed
         // in pointy brackets:
         [Test]
-        public void InlinesLinks_Example491()
+        public void InlinesLinks_Example492()
         {
-            // Example 491
+            // Example 492
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11322,14 +11343,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="b)c">a</a></p>
 
-            TestParser.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "", context: "Example 491\nSection Inlines / Links\n");
+            TestParser.TestSpec("[a](<b)c>)", "<p><a href=\"b)c\">a</a></p>", "", context: "Example 492\nSection Inlines / Links\n");
         }
 
         // Pointy brackets that enclose links must be unescaped:
         [Test]
-        public void InlinesLinks_Example492()
+        public void InlinesLinks_Example493()
         {
-            // Example 492
+            // Example 493
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11338,15 +11359,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[link](&lt;foo&gt;)</p>
 
-            TestParser.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "", context: "Example 492\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo\\>)", "<p>[link](&lt;foo&gt;)</p>", "", context: "Example 493\nSection Inlines / Links\n");
         }
 
         // These are not links, because the opening pointy bracket
         // is not matched properly:
         [Test]
-        public void InlinesLinks_Example493()
+        public void InlinesLinks_Example494()
         {
-            // Example 493
+            // Example 494
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11359,14 +11380,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     [a](&lt;b)c&gt;
             //     [a](<b>c)</p>
 
-            TestParser.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "", context: "Example 493\nSection Inlines / Links\n");
+            TestParser.TestSpec("[a](<b)c\n[a](<b)c>\n[a](<b>c)", "<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>", "", context: "Example 494\nSection Inlines / Links\n");
         }
 
         // Parentheses inside the link destination may be escaped:
         [Test]
-        public void InlinesLinks_Example494()
+        public void InlinesLinks_Example495()
         {
-            // Example 494
+            // Example 495
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11375,15 +11396,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="(foo)">link</a></p>
 
-            TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "", context: "Example 494\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](\\(foo\\))", "<p><a href=\"(foo)\">link</a></p>", "", context: "Example 495\nSection Inlines / Links\n");
         }
 
         // Any number of parentheses are allowed without escaping, as long as they are
         // balanced:
         [Test]
-        public void InlinesLinks_Example495()
+        public void InlinesLinks_Example496()
         {
-            // Example 495
+            // Example 496
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11392,15 +11413,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="foo(and(bar))">link</a></p>
 
-            TestParser.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "", context: "Example 495\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo(and(bar)))", "<p><a href=\"foo(and(bar))\">link</a></p>", "", context: "Example 496\nSection Inlines / Links\n");
         }
 
         // However, if you have unbalanced parentheses, you need to escape or use the
         // `<...>` form:
         [Test]
-        public void InlinesLinks_Example496()
+        public void InlinesLinks_Example497()
         {
-            // Example 496
+            // Example 497
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11409,22 +11430,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[link](foo(and(bar))</p>
 
-            TestParser.TestSpec("[link](foo(and(bar))", "<p>[link](foo(and(bar))</p>", "", context: "Example 496\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example497()
-        {
-            // Example 497
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [link](foo\(and\(bar\))
-            //
-            // Should be rendered as:
-            //     <p><a href="foo(and(bar)">link</a></p>
-
-            TestParser.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 497\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo(and(bar))", "<p>[link](foo(and(bar))</p>", "", context: "Example 497\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11434,20 +11440,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     [link](foo\(and\(bar\))
+            //
+            // Should be rendered as:
+            //     <p><a href="foo(and(bar)">link</a></p>
+
+            TestParser.TestSpec("[link](foo\\(and\\(bar\\))", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 498\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example499()
+        {
+            // Example 499
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     [link](<foo(and(bar)>)
             //
             // Should be rendered as:
             //     <p><a href="foo(and(bar)">link</a></p>
 
-            TestParser.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 498\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](<foo(and(bar)>)", "<p><a href=\"foo(and(bar)\">link</a></p>", "", context: "Example 499\nSection Inlines / Links\n");
         }
 
         // Parentheses and other symbols can also be escaped, as usual
         // in Markdown:
         [Test]
-        public void InlinesLinks_Example499()
+        public void InlinesLinks_Example500()
         {
-            // Example 499
+            // Example 500
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11456,37 +11477,37 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="foo):">link</a></p>
 
-            TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "", context: "Example 499\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\\)\\:)", "<p><a href=\"foo):\">link</a></p>", "", context: "Example 500\nSection Inlines / Links\n");
         }
 
         // A link can contain fragment identifiers and queries:
         [Test]
-        public void InlinesLinks_Example500()
+        public void InlinesLinks_Example501()
         {
-            // Example 500
+            // Example 501
             // Section: Inlines / Links
             //
             // The following Markdown:
             //     [link](#fragment)
             //     
-            //     [link](http://example.com#fragment)
+            //     [link](https://example.com#fragment)
             //     
-            //     [link](http://example.com?foo=3#frag)
+            //     [link](https://example.com?foo=3#frag)
             //
             // Should be rendered as:
             //     <p><a href="#fragment">link</a></p>
-            //     <p><a href="http://example.com#fragment">link</a></p>
-            //     <p><a href="http://example.com?foo=3#frag">link</a></p>
+            //     <p><a href="https://example.com#fragment">link</a></p>
+            //     <p><a href="https://example.com?foo=3#frag">link</a></p>
 
-            TestParser.TestSpec("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>", "", context: "Example 500\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](#fragment)\n\n[link](https://example.com#fragment)\n\n[link](https://example.com?foo=3#frag)", "<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"https://example.com#fragment\">link</a></p>\n<p><a href=\"https://example.com?foo=3#frag\">link</a></p>", "", context: "Example 501\nSection Inlines / Links\n");
         }
 
         // Note that a backslash before a non-escapable character is
         // just a backslash:
         [Test]
-        public void InlinesLinks_Example501()
+        public void InlinesLinks_Example502()
         {
-            // Example 501
+            // Example 502
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11495,7 +11516,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="foo%5Cbar">link</a></p>
 
-            TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "", context: "Example 501\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo\\bar)", "<p><a href=\"foo%5Cbar\">link</a></p>", "", context: "Example 502\nSection Inlines / Links\n");
         }
 
         // URL-escaping should be left alone inside the destination, as all
@@ -11507,9 +11528,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // HTML or other formats.  Renderers may make different decisions
         // about how to escape or normalize URLs in the output.
         [Test]
-        public void InlinesLinks_Example502()
+        public void InlinesLinks_Example503()
         {
-            // Example 502
+            // Example 503
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11518,16 +11539,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="foo%20b%C3%A4">link</a></p>
 
-            TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "", context: "Example 502\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](foo%20b&auml;)", "<p><a href=\"foo%20b%C3%A4\">link</a></p>", "", context: "Example 503\nSection Inlines / Links\n");
         }
 
         // Note that, because titles can often be parsed as destinations,
         // if you try to omit the destination and keep the title, you'll
         // get unexpected results:
         [Test]
-        public void InlinesLinks_Example503()
+        public void InlinesLinks_Example504()
         {
-            // Example 503
+            // Example 504
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11536,14 +11557,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="%22title%22">link</a></p>
 
-            TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "", context: "Example 503\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](\"title\")", "<p><a href=\"%22title%22\">link</a></p>", "", context: "Example 504\nSection Inlines / Links\n");
         }
 
         // Titles may be in single quotes, double quotes, or parentheses:
         [Test]
-        public void InlinesLinks_Example504()
+        public void InlinesLinks_Example505()
         {
-            // Example 504
+            // Example 505
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11556,15 +11577,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <a href="/url" title="title">link</a>
             //     <a href="/url" title="title">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "", context: "Example 504\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))", "<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>", "", context: "Example 505\nSection Inlines / Links\n");
         }
 
         // Backslash escapes and entity and numeric character references
         // may be used in titles:
         [Test]
-        public void InlinesLinks_Example505()
+        public void InlinesLinks_Example506()
         {
-            // Example 505
+            // Example 506
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11573,16 +11594,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;&quot;">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "", context: "Example 505\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title \\\"&quot;\")", "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>", "", context: "Example 506\nSection Inlines / Links\n");
         }
 
         // Titles must be separated from the link using spaces, tabs, and up to one line
         // ending.
         // Other [Unicode whitespace] like non-breaking space doesn't work.
         [Test]
-        public void InlinesLinks_Example506()
+        public void InlinesLinks_Example507()
         {
-            // Example 506
+            // Example 507
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11591,14 +11612,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url%C2%A0%22title%22">link</a></p>
 
-            TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "", context: "Example 506\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title\")", "<p><a href=\"/url%C2%A0%22title%22\">link</a></p>", "", context: "Example 507\nSection Inlines / Links\n");
         }
 
         // Nested balanced quotes are not allowed without escaping:
         [Test]
-        public void InlinesLinks_Example507()
+        public void InlinesLinks_Example508()
         {
-            // Example 507
+            // Example 508
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11607,14 +11628,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
 
-            TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "", context: "Example 507\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url \"title \"and\" title\")", "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>", "", context: "Example 508\nSection Inlines / Links\n");
         }
 
         // But it is easy to work around this by using a different quote type:
         [Test]
-        public void InlinesLinks_Example508()
+        public void InlinesLinks_Example509()
         {
-            // Example 508
+            // Example 509
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11623,7 +11644,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 
-            TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "", context: "Example 508\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](/url 'title \"and\" title')", "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>", "", context: "Example 509\nSection Inlines / Links\n");
         }
 
         // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
@@ -11644,9 +11665,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // Spaces, tabs, and up to one line ending is allowed around the destination and
         // title:
         [Test]
-        public void InlinesLinks_Example509()
+        public void InlinesLinks_Example510()
         {
-            // Example 509
+            // Example 510
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11656,15 +11677,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri" title="title">link</a></p>
 
-            TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 509\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link](   /uri\n  \"title\"  )", "<p><a href=\"/uri\" title=\"title\">link</a></p>", "", context: "Example 510\nSection Inlines / Links\n");
         }
 
         // But it is not allowed between the link text and the
         // following parenthesis:
         [Test]
-        public void InlinesLinks_Example510()
+        public void InlinesLinks_Example511()
         {
-            // Example 510
+            // Example 511
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11673,15 +11694,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[link] (/uri)</p>
 
-            TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "", context: "Example 510\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link] (/uri)", "<p>[link] (/uri)</p>", "", context: "Example 511\nSection Inlines / Links\n");
         }
 
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
         [Test]
-        public void InlinesLinks_Example511()
+        public void InlinesLinks_Example512()
         {
-            // Example 511
+            // Example 512
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11690,22 +11711,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 511\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example512()
-        {
-            // Example 512
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [link] bar](/uri)
-            //
-            // Should be rendered as:
-            //     <p>[link] bar](/uri)</p>
-
-            TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "", context: "Example 512\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link [foo [bar]]](/uri)", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 512\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11715,12 +11721,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [link [bar](/uri)
+            //     [link] bar](/uri)
             //
             // Should be rendered as:
-            //     <p>[link <a href="/uri">bar</a></p>
+            //     <p>[link] bar](/uri)</p>
 
-            TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "", context: "Example 513\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link] bar](/uri)", "<p>[link] bar](/uri)</p>", "", context: "Example 513\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11730,19 +11736,34 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     [link [bar](/uri)
+            //
+            // Should be rendered as:
+            //     <p>[link <a href="/uri">bar</a></p>
+
+            TestParser.TestSpec("[link [bar](/uri)", "<p>[link <a href=\"/uri\">bar</a></p>", "", context: "Example 514\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example515()
+        {
+            // Example 515
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     [link \[bar](/uri)
             //
             // Should be rendered as:
             //     <p><a href="/uri">link [bar</a></p>
 
-            TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 514\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link \\[bar](/uri)", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 515\nSection Inlines / Links\n");
         }
 
         // The link text may contain inline content:
         [Test]
-        public void InlinesLinks_Example515()
+        public void InlinesLinks_Example516()
         {
-            // Example 515
+            // Example 516
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11751,13 +11772,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 515\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link *foo **bar** `#`*](/uri)", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 516\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example516()
+        public void InlinesLinks_Example517()
         {
-            // Example 516
+            // Example 517
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11766,14 +11787,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 516\nSection Inlines / Links\n");
+            TestParser.TestSpec("[![moon](moon.jpg)](/uri)", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 517\nSection Inlines / Links\n");
         }
 
         // However, links may not contain other links, at any level of nesting.
         [Test]
-        public void InlinesLinks_Example517()
+        public void InlinesLinks_Example518()
         {
-            // Example 517
+            // Example 518
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11782,22 +11803,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo <a href="/uri">bar</a>](/uri)</p>
 
-            TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "", context: "Example 517\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example518()
-        {
-            // Example 518
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
-            //
-            // Should be rendered as:
-            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
-
-            TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "", context: "Example 518\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo [bar](/uri)](/uri)", "<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>", "", context: "Example 518\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11807,20 +11813,35 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
+            //     [foo *[bar [baz](/uri)](/uri)*](/uri)
+            //
+            // Should be rendered as:
+            //     <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
+
+            TestParser.TestSpec("[foo *[bar [baz](/uri)](/uri)*](/uri)", "<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>", "", context: "Example 519\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example520()
+        {
+            // Example 520
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
             //     ![[[foo](uri1)](uri2)](uri3)
             //
             // Should be rendered as:
             //     <p><img src="uri3" alt="[foo](uri2)" /></p>
 
-            TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "", context: "Example 519\nSection Inlines / Links\n");
+            TestParser.TestSpec("![[[foo](uri1)](uri2)](uri3)", "<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>", "", context: "Example 520\nSection Inlines / Links\n");
         }
 
         // These cases illustrate the precedence of link text grouping over
         // emphasis grouping:
         [Test]
-        public void InlinesLinks_Example520()
+        public void InlinesLinks_Example521()
         {
-            // Example 520
+            // Example 521
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11829,13 +11850,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 520\nSection Inlines / Links\n");
+            TestParser.TestSpec("*[foo*](/uri)", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 521\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example521()
+        public void InlinesLinks_Example522()
         {
-            // Example 521
+            // Example 522
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11844,15 +11865,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="baz*">foo *bar</a></p>
 
-            TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "", context: "Example 521\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *bar](baz*)", "<p><a href=\"baz*\">foo *bar</a></p>", "", context: "Example 522\nSection Inlines / Links\n");
         }
 
         // Note that brackets that *aren't* part of links do not take
         // precedence:
         [Test]
-        public void InlinesLinks_Example522()
+        public void InlinesLinks_Example523()
         {
-            // Example 522
+            // Example 523
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11861,15 +11882,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><em>foo [bar</em> baz]</p>
 
-            TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "", context: "Example 522\nSection Inlines / Links\n");
+            TestParser.TestSpec("*foo [bar* baz]", "<p><em>foo [bar</em> baz]</p>", "", context: "Example 523\nSection Inlines / Links\n");
         }
 
         // These cases illustrate the precedence of HTML tags, code spans,
         // and autolinks over link grouping:
         [Test]
-        public void InlinesLinks_Example523()
+        public void InlinesLinks_Example524()
         {
-            // Example 523
+            // Example 524
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11878,22 +11899,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo <bar attr="](baz)"></p>
 
-            TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "", context: "Example 523\nSection Inlines / Links\n");
-        }
-
-        [Test]
-        public void InlinesLinks_Example524()
-        {
-            // Example 524
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [foo`](/uri)`
-            //
-            // Should be rendered as:
-            //     <p>[foo<code>](/uri)</code></p>
-
-            TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "", context: "Example 524\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo <bar attr=\"](baz)\">", "<p>[foo <bar attr=\"](baz)\"></p>", "", context: "Example 524\nSection Inlines / Links\n");
         }
 
         [Test]
@@ -11903,12 +11909,27 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Links
             //
             // The following Markdown:
-            //     [foo<http://example.com/?search=](uri)>
+            //     [foo`](/uri)`
             //
             // Should be rendered as:
-            //     <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
+            //     <p>[foo<code>](/uri)</code></p>
 
-            TestParser.TestSpec("[foo<http://example.com/?search=](uri)>", "<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>", "", context: "Example 525\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo`](/uri)`", "<p>[foo<code>](/uri)</code></p>", "", context: "Example 525\nSection Inlines / Links\n");
+        }
+
+        [Test]
+        public void InlinesLinks_Example526()
+        {
+            // Example 526
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     [foo<https://example.com/?search=](uri)>
+            //
+            // Should be rendered as:
+            //     <p>[foo<a href="https://example.com/?search=%5D(uri)">https://example.com/?search=](uri)</a></p>
+
+            TestParser.TestSpec("[foo<https://example.com/?search=](uri)>", "<p>[foo<a href=\"https://example.com/?search=%5D(uri)\">https://example.com/?search=](uri)</a></p>", "", context: "Example 526\nSection Inlines / Links\n");
         }
 
         // There are three kinds of [reference link](@)s:
@@ -11942,9 +11963,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // Here is a simple example:
         [Test]
-        public void InlinesLinks_Example526()
+        public void InlinesLinks_Example527()
         {
-            // Example 526
+            // Example 527
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11955,7 +11976,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 526\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 527\nSection Inlines / Links\n");
         }
 
         // The rules for the [link text] are the same as with
@@ -11964,9 +11985,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // The link text may contain balanced brackets, but not unbalanced ones,
         // unless they are escaped:
         [Test]
-        public void InlinesLinks_Example527()
+        public void InlinesLinks_Example528()
         {
-            // Example 527
+            // Example 528
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11977,13 +11998,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link [foo [bar]]</a></p>
 
-            TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 527\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link [foo [bar]]][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [foo [bar]]</a></p>", "", context: "Example 528\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example528()
+        public void InlinesLinks_Example529()
         {
-            // Example 528
+            // Example 529
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -11994,14 +12015,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link [bar</a></p>
 
-            TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 528\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link \\[bar][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link [bar</a></p>", "", context: "Example 529\nSection Inlines / Links\n");
         }
 
         // The link text may contain inline content:
         [Test]
-        public void InlinesLinks_Example529()
+        public void InlinesLinks_Example530()
         {
-            // Example 529
+            // Example 530
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12012,13 +12033,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
-            TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 529\nSection Inlines / Links\n");
+            TestParser.TestSpec("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>", "", context: "Example 530\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example530()
+        public void InlinesLinks_Example531()
         {
-            // Example 530
+            // Example 531
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12029,14 +12050,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
-            TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 530\nSection Inlines / Links\n");
+            TestParser.TestSpec("[![moon](moon.jpg)][ref]\n\n[ref]: /uri", "<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>", "", context: "Example 531\nSection Inlines / Links\n");
         }
 
         // However, links may not contain other links, at any level of nesting.
         [Test]
-        public void InlinesLinks_Example531()
+        public void InlinesLinks_Example532()
         {
-            // Example 531
+            // Example 532
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12047,13 +12068,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
 
-            TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "", context: "Example 531\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo [bar](/uri)][ref]\n\n[ref]: /uri", "<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>", "", context: "Example 532\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example532()
+        public void InlinesLinks_Example533()
         {
-            // Example 532
+            // Example 533
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12064,7 +12085,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 
-            TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "", context: "Example 532\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri", "<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>", "", context: "Example 533\nSection Inlines / Links\n");
         }
 
         // (In the examples above, we have two [shortcut reference links]
@@ -12073,9 +12094,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // The following cases illustrate the precedence of link text grouping over
         // emphasis grouping:
         [Test]
-        public void InlinesLinks_Example533()
+        public void InlinesLinks_Example534()
         {
-            // Example 533
+            // Example 534
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12086,13 +12107,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*<a href="/uri">foo*</a></p>
 
-            TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 533\nSection Inlines / Links\n");
+            TestParser.TestSpec("*[foo*][ref]\n\n[ref]: /uri", "<p>*<a href=\"/uri\">foo*</a></p>", "", context: "Example 534\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example534()
+        public void InlinesLinks_Example535()
         {
-            // Example 534
+            // Example 535
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12103,15 +12124,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">foo *bar</a>*</p>
 
-            TestParser.TestSpec("[foo *bar][ref]*\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a>*</p>", "", context: "Example 534\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo *bar][ref]*\n\n[ref]: /uri", "<p><a href=\"/uri\">foo *bar</a>*</p>", "", context: "Example 535\nSection Inlines / Links\n");
         }
 
         // These cases illustrate the precedence of HTML tags, code spans,
         // and autolinks over link grouping:
         [Test]
-        public void InlinesLinks_Example535()
+        public void InlinesLinks_Example536()
         {
-            // Example 535
+            // Example 536
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12122,13 +12143,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo <bar attr="][ref]"></p>
 
-            TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "", context: "Example 535\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri", "<p>[foo <bar attr=\"][ref]\"></p>", "", context: "Example 536\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example536()
+        public void InlinesLinks_Example537()
         {
-            // Example 536
+            // Example 537
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12139,31 +12160,31 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo<code>][ref]</code></p>
 
-            TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "", context: "Example 536\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo`][ref]`\n\n[ref]: /uri", "<p>[foo<code>][ref]</code></p>", "", context: "Example 537\nSection Inlines / Links\n");
         }
 
-        [Test]
-        public void InlinesLinks_Example537()
-        {
-            // Example 537
-            // Section: Inlines / Links
-            //
-            // The following Markdown:
-            //     [foo<http://example.com/?search=][ref]>
-            //     
-            //     [ref]: /uri
-            //
-            // Should be rendered as:
-            //     <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
-
-            TestParser.TestSpec("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>", "", context: "Example 537\nSection Inlines / Links\n");
-        }
-
-        // Matching is case-insensitive:
         [Test]
         public void InlinesLinks_Example538()
         {
             // Example 538
+            // Section: Inlines / Links
+            //
+            // The following Markdown:
+            //     [foo<https://example.com/?search=][ref]>
+            //     
+            //     [ref]: /uri
+            //
+            // Should be rendered as:
+            //     <p>[foo<a href="https://example.com/?search=%5D%5Bref%5D">https://example.com/?search=][ref]</a></p>
+
+            TestParser.TestSpec("[foo<https://example.com/?search=][ref]>\n\n[ref]: /uri", "<p>[foo<a href=\"https://example.com/?search=%5D%5Bref%5D\">https://example.com/?search=][ref]</a></p>", "", context: "Example 538\nSection Inlines / Links\n");
+        }
+
+        // Matching is case-insensitive:
+        [Test]
+        public void InlinesLinks_Example539()
+        {
+            // Example 539
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12174,14 +12195,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 538\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][BaR]\n\n[bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 539\nSection Inlines / Links\n");
         }
 
         // Unicode case fold is used:
         [Test]
-        public void InlinesLinks_Example539()
+        public void InlinesLinks_Example540()
         {
-            // Example 539
+            // Example 540
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12192,15 +12213,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url">ẞ</a></p>
 
-            TestParser.TestSpec("[ẞ]\n\n[SS]: /url", "<p><a href=\"/url\">ẞ</a></p>", "", context: "Example 539\nSection Inlines / Links\n");
+            TestParser.TestSpec("[ẞ]\n\n[SS]: /url", "<p><a href=\"/url\">ẞ</a></p>", "", context: "Example 540\nSection Inlines / Links\n");
         }
 
         // Consecutive internal spaces, tabs, and line endings are treated as one space for
         // purposes of determining matching:
         [Test]
-        public void InlinesLinks_Example540()
+        public void InlinesLinks_Example541()
         {
-            // Example 540
+            // Example 541
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12212,15 +12233,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url">Baz</a></p>
 
-            TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "", context: "Example 540\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo\n  bar]: /url\n\n[Baz][Foo bar]", "<p><a href=\"/url\">Baz</a></p>", "", context: "Example 541\nSection Inlines / Links\n");
         }
 
         // No spaces, tabs, or line endings are allowed between the [link text] and the
         // [link label]:
         [Test]
-        public void InlinesLinks_Example541()
+        public void InlinesLinks_Example542()
         {
-            // Example 541
+            // Example 542
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12231,13 +12252,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo] <a href="/url" title="title">bar</a></p>
 
-            TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 541\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] [bar]\n\n[bar]: /url \"title\"", "<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 542\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example542()
+        public void InlinesLinks_Example543()
         {
-            // Example 542
+            // Example 543
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12250,7 +12271,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[foo]
             //     <a href="/url" title="title">bar</a></p>
 
-            TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 542\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]\n[bar]\n\n[bar]: /url \"title\"", "<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>", "", context: "Example 543\nSection Inlines / Links\n");
         }
 
         // This is a departure from John Gruber's original Markdown syntax
@@ -12283,9 +12304,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // When there are multiple matching [link reference definitions],
         // the first is used:
         [Test]
-        public void InlinesLinks_Example543()
+        public void InlinesLinks_Example544()
         {
-            // Example 543
+            // Example 544
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12298,16 +12319,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url1">bar</a></p>
 
-            TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "", context: "Example 543\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]", "<p><a href=\"/url1\">bar</a></p>", "", context: "Example 544\nSection Inlines / Links\n");
         }
 
         // Note that matching is performed on normalized strings, not parsed
         // inline content.  So the following does not match, even though the
         // labels define equivalent inline content:
         [Test]
-        public void InlinesLinks_Example544()
+        public void InlinesLinks_Example545()
         {
-            // Example 544
+            // Example 545
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12318,15 +12339,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[bar][foo!]</p>
 
-            TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "", context: "Example 544\nSection Inlines / Links\n");
+            TestParser.TestSpec("[bar][foo\\!]\n\n[foo!]: /url", "<p>[bar][foo!]</p>", "", context: "Example 545\nSection Inlines / Links\n");
         }
 
         // [Link labels] cannot contain brackets, unless they are
         // backslash-escaped:
         [Test]
-        public void InlinesLinks_Example545()
+        public void InlinesLinks_Example546()
         {
-            // Example 545
+            // Example 546
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12338,13 +12359,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[foo][ref[]</p>
             //     <p>[ref[]: /uri</p>
 
-            TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "", context: "Example 545\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref[]\n\n[ref[]: /uri", "<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>", "", context: "Example 546\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example546()
+        public void InlinesLinks_Example547()
         {
-            // Example 546
+            // Example 547
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12356,13 +12377,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[foo][ref[bar]]</p>
             //     <p>[ref[bar]]: /uri</p>
 
-            TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "", context: "Example 546\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref[bar]]\n\n[ref[bar]]: /uri", "<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>", "", context: "Example 547\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example547()
+        public void InlinesLinks_Example548()
         {
-            // Example 547
+            // Example 548
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12374,13 +12395,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[[[foo]]]</p>
             //     <p>[[[foo]]]: /url</p>
 
-            TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "", context: "Example 547\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[[foo]]]\n\n[[[foo]]]: /url", "<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>", "", context: "Example 548\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example548()
+        public void InlinesLinks_Example549()
         {
-            // Example 548
+            // Example 549
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12391,14 +12412,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">foo</a></p>
 
-            TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "", context: "Example 548\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][ref\\[]\n\n[ref\\[]: /uri", "<p><a href=\"/uri\">foo</a></p>", "", context: "Example 549\nSection Inlines / Links\n");
         }
 
         // Note that in this example `]` is not backslash-escaped:
         [Test]
-        public void InlinesLinks_Example549()
+        public void InlinesLinks_Example550()
         {
-            // Example 549
+            // Example 550
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12409,15 +12430,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/uri">bar\</a></p>
 
-            TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "", context: "Example 549\nSection Inlines / Links\n");
+            TestParser.TestSpec("[bar\\\\]: /uri\n\n[bar\\\\]", "<p><a href=\"/uri\">bar\\</a></p>", "", context: "Example 550\nSection Inlines / Links\n");
         }
 
         // A [link label] must contain at least one character that is not a space, tab, or
         // line ending:
         [Test]
-        public void InlinesLinks_Example550()
+        public void InlinesLinks_Example551()
         {
-            // Example 550
+            // Example 551
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12429,13 +12450,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[]</p>
             //     <p>[]: /uri</p>
 
-            TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "", context: "Example 550\nSection Inlines / Links\n");
+            TestParser.TestSpec("[]\n\n[]: /uri", "<p>[]</p>\n<p>[]: /uri</p>", "", context: "Example 551\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example551()
+        public void InlinesLinks_Example552()
         {
-            // Example 551
+            // Example 552
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12451,21 +12472,21 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>[
             //     ]: /uri</p>
 
-            TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "", context: "Example 551\nSection Inlines / Links\n");
+            TestParser.TestSpec("[\n ]\n\n[\n ]: /uri", "<p>[\n]</p>\n<p>[\n]: /uri</p>", "", context: "Example 552\nSection Inlines / Links\n");
         }
 
         // A [collapsed reference link](@)
         // consists of a [link label] that [matches] a
         // [link reference definition] elsewhere in the
         // document, followed by the string `[]`.
-        // The contents of the first link label are parsed as inlines,
+        // The contents of the link label are parsed as inlines,
         // which are used as the link's text.  The link's URI and title are
         // provided by the matching reference link definition.  Thus,
         // `[foo][]` is equivalent to `[foo][foo]`.
         [Test]
-        public void InlinesLinks_Example552()
+        public void InlinesLinks_Example553()
         {
-            // Example 552
+            // Example 553
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12476,13 +12497,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 552\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 553\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example553()
+        public void InlinesLinks_Example554()
         {
-            // Example 553
+            // Example 554
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12493,14 +12514,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 553\nSection Inlines / Links\n");
+            TestParser.TestSpec("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 554\nSection Inlines / Links\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesLinks_Example554()
+        public void InlinesLinks_Example555()
         {
-            // Example 554
+            // Example 555
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12511,15 +12532,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 554\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo][]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 555\nSection Inlines / Links\n");
         }
 
         // As with full reference links, spaces, tabs, or line endings are not
         // allowed between the two sets of brackets:
         [Test]
-        public void InlinesLinks_Example555()
+        public void InlinesLinks_Example556()
         {
-            // Example 555
+            // Example 556
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12532,21 +12553,21 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><a href="/url" title="title">foo</a>
             //     []</p>
 
-            TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "", context: "Example 555\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] \n[]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>", "", context: "Example 556\nSection Inlines / Links\n");
         }
 
         // A [shortcut reference link](@)
         // consists of a [link label] that [matches] a
         // [link reference definition] elsewhere in the
         // document and is not followed by `[]` or a link label.
-        // The contents of the first link label are parsed as inlines,
+        // The contents of the link label are parsed as inlines,
         // which are used as the link's text.  The link's URI and title
         // are provided by the matching link reference definition.
         // Thus, `[foo]` is equivalent to `[foo][]`.
         [Test]
-        public void InlinesLinks_Example556()
+        public void InlinesLinks_Example557()
         {
-            // Example 556
+            // Example 557
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12557,13 +12578,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 556\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 557\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example557()
+        public void InlinesLinks_Example558()
         {
-            // Example 557
+            // Example 558
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12574,13 +12595,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
-            TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 557\nSection Inlines / Links\n");
+            TestParser.TestSpec("[*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>", "", context: "Example 558\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example558()
+        public void InlinesLinks_Example559()
         {
-            // Example 558
+            // Example 559
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12591,13 +12612,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
 
-            TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "", context: "Example 558\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"", "<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>", "", context: "Example 559\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example559()
+        public void InlinesLinks_Example560()
         {
-            // Example 559
+            // Example 560
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12608,14 +12629,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[[bar <a href="/url">foo</a></p>
 
-            TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "", context: "Example 559\nSection Inlines / Links\n");
+            TestParser.TestSpec("[[bar [foo]\n\n[foo]: /url", "<p>[[bar <a href=\"/url\">foo</a></p>", "", context: "Example 560\nSection Inlines / Links\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesLinks_Example560()
+        public void InlinesLinks_Example561()
         {
-            // Example 560
+            // Example 561
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12626,14 +12647,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url" title="title">Foo</a></p>
 
-            TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 560\nSection Inlines / Links\n");
+            TestParser.TestSpec("[Foo]\n\n[foo]: /url \"title\"", "<p><a href=\"/url\" title=\"title\">Foo</a></p>", "", context: "Example 561\nSection Inlines / Links\n");
         }
 
         // A space after the link text should be preserved:
         [Test]
-        public void InlinesLinks_Example561()
+        public void InlinesLinks_Example562()
         {
-            // Example 561
+            // Example 562
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12644,15 +12665,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url">foo</a> bar</p>
 
-            TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "", context: "Example 561\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo] bar\n\n[foo]: /url", "<p><a href=\"/url\">foo</a> bar</p>", "", context: "Example 562\nSection Inlines / Links\n");
         }
 
         // If you just want bracketed text, you can backslash-escape the
         // opening bracket to avoid links:
         [Test]
-        public void InlinesLinks_Example562()
+        public void InlinesLinks_Example563()
         {
-            // Example 562
+            // Example 563
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12663,15 +12684,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo]</p>
 
-            TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "", context: "Example 562\nSection Inlines / Links\n");
+            TestParser.TestSpec("\\[foo]\n\n[foo]: /url \"title\"", "<p>[foo]</p>", "", context: "Example 563\nSection Inlines / Links\n");
         }
 
         // Note that this is a link, because a link label ends with the first
         // following closing bracket:
         [Test]
-        public void InlinesLinks_Example563()
+        public void InlinesLinks_Example564()
         {
-            // Example 563
+            // Example 564
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12682,15 +12703,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>*<a href="/url">foo*</a></p>
 
-            TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "", context: "Example 563\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo*]: /url\n\n*[foo*]", "<p>*<a href=\"/url\">foo*</a></p>", "", context: "Example 564\nSection Inlines / Links\n");
         }
 
-        // Full and compact references take precedence over shortcut
+        // Full and collapsed references take precedence over shortcut
         // references:
         [Test]
-        public void InlinesLinks_Example564()
+        public void InlinesLinks_Example565()
         {
-            // Example 564
+            // Example 565
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12702,13 +12723,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url2">foo</a></p>
 
-            TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "", context: "Example 564\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a></p>", "", context: "Example 565\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example565()
+        public void InlinesLinks_Example566()
         {
-            // Example 565
+            // Example 566
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12719,14 +12740,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url1">foo</a></p>
 
-            TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "", context: "Example 565\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][]\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a></p>", "", context: "Example 566\nSection Inlines / Links\n");
         }
 
         // Inline links also take precedence:
         [Test]
-        public void InlinesLinks_Example566()
+        public void InlinesLinks_Example567()
         {
-            // Example 566
+            // Example 567
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12737,13 +12758,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="">foo</a></p>
 
-            TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "", context: "Example 566\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo]()\n\n[foo]: /url1", "<p><a href=\"\">foo</a></p>", "", context: "Example 567\nSection Inlines / Links\n");
         }
 
         [Test]
-        public void InlinesLinks_Example567()
+        public void InlinesLinks_Example568()
         {
-            // Example 567
+            // Example 568
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12754,15 +12775,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url1">foo</a>(not a link)</p>
 
-            TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "", context: "Example 567\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo](not a link)\n\n[foo]: /url1", "<p><a href=\"/url1\">foo</a>(not a link)</p>", "", context: "Example 568\nSection Inlines / Links\n");
         }
 
         // In the following case `[bar][baz]` is parsed as a reference,
         // `[foo]` as normal text:
         [Test]
-        public void InlinesLinks_Example568()
+        public void InlinesLinks_Example569()
         {
-            // Example 568
+            // Example 569
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12773,15 +12794,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo]<a href="/url">bar</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "", context: "Example 568\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url", "<p>[foo]<a href=\"/url\">bar</a></p>", "", context: "Example 569\nSection Inlines / Links\n");
         }
 
         // Here, though, `[foo][bar]` is parsed as a reference, since
         // `[bar]` is defined:
         [Test]
-        public void InlinesLinks_Example569()
+        public void InlinesLinks_Example570()
         {
-            // Example 569
+            // Example 570
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12793,15 +12814,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "", context: "Example 569\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2", "<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>", "", context: "Example 570\nSection Inlines / Links\n");
         }
 
         // Here `[foo]` is not parsed as a shortcut reference, because it
         // is followed by a link label (even though `[bar]` is not defined):
         [Test]
-        public void InlinesLinks_Example570()
+        public void InlinesLinks_Example571()
         {
-            // Example 570
+            // Example 571
             // Section: Inlines / Links
             //
             // The following Markdown:
@@ -12813,7 +12834,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>[foo]<a href="/url1">bar</a></p>
 
-            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "", context: "Example 570\nSection Inlines / Links\n");
+            TestParser.TestSpec("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2", "<p>[foo]<a href=\"/url1\">bar</a></p>", "", context: "Example 571\nSection Inlines / Links\n");
         }
     }
 
@@ -12832,9 +12853,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // as its contents.  When an image is rendered to HTML,
         // this is standardly used as the image's `alt` attribute.
         [Test]
-        public void InlinesImages_Example571()
+        public void InlinesImages_Example572()
         {
-            // Example 571
+            // Example 572
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12843,13 +12864,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 571\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo](/url \"title\")", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 572\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example572()
+        public void InlinesImages_Example573()
         {
-            // Example 572
+            // Example 573
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12860,22 +12881,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 572\nSection Inlines / Images\n");
-        }
-
-        [Test]
-        public void InlinesImages_Example573()
-        {
-            // Example 573
-            // Section: Inlines / Images
-            //
-            // The following Markdown:
-            //     ![foo ![bar](/url)](/url2)
-            //
-            // Should be rendered as:
-            //     <p><img src="/url2" alt="foo bar" /></p>
-
-            TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 573\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 573\nSection Inlines / Images\n");
         }
 
         [Test]
@@ -12885,12 +12891,27 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Images
             //
             // The following Markdown:
+            //     ![foo ![bar](/url)](/url2)
+            //
+            // Should be rendered as:
+            //     <p><img src="/url2" alt="foo bar" /></p>
+
+            TestParser.TestSpec("![foo ![bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 574\nSection Inlines / Images\n");
+        }
+
+        [Test]
+        public void InlinesImages_Example575()
+        {
+            // Example 575
+            // Section: Inlines / Images
+            //
+            // The following Markdown:
             //     ![foo [bar](/url)](/url2)
             //
             // Should be rendered as:
             //     <p><img src="/url2" alt="foo bar" /></p>
 
-            TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 574\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo [bar](/url)](/url2)", "<p><img src=\"/url2\" alt=\"foo bar\" /></p>", "", context: "Example 575\nSection Inlines / Images\n");
         }
 
         // Though this spec is concerned with parsing, not rendering, it is
@@ -12900,9 +12921,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string
         // content is rendered, without formatting.
         [Test]
-        public void InlinesImages_Example575()
+        public void InlinesImages_Example576()
         {
-            // Example 575
+            // Example 576
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12913,13 +12934,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 575\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 576\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example576()
+        public void InlinesImages_Example577()
         {
-            // Example 576
+            // Example 577
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -12930,22 +12951,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
-            TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 576\nSection Inlines / Images\n");
-        }
-
-        [Test]
-        public void InlinesImages_Example577()
-        {
-            // Example 577
-            // Section: Inlines / Images
-            //
-            // The following Markdown:
-            //     ![foo](train.jpg)
-            //
-            // Should be rendered as:
-            //     <p><img src="train.jpg" alt="foo" /></p>
-
-            TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "", context: "Example 577\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"", "<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>", "", context: "Example 577\nSection Inlines / Images\n");
         }
 
         [Test]
@@ -12955,12 +12961,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Images
             //
             // The following Markdown:
-            //     My ![foo bar](/path/to/train.jpg  "title"   )
+            //     ![foo](train.jpg)
             //
             // Should be rendered as:
-            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
+            //     <p><img src="train.jpg" alt="foo" /></p>
 
-            TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 578\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo](train.jpg)", "<p><img src=\"train.jpg\" alt=\"foo\" /></p>", "", context: "Example 578\nSection Inlines / Images\n");
         }
 
         [Test]
@@ -12970,12 +12976,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Images
             //
             // The following Markdown:
-            //     ![foo](<url>)
+            //     My ![foo bar](/path/to/train.jpg  "title"   )
             //
             // Should be rendered as:
-            //     <p><img src="url" alt="foo" /></p>
+            //     <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
 
-            TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "", context: "Example 579\nSection Inlines / Images\n");
+            TestParser.TestSpec("My ![foo bar](/path/to/train.jpg  \"title\"   )", "<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 579\nSection Inlines / Images\n");
         }
 
         [Test]
@@ -12985,19 +12991,34 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Images
             //
             // The following Markdown:
+            //     ![foo](<url>)
+            //
+            // Should be rendered as:
+            //     <p><img src="url" alt="foo" /></p>
+
+            TestParser.TestSpec("![foo](<url>)", "<p><img src=\"url\" alt=\"foo\" /></p>", "", context: "Example 580\nSection Inlines / Images\n");
+        }
+
+        [Test]
+        public void InlinesImages_Example581()
+        {
+            // Example 581
+            // Section: Inlines / Images
+            //
+            // The following Markdown:
             //     ![](/url)
             //
             // Should be rendered as:
             //     <p><img src="/url" alt="" /></p>
 
-            TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "", context: "Example 580\nSection Inlines / Images\n");
+            TestParser.TestSpec("![](/url)", "<p><img src=\"/url\" alt=\"\" /></p>", "", context: "Example 581\nSection Inlines / Images\n");
         }
 
         // Reference-style:
         [Test]
-        public void InlinesImages_Example581()
+        public void InlinesImages_Example582()
         {
-            // Example 581
+            // Example 582
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13008,13 +13029,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 581\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][bar]\n\n[bar]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 582\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example582()
+        public void InlinesImages_Example583()
         {
-            // Example 582
+            // Example 583
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13025,14 +13046,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" /></p>
 
-            TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 582\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][bar]\n\n[BAR]: /url", "<p><img src=\"/url\" alt=\"foo\" /></p>", "", context: "Example 583\nSection Inlines / Images\n");
         }
 
         // Collapsed:
         [Test]
-        public void InlinesImages_Example583()
+        public void InlinesImages_Example584()
         {
-            // Example 583
+            // Example 584
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13043,13 +13064,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 583\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 584\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example584()
+        public void InlinesImages_Example585()
         {
-            // Example 584
+            // Example 585
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13060,14 +13081,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 584\nSection Inlines / Images\n");
+            TestParser.TestSpec("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 585\nSection Inlines / Images\n");
         }
 
         // The labels are case-insensitive:
         [Test]
-        public void InlinesImages_Example585()
+        public void InlinesImages_Example586()
         {
-            // Example 585
+            // Example 586
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13078,15 +13099,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 585\nSection Inlines / Images\n");
+            TestParser.TestSpec("![Foo][]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 586\nSection Inlines / Images\n");
         }
 
         // As with reference links, spaces, tabs, and line endings, are not allowed
         // between the two sets of brackets:
         [Test]
-        public void InlinesImages_Example586()
+        public void InlinesImages_Example587()
         {
-            // Example 586
+            // Example 587
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13099,14 +13120,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><img src="/url" alt="foo" title="title" />
             //     []</p>
 
-            TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "", context: "Example 586\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo] \n[]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>", "", context: "Example 587\nSection Inlines / Images\n");
         }
 
         // Shortcut:
         [Test]
-        public void InlinesImages_Example587()
+        public void InlinesImages_Example588()
         {
-            // Example 587
+            // Example 588
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13117,13 +13138,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo" title="title" /></p>
 
-            TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 587\nSection Inlines / Images\n");
+            TestParser.TestSpec("![foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>", "", context: "Example 588\nSection Inlines / Images\n");
         }
 
         [Test]
-        public void InlinesImages_Example588()
+        public void InlinesImages_Example589()
         {
-            // Example 588
+            // Example 589
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13134,14 +13155,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="foo bar" title="title" /></p>
 
-            TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 588\nSection Inlines / Images\n");
+            TestParser.TestSpec("![*foo* bar]\n\n[*foo* bar]: /url \"title\"", "<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>", "", context: "Example 589\nSection Inlines / Images\n");
         }
 
         // Note that link labels cannot contain unescaped brackets:
         [Test]
-        public void InlinesImages_Example589()
+        public void InlinesImages_Example590()
         {
-            // Example 589
+            // Example 590
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13153,14 +13174,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p>![[foo]]</p>
             //     <p>[[foo]]: /url &quot;title&quot;</p>
 
-            TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "", context: "Example 589\nSection Inlines / Images\n");
+            TestParser.TestSpec("![[foo]]\n\n[[foo]]: /url \"title\"", "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>", "", context: "Example 590\nSection Inlines / Images\n");
         }
 
         // The link labels are case-insensitive:
         [Test]
-        public void InlinesImages_Example590()
+        public void InlinesImages_Example591()
         {
-            // Example 590
+            // Example 591
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13171,15 +13192,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><img src="/url" alt="Foo" title="title" /></p>
 
-            TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 590\nSection Inlines / Images\n");
+            TestParser.TestSpec("![Foo]\n\n[foo]: /url \"title\"", "<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>", "", context: "Example 591\nSection Inlines / Images\n");
         }
 
         // If you just want a literal `!` followed by bracketed text, you can
         // backslash-escape the opening `[`:
         [Test]
-        public void InlinesImages_Example591()
+        public void InlinesImages_Example592()
         {
-            // Example 591
+            // Example 592
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13190,15 +13211,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>![foo]</p>
 
-            TestParser.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "", context: "Example 591\nSection Inlines / Images\n");
+            TestParser.TestSpec("!\\[foo]\n\n[foo]: /url \"title\"", "<p>![foo]</p>", "", context: "Example 592\nSection Inlines / Images\n");
         }
 
         // If you want a link after a literal `!`, backslash-escape the
         // `!`:
         [Test]
-        public void InlinesImages_Example592()
+        public void InlinesImages_Example593()
         {
-            // Example 592
+            // Example 593
             // Section: Inlines / Images
             //
             // The following Markdown:
@@ -13209,7 +13230,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>!<a href="/url" title="title">foo</a></p>
 
-            TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 592\nSection Inlines / Images\n");
+            TestParser.TestSpec("\\![foo]\n\n[foo]: /url \"title\"", "<p>!<a href=\"/url\" title=\"title\">foo</a></p>", "", context: "Example 593\nSection Inlines / Images\n");
         }
     }
 
@@ -13240,9 +13261,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // Here are some valid autolinks:
         [Test]
-        public void InlinesAutolinks_Example593()
+        public void InlinesAutolinks_Example594()
         {
-            // Example 593
+            // Example 594
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13251,22 +13272,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
 
-            TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "", context: "Example 593\nSection Inlines / Autolinks\n");
-        }
-
-        [Test]
-        public void InlinesAutolinks_Example594()
-        {
-            // Example 594
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <http://foo.bar.baz/test?q=hello&id=22&boolean>
-            //
-            // Should be rendered as:
-            //     <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
-
-            TestParser.TestSpec("<http://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "", context: "Example 594\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<http://foo.bar.baz>", "<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>", "", context: "Example 594\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13276,19 +13282,34 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
+            //     <https://foo.bar.baz/test?q=hello&id=22&boolean>
+            //
+            // Should be rendered as:
+            //     <p><a href="https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
+
+            TestParser.TestSpec("<https://foo.bar.baz/test?q=hello&id=22&boolean>", "<p><a href=\"https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>", "", context: "Example 595\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example596()
+        {
+            // Example 596
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
             //     <irc://foo.bar:2233/baz>
             //
             // Should be rendered as:
             //     <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
 
-            TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "", context: "Example 595\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<irc://foo.bar:2233/baz>", "<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>", "", context: "Example 596\nSection Inlines / Autolinks\n");
         }
 
         // Uppercase is also fine:
         [Test]
-        public void InlinesAutolinks_Example596()
+        public void InlinesAutolinks_Example597()
         {
-            // Example 596
+            // Example 597
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13297,7 +13318,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
 
-            TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "", context: "Example 596\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<MAILTO:FOO@BAR.BAZ>", "<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>", "", context: "Example 597\nSection Inlines / Autolinks\n");
         }
 
         // Note that many strings that count as [absolute URIs] for
@@ -13305,9 +13326,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // schemes are not registered or because of other problems
         // with their syntax:
         [Test]
-        public void InlinesAutolinks_Example597()
+        public void InlinesAutolinks_Example598()
         {
-            // Example 597
+            // Example 598
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13316,22 +13337,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="a+b+c:d">a+b+c:d</a></p>
 
-            TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "", context: "Example 597\nSection Inlines / Autolinks\n");
-        }
-
-        [Test]
-        public void InlinesAutolinks_Example598()
-        {
-            // Example 598
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     <made-up-scheme://foo,bar>
-            //
-            // Should be rendered as:
-            //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
-
-            TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "", context: "Example 598\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<a+b+c:d>", "<p><a href=\"a+b+c:d\">a+b+c:d</a></p>", "", context: "Example 598\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13341,12 +13347,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <http://../>
+            //     <made-up-scheme://foo,bar>
             //
             // Should be rendered as:
-            //     <p><a href="http://../">http://../</a></p>
+            //     <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
 
-            TestParser.TestSpec("<http://../>", "<p><a href=\"http://../\">http://../</a></p>", "", context: "Example 599\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<made-up-scheme://foo,bar>", "<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>", "", context: "Example 599\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13356,15 +13362,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <localhost:5001/foo>
+            //     <https://../>
             //
             // Should be rendered as:
-            //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
+            //     <p><a href="https://../">https://../</a></p>
 
-            TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "", context: "Example 600\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<https://../>", "<p><a href=\"https://../\">https://../</a></p>", "", context: "Example 600\nSection Inlines / Autolinks\n");
         }
 
-        // Spaces are not allowed in autolinks:
         [Test]
         public void InlinesAutolinks_Example601()
         {
@@ -13372,15 +13377,15 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <http://foo.bar/baz bim>
+            //     <localhost:5001/foo>
             //
             // Should be rendered as:
-            //     <p>&lt;http://foo.bar/baz bim&gt;</p>
+            //     <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
 
-            TestParser.TestSpec("<http://foo.bar/baz bim>", "<p>&lt;http://foo.bar/baz bim&gt;</p>", "", context: "Example 601\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<localhost:5001/foo>", "<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>", "", context: "Example 601\nSection Inlines / Autolinks\n");
         }
 
-        // Backslash-escapes do not work inside autolinks:
+        // Spaces are not allowed in autolinks:
         [Test]
         public void InlinesAutolinks_Example602()
         {
@@ -13388,12 +13393,28 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <http://example.com/\[\>
+            //     <https://foo.bar/baz bim>
             //
             // Should be rendered as:
-            //     <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
+            //     <p>&lt;https://foo.bar/baz bim&gt;</p>
 
-            TestParser.TestSpec("<http://example.com/\\[\\>", "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>", "", context: "Example 602\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<https://foo.bar/baz bim>", "<p>&lt;https://foo.bar/baz bim&gt;</p>", "", context: "Example 602\nSection Inlines / Autolinks\n");
+        }
+
+        // Backslash-escapes do not work inside autolinks:
+        [Test]
+        public void InlinesAutolinks_Example603()
+        {
+            // Example 603
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
+            //     <https://example.com/\[\>
+            //
+            // Should be rendered as:
+            //     <p><a href="https://example.com/%5C%5B%5C">https://example.com/\[\</a></p>
+
+            TestParser.TestSpec("<https://example.com/\\[\\>", "<p><a href=\"https://example.com/%5C%5B%5C\">https://example.com/\\[\\</a></p>", "", context: "Example 603\nSection Inlines / Autolinks\n");
         }
 
         // An [email autolink](@)
@@ -13411,9 +13432,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // Examples of email autolinks:
         [Test]
-        public void InlinesAutolinks_Example603()
+        public void InlinesAutolinks_Example604()
         {
-            // Example 603
+            // Example 604
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13422,13 +13443,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
 
-            TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "", context: "Example 603\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo@bar.example.com>", "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>", "", context: "Example 604\nSection Inlines / Autolinks\n");
         }
 
         [Test]
-        public void InlinesAutolinks_Example604()
+        public void InlinesAutolinks_Example605()
         {
-            // Example 604
+            // Example 605
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13437,14 +13458,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
 
-            TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "", context: "Example 604\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo+special@Bar.baz-bar0.com>", "<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>", "", context: "Example 605\nSection Inlines / Autolinks\n");
         }
 
         // Backslash-escapes do not work inside email autolinks:
         [Test]
-        public void InlinesAutolinks_Example605()
+        public void InlinesAutolinks_Example606()
         {
-            // Example 605
+            // Example 606
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13453,14 +13474,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;foo+@bar.example.com&gt;</p>
 
-            TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "", context: "Example 605\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo\\+@bar.example.com>", "<p>&lt;foo+@bar.example.com&gt;</p>", "", context: "Example 606\nSection Inlines / Autolinks\n");
         }
 
         // These are not autolinks:
         [Test]
-        public void InlinesAutolinks_Example606()
+        public void InlinesAutolinks_Example607()
         {
-            // Example 606
+            // Example 607
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
@@ -13469,22 +13490,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;&gt;</p>
 
-            TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "", context: "Example 606\nSection Inlines / Autolinks\n");
-        }
-
-        [Test]
-        public void InlinesAutolinks_Example607()
-        {
-            // Example 607
-            // Section: Inlines / Autolinks
-            //
-            // The following Markdown:
-            //     < http://foo.bar >
-            //
-            // Should be rendered as:
-            //     <p>&lt; http://foo.bar &gt;</p>
-
-            TestParser.TestSpec("< http://foo.bar >", "<p>&lt; http://foo.bar &gt;</p>", "", context: "Example 607\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<>", "<p>&lt;&gt;</p>", "", context: "Example 607\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13494,12 +13500,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <m:abc>
+            //     < https://foo.bar >
             //
             // Should be rendered as:
-            //     <p>&lt;m:abc&gt;</p>
+            //     <p>&lt; https://foo.bar &gt;</p>
 
-            TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "", context: "Example 608\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("< https://foo.bar >", "<p>&lt; https://foo.bar &gt;</p>", "", context: "Example 608\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13509,12 +13515,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     <foo.bar.baz>
+            //     <m:abc>
             //
             // Should be rendered as:
-            //     <p>&lt;foo.bar.baz&gt;</p>
+            //     <p>&lt;m:abc&gt;</p>
 
-            TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "", context: "Example 609\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<m:abc>", "<p>&lt;m:abc&gt;</p>", "", context: "Example 609\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13524,12 +13530,12 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
-            //     http://example.com
+            //     <foo.bar.baz>
             //
             // Should be rendered as:
-            //     <p>http://example.com</p>
+            //     <p>&lt;foo.bar.baz&gt;</p>
 
-            TestParser.TestSpec("http://example.com", "<p>http://example.com</p>", "", context: "Example 610\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("<foo.bar.baz>", "<p>&lt;foo.bar.baz&gt;</p>", "", context: "Example 610\nSection Inlines / Autolinks\n");
         }
 
         [Test]
@@ -13539,12 +13545,27 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Autolinks
             //
             // The following Markdown:
+            //     https://example.com
+            //
+            // Should be rendered as:
+            //     <p>https://example.com</p>
+
+            TestParser.TestSpec("https://example.com", "<p>https://example.com</p>", "", context: "Example 611\nSection Inlines / Autolinks\n");
+        }
+
+        [Test]
+        public void InlinesAutolinks_Example612()
+        {
+            // Example 612
+            // Section: Inlines / Autolinks
+            //
+            // The following Markdown:
             //     foo@bar.example.com
             //
             // Should be rendered as:
             //     <p>foo@bar.example.com</p>
 
-            TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "", context: "Example 611\nSection Inlines / Autolinks\n");
+            TestParser.TestSpec("foo@bar.example.com", "<p>foo@bar.example.com</p>", "", context: "Example 612\nSection Inlines / Autolinks\n");
         }
     }
 
@@ -13602,10 +13623,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // [tag name], optional spaces, tabs, and up to one line ending, and the character
         // `>`.
         // 
-        // An [HTML comment](@) consists of `<!--` + *text* + `-->`,
-        // where *text* does not start with `>` or `->`, does not end with `-`,
-        // and does not contain `--`.  (See the
-        // [HTML5 spec](http://www.w3.org/TR/html5/syntax.html#comments).)
+        // An [HTML comment](@) consists of `<!-->`, `<!--->`, or  `<!--`, a string of
+        // characters not including the string `-->`, and `-->` (see the
+        // [HTML spec](https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state)).
         // 
         // A [processing instruction](@)
         // consists of the string `<?`, a string
@@ -13625,9 +13645,9 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         // 
         // Here are some simple open tags:
         [Test]
-        public void InlinesRawHTML_Example612()
+        public void InlinesRawHTML_Example613()
         {
-            // Example 612
+            // Example 613
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13636,14 +13656,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a><bab><c2c></p>
 
-            TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "", context: "Example 612\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a><bab><c2c>", "<p><a><bab><c2c></p>", "", context: "Example 613\nSection Inlines / Raw HTML\n");
         }
 
         // Empty elements:
         [Test]
-        public void InlinesRawHTML_Example613()
+        public void InlinesRawHTML_Example614()
         {
-            // Example 613
+            // Example 614
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13652,14 +13672,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p><a/><b2/></p>
 
-            TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "", context: "Example 613\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a/><b2/>", "<p><a/><b2/></p>", "", context: "Example 614\nSection Inlines / Raw HTML\n");
         }
 
         // Whitespace is allowed:
         [Test]
-        public void InlinesRawHTML_Example614()
+        public void InlinesRawHTML_Example615()
         {
-            // Example 614
+            // Example 615
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13670,14 +13690,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><a  /><b2
             //     data="foo" ></p>
 
-            TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "", context: "Example 614\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a  /><b2\ndata=\"foo\" >", "<p><a  /><b2\ndata=\"foo\" ></p>", "", context: "Example 615\nSection Inlines / Raw HTML\n");
         }
 
         // With attributes:
         [Test]
-        public void InlinesRawHTML_Example615()
+        public void InlinesRawHTML_Example616()
         {
-            // Example 615
+            // Example 616
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13688,14 +13708,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     <p><a foo="bar" bam = 'baz <em>"</em>'
             //     _boolean zoop:33=zoop:33 /></p>
 
-            TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "", context: "Example 615\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />", "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>", "", context: "Example 616\nSection Inlines / Raw HTML\n");
         }
 
         // Custom tag names can be used:
         [Test]
-        public void InlinesRawHTML_Example616()
+        public void InlinesRawHTML_Example617()
         {
-            // Example 616
+            // Example 617
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13704,14 +13724,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>Foo <responsive-image src="foo.jpg" /></p>
 
-            TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "", context: "Example 616\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("Foo <responsive-image src=\"foo.jpg\" />", "<p>Foo <responsive-image src=\"foo.jpg\" /></p>", "", context: "Example 617\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal tag names, not parsed as HTML:
         [Test]
-        public void InlinesRawHTML_Example617()
+        public void InlinesRawHTML_Example618()
         {
-            // Example 617
+            // Example 618
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13720,14 +13740,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;33&gt; &lt;__&gt;</p>
 
-            TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "", context: "Example 617\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<33> <__>", "<p>&lt;33&gt; &lt;__&gt;</p>", "", context: "Example 618\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attribute names:
         [Test]
-        public void InlinesRawHTML_Example618()
+        public void InlinesRawHTML_Example619()
         {
-            // Example 618
+            // Example 619
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13736,14 +13756,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 
-            TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "", context: "Example 618\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a h*#ref=\"hi\">", "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>", "", context: "Example 619\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attribute values:
         [Test]
-        public void InlinesRawHTML_Example619()
+        public void InlinesRawHTML_Example620()
         {
-            // Example 619
+            // Example 620
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13752,14 +13772,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 
-            TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "", context: "Example 619\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a href=\"hi'> <a href=hi'>", "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>", "", context: "Example 620\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal whitespace:
         [Test]
-        public void InlinesRawHTML_Example620()
+        public void InlinesRawHTML_Example621()
         {
-            // Example 620
+            // Example 621
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13774,14 +13794,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             //     &lt;foo bar=baz
             //     bim!bop /&gt;</p>
 
-            TestParser.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "", context: "Example 620\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />", "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>", "", context: "Example 621\nSection Inlines / Raw HTML\n");
         }
 
         // Missing whitespace:
         [Test]
-        public void InlinesRawHTML_Example621()
+        public void InlinesRawHTML_Example622()
         {
-            // Example 621
+            // Example 622
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13790,14 +13810,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;a href='bar'title=title&gt;</p>
 
-            TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "", context: "Example 621\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("<a href='bar'title=title>", "<p>&lt;a href='bar'title=title&gt;</p>", "", context: "Example 622\nSection Inlines / Raw HTML\n");
         }
 
         // Closing tags:
         [Test]
-        public void InlinesRawHTML_Example622()
+        public void InlinesRawHTML_Example623()
         {
-            // Example 622
+            // Example 623
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13806,14 +13826,14 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p></a></foo ></p>
 
-            TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "", context: "Example 622\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("</a></foo >", "<p></a></foo ></p>", "", context: "Example 623\nSection Inlines / Raw HTML\n");
         }
 
         // Illegal attributes in closing tag:
         [Test]
-        public void InlinesRawHTML_Example623()
+        public void InlinesRawHTML_Example624()
         {
-            // Example 623
+            // Example 624
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
@@ -13822,27 +13842,10 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Should be rendered as:
             //     <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 
-            TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "", context: "Example 623\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("</a href=\"foo\">", "<p>&lt;/a href=&quot;foo&quot;&gt;</p>", "", context: "Example 624\nSection Inlines / Raw HTML\n");
         }
 
         // Comments:
-        [Test]
-        public void InlinesRawHTML_Example624()
-        {
-            // Example 624
-            // Section: Inlines / Raw HTML
-            //
-            // The following Markdown:
-            //     foo <!-- this is a
-            //     comment - with hyphen -->
-            //
-            // Should be rendered as:
-            //     <p>foo <!-- this is a
-            //     comment - with hyphen --></p>
-
-            TestParser.TestSpec("foo <!-- this is a\ncomment - with hyphen -->", "<p>foo <!-- this is a\ncomment - with hyphen --></p>", "", context: "Example 624\nSection Inlines / Raw HTML\n");
-        }
-
         [Test]
         public void InlinesRawHTML_Example625()
         {
@@ -13850,15 +13853,16 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // Section: Inlines / Raw HTML
             //
             // The following Markdown:
-            //     foo <!-- not a comment -- two hyphens -->
+            //     foo <!-- this is a --
+            //     comment - with hyphens -->
             //
             // Should be rendered as:
-            //     <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
+            //     <p>foo <!-- this is a --
+            //     comment - with hyphens --></p>
 
-            TestParser.TestSpec("foo <!-- not a comment -- two hyphens -->", "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>", "", context: "Example 625\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!-- this is a --\ncomment - with hyphens -->", "<p>foo <!-- this is a --\ncomment - with hyphens --></p>", "", context: "Example 625\nSection Inlines / Raw HTML\n");
         }
 
-        // Not comments:
         [Test]
         public void InlinesRawHTML_Example626()
         {
@@ -13868,13 +13872,13 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
             // The following Markdown:
             //     foo <!--> foo -->
             //     
-            //     foo <!-- foo--->
+            //     foo <!---> foo -->
             //
             // Should be rendered as:
-            //     <p>foo &lt;!--&gt; foo --&gt;</p>
-            //     <p>foo &lt;!-- foo---&gt;</p>
+            //     <p>foo <!--> foo --&gt;</p>
+            //     <p>foo <!---> foo --&gt;</p>
 
-            TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!-- foo--->", "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>", "", context: "Example 626\nSection Inlines / Raw HTML\n");
+            TestParser.TestSpec("foo <!--> foo -->\n\nfoo <!---> foo -->", "<p>foo <!--> foo --&gt;</p>\n<p>foo <!---> foo --&gt;</p>", "", context: "Example 626\nSection Inlines / Raw HTML\n");
         }
 
         // Processing instructions:
@@ -14604,7 +14608,7 @@ namespace Markdig.Tests.Specs.CommonMarkSpecs
         //   delimiter from the stack, and return a literal text node `]`.
         // 
         // - If we find one and it's active, then we parse ahead to see if
-        //   we have an inline link/image, reference link/image, compact reference
+        //   we have an inline link/image, reference link/image, collapsed reference
         //   link/image, or shortcut reference link/image.
         // 
         //   + If we don't, then we remove the opening delimiter from the
