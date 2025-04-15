@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Buffers;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Markdig.Syntax;
@@ -286,40 +288,34 @@ public static class LinkHelper
         }
         else
         {
-            // scan an uri            
-            // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
-            // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
+            // 6.5 Autolinks - https://spec.commonmark.org/0.31.2/#autolinks
+            // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) followed by
+            // zero or more characters other than ASCII control characters, space, <, and >.
             // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
+            //
+            // 2.1 Characters and lines
+            // An ASCII control character is a character between U+0000–1F (both including) or U+007F.
 
-            while (true)
+            text.SkipChar();
+            ReadOnlySpan<char> slice = text.AsSpan();
+
+            Debug.Assert(!slice.Contains('\0'));
+
+            // This set of invalid characters includes '>'.
+            int end = slice.IndexOfAny(CharHelper.InvalidAutoLinkCharacters);
+
+            if ((uint)end < (uint)slice.Length && slice[end] == '>')
             {
-                c = text.NextChar();
-                if (c == '\0')
-                {
-                    break;
-                }
-
-                if (c == '>')
-                {
-                    text.SkipChar();
-                    link = builder.ToString();
-                    return true;
-                }
-
-                // Chars valid for both scheme and email
-                if (c <= 127)
-                {
-                    if (c > ' ' && c != '>')
-                    {
-                        builder.Append(c);
-                    }
-                    else break;
-                }
-                else if (!c.IsSpaceOrPunctuation())
-                {
-                    builder.Append(c);
-                }
-                else break;
+                // We've found '>' and all characters before it are valid.
+#if NET
+                link = string.Concat(builder.AsSpan(), slice.Slice(0, end));
+                builder.Dispose();
+#else
+                builder.Append(slice.Slice(0, end));
+                link = builder.ToString();
+#endif
+                text.Start += end + 1; // +1 to skip '>'
+                return true;
             }
         }
 
@@ -1042,7 +1038,7 @@ public static class LinkHelper
                 {
                     lastUnderscoreSegment = segmentCount;
                 }
-                else if (c != '-' && c.IsSpaceOrPunctuation())
+                else if (c != '-' && CharHelper.IsSpaceOrPunctuationForGFMAutoLink(c))
                 {
                     // An invalid character has been found
                     return false;

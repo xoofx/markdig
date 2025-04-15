@@ -533,5 +533,28 @@ namespace Markdig.Tests.Specs.AutoLinks
 
             TestParser.TestSpec("<http://foö.bar.`baz>`", "<p><a href=\"http://xn--fo-gka.bar.%60baz\">http://foö.bar.`baz</a>`</p>", "autolinks|advanced", context: "Example 25\nSection Extensions / AutoLinks / Unicode support\n");
         }
+
+        // Unicode punctuation characters are not allowed, but symbols are.
+        // Note that this does _not_ exactly match CommonMark's "Unicode punctuation character" definition.
+        [Test]
+        public void ExtensionsAutoLinksUnicodeSupport_Example026()
+        {
+            // Example 26
+            // Section: Extensions / AutoLinks / Unicode support
+            //
+            // The following Markdown:
+            //     http://☃.net?☃ // OtherSymbol
+            //     
+            //     http://🍉.net?🍉 // A UTF-16 surrogate pair, but code point is OtherSymbol
+            //     
+            //     http://‰.net?‰ // OtherPunctuation
+            //
+            // Should be rendered as:
+            //     <p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a> // OtherSymbol</p>
+            //     <p><a href="http://xn--ji8h.net?%F0%9F%8D%89">http://🍉.net?🍉</a> // A UTF-16 surrogate pair, but code point is OtherSymbol</p>
+            //     <p>http://‰.net?‰ // OtherPunctuation</p>
+
+            TestParser.TestSpec("http://☃.net?☃ // OtherSymbol\n\nhttp://🍉.net?🍉 // A UTF-16 surrogate pair, but code point is OtherSymbol\n\nhttp://‰.net?‰ // OtherPunctuation", "<p><a href=\"http://xn--n3h.net?%E2%98%83\">http://☃.net?☃</a> // OtherSymbol</p>\n<p><a href=\"http://xn--ji8h.net?%F0%9F%8D%89\">http://🍉.net?🍉</a> // A UTF-16 surrogate pair, but code point is OtherSymbol</p>\n<p>http://‰.net?‰ // OtherPunctuation</p>", "autolinks|advanced", context: "Example 26\nSection Extensions / AutoLinks / Unicode support\n");
+        }
     }
 }

@@ -37,6 +37,29 @@ public static class CharHelper
     // {, |, }, or ~ (U+007B–007E).
     private const string AsciiPunctuationChars = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
+    // Unicode P (punctuation) categories.
+    private const int UnicodePunctuationCategoryMask =
+        1 << (int)UnicodeCategory.ConnectorPunctuation |
+        1 << (int)UnicodeCategory.DashPunctuation |
+        1 << (int)UnicodeCategory.OpenPunctuation |
+        1 << (int)UnicodeCategory.ClosePunctuation |
+        1 << (int)UnicodeCategory.InitialQuotePunctuation |
+        1 << (int)UnicodeCategory.FinalQuotePunctuation |
+        1 << (int)UnicodeCategory.OtherPunctuation;
+
+    private const int UnicodePunctuationOrSpaceCategoryMask =
+        UnicodePunctuationCategoryMask |
+        1 << (int)UnicodeCategory.SpaceSeparator;
+
+    // 2.1 Characters and lines
+    // A Unicode punctuation character is a character in the Unicode P (punctuation) or S (symbol) general categories.
+    private const int CommonMarkPunctuationCategoryMask =
+        UnicodePunctuationCategoryMask |
+        1 << (int)UnicodeCategory.MathSymbol |
+        1 << (int)UnicodeCategory.CurrencySymbol |
+        1 << (int)UnicodeCategory.ModifierSymbol |
+        1 << (int)UnicodeCategory.OtherSymbol;
+
     // We're not currently using these SearchValues instances for vectorized IndexOfAny-like searches, but for their efficient single Contains(char) checks.
     private static readonly SearchValues<char> s_emailUsernameSpecialChar = SearchValues.Create(EmailUsernameSpecialChars);
     private static readonly SearchValues<char> s_emailUsernameSpecialCharOrDigit = SearchValues.Create(EmailUsernameSpecialChars + "0123456789");
@@ -235,45 +258,41 @@ public static class CharHelper
         }
         else
         {
-            // A Unicode punctuation character is an ASCII punctuation character
-            // or anything in the general Unicode categories Pc, Pd, Pe, Pf, Pi, Po, or Ps.
-            const int PunctuationCategoryMask =
-                1 << (int)UnicodeCategory.ConnectorPunctuation |
-                1 << (int)UnicodeCategory.DashPunctuation |
-                1 << (int)UnicodeCategory.OpenPunctuation |
-                1 << (int)UnicodeCategory.ClosePunctuation |
-                1 << (int)UnicodeCategory.InitialQuotePunctuation |
-                1 << (int)UnicodeCategory.FinalQuotePunctuation |
-                1 << (int)UnicodeCategory.OtherPunctuation;
-
             space = false;
-            punctuation = (PunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
+            punctuation = (CommonMarkPunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
         }
     }
 
-    // Same as CheckUnicodeCategory
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool IsSpaceOrPunctuation(this char c)
+    internal static bool IsSpaceOrPunctuationForGFMAutoLink(char c)
     {
+        // Github Flavored Markdown's allowed set of domain characters differs from CommonMark's "punctuation" definition.
+        // CommonMark also counts symbols as punctuation, but GitHub will render e.g. http://☃.net as an autolink, despite
+        // the snowman emoji falling under the OtherSymbol (So) category.
         if (c <= 127)
         {
             return s_asciiPunctuationOrWhitespaceCharsOrZero.Contains(c);
         }
         else
         {
-            const int PunctuationCategoryMask =
-                1 << (int)UnicodeCategory.ConnectorPunctuation |
-                1 << (int)UnicodeCategory.DashPunctuation |
-                1 << (int)UnicodeCategory.OpenPunctuation |
-                1 << (int)UnicodeCategory.ClosePunctuation |
-                1 << (int)UnicodeCategory.InitialQuotePunctuation |
-                1 << (int)UnicodeCategory.FinalQuotePunctuation |
-                1 << (int)UnicodeCategory.OtherPunctuation |
-                1 << (int)UnicodeCategory.SpaceSeparator;
+            return NonAscii(c);
 
-            return (PunctuationCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
+            static bool NonAscii(char c) =>
+                (UnicodePunctuationOrSpaceCategoryMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(c))) != 0;
         }
     }
+
+    // 6.5 Autolinks - https://spec.commonmark.org/0.31.2/#autolinks
+    // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) followed by
+    // zero or more characters other than ASCII control characters, space, <, and >.
+    //
+    // 2.1 Characters and lines
+    // An ASCII control character is a character between U+0000–1F (both including) or U+007F.
+    internal static readonly SearchValues<char> InvalidAutoLinkCharacters = SearchValues.Create(
+        // 0 is excluded because it can be slightly more expensive for SearchValues to handle, and we've already removed it from the input text.
+        "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000A\u000B\u000C\u000D\u000E\u000F" +
+        "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F" +
+        " <>\u007F");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNewLineOrLineFeed(this char c)

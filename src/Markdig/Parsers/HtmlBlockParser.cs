@@ -295,7 +295,7 @@ public class HtmlBlockParser : BlockParser
         return BlockState.Continue;
     }
 
-    private static readonly CompactPrefixTree<int> HtmlTags = new(66, 94, 83)
+    private static readonly CompactPrefixTree<int> HtmlTags = new(67, 96, 86)
     {
         { "address", 0 },
         { "article", 1 },
@@ -362,6 +362,7 @@ public class HtmlBlockParser : BlockParser
         { "title", 62 },
         { "tr", 63 },
         { "track", 64 },
-        { "ul", 65 }
+        { "ul", 65 },
+        { "search", 66 },
     };
 }
