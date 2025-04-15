@@ -33,4 +33,11 @@ public class PipeTableOptions
     /// in all other rows (default behavior).
     /// </summary>
     public bool UseHeaderForColumnCount { get; set; }
+
+
+    /// <summary>
+    /// Gets or sets a value indicating whether column widths should be inferred based on the number of dashes
+    /// in the header separator row. Each column's width will be proportional to the dash count in its respective column.
+    /// </summary>
+    public bool InferColumnWidthsFromSeparator { get; set; }
 }
