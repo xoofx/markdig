@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -393,40 +394,52 @@ public static class HtmlHelper
 
     private static bool TryParseHtmlTagHtmlComment(ref StringSlice text, ref ValueStringBuilder builder)
     {
+        // https://spec.commonmark.org/0.31.2/#raw-html
+        // An HTML comment consists of <!-->, <!--->, or
+        // <!--, a string of characters not including the string -->, and -->.
+
+        // The caller already checked <!-
+        Debug.Assert(text.CurrentChar == '-' && text.PeekCharExtra(-1) == '!' && text.PeekCharExtra(-2) == '<');
+
         var c = text.NextChar();
         if (c != '-')
         {
             return false;
         }
-        builder.Append('-');
-        builder.Append('-');
-        if (text.PeekChar() == '>')
+
+        c = text.NextChar();
+
+        if (c == '>')
+        {
+            // <!--> is considered valid.
+            builder.Append("-->");
+            text.SkipChar();
+            return true;
+        }
+
+        if (c == '-' && text.PeekChar() == '>')
+        {
+            // <!---> is also considered valid.
+            builder.Append("--->");
+            text.SkipChar();
+            text.SkipChar();
+            return true;
+        }
+
+        ReadOnlySpan<char> slice = text.AsSpan();
+
+        const string EndOfComment = "-->";
+
+        int endOfComment = slice.IndexOf(EndOfComment, StringComparison.Ordinal);
+        if (endOfComment < 0)
         {
             return false;
         }
 
-        var countHyphen = 0;
-        while (true)
-        {
-            c = text.NextChar();
-            if (c == '\0')
-            {
-                return false;
-            }
-
-            if (countHyphen == 2)
-            {
-                if (c == '>')
-                {
-                    builder.Append('>');
-                    text.SkipChar();
-                    return true;
-                }
-                return false;
-            }
-            countHyphen = c == '-' ? countHyphen + 1 : 0;
-            builder.Append(c);
-        }
+        builder.Append("--");
+        builder.Append(slice.Slice(0, endOfComment + EndOfComment.Length));
+        text.Start += endOfComment + EndOfComment.Length;
+        return true;
     }
 
     private static bool TryParseHtmlTagProcessingInstruction(ref StringSlice text, ref ValueStringBuilder builder)
