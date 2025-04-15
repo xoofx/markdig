@@ -22,7 +22,7 @@ public class AlertBlock : QuoteBlock
     }
 
     /// <summary>
-    /// Gets or sets the kind of the alert block (e.g `NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`)
+    /// Gets or sets the kind of the alert block (e.g `NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`).
     /// </summary>
     public StringSlice Kind { get; set; }
 

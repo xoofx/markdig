@@ -15,6 +15,9 @@ namespace Markdig.Extensions.Alerts;
 /// <seealso cref="InlineParser" />
 public class AlertInlineParser : InlineParser
 {
+    private static readonly TransformedStringCache s_alertTypeClassCache = new(
+        type => $"markdown-alert-{type.ToLowerInvariant()}");
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AlertInlineParser"/> class.
     /// </summary>
@@ -25,27 +28,30 @@ public class AlertInlineParser : InlineParser
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
+        if (slice.PeekChar() != '!')
+        {
+            return false;
+        }
+
         // We expect the alert to be the first child of a quote block. Example:
         // > [!NOTE]
         // > This is a note
-        if (processor.Block is not ParagraphBlock paragraphBlock || paragraphBlock.Parent is not QuoteBlock quoteBlock || paragraphBlock.Inline?.FirstChild != null
-            || quoteBlock is AlertBlock || quoteBlock.Parent is not MarkdownDocument)
+        if (processor.Block is not ParagraphBlock paragraphBlock ||
+            paragraphBlock.Parent is not QuoteBlock quoteBlock ||
+            paragraphBlock.Inline?.FirstChild != null ||
+            quoteBlock is AlertBlock ||
+            quoteBlock.Parent is not MarkdownDocument)
         {
             return false;
         }
 
-        var saved = slice;
-        var c = slice.NextChar();
-        if (c != '!')
-        {
-            slice = saved;
-            return false;
-        }
+        StringSlice saved = slice;
 
-        c = slice.NextChar(); // Skip !
+        slice.SkipChar(); // Skip [
+        char c = slice.NextChar(); // Skip !
 
-        var start = slice.Start;
-        var end = start;
+        int start = slice.Start;
+        int end = start;
         while (c.IsAlpha())
         {
             end = slice.Start;
@@ -76,13 +82,13 @@ public class AlertInlineParser : InlineParser
                         end = slice.Start;
                         if (c == '\n')
                         {
-                            slice.NextChar(); // Skip \n
+                            slice.SkipChar(); // Skip \n
                         }
                     }
                 }
                 else if (c == '\n')
                 {
-                    slice.NextChar(); // Skip \n
+                    slice.SkipChar(); // Skip \n
                 }
                 break;
             }
@@ -103,8 +109,9 @@ public class AlertInlineParser : InlineParser
             Column = quoteBlock.Column,
         };
 
-        alertBlock.GetAttributes().AddClass("markdown-alert");
-        alertBlock.GetAttributes().AddClass($"markdown-alert-{alertType.ToString().ToLowerInvariant()}");
+        HtmlAttributes attributes = alertBlock.GetAttributes();
+        attributes.AddClass("markdown-alert");
+        attributes.AddClass(s_alertTypeClassCache.Get(alertType.AsSpan()));
 
         // Replace the quote block with the alert block
         var parentQuoteBlock = quoteBlock.Parent!;
