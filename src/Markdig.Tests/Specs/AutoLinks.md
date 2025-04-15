@@ -304,3 +304,18 @@ This will therefore be seen as an autolink and not as code inline.
 .
 <p><a href="http://xn--fo-gka.bar.%60baz">http://foö.bar.`baz</a>`</p>
 ````````````````````````````````
+
+Unicode punctuation characters are not allowed, but symbols are.
+Note that this does _not_ exactly match CommonMark's "Unicode punctuation character" definition.
+
+```````````````````````````````` example
+http://☃.net?☃ // OtherSymbol
+
+http://🍉.net?🍉 // A UTF-16 surrogate pair, but code point is OtherSymbol
+
+http://‰.net?‰ // OtherPunctuation
+.
+<p><a href="http://xn--n3h.net?%E2%98%83">http://☃.net?☃</a> // OtherSymbol</p>
+<p><a href="http://xn--ji8h.net?%F0%9F%8D%89">http://🍉.net?🍉</a> // A UTF-16 surrogate pair, but code point is OtherSymbol</p>
+<p>http://‰.net?‰ // OtherPunctuation</p>
+````````````````````````````````

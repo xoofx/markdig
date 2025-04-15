@@ -19,24 +19,45 @@ public class TestCharHelper
         '{', '|', '}', '~'
     };
 
-    // A Unicode punctuation character is an ASCII punctuation character or anything in the general Unicode categories
-    // Pc, Pd, Pe, Pf, Pi, Po, or Ps.
-    private static readonly HashSet<UnicodeCategory> s_punctuationCategories = new()
-    {
+    // A Unicode punctuation character is a character in the Unicode P (punctuation) or S (symbol) general categories.
+    private static readonly HashSet<UnicodeCategory> s_punctuationCategories =
+    [
         UnicodeCategory.ConnectorPunctuation,
         UnicodeCategory.DashPunctuation,
+        UnicodeCategory.OpenPunctuation,
         UnicodeCategory.ClosePunctuation,
-        UnicodeCategory.FinalQuotePunctuation,
         UnicodeCategory.InitialQuotePunctuation,
+        UnicodeCategory.FinalQuotePunctuation,
         UnicodeCategory.OtherPunctuation,
-        UnicodeCategory.OpenPunctuation
-    };
+        UnicodeCategory.MathSymbol,
+        UnicodeCategory.CurrencySymbol,
+        UnicodeCategory.ModifierSymbol,
+        UnicodeCategory.OtherSymbol,
+    ];
+
+    private static readonly HashSet<UnicodeCategory> s_punctuationWithoutSymbolsCategories =
+    [
+        UnicodeCategory.ConnectorPunctuation,
+        UnicodeCategory.DashPunctuation,
+        UnicodeCategory.OpenPunctuation,
+        UnicodeCategory.ClosePunctuation,
+        UnicodeCategory.InitialQuotePunctuation,
+        UnicodeCategory.FinalQuotePunctuation,
+        UnicodeCategory.OtherPunctuation,
+    ];
 
     private static bool ExpectedIsPunctuation(char c)
     {
         return c <= 127
             ? s_asciiPunctuation.Contains(c)
             : s_punctuationCategories.Contains(CharUnicodeInfo.GetUnicodeCategory(c));
+    }
+
+    private static bool ExpectedIsPunctuationWithoutSymbols(char c)
+    {
+        return c <= 127
+            ? s_asciiPunctuation.Contains(c)
+            : s_punctuationWithoutSymbolsCategories.Contains(CharUnicodeInfo.GetUnicodeCategory(c));
     }
 
     private static bool ExpectedIsWhitespace(char c)
@@ -105,11 +126,25 @@ public class TestCharHelper
     }
 
     [Test]
-    public void IsSpaceOrPunctuation()
+    public void IsSpaceOrPunctuationForGFMAutoLink()
     {
         Test(
-            c => c == 0 || ExpectedIsWhitespace(c) || ExpectedIsPunctuation(c),
-            CharHelper.IsSpaceOrPunctuation);
+            c => c == 0 || ExpectedIsWhitespace(c) || ExpectedIsPunctuationWithoutSymbols(c),
+            CharHelper.IsSpaceOrPunctuationForGFMAutoLink);
+    }
+
+    [Test]
+    public void InvalidAutoLinkCharacters()
+    {
+        // 6.5 Autolinks - https://spec.commonmark.org/0.31.2/#autolinks
+        // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) followed by
+        // zero or more characters other than ASCII control characters, space, <, and >.
+        //
+        // 2.1 Characters and lines
+        // An ASCII control character is a character between U+0000–1F (both including) or U+007F.
+        Test(
+            c => c != 0 && c is < (char)0x20 or ' ' or '<' or '>' or '\u007F',
+            CharHelper.InvalidAutoLinkCharacters.Contains);
     }
 
     [Test]
@@ -214,7 +249,14 @@ public class TestCharHelper
         for (int i = char.MinValue; i <= char.MaxValue; i++)
         {
             char c = (char)i;
-            Assert.AreEqual(expected(c), actual(c));
+
+            bool expectedResult = expected(c);
+            bool actualResult = actual(c);
+
+            if (expectedResult != actualResult)
+            {
+                Assert.AreEqual(expectedResult, actualResult, $"Char: '{c}' ({i})");
+            }
         }
     }
 }

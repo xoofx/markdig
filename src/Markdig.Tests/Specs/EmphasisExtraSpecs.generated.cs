@@ -123,6 +123,8 @@ namespace Markdig.Tests.Specs.EmphasisExtra
     public class TestExtensionsEmphasisOnHtmlEntities
     {
         // ## Emphasis on Html Entities
+        // 
+        // Note that Unicode symbols are treated as punctuation, which are not allowed to open the emphasis unless they are preceded by a space.
         [Test]
         public void ExtensionsEmphasisOnHtmlEntities_Example006()
         {
@@ -132,14 +134,14 @@ namespace Markdig.Tests.Specs.EmphasisExtra
             // The following Markdown:
             //     This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^
             //     This is text MyBrand^&reg;^ and MyTrademark^&trade;^
-            //     This is text MyBrand~&reg;~ and MyCopyright^&copy;^
+            //     This is text MyBrand ~&reg;~ and MyCopyright ^&copy;^
             //
             // Should be rendered as:
             //     <p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>
-            //     This is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>
-            //     This is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>
+            //     This is text MyBrand^®^ and MyTrademark^TM^
+            //     This is text MyBrand <sub>®</sub> and MyCopyright <sup>©</sup></p>
 
-            TestParser.TestSpec("This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^\nThis is text MyBrand^&reg;^ and MyTrademark^&trade;^\nThis is text MyBrand~&reg;~ and MyCopyright^&copy;^", "<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>\nThis is text MyBrand<sup>®</sup> and MyTrademark<sup>TM</sup>\nThis is text MyBrand<sub>®</sub> and MyCopyright<sup>©</sup></p>", "emphasisextras|advanced", context: "Example 6\nSection Extensions / Emphasis on Html Entities\n");
+            TestParser.TestSpec("This is text MyBrand ^&reg;^ and MyTrademark ^&trade;^\nThis is text MyBrand^&reg;^ and MyTrademark^&trade;^\nThis is text MyBrand ~&reg;~ and MyCopyright ^&copy;^", "<p>This is text MyBrand <sup>®</sup> and MyTrademark <sup>TM</sup>\nThis is text MyBrand^®^ and MyTrademark^TM^\nThis is text MyBrand <sub>®</sub> and MyCopyright <sup>©</sup></p>", "emphasisextras|advanced", context: "Example 6\nSection Extensions / Emphasis on Html Entities\n");
         }
     }
 }
