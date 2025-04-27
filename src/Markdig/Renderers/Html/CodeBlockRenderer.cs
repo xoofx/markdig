@@ -100,7 +100,7 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
                 renderer.WriteRaw('>');
             }
 
-            renderer.WriteLeafRawLines(obj, true, true);
+            renderer.WriteLeafRawLines(obj, true, renderer.EnableHtmlEscape);
 
             if (renderer.EnableHtmlForBlock)
             {
