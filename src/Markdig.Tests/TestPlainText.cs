@@ -27,6 +27,14 @@ public class TestPlainText
     }
 
     [Test]
+    [TestCase(/* markdownText: */ "```\nConsole.WriteLine(\"Hello, World!\");\n```", /* expected: */ "Console.WriteLine(\"Hello, World!\");\n")]
+    public void TestPlainCodeBlock(string markdownText, string expected)
+    {
+        var actual = Markdown.ToPlainText(markdownText);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
     [TestCase(/* markdownText: */ ":::\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers|advanced")]
     [TestCase(/* markdownText: */ ":::bar\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers+attributes|advanced")]
     [TestCase(/* markdownText: */ "| Header1 | Header2 | Header3 |\n|--|--|--|\nt**es**t|value2|value3", /* expected: */ "Header1 Header2 Header3 test value2 value3","pipetables")]
