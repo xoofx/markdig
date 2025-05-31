@@ -411,7 +411,7 @@ public static class LinkHelper
         {
             // Skip ')'
             text.SkipChar();
-            title ??= string.Empty;
+            // not to normalize nulls
         }
 
         return isValid;
