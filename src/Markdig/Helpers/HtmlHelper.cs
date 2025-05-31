@@ -470,6 +470,24 @@ public static class HtmlHelper
     /// </summary>
     /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
     /// <param name="removeBackSlash">if set to <c>true</c> [remove back slash].</param>
+    /// <returns>Unescaped text, or null if <paramref name="text"/> is null.<returns>
+    public static string? UnescapeNullable(string? text, bool removeBackSlash = true)
+    {
+        if (text == null)
+        {
+            return null;
+        }
+        else
+        {
+            return Unescape(text, removeBackSlash);
+        }
+    }
+
+    /// <summary>
+    /// Destructively unescape a string: remove backslashes before punctuation or symbol characters.
+    /// </summary>
+    /// <param name="text">The string data that will be changed by unescaping any punctuation or symbol characters.</param>
+    /// <param name="removeBackSlash">if set to <c>true</c> [remove back slash].</param>
     /// <returns></returns>
     public static string Unescape(string? text, bool removeBackSlash = true)
     {
