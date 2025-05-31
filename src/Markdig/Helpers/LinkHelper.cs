@@ -411,7 +411,7 @@ public static class LinkHelper
         {
             // Skip ')'
             text.SkipChar();
-            // not to normalize nulls
+            // not to normalize nulls into empty strings, since LinkInline.Title property is nullable.
         }
 
         return isValid;
