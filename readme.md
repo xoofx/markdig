@@ -2,7 +2,7 @@
 
 <img align="right" width="160px" height="160px" src="img/markdig.png">
 
-Markdig is a fast, powerful, [CommonMark](http://commonmark.org/) compliant, extensible Markdown processor for .NET.
+Markdig is a fast, powerful, [CommonMark](https://commonmark.org/) compliant, extensible Markdown processor for .NET.
 
 > NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
 
@@ -14,7 +14,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
 - **Abstract Syntax Tree** with precise source code location for syntax tree, useful when building a Markdown editor.
   - Checkout [Markdown Editor v2 for Visual Studio 2022](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.MarkdownEditor2) powered by Markdig!
 - Converter to **HTML**
-- Passing more than **600+ tests** from the latest [CommonMark specs (0.31.2)](http://spec.commonmark.org/)
+- Passing more than **600+ tests** from the latest [CommonMark specs (0.31.2)](https://spec.commonmark.org/)
 - Includes all the core elements of CommonMark:
   - including **GFM fenced code blocks**.  
 - **Extensible** architecture
@@ -22,9 +22,9 @@ You can **try Markdig online** and compare it to other implementations on [babel
 - [**Roundtrip support**](./src/Markdig/Roundtrip.md): Parses trivia (whitespace, newlines and other characters) to support lossless parse ⭢ render roundtrip. This enables changing markdown documents without introducing undesired trivia changes.
 - Built-in with **20+ extensions**, including:
   - 2 kind of tables:
-    - [**Pipe tables**](src/Markdig.Tests/Specs/PipeTableSpecs.md) (inspired from GitHub tables and [PanDoc - Pipe Tables](http://pandoc.org/README.html#extension-pipe_tables))
-    - [**Grid tables**](src/Markdig.Tests/Specs/GridTableSpecs.md) (inspired from [Pandoc - Grid Tables](http://pandoc.org/README.html#extension-grid_tables)) 
-  - [**Extra emphasis**](src/Markdig.Tests/Specs/EmphasisExtraSpecs.md) (inspired from [Pandoc - Emphasis](http://pandoc.org/README.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
+    - [**Pipe tables**](src/Markdig.Tests/Specs/PipeTableSpecs.md) (inspired from GitHub tables and [PanDoc - Pipe Tables](https://pandoc.org/MANUAL.html#extension-pipe_tables))
+    - [**Grid tables**](src/Markdig.Tests/Specs/GridTableSpecs.md) (inspired from [Pandoc - Grid Tables](https://pandoc.org/MANUAL.html#extension-grid_tables)) 
+  - [**Extra emphasis**](src/Markdig.Tests/Specs/EmphasisExtraSpecs.md) (inspired from [Pandoc - Emphasis](https://pandoc.org/MANUAL.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
     - strike through `~~`,
     - Subscript `~`
     - Superscript `^` 
@@ -33,7 +33,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**Special attributes**](src/Markdig.Tests/Specs/GenericAttributesSpecs.md) or attached HTML attributes (inspired from [PHP Markdown Extra - Special Attributes](https://michelf.ca/projects/php-markdown/extra/#spe-attr))
   - [**Definition lists**](src/Markdig.Tests/Specs/DefinitionListSpecs.md) (inspired from [PHP Markdown Extra - Definitions Lists](https://michelf.ca/projects/php-markdown/extra/#def-list))
   - [**Footnotes**](src/Markdig.Tests/Specs/FootnotesSpecs.md) (inspired from [PHP Markdown Extra - Footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes))
-  - [**Auto-identifiers**](src/Markdig.Tests/Specs/AutoIdentifierSpecs.md) for headings (similar to [Pandoc - Auto Identifiers](http://pandoc.org/README.html#extension-auto_identifiers))
+  - [**Auto-identifiers**](src/Markdig.Tests/Specs/AutoIdentifierSpecs.md) for headings (similar to [Pandoc - Auto Identifiers](https://pandoc.org/MANUAL.html#extension-auto_identifiers))
   - [**Auto-links**](src/Markdig.Tests/Specs/AutoLinks.md) generates links if a text starts with `http://` or `https://` or `ftp://` or `mailto:` or `www.xxx.yyy`
   - [**Task Lists**](src/Markdig.Tests/Specs/TaskListSpecs.md)  inspired from [Github Task lists](https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments).
   - [**Extra bullet lists**](src/Markdig.Tests/Specs/ListExtraSpecs.md), supporting alpha bullet `a.` `b.` and roman bullet (`i`, `ii`...etc.)
@@ -70,7 +70,7 @@ If you are looking for support for an old .NET Framework 3.5 or 4.0, you can dow
 
 While there is not yet a dedicated documentation, you can find from the [specs documentation](src/Markdig.Tests/Specs/readme.md) how to use these extensions.
 
-In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](http://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
+In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](https://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
 
 ## Download
 
@@ -153,7 +153,7 @@ image editing, optimization, and delivery server](https://github.com/imazen/imag
 
 ## Credits
 
-Thanks to the fantastic work done by [John Mac Farlane](http://johnmacfarlane.net/) for the CommonMark specs and all the people involved in making Markdown a better standard!
+Thanks to the fantastic work done by [John Mac Farlane](https://johnmacfarlane.net/) for the CommonMark specs and all the people involved in making Markdown a better standard!
 
 This project would not have been possible without this huge foundation.
 
@@ -161,7 +161,7 @@ Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/Bench
 
 Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET](https://github.com/Knagis/CommonMark.NET)
 
-Thanks to the work done by @clarkd on the JIRA Link extension (https://github.com/clarkd/MarkdigJiraLinker), now included with this project!
+Thanks to the work done by @clarkd on the [JIRA Link extension](https://github.com/clarkd/MarkdigJiraLinker), now included with this project!
 ## Author
 
-Alexandre MUTEL aka [xoofx](http://xoofx.github.io)
+Alexandre MUTEL aka [xoofx](https://xoofx.github.io/)
