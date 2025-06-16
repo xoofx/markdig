@@ -25,6 +25,7 @@ public class TestUnorderedList
     [TestCase("-\ti1")]
     [TestCase("-\ti1\n-\ti2")]
     [TestCase("-\ti1\n-  i2\n-\ti3")]
+    [TestCase("- 1.\n- 2.")]
     public void Test(string value)
     {
         RoundTrip(value);
