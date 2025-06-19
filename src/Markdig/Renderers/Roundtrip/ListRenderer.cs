@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
@@ -28,7 +28,15 @@ public class ListRenderer : RoundtripObjectRenderer<ListBlock>
                 var bullet = listItem.SourceBullet.ToString();
                 var delimiter = listBlock.OrderedDelimiter;
                 renderer.PushIndent(new string[] { $"{bws}{bullet}{delimiter}" });
-                renderer.WriteChildren(listItem);
+                if (listItem.Count == 0)
+                {
+                    renderer.Write(""); // trigger writing of indent
+                }
+                else
+                {
+                    renderer.WriteChildren(listItem);
+                }
+                renderer.PopIndent();
                 renderer.RenderLinesAfter(listItem);
             }
         }
