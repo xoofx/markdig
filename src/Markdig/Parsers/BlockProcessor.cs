@@ -485,15 +485,11 @@ public class BlockProcessor
     /// Processes a new line.
     /// </summary>
     /// <param name="newLine">The new line.</param>
-    /// <param name="column">The offset.</param>
-    public void ProcessLine(StringSlice newLine, int column = 0)
+    public void ProcessLine(StringSlice newLine)
     {
         CurrentLineStartPosition = newLine.Start;
 
-        if (column == 0)
-        {
-            Document.LineStartIndexes?.Add(CurrentLineStartPosition);
-        }
+        Document.LineStartIndexes?.Add(CurrentLineStartPosition);
 
         ContinueProcessingLine = true;
 
