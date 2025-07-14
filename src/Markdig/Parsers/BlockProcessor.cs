@@ -497,10 +497,34 @@ public class BlockProcessor
 
         ContinueProcessingLine = true;
 
-        ResetLine(newLine);
-        Column = column;
-        originalLineStart -= column;
+        ResetLine(newLine, 0);
 
+        Process();
+
+        LineIndex++;
+    }
+
+    /// <summary>
+    /// Processes part of a line.
+    /// </summary>
+    /// <param name="line">The line.</param>
+    /// <param name="column">The column.</param>
+    public void ProcessLinePart(StringSlice line, int column)
+    {
+        CurrentLineStartPosition = line.Start - column;
+
+        ContinueProcessingLine = true;
+
+        ResetLine(line, column);
+
+        Process();
+    }
+
+    /// <summary>
+    /// Process current string slice.
+    /// </summary>
+    private void Process()
+    {
         TryContinueBlocks();
 
         // If the line was not entirely processed by pending blocks, try to process it with any new block
@@ -508,8 +532,6 @@ public class BlockProcessor
 
         // Close blocks that are no longer opened
         CloseAll(false);
-
-        LineIndex++;
     }
 
     internal bool IsOpen(Block block)
@@ -962,16 +984,15 @@ public class BlockProcessor
         ContinueProcessingLine = !result.IsDiscard();
     }
 
-    private void ResetLine(StringSlice newLine)
+    private void ResetLine(StringSlice newLine, int column)
     {
         Line = newLine;
-        Column = 0;
+        Column = column;
         ColumnBeforeIndent = 0;
         StartBeforeIndent = Start;
-        originalLineStart = newLine.Start;
+        originalLineStart = newLine.Start - column;
         TriviaStart = newLine.Start;
     }
-
 
 
     [MemberNotNull(nameof(Document), nameof(Parsers))]

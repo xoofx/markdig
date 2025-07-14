@@ -303,7 +303,7 @@ public class GridTableParser : BlockParser
                 // Process the content of the cell
                 columnSlice.BlockProcessor!.LineIndex = processor.LineIndex;
 
-                columnSlice.BlockProcessor.ProcessLine(sliceForCell, sliceForCell.Start - line.Start);
+                columnSlice.BlockProcessor.ProcessLinePart(sliceForCell, sliceForCell.Start - line.Start);
             }
 
             // Go to next column
