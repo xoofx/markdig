@@ -835,6 +835,29 @@ literal      ( 2, 2) 11-11
     }
 
     [Test]
+    public void TestGridTable()
+    {
+        Check("0\n\n+-+-+\n|A|B|\n+=+=+\n|C|D|\n+-+-+", @"
+paragraph    ( 0, 0)  0-0
+literal      ( 0, 0)  0-0
+table        ( 2, 0)  3-31
+tablerow     ( 3, 0)  9-13
+tablecell    ( 3, 0)  9-11
+paragraph    ( 3, 1) 10-10
+literal      ( 3, 1) 10-10
+tablecell    ( 3, 2) 11-13
+paragraph    ( 3, 3) 12-12
+literal      ( 3, 3) 12-12
+tablerow     ( 5, 0) 21-25
+tablecell    ( 5, 0) 21-23
+paragraph    ( 5, 1) 22-22
+literal      ( 5, 1) 22-22
+tablecell    ( 5, 2) 23-25
+paragraph    ( 5, 3) 24-24
+literal      ( 5, 3) 24-24", "gridtables");
+    }
+
+    [Test]
     public void TestIndentedCode()
     {
         //     01 2 345678 9ABCDE
