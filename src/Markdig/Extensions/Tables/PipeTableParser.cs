@@ -48,6 +48,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         }
 
         var c = slice.CurrentChar;
+        var isNewLineFollowedByPipe = (c == '\n' || c == '\r') && slice.PeekChar() == '|';
 
         // If we have not a delimiter on the first line of a paragraph, don't bother to continue
         // tracking other delimiters on following lines
@@ -60,18 +61,17 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         if (tableState is null)
         {
-
             // A table could be preceded by an empty line or a line containing an inline
             // that has not been added to the stack, so we consider this as a valid
             // start for a table. Typically, with this, we can have an attributes {...}
             // starting on the first line of a pipe table, even if the first line
             // doesn't have a pipe
-            if (processor.Inline != null && (localLineIndex > 0 || c == '\n' || c == '\r'))
+            if (processor.Inline != null && (localLineIndex > 0 || c == '\n' || c == '\r') && !isNewLineFollowedByPipe)
             {
                 return false;
             }
 
-            if (processor.Inline is null)
+            if (processor.Inline is null || isNewLineFollowedByPipe)
             {
                 isFirstLineEmpty = true;
             }
