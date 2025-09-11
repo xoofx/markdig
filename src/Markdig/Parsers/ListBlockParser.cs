@@ -145,6 +145,7 @@ public class ListBlockParser : BlockParser
             if (list.CountBlankLinesReset == 1 && listItem.ColumnWidth < 0)
             {
                 state.Close(listItem);
+                list.CountBlankLinesReset = 0;
 
                 // Leave the list open
                 list.IsOpen = true;

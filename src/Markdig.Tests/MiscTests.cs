@@ -386,4 +386,27 @@ Also not a note.</p>
 ";
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks().Build());
     }
+
+
+    [Test]
+    public void TestIssue845ListItemBlankLine()
+    {
+        TestParser.TestSpec("-\n\n  foo",@"
+<ul>
+<li></li>
+</ul>
+<p>foo</p>");
+        TestParser.TestSpec("-\n-\n\n  foo",@"
+<ul>
+<li></li>
+<li></li>
+</ul>
+<p>foo</p>");
+        TestParser.TestSpec("-\n\n-\n\n  foo",@"
+<ul>
+<li></li>
+<li></li>
+</ul>
+<p>foo</p>");
+    }
 }
