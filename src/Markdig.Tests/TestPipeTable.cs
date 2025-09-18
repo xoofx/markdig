@@ -57,4 +57,48 @@ public sealed class TestPipeTable
             Assert.AreEqual(0, column.Width);
         }
     }
+
+    [Test]
+    public void TableWithUnbalancedCodeSpanParsesWithoutDepthLimitError()
+    {
+        const string markdown = """
+| Count | A | B | C | D | E |
+|-------|---|---|---|---|---|
+|     0 | B | C | D | E | F |
+|     1 | B | `C | D | E | F |
+|     2 | B | `C | D | E | F |
+|     3 | B | C | D | E | F |
+|     4 | B | C | D | E | F |
+|     5 | B | C | D | E | F |
+|     6 | B | C | D | E | F |
+|     7 | B | C | D | E | F |
+|     8 | B | C | D | E | F |
+|     9 | B | C | D | E | F |
+|    10 | B | C | D | E | F |
+|    11 | B | C | D | E | F |
+|    12 | B | C | D | E | F |
+|    13 | B | C | D | E | F |
+|    14 | B | C | D | E | F |
+|    15 | B | C | D | E | F |
+|    16 | B | C | D | E | F |
+|    17 | B | C | D | E | F |
+|    18 | B | C | D | E | F |
+|    19 | B | C | D | E | F |
+""";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        MarkdownDocument document = null!;
+        Assert.DoesNotThrow(() => document = Markdown.Parse(markdown, pipeline));
+
+        var tables = document.Descendants().OfType<Table>().ToArray();
+        Assert.That(tables, Has.Length.EqualTo(1));
+
+        string html = string.Empty;
+        Assert.DoesNotThrow(() => html = Markdown.ToHtml(markdown, pipeline));
+        Assert.That(html, Does.Contain("<table"));
+        Assert.That(html, Does.Contain("<td>`C</td>"));
+    }
 }
