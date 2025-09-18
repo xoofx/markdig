@@ -35,6 +35,7 @@ public class CodeInlineParser : InlineParser
         Debug.Assert(match is not ('\r' or '\n'));
 
         // Match the opened sticks
+        int openingStart = slice.Start;
         int openSticks = slice.CountAndSkipChar(match);
 
         // A backtick string is a string of one or more backtick characters (`) that is neither preceded nor followed by a backtick.
@@ -75,8 +76,25 @@ public class CodeInlineParser : InlineParser
             {
                 break;
             }
-            else if (closeSticks == 0)
+
+            if (closeSticks == 0)
             {
+                ReadOnlySpan<char> lookAhead = span.Length > 1 ? span.Slice(1) : ReadOnlySpan<char>.Empty;
+                while (!lookAhead.IsEmpty && (lookAhead[0] == '\r' || lookAhead[0] == '\n'))
+                {
+                    lookAhead = lookAhead.Slice(1);
+                }
+                int whitespace = 0;
+                while (whitespace < lookAhead.Length && (lookAhead[whitespace] == ' ' || lookAhead[whitespace] == '\t'))
+                {
+                    whitespace++;
+                }
+                if (whitespace < lookAhead.Length && lookAhead[whitespace] == '|')
+                {
+                    slice.Start = openingStart;
+                    return false;
+                }
+
                 containsNewLines = true;
                 span = span.Slice(1);
             }
