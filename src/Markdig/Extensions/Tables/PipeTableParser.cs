@@ -196,6 +196,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         // Continue
         if (tableState is null || container is null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
         {
+            if (tableState is not null)
+            {
+                foreach (var inline in tableState.ColumnAndLineDelimiters)
+                {
+                    if (inline is PipeTableDelimiterInline pipeDelimiter)
+                    {
+                        pipeDelimiter.ReplaceByLiteral();
+                    }
+                }
+            }
             return true;
         }
 
