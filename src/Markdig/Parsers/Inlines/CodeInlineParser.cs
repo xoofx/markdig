@@ -4,6 +4,7 @@
 
 using System.Diagnostics;
 
+using Markdig.Extensions.Tables;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -91,8 +92,13 @@ public class CodeInlineParser : InlineParser
                 }
                 if (whitespace < lookAhead.Length && lookAhead[whitespace] == '|')
                 {
-                    slice.Start = openingStart;
-                    return false;
+                    // Mirror the guard in PipeTableParser: if the next line starts with a pipe while we are inside
+                    // a table delimiter, defer to the pipe table parser so the backtick span stays intact.
+                    if (processor.Inline != null && processor.Inline.ContainsParentOfType<PipeTableDelimiterInline>())
+                    {
+                        slice.Start = openingStart;
+                        return false;
+                    }
                 }
 
                 containsNewLines = true;

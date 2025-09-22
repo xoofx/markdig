@@ -1,5 +1,7 @@
+using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Tests;
 
@@ -100,5 +102,73 @@ public sealed class TestPipeTable
         Assert.DoesNotThrow(() => html = Markdown.ToHtml(markdown, pipeline));
         Assert.That(html, Does.Contain("<table"));
         Assert.That(html, Does.Contain("<td>`C</td>"));
+    }
+
+    [Test]
+    public void CodeInlineWithPipeDelimitersRemainsCodeInline()
+    {
+        const string markdown = "`|| hidden text ||`";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+
+        var codeInline = document.Descendants().OfType<CodeInline>().SingleOrDefault();
+        Assert.IsNotNull(codeInline);
+        Assert.That(codeInline!.Content, Is.EqualTo("|| hidden text ||"));
+    }
+
+    [Test]
+    public void SingleLineCodeInlineWithPipeDelimitersRendersAsCode()
+    {
+        const string markdown = "`|| hidden text ||`";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var html = Markdown.ToHtml(markdown, pipeline);
+
+        Assert.That(html, Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
+    }
+
+    [Test]
+    public void MultiLineCodeInlineWithPipeDelimitersRendersAsCode()
+    {
+        const string markdown = """
+`
+|| hidden text ||
+`
+""";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var html = Markdown.ToHtml(markdown, pipeline);
+
+        Assert.That(html, Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
+    }
+
+    [Test]
+    public void TableCellWithCodeInlineRendersCorrectly()
+    {
+        const string markdown = """
+| Count | A | B | C | D | E |
+|-------|---|---|---|---|---|
+|     0 | B | C | D | E | F |
+|     1 | B | `Code block` | D | E | F |
+|     2 | B | C | D | E | F |
+""";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var html = Markdown.ToHtml(markdown, pipeline);
+
+        Assert.That(html, Does.Contain("<td><code>Code block</code></td>"));
     }
 }

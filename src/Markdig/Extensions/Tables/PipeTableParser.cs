@@ -47,6 +47,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             return false;
         }
 
+        // Do not treat pipe characters that occur within inline code block as table delimiters
+        // This handles the scenario where we start an inline code block but do a new line with a pipe
+        // `
+        // || Code ||
+        // `
+        if (processor.Inline != null && processor.Inline.ContainsParentOfType<CodeInline>())
+        {
+            return false;
+        }
+
         var c = slice.CurrentChar;
         var isNewLineFollowedByPipe = (c == '\n' || c == '\r') && slice.PeekChar() == '|';
 

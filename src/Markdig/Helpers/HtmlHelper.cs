@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics;
@@ -430,7 +430,7 @@ public static class HtmlHelper
 
         const string EndOfComment = "-->";
 
-        int endOfComment = slice.IndexOf(EndOfComment, StringComparison.Ordinal);
+        int endOfComment = slice.IndexOf(EndOfComment.AsSpan(), StringComparison.Ordinal);
         if (endOfComment < 0)
         {
             return false;
@@ -474,7 +474,7 @@ public static class HtmlHelper
     public static string Unescape(string? text, bool removeBackSlash = true)
     {
         // Credits: code from CommonMark.NET
-        // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
+        // Copyright (c) 2014, Kārlis Gaņģis All rights reserved.
         // See license for details:  https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md
         if (string.IsNullOrEmpty(text))
         {
@@ -553,7 +553,7 @@ public static class HtmlHelper
     public static int ScanEntity<T>(T slice, out int numericEntity, out int namedEntityStart,  out int namedEntityLength) where T : ICharIterator
     {
         // Credits: code from CommonMark.NET
-        // Copyright (c) 2014, Kārlis Gaņģis All rights reserved. 
+        // Copyright (c) 2014, Kārlis Gaņģis All rights reserved.
         // See license for details:  https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md
 
         numericEntity = 0;
@@ -568,7 +568,7 @@ public static class HtmlHelper
         var start = slice.Start;
         char c = slice.NextChar();
         int counter = 0;
-        
+
         if (c == '#')
         {
             c = slice.PeekChar();
