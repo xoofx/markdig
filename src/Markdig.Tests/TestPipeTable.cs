@@ -137,11 +137,12 @@ public sealed class TestPipeTable
     [Test]
     public void MultiLineCodeInlineWithPipeDelimitersRendersAsCode()
     {
-        const string markdown = """
-`
-|| hidden text ||
-`
-""";
+        const string markdown =
+            """
+            `
+            || hidden text ||
+            `
+            """;
 
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
