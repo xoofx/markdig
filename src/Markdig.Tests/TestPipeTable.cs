@@ -155,13 +155,14 @@ public sealed class TestPipeTable
     [Test]
     public void TableCellWithCodeInlineRendersCorrectly()
     {
-        const string markdown = """
-| Count | A | B | C | D | E |
-|-------|---|---|---|---|---|
-|     0 | B | C | D | E | F |
-|     1 | B | `Code block` | D | E | F |
-|     2 | B | C | D | E | F |
-""";
+        const string markdown =
+            """
+            | Count | A | B | C | D | E |
+            |-------|---|---|---|---|---|
+            |     0 | B | C | D | E | F |
+            |     1 | B | `Code block` | D | E | F |
+            |     2 | B | C | D | E | F |
+            """;
 
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
