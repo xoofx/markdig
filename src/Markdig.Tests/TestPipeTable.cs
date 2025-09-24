@@ -118,20 +118,7 @@ public sealed class TestPipeTable
         var codeInline = document.Descendants().OfType<CodeInline>().SingleOrDefault();
         Assert.IsNotNull(codeInline);
         Assert.That(codeInline!.Content, Is.EqualTo("|| hidden text ||"));
-    }
-
-    [Test]
-    public void SingleLineCodeInlineWithPipeDelimitersRendersAsCode()
-    {
-        const string markdown = "`|| hidden text ||`";
-
-        var pipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .Build();
-
-        var html = Markdown.ToHtml(markdown, pipeline);
-
-        Assert.That(html, Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
+        Assert.That(docunent.ToHtml(), Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
     }
 
     [Test]
