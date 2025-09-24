@@ -118,7 +118,7 @@ public sealed class TestPipeTable
         var codeInline = document.Descendants().OfType<CodeInline>().SingleOrDefault();
         Assert.IsNotNull(codeInline);
         Assert.That(codeInline!.Content, Is.EqualTo("|| hidden text ||"));
-        Assert.That(docunent.ToHtml(), Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
+        Assert.That(document.ToHtml(), Is.EqualTo("<p><code>|| hidden text ||</code></p>\n"));
     }
 
     [Test]
