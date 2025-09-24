@@ -85,12 +85,7 @@ public class CodeInlineParser : InlineParser
                 {
                     lookAhead = lookAhead.Slice(1);
                 }
-                int whitespace = 0;
-                while (whitespace < lookAhead.Length && (lookAhead[whitespace] == ' ' || lookAhead[whitespace] == '\t'))
-                {
-                    whitespace++;
-                }
-                if (whitespace < lookAhead.Length && lookAhead[whitespace] == '|')
+                if (lookAhead[0] == '|')
                 {
                     // Mirror the guard in PipeTableParser: if the next line starts with a pipe while we are inside
                     // a table delimiter, defer to the pipe table parser so the backtick span stays intact.

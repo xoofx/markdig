@@ -160,4 +160,46 @@ public sealed class TestPipeTable
 
         Assert.That(html, Does.Contain("<td><code>Code block</code></td>"));
     }
+
+    [Test]
+    public void CodeInlineWithIndentedContentPreservesWhitespace()
+    {
+        const string markdown = "`\n   foo\n`";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+        var codeInline = document.Descendants().OfType<CodeInline>().Single();
+
+        Assert.That(codeInline.Content, Is.EqualTo("foo"));
+        Assert.That(Markdown.ToHtml(markdown, pipeline), Is.EqualTo("<p><code>foo</code></p>\n"));
+    }
+
+    [Test]
+    public void TableWithIndentedPipeAfterCodeInlineParsesCorrectly()
+    {
+        var markdown =
+            """
+            `
+            	|| hidden text ||
+            `
+
+              | Count | Value |
+              |-------|-------|
+              | 0     | B |
+
+            """;
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var html = Markdown.ToHtml(markdown, pipeline);
+
+        Assert.That(html, Does.Contain("<p><code>|| hidden text ||</code></p>"));
+        Assert.That(html, Does.Contain("<table"));
+        Assert.That(html, Does.Contain("<td>B</td>"));
+    }
 }
