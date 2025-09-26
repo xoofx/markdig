@@ -190,7 +190,7 @@ public sealed class TestPipeTable
               |-------|-------|
               | 0     | B |
 
-            """;
+            """.ReplaceLineEndings("\n");
 
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
