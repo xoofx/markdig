@@ -124,12 +124,12 @@ public sealed class TestPipeTable
     [Test]
     public void MultiLineCodeInlineWithPipeDelimitersRendersAsCode()
     {
-        const string markdown =
+        string markdown =
             """
             `
             || hidden text ||
             `
-            """;
+            """.ReplaceLineEndings("\n");
 
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
