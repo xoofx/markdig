@@ -87,8 +87,9 @@ public class CodeInlineParser : InlineParser
                 }
                 if (lookAhead[0] == '|')
                 {
-                    // Mirror the guard in PipeTableParser: if the next line starts with a pipe while we are inside
-                    // a table delimiter, defer to the pipe table parser so the backtick span stays intact.
+                    // We saw the start of a code inline, but the close sticks are not present on the same line.
+                    // If the next line starts with a pipe character, this is likely an incomplete CodeInline within a table.
+                    // Treat it as regular text to avoid breaking the overall table shape.
                     if (processor.Inline != null && processor.Inline.ContainsParentOfType<PipeTableDelimiterInline>())
                     {
                         slice.Start = openingStart;
