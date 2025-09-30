@@ -109,9 +109,14 @@ public class GenericAttributesParser : InlineParser
             {
                 isValid = true;
                 line.SkipChar(); // skip }
+                // skip line breaks
                 if (line.CurrentChar == '\n')
                 {
-                    line.SkipChar(); // skip \n
+                    line.SkipChar();
+                }
+                else if (line.CurrentChar == '\r' && line.PeekChar() == '\n')
+                {
+                    line.Start += 2;
                 }
                 break;
             }
