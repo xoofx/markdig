@@ -61,3 +61,12 @@ Attribute values can be one character long
 <p><a href="url" data-x="1">Foo</a></p>
 <p><a href="url" data-x="11">Foo</a></p>
 ````````````````````````````````
+
+Attributes that occur immediately before a block element, on a line by themselves, affect that element
+
+```````````````````````````````` example
+{.center}
+A paragraph
+.
+<p class="center">A paragraph</p>
+````````````````````````````````

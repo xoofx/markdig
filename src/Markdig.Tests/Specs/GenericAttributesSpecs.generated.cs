@@ -98,5 +98,22 @@ namespace Markdig.Tests.Specs.GenericAttributes
 
             TestParser.TestSpec("[Foo](url){data-x=1}\n\n[Foo](url){data-x='1'}\n\n[Foo](url){data-x=11}", "<p><a href=\"url\" data-x=\"1\">Foo</a></p>\n<p><a href=\"url\" data-x=\"1\">Foo</a></p>\n<p><a href=\"url\" data-x=\"11\">Foo</a></p>", "attributes|advanced", context: "Example 3\nSection Extensions / Generic Attributes\n");
         }
+
+        // Attributes that occur immediately before a block element, on a line by themselves, affect that element
+        [Test]
+        public void ExtensionsGenericAttributes_Example004()
+        {
+            // Example 4
+            // Section: Extensions / Generic Attributes
+            //
+            // The following Markdown:
+            //     {.center}
+            //     A paragraph
+            //
+            // Should be rendered as:
+            //     <p class="center">A paragraph</p>
+
+            TestParser.TestSpec("{.center}\nA paragraph", "<p class=\"center\">A paragraph</p>", "attributes|advanced", context: "Example 4\nSection Extensions / Generic Attributes\n");
+        }
     }
 }
