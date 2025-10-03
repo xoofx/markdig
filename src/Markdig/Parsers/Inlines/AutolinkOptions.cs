@@ -9,5 +9,5 @@ public class AutolinkOptions : LinkOptions
     /// <summary>
     /// Gets or sets a value indicating whether to enable HTML parsing. Default is <c>true</c>
     /// </summary>
-    public bool EnableHtmlParsing { get; set; }
+    public bool EnableHtmlParsing { get; set; } = true;
 }
