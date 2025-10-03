@@ -4,6 +4,7 @@
 
 using System.Diagnostics;
 
+using Markdig.Extensions.Tables;
 using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -84,15 +85,16 @@ public class CodeInlineParser : InlineParser
                 {
                     lookAhead = lookAhead.Slice(1);
                 }
-                int whitespace = 0;
-                while (whitespace < lookAhead.Length && (lookAhead[whitespace] == ' ' || lookAhead[whitespace] == '\t'))
+                if (lookAhead[0] == '|')
                 {
-                    whitespace++;
-                }
-                if (whitespace < lookAhead.Length && lookAhead[whitespace] == '|')
-                {
-                    slice.Start = openingStart;
-                    return false;
+                    // We saw the start of a code inline, but the close sticks are not present on the same line.
+                    // If the next line starts with a pipe character, this is likely an incomplete CodeInline within a table.
+                    // Treat it as regular text to avoid breaking the overall table shape.
+                    if (processor.Inline != null && processor.Inline.ContainsParentOfType<PipeTableDelimiterInline>())
+                    {
+                        slice.Start = openingStart;
+                        return false;
+                    }
                 }
 
                 containsNewLines = true;
