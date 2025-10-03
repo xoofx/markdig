@@ -538,7 +538,7 @@ public static class MarkdownExtensions
         var inlineParser = pipeline.InlineParsers.Find<AutolinkInlineParser>();
         if (inlineParser != null)
         {
-            inlineParser.EnableHtmlParsing = false;
+            inlineParser.Options.EnableHtmlParsing = false;
         }
         return pipeline;
     }

@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
@@ -17,10 +18,21 @@ public class LinkInlineParser : InlineParser
     /// <summary>
     /// Initializes a new instance of the <see cref="LinkInlineParser"/> class.
     /// </summary>
-    public LinkInlineParser()
+    public LinkInlineParser() : this(new LinkOptions())
     {
+
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LinkInlineParser"/> class.
+    /// </summary>
+    public LinkInlineParser(LinkOptions options)
+    {
+        Options = options ?? throw new ArgumentNullException(nameof(options));
         OpeningCharacters = ['[', ']', '!'];
     }
+
+    public readonly LinkOptions Options;
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
@@ -167,6 +179,11 @@ public class LinkInlineParser : InlineParser
                 linkInline.LinkRefDefLabel = linkRef.Label;
                 linkInline.LinkRefDefLabelWithTrivia = linkRef.LabelWithTrivia;
                 linkInline.LocalLabel = localLabel;
+            }
+
+            if (Options.OpenInNewWindow)
+            {
+                linkInline.GetAttributes().AddPropertyIfNotExist("target", "_blank");
             }
 
             link = linkInline;
