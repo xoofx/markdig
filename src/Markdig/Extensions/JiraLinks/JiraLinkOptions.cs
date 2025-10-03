@@ -3,13 +3,14 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Parsers;
 
 namespace Markdig.Extensions.JiraLinks;
 
 /// <summary>
 /// Available options for replacing JIRA links
 /// </summary>
-public class JiraLinkOptions
+public class JiraLinkOptions : LinkOptions
 {
     /// <summary>
     /// The base Url (e.g. `https://mycompany.atlassian.net`)
@@ -20,11 +21,6 @@ public class JiraLinkOptions
     /// The base path after the base url (default is `/browse`)
     /// </summary>
     public string BasePath { get; set; }
-
-    /// <summary>
-    /// Should the link open in a new window when clicked
-    /// </summary>
-    public bool OpenInNewWindow { get; set; }
 
     public JiraLinkOptions(string baseUrl)
     {

@@ -18,7 +18,7 @@ public class LinkInlineParser : InlineParser
     /// <summary>
     /// Initializes a new instance of the <see cref="LinkInlineParser"/> class.
     /// </summary>
-    public LinkInlineParser() : this(new LinkInlineOptions())
+    public LinkInlineParser() : this(new LinkOptions())
     {
 
     }
@@ -26,13 +26,13 @@ public class LinkInlineParser : InlineParser
     /// <summary>
     /// Initializes a new instance of the <see cref="LinkInlineParser"/> class.
     /// </summary>
-    public LinkInlineParser(LinkInlineOptions options)
+    public LinkInlineParser(LinkOptions options)
     {
         Options = options ?? throw new ArgumentNullException(nameof(options));
         OpeningCharacters = ['[', ']', '!'];
     }
 
-    public readonly LinkInlineOptions Options;
+    public readonly LinkOptions Options;
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {

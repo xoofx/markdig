@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
@@ -14,19 +15,21 @@ namespace Markdig.Parsers.Inlines;
 /// <seealso cref="InlineParser" />
 public class AutolinkInlineParser : InlineParser
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AutolinkInlineParser"/> class.
-    /// </summary>
-    public AutolinkInlineParser()
+    public AutolinkInlineParser() : this(new AutolinkOptions())
     {
-        OpeningCharacters = ['<'];
-        EnableHtmlParsing = true;
+
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to enable HTML parsing. Default is <c>true</c>
+    /// Initializes a new instance of the <see cref="AutolinkInlineParser"/> class.
     /// </summary>
-    public bool EnableHtmlParsing { get; set; }
+    public AutolinkInlineParser(AutolinkOptions options)
+    {
+        Options = options ?? throw new ArgumentNullException(nameof(options));
+        OpeningCharacters = ['<'];
+    }
+
+    public readonly AutolinkOptions Options;
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
@@ -42,8 +45,12 @@ public class AutolinkInlineParser : InlineParser
                 Line = line,
                 Column = column
             };
+            if (Options.OpenInNewWindow)
+            {
+                processor.Inline.GetAttributes().AddPropertyIfNotExist("target", "_blank");
+            }
         }
-        else if (EnableHtmlParsing)
+        else if (Options.EnableHtmlParsing)
         {
             slice = saved;
             if (!HtmlHelper.TryParseHtmlTag(ref slice, out string? htmlTag))
@@ -57,6 +64,10 @@ public class AutolinkInlineParser : InlineParser
                 Line = line,
                 Column = column
             };
+            if (Options.OpenInNewWindow)
+            {
+                processor.Inline.GetAttributes().AddPropertyIfNotExist("target", "_blank");
+            }
         }
         else
         {
