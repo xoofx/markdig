@@ -118,7 +118,7 @@ public class FilteredAutolinkInlineParser : AutolinkInlineParser
             // Check if the next character suggests this is an HTML tag
             // HTML tags have whitespace, '>', '/', or attributes after the tag name
             // Autolinks have ':' or '@' 
-            if (c == ':' || c == '@')
+            if (c is ':' or '@')
             {
                 return false; // This is likely an autolink, not an HTML tag
             }
