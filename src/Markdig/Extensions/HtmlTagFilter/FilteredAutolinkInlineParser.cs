@@ -70,7 +70,7 @@ public class FilteredAutolinkInlineParser : AutolinkInlineParser
 
             // Check if this looks like an autolink (not an HTML tag)
             // Autolinks don't start with /, !, or ?
-            if (c == '/' || c == '!' || c == '?')
+            if (c is '/' or '!' or '?')
             {
                 // This is an HTML tag, not an autolink
             }
