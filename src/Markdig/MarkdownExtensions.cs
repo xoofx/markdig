@@ -19,6 +19,7 @@ using Markdig.Extensions.Footnotes;
 using Markdig.Extensions.GenericAttributes;
 using Markdig.Extensions.Globalization;
 using Markdig.Extensions.Hardlines;
+using Markdig.Extensions.HtmlTagFilter;
 using Markdig.Extensions.JiraLinks;
 using Markdig.Extensions.ListExtras;
 using Markdig.Extensions.Mathematics;
@@ -540,6 +541,69 @@ public static class MarkdownExtensions
         {
             inlineParser.Options.EnableHtmlParsing = false;
         }
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses a whitelist to allow only specific HTML tags. All other HTML tags will be escaped.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="allowedTags">The HTML tags to allow (e.g., "p", "a", "strong", "em").</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseHtmlTagWhitelist(this MarkdownPipelineBuilder pipeline, params string[] allowedTags)
+    {
+        if (allowedTags == null || allowedTags.Length == 0)
+        {
+            ThrowHelper.ArgumentException("At least one allowed tag must be specified", nameof(allowedTags));
+        }
+
+        var options = new HtmlTagFilterOptions();
+        foreach (var tag in allowedTags)
+        {
+            options.AllowedTags.Add(tag);
+        }
+        
+        pipeline.Extensions.AddIfNotAlready(new HtmlTagFilterExtension(options));
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses a blacklist to block specific HTML tags. All other HTML tags will be allowed.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="blockedTags">The HTML tags to block (e.g., "script", "iframe", "object").</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseHtmlTagBlacklist(this MarkdownPipelineBuilder pipeline, params string[] blockedTags)
+    {
+        if (blockedTags == null || blockedTags.Length == 0)
+        {
+            ThrowHelper.ArgumentException("At least one blocked tag must be specified", nameof(blockedTags));
+        }
+
+        var options = new HtmlTagFilterOptions();
+        foreach (var tag in blockedTags)
+        {
+            options.BlockedTags.Add(tag);
+        }
+        
+        pipeline.Extensions.AddIfNotAlready(new HtmlTagFilterExtension(options));
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses custom HTML tag filtering options.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="options">The filter options to apply.</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseHtmlTagFilter(this MarkdownPipelineBuilder pipeline, HtmlTagFilterOptions options)
+    {
+        if (options == null)
+        {
+            ThrowHelper.ArgumentNullException(nameof(options));
+        }
+
+        pipeline.Extensions.AddIfNotAlready(new HtmlTagFilterExtension(options));
         return pipeline;
     }
 
