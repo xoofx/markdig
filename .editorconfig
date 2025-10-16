@@ -12,8 +12,9 @@ insert_final_newline = false
 trim_trailing_whitespace = true
 
 # Solution Files
-[*.sln]
-indent_style = tab
+[*.slnx]
+indent_size = 2
+insert_final_newline = true
 
 # XML Project Files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
@@ -35,3 +36,8 @@ insert_final_newline = true
 # Bash Files
 [*.sh]
 end_of_line = lf
+
+# C# files
+[*.cs]
+# License header
+file_header_template = Copyright (c) Alexandre Mutel. All rights reserved.\nThis file is licensed under the BSD-Clause 2 license.\nSee the license.txt file in the project root for more information.
