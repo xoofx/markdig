@@ -22,7 +22,7 @@ internal static class UnicodeUtility
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void GetUtf16SurrogatesFromSupplementaryPlaneScalar(uint value, out char highSurrogateCodePoint, out char lowSurrogateCodePoint)
     {
-        Debug.Assert(IsValidUnicodeScalar(value) && IsBmpCodePoint(value));
+        Debug.Assert(IsValidUnicodeScalar(value) && !IsBmpCodePoint(value));
 
         highSurrogateCodePoint = (char)((value + ((0xD800u - 0x40u) << 10)) >> 10);
         lowSurrogateCodePoint = (char)((value & 0x3FFu) + 0xDC00u);

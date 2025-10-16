@@ -3,12 +3,14 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using System.Diagnostics;
 
 namespace Markdig.Parsers.Inlines;
 
 /// <summary>
 /// Descriptor for an emphasis.
 /// </summary>
+[DebuggerDisplay("Emphasis Char={Character}, Min={MinimumCount}, Max={MaximumCount}, EnableWithinWord={EnableWithinWord}")]
 public sealed class EmphasisDescriptor
 {
     /// <summary>
