@@ -47,6 +47,7 @@ public static class TableHelper
     /// <param name="slice">The text slice.</param>
     /// <param name="delimiterChar">The delimiter character (either `-` or `=`). If `\0`, it will detect the character (either `-` or `=`)</param>
     /// <param name="align">The alignment of the column.</param>
+    /// <param name="delimiterCount">The number of times <paramref name="delimiterChar"/> appeared in the column header.</param>
     /// <returns>
     ///   <c>true</c> if parsing was successful
     /// </returns>

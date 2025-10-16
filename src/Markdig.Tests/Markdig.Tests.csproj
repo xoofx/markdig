@@ -9,6 +9,7 @@
     <StartupObject>Markdig.Tests.Program</StartupObject>
     <SpecExecutable>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\$(TargetFramework)\SpecFileGen.dll</SpecExecutable>
     <SpecTimestamp>$(MSBuildProjectDirectory)\..\SpecFileGen\bin\$(Configuration)\$(TargetFramework)\SpecFileGen.timestamp</SpecTimestamp>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
