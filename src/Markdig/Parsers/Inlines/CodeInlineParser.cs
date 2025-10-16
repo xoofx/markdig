@@ -80,12 +80,7 @@ public class CodeInlineParser : InlineParser
 
             if (closeSticks == 0)
             {
-                ReadOnlySpan<char> lookAhead = span.Length > 1 ? span.Slice(1) : ReadOnlySpan<char>.Empty;
-                while (!lookAhead.IsEmpty && (lookAhead[0] == '\r' || lookAhead[0] == '\n'))
-                {
-                    lookAhead = lookAhead.Slice(1);
-                }
-                if (lookAhead[0] == '|')
+                if (span.TrimStart(['\r', '\n']).StartsWith('|'))
                 {
                     // We saw the start of a code inline, but the close sticks are not present on the same line.
                     // If the next line starts with a pipe character, this is likely an incomplete CodeInline within a table.
