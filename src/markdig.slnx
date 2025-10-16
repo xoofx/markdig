@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="../.editorconfig" />
+    <File Path="../.gitattributes" />
+    <File Path="../.github/workflows/ci.yml" />
+    <File Path="../.gitignore" />
+    <File Path="../changelog.md" />
+    <File Path="../license.txt" />
+    <File Path="../readme.md" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="Markdig.Benchmarks/Markdig.Benchmarks.csproj">
+    <BuildDependency Project="Markdig/Markdig.csproj" />
+  </Project>
+  <Project Path="Markdig.Tests/Markdig.Tests.csproj">
+    <BuildDependency Project="Markdig/Markdig.csproj" />
+  </Project>
+  <Project Path="Markdig.WebApp/Markdig.WebApp.csproj" />
+  <Project Path="Markdig/Markdig.csproj" />
+  <Project Path="mdtoc/mdtoc.csproj" />
+  <Project Path="SpecFileGen/SpecFileGen.csproj" />
+  <Project Path="UnicodeNormDApp/UnicodeNormDApp.csproj" />
+</Solution>

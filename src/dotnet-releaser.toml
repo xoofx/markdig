@@ -1,5 +1,5 @@
 [msbuild]
-project = ["markdig.sln", "./Markdig.Signed/Markdig.Signed.csproj"]
+project = ["markdig.slnx", "./Markdig.Signed/Markdig.Signed.csproj"]
 build_debug = true
 [github]
 user = "xoofx"
