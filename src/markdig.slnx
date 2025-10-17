@@ -12,6 +12,9 @@
   <Project Path="Markdig.Benchmarks/Markdig.Benchmarks.csproj">
     <BuildDependency Project="Markdig/Markdig.csproj" />
   </Project>
+  <Project Path="Markdig.Fuzzing/Markdig.Fuzzing.csproj">
+    <BuildDependency Project="Markdig/Markdig.csproj" />
+  </Project>
   <Project Path="Markdig.Tests/Markdig.Tests.csproj">
     <BuildDependency Project="Markdig/Markdig.csproj" />
   </Project>

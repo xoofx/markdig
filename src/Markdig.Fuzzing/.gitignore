@@ -1,0 +1,4 @@
+corpus
+libfuzzer-dotnet-windows.exe
+crash-*
+timeout-*
