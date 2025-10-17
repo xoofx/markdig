@@ -233,9 +233,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                 continue;
             }
 
-            if ((closeDelimiter.Type & DelimiterType.Close) != 0 && closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
+            if ((closeDelimiter.Type & DelimiterType.Close) != 0)
             {
-                while (true)
+                while (closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
                 {
                     // Now, look back in the stack (staying above stack_bottom and the openers_bottom for this delimiter type)
                     // for the first matching potential opener (“matching” means same delimiter).
@@ -245,8 +245,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                     {
                         var previousOpenDelimiter = delimiters[j];
 
-                        var isOddMatch = ((closeDelimiter.Type & DelimiterType.Open) != 0 ||
-                                         (previousOpenDelimiter.Type & DelimiterType.Close) != 0) &&
+                        var isOddMatch = ((closeDelimiter.Type & DelimiterType.Open) != 0 || (previousOpenDelimiter.Type & DelimiterType.Close) != 0) &&
                                          previousOpenDelimiter.DelimiterCount != closeDelimiter.DelimiterCount &&
                                          (previousOpenDelimiter.DelimiterCount + closeDelimiter.DelimiterCount) % 3 == 0 &&
                                          (previousOpenDelimiter.DelimiterCount % 3 != 0 || closeDelimiter.DelimiterCount % 3 != 0);
@@ -357,7 +356,8 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                         }
 
                         // The current delimiters are matching
-                        if (openDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
+                        if (openDelimiter.DelimiterCount >= emphasisDesc.MinimumCount &&
+                            closeDelimiter.DelimiterCount >= emphasisDesc.MinimumCount)
                         {
                             goto process_delims;
                         }
