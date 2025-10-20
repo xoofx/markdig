@@ -285,3 +285,24 @@ An empty `+` on a line should result in a simple empty list output:
 <li></li>
 </ul>
 ````````````````````````````````
+
+A table may begin right after a paragraph without an empty line in between:
+
+```````````````````````````````` example
+Some
+**text**.
++---+
+| A |
++---+
+.
+<p>Some
+<strong>text</strong>.</p>
+<table>
+<col style="width:100%" />
+<tbody>
+<tr>
+<td>A</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````

@@ -386,5 +386,34 @@ namespace Markdig.Tests.Specs.GridTables
 
             TestParser.TestSpec("+", "<ul>\n<li></li>\n</ul>", "gridtables|advanced", context: "Example 11\nSection Extensions / Grid Table\n");
         }
+
+        // A table may begin right after a paragraph without an empty line in between:
+        [Test]
+        public void ExtensionsGridTable_Example012()
+        {
+            // Example 12
+            // Section: Extensions / Grid Table
+            //
+            // The following Markdown:
+            //     Some
+            //     **text**.
+            //     +---+
+            //     | A |
+            //     +---+
+            //
+            // Should be rendered as:
+            //     <p>Some
+            //     <strong>text</strong>.</p>
+            //     <table>
+            //     <col style="width:100%" />
+            //     <tbody>
+            //     <tr>
+            //     <td>A</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("Some\n**text**.\n+---+\n| A |\n+---+", "<p>Some\n<strong>text</strong>.</p>\n<table>\n<col style=\"width:100%\" />\n<tbody>\n<tr>\n<td>A</td>\n</tr>\n</tbody>\n</table>", "gridtables|advanced", context: "Example 12\nSection Extensions / Grid Table\n");
+        }
     }
 }

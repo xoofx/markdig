@@ -14,6 +14,7 @@ public sealed class TestPipeTable
     [TestCase("| S | \r\n|---|\r\n| G |\r\n\r\n| D | D |\r\n| ---| ---| \r\n| V | V |", 2)]
     [TestCase("a\r| S | T |\r|---|---|")]
     [TestCase("a\n| S | T |\r|---|---|")]
+    [TestCase("a\r\n| S | T |\r|---|---|")]
     public void TestTableBug(string markdown, int tableCount = 1)
     {
         MarkdownDocument document =
