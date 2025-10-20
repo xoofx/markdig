@@ -825,5 +825,38 @@ namespace Markdig.Tests.Specs.PipeTables
 
             TestParser.TestSpec("a | b\n-- | - \n0 | 1 | 2", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 25\nSection Extensions / Pipe Table\n");
         }
+
+        // A table may begin right after a paragraph without an empty line in between:
+        [Test]
+        public void ExtensionsPipeTable_Example026()
+        {
+            // Example 26
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     Some
+            //     **text**.
+            //     | A |
+            //     |---|
+            //     | B |
+            //
+            // Should be rendered as:
+            //     <p>Some
+            //     <strong>text</strong>.</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>A</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>B</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("Some\n**text**.\n| A |\n|---|\n| B |", "<p>Some\n<strong>text</strong>.</p>\n<table>\n<thead>\n<tr>\n<th>A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>B</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 26\nSection Extensions / Pipe Table\n");
+        }
     }
 }

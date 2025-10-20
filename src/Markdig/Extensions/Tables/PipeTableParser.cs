@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using System.Diagnostics;
-
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
@@ -48,7 +47,6 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         }
 
         var c = slice.CurrentChar;
-        var isNewLineFollowedByPipe = (c == '\n' || c == '\r') && slice.PeekChar() == '|';
 
         // If we have not a delimiter on the first line of a paragraph, don't bother to continue
         // tracking other delimiters on following lines
@@ -66,15 +64,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             // start for a table. Typically, with this, we can have an attributes {...}
             // starting on the first line of a pipe table, even if the first line
             // doesn't have a pipe
-            if (processor.Inline != null && (localLineIndex > 0 || c == '\n' || c == '\r') && !isNewLineFollowedByPipe)
+            if (processor.Inline != null && (c == '\n' || c == '\r'))
             {
                 return false;
             }
 
-            if (processor.Inline is null || isNewLineFollowedByPipe)
+            if (processor.Inline is null)
             {
                 isFirstLineEmpty = true;
             }
+
             // Else setup a table processor
             tableState = new TableState();
             processor.ParserStates[Index] = tableState;
@@ -88,7 +87,6 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             }
             tableState.LineHasPipe = false;
             lineBreakParser.Match(processor, ref slice);
-            tableState.LineIndex++;
             if (!isFirstLineEmpty)
             {
                 tableState.ColumnAndLineDelimiters.Add(processor.Inline!);
@@ -104,13 +102,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 Column = column,
                 LocalLineIndex = localLineIndex
             };
-            var deltaLine = localLineIndex - tableState.LineIndex;
-            if (deltaLine > 0)
-            {
-                tableState.IsInvalidTable = true;
-            }
+
             tableState.LineHasPipe = true;
-            tableState.LineIndex = localLineIndex;
             slice.SkipChar(); // Skip the `|` character
 
             tableState.ColumnAndLineDelimiters.Add(processor.Inline);
@@ -487,6 +480,21 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             table.NormalizeUsingMaxWidth();
         }
 
+        if (state.Block is ParagraphBlock { Inline.FirstChild: not null } leadingParagraph)
+        {
+            // The table was preceded by a non-empty paragraph, e.g.
+            // ```md
+            // Some text
+            // | Header |
+            // ```
+            //
+            // Since we're already processing inlines, it's hard to insert a completely a block into the AST at the same layer as the table.
+            // We'll instead preserve the paragraph by making it the first child of the table and special-casing that during rendering.
+            leadingParagraph.Parent = null;
+            state.PostProcessInlines(0, leadingParagraph.Inline, null, isFinalProcessing: true);
+            table.Insert(0, leadingParagraph);
+        }
+
         // We don't want to continue procesing delimiters, as we are already processing them here
         return false;
     }
@@ -681,8 +689,6 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         public bool IsInvalidTable { get; set; }
 
         public bool LineHasPipe { get; set; }
-
-        public int LineIndex { get; set; }
 
         public List<Inline> ColumnAndLineDelimiters { get; } = [];
 

@@ -613,3 +613,28 @@ a | b
 </tbody>
 </table>
 ````````````````````````````````
+
+A table may begin right after a paragraph without an empty line in between:
+
+```````````````````````````````` example
+Some
+**text**.
+| A |
+|---|
+| B |
+.
+<p>Some
+<strong>text</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
