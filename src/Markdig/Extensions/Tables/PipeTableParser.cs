@@ -221,7 +221,6 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             attributes.CopyTo(table.GetAttributes());
         }
 
-        state.BlockNew = table;
         var cells = tableState.Cells;
         cells.Clear();
 
@@ -488,11 +487,28 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             // | Header |
             // ```
             //
-            // Since we're already processing inlines, it's hard to insert a completely a block into the AST at the same layer as the table.
-            // We'll instead preserve the paragraph by making it the first child of the table and special-casing that during rendering.
-            leadingParagraph.Parent = null;
+            // Keep the paragraph as-is and insert the table after it.
+            // Since we've already processed all the inlines in this table block,
+            // we can't insert it while the parent is still being processed.
+            // Hook up a callback that inserts the table after we're done with ProcessInlines for the parent block.
+
+            // We've processed inlines in the table, but not the leading paragraph itself yet.
             state.PostProcessInlines(0, leadingParagraph.Inline, null, isFinalProcessing: true);
-            table.Insert(0, leadingParagraph);
+
+            ContainerBlock parent = leadingParagraph.Parent!;
+
+            ProcessInlineDelegate insertTableDelegate = null!;
+            insertTableDelegate = (processor, _) =>
+            {
+                parent.ProcessInlinesEnd -= insertTableDelegate;
+                parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
+            };
+            parent.ProcessInlinesEnd += insertTableDelegate;
+        }
+        else
+        {
+            // Nothing interesting in the existing block, just replace it.
+            state.BlockNew = table;
         }
 
         // We don't want to continue procesing delimiters, as we are already processing them here

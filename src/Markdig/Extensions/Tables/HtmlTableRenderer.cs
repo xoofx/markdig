@@ -2,12 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
-using System.Diagnostics;
 using System.Globalization;
 
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
-using Markdig.Syntax;
 
 namespace Markdig.Extensions.Tables;
 
@@ -19,12 +17,6 @@ public class HtmlTableRenderer : HtmlObjectRenderer<Table>
 {
     protected override void Write(HtmlRenderer renderer, Table table)
     {
-        // If the table started with a leading paragraph, that block will be stored as the first child.
-        if (table.Count > 0 && table[0] is not TableRow)
-        {
-            renderer.Write(table[0]);
-        }
-
         if (renderer.EnableHtmlForBlock)
         {
             renderer.EnsureLine();
@@ -55,14 +47,9 @@ public class HtmlTableRenderer : HtmlObjectRenderer<Table>
                 }
             }
 
-            foreach (Block rowObj in table)
+            foreach (var rowObj in table)
             {
-                if (rowObj is not TableRow row)
-                {
-                    Debug.Assert(ReferenceEquals(rowObj, table[0]));
-                    continue;
-                }
-
+                var row = (TableRow)rowObj;
                 if (row.IsHeader)
                 {
                     // Allow a single thead
@@ -164,14 +151,9 @@ public class HtmlTableRenderer : HtmlObjectRenderer<Table>
 
             //enable implicit paragraphs to avoid newlines after each cell
             renderer.ImplicitParagraph = true;
-            foreach (Block rowObj in table)
+            foreach (var rowObj in table)
             {
-                if (rowObj is not TableRow row)
-                {
-                    Debug.Assert(ReferenceEquals(rowObj, table[0]));
-                    continue;
-                }
-
+                var row = (TableRow)rowObj;
                 for (int i = 0; i < row.Count; i++)
                 {
                     var cellObj = row[i];
