@@ -858,5 +858,157 @@ namespace Markdig.Tests.Specs.PipeTables
 
             TestParser.TestSpec("Some\n**text**.\n| A |\n|---|\n| B |", "<p>Some\n<strong>text</strong>.</p>\n<table>\n<thead>\n<tr>\n<th>A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>B</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 26\nSection Extensions / Pipe Table\n");
         }
+
+        // Tables can be nested inside other blocks, like lists:
+        [Test]
+        public void ExtensionsPipeTable_Example027()
+        {
+            // Example 27
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     Bullet list
+            //     * Table 1
+            //     
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //     
+            //     * Table 2
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //     
+            //     * Table 3
+            //       Lorem ipsum ...
+            //       Lorem ipsum ...
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //     
+            //     
+            //     Ordered list
+            //     1. Table 1
+            //     
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //     
+            //     2. Table 2
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //     
+            //     3. Table 3
+            //        Lorem ipsum ...
+            //        Lorem ipsum ...
+            //         | Header 1       | Header 2       |
+            //         |----------------|----------------|
+            //         | Row 1 Column 1 | Row 1 Column 2 |
+            //
+            // Should be rendered as:
+            //     <p>Bullet list</p>
+            //     <ul>
+            //     <li><p>Table 1</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     <li><p>Table 2</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     <li><p>Table 3
+            //     Lorem ipsum ...
+            //     Lorem ipsum ...</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     </ul>
+            //     <p>Ordered list</p>
+            //     <ol>
+            //     <li><p>Table 1</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     <li><p>Table 2</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     <li><p>Table 3
+            //     Lorem ipsum ...
+            //     Lorem ipsum ...</p>
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Header 1</th>
+            //     <th>Header 2</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Row 1 Column 1</td>
+            //     <td>Row 1 Column 2</td>
+            //     </tr>
+            //     </tbody>
+            //     </table></li>
+            //     </ol>
+
+            TestParser.TestSpec("Bullet list\n* Table 1\n\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n* Table 2\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n* Table 3\n  Lorem ipsum ...\n  Lorem ipsum ...\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n\nOrdered list\n1. Table 1\n\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n2. Table 2\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n3. Table 3\n   Lorem ipsum ...\n   Lorem ipsum ...\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |", "<p>Bullet list</p>\n<ul>\n<li><p>Table 1</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 2</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 3\nLorem ipsum ...\nLorem ipsum ...</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n</ul>\n<p>Ordered list</p>\n<ol>\n<li><p>Table 1</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 2</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 3\nLorem ipsum ...\nLorem ipsum ...</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n</ol>", "pipetables|advanced", context: "Example 27\nSection Extensions / Pipe Table\n");
+        }
     }
 }
