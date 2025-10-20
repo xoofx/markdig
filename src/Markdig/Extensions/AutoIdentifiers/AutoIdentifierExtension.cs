@@ -101,7 +101,6 @@ public class AutoIdentifierExtension : IMarkdownExtension
     private void DocumentOnProcessInlinesBegin(InlineProcessor processor, Inline? inline)
     {
         var doc = processor.Document;
-        doc.ProcessInlinesBegin -= _processInlinesBegin;
         var dictionary = (Dictionary<string, HeadingLinkReferenceDefinition>)doc.GetData(this)!;
         foreach (var keyPair in dictionary)
         {

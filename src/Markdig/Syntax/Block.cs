@@ -92,12 +92,20 @@ public abstract class Block : MarkdownObject, IBlock
     /// <summary>
     /// Occurs when the process of inlines begin.
     /// </summary>
-    public event ProcessInlineDelegate? ProcessInlinesBegin;
+    public event ProcessInlineDelegate? ProcessInlinesBegin
+    {
+        add => Trivia.ProcessInlinesBegin += value;
+        remove => _trivia?.ProcessInlinesBegin -= value;
+    }
 
     /// <summary>
     /// Occurs when the process of inlines ends for this instance.
     /// </summary>
-    public event ProcessInlineDelegate? ProcessInlinesEnd;
+    public event ProcessInlineDelegate? ProcessInlinesEnd
+    {
+        add => Trivia.ProcessInlinesEnd += value;
+        remove => _trivia?.ProcessInlinesEnd -= value;
+    }
 
     /// <summary>
     /// Called when the process of inlines begin.
@@ -105,7 +113,13 @@ public abstract class Block : MarkdownObject, IBlock
     /// <param name="state">The inline parser state.</param>
     internal void OnProcessInlinesBegin(InlineProcessor state)
     {
-        ProcessInlinesBegin?.Invoke(state, null);
+        if (_trivia is BlockTriviaProperties trivia)
+        {
+            trivia.ProcessInlinesBegin?.Invoke(state, null);
+
+            // Not exactly standard 'event' behavior, but these aren't expected to be called more than once.
+            _trivia.ProcessInlinesBegin = null;
+        }
     }
 
     /// <summary>
@@ -114,7 +128,13 @@ public abstract class Block : MarkdownObject, IBlock
     /// <param name="state">The inline parser state.</param>
     internal void OnProcessInlinesEnd(InlineProcessor state)
     {
-        ProcessInlinesEnd?.Invoke(state, null);
+        if (_trivia is BlockTriviaProperties trivia)
+        {
+            trivia.ProcessInlinesEnd?.Invoke(state, null);
+
+            // Not exactly standard 'event' behavior, but these aren't expected to be called more than once.
+            _trivia.ProcessInlinesEnd = null;
+        }
     }
 
     public void UpdateSpanEnd(int spanEnd)
@@ -155,6 +175,11 @@ public abstract class Block : MarkdownObject, IBlock
     {
         // Used by derived types to store their own TriviaProperties
         public object? DerivedTriviaSlot;
+
+        // These callbacks are set on a tiny subset of blocks (usually only the main MarkdownDocument),
+        // so we store them in a lazily-allocated container to save memory for the majority of blocks.
+        public ProcessInlineDelegate? ProcessInlinesBegin;
+        public ProcessInlineDelegate? ProcessInlinesEnd;
 
         public StringSlice TriviaBefore;
         public StringSlice TriviaAfter;

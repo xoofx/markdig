@@ -73,8 +73,6 @@ public class AbbreviationParser : BlockParser
 
     private void DocumentOnProcessInlinesBegin(InlineProcessor inlineProcessor, Inline? inline)
     {
-        inlineProcessor.Document.ProcessInlinesBegin -= DocumentOnProcessInlinesBegin;
-
         var abbreviations = inlineProcessor.Document.GetAbbreviations();
         // Should not happen, but another extension could decide to remove them, so...
         if (abbreviations is null)
