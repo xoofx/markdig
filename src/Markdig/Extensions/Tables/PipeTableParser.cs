@@ -497,13 +497,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
             ContainerBlock parent = leadingParagraph.Parent!;
 
-            ProcessInlineDelegate insertTableDelegate = null!;
-            insertTableDelegate = (processor, _) =>
+            parent.ProcessInlinesEnd += (_, _) =>
             {
-                parent.ProcessInlinesEnd -= insertTableDelegate;
                 parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
             };
-            parent.ProcessInlinesEnd += insertTableDelegate;
         }
         else
         {

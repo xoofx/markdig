@@ -134,9 +134,6 @@ public class FootnoteParser : BlockParser
     /// <param name="inline">The inline.</param>
     private void Document_ProcessInlinesEnd(InlineProcessor state, Inline? inline)
     {
-        // Unregister
-        state.Document.ProcessInlinesEnd -= Document_ProcessInlinesEnd;
-
         var footnotes = (FootnoteGroup)state.Document.GetData(DocumentKey)!;
         // Remove the footnotes from the document and readd them at the end
         state.Document.Remove(footnotes);

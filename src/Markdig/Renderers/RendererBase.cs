@@ -85,12 +85,12 @@ public abstract class RendererBase : IMarkdownRenderer
     public bool IsLastInContainer { get; private set; }
 
     /// <summary>
-    /// Occurs when before writing an object.
+    /// Occurs before writing an object.
     /// </summary>
     public event Action<IMarkdownRenderer, MarkdownObject>? ObjectWriteBefore;
 
     /// <summary>
-    /// Occurs when after writing an object.
+    /// Occurs after writing an object.
     /// </summary>
     public event Action<IMarkdownRenderer, MarkdownObject>? ObjectWriteAfter;
 

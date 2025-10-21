@@ -204,8 +204,6 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
 
     private void BlockOnProcessInlinesEnd(InlineProcessor processor, Inline? inline)
     {
-        processor.Block!.ProcessInlinesEnd -= BlockOnProcessInlinesEnd;
-
         var pants = (ListSmartyPants) processor.ParserStates[Index];
 
         var openers = new Stack<Opener>(4);
