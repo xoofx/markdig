@@ -638,3 +638,147 @@ Some
 </tbody>
 </table>
 ````````````````````````````````
+
+Tables can be nested inside other blocks, like lists:
+
+```````````````````````````````` example
+Bullet list
+* Table 1
+
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+
+* Table 2
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+
+* Table 3
+  Lorem ipsum ...
+  Lorem ipsum ...
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+
+
+Ordered list
+1. Table 1
+
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+
+2. Table 2
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+
+3. Table 3
+   Lorem ipsum ...
+   Lorem ipsum ...
+    | Header 1       | Header 2       |
+    |----------------|----------------|
+    | Row 1 Column 1 | Row 1 Column 2 |
+.
+<p>Bullet list</p>
+<ul>
+<li><p>Table 1</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Table 2</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Table 3
+Lorem ipsum ...
+Lorem ipsum ...</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<p>Ordered list</p>
+<ol>
+<li><p>Table 1</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Table 2</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Table 3
+Lorem ipsum ...
+Lorem ipsum ...</p>
+<table>
+<thead>
+<tr>
+<th>Header 1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row 1 Column 1</td>
+<td>Row 1 Column 2</td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+````````````````````````````````
