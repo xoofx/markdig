@@ -1,11 +1,12 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Markdig.Helpers;
 
@@ -69,10 +70,10 @@ public static class CharHelper
     private static readonly SearchValues<char> s_escapableSymbolChars = SearchValues.Create("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~•");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsPunctuationException(char c) =>
-        c is '−' or '-' or '†' or '‡';
+    private static bool IsPunctuationException(Rune c) =>
+        c.IsBmp && (char)c.Value is '−' or '-' or '†' or '‡';
 
-    public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
+    public static void CheckOpenCloseDelimiter(Rune pc, Rune c, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
@@ -100,13 +101,13 @@ public static class CharHelper
         if (!enableWithinWord)
         {
             var temp = canOpen;
-            // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either 
-            // (a) not part of a right-flanking delimiter run or 
+            // A single _ character can open emphasis iff it is part of a left-flanking delimiter run and either
+            // (a) not part of a right-flanking delimiter run or
             // (b) part of a right-flanking delimiter run preceded by punctuation.
             canOpen = canOpen && (!canClose || prevIsPunctuation);
 
             // A single _ character can close emphasis iff it is part of a right-flanking delimiter run and either
-            // (a) not part of a left-flanking delimiter run or 
+            // (a) not part of a left-flanking delimiter run or
             // (b) part of a left-flanking delimiter run followed by punctuation.
             canClose = canClose && (!temp || nextIsPunctuation);
         }
@@ -200,6 +201,9 @@ public static class CharHelper
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsWhitespace(this Rune r) => r.IsBmp && IsWhitespace((char)r.Value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhiteSpaceOrZero(this char c)
     {
         if (c < '\u00A0')
@@ -263,6 +267,52 @@ public static class CharHelper
         }
     }
 
+#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER)
+    private static Lazy<Func<int, UnicodeCategory>?> GetUnicodeCategoryReflection =
+        new(() => (Func<int, UnicodeCategory>?)typeof(char).GetMethod("GetUnicodeCategory", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.CreateDelegate(
+                    typeof(Func<int, UnicodeCategory>)));
+#endif
+
+    // Check if a char is a space or a punctuation
+    public static void CheckUnicodeCategory(this Rune c, out bool space, out bool punctuation)
+    {
+        if (IsWhitespace(c))
+        {
+            space = true;
+            punctuation = false;
+        }
+        else if (c.Value <= 127)
+        {
+            space = c.Value == 0;
+            punctuation = c.IsBmp && IsAsciiPunctuationOrZero((char)c.Value);
+        }
+        else
+        {
+            space = false;
+            punctuation = (CommonMarkPunctuationCategoryMask & (1 <<
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                (int)CharUnicodeInfo.GetUnicodeCategory(c.Value)
+#else
+                (int)GetUnicodeCategoryFallback(c)
+#endif
+                )) != 0;
+        }
+
+#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER)
+        static UnicodeCategory GetUnicodeCategoryFallback(Rune c)
+        {
+            if (c.IsBmp) return CharUnicodeInfo.GetUnicodeCategory((char)c.Value);
+
+            if (GetUnicodeCategoryReflection.Value is Func<int, UnicodeCategory> GetUnicodeCategory)
+            {
+                return GetUnicodeCategory(c.Value);
+            }
+
+            return CharUnicodeInfo.GetUnicodeCategory(c.ToString(), 0);
+        }
+#endif
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool IsSpaceOrPunctuationForGFMAutoLink(char c)
     {
@@ -309,7 +359,7 @@ public static class CharHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSpace(this char c)
     {
-        // 2.1 Characters and lines 
+        // 2.1 Characters and lines
         // A space is U+0020.
         return c == ' ';
     }
@@ -317,7 +367,7 @@ public static class CharHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTab(this char c)
     {
-        // 2.1 Characters and lines 
+        // 2.1 Characters and lines
         // A space is U+0009.
         return c == '\t';
     }

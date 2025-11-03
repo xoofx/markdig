@@ -31,4 +31,14 @@ public class TestSmartyPants
 
         TestParser.TestSpec("<<test>>", "<p>&laquo;test&raquo;</p>", pipeline);
     }
+
+    [Test]
+    public void RecognizesSupplementaryCharacters()
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseSmartyPants()
+            .Build();
+
+        TestParser.TestSpec("\"𝜵\"𠮷\"𝜵\"𩸽\"", "<p>&ldquo;𝜵&ldquo;𠮷&rdquo;𝜵&ldquo;𩸽&rdquo;</p>", pipeline);
+    }
 }

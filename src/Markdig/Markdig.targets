@@ -28,6 +28,10 @@
     <PackageReference Include="System.Memory" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Shim.System.Text.Rune" Version="6.0.2" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="../../img/markdig.png" Pack="true" PackagePath="" />
     <None Include="../../readme.md" Pack="true" PackagePath="/"/>

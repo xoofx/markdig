@@ -4,7 +4,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
+using System.Text;
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -150,18 +150,19 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         var delimiterChar = slice.CurrentChar;
         var emphasisDesc = emphasisMap![delimiterChar]!;
 
-        char pc = (char)0;
+        Rune pc = (Rune)0;
         if (processor.Inline is HtmlEntityInline htmlEntityInline)
         {
             if (htmlEntityInline.Transcoded.Length > 0)
             {
-                pc = htmlEntityInline.Transcoded[htmlEntityInline.Transcoded.End];
+                pc = htmlEntityInline.Transcoded.RuneAt(htmlEntityInline.Transcoded.End);
             }
         }
-        if (pc == 0)
+        if (pc.Value == 0)
         {
-            pc = slice.PeekCharExtra(-1);
-            if (pc == delimiterChar && slice.PeekCharExtra(-2) != '\\')
+            pc = slice.PeekRuneExtra(-1);
+            // delimiterChar is BMP, so slice.PeekCharExtra(-2) is (a part of) the character two positions back.
+            if (pc == (Rune)delimiterChar && slice.PeekCharExtra(-2) != '\\')
             {
                 // If we get here, we determined that either:
                 // a) there weren't enough delimiters in the delimiter run to satisfy the MinimumCount condition
@@ -179,12 +180,12 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
             return false;
         }
 
-        char c = slice.CurrentChar;
+        Rune c = slice.CurrentRune;
 
         // The following character is actually an entity, we need to decode it
         if (HtmlEntityParser.TryParse(ref slice, out string? htmlString, out int htmlLength))
         {
-            c = htmlString[0];
+            Rune.DecodeFromUtf16(htmlString, out c, out _);
         }
 
         // Calculate Open-Close for current character

@@ -36,7 +36,7 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         // -- 	– 	&ndash; 	'ndash'
         // --- 	— 	&mdash; 	'mdash'
 
-        var pc = slice.PeekCharExtra(-1);
+        var pc = slice.PeekRuneExtra(-1);
         var c = slice.CurrentChar;
         var openingChar = c;
 
@@ -93,9 +93,9 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         }
 
         // Skip char
-        c = slice.NextChar();
+        var next = slice.NextRune();
 
-        CharHelper.CheckOpenCloseDelimiter(pc, c, false, out bool canOpen, out bool canClose);
+        CharHelper.CheckOpenCloseDelimiter(pc, next, false, out bool canOpen, out bool canClose);
 
         bool postProcess = false;
 

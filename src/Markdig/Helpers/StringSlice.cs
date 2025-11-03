@@ -1,11 +1,12 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 #nullable disable
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Markdig.Helpers;
 
@@ -114,7 +115,7 @@ public struct StringSlice : ICharIterator
     public NewLine NewLine;
 
     /// <summary>
-    /// Gets the current character.
+    /// Gets the current character .
     /// </summary>
     public readonly char CurrentChar
     {
@@ -122,6 +123,31 @@ public struct StringSlice : ICharIterator
         {
             int start = Start;
             return start <= End ? Text[start] : '\0';
+        }
+    }
+
+    /// <summary>
+    /// Gets the current rune (Unicode scalar value). Recognizes supplementary code points that cannot be covered by a single character.
+    /// </summary>
+    public readonly Rune CurrentRune
+    {
+        get
+        {
+            int start = Start;
+            if (start > End) return default;
+            var first = Text[start];
+            if (!char.IsSurrogate(first)) return new Rune(first);
+            if (char.IsHighSurrogate(first))
+            {
+                if (start + 1 > End) return default;
+                var second = Text[start + 1];
+                if (!char.IsLowSurrogate(second)) return default;
+                return new Rune(first, second);
+            }
+            if (start < 1) return default;
+            var trueFirst = Text[start - 1];
+            if (!char.IsHighSurrogate(trueFirst)) return default;
+            return new Rune(trueFirst, first);
         }
     }
 
@@ -145,6 +171,35 @@ public struct StringSlice : ICharIterator
         get => Text[index];
     }
 
+    /// <summary>
+    /// Gets the Unicode scalar value (rune) at the specified index relative to the slice.
+    /// Recognizes supplementary code points that cannot be covered by a single character.
+    /// </summary>
+    /// <param name="index">The index relative to the slice.</param>
+    /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the index is out of range or the rune cannot be determined.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Rune RuneAt(int index)
+    {
+        var first = Text[index];
+        if (!char.IsSurrogate(first))
+            return new Rune(first);
+        if (char.IsHighSurrogate(first) && index + 1 <= End)
+        {
+            var second = Text[index + 1];
+            if (char.IsLowSurrogate(second))
+                return new Rune(first, second);
+            return default;
+        }
+        else if (index >= Start + 1)
+        {
+            var trueFirst = Text[index - 1];
+            if (char.IsHighSurrogate(trueFirst))
+                return new Rune(trueFirst, first);
+            return default;
+        }
+        return default;
+    }
+
 
     /// <summary>
     /// Goes to the next character, incrementing the <see cref="Start" /> position.
@@ -164,6 +219,36 @@ public struct StringSlice : ICharIterator
         start++;
         Start = start;
         return Text[start];
+    }
+
+    /// <summary>
+    /// Goes to the next rune, incrementing the <see cref="Start"/> position.
+    /// </summary>
+    /// <returns>
+    /// The next rune. If none, returns default.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Rune NextRune()
+    {
+        int start = Start;
+        if (start >= End)
+        {
+            Start = End + 1;
+            return default;
+        }
+        start++;
+        Start = start;
+        var first = Text[start];
+        if (!char.IsSurrogate(first))
+            return new Rune(first);
+        if (!char.IsHighSurrogate(first) || start + 1 > End)
+            return default;
+        var second = Text[start + 1];
+        if (!char.IsLowSurrogate(second))
+            return default;
+        start++;
+        Start = start;
+        return new Rune(first, second);
     }
 
     /// <summary>
@@ -242,6 +327,53 @@ public struct StringSlice : ICharIterator
         var index = Start + offset;
         var text = Text;
         return (uint)index < (uint)text.Length ? text[index] : '\0';
+    }
+
+    /// <summary>
+    /// Peeks a rune at the specified offset from the current beginning of the slice
+    /// without using the range <see cref="Start"/> or <see cref="End"/>, returns default if outside the <see cref="Text"/>.
+    /// Recognizes supplementary code points that cannot be covered by a single character.
+    /// </summary>
+    /// <param name="offset">The offset.</param>
+    /// <returns>The rune at the specified offset, returns default if none.</returns>
+///
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Rune PeekRuneExtra(int offset)
+    {
+        var index = Start + offset;
+        var text = Text;
+        if ((uint)index >= (uint)text.Length)
+        {
+            return default;
+        }
+        var resultOrLowSurrogate = text[index];
+        if (!char.IsSurrogate(resultOrLowSurrogate))
+        {
+            return new Rune(resultOrLowSurrogate);
+        }
+        if (!char.IsHighSurrogate(resultOrLowSurrogate))
+        {
+            if (index + 1 >= text.Length)
+            {
+                return default;
+            }
+            var lowSurrogate = text[index + 1];
+            if (!char.IsLowSurrogate(lowSurrogate))
+            {
+                return default;
+            }
+            return new Rune(resultOrLowSurrogate, lowSurrogate);
+        }
+        if (index <= 1)
+        {
+            return default;
+        }
+        var highSurrogate = text[index - 1];
+        if (!char.IsHighSurrogate(highSurrogate))
+        {
+            return default;
+        }
+        return new Rune(highSurrogate, resultOrLowSurrogate);
     }
 
     /// <summary>
