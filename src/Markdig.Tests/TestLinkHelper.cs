@@ -343,6 +343,75 @@ public class TestLinkHelper
         Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
     }
 
+    // Tests for NormalizeScandinavianOrGermanChar method mappings
+    // These special characters are always normalized (both allowOnlyAscii=true and false)
+    // 
+    // Note: When allowOnlyAscii=true, NFD (Canonical Decomposition) is applied first:
+    // - German umlauts ä,ö,ü decompose to base letter + combining mark (ü -> u + ¨)
+    //   The combining mark is then stripped, leaving just the base letter (ü -> u)
+    // - å decomposes similarly (å -> a + ˚ -> a)
+    // - But ø, æ, ß, þ, ð do NOT decompose, so they use NormalizeScandinavianOrGermanChar
+    //
+    // When allowOnlyAscii=false, NormalizeScandinavianOrGermanChar is used for ALL special chars
+    
+    // German ß (Eszett/sharp s) - does NOT decompose with NFD
+    [TestCase("Straße", "strasse")]    // ß -> ss (both allowOnlyAscii=true and false)
+    
+    // Scandinavian æ, ø - do NOT decompose with NFD
+    [TestCase("æble", "aeble")]        // æ -> ae (both modes)
+    [TestCase("Ærø", "aeroe")]         // Æ -> Ae, ø -> oe (both modes, then lowercase)
+    [TestCase("København", "koebenhavn")] // ø -> oe (both modes)
+    [TestCase("Øresund", "oeresund")]  // Ø -> Oe (both modes, then lowercase)
+    
+    // Icelandic þ, ð - do NOT decompose with NFD
+    [TestCase("þing", "thing")]        // þ (thorn) -> th (both modes)
+    [TestCase("bað", "bad")]           // ð (eth) -> d (both modes)
+    
+    // Mixed special characters (only chars that behave same in both modes)
+    [TestCase("øst-æble", "oest-aeble")] // ø->oe, æ->ae (both modes)
+    public void TestUrilizeScandinavianGermanChars(string input, string expectedResult)
+    {
+        // These transformations apply regardless of allowOnlyAscii flag
+        Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+        Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+    }
+    
+    // Tests specific to allowOnlyAscii=true behavior
+    // German umlauts (ä, ö, ü) and å decompose with NFD, so they become base letter only
+    [TestCase("schön", "schon")]       // ö decomposes to o (NFD strips combining mark)
+    [TestCase("Mädchen", "madchen")]   // ä decomposes to a
+    [TestCase("Übung", "ubung")]       // Ü decomposes to U (then lowercase to u)
+    [TestCase("Düsseldorf", "dusseldorf")] // ü decomposes to u
+    [TestCase("Käse", "kase")]         // ä decomposes to a
+    [TestCase("gå", "ga")]             // å decomposes to a
+    [TestCase("Ålesund", "alesund")]   // Å decomposes to A (then lowercase)
+    [TestCase("grüßen", "grussen")]    // ü decomposes to u, ß -> ss
+    [TestCase("Þór", "thor")]          // Þ -> Th, ó decomposes to o (then lowercase)
+    [TestCase("Íslandsbanki", "islandsbanki")] // Í decomposes to I (then lowercase)
+    public void TestUrilizeOnlyAscii_GermanUmlautsDecompose(string input, string expectedResult)
+    {
+        // With allowOnlyAscii=true, these characters decompose via NFD and lose their diacritics
+        Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
+    }
+    
+    // Tests specific to allowOnlyAscii=false behavior
+    // All special chars use NormalizeScandinavianOrGermanChar (including ä, ö, ü, å)
+    [TestCase("schön", "schoen")]      // ö -> oe (NormalizeScandinavianOrGermanChar)
+    [TestCase("Mädchen", "maedchen")]  // ä -> ae
+    [TestCase("Übung", "uebung")]      // Ü -> Ue (then lowercase)
+    [TestCase("Düsseldorf", "duesseldorf")] // ü -> ue
+    [TestCase("Käse", "kaese")]        // ä -> ae
+    [TestCase("gå", "gaa")]            // å -> aa
+    [TestCase("Ålesund", "aalesund")]  // Å -> Aa (then lowercase)
+    [TestCase("grüßen", "gruessen")]   // ü -> ue, ß -> ss
+    [TestCase("Þór", "thór")]          // Þ -> Th (then lowercase 'th'), ó is kept as-is
+    [TestCase("Íslandsbanki", "íslandsbanki")] // í is kept as-is when allowOnlyAscii=false
+    public void TestUrilizeNonAscii_GermanUmlautsExpanded(string input, string expectedResult)
+    {
+        // With allowOnlyAscii=false, these characters use NormalizeScandinavianOrGermanChar
+        Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
+    }
+    
     [TestCase("123", "")]
     [TestCase("1,-b", "b")]
     [TestCase("b1,-", "b1")] // Not Pandoc equivalent: b1-
@@ -360,11 +429,11 @@ public class TestLinkHelper
         Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
     }
 
-    [TestCase("bær", "bær")]
-    [TestCase("æ5el", "æ5el")]
-    [TestCase("-æ5el", "æ5el")]
-    [TestCase("-frø-", "frø")]
-    [TestCase("-fr-ø", "fr-ø")]
+    [TestCase("bær", "baer")]
+    [TestCase("æ5el", "ae5el")]
+    [TestCase("-æ5el", "ae5el")]
+    [TestCase("-frø-", "froe")]
+    [TestCase("-fr-ø", "fr-oe")]
     public void TestUrilizeNonAscii_Simple(string input, string expectedResult)
     {
         Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, false));
