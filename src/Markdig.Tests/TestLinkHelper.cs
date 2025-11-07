@@ -327,8 +327,8 @@ public class TestLinkHelper
         Assert.AreEqual(expectedResult, LinkHelper.Urilize(input, true));
     }
 
-    [TestCase("bær", "br")]
-    [TestCase("bør", "br")]
+    [TestCase("bær", "baer")]
+    [TestCase("bør", "boer")]
     [TestCase("bΘr", "br")]
     [TestCase("四五", "")]
     public void TestUrilizeOnlyAscii_NonAscii(string input, string expectedResult)
