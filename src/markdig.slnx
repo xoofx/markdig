@@ -7,6 +7,7 @@
     <File Path="../changelog.md" />
     <File Path="../license.txt" />
     <File Path="../readme.md" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
   </Folder>
   <Project Path="Markdig.Benchmarks/Markdig.Benchmarks.csproj">
