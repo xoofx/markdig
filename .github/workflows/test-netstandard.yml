@@ -1,0 +1,40 @@
+name: Test netstandard
+
+on: pull_request
+
+jobs:
+  test-netstandard:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        netstandard-version: ['netstandard2.0', 'netstandard2.1']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+
+    - name: Patch build to test ${{ matrix.netstandard-version }}
+      run: |
+        sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFrameworks>${{ matrix.netstandard-version }}<\/TargetFrameworks>/' src/Markdig/Markdig.targets
+        echo "Markdig.targets TFM:"
+        grep "TargetFrameworks" src/Markdig/Markdig.targets
+
+    - name: Restore dependencies
+      run: dotnet restore src/Markdig.Tests/Markdig.Tests.csproj
+
+    - name: Test Debug
+      run: |
+        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Debug --no-restore
+        dotnet test src/Markdig.Tests/Markdig.Tests.csproj -c Debug --no-build
+
+    - name: Test Release
+      run: |
+        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Release --no-restore
+        dotnet test src/Markdig.Tests/Markdig.Tests.csproj -c Release --no-build
