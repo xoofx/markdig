@@ -40,10 +40,7 @@ public class LinkReferenceDefinitionGroup : ContainerBlock
         if (!Contains(link))
         {
             Add(link);
-            if (!Links.ContainsKey(label))
-            {
-                Links[label] = link;
-            }
+            Links.TryAdd(label, link);
         }
     }
 

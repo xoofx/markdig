@@ -51,10 +51,7 @@ public sealed class CharacterMap<T> where T : class
             {
                 nonAsciiMap ??= [];
 
-                if (!nonAsciiMap.ContainsKey(openingChar))
-                {
-                    nonAsciiMap[openingChar] = state.Value;
-                }
+                nonAsciiMap.TryAdd(openingChar, state.Value);
             }
         }
 
