@@ -60,12 +60,12 @@ public static class LinkHelper
             }
             else
             {
-                normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
+                normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : ReadOnlySpan<char>.Empty;
             }
 
             for (int j = 0; j < (normalized.Length < 1 ? 1 : normalized.Length); j++)
             {
-                if (normalized != null)
+                if (!normalized.IsEmpty)
                 {
                     c = normalized[j];
                 }
