@@ -38,8 +38,10 @@ public abstract class ParserList<T, TState> : OrderedList<T> where T : notnull, 
             {
                 foreach (var openingChar in parser.OpeningCharacters)
                 {
-                    charCounter.TryAdd(openingChar, 0);
-                    charCounter[openingChar]++;
+                    if (!charCounter.TryAdd(openingChar, 1))
+                    {
+                        charCounter[openingChar]++;
+                    }
                 }
             }
             else
