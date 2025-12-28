@@ -73,7 +73,7 @@ public static class CharHelper
     private static bool IsPunctuationException(Rune c) =>
         c.IsBmp && (char)c.Value is '−' or '-' or '†' or '‡';
 
-    public static void CheckOpenCloseDelimiter(Rune pc, Rune c, bool enableWithinWord, out bool canOpen, out bool canClose)
+    internal static void CheckOpenCloseDelimiter(Rune pc, Rune c, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
@@ -181,6 +181,11 @@ public static class CharHelper
         return (column & (TabSize - 1)) != 0;
     }
 
+    /// <summary>
+    /// <see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
+    /// </summary>
+    /// <param name="c">The character or surrogate code unit to evaluate.</param>
+    /// <returns><see langword="true"/> if the character is an Unicode whitespace character</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhitespace(this char c)
     {
@@ -201,7 +206,7 @@ public static class CharHelper
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsWhitespace(this Rune r) => r.IsBmp && IsWhitespace((char)r.Value);
+    internal static bool IsWhitespace(this Rune r) => r.IsBmp && IsWhitespace((char)r.Value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhiteSpaceOrZero(this char c)
@@ -247,7 +252,13 @@ public static class CharHelper
         return s_escapableSymbolChars.Contains(c);
     }
 
-    // Check if a char is a space or a punctuation
+    /// <summary>
+    /// Checks the Unicode category of the given character and determines whether it is a whitespace or punctuation character.
+    /// </summary>
+    /// <param name="c">The character to check.</param>
+    /// <param name="space">Output parameter indicating whether the character is a whitespace character.</param>
+    /// <param name="punctuation">Output parameter indicating whether the character is a punctuation character.</param>
+
     public static void CheckUnicodeCategory(this char c, out bool space, out bool punctuation)
     {
         if (IsWhitespace(c))
@@ -267,14 +278,13 @@ public static class CharHelper
         }
     }
 
-#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER)
-    private static Lazy<Func<int, UnicodeCategory>?> GetUnicodeCategoryReflection =
-        new(() => (Func<int, UnicodeCategory>?)typeof(char).GetMethod("GetUnicodeCategory", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.CreateDelegate(
-                    typeof(Func<int, UnicodeCategory>)));
-#endif
-
-    // Check if a char is a space or a punctuation
-    public static void CheckUnicodeCategory(this Rune c, out bool space, out bool punctuation)
+    /// <summary>
+    /// Check if a character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace</see> or <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">punctuation character</see>.
+    /// </summary>
+    /// <param name="c">The character to evaluate. A supplementary character is also accepted.</param>
+    /// <param name="space"><see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see></param>
+    /// <param name="punctuation"><see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">Unicode punctuation character</see></param>
+    internal static void CheckUnicodeCategory(this Rune c, out bool space, out bool punctuation)
     {
         if (IsWhitespace(c))
         {
@@ -302,11 +312,6 @@ public static class CharHelper
         static UnicodeCategory GetUnicodeCategoryFallback(Rune c)
         {
             if (c.IsBmp) return CharUnicodeInfo.GetUnicodeCategory((char)c.Value);
-
-            if (GetUnicodeCategoryReflection.Value is Func<int, UnicodeCategory> GetUnicodeCategory)
-            {
-                return GetUnicodeCategory(c.Value);
-            }
 
             return CharUnicodeInfo.GetUnicodeCategory(c.ToString(), 0);
         }
@@ -356,6 +361,11 @@ public static class CharHelper
         return c == '\0';
     }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#space">space</see> (U+0020).
+    /// </summary>
+    /// <param name="c">The character or surrogate code unit to evaluate</param>
+    /// <returns><see langword="true"/> if the character is a space</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSpace(this char c)
     {
@@ -364,6 +374,11 @@ public static class CharHelper
         return c == ' ';
     }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#tab">tab</see> (U+0009).
+    /// </summary>
+    /// <param name="c">The character or surrogate code unit to evaluate</param>
+    /// <returns><see langword="true"/> if the character is a tab</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTab(this char c)
     {
@@ -372,6 +387,11 @@ public static class CharHelper
         return c == '\t';
     }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#space">space</see> (U+0020) or <see href="https://spec.commonmark.org/0.31.2/#tab">tab</see> (U+0009).
+    /// </summary>
+    /// <param name="c">The character or surrogate code unit to evaluate.</param>
+    /// <returns><see langword="true"/> if the character is a space or tab</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSpaceOrTab(this char c)
     {

@@ -129,7 +129,7 @@ public struct StringSlice : ICharIterator
     /// <summary>
     /// Gets the current rune (Unicode scalar value). Recognizes supplementary code points that cannot be covered by a single character.
     /// </summary>
-    public readonly Rune CurrentRune
+    internal readonly Rune CurrentRune
     {
         get
         {
@@ -178,7 +178,7 @@ public struct StringSlice : ICharIterator
     /// <param name="index">The index relative to the slice.</param>
     /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the index is out of range or the rune cannot be determined.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Rune RuneAt(int index)
+    internal Rune RuneAt(int index)
     {
         var first = Text[index];
         if (!char.IsSurrogate(first))
@@ -228,7 +228,7 @@ public struct StringSlice : ICharIterator
     /// The next rune. If none, returns default.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Rune NextRune()
+    internal Rune NextRune()
     {
         int start = Start;
         if (start >= End)
@@ -338,7 +338,7 @@ public struct StringSlice : ICharIterator
     /// <returns>The rune at the specified offset, returns default if none.</returns>
 ///
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Rune PeekRuneExtra(int offset)
+    internal readonly Rune PeekRuneExtra(int offset)
     {
         var index = Start + offset;
         var text = Text;
