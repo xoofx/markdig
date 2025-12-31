@@ -115,7 +115,7 @@ public struct StringSlice : ICharIterator
     public NewLine NewLine;
 
     /// <summary>
-    /// Gets the current character .
+    /// Gets the current character.
     /// </summary>
     public readonly char CurrentChar
     {
