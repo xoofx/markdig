@@ -39,6 +39,6 @@ public class TestSmartyPants
             .UseSmartyPants()
             .Build();
 
-        TestParser.TestSpec("\"𝜵\"𠮷\"𝜵\"𩸽\"", "<p>&ldquo;𝜵&ldquo;𠮷&rdquo;𝜵&ldquo;𩸽&rdquo;</p>", pipeline);
+        TestParser.TestSpec("\"𝜵\"𠮷\"𝜵\"𩸽\"", "<p>&quot;𝜵&ldquo;𠮷&rdquo;𝜵&ldquo;𩸽&rdquo;</p>", pipeline);
     }
 }

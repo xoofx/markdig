@@ -144,10 +144,7 @@ public struct StringSlice : ICharIterator
                 if (!char.IsLowSurrogate(second)) return default;
                 return new Rune(first, second);
             }
-            if (start < 1) return default;
-            var trueFirst = Text[start - 1];
-            if (!char.IsHighSurrogate(trueFirst)) return default;
-            return new Rune(trueFirst, first);
+            return default;
         }
     }
 
@@ -190,13 +187,6 @@ public struct StringSlice : ICharIterator
                 return new Rune(first, second);
             return default;
         }
-        else if (index >= Start + 1)
-        {
-            var trueFirst = Text[index - 1];
-            if (char.IsHighSurrogate(trueFirst))
-                return new Rune(trueFirst, first);
-            return default;
-        }
         return default;
     }
 
@@ -236,7 +226,15 @@ public struct StringSlice : ICharIterator
             Start = End + 1;
             return default;
         }
-        start++;
+        var currentBmpOrHighSurrogate = Text[start++];
+        if (char.IsHighSurrogate(currentBmpOrHighSurrogate))
+        {
+            var currentLowSurrogate = Text[start++];
+            if (!char.IsLowSurrogate(currentLowSurrogate))
+            {
+                start--;
+            }
+        }
         Start = start;
         var first = Text[start];
         if (!char.IsSurrogate(first))
@@ -246,8 +244,6 @@ public struct StringSlice : ICharIterator
         var second = Text[start + 1];
         if (!char.IsLowSurrogate(second))
             return default;
-        start++;
-        Start = start;
         return new Rune(first, second);
     }
 
@@ -336,7 +332,6 @@ public struct StringSlice : ICharIterator
     /// </summary>
     /// <param name="offset">The offset.</param>
     /// <returns>The rune at the specified offset, returns default if none.</returns>
-///
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal readonly Rune PeekRuneExtra(int offset)
     {
@@ -346,34 +341,46 @@ public struct StringSlice : ICharIterator
         {
             return default;
         }
-        var resultOrLowSurrogate = text[index];
-        if (!char.IsSurrogate(resultOrLowSurrogate))
+        var bmpResultOrNearerSurrogate = text[index];
+        if (!char.IsSurrogate(bmpResultOrNearerSurrogate))
         {
-            return new Rune(resultOrLowSurrogate);
+            // BMP character
+            return new Rune(bmpResultOrNearerSurrogate);
         }
-        if (!char.IsHighSurrogate(resultOrLowSurrogate))
+        if (offset < 0)
         {
-            if (index + 1 >= text.Length)
+            // The code unit at `index` should be a low surrogate
+            // The scalar value (rune) of a supplementary character should start at `index - 1`, which should be a high surrogate
+            if (!char.IsLowSurrogate(bmpResultOrNearerSurrogate))
             {
                 return default;
             }
-            var lowSurrogate = text[index + 1];
-            if (!char.IsLowSurrogate(lowSurrogate))
+            if (index < 1)
             {
                 return default;
             }
-            return new Rune(resultOrLowSurrogate, lowSurrogate);
+            var highSurrogate = text[index - 1];
+            if (!char.IsHighSurrogate(highSurrogate))
+            {
+                return default;
+            }
+            return new Rune(highSurrogate, bmpResultOrNearerSurrogate);
         }
-        if (index <= 1)
+        // The code unit at `index` should be a high surrogate and the start of a scalar value (rune) of a supplementary character
+        if (!char.IsHighSurrogate(bmpResultOrNearerSurrogate))
         {
             return default;
         }
-        var highSurrogate = text[index - 1];
-        if (!char.IsHighSurrogate(highSurrogate))
+        if (index + 1 >= text.Length)
         {
             return default;
         }
-        return new Rune(highSurrogate, resultOrLowSurrogate);
+        var lowSurrogate = text[index + 1];
+        if (!char.IsLowSurrogate(lowSurrogate))
+        {
+            return default;
+        }
+        return new Rune(bmpResultOrNearerSurrogate, lowSurrogate);
     }
 
     /// <summary>
