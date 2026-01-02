@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#if !NETCOREAPP3_0_OR_GREATER
+
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -12,203 +14,8 @@ using System.Runtime.CompilerServices;
 //#pragma warning disable CS3019 // CLS compliance checking will not be performed because it is not visible from outside this assembly
 //#endif
 
-#if !NETCOREAPP3_1_OR_GREATER
-
 namespace System.Text
 {
-    file static class UnicodeDebug
-    {
-        [Conditional("DEBUG")]
-        internal static void AssertIsValidCodePoint(uint codePoint)
-        {
-            if (!UnicodeUtilitySupplement.IsValidCodePoint(codePoint))
-            {
-                Debug.Fail($"The value {ToHexString(codePoint)} is not a valid Unicode code point.");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        internal static void AssertIsHighSurrogateCodePoint(uint codePoint)
-        {
-            if (!UnicodeUtilitySupplement.IsHighSurrogateCodePoint(codePoint))
-            {
-                Debug.Fail($"The value {ToHexString(codePoint)} is not a valid UTF-16 high surrogate code point.");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        internal static void AssertIsLowSurrogateCodePoint(uint codePoint)
-        {
-            if (!UnicodeUtilitySupplement.IsLowSurrogateCodePoint(codePoint))
-            {
-                Debug.Fail($"The value {ToHexString(codePoint)} is not a valid UTF-16 low surrogate code point.");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        internal static void AssertIsValidScalar(uint scalarValue)
-        {
-            if (!UnicodeUtility.IsValidUnicodeScalar(scalarValue))
-            {
-                Debug.Fail($"The value {ToHexString(scalarValue)} is not a valid Unicode scalar value.");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        internal static void AssertIsValidSupplementaryPlaneScalar(uint scalarValue)
-        {
-            if (!UnicodeUtility.IsValidUnicodeScalar(scalarValue) || UnicodeUtility.IsBmpCodePoint(scalarValue))
-            {
-                Debug.Fail($"The value {ToHexString(scalarValue)} is not a valid supplementary plane Unicode scalar value.");
-            }
-        }
-
-        /// <summary>
-        /// Formats a code point as the hex string "U+XXXX".
-        /// </summary>
-        /// <remarks>
-        /// The input value doesn't have to be a real code point in the Unicode codespace. It can be any integer.
-        /// </remarks>
-        private static string ToHexString(uint codePoint)
-        {
-            return FormattableString.Invariant($"U+{codePoint:X4}");
-        }
-    }
-    file static class UnicodeUtilitySupplement
-    {
-        /// <summary>
-        /// The Unicode replacement character U+FFFD.
-        /// </summary>
-        public const uint ReplacementChar = 0xFFFD;
-
-        /// <summary>
-        /// Returns the Unicode plane (0 through 16, inclusive) which contains this code point.
-        /// </summary>
-        public static int GetPlane(uint codePoint)
-        {
-            UnicodeDebug.AssertIsValidCodePoint(codePoint);
-
-            return (int)(codePoint >> 16);
-        }
-
-        /// <summary>
-        /// Returns a Unicode scalar value from two code points representing a UTF-16 surrogate pair.
-        /// </summary>
-        public static uint GetScalarFromUtf16SurrogatePair(uint highSurrogateCodePoint, uint lowSurrogateCodePoint)
-        {
-            UnicodeDebug.AssertIsHighSurrogateCodePoint(highSurrogateCodePoint);
-            UnicodeDebug.AssertIsLowSurrogateCodePoint(lowSurrogateCodePoint);
-
-            // This calculation comes from the Unicode specification, Table 3-5.
-            // Need to remove the D800 marker from the high surrogate and the DC00 marker from the low surrogate,
-            // then fix up the "wwww = uuuuu - 1" section of the bit distribution. The code is written as below
-            // to become just two instructions: shl, lea.
-
-            return (highSurrogateCodePoint << 10) + lowSurrogateCodePoint - ((0xD800U << 10) + 0xDC00U - (1 << 16));
-        }
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="value"/> is an ASCII
-        /// character ([ U+0000..U+007F ]).
-        /// </summary>
-        /// <remarks>
-        /// Per http://www.unicode.org/glossary/#ASCII, ASCII is only U+0000..U+007F.
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsAsciiCodePoint(uint value) => value <= 0x7Fu;
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="value"/> is a UTF-16 high surrogate code point,
-        /// i.e., is in [ U+D800..U+DBFF ], inclusive.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsHighSurrogateCodePoint(uint value) => IsInRangeInclusive(value, 0xD800U, 0xDBFFU);
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="value"/> is between
-        /// <paramref name="lowerBound"/> and <paramref name="upperBound"/>, inclusive.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsInRangeInclusive(uint value, uint lowerBound, uint upperBound) => (value - lowerBound) <= (upperBound - lowerBound);
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="value"/> is a UTF-16 low surrogate code point,
-        /// i.e., is in [ U+DC00..U+DFFF ], inclusive.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLowSurrogateCodePoint(uint value) => IsInRangeInclusive(value, 0xDC00U, 0xDFFFU);
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="value"/> is a UTF-16 surrogate code point,
-        /// i.e., is in [ U+D800..U+DFFF ], inclusive.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsSurrogateCodePoint(uint value) => IsInRangeInclusive(value, 0xD800U, 0xDFFFU);
-
-        /// <summary>
-        /// Returns <see langword="true"/> iff <paramref name="codePoint"/> is a valid Unicode code
-        /// point, i.e., is in [ U+0000..U+10FFFF ], inclusive.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsValidCodePoint(uint codePoint) => codePoint <= 0x10FFFFU;
-
-        /// <summary>
-        /// Given a Unicode scalar value, gets the number of UTF-16 code units required to represent this value.
-        /// </summary>
-        public static int GetUtf16SequenceLength(uint value)
-        {
-            UnicodeDebug.AssertIsValidScalar(value);
-
-            value -= 0x10000;   // if value < 0x10000, high byte = 0xFF; else high byte = 0x00
-            value += (2 << 24); // if value < 0x10000, high byte = 0x01; else high byte = 0x02
-            value >>= 24;       // shift high byte down
-            return (int)value;  // and return it
-        }
-
-        /// <summary>
-        /// Given a Unicode scalar value, gets the number of UTF-8 code units required to represent this value.
-        /// </summary>
-        public static int GetUtf8SequenceLength(uint value)
-        {
-            UnicodeDebug.AssertIsValidScalar(value);
-
-            // The logic below can handle all valid scalar values branchlessly.
-            // It gives generally good performance across all inputs, and on x86
-            // it's only six instructions: lea, sar, xor, add, shr, lea.
-
-            // 'a' will be -1 if input is < 0x800; else 'a' will be 0
-            // => 'a' will be -1 if input is 1 or 2 UTF-8 code units; else 'a' will be 0
-
-            int a = ((int)value - 0x0800) >> 31;
-
-            // The number of UTF-8 code units for a given scalar is as follows:
-            // - U+0000..U+007F => 1 code unit
-            // - U+0080..U+07FF => 2 code units
-            // - U+0800..U+FFFF => 3 code units
-            // - U+10000+       => 4 code units
-            //
-            // If we XOR the incoming scalar with 0xF800, the chart mutates:
-            // - U+0000..U+F7FF => 3 code units
-            // - U+F800..U+F87F => 1 code unit
-            // - U+F880..U+FFFF => 2 code units
-            // - U+10000+       => 4 code units
-            //
-            // Since the 1- and 3-code unit cases are now clustered, they can
-            // both be checked together very cheaply.
-
-            value ^= 0xF800u;
-            value -= 0xF880u;   // if scalar is 1 or 3 code units, high byte = 0xFF; else high byte = 0x00
-            value += (4 << 24); // if scalar is 1 or 3 code units, high byte = 0x03; else high byte = 0x04
-            value >>= 24;       // shift high byte down
-
-            // Final return value:
-            // - U+0000..U+007F => 3 + (-1) * 2 = 1
-            // - U+0080..U+07FF => 4 + (-1) * 2 = 2
-            // - U+0800..U+FFFF => 3 + ( 0) * 2 = 3
-            // - U+10000+       => 4 + ( 0) * 2 = 4
-            return (int)value + (a * 2);
-        }
-    }
     /// <summary>
     /// Represents a Unicode scalar value ([ U+0000..U+D7FF ], inclusive; or [ U+E000..U+10FFFF ], inclusive).
     /// </summary>
@@ -359,7 +166,7 @@ namespace System.Text
         /// Returns true if and only if this scalar value is ASCII ([ U+0000..U+007F ])
         /// and therefore representable by a single UTF-8 code unit.
         /// </summary>
-        public bool IsAscii => UnicodeUtilitySupplement.IsAsciiCodePoint(_value);
+        public bool IsAscii => UnicodeUtility.IsAsciiCodePoint(_value);
 
         /// <summary>
         /// Returns true if and only if this scalar value is within the BMP ([ U+0000..U+FFFF ])
@@ -370,12 +177,12 @@ namespace System.Text
         /// <summary>
         /// Returns the Unicode plane (0 to 16, inclusive) which contains this scalar.
         /// </summary>
-        public int Plane => UnicodeUtilitySupplement.GetPlane(_value);
+        public int Plane => UnicodeUtility.GetPlane(_value);
 
         /// <summary>
         /// A <see cref="Rune"/> instance that represents the Unicode replacement character U+FFFD.
         /// </summary>
-        public static Rune ReplacementChar => UnsafeCreate(UnicodeUtilitySupplement.ReplacementChar);
+        public static Rune ReplacementChar => UnsafeCreate(UnicodeUtility.ReplacementChar);
 
         /// <summary>
         /// Returns the length in code units (<see cref="char"/>) of the
@@ -388,7 +195,7 @@ namespace System.Text
         {
             get
             {
-                int codeUnitCount = UnicodeUtilitySupplement.GetUtf16SequenceLength(_value);
+                int codeUnitCount = UnicodeUtility.GetUtf16SequenceLength(_value);
                 Debug.Assert(codeUnitCount > 0 && codeUnitCount <= MaxUtf16CharsPerRune);
                 return codeUnitCount;
             }
@@ -405,7 +212,7 @@ namespace System.Text
         {
             get
             {
-                int codeUnitCount = UnicodeUtilitySupplement.GetUtf8SequenceLength(_value);
+                int codeUnitCount = UnicodeUtility.GetUtf8SequenceLength(_value);
                 Debug.Assert(codeUnitCount > 0 && codeUnitCount <= MaxUtf8BytesPerRune);
                 return codeUnitCount;
             }
@@ -482,7 +289,7 @@ namespace System.Text
             }
             else
             {
-                return UnsafeCreate(UnicodeUtilitySupplement.GetScalarFromUtf16SurrogatePair(modified[0], modified[1]));
+                return UnsafeCreate(UnicodeUtility.GetScalarFromUtf16SurrogatePair(modified[0], modified[1]));
             }
         }
 #endif
@@ -623,7 +430,7 @@ namespace System.Text
             }
 
             uint tempValue = source[0];
-            if (UnicodeUtilitySupplement.IsAsciiCodePoint(tempValue))
+            if (UnicodeUtility.IsAsciiCodePoint(tempValue))
             {
                 bytesConsumed = 1;
                 result = UnsafeCreate(tempValue);
@@ -638,7 +445,7 @@ namespace System.Text
             // Try reading source[1].
 
             index = 1;
-            if (!UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, 0xC2, 0xF4))
+            if (!UnicodeUtility.IsInRangeInclusive(tempValue, 0xC2, 0xF4))
             {
                 goto Invalid;
             }
@@ -666,7 +473,7 @@ namespace System.Text
 
             if (tempValue < 0x0800)
             {
-                Debug.Assert(UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, 0x0080, 0x07FF));
+                Debug.Assert(UnicodeUtility.IsInRangeInclusive(tempValue, 0x0080, 0x07FF));
                 goto Finish; // this is a valid 2-byte sequence
             }
 
@@ -674,20 +481,20 @@ namespace System.Text
             // enough information (from just two code units) to detect overlong or surrogate
             // sequences, we need to perform these checks now.
 
-            if (!UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, ((0xE0 - 0xC0) << 6) + (0xA0 - 0x80), ((0xF4 - 0xC0) << 6) + (0x8F - 0x80)))
+            if (!UnicodeUtility.IsInRangeInclusive(tempValue, ((0xE0 - 0xC0) << 6) + (0xA0 - 0x80), ((0xF4 - 0xC0) << 6) + (0x8F - 0x80)))
             {
                 // The first two bytes were not in the range [[E0 A0]..[F4 8F]].
                 // This is an overlong 3-byte sequence or an out-of-range 4-byte sequence.
                 goto Invalid;
             }
 
-            if (UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, ((0xED - 0xC0) << 6) + (0xA0 - 0x80), ((0xED - 0xC0) << 6) + (0xBF - 0x80)))
+            if (UnicodeUtility.IsInRangeInclusive(tempValue, ((0xED - 0xC0) << 6) + (0xA0 - 0x80), ((0xED - 0xC0) << 6) + (0xBF - 0x80)))
             {
                 // This is a UTF-16 surrogate code point, which is invalid in UTF-8.
                 goto Invalid;
             }
 
-            if (UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, ((0xF0 - 0xC0) << 6) + (0x80 - 0x80), ((0xF0 - 0xC0) << 6) + (0x8F - 0x80)))
+            if (UnicodeUtility.IsInRangeInclusive(tempValue, ((0xF0 - 0xC0) << 6) + (0x80 - 0x80), ((0xF0 - 0xC0) << 6) + (0x8F - 0x80)))
             {
                 // This is an overlong 4-byte sequence.
                 goto Invalid;
@@ -717,7 +524,7 @@ namespace System.Text
 
             if (tempValue <= 0xFFFF)
             {
-                Debug.Assert(UnicodeUtilitySupplement.IsInRangeInclusive(tempValue, 0x0800, 0xFFFF));
+                Debug.Assert(UnicodeUtility.IsInRangeInclusive(tempValue, 0x0800, 0xFFFF));
                 goto Finish; // this is a valid 3-byte sequence
             }
 
@@ -843,7 +650,7 @@ namespace System.Text
                 // buffer ends with an ASCII byte.
 
                 uint tempValue = source[index];
-                if (UnicodeUtilitySupplement.IsAsciiCodePoint(tempValue))
+                if (UnicodeUtility.IsAsciiCodePoint(tempValue))
                 {
                     bytesConsumed = 1;
                     value = UnsafeCreate(tempValue);
@@ -1052,9 +859,9 @@ namespace System.Text
             // Optimistically assume input is within BMP.
 
             uint returnValue = input[0];
-            if (UnicodeUtilitySupplement.IsSurrogateCodePoint(returnValue))
+            if (UnicodeUtility.IsSurrogateCodePoint(returnValue))
             {
-                if (!UnicodeUtilitySupplement.IsHighSurrogateCodePoint(returnValue))
+                if (!UnicodeUtility.IsHighSurrogateCodePoint(returnValue))
                 {
                     return -1;
                 }
@@ -1067,12 +874,12 @@ namespace System.Text
                 }
 
                 uint potentialLowSurrogate = input[1];
-                if (!UnicodeUtilitySupplement.IsLowSurrogateCodePoint(potentialLowSurrogate))
+                if (!UnicodeUtility.IsLowSurrogateCodePoint(potentialLowSurrogate))
                 {
                     return -1;
                 }
 
-                returnValue = UnicodeUtilitySupplement.GetScalarFromUtf16SurrogatePair(returnValue, potentialLowSurrogate);
+                returnValue = UnicodeUtility.GetScalarFromUtf16SurrogatePair(returnValue, potentialLowSurrogate);
             }
 
             return (int)returnValue;
@@ -1200,7 +1007,7 @@ namespace System.Text
         public static bool TryCreate(char ch, out Rune result)
         {
             uint extendedValue = ch;
-            if (!UnicodeUtilitySupplement.IsSurrogateCodePoint(extendedValue))
+            if (!UnicodeUtility.IsSurrogateCodePoint(extendedValue))
             {
                 result = UnsafeCreate(extendedValue);
                 return true;
@@ -1485,38 +1292,38 @@ namespace System.Text
         // Returns true iff this Unicode category represents a letter
         private static bool IsCategoryLetter(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.UppercaseLetter, (uint)UnicodeCategory.OtherLetter);
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.UppercaseLetter, (uint)UnicodeCategory.OtherLetter);
         }
 
         // Returns true iff this Unicode category represents a letter or a decimal digit
         private static bool IsCategoryLetterOrDecimalDigit(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.UppercaseLetter, (uint)UnicodeCategory.OtherLetter)
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.UppercaseLetter, (uint)UnicodeCategory.OtherLetter)
                 || (category == UnicodeCategory.DecimalDigitNumber);
         }
 
         // Returns true iff this Unicode category represents a number
         private static bool IsCategoryNumber(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.DecimalDigitNumber, (uint)UnicodeCategory.OtherNumber);
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.DecimalDigitNumber, (uint)UnicodeCategory.OtherNumber);
         }
 
         // Returns true iff this Unicode category represents a punctuation mark
         private static bool IsCategoryPunctuation(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.ConnectorPunctuation, (uint)UnicodeCategory.OtherPunctuation);
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.ConnectorPunctuation, (uint)UnicodeCategory.OtherPunctuation);
         }
 
         // Returns true iff this Unicode category represents a separator
         private static bool IsCategorySeparator(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.SpaceSeparator, (uint)UnicodeCategory.ParagraphSeparator);
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.SpaceSeparator, (uint)UnicodeCategory.ParagraphSeparator);
         }
 
         // Returns true iff this Unicode category represents a symbol
         private static bool IsCategorySymbol(UnicodeCategory category)
         {
-            return UnicodeUtilitySupplement.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.MathSymbol, (uint)UnicodeCategory.OtherSymbol);
+            return UnicodeUtility.IsInRangeInclusive((uint)category, (uint)UnicodeCategory.MathSymbol, (uint)UnicodeCategory.OtherSymbol);
         }
 
         public static bool IsControl(Rune value)
@@ -1537,7 +1344,7 @@ namespace System.Text
         {
             if (value.IsAscii)
             {
-                return UnicodeUtilitySupplement.IsInRangeInclusive(value._value, '0', '9');
+                return UnicodeUtility.IsInRangeInclusive(value._value, '0', '9');
             }
             else
             {
@@ -1573,7 +1380,7 @@ namespace System.Text
         {
             if (value.IsAscii)
             {
-                return UnicodeUtilitySupplement.IsInRangeInclusive(value._value, 'a', 'z');
+                return UnicodeUtility.IsInRangeInclusive(value._value, 'a', 'z');
             }
             else
             {
@@ -1585,7 +1392,7 @@ namespace System.Text
         {
             if (value.IsAscii)
             {
-                return UnicodeUtilitySupplement.IsInRangeInclusive(value._value, '0', '9');
+                return UnicodeUtility.IsInRangeInclusive(value._value, '0', '9');
             }
             else
             {
@@ -1612,7 +1419,7 @@ namespace System.Text
         {
             if (value.IsAscii)
             {
-                return UnicodeUtilitySupplement.IsInRangeInclusive(value._value, 'A', 'Z');
+                return UnicodeUtility.IsInRangeInclusive(value._value, 'A', 'Z');
             }
             else
             {
