@@ -37,15 +37,14 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         // --- 	— 	&mdash; 	'mdash'
 
         var pc = slice.PeekRuneExtra(-1);
-        var c = slice.CurrentChar;
-        var openingChar = c;
+        var openingChar = slice.CurrentChar;
 
         var startingPosition = slice.Start;
 
         // undefined first
         var type = (SmartyPantType) 0;
 
-        switch (c)
+        switch (openingChar)
         {
             case '\'':
                 type = SmartyPantType.Quote; // We will resolve them at the end of parsing all inlines
