@@ -257,6 +257,8 @@ public static class CharHelper
     internal
 #endif
     static bool IsWhitespace(this Rune r) => r.IsBmp && IsWhitespace((char)r.Value);
+    // Note: there is no supplementary character whose Unicode category is Zs (at least as of Unicode 17).
+    // https://www.compart.com/en/unicode/category/Zs
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhiteSpaceOrZero(this char c)
