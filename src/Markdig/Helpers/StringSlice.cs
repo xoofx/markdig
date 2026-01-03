@@ -129,7 +129,13 @@ public struct StringSlice : ICharIterator
     /// <summary>
     /// Gets the current rune (Unicode scalar value). Recognizes supplementary code points that cannot be covered by a single character.
     /// </summary>
-    internal readonly Rune CurrentRune
+    /// <returns>The current rune or the default value (refers to <c>'\0'</c>) if the code unit(s) at the current position does not represent a valid rune.</returns>
+#if NETCOREAPP3_0_OR_GREATER
+    public
+#else
+    internal
+#endif
+    readonly Rune CurrentRune
     {
         get
         {
@@ -175,7 +181,12 @@ public struct StringSlice : ICharIterator
     /// <param name="index">The index relative to the slice.</param>
     /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the index is out of range or the rune cannot be determined.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Rune RuneAt(int index)
+#if NETCOREAPP3_0_OR_GREATER
+    public
+#else
+    internal
+#endif
+    Rune RuneAt(int index)
     {
         var first = Text[index];
         if (!char.IsSurrogate(first))
@@ -218,7 +229,12 @@ public struct StringSlice : ICharIterator
     /// The next rune. If none, returns default.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Rune NextRune()
+#if NETCOREAPP3_0_OR_GREATER
+    public
+#else
+    internal
+#endif
+    Rune NextRune()
     {
         int start = Start;
         if (start >= End)
@@ -333,7 +349,12 @@ public struct StringSlice : ICharIterator
     /// <param name="offset">The offset.</param>
     /// <returns>The rune at the specified offset, returns default if none.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal readonly Rune PeekRuneExtra(int offset)
+#if NETCOREAPP3_0_OR_GREATER
+    public
+#else
+    internal
+#endif
+    readonly Rune PeekRuneExtra(int offset)
     {
         var index = Start + offset;
         var text = Text;
