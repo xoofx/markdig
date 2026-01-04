@@ -347,6 +347,7 @@ public struct StringSlice : ICharIterator
     /// Peeks a rune at the specified offset from the current beginning of the slice
     /// without using the range <see cref="Start"/> or <see cref="End"/>, returns default if outside the <see cref="Text"/>.
     /// Recognizes supplementary code points that cannot be covered by a single character.
+    /// A positive <paramref name="offset"/> value expects the <em>high</em> surrogate and a negative <paramref name="offset"/> expects the <em>low</em> surrogate of the surrogate pair of a supplementary character at that position.
     /// </summary>
     /// <param name="offset">The offset.</param>
     /// <returns>The rune at the specified offset, returns default if none.</returns>
