@@ -248,7 +248,7 @@ public static class CharHelper
     /// <summary>
     /// <see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
     /// </summary>
-    /// <param name="c">The character to evaluate. A supplementary character is also accepted.</param>
+    /// <param name="r">The character to evaluate. A supplementary character is also accepted.</param>
     /// <returns><see langword="true"/> if the character is an Unicode whitespace character</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NETCOREAPP3_0_OR_GREATER
