@@ -8,7 +8,6 @@ namespace Markdig.Tests;
 [TestFixture]
 public class TestStringSliceList
 {
-    // TODO: Add tests for StringSlice
     // TODO: Add more tests for StringLineGroup
 
     [Test]
