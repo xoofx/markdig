@@ -185,11 +185,8 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         // The following character is actually an entity, we need to decode it
         if (HtmlEntityParser.TryParse(ref slice, out string? htmlString, out int htmlLength))
         {
-            var status = Rune.DecodeFromUtf16(htmlString, out c, out _);
-            if (status != System.Buffers.OperationStatus.Done)
-            {
-                throw new ArgumentException($"Could not extract the first Unicode scalar value (decode status: {status})", nameof(htmlString));
-            }
+            // Note: c is U+FFFD when decode error
+            Rune.DecodeFromUtf16(htmlString, out c, out _);
         }
 
         // Calculate Open-Close for current character
