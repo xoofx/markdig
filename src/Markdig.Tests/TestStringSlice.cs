@@ -17,7 +17,7 @@ internal class TestStringSlice
 {
     // TODO: Add more tests for StringSlice
 
-    // Old modern .NET (that meets NETCOREAPP but not the following #if) try to load the polyfilled Rune in .NET Standard 2.x build of Markdig while they have built-in Rune too
+    // Old versions of modern .NET (that meets NETCOREAPP but not the following #if) try to load the polyfilled Rune in .NET Standard 2.x build of Markdig while they have built-in Rune too
     // Adjust this condition to match the minimal modern (not .NET Standard or Framework) .NET target framework of Markdig (not Markdig.Tests)
 #if NET8_0_OR_GREATER
 
