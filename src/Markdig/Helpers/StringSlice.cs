@@ -245,12 +245,11 @@ public struct StringSlice : ICharIterator
         var currentBmpOrHighSurrogate = Text[start++];
         if (char.IsHighSurrogate(currentBmpOrHighSurrogate))
         {
-            var currentLowSurrogate = Text[start++];
-            if (!char.IsLowSurrogate(currentLowSurrogate))
+            var currentLowSurrogate = Text[start];
+            if (char.IsLowSurrogate(currentLowSurrogate))
             {
-                // was at an isolated high surrogate, not a valid surrogate pair (abnormal), when called.
-                // Since we went past by one character, go back one character.
-                start--;
+                // Supplementary character that occupies 2 code units.
+                start++;
             }
         }
         Start = start;
