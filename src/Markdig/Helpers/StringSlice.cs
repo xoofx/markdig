@@ -178,8 +178,8 @@ public struct StringSlice : ICharIterator
     /// Recognizes supplementary code points that cannot be covered by a single character.
     /// </summary>
     /// <param name="index">The index relative to the slice.</param>
-    /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the index is out of range or the rune cannot be determined.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the rune cannot be determined.</returns>    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <exception cref="IndexOutOfRangeException">Thrown when the given <paramref name="index"/> is out of range</exception>
 #if NETCOREAPP3_0_OR_GREATER
     public
 #else
@@ -191,7 +191,7 @@ public struct StringSlice : ICharIterator
         // BMP character
         if (Rune.TryCreate(first, out var rune))
             return rune;
-        if (index + 1 <= End)
+        if (index + 1 < Text.Length)
         {
             var second = Text[index + 1];
             return Rune.TryCreate(first, second, out rune)
