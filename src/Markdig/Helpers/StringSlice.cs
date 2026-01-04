@@ -142,15 +142,14 @@ public struct StringSlice : ICharIterator
             int start = Start;
             if (start > End) return default;
             var first = Text[start];
-            if (!char.IsSurrogate(first)) return new Rune(first);
-            if (char.IsHighSurrogate(first))
-            {
-                if (start + 1 > End) return default;
-                var second = Text[start + 1];
-                if (!char.IsLowSurrogate(second)) return default;
-                return new Rune(first, second);
-            }
-            return default;
+            // BMP character
+            if (Rune.TryCreate(first, out var rune)) return rune;
+            if (start + 1 > End) return default;
+            var second = Text[start + 1];
+            // Supplementary character
+            return Rune.TryCreate(first, second, out rune)
+                ? rune
+                : default;
         }
     }
 
@@ -189,14 +188,15 @@ public struct StringSlice : ICharIterator
     Rune RuneAt(int index)
     {
         var first = Text[index];
-        if (!char.IsSurrogate(first))
-            return new Rune(first);
-        if (char.IsHighSurrogate(first) && index + 1 <= End)
+        // BMP character
+        if (Rune.TryCreate(first, out var rune))
+            return rune;
+        if (index + 1 <= End)
         {
             var second = Text[index + 1];
-            if (char.IsLowSurrogate(second))
-                return new Rune(first, second);
-            return default;
+            return Rune.TryCreate(first, second, out rune)
+                ? rune
+                : default;
         }
         return default;
     }
@@ -255,14 +255,16 @@ public struct StringSlice : ICharIterator
         }
         Start = start;
         var first = Text[start];
-        if (!char.IsSurrogate(first))
-            return new Rune(first);
-        if (!char.IsHighSurrogate(first) || start + 1 > End)
+        // BMP character
+        if (Rune.TryCreate(first, out var rune))
+            return rune;
+        if (start + 1 > End)
             return default;
         var second = Text[start + 1];
-        if (!char.IsLowSurrogate(second))
-            return default;
-        return new Rune(first, second);
+        // Supplementary character
+        return Rune.TryCreate(first, second, out rune)
+            ? rune
+            : default;
     }
 
     /// <summary>
@@ -358,7 +360,7 @@ public struct StringSlice : ICharIterator
     internal
 #endif
     readonly Rune PeekRuneExtra(int offset)
-    {
+    {    // Supplementary character
         var index = Start + offset;
         var text = Text;
         if ((uint)index >= (uint)text.Length)
@@ -366,45 +368,32 @@ public struct StringSlice : ICharIterator
             return default;
         }
         var bmpResultOrNearerSurrogate = text[index];
-        if (!char.IsSurrogate(bmpResultOrNearerSurrogate))
-        {
-            // BMP character
-            return new Rune(bmpResultOrNearerSurrogate);
-        }
+        // BMP character
+        if (Rune.TryCreate(bmpResultOrNearerSurrogate, out var rune))
+            return rune;
+        // Supplementary character
         if (offset < 0)
         {
             // The code unit at `index` should be a low surrogate
             // The scalar value (rune) of a supplementary character should start at `index - 1`, which should be a high surrogate
-            if (!char.IsLowSurrogate(bmpResultOrNearerSurrogate))
-            {
-                return default;
-            }
             if (index < 1)
             {
                 return default;
             }
             var highSurrogate = text[index - 1];
-            if (!char.IsHighSurrogate(highSurrogate))
-            {
-                return default;
-            }
-            return new Rune(highSurrogate, bmpResultOrNearerSurrogate);
+            return Rune.TryCreate(highSurrogate, bmpResultOrNearerSurrogate, out rune)
+                ? rune
+                : default;
         }
         // The code unit at `index` should be a high surrogate and the start of a scalar value (rune) of a supplementary character
-        if (!char.IsHighSurrogate(bmpResultOrNearerSurrogate))
-        {
-            return default;
-        }
         if (index + 1 >= text.Length)
         {
             return default;
         }
         var lowSurrogate = text[index + 1];
-        if (!char.IsLowSurrogate(lowSurrogate))
-        {
-            return default;
-        }
-        return new Rune(bmpResultOrNearerSurrogate, lowSurrogate);
+        return Rune.TryCreate(bmpResultOrNearerSurrogate, lowSurrogate, out rune)
+            ? rune
+            : default;
     }
 
     /// <summary>
