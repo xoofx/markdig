@@ -185,7 +185,7 @@ public struct StringSlice : ICharIterator
 #else
     internal
 #endif
-    Rune RuneAt(int index)
+    readonly Rune RuneAt(int index)
     {
         var first = Text[index];
         // BMP character
