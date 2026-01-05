@@ -6,7 +6,11 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NETCOREAPP3_0_OR_GREATER
 using System.Text;
+#else
+using Markdig.Polyfills.System.Text;
+#endif
 
 namespace Markdig.Helpers;
 

@@ -4,7 +4,11 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+#if NETCOREAPP3_0_OR_GREATER
 using System.Text;
+#else
+using Markdig.Polyfills.System.Text;
+#endif
 using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
