@@ -67,7 +67,7 @@ internal class TestStringSlice
         Assert.AreEqual((Rune)0x1D7D0, slice.RuneAt(4)); // 𝟐
         Assert.AreEqual((Rune)0x1D7D1, slice.RuneAt(6)); // 𝟑
         Assert.AreEqual((Rune)0x1D7D2, slice.RuneAt(8)); // 𝟒
-        // The following usages are not expected. You should should take into consideration the `char`s that the Rune you just acquired occupies.
+        // The following usages are not expected. You should take into consideration the `char`s that the Rune you just acquired occupies.
         Assert.AreEqual((Rune)'\0', slice.PeekRuneExtra(-4));
         Assert.AreEqual((Rune)'\0', slice.PeekRuneExtra(-2));
         Assert.AreEqual((Rune)'\0', slice.PeekRuneExtra(1));
