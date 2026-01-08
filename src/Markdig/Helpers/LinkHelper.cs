@@ -2,11 +2,13 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Syntax;
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
-using Markdig.Syntax;
+using System.Text;
 
 namespace Markdig.Helpers;
 
@@ -30,11 +32,38 @@ public static class LinkHelper
         var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
         bool hasLetter = keepOpeningDigits && headingText.Length > 0 && char.IsLetterOrDigit(headingText[0]);
         bool previousIsSpace = false;
-        for (int i = 0; i < headingText.Length; i++)
+
+        // First normalize the string to decompose characters if allowOnlyAscii is true
+        string normalizedString = string.Empty;
+        if (allowOnlyAscii)
         {
-            var c = headingText[i];
-            var normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
-            for (int j = 0; j < (normalized?.Length ?? 1); j++)
+            normalizedString = headingText.ToString().Normalize(NormalizationForm.FormD);
+        }
+
+        var textToProcess = string.IsNullOrEmpty(normalizedString) ? headingText : normalizedString.AsSpan();
+
+        for (int i = 0; i < textToProcess.Length; i++)
+        {
+            var c = textToProcess[i];
+
+            // Skip combining diacritical marks when normalized
+            if (allowOnlyAscii && CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark)
+            {
+                continue;
+            }
+
+            // Handle German umlauts and Norwegian/Danish characters explicitly (they don't decompose properly)
+            ReadOnlySpan<char> normalized;
+            if (IsSpecialScandinavianOrGermanChar(c))
+            {
+                normalized = NormalizeScandinavianOrGermanChar(c);
+            }
+            else
+            {
+                normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
+            }
+
+            for (int j = 0; j < (normalized.Length < 1 ? 1 : normalized.Length); j++)
             {
                 if (normalized != null)
                 {
@@ -99,6 +128,50 @@ public static class LinkHelper
         }
 
         return headingBuffer.ToString();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsSpecialScandinavianOrGermanChar(char c)
+    {
+        // German umlauts and ß
+        // Norwegian/Danish/Swedish æ, ø, å
+        // Icelandic þ (thorn), ð (eth)
+        return c == 'ä' || c == 'ö' || c == 'ü' ||
+               c == 'Ä' || c == 'Ö' || c == 'Ü' ||
+               c == 'ß' ||
+               c == 'æ' || c == 'ø' || c == 'å' ||
+               c == 'Æ' || c == 'Ø' || c == 'Å' ||
+               c == 'þ' || c == 'ð' ||
+               c == 'Þ' || c == 'Ð';
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ReadOnlySpan<char> NormalizeScandinavianOrGermanChar(char c)
+    {
+        return c switch
+        {
+            // German
+            'ä' => "ae",
+            'ö' => "oe",
+            'ü' => "ue",
+            'Ä' => "Ae",
+            'Ö' => "Oe",
+            'Ü' => "Ue",
+            'ß' => "ss",
+            // Norwegian/Danish/Swedish
+            'æ' => "ae",
+            'ø' => "oe",
+            'å' => "aa",
+            'Æ' => "Ae",
+            'Ø' => "Oe",
+            'Å' => "Aa",
+            // Icelandic
+            'þ' => "th",
+            'Þ' => "Th",
+            'ð' => "d",
+            'Ð' => "D",
+            _ => ReadOnlySpan<char>.Empty
+        };
     }
 
     public static string UrilizeAsGfm(string headingText)
@@ -218,7 +291,8 @@ public static class LinkHelper
                 }
                 state = 1;
                 break;
-            } else if (c == '@')
+            }
+            else if (c == '@')
             {
                 if (state > 0)
                 {
@@ -234,7 +308,7 @@ public static class LinkHelper
         }
 
         // append ':' or '@' 
-        builder.Append(c); 
+        builder.Append(c);
 
         if (state < 0)
         {

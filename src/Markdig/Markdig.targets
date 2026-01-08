@@ -25,17 +25,16 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.6.0" />
+    <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="../../img/markdig.png" Pack="true" PackagePath="" />
-    <None Include="../../readme.md" Pack="true" PackagePath="/"/>
-    <PackageReference Include="MinVer" Version="4.3.0">
+    <None Include="../../readme.md" Pack="true" PackagePath="/" />
+    <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.*" PrivateAssets="All"/>
   </ItemGroup>
 
   <Target Name="PatchVersion" AfterTargets="MinVer">

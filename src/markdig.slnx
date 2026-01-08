@@ -2,12 +2,16 @@
   <Folder Name="/Build/">
     <File Path="../.editorconfig" />
     <File Path="../.gitattributes" />
-    <File Path="../.github/workflows/ci.yml" />
     <File Path="../.gitignore" />
     <File Path="../changelog.md" />
     <File Path="../license.txt" />
     <File Path="../readme.md" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
+  </Folder>
+  <Folder Name="/Build/GitHub Actions/">
+    <File Path="../.github/workflows/ci.yml" />
+    <File Path="../.github/workflows/test-netstandard.yml" />
   </Folder>
   <Project Path="Markdig.Benchmarks/Markdig.Benchmarks.csproj">
     <BuildDependency Project="Markdig/Markdig.csproj" />
