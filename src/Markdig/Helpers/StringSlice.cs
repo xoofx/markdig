@@ -145,15 +145,15 @@ public struct StringSlice : ICharIterator
         {
             int start = Start;
             if (start > End) return default;
-            var first = Text[start];
-            // BMP character
-            if (Rune.TryCreate(first, out var rune)) return rune;
-            if (start + 1 > End) return default;
-            var second = Text[start + 1];
-            // Supplementary character
-            return Rune.TryCreate(first, second, out rune)
-                ? rune
-                : default;
+
+            char first = Text[start];
+            if (!Rune.TryCreate(first, out Rune rune) && start + 1 <= End)
+            {
+                // The first character is a surrogate, check if we have a valid pair
+                Rune.TryCreate(first, Text[start + 1], out rune);
+            }
+
+            return rune;
         }
     }
 
@@ -191,18 +191,16 @@ public struct StringSlice : ICharIterator
 #endif
     readonly Rune RuneAt(int index)
     {
-        var first = Text[index];
-        // BMP character
-        if (Rune.TryCreate(first, out var rune))
-            return rune;
-        if (index + 1 < Text.Length)
+        string text = Text;
+        char first = text[index];
+
+        if (!Rune.TryCreate(first, out Rune rune) && (uint)(index + 1) < (uint)text.Length)
         {
-            var second = Text[index + 1];
-            return Rune.TryCreate(first, second, out rune)
-                ? rune
-                : default;
+            // The first character is a surrogate, check if we have a valid pair
+            Rune.TryCreate(first, text[index + 1], out rune);
         }
-        return default;
+
+        return rune;
     }
 
 
@@ -246,28 +244,20 @@ public struct StringSlice : ICharIterator
             Start = End + 1;
             return default;
         }
-        var currentBmpOrHighSurrogate = Text[start++];
-        if (char.IsHighSurrogate(currentBmpOrHighSurrogate))
+
+        char first = Text[start++];
+        if (!Rune.TryCreate(first, out Rune rune) && start <= End)
         {
-            var currentLowSurrogate = Text[start];
-            if (char.IsLowSurrogate(currentLowSurrogate))
+            // The first character is a surrogate, check if we have a valid pair
+            if (Rune.TryCreate(first, Text[start], out rune))
             {
-                // Supplementary character that occupies 2 code units.
+                // Valid surrogate pair
                 start++;
             }
         }
+        
         Start = start;
-        var first = Text[start];
-        // BMP character
-        if (Rune.TryCreate(first, out var rune))
-            return rune;
-        if (start + 1 > End)
-            return default;
-        var second = Text[start + 1];
-        // Supplementary character
-        return Rune.TryCreate(first, second, out rune)
-            ? rune
-            : default;
+        return rune;
     }
 
     /// <summary>
@@ -363,40 +353,41 @@ public struct StringSlice : ICharIterator
     internal
 #endif
     readonly Rune PeekRuneExtra(int offset)
-    {    // Supplementary character
-        var index = Start + offset;
-        var text = Text;
+    {
+        int index = Start + offset;
+        string text = Text;
         if ((uint)index >= (uint)text.Length)
         {
             return default;
         }
-        var bmpResultOrNearerSurrogate = text[index];
-        // BMP character
-        if (Rune.TryCreate(bmpResultOrNearerSurrogate, out var rune))
+
+        char first = text[index];
+        if (Rune.TryCreate(first, out var rune))
+        {
+            // BMP
             return rune;
-        // Supplementary character
+        }
+
+        // Check if we have a valid surrogate pair
         if (offset < 0)
         {
             // The code unit at `index` should be a low surrogate
             // The scalar value (rune) of a supplementary character should start at `index - 1`, which should be a high surrogate
-            if (index < 1)
+            if ((uint)(index - 1) < (uint)text.Length)
             {
-                return default;
+                Rune.TryCreate(text[index - 1], first, out rune);
             }
-            var highSurrogate = text[index - 1];
-            return Rune.TryCreate(highSurrogate, bmpResultOrNearerSurrogate, out rune)
-                ? rune
-                : default;
         }
-        // The code unit at `index` should be a high surrogate and the start of a scalar value (rune) of a supplementary character
-        if (index + 1 >= text.Length)
+        else
         {
-            return default;
+            // The code unit at `index` should be a high surrogate and the start of a scalar value (rune) of a supplementary character
+            if ((uint)(index + 1) < (uint)text.Length)
+            {
+                Rune.TryCreate(first, text[index + 1], out rune);
+            }
         }
-        var lowSurrogate = text[index + 1];
-        return Rune.TryCreate(bmpResultOrNearerSurrogate, lowSurrogate, out rune)
-            ? rune
-            : default;
+
+        return rune;
     }
 
     /// <summary>
