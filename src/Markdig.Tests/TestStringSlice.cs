@@ -7,7 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+#if TEST_NETSTANDARD_BUILD_IN_MODERN_NET
+using Markdig.Polyfills.System.Text;
+#else
 using System.Text;
+#endif
 using System.Threading.Tasks;
 
 namespace Markdig.Tests;
