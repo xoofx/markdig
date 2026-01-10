@@ -88,10 +88,10 @@ public static class CharHelper
         CheckOpenCloseDelimiter(
             prevIsWhiteSpace,
             prevIsPunctuation,
-            IsPunctuationException(pc),
+            prevIsPunctuation && IsPunctuationException(pc),
             nextIsWhiteSpace,
             nextIsPunctuation,
-            IsPunctuationException(c),
+            nextIsPunctuation && IsPunctuationException(c),
             enableWithinWord,
             out canOpen,
             out canClose);
@@ -110,21 +110,18 @@ public static class CharHelper
         CheckOpenCloseDelimiter(
             prevIsWhiteSpace,
             prevIsPunctuation,
-            IsPunctuationException(pc),
+            prevIsPunctuation && IsPunctuationException(pc),
             nextIsWhiteSpace,
             nextIsPunctuation,
-            IsPunctuationException(c),
+            nextIsPunctuation && IsPunctuationException(c),
             enableWithinWord,
             out canOpen,
             out canClose);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void CheckOpenCloseDelimiter(bool prevIsWhiteSpace, bool prevIsPunctuation, bool prevIsPunctuationExcepted, bool nextIsWhiteSpace, bool nextIsPunctuation, bool nextIsPunctuationExcepted, bool enableWithinWord, out bool canOpen, out bool canClose)
+    private static void CheckOpenCloseDelimiter(bool prevIsWhiteSpace, bool prevIsPunctuation, bool prevIsExcepted, bool nextIsWhiteSpace, bool nextIsPunctuation, bool nextIsExcepted, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
-        var prevIsExcepted = prevIsPunctuation && prevIsPunctuationExcepted;
-        var nextIsExcepted = nextIsPunctuation && nextIsPunctuationExcepted;
-
         // A left-flanking delimiter run is a delimiter run that is
         // (1) not followed by Unicode whitespace, and either
         // (2a) not followed by a punctuation character or
