@@ -1,22 +1,19 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#if !NETCOREAPP3_0_OR_GREATER
+#if !NET
 
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
-//using System.Text.Unicode;
 
 //#if !SYSTEM_PRIVATE_CORELIB
 //#pragma warning disable CS3019 // CLS compliance checking will not be performed because it is not visible from outside this assembly
 //#endif
 
-// You cannot test .NET Standard builds of Markdig with .NET with built-in Rune support unless you move this namespace out of System.Text.
-namespace Markdig.Polyfills.System.Text
+namespace System.Text
 {
     /// <summary>
     /// Represents a Unicode scalar value ([ U+0000..U+D7FF ], inclusive; or [ U+E000..U+10FFFF ], inclusive).

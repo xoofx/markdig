@@ -34,7 +34,6 @@ public partial class TestEmphasisPlus
         TestParser.TestSpec("🌶️**𰻞**🍜**𰻞**🌶️**麺**🍜", "<p>🌶️<strong>𰻞</strong>🍜<strong>𰻞</strong>🌶️<strong>麺</strong>🍜</p>", "");
     }
 
-
     [Test]
     public void OpenEmphasisHasConvenientContentStringSlice()
     {

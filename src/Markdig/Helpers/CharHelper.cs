@@ -6,11 +6,7 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-#if NETCOREAPP3_0_OR_GREATER
 using System.Text;
-#else
-using Markdig.Polyfills.System.Text;
-#endif
 
 namespace Markdig.Helpers;
 
@@ -97,7 +93,7 @@ public static class CharHelper
             out canClose);
     }
 
-#if NETCOREAPP3_0_OR_GREATER
+#if NET
     public
 #else
     internal
@@ -223,10 +219,10 @@ public static class CharHelper
     }
 
     /// <summary>
-    /// <see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
+    /// <see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
     /// </summary>
     /// <param name="c">The character to evaluate.</param>
-    /// <returns><see langword="true"/> if the character is an Unicode whitespace character</returns>
+    /// <returns><see langword="true"/> if the character is a Unicode whitespace character</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhitespace(this char c)
     {
@@ -247,12 +243,12 @@ public static class CharHelper
     }
 
     /// <summary>
-    /// <see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
+    /// <see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see>.
     /// </summary>
     /// <param name="r">The character to evaluate. A supplementary character is also accepted.</param>
-    /// <returns><see langword="true"/> if the character is an Unicode whitespace character</returns>
+    /// <returns><see langword="true"/> if the character is a Unicode whitespace character</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NETCOREAPP3_0_OR_GREATER
+#if NET
     public
 #else
     internal
@@ -331,48 +327,33 @@ public static class CharHelper
     }
 
     /// <summary>
-    /// Check if a character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace</see> or <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">punctuation character</see>.
+    /// Check if a character is a <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace</see> or <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">punctuation character</see>.
     /// </summary>
-    /// <param name="c">The character to evaluate. A supplementary character is also accepted.</param>
+    /// <param name="r">The character to evaluate. A supplementary character is also accepted.</param>
     /// <param name="space"><see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-whitespace-character">Unicode whitespace character</see></param>
-    /// <param name="punctuation"><see langword="true"/> if the character is an <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">Unicode punctuation character</see></param>
-#if NETCOREAPP3_0_OR_GREATER
+    /// <param name="punctuation"><see langword="true"/> if the character is a <see href="https://spec.commonmark.org/0.31.2/#unicode-punctuation-character">Unicode punctuation character</see></param>
+#if NET
     public
 #else
     internal
 #endif
-    static void CheckUnicodeCategory(this Rune c, out bool space, out bool punctuation)
+    static void CheckUnicodeCategory(this Rune r, out bool space, out bool punctuation)
     {
-        if (IsWhitespace(c))
+        if (IsWhitespace(r))
         {
             space = true;
             punctuation = false;
         }
-        else if (c.Value <= 127)
+        else if (r.Value <= 127)
         {
-            space = c.Value == 0;
-            punctuation = c.IsBmp && IsAsciiPunctuationOrZero((char)c.Value);
+            space = r.Value == 0;
+            punctuation = r.IsBmp && IsAsciiPunctuationOrZero((char)r.Value);
         }
         else
         {
             space = false;
-            punctuation = (CommonMarkPunctuationCategoryMask & (1 <<
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                (int)CharUnicodeInfo.GetUnicodeCategory(c.Value)
-#else
-                (int)GetUnicodeCategoryFallback(c)
-#endif
-                )) != 0;
+            punctuation = (CommonMarkPunctuationCategoryMask & (1 << (int)Rune.GetUnicodeCategory(r))) != 0;
         }
-
-#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER)
-        static UnicodeCategory GetUnicodeCategoryFallback(Rune c)
-        {
-            if (c.IsBmp) return CharUnicodeInfo.GetUnicodeCategory((char)c.Value);
-
-            return CharUnicodeInfo.GetUnicodeCategory(c.ToString(), 0);
-        }
-#endif
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

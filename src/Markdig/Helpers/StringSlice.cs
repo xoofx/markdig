@@ -6,11 +6,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if NETCOREAPP3_0_OR_GREATER
 using System.Text;
-#else
-using Markdig.Polyfills.System.Text;
-#endif
 
 namespace Markdig.Helpers;
 
@@ -131,10 +127,10 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
-    /// Gets the current rune (Unicode scalar value). Recognizes supplementary code points that cannot be covered by a single character.
+    /// Gets the current <see cref="Rune"/>. Recognizes supplementary code points that cannot be covered by a single <see cref="char"/>.
     /// </summary>
-    /// <returns>The current rune or the default value (refers to <c>'\0'</c>) if the code unit(s) at the current position does not represent a valid rune.</returns>
-#if NETCOREAPP3_0_OR_GREATER
+    /// <returns>The current rune or <see langword="default"/> if the current position contains an incomplete surrogate pair or <see cref="IsEmpty"/>.</returns>
+#if NET
     public
 #else
     internal
@@ -179,13 +175,13 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
-    /// Gets the Unicode scalar value (rune) at the specified index relative to the slice.
-    /// Recognizes supplementary code points that cannot be covered by a single character.
+    /// Gets the <see cref="Rune"/> at the specified index.
+    /// Recognizes supplementary code points that cannot be covered by a single <see cref="char"/>.
     /// </summary>
-    /// <param name="index">The index relative to the slice.</param>
-    /// <returns>The rune at the specified index or the default value (refers to <c>'\0'</c>) if the rune cannot be determined.</returns>    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <param name="index">The index into <see cref="Text"/>.</param>
+    /// <returns>The rune at the specified index or <see langword="default"/> if the location contains an incomplete surrogate pair.</returns>
     /// <exception cref="IndexOutOfRangeException">Thrown when the given <paramref name="index"/> is out of range</exception>
-#if NETCOREAPP3_0_OR_GREATER
+#if NET
     public
 #else
     internal
@@ -226,13 +222,12 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
-    /// Goes to the next rune, incrementing the <see cref="Start"/> position.
+    /// Goes to the next <see cref="Rune"/>, incrementing the <see cref="Start"/> position.
+    /// If <see cref="CurrentRune"/> is a supplementary character, <see cref="Start"/> will be advanced by 2.
     /// </summary>
-    /// <returns>
-    /// The next rune. If none, returns default.
-    /// </returns>
+    /// <returns>The current rune or <see langword="default"/> if the next position contains an incomplete surrogate pair or <see cref="IsEmpty"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NETCOREAPP3_0_OR_GREATER
+#if NET
     public
 #else
     internal
@@ -245,19 +240,19 @@ public struct StringSlice : ICharIterator
             Start = End + 1;
             return default;
         }
-        // We don't need to Rune.TryCreate here because we don't use the created rune
+
+        // Start may be pointing at the start of a previous surrogate pair. Check if we have to advance by 2 chars.
         if (
             // Advance to the next character, checking for a valid surrogate pair
             char.IsHighSurrogate(Text[start++])
             // Don't unconditionally increment `start` here. Check the surrogate code unit at `start` is a part of a valid surrogate pair first.
             && start <= End
-            && char.IsLowSurrogate(Text[start])
-        )
+            && char.IsLowSurrogate(Text[start]))
         {
             // Valid surrogate pair representing a supplementary character
             start++;
         }
-        
+
         Start = start;
         var first = Text[start];
         // '\0' is stored in `rune` if `TryCreate` returns false
@@ -266,6 +261,7 @@ public struct StringSlice : ICharIterator
             // Supplementary character
             Rune.TryCreate(first, Text[start + 1], out rune);
         }
+
         return rune;
     }
 
@@ -348,15 +344,15 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
-    /// Peeks a rune at the specified offset from the current beginning of the slice
-    /// without using the range <see cref="Start"/> or <see cref="End"/>, returns default if outside the <see cref="Text"/>.
-    /// Recognizes supplementary code points that cannot be covered by a single character.
+    /// Peeks a <see cref="Rune"/> at the specified offset from the current beginning of the slice
+    /// without using the range <see cref="Start"/> or <see cref="End"/>, returns <see langword="default"/> if outside the <see cref="Text"/>.
+    /// Recognizes supplementary code points that cannot be covered by a single <see cref="char"/>.
     /// A positive <paramref name="offset"/> value expects the <em>high</em> surrogate and a negative <paramref name="offset"/> expects the <em>low</em> surrogate of the surrogate pair of a supplementary character at that position.
     /// </summary>
     /// <param name="offset">The offset.</param>
     /// <returns>The rune at the specified offset, returns default if none.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NETCOREAPP3_0_OR_GREATER
+#if NET
     public
 #else
     internal
@@ -631,7 +627,7 @@ public struct StringSlice : ICharIterator
             return default;
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NET
         return MemoryMarshal.CreateReadOnlySpan(ref Unsafe.Add(ref Unsafe.AsRef(in text.GetPinnableReference()), start), length);
 #else
         return text.AsSpan(start, length);
