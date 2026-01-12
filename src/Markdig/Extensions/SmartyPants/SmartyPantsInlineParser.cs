@@ -36,16 +36,15 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         // -- 	– 	&ndash; 	'ndash'
         // --- 	— 	&mdash; 	'mdash'
 
-        var pc = slice.PeekCharExtra(-1);
-        var c = slice.CurrentChar;
-        var openingChar = c;
+        var pc = slice.PeekRuneExtra(-1);
+        var openingChar = slice.CurrentChar;
 
         var startingPosition = slice.Start;
 
         // undefined first
         var type = (SmartyPantType) 0;
 
-        switch (c)
+        switch (openingChar)
         {
             case '\'':
                 type = SmartyPantType.Quote; // We will resolve them at the end of parsing all inlines
@@ -93,9 +92,9 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         }
 
         // Skip char
-        c = slice.NextChar();
+        var next = slice.NextRune();
 
-        CharHelper.CheckOpenCloseDelimiter(pc, c, false, out bool canOpen, out bool canClose);
+        CharHelper.CheckOpenCloseDelimiter(pc, next, false, out bool canOpen, out bool canClose);
 
         bool postProcess = false;
 

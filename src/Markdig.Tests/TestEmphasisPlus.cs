@@ -23,6 +23,18 @@ public partial class TestEmphasisPlus
     }
 
     [Test]
+    public void SupplementaryPunctuation()
+    {
+        TestParser.TestSpec("a*a∇*a\n\na*∇a*a\n\na*a𝜵*a\n\na*𝜵a*a\n\na*𐬼a*a\n\na*a𐬼*a", "<p>a*a∇*a</p>\n<p>a*∇a*a</p>\n<p>a*a𝜵*a</p>\n<p>a*𝜵a*a</p>\n<p>a*𐬼a*a</p>\n<p>a*a𐬼*a</p>", "");
+    }
+
+    [Test]
+    public void RecognizeSupplementaryChars()
+    {
+        TestParser.TestSpec("🌶️**𰻞**🍜**𰻞**🌶️**麺**🍜", "<p>🌶️<strong>𰻞</strong>🍜<strong>𰻞</strong>🌶️<strong>麺</strong>🍜</p>", "");
+    }
+
+    [Test]
     public void OpenEmphasisHasConvenientContentStringSlice()
     {
         var pipeline = new MarkdownPipelineBuilder().Build();
