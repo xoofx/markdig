@@ -203,49 +203,72 @@ public class GenericAttributesParser : InlineParser
                 int endValue = -1;
 
                 c = line.CurrentChar;
-                // Parse a quoted string
+                // Parse a quoted string with backslash escape support (following CommonMark conventions)
                 if (c == '\'' || c == '"')
                 {
+                    var valueBuilder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
                     char openingStringChar = c;
-                    startValue = line.Start + 1;
-                    while (true)
+                    bool hasEscape = false;
+                    while ((c = line.NextChar()) != '\0')
                     {
-                        c = line.NextChar();
-                        if (c == '\0')
+                        if (hasEscape)
                         {
-                            return false;
+                            hasEscape = false;
+                            // Following CommonMark: only ASCII punctuation can be escaped
+                            if (!c.IsAsciiPunctuation())
+                            {
+                                valueBuilder.Append('\\');
+                            }
+                            valueBuilder.Append(c);
                         }
-                        if (c == openingStringChar)
+                        else if (c == openingStringChar)
                         {
                             break;
                         }
+                        else if (c == '\\')
+                        {
+                            hasEscape = true;
+                        }
+                        else
+                        {
+                            valueBuilder.Append(c);
+                        }
                     }
-                    endValue = line.Start - 1;
-                    c = line.NextChar(); // Skip closing opening string char
+
+                    if (c == '\0')
+                    {
+                        valueBuilder.Dispose();
+                        return false;
+                    }
+
+                    properties ??= new();
+                    properties.Add(new KeyValuePair<string, string?>(name, valueBuilder.ToString()));
+                    valueBuilder.Dispose();
+
+                    line.SkipChar(); // Skip closing quote
+                    c = line.CurrentChar;
+                    continue;
                 }
-                else
+                // Parse unquoted value until we match a space or a special html character
+                startValue = line.Start;
+                bool valid = false;
+                while (true)
                 {
-                    // Parse until we match a space or a special html character
-                    startValue = line.Start;
-                    bool valid = false;
-                    while (true)
+                    if (c == '\0')
                     {
-                        if (c == '\0')
-                        {
-                            return false;
-                        }
-                        if (c.IsWhitespace() || c == '}')
-                        {
-                            break;
-                        }
-                        c = line.NextChar();
-                        valid = true;
+                        return false;
                     }
-                    endValue = line.Start - 1;
-                    if (!valid)
+                    if (c.IsWhitespace() || c == '}')
                     {
                         break;
                     }
+                    c = line.NextChar();
+                    valid = true;
+                }
+                endValue = line.Start - 1;
+                if (!valid)
+                {
+                    break;
                 }
 
                 var value = slice.Text.Substring(startValue, endValue - startValue + 1);

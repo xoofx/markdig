@@ -70,3 +70,56 @@ A paragraph
 .
 <p class="center">A paragraph</p>
 ````````````````````````````````
+
+## Escaped Quotes in Attribute Values
+
+Backslash escapes are supported in quoted attribute values, following CommonMark conventions.
+Escaped quotes (\") allow including quote characters within quoted values.
+
+Escaped double quotes inside double-quoted value:
+
+```````````````````````````````` example
+[Link](url){data-value="hello \"world\""}
+.
+<p><a href="url" data-value="hello &quot;world&quot;">Link</a></p>
+````````````````````````````````
+
+Escaped single quotes inside single-quoted value:
+
+```````````````````````````````` example
+[Link](url){data-value='hello \'world\''}
+.
+<p><a href="url" data-value="hello 'world'">Link</a></p>
+````````````````````````````````
+
+Mixed quotes (no escaping needed, existing behavior):
+
+```````````````````````````````` example
+[Link](url){data-value='hello "world"'}
+.
+<p><a href="url" data-value="hello &quot;world&quot;">Link</a></p>
+````````````````````````````````
+
+Escaped backslash followed by quote (backslash is escaped, quote closes the value):
+
+```````````````````````````````` example
+[Link](url){data-value="path\\"}
+.
+<p><a href="url" data-value="path\">Link</a></p>
+````````````````````````````````
+
+Backslash not followed by escapable character (preserved as-is):
+
+```````````````````````````````` example
+[Link](url){data-value="hello\nworld"}
+.
+<p><a href="url" data-value="hello\nworld">Link</a></p>
+````````````````````````````````
+
+Complex escape sequence (Word field code use case):
+
+```````````````````````````````` example
+[Date](){field="DATE \\@ \"MMMM d, yyyy\""}
+.
+<p><a href="" field="DATE \@ &quot;MMMM d, yyyy&quot;">Date</a></p>
+````````````````````````````````

@@ -116,4 +116,109 @@ namespace Markdig.Tests.Specs.GenericAttributes
             TestParser.TestSpec("{.center}\nA paragraph", "<p class=\"center\">A paragraph</p>", "attributes|advanced", context: "Example 4\nSection Extensions / Generic Attributes\n");
         }
     }
+
+    [TestFixture]
+    public class TestExtensionsEscapedQuotesInAttributeValues
+    {
+        // ## Escaped Quotes in Attribute Values
+        // 
+        // Backslash escapes are supported in quoted attribute values, following CommonMark conventions.
+        // Escaped quotes (\") allow including quote characters within quoted values.
+        // 
+        // Escaped double quotes inside double-quoted value:
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example005()
+        {
+            // Example 5
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Link](url){data-value="hello \"world\""}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-value="hello &quot;world&quot;">Link</a></p>
+
+            TestParser.TestSpec("[Link](url){data-value=\"hello \\\"world\\\"\"}", "<p><a href=\"url\" data-value=\"hello &quot;world&quot;\">Link</a></p>", "attributes|advanced", context: "Example 5\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+
+        // Escaped single quotes inside single-quoted value:
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example006()
+        {
+            // Example 6
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Link](url){data-value='hello \'world\''}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-value="hello 'world'">Link</a></p>
+
+            TestParser.TestSpec("[Link](url){data-value='hello \\'world\\''}", "<p><a href=\"url\" data-value=\"hello 'world'\">Link</a></p>", "attributes|advanced", context: "Example 6\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+
+        // Mixed quotes (no escaping needed, existing behavior):
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example007()
+        {
+            // Example 7
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Link](url){data-value='hello "world"'}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-value="hello &quot;world&quot;">Link</a></p>
+
+            TestParser.TestSpec("[Link](url){data-value='hello \"world\"'}", "<p><a href=\"url\" data-value=\"hello &quot;world&quot;\">Link</a></p>", "attributes|advanced", context: "Example 7\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+
+        // Escaped backslash followed by quote (backslash is escaped, quote closes the value):
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example008()
+        {
+            // Example 8
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Link](url){data-value="path\\"}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-value="path\">Link</a></p>
+
+            TestParser.TestSpec("[Link](url){data-value=\"path\\\\\"}", "<p><a href=\"url\" data-value=\"path\\\">Link</a></p>", "attributes|advanced", context: "Example 8\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+
+        // Backslash not followed by escapable character (preserved as-is):
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example009()
+        {
+            // Example 9
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Link](url){data-value="hello\nworld"}
+            //
+            // Should be rendered as:
+            //     <p><a href="url" data-value="hello\nworld">Link</a></p>
+
+            TestParser.TestSpec("[Link](url){data-value=\"hello\\nworld\"}", "<p><a href=\"url\" data-value=\"hello\\nworld\">Link</a></p>", "attributes|advanced", context: "Example 9\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+
+        // Complex escape sequence (Word field code use case):
+        [Test]
+        public void ExtensionsEscapedQuotesInAttributeValues_Example010()
+        {
+            // Example 10
+            // Section: Extensions / Escaped Quotes in Attribute Values
+            //
+            // The following Markdown:
+            //     [Date](){field="DATE \\@ \"MMMM d, yyyy\""}
+            //
+            // Should be rendered as:
+            //     <p><a href="" field="DATE \@ &quot;MMMM d, yyyy&quot;">Date</a></p>
+
+            TestParser.TestSpec("[Date](){field=\"DATE \\\\@ \\\"MMMM d, yyyy\\\"\"}", "<p><a href=\"\" field=\"DATE \\@ &quot;MMMM d, yyyy&quot;\">Date</a></p>", "attributes|advanced", context: "Example 10\nSection Extensions / Escaped Quotes in Attribute Values\n");
+        }
+    }
 }
