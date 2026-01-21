@@ -150,6 +150,113 @@ public static class CharHelper
         }
     }
 
+#if NET
+    public
+#else
+    internal
+#endif
+    static void CheckOpenCloseDelimiterCjkFriendly(Rune pc, Rune c, Rune twoPreviousRune, bool enableWithinWord, out bool canOpen, out bool canClose)
+    {
+        pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
+        c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
+
+        if (prevIsWhiteSpace || nextIsWhiteSpace)
+        {
+            canOpen = !nextIsWhiteSpace;
+            canClose = !prevIsWhiteSpace;
+            return;
+        }
+
+        bool isMainTwoPrevious = false;
+        Rune mainPreviousRune = pc;
+        if (IsNonEmojiGeneralUseVariantSelector(pc))
+        {
+            isMainTwoPrevious = true;
+            mainPreviousRune = twoPreviousRune;
+            mainPreviousRune.CheckUnicodeCategory(out var _, out prevIsPunctuation);
+        }
+        canOpen = prevIsPunctuation;
+        canClose = nextIsPunctuation;
+        if (!enableWithinWord)
+        {
+            return;
+        }
+        bool prevIsCjk = IsCjk(mainPreviousRune) || (isMainTwoPrevious ? IsCjkAmbiousPunctuation(mainPreviousRune, pc) : IsIdeographicVariationSelector(mainPreviousRune));
+        bool nextIsCjk = IsCjk(c);
+        bool eitherIsCjk = prevIsCjk || nextIsCjk;
+
+        canOpen |= eitherIsCjk || !nextIsPunctuation;
+        canClose |= eitherIsCjk || !prevIsPunctuation;
+
+        static bool IsNonEmojiGeneralUseVariantSelector(Rune r) => r.Value is >= 0xFE00 and <= 0xFE0E;
+        static bool IsIdeographicVariationSelector(Rune r) => r.Value is >= 0xE0100 and <= 0xE01EF;
+        static bool IsCjkAmbiousPunctuation(Rune main, Rune vs) => vs.Value is 0xFE01 && main.Value is 0x2018 or 0x2019 or 0x201C or 0x201D;
+        // As of Unicode 17
+        static bool IsCjk(Rune r) => r.Value is
+            >= 0x1100 and ( // Fast path for most non-CJK characters
+                <= 0x11ff
+                or 0x20a9
+                or >= 0x2329 and <= 0x232a
+                or >= 0x2630 and <= 0x2637
+                or >= 0x268a and <= 0x268f
+                or >= 0x2e80 and <= 0x2e99
+                or >= 0x2e9b and <= 0x2ef3
+                or >= 0x2f00 and <= 0x2fd5
+                or >= 0x2ff0 and <= 0x303e
+                or >= 0x3041 and <= 0x3096
+                or >= 0x3099 and <= 0x30ff
+                or >= 0x3105 and <= 0x312f
+                or >= 0x3131 and <= 0x318e
+                or >= 0x3190 and <= 0x31e5
+                or >= 0x31ef and <= 0x321e
+                or >= 0x3220 and <= 0x3247
+                or >= 0x3250 and <= 0xa48c
+                or >= 0xa490 and <= 0xa4c6
+                or >= 0xa960 and <= 0xa97c
+                or >= 0xac00 and <= 0xd7a3
+                or >= 0xd7b0 and <= 0xd7c6
+                or >= 0xd7cb and <= 0xd7fb
+                or >= 0xf900 and <= 0xfaff
+                or >= 0xfe10 and <= 0xfe19
+                or >= 0xfe30 and <= 0xfe52
+                or >= 0xfe54 and <= 0xfe66
+                or >= 0xfe68 and <= 0xfe6b
+                or >= 0xff01 and <= 0xffbe
+                or >= 0xffc2 and <= 0xffc7
+                or >= 0xffca and <= 0xffcf
+                or >= 0xffd2 and <= 0xffd7
+                or >= 0xffda and <= 0xffdc
+                or >= 0xffe0 and <= 0xffe6
+                or >= 0xffe8 and <= 0xffee
+                or >= 0x16fe0 and <= 0x16fe4
+                or >= 0x16ff0 and <= 0x16ff6
+                or >= 0x17000 and <= 0x18cd5
+                or >= 0x18cff and <= 0x18d1e
+                or >= 0x18d80 and <= 0x18df2
+                or >= 0x1aff0 and <= 0x1aff3
+                or >= 0x1aff5 and <= 0x1affb
+                or >= 0x1affd and <= 0x1affe
+                or >= 0x1b000 and <= 0x1b122
+                or 0x1b132
+                or >= 0x1b150 and <= 0x1b152
+                or 0x1b155
+                or >= 0x1b164 and <= 0x1b167
+                or >= 0x1b170 and <= 0x1b2fb
+                or >= 0x1d300 and <= 0x1d356
+                or >= 0x1d360 and <= 0x1d376
+                or 0x1f200
+                or 0x1f202
+                or >= 0x1f210 and <= 0x1f219
+                or >= 0x1f21b and <= 0x1f22e
+                or >= 0x1f230 and <= 0x1f231
+                or 0x1f237
+                or 0x1f23b
+                or >= 0x1f240 and <= 0x1f248
+                or >= 0x1f260 and <= 0x1f265
+                or >= 0x20000 and <= 0x3fffd
+            );
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsRomanLetterPartial(char c)
     {

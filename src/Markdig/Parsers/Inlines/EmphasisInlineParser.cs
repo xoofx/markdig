@@ -43,6 +43,8 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     public List<EmphasisDescriptor> EmphasisDescriptors { get; }
 
+    public bool CjkFriendlyEmphasis { get; set; } = false;
+
     /// <summary>
     /// Determines whether this parser is using the specified character as an emphasis delimiter.
     /// </summary>
@@ -151,16 +153,28 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         var emphasisDesc = emphasisMap![delimiterChar]!;
 
         Rune pc = (Rune)0;
+        Rune twoPreviousChar = default;
+
         if (processor.Inline is HtmlEntityInline htmlEntityInline)
         {
             if (htmlEntityInline.Transcoded.Length > 0)
             {
                 pc = htmlEntityInline.Transcoded.RuneAt(htmlEntityInline.Transcoded.End);
+
+                if (CjkFriendlyEmphasis)
+                {
+                    twoPreviousChar = htmlEntityInline.Transcoded.RuneAt(htmlEntityInline.Transcoded.End - pc.Utf16SequenceLength);
+                }
             }
         }
         if (pc.Value == 0)
         {
             pc = slice.PeekRuneExtra(-1);
+            if (CjkFriendlyEmphasis)
+            {
+                // This cannot be a delegate (Func<Rune>?) because slice is a reference
+                twoPreviousChar = slice.PeekRuneExtra(-1 - pc.Utf16SequenceLength);
+            }
             // delimiterChar is BMP, so slice.PeekCharExtra(-2) is (a part of) the character two positions back.
             if (pc == (Rune)delimiterChar && slice.PeekCharExtra(-2) != '\\')
             {
@@ -189,8 +203,17 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
             Rune.DecodeFromUtf16(htmlString, out c, out _);
         }
 
+        bool canOpen = false;
+        bool canClose = false;
         // Calculate Open-Close for current character
-        CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out bool canOpen, out bool canClose);
+        if (CjkFriendlyEmphasis)
+        {
+            CharHelper.CheckOpenCloseDelimiterCjkFriendly(pc, c, twoPreviousChar, emphasisDesc.EnableWithinWord, out canOpen, out canClose);
+        }
+        else
+        {
+            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out canOpen, out canClose);
+        }
 
         // We have potentially an open or close emphasis
         if (canOpen || canClose)
