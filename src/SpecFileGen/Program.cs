@@ -87,7 +87,7 @@ class Program
         new Spec("Jira Links",          "JiraLinks.md",                 "jiralinks"),
         new Spec("Globalization",       "GlobalizationSpecs.md",        "globalization+advanced+emojis"),
         new Spec("Figures, Footers and Cites", "FigureFooterAndCiteSpecs.md", "figures+footers+citations|advanced"),
-        new Spec("CJK-friendly Emphasis", "CJKFriendlyEmphasis.md",     "emphasisextras|advanced"),
+        new Spec("CJK-friendly Emphasis", "CJKFriendlyEmphasis.md",     "cjk-friendly-emphasis"),
 
         new NormalizeSpec("Headings", "Headings.md", ""),
 

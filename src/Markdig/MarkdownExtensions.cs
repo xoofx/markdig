@@ -109,7 +109,7 @@ public static class MarkdownExtensions
         pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
         return pipeline;
     }
-    
+
     /// <summary>
     /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
     /// </summary>
@@ -666,6 +666,9 @@ public static class MarkdownExtensions
                     break;
                 case "globalization":
                     pipeline.UseGlobalization();
+                    break;
+                case "cjk-friendly-emphasis":
+                    pipeline.UseCjkFriendlyEmphasis();
                     break;
                 default:
                     throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
