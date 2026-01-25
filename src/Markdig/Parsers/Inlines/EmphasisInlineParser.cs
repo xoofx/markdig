@@ -203,8 +203,8 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
             Rune.DecodeFromUtf16(htmlString, out c, out _);
         }
 
-        bool canOpen = false;
-        bool canClose = false;
+        bool canOpen;
+        bool canClose;
         // Calculate Open-Close for current character
         if (CjkFriendlyEmphasis)
         {
