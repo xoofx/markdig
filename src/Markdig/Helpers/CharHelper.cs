@@ -156,8 +156,13 @@ public static class CharHelper
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
 
+        // https://github.com/tats-u/markdown-cjk-friendly/commit/3c4217bea8248e9abc8be4e7c68748a88557662d
+        // The above flankingness check can be simplified under the following conditions:
+        // - If the delimiter run is adjacent to a whitespace character, the flankingness does not depend on the existence of a punctuation character (and (in CJK-friendly emphasis) a CJK character).
+        // - If the delimiter run is `_`, some rules can be simplified. Additionally, in CJK-friendly emphasis, the flankingness does not depend on whether the delimiter run is adjacent to a CJK character.
         if (prevIsWhiteSpace || nextIsWhiteSpace)
         {
+            // Fastest path
             canOpen = !nextIsWhiteSpace;
             canClose = !prevIsWhiteSpace;
             return;
@@ -175,6 +180,7 @@ public static class CharHelper
         canClose = nextIsPunctuation;
         if (!enableWithinWord)
         {
+            // Fast path for `_` (does not depend on the existence of a CJK character)
             return;
         }
         bool prevIsCjk = IsCjk(mainPreviousRune) || (isMainTwoPrevious ? IsCjkAmbiousPunctuation(mainPreviousRune, pc) : IsIdeographicVariationSelector(mainPreviousRune));
@@ -184,6 +190,8 @@ public static class CharHelper
         canOpen |= eitherIsCjk || !nextIsPunctuation;
         canClose |= eitherIsCjk || !prevIsPunctuation;
 
+        // https://github.com/tats-u/markdown-cjk-friendly/blob/main/specification.md
+        // https://github.com/tats-u/markdown-cjk-friendly/blob/main/ranges.md
         static bool IsNonEmojiGeneralUseVariantSelector(Rune r) => r.Value is >= 0xFE00 and <= 0xFE0E;
         static bool IsIdeographicVariationSelector(Rune r) => r.Value is >= 0xE0100 and <= 0xE01EF;
         static bool IsCjkAmbiousPunctuation(Rune main, Rune vs) => vs.Value is 0xFE01 && main.Value is 0x2018 or 0x2019 or 0x201C or 0x201D;
