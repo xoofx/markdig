@@ -150,12 +150,8 @@ public static class CharHelper
         }
     }
 
-#if NET
-    public
-#else
-    internal
-#endif
-    static void CheckOpenCloseDelimiterCjkFriendly(Rune pc, Rune c, Rune twoPreviousRune, bool enableWithinWord, out bool canOpen, out bool canClose)
+    // The signature of this method is still unstable and can be changed in the future. `internal`-only as for now.
+    internal static void CheckOpenCloseDelimiterCjkFriendly(Rune pc, Rune c, Rune twoPreviousRune, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
