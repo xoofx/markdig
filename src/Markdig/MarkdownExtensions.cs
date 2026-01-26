@@ -8,7 +8,6 @@ using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.AutoLinks;
 using Markdig.Extensions.Bootstrap;
 using Markdig.Extensions.Citations;
-using Markdig.Extensions.CjkFriendlyEmphasis;
 using Markdig.Extensions.CustomContainers;
 using Markdig.Extensions.DefinitionLists;
 using Markdig.Extensions.Diagrams;
@@ -525,7 +524,7 @@ public static class MarkdownExtensions
 
     public static MarkdownPipelineBuilder UseCjkFriendlyEmphasis(this MarkdownPipelineBuilder pipeline)
     {
-        pipeline.Extensions.AddIfNotAlready<CjkFriendlyEmphasisExtension>();
+        pipeline.InlineParsers.FindExact<EmphasisInlineParser>()?.CjkFriendlyEmphasis = true;
         return pipeline;
     }
 
