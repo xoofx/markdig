@@ -2,7 +2,9 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,6 +102,99 @@ namespace Markdig.Tests
             var pipeline = GetPipeline();
             var actual = Markdown.ToHtml(source, pipeline);
             Assert.AreEqual(expected, actual);
+        }
+
+        // delimiter: '*', '_' = each character, '?' = either
+        // can open/close = whether the places can be in the range of emphasis
+        // 2 before, previous, can close, delimiter, can open, next
+        // *****Basic*****
+        [TestCase("\0", " ", false, '?', false, " ")]
+        [TestCase("\0", "𰻞", true, '?', false, " ")]
+        [TestCase("\0", " ", false, '?', true, "𰻞")]
+        [TestCase("\0", "𝜵", false, '?', true, "A")]
+        [TestCase("\0", "A", true, '?', false, "𝜵")]
+        [TestCase("\0", "𝜵", true, '*', true, "𰻞")]
+        [TestCase("\0", "A", true, '*', true, "𰻞")]
+        [TestCase("\0", "𰻞", true, '*', true, "𝜵")]
+        [TestCase("\0", "𰻞", true, '*', true, "A")]
+        [TestCase("\0", "𰻞", true, '*', true, "」")]
+        [TestCase("\0", "「", true, '*', true, "𰻞")]
+        [TestCase("\0", "A", true, '*', true, "」")]
+        [TestCase("\0", "「", true, '*', true, "A")]
+        [TestCase("\0", "𝜵", false, '_', true, "𰻞")]
+        [TestCase("\0", "A", false, '_', false, "𰻞")]
+        [TestCase("\0", "𰻞", true, '_', false, "𝜵")]
+        [TestCase("\0", "𰻞", false, '_', false, "A")]
+        [TestCase("\0", "𰻞", true, '_', false, "」")]
+        [TestCase("\0", "「", false, '_', true, "𰻞")]
+        [TestCase("\0", "A", true, '_', false, "」")]
+        [TestCase("\0", "「", false, '_', true, "A")]
+        // *****IVS*****
+        [TestCase("𩸽", "\U000E0101", true, '*', true, "𝜵")]
+        [TestCase("𩸽", "\U000E0101", true, '_', false, "𝜵")]
+        [TestCase("𩸽", "\U000E0101", true, '*', true, "𝜵")]
+        [TestCase("𩸽", "\U000E0101", true, '_', false, "𝜵")]
+        // Non-Han + U+E01XX does not appear in the wild
+        [TestCase("\0", "\U000E0101", true, '*', true, "𝜵")]
+        [TestCase("\0", "\U000E0101", true, '_', false, "𝜵")]
+        [TestCase("\0", "\U000E0101", true, '*', true, "𝜵")]
+        [TestCase("\0", "\U000E0101", true, '_', false, "𝜵")]
+        // *****SVS*****
+        [TestCase("羽", "\uFE00", true, '*', true, "𝜵")]
+        [TestCase("羽", "\uFE00", true, '_', false, "𝜵")]
+        [TestCase("羽", "\uFE00", true, '*', true, "𝜵")]
+        [TestCase("羽", "\uFE00", true, '_', false, "𝜵")]
+        // Slashed zero
+        [TestCase("0", "\uFE00", true, '?', false, "𝜵")]
+        [TestCase("0", "\uFE00", true, '?', false, "𝜵")]
+        [TestCase("“", "\uFE00", false, '?', true, "A")]
+        [TestCase("“", "\uFE01", true, '*', true, "A")]
+        [TestCase("“", "\uFE01", false, '_', true, "A")]
+        [TestCase("\0", "“", false, '?', true, "A")]
+        [TestCase("\0", "A", true, '?', false, "“")]
+        // *****Emoji*****
+        // Default text presentation
+        [TestCase("\0", "㊙", true, '*', true, "A")]
+        [TestCase("\0", "㊙", false, '_', true, "A")]
+        [TestCase("\0", "A", true, '*', true, "㊙")]
+        [TestCase("\0", "A", true, '_', false, "㊙")]
+        // Default emoji presentation
+        [TestCase("\0", "🈯", false, '?', true, "A")]
+        [TestCase("\0", "A", true, '?', false, "🈯")]
+        // EAW = Ambiguous (not CJK)
+        [TestCase("\0", "☎", false, '?', true, "A")]
+        // Text presentation sequences
+        [TestCase("㊙", "\uFE0E", true, '*', true, "A")]
+        [TestCase("㊙", "\uFE0E", false, '_', true, "A")]
+        // Caution: default emoji presentation character + text presentation selector has not been supported yet
+        [TestCase("🈯", "\uFE0E", false, '?', true, "A")]
+        // Emoji presentation sequences
+        [TestCase("㊙", "\uFE0F", true, '*', true, "A")]
+        [TestCase("㊙", "\uFE0F", false, '_', false, "A")]
+        [TestCase("🈯", "\uFE0F", true, '*', true, "A")]
+        [TestCase("🈯", "\uFE0F", false, '_', false, "A")]
+        // *****Korean*****
+        [TestCase("\0", "한", true, '*', true, "𝜵")]
+        [TestCase("\0", "𝜵", true, '*', true, "한")]
+        // A part of NFD form
+        [TestCase("\0", "ᆫ", true, '*', true, "𝜵")]
+        [TestCase("\0", "𝜵", true, '*', true, "ᆫ")]
+        [Test]
+        public void TestCheckOpenCloseDelimiterCjkFriendly(string twoPrevStr, string prevStr, bool shouldBeClosable, char delim, bool shouldBeOpenable, string nextStr)
+        {
+            Assert.AreEqual(OperationStatus.Done, Rune.DecodeFromUtf16(twoPrevStr, out var twoPrev, out _));
+            Assert.AreEqual(OperationStatus.Done, Rune.DecodeFromUtf16(prevStr, out var prev, out _));
+            Assert.AreEqual(OperationStatus.Done, Rune.DecodeFromUtf16(nextStr, out var next, out _));
+
+            CharHelper.CheckOpenCloseDelimiterCjkFriendly(prev, next, twoPrev, delim == '*', out bool isOpen, out bool isClose);
+            Assert.AreEqual(shouldBeOpenable, isOpen, "isOpen");
+            Assert.AreEqual(shouldBeClosable, isClose, "isClose");
+            if (delim == '?')
+            {
+                CharHelper.CheckOpenCloseDelimiterCjkFriendly(prev, next, twoPrev, true, out isOpen, out isClose);
+                Assert.AreEqual(shouldBeOpenable, isOpen, "isOpen (*)");
+                Assert.AreEqual(shouldBeClosable, isClose, "isClose (*)");
+            }
         }
     }
 }
