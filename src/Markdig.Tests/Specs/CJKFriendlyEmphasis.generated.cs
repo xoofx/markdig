@@ -30,7 +30,7 @@ namespace Markdig.Tests.Specs.CJKFriendlyEmphasis
             // Should be rendered as:
             //     <p><strong>この文を強調できますか（Can I emphasize this sentence）？</strong>残念ながらこの文のせいでできません（Unfortunately not possible due to this sentence）。</p>
 
-            TestParser.TestSpec("**この文を強調できますか（Can I emphasize this sentence）？**残念ながらこの文のせいでできません（Unfortunately not possible due to this sentence）。", "<p><strong>この文を強調できますか（Can I emphasize this sentence）？</strong>残念ながらこの文のせいでできません（Unfortunately not possible due to this sentence）。</p>", "emphasisextras|advanced", context: "Example 1\nSection CJK-friendly Emphasis Extension\n");
+            TestParser.TestSpec("**この文を強調できますか（Can I emphasize this sentence）？**残念ながらこの文のせいでできません（Unfortunately not possible due to this sentence）。", "<p><strong>この文を強調できますか（Can I emphasize this sentence）？</strong>残念ながらこの文のせいでできません（Unfortunately not possible due to this sentence）。</p>", "cjk-friendly-emphasis", context: "Example 1\nSection CJK-friendly Emphasis Extension\n");
         }
 
         // ````````````````````````````````` example
@@ -50,7 +50,7 @@ namespace Markdig.Tests.Specs.CJKFriendlyEmphasis
             // Should be rendered as:
             //     <p><strong>이 용어(This term)</strong>를 강조해 주세요. (Please emphasize <strong>this term</strong>.)</p>
 
-            TestParser.TestSpec("**이 용어(This term)**를 강조해 주세요. (Please emphasize **this term**.)", "<p><strong>이 용어(This term)</strong>를 강조해 주세요. (Please emphasize <strong>this term</strong>.)</p>", "emphasisextras|advanced", context: "Example 2\nSection CJK-friendly Emphasis Extension\n");
+            TestParser.TestSpec("**이 용어(This term)**를 강조해 주세요. (Please emphasize **this term**.)", "<p><strong>이 용어(This term)</strong>를 강조해 주세요. (Please emphasize <strong>this term</strong>.)</p>", "cjk-friendly-emphasis", context: "Example 2\nSection CJK-friendly Emphasis Extension\n");
         }
         // You can compare the results with and without this extension: https://tats-u.github.io/markdown-cjk-friendly/?sc8=KirjgZPjga7mlofjgpLlvLfoqr_jgafjgY3jgb7jgZnjgYvvvIhDYW4gSSBlbXBoYXNpemUgdGhpcyBzZW50ZW5jZe-8ie-8nyoq5q6L5b-144Gq44GM44KJ44GT44Gu5paH44Gu44Gb44GE44Gn44Gn44GN44G-44Gb44KT77yIVW5mb3J0dW5hdGVseSBub3QgcG9zc2libGUgZHVlIHRvIHRoaXMgc2VudGVuY2XvvInjgIIKCuaIkeWPr-S7peW8uuiwgyoq6L-Z5LiqYGNvZGVgKirlkJfvvIhDYW4gSSBlbXBoYXNpemUgKip0aGlzIGBjb2RlYCoq77yJ77yfCgoqKuydtCDsmqnslrQoVGhpcyB0ZXJtKSoq66W8IOqwleyhsO2VtCDso7zshLjsmpQuIChQbGVhc2UgZW1waGFzaXplICoqdGhpcyB0ZXJtKiouKQo&gfm=1&engine=markdown-it
         // 
