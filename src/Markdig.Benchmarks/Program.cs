@@ -7,6 +7,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 using Markdig;
+using Testamina.Markdig.Benchmarks.PipeTable;
 
 
 namespace Testamina.Markdig.Benchmarks;
@@ -68,7 +69,16 @@ public class Program
         //config.Add(gcDiagnoser);
 
         //var  config = DefaultConfig.Instance;
-        BenchmarkRunner.Run<Program>(config);
+
+        // Run specific benchmarks based on command line arguments
+        if (args.Length > 0 && args[0] == "--pipetable")
+        {
+            BenchmarkRunner.Run<PipeTableBenchmark>(config);
+        }
+        else
+        {
+            BenchmarkRunner.Run<Program>(config);
+        }
         //BenchmarkRunner.Run<TestDictionary>(config);
         //BenchmarkRunner.Run<TestMatchPerf>();
         //BenchmarkRunner.Run<TestStringPerf>();

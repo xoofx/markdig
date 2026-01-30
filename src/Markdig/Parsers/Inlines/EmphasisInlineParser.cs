@@ -125,7 +125,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                 }
 
                 // Follow DelimiterInline (EmphasisDelimiter, TableDelimiter...)
-                child = delimiterInline.FirstChild;
+                // If the delimiter has IsClosed=true (e.g., pipe table delimiter), it has no children
+                // In that case, continue to next sibling instead of stopping
+                var firstChild = delimiterInline.FirstChild;
+                child = firstChild ?? delimiterInline.NextSibling;
             }
             else
             {
