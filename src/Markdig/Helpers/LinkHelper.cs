@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
@@ -65,7 +65,7 @@ public static class LinkHelper
 
             for (int j = 0; j < (normalized.Length < 1 ? 1 : normalized.Length); j++)
             {
-                if (normalized != null)
+                if (!normalized.IsEmpty)
                 {
                     c = normalized[j];
                 }
@@ -215,13 +215,13 @@ public static class LinkHelper
             return false;
         }
 
-        // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
-        // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
+        // An absolute URI, for these purposes, consists of a scheme followed by a colon (:)
+        // followed by zero or more characters other than ASCII whitespace and control characters, <, and >.
         // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
         // A URI that would end with a full stop (.) is treated instead as ending immediately before the full stop.
 
-        // a scheme is any sequence of 2–32 characters 
-        // beginning with an ASCII letter 
+        // a scheme is any sequence of 2–32 characters
+        // beginning with an ASCII letter
         // and followed by any combination of ASCII letters, digits, or the symbols plus (”+”), period (”.”), or hyphen (”-”).
 
         // An email address, for these purposes, is anything that matches the non-normative regex from the HTML5 spec:
@@ -276,7 +276,7 @@ public static class LinkHelper
 
             if (isValidChar)
             {
-                // a scheme is any sequence of 2–32 characters 
+                // a scheme is any sequence of 2–32 characters
                 if (state > 0 && builder.Length >= 32)
                 {
                     goto ReturnFalse;
@@ -307,7 +307,7 @@ public static class LinkHelper
             }
         }
 
-        // append ':' or '@' 
+        // append ':' or '@'
         builder.Append(c);
 
         if (state < 0)
@@ -415,10 +415,10 @@ public static class LinkHelper
 
     public static bool TryParseInlineLink(ref StringSlice text, out string? link, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan)
     {
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
-        // 3. an optional link destination, 
-        // 4. an optional link title separated from the link destination by whitespace, 
+        // 3. an optional link destination,
+        // 4. an optional link title separated from the link destination by whitespace,
         // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
         // 6. and a right parenthesis )
         bool isValid = false;
@@ -429,7 +429,7 @@ public static class LinkHelper
         linkSpan = SourceSpan.Empty;
         titleSpan = SourceSpan.Empty;
 
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         if (c == '(')
         {
             text.SkipChar();
@@ -505,10 +505,10 @@ public static class LinkHelper
         out SourceSpan triviaAfterTitle,
         out bool urlHasPointyBrackets)
     {
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
-        // 3. an optional link destination, 
-        // 4. an optional link title separated from the link destination by whitespace, 
+        // 3. an optional link destination,
+        // 4. an optional link title separated from the link destination by whitespace,
         // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
         // 6. and a right parenthesis )
         bool isValid = false;
@@ -526,7 +526,7 @@ public static class LinkHelper
         urlHasPointyBrackets = false;
         titleEnclosingCharacter = '\0';
 
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         if (c == '(')
         {
             text.SkipChar();
@@ -773,7 +773,7 @@ public static class LinkHelper
 
         var c = text.CurrentChar;
 
-        // a sequence of zero or more characters between an opening < and a closing > 
+        // a sequence of zero or more characters between an opening < and a closing >
         // that contains no line breaks, or unescaped < or > characters, or
         if (c == '<')
         {
@@ -820,9 +820,9 @@ public static class LinkHelper
         else
         {
             // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
-            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
-            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
-            // parentheses. 
+            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a
+            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped
+            // parentheses.
             bool hasEscape = false;
             int openedParent = 0;
             while (true)
@@ -922,7 +922,7 @@ public static class LinkHelper
 
         var c = text.CurrentChar;
 
-        // a sequence of zero or more characters between an opening < and a closing > 
+        // a sequence of zero or more characters between an opening < and a closing >
         // that contains no line breaks, or unescaped < or > characters, or
         if (c == '<')
         {
@@ -969,9 +969,9 @@ public static class LinkHelper
         else
         {
             // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
-            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
-            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
-            // parentheses. 
+            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a
+            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped
+            // parentheses.
             bool hasEscape = false;
             int openedParent = 0;
             while (true)
@@ -1201,7 +1201,7 @@ public static class LinkHelper
 
         if (c != '\0' && c != '\n' && c != '\r')
         {
-            // If we were able to parse the url but the title doesn't end with space, 
+            // If we were able to parse the url but the title doesn't end with space,
             // we are still returning a valid definition
             if (newLineCount > 0 && title != null)
             {
@@ -1341,7 +1341,7 @@ public static class LinkHelper
 
         if (c != '\0' && c != '\n' && c != '\r')
         {
-            // If we were able to parse the url but the title doesn't end with space, 
+            // If we were able to parse the url but the title doesn't end with space,
             // we are still returning a valid definition
             if (newLineCount > 0 && title != null)
             {

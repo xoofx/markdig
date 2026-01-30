@@ -250,7 +250,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         //       a | b |    (trailing pipe only)
 
         // Ensure the table ends with a line break to simplify row detection
-        var lastElement = delimiters[^1];
+        var lastElement = delimiters[delimiters.Count - 1];
         if (!(lastElement is LineBreakInline))
         {
             // Find the actual last sibling (there may be content after the last delimiter)
@@ -401,11 +401,11 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 Debug.Assert(row != null);
                 if (table.Span.IsEmpty)
                 {
-                    table.Span = row.Span;
+                    table.Span = row!.Span;
                     table.Line = row.Line;
                     table.Column = row.Column;
                 }
-                table.Add(row);
+                table.Add(row!);
                 row = null;
             }
         }
