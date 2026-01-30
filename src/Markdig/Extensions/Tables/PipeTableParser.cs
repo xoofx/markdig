@@ -19,7 +19,7 @@ namespace Markdig.Extensions.Tables;
 /// <seealso cref="IPostInlineProcessor" />
 public class PipeTableParser : InlineParser, IPostInlineProcessor
 {
-    private readonly LineBreakInlineParser lineBreakParser;
+    private readonly LineBreakInlineParser _lineBreakParser;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PipeTableParser" /> class.
@@ -28,7 +28,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     /// <param name="options">The options.</param>
     public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions? options = null)
     {
-        this.lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
+        _lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
         OpeningCharacters = ['|', '\n', '\r'];
         Options = options ?? new PipeTableOptions();
     }
@@ -86,7 +86,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 tableState.IsInvalidTable = true;
             }
             tableState.LineHasPipe = false;
-            lineBreakParser.Match(processor, ref slice);
+            _lineBreakParser.Match(processor, ref slice);
             if (!isFirstLineEmpty)
             {
                 tableState.ColumnAndLineDelimiters.Add(processor.Inline!);
@@ -100,7 +100,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 Span = new SourceSpan(position, position),
                 Line = globalLineIndex,
                 Column = column,
-                LocalLineIndex = localLineIndex
+                LocalLineIndex = localLineIndex,
+                IsClosed = true  // Creates flat sibling structure for O(n) traversal
             };
 
             tableState.LineHasPipe = true;
@@ -125,6 +126,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 return true;
             }
 
+            // With flat structure, pipes are siblings at root level
+            // Walk backwards from the last child to find pipe delimiters
             var child = container.LastChild;
             List<PipeTableDelimiterInline>? delimitersToRemove = null;
 
@@ -142,8 +145,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     break;
                 }
 
-                var subContainer = child as ContainerInline;
-                child = subContainer?.LastChild;
+                // Walk siblings instead of descending into containers
+                child = child.PreviousSibling;
             }
 
             // If we have found any delimiters, transform them to literals
@@ -186,8 +189,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         // Remove previous state
         state.ParserStates[Index] = null!;
 
-        // Continue
-        if (tableState is null || container is null || tableState.IsInvalidTable || !tableState.LineHasPipe ) //|| tableState.LineIndex != state.LocalLineIndex)
+        // Abort if not a valid table
+        if (tableState is null || container is null || tableState.IsInvalidTable || !tableState.LineHasPipe)
         {
             if (tableState is not null)
             {
@@ -204,11 +207,18 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         // Detect the header row
         var delimiters = tableState.ColumnAndLineDelimiters;
-        // TODO: we could optimize this by merging FindHeaderRow and the cell loop
         var aligns = FindHeaderRow(delimiters);
 
         if (Options.RequireHeaderSeparator && aligns is null)
         {
+            // No valid header separator found - convert all pipe delimiters to literals
+            foreach (var inline in delimiters)
+            {
+                if (inline is PipeTableDelimiterInline pipeDelimiter)
+                {
+                    pipeDelimiter.ReplaceByLiteral();
+                }
+            }
             return true;
         }
 
@@ -224,68 +234,40 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         var cells = tableState.Cells;
         cells.Clear();
 
-        //delimiters[0].DumpTo(state.DebugLog);
+        // Pipes may end up nested inside unmatched emphasis delimiters, e.g.:
+        //     *a | b*|
+        // Promote them to root level so we have a flat sibling structure.
+        PromoteNestedPipesToRootLevel(delimiters, container);
 
-        // delimiters contain a list of `|` and `\n` delimiters
-        // The `|` delimiters are created as child containers.
-        // So the following:
-        // | a | b \n
-        // | d | e \n
+        // The inline tree is now flat: all pipes and line breaks are siblings at root level.
+        // For example, `| a | b \n| c | d \n` produces:
+        //     [|] [a] [|] [b] [\n] [|] [c] [|] [d] [\n]
         //
-        // Will generate a tree of the following node:
-        // |
-        //   a
-        //   |
-        //     b
-        //     \n
-        //     |
-        //       d
-        //       |
-        //         e
-        //         \n
-        // When parsing delimiters, we need to recover whether a row is of the following form:
-        // 0)  | a | b | \n
-        // 1)  | a | b \n
-        // 2)    a | b \n
-        // 3)    a | b | \n
+        // Tables support four row formats:
+        //     | a | b |    (leading and trailing pipes)
+        //     | a | b      (leading pipe only)
+        //       a | b      (no leading or trailing pipes)
+        //       a | b |    (trailing pipe only)
 
-        // If the last element is not a line break, add a line break to homogenize parsing in the next loop
-        var lastElement = delimiters[delimiters.Count - 1];
+        // Ensure the table ends with a line break to simplify row detection
+        var lastElement = delimiters[^1];
         if (!(lastElement is LineBreakInline))
         {
-            while (true)
+            // Find the actual last sibling (there may be content after the last delimiter)
+            while (lastElement.NextSibling != null)
             {
-                if (lastElement is ContainerInline lastElementContainer)
-                {
-                    var nextElement = lastElementContainer.LastChild;
-                    if (nextElement != null)
-                    {
-                        lastElement = nextElement;
-                        continue;
-                    }
-                }
-                break;
+                lastElement = lastElement.NextSibling;
             }
 
             var endOfTable = new LineBreakInline();
-            // If the last element is a container, we have to add the EOL to its child
-            // otherwise only next sibling
-            if (lastElement is ContainerInline)
-            {
-                ((ContainerInline)lastElement).AppendChild(endOfTable);
-            }
-            else
-            {
-                lastElement.InsertAfter(endOfTable);
-            }
+            lastElement.InsertAfter(endOfTable);
             delimiters.Add(endOfTable);
             tableState.EndOfLines.Add(endOfTable);
         }
 
         int lastPipePos = 0;
 
-        // Cell loop
-        // Reconstruct the table from the delimiters
+        // Build table rows and cells by iterating through delimiters
         TableRow? row = null;
         TableRow? firstRow = null;
         for (int i = 0; i < delimiters.Count; i++)
@@ -300,9 +282,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
                 firstRow ??= row;
 
-                // If the first delimiter is a pipe and doesn't have any parent or previous sibling, for cases like:
-                // 0)  | a | b | \n
-                // 1)  | a | b \n
+                // Skip leading pipe at start of row (e.g., `| a | b` or `| a | b |`)
                 if (pipeSeparator != null && (delimiter.PreviousSibling is null || delimiter.PreviousSibling is LineBreakInline))
                 {
                     delimiter.Remove();
@@ -316,57 +296,37 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 }
             }
 
-            // We need to find the beginning/ending of a cell from a right delimiter. From the delimiter 'x', we need to find a (without the delimiter start `|`)
-            // So we iterate back to the first pipe or line break
-            //         x
-            // 1)  | a | b \n
-            // 2)    a | b \n
+            // Find cell content by walking backwards from this delimiter to the previous pipe or line break.
+            // For `| a | b \n` at delimiter 'x':
+            //       [|] [a] [x] [b] [\n]
+            //                ^--- current delimiter
+            // Walk back: [a] is the cell content (stop at [|])
             Inline? endOfCell = null;
             Inline? beginOfCell = null;
-            var cellContentIt = delimiter;
-            while (true)
+            var cellContentIt = delimiter.PreviousSibling;
+            while (cellContentIt != null)
             {
-                cellContentIt = cellContentIt.PreviousSibling ?? cellContentIt.Parent;
-
-                if (cellContentIt is null || cellContentIt is LineBreakInline)
-                {
+                if (cellContentIt is LineBreakInline || cellContentIt is PipeTableDelimiterInline)
                     break;
-                }
 
-                // The cell begins at the first effective child after a | or the top ContainerInline (which is not necessary to bring into the tree + it contains an invalid span calculation)
-                if (cellContentIt is PipeTableDelimiterInline || (cellContentIt.GetType() == typeof(ContainerInline) && cellContentIt.Parent is null ))
-                {
-                    beginOfCell = ((ContainerInline)cellContentIt).FirstChild;
-                    if (endOfCell is null)
-                    {
-                        endOfCell = beginOfCell;
-                    }
+                // Stop at the root ContainerInline (which is not necessary to bring into the tree + it contains an invalid span calculation)
+                if (cellContentIt.GetType() == typeof(ContainerInline) && cellContentIt.Parent is null)
                     break;
-                }
 
                 beginOfCell = cellContentIt;
-                if (endOfCell is null)
-                {
-                    endOfCell = beginOfCell;
-                }
+                endOfCell ??= beginOfCell;
+
+                cellContentIt = cellContentIt.PreviousSibling;
             }
 
-            // If the current deilimiter is a pipe `|` OR
+            // If the current delimiter is a pipe `|` OR
             // the beginOfCell/endOfCell are not null and
-            // either they are :
+            // either they are:
             // - different
             // - they contain a single element, but it is not a line break (\n) or an empty/whitespace Literal.
             // Then we can add a cell to the current row
             if (!isLine || (beginOfCell != null && endOfCell != null && ( beginOfCell != endOfCell || !(beginOfCell is LineBreakInline || (beginOfCell is LiteralInline beingOfCellLiteral && beingOfCellLiteral.Content.IsEmptyOrWhitespace())))))
             {
-                if (!isLine)
-                {
-                    // If the delimiter is a pipe, we need to remove it from the tree
-                    // so that previous loop looking for a parent will not go further on subsequent cells
-                    delimiter.Remove();
-                    lastPipePos = delimiter.Span.End;
-                }
-
                 // We trim whitespace at the beginning and ending of the cell
                 TrimStart(beginOfCell);
                 TrimEnd(endOfCell);
@@ -374,10 +334,20 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 var cellContainer = new ContainerInline();
 
                 // Copy elements from beginOfCell on the first level
+                // The pipe delimiter serves as a boundary - stop when we hit it
                 var cellIt = beginOfCell;
                 while (cellIt != null && !IsLine(cellIt) && !(cellIt is PipeTableDelimiterInline))
                 {
                     var nextSibling = cellIt.NextSibling;
+
+                    // Skip empty literals (can result from trimming)
+                    if (cellIt is LiteralInline { Content.IsEmpty: true })
+                    {
+                        cellIt.Remove();
+                        cellIt = nextSibling;
+                        continue;
+                    }
+
                     cellIt.Remove();
                     if (cellContainer.Span.IsEmpty)
                     {
@@ -390,8 +360,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     cellIt = nextSibling;
                 }
 
+                if (!isLine)
+                {
+                    // Remove the pipe delimiter AFTER copying cell content
+                    // This preserves the sibling chain during the copy loop
+                    delimiter.Remove();
+                    lastPipePos = delimiter.Span.End;
+                }
+
                 // Create the cell and add it to the pending row
-                var tableParagraph = new ParagraphBlock()
+                var tableParagraph = new ParagraphBlock
                 {
                     Span = cellContainer.Span,
                     Line = cellContainer.Line,
@@ -423,11 +401,11 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 Debug.Assert(row != null);
                 if (table.Span.IsEmpty)
                 {
-                    table.Span = row!.Span;
+                    table.Span = row.Span;
                     table.Line = row.Line;
                     table.Column = row.Column;
                 }
-                table.Add(row!);
+                table.Add(row);
                 row = null;
             }
         }
@@ -443,8 +421,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             endOfLine.Remove();
         }
 
-        // If we have a header row, we can remove it
-        // TODO: we could optimize this by merging FindHeaderRow and the previous loop
+        // Mark first row as header and remove the separator row if present
         var tableRow = (TableRow)table[0];
         tableRow.IsHeader = Options.RequireHeaderSeparator;
         if (aligns != null)
@@ -454,11 +431,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             table.ColumnDefinitions.AddRange(aligns);
         }
 
-        // Perform delimiter processor that are coming after this processor
+        // Perform all post-processors on cell content
+        // With InsertAfter, emphasis runs before pipe table, so we need to re-run from index 0
+        // to ensure emphasis delimiters in cells are properly matched
         foreach (var cell in cells)
         {
             var paragraph = (ParagraphBlock) cell[0];
-            state.PostProcessInlines(postInlineProcessorIndex + 1, paragraph.Inline, null, true);
+            state.PostProcessInlines(0, paragraph.Inline, null, true);
             if (paragraph.Inline?.LastChild is not null)
             {
                 paragraph.Inline.Span.End = paragraph.Inline.LastChild.Span.End;
@@ -548,7 +527,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 continue;
             }
 
-            // The last delimiter is always null,
+            // Parse the separator row (second row) to extract column alignments
             for (int j = i + 1; j < delimiters.Count; j++)
             {
                 var delimiter = delimiters[j];
@@ -560,11 +539,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     continue;
                 }
 
-                // Check the left side of a `|` delimiter
+                // Parse the content before this delimiter as a column definition (e.g., `:---`, `---:`, `:---:`)
+                // Skip if previous sibling is a pipe (empty cell) or whitespace
                 TableColumnAlign? align = null;
                 int delimiterCount = 0;
                 if (delimiter.PreviousSibling != null &&
-                    !(delimiter.PreviousSibling is LiteralInline li && li.Content.IsEmptyOrWhitespace()) && // ignore parsed whitespace
+                    !(delimiter.PreviousSibling is PipeTableDelimiterInline) &&
+                    !(delimiter.PreviousSibling is LiteralInline li && li.Content.IsEmptyOrWhitespace()) &&
                     !ParseHeaderString(delimiter.PreviousSibling, out align, out delimiterCount))
                 {
                     break;
@@ -576,14 +557,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 totalDelimiterCount += delimiterCount;
                 columnDefinitions.Add(new TableColumnDefinition() { Alignment =  align, Width = delimiterCount});
 
-                // If this is the last delimiter, we need to check the right side of the `|` delimiter
+                // If this is the last pipe, check for a trailing column definition (row without trailing pipe)
+                // e.g., `| :--- | ---:` has content after the last pipe
                 if (nextDelimiter is null)
                 {
-                    var nextSibling = columnDelimiter != null
-                        ? columnDelimiter.FirstChild
-                        : delimiter.NextSibling;
+                    var nextSibling = delimiter.NextSibling;
 
-                    // If there is no content after
+                    // No trailing content means row ends with pipe: `| :--- |`
                     if (IsNullOrSpace(nextSibling))
                     {
                         isValidRow = true;
@@ -664,9 +644,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
     private static void TrimStart(Inline? inline)
     {
-        while (inline is ContainerInline && !(inline is DelimiterInline))
+        while (inline is ContainerInline containerInline && !(containerInline is DelimiterInline))
         {
-            inline = ((ContainerInline)inline).FirstChild;
+            inline = containerInline.FirstChild;
         }
 
         if (inline is LiteralInline literal)
@@ -677,6 +657,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
     private static void TrimEnd(Inline? inline)
     {
+        // Walk into containers to find the last leaf to trim
+        // Skip PipeTableDelimiterInline but walk into other containers (including emphasis)
+        while (inline is ContainerInline container && !(inline is PipeTableDelimiterInline))
+        {
+            inline = container.LastChild;
+        }
+
         if (inline is LiteralInline literal)
         {
             literal.Content.TrimEnd();
@@ -695,6 +682,106 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             return literal.Content.IsEmptyOrWhitespace();
         }
         return false;
+    }
+
+    /// <summary>
+    /// Promotes nested pipe delimiters and line breaks to root level.
+    /// </summary>
+    /// <remarks>
+    /// Handles cases like `*a | b*|` where the pipe ends up inside an unmatched emphasis container.
+    /// After promotion, all delimiters become siblings at root level for consistent cell boundary detection.
+    /// </remarks>
+    private static void PromoteNestedPipesToRootLevel(List<Inline> delimiters, ContainerInline root)
+    {
+        for (int i = 0; i < delimiters.Count; i++)
+        {
+            var delimiter = delimiters[i];
+
+            // Handle both pipe delimiters and line breaks
+            bool isPipe = delimiter is PipeTableDelimiterInline;
+            bool isLineBreak = delimiter is LineBreakInline;
+            if (!isPipe && !isLineBreak)
+                continue;
+
+            // Skip if already at root level
+            if (delimiter.Parent == root)
+                continue;
+
+            // Find the top-level ancestor (direct child of root)
+            var ancestor = delimiter.Parent;
+            while (ancestor?.Parent != null && ancestor.Parent != root)
+            {
+                ancestor = ancestor.Parent;
+            }
+
+            if (ancestor is null || ancestor.Parent != root)
+                continue;
+
+            // Split: promote delimiter to be sibling of ancestor
+            SplitContainerAtDelimiter(delimiter, ancestor);
+        }
+    }
+
+    /// <summary>
+    /// Splits a container at the delimiter, promoting the delimiter to root level.
+    /// </summary>
+    /// <remarks>
+    /// For input `*a | b*`, the pipe is inside the emphasis container:
+    ///     EmphasisDelimiter { "a", Pipe, "b" }
+    /// After splitting:
+    ///     EmphasisDelimiter { "a" }, Pipe, Container { "b" }
+    /// </remarks>
+    private static void SplitContainerAtDelimiter(Inline delimiter, Inline ancestor)
+    {
+        if (delimiter.Parent is not { } parent) return;
+
+        // Collect content after the delimiter
+        var contentAfter = new List<Inline>();
+        var current = delimiter.NextSibling;
+        while (current != null)
+        {
+            contentAfter.Add(current);
+            current = current.NextSibling;
+        }
+
+        // Remove content after delimiter from parent
+        foreach (var inline in contentAfter)
+        {
+            inline.Remove();
+        }
+
+        // Remove delimiter from parent
+        delimiter.Remove();
+
+        // Insert delimiter after the ancestor (at root level)
+        ancestor.InsertAfter(delimiter);
+
+        // If there's content after, wrap in new container and insert after delimiter
+        if (contentAfter.Count > 0)
+        {
+            // Create new container matching the original parent type
+            var newContainer = CreateMatchingContainer(parent);
+            foreach (var inline in contentAfter)
+            {
+                newContainer.AppendChild(inline);
+            }
+            delimiter.InsertAfter(newContainer);
+        }
+    }
+
+    /// <summary>
+    /// Creates a container to wrap content split from the source container.
+    /// </summary>
+    private static ContainerInline CreateMatchingContainer(ContainerInline source)
+    {
+        // Emphasis processing runs before pipe table processing, so emphasis delimiters
+        // are already resolved. A plain ContainerInline suffices.
+        return new ContainerInline
+        {
+            Span = source.Span,
+            Line = source.Line,
+            Column = source.Column
+        };
     }
 
     private sealed class TableState

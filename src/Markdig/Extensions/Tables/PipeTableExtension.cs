@@ -38,7 +38,7 @@ public class PipeTableExtension : IMarkdownExtension
         var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
         if (!pipeline.InlineParsers.Contains<PipeTableParser>())
         {
-            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
+            pipeline.InlineParsers.InsertAfter<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
         }
     }
 

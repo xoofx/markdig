@@ -217,6 +217,47 @@ public abstract class Inline : MarkdownObject, IInline
     }
 
     /// <summary>
+    /// Determines whether there is a sibling of the specified type among root-level siblings.
+    /// This walks up to find the root container, then checks all siblings.
+    /// </summary>
+    /// <typeparam name="T">Type of the sibling to check</typeparam>
+    /// <returns><c>true</c> if a sibling of the specified type exists; <c>false</c> otherwise</returns>
+    public bool ContainsParentOrSiblingOfType<T>() where T : Inline
+    {
+        // First check parents (handles nested case)
+        if (ContainsParentOfType<T>())
+        {
+            return true;
+        }
+
+        // Then check siblings at root level (handles flat case)
+        // Find the root container
+        var root = Parent;
+        while (root?.Parent != null)
+        {
+            root = root.Parent;
+        }
+
+        if (root is not ContainerInline container)
+        {
+            return false;
+        }
+
+        // Walk siblings looking for the type
+        var sibling = container.FirstChild;
+        while (sibling != null)
+        {
+            if (sibling is T)
+            {
+                return true;
+            }
+            sibling = sibling.NextSibling;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Iterates on parents of the specified type.
     /// </summary>
     /// <typeparam name="T">Type of the parent to iterate over</typeparam>
