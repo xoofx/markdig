@@ -471,15 +471,30 @@ public class BlockProcessor
     /// <param name="block">The block.</param>
     public void Discard(Block block)
     {
+        _ = TryDiscard(block);
+    }
+
+    /// <summary>
+    /// Tries to discard the specified block from the open stack and remove it from its parent.
+    /// </summary>
+    /// <param name="block">The block to discard.</param>
+    /// <returns><c>true</c> if the block was discarded; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="block"/> is null.</exception>
+    public bool TryDiscard(Block block)
+    {
+        if (block is null) ThrowHelper.ArgumentNullException(nameof(block));
+
         for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
         {
             if (ReferenceEquals(OpenedBlocks[i].Block, block))
             {
                 block.Parent!.Remove(block);
                 OpenedBlocks.RemoveAt(i);
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     /// <summary>
@@ -934,6 +949,7 @@ public class BlockProcessor
         while (newBlocks.Count > 0)
         {
             var block = newBlocks.Pop();
+            Debug.Assert(block.Parser is not null, $"The new block [{block.GetType()}] must have a valid Parser property");
 
             if (block.Parser is null)
             {
@@ -960,6 +976,7 @@ public class BlockProcessor
 
                 if (newBlocks.Count > 0)
                 {
+                    Debug.Assert(false, "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                     ThrowHelper.InvalidOperationException(
                         "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                 }

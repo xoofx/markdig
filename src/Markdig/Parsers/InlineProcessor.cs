@@ -396,6 +396,69 @@ public class InlineProcessor
         }
     }
 
+    /// <summary>
+    /// Gets or creates a parser state instance scoped to the current leaf processing pass.
+    /// </summary>
+    /// <typeparam name="TState">The type of state to get or create.</typeparam>
+    /// <param name="parser">The parser requesting the state.</param>
+    /// <param name="factory">A factory used to create a state instance when none exists yet.</param>
+    /// <returns>The existing or newly created state instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> or <paramref name="factory"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="factory"/> returns <c>null</c>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public TState GetParserState<TState>(InlineParser parser, Func<TState> factory) where TState : class
+    {
+        if (parser is null) ThrowHelper.ArgumentNullException(nameof(parser));
+        if (factory is null) ThrowHelper.ArgumentNullException(nameof(factory));
+
+        ref var slot = ref ParserStates[parser.Index];
+        if (slot is TState state)
+        {
+            return state;
+        }
+
+        state = factory();
+        if (state is null)
+        {
+            ThrowHelper.InvalidOperationException($"The state factory for [{typeof(TState)}] returned null");
+        }
+
+        slot = state;
+        return state;
+    }
+
+    /// <summary>
+    /// Gets or creates a parser state instance scoped to the current leaf processing pass.
+    /// </summary>
+    /// <typeparam name="TState">The type of state to get or create.</typeparam>
+    /// <param name="parser">The parser requesting the state.</param>
+    /// <returns>The existing or newly created state instance.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public TState GetParserState<TState>(InlineParser parser) where TState : class, new()
+    {
+        return GetParserState(parser, static () => new TState());
+    }
+
+    /// <summary>
+    /// Emits an inline into the deepest open inline container for the current leaf.
+    /// </summary>
+    /// <param name="inline">The inline to emit.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="inline"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="inline"/> is already attached to a parent.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Emit(Inline inline)
+    {
+        if (inline is null) ThrowHelper.ArgumentNullException(nameof(inline));
+        if (inline.Parent is not null)
+        {
+            ThrowHelper.ArgumentException("Inline has already a parent", nameof(inline));
+        }
+
+        var container = FindLastContainer();
+        container.AppendChild(inline);
+        Inline = inline;
+    }
+
     private ContainerInline FindLastContainer()
     {
         var container = Block!.Inline!;
