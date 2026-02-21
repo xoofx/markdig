@@ -18,13 +18,13 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-          9.0.x
+          10.0.x
 
     - name: Patch build to test ${{ matrix.netstandard-version }}
       run: |
         cd src
         sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFrameworks>${{ matrix.netstandard-version }}<\/TargetFrameworks>/' Markdig/Markdig.targets
-        sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFrameworks>net8.0;net9.0<\/TargetFrameworks>/' Markdig.Tests/Markdig.Tests.csproj
+        sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFrameworks>net8.0;net10.0<\/TargetFrameworks>/' Markdig.Tests/Markdig.Tests.csproj
         echo "Markdig.targets TFMs:"
         grep "TargetFrameworks" Markdig/Markdig.targets
         echo "Markdig.Tests.csproj TFMs:"
