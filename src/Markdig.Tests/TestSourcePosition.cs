@@ -580,7 +580,7 @@ literal      ( 4, 0) 13-14
         //     012 3456789A
         Check("a0\n:   1234", @"
 definitionlist ( 0, 0)  0-10
-definitionitem ( 1, 0)  3-10
+definitionitem ( 1, 0)  0-10
 definitionterm ( 0, 0)  0-1
 literal      ( 0, 0)  0-1
 paragraph    ( 1, 4)  7-10
@@ -594,7 +594,7 @@ literal      ( 1, 4)  7-10
         //     012 3456789AB CDEF01234
         Check("a0\n:   1234\n:    5678", @"
 definitionlist ( 0, 0)  0-20
-definitionitem ( 1, 0)  3-10
+definitionitem ( 1, 0)  0-10
 definitionterm ( 0, 0)  0-1
 literal      ( 0, 0)  0-1
 paragraph    ( 1, 4)  7-10

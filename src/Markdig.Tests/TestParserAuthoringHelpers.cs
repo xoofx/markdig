@@ -48,6 +48,21 @@ public sealed class TestParserAuthoringHelpers
         Assert.That(processor.TryDiscard(document), Is.False);
     }
 
+    [Test]
+    public void EmitUpdatesInlineAndLeafSpans()
+    {
+        var pipeline = new MarkdownPipelineBuilder();
+        pipeline.InlineParsers.InsertBefore<AutolinkInlineParser>(new SpanEmittingInlineParser());
+
+        var document = Markdown.Parse("~", pipeline.Build());
+        var paragraph = document[0] as ParagraphBlock;
+
+        Assert.That(paragraph, Is.Not.Null);
+        Assert.That(paragraph!.Inline, Is.Not.Null);
+        Assert.That(paragraph.Inline!.Span, Is.EqualTo(new SourceSpan(0, 0)));
+        Assert.That(paragraph.Span, Is.EqualTo(new SourceSpan(0, 0)));
+    }
+
     private sealed class CountingInlineParser : InlineParser
     {
         public CountingInlineParser()
@@ -74,5 +89,32 @@ public sealed class TestParserAuthoringHelpers
     private sealed class CounterState
     {
         public int Count { get; set; }
+    }
+
+    private sealed class SpanEmittingInlineParser : InlineParser
+    {
+        public SpanEmittingInlineParser()
+        {
+            OpeningCharacters = ['~'];
+        }
+
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+        {
+            if (slice.CurrentChar != '~')
+            {
+                return false;
+            }
+
+            int start = processor.GetSourcePosition(slice.Start, out int line, out int column);
+            processor.Emit(new LiteralInline("x")
+            {
+                Line = line,
+                Column = column,
+                Span = new SourceSpan(start, start)
+            });
+
+            slice.SkipChar();
+            return true;
+        }
     }
 }

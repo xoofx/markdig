@@ -137,6 +137,45 @@ public abstract class Block : MarkdownObject, IBlock
         }
     }
 
+    /// <summary>
+    /// Updates this block span and all parent container spans to include the specified <paramref name="span"/>.
+    /// </summary>
+    /// <param name="span">The span to include.</param>
+    public void UpdateSpanToInclude(SourceSpan span)
+    {
+        if (span.IsEmpty)
+        {
+            return;
+        }
+
+        int depth = 0;
+        Block? current = this;
+        while (current is not null)
+        {
+            if (current.Span.IsEmpty)
+            {
+                current.Span = span;
+            }
+            else
+            {
+                if (span.Start < current.Span.Start)
+                {
+                    current.Span.Start = span.Start;
+                }
+
+                if (span.End > current.Span.End)
+                {
+                    current.Span.End = span.End;
+                }
+            }
+
+            current = current.Parent;
+            depth++;
+        }
+
+        ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
+    }
+
     public void UpdateSpanEnd(int spanEnd)
     {
         // Update parent spans

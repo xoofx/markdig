@@ -456,6 +456,29 @@ public class InlineProcessor
 
         var container = FindLastContainer();
         container.AppendChild(inline);
+
+        if (ReferenceEquals(container, Root) && !inline.Span.IsEmpty)
+        {
+            if (container.Span.IsEmpty)
+            {
+                container.Span = inline.Span;
+            }
+            else
+            {
+                if (inline.Span.Start < container.Span.Start)
+                {
+                    container.Span.Start = inline.Span.Start;
+                }
+
+                if (inline.Span.End > container.Span.End)
+                {
+                    container.Span.End = inline.Span.End;
+                }
+            }
+
+            Block?.UpdateSpanToInclude(inline.Span);
+        }
+
         Inline = inline;
     }
 

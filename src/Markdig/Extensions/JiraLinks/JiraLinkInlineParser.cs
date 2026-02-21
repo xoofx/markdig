@@ -5,6 +5,7 @@
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Extensions.JiraLinks;
@@ -80,18 +81,15 @@ public class JiraLinkInlineParser : InlineParser
             return false;
         }
 
+        int spanStart = processor.GetSourcePosition(startKey, out int line, out int column);
         var jiraLink = new JiraLink() //create the link at the relevant position
         {
-            Span =
-            {
-                Start = processor.GetSourcePosition(slice.Start, out int line, out int column)
-            },
+            Span = new SourceSpan(spanStart, spanStart + (endIssue - startKey)),
             Line = line,
             Column = column,
             Issue = new StringSlice(slice.Text, startIssue, endIssue),
             ProjectKey = new StringSlice(slice.Text, startKey, endKey),
         };
-        jiraLink.Span.End = jiraLink.Span.Start + (endIssue - startKey);
 
         // Builds the Url
         var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
@@ -107,7 +105,12 @@ public class JiraLinkInlineParser : InlineParser
         builder.Append(jiraLink.ProjectKey.AsSpan());
         builder.Append('-');
         builder.Append(jiraLink.Issue.AsSpan());
-        jiraLink.AppendChild(new LiteralInline(builder.ToString()));
+        jiraLink.AppendChild(new LiteralInline(builder.ToString())
+        {
+            Span = jiraLink.Span,
+            Line = line,
+            Column = column,
+        });
 
         if (_options.OpenInNewWindow)
         {

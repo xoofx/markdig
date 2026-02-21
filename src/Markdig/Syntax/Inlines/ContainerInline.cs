@@ -5,8 +5,10 @@
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using Markdig.Helpers;
+using Markdig.Syntax;
 
 namespace Markdig.Syntax.Inlines;
 
@@ -261,6 +263,113 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         {
             level++;
             FirstChild.DumpTo(writer, level);
+        }
+    }
+
+    /// <summary>
+    /// Checks whether this container span is valid with respect to child inline spans.
+    /// </summary>
+    /// <param name="recursive">When <c>true</c>, validates descendant container inline spans recursively.</param>
+    /// <returns>
+    /// <c>true</c> when this container span contains all direct child spans and recursive checks (if enabled) succeed;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public bool HasValidSpan(bool recursive = false)
+    {
+        var child = FirstChild;
+        while (child is not null)
+        {
+            if (!ContainsSpan(Span, child.Span))
+            {
+                return false;
+            }
+
+            if (recursive && child is ContainerInline childContainer && !childContainer.HasValidSpan(recursive: true))
+            {
+                return false;
+            }
+
+            child = child.NextSibling;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Updates this container span from its child inline spans.
+    /// </summary>
+    /// <param name="recursive">When <c>true</c>, updates descendant container inline spans recursively before updating this container.</param>
+    /// <param name="preserveSelfSpan">
+    /// When <c>true</c>, preserves this container current span and only expands it to include children.
+    /// When <c>false</c>, recomputes from children only.
+    /// </param>
+    /// <returns><c>true</c> when this container span changed; otherwise, <c>false</c>.</returns>
+    public bool UpdateSpanFromChildren(bool recursive = false, bool preserveSelfSpan = true)
+    {
+        var updatedSpan = SourceSpan.Empty;
+        bool hasUpdatedSpan = false;
+
+        if (preserveSelfSpan && !Span.IsEmpty)
+        {
+            updatedSpan = Span;
+            hasUpdatedSpan = true;
+        }
+
+        var child = FirstChild;
+        while (child is not null)
+        {
+            if (recursive && child is ContainerInline childContainer)
+            {
+                childContainer.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+            }
+
+            AppendSpan(ref updatedSpan, ref hasUpdatedSpan, child.Span);
+            child = child.NextSibling;
+        }
+
+        if (!hasUpdatedSpan)
+        {
+            updatedSpan = SourceSpan.Empty;
+        }
+
+        if (updatedSpan == Span)
+        {
+            return false;
+        }
+
+        Span = updatedSpan;
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ContainsSpan(in SourceSpan containerSpan, in SourceSpan childSpan)
+    {
+        return childSpan.IsEmpty || (!containerSpan.IsEmpty && childSpan.Start >= containerSpan.Start && childSpan.End <= containerSpan.End);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void AppendSpan(ref SourceSpan destinationSpan, ref bool hasDestinationSpan, in SourceSpan spanToAppend)
+    {
+        if (spanToAppend.IsEmpty)
+        {
+            return;
+        }
+
+        if (!hasDestinationSpan)
+        {
+            destinationSpan = spanToAppend;
+            hasDestinationSpan = true;
+            return;
+        }
+
+        if (spanToAppend.Start < destinationSpan.Start)
+        {
+            destinationSpan.Start = spanToAppend.Start;
+        }
+
+        if (spanToAppend.End > destinationSpan.End)
+        {
+            destinationSpan.End = spanToAppend.End;
         }
     }
 

@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Syntax;
 
@@ -271,6 +272,124 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Checks whether this container span is valid with respect to child block spans.
+    /// </summary>
+    /// <param name="recursive">
+    /// When <c>true</c>, validates descendant container blocks and inline containers recursively.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> when this container span contains all direct child spans and recursive checks (if enabled) succeed;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public bool HasValidSpan(bool recursive = false)
+    {
+        var children = _children;
+        for (int i = 0; i < Count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+            if (!ContainsSpan(Span, child.Span))
+            {
+                return false;
+            }
+
+            if (!recursive)
+            {
+                continue;
+            }
+
+            if (child is ContainerBlock containerBlock)
+            {
+                if (!containerBlock.HasValidSpan(recursive: true))
+                {
+                    return false;
+                }
+            }
+            else if (child is LeafBlock leafBlock && leafBlock.Inline is ContainerInline inline)
+            {
+                if (!ContainsSpan(leafBlock.Span, inline.Span))
+                {
+                    return false;
+                }
+
+                if (!inline.HasValidSpan(recursive: true))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Updates this container span from its child block spans.
+    /// </summary>
+    /// <param name="recursive">
+    /// When <c>true</c>, updates descendant container blocks and inline containers recursively before updating this container.
+    /// </param>
+    /// <param name="preserveSelfSpan">
+    /// When <c>true</c>, preserves this container current span and only expands it to include children.
+    /// When <c>false</c>, recomputes from children only.
+    /// </param>
+    /// <returns><c>true</c> when this container span changed; otherwise, <c>false</c>.</returns>
+    public bool UpdateSpanFromChildren(bool recursive = false, bool preserveSelfSpan = true)
+    {
+        var updatedSpan = SourceSpan.Empty;
+        bool hasUpdatedSpan = false;
+
+        if (preserveSelfSpan && !Span.IsEmpty)
+        {
+            updatedSpan = Span;
+            hasUpdatedSpan = true;
+        }
+
+        var children = _children;
+        for (int i = 0; i < Count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+
+            if (recursive)
+            {
+                if (child is ContainerBlock containerBlock)
+                {
+                    containerBlock.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+                }
+                else if (child is LeafBlock leafBlock && leafBlock.Inline is ContainerInline inline)
+                {
+                    inline.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+
+                    if (!ContainsSpan(leafBlock.Span, inline.Span))
+                    {
+                        if (preserveSelfSpan && !leafBlock.Span.IsEmpty)
+                        {
+                            leafBlock.UpdateSpanToInclude(inline.Span);
+                        }
+                        else
+                        {
+                            leafBlock.Span = inline.Span;
+                        }
+                    }
+                }
+            }
+
+            AppendSpan(ref updatedSpan, ref hasUpdatedSpan, child.Span);
+        }
+
+        if (!hasUpdatedSpan)
+        {
+            updatedSpan = SourceSpan.Empty;
+        }
+
+        if (updatedSpan == Span)
+        {
+            return false;
+        }
+
+        Span = updatedSpan;
+        return true;
+    }
+
     public void Sort(IComparer<Block> comparer)
     {
         if (comparer is null) ThrowHelper.ArgumentNullException(nameof(comparer));
@@ -351,6 +470,38 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         public int Compare(BlockWrapper x, BlockWrapper y)
         {
             return _comparer.Compare(x.Block, y.Block);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ContainsSpan(in SourceSpan containerSpan, in SourceSpan childSpan)
+    {
+        return childSpan.IsEmpty || (!containerSpan.IsEmpty && childSpan.Start >= containerSpan.Start && childSpan.End <= containerSpan.End);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void AppendSpan(ref SourceSpan destinationSpan, ref bool hasDestinationSpan, in SourceSpan spanToAppend)
+    {
+        if (spanToAppend.IsEmpty)
+        {
+            return;
+        }
+
+        if (!hasDestinationSpan)
+        {
+            destinationSpan = spanToAppend;
+            hasDestinationSpan = true;
+            return;
+        }
+
+        if (spanToAppend.Start < destinationSpan.Start)
+        {
+            destinationSpan.Start = spanToAppend.Start;
+        }
+
+        if (spanToAppend.End > destinationSpan.End)
+        {
+            destinationSpan.End = spanToAppend.End;
         }
     }
 }

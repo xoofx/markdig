@@ -75,7 +75,7 @@ public class DefinitionListParser : BlockParser
         {
             Line = processor.LineIndex,
             Column = column,
-            Span = new SourceSpan(startPosition, processor.Line.End),
+            Span = new SourceSpan(paragraphBlock.Span.Start, processor.Line.End),
             OpeningCharacter = processor.CurrentChar,
         };
 
