@@ -10,32 +10,34 @@ namespace Markdig.Parsers;
 public enum BlockState
 {
     /// <summary>
-    /// A line is not accepted by this parser.
+    /// The parser does not accept the line for this block.
+    /// No line content is consumed by this result.
     /// </summary>
     None,
 
     /// <summary>
-    /// The parser is skipped.
+    /// Skips this parser for the current line and continues with the next parser/candidate block.
     /// </summary>
     Skip,
 
     /// <summary>
-    /// The parser accepts a line and instruct to continue.
+    /// The parser accepts the line and keeps the block open.
+    /// For leaf blocks, the current line is appended to the block.
     /// </summary>
     Continue,
 
     /// <summary>
-    /// The parser accepts a line, instruct to continue but discard the line (not stored on the block)
+    /// The parser accepts the line and keeps the block open, but the line is consumed and not appended.
     /// </summary>
     ContinueDiscard,
 
     /// <summary>
-    /// The parser is ending a block, instruct to stop and keep the line being processed.
+    /// The parser ends the block and keeps the current line available for further parsing.
     /// </summary>
     Break,
 
     /// <summary>
-    /// The parser is ending a block, instruct to stop and discard the line being processed.
+    /// The parser ends the block and consumes the current line.
     /// </summary>
     BreakDiscard
 }
