@@ -150,6 +150,30 @@ public class ContainerInline : Inline, IEnumerable<Inline>
     }
 
     /// <summary>
+    /// Transfers all children from this container to <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null.</exception>
+    public void TransferChildrenTo(ContainerInline destination)
+    {
+        if (destination is null) ThrowHelper.ArgumentNullException(nameof(destination));
+
+        if (ReferenceEquals(this, destination))
+        {
+            return;
+        }
+
+        var child = FirstChild;
+        while (child != null)
+        {
+            var next = child.NextSibling;
+            child.Remove();
+            destination.AppendChild(child);
+            child = next;
+        }
+    }
+
+    /// <summary>
     /// Moves all the children of this container after the specified inline.
     /// </summary>
     /// <param name="parent">The parent.</param>

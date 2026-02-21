@@ -183,4 +183,55 @@ public class TestContainerBlocks
 
         Assert.Throws<IndexOutOfRangeException>(() => container.CopyTo(destination, 3));
     }
+
+    [Test]
+    public void CanTransferChildrenToAnotherContainer()
+    {
+        var source = new MockContainerBlock();
+        var first = new ParagraphBlock { Column = 1 };
+        var second = new ParagraphBlock { Column = 2 };
+        source.Add(first);
+        source.Add(second);
+
+        var destination = new MockContainerBlock();
+        var existing = new ParagraphBlock { Column = 0 };
+        destination.Add(existing);
+
+        source.TransferChildrenTo(destination);
+
+        Assert.That(source.Count, Is.EqualTo(0));
+        Assert.That(destination.Count, Is.EqualTo(3));
+        Assert.That(destination[0], Is.SameAs(existing));
+        Assert.That(destination[1], Is.SameAs(first));
+        Assert.That(destination[2], Is.SameAs(second));
+        Assert.That(first.Parent, Is.SameAs(destination));
+        Assert.That(second.Parent, Is.SameAs(destination));
+    }
+
+    [Test]
+    public void BlockCanBeRemovedAndReplaced()
+    {
+        var root = new MockContainerBlock();
+        var toRemove = new ParagraphBlock();
+        root.Add(toRemove);
+
+        toRemove.Remove();
+        Assert.That(root.Count, Is.EqualTo(0));
+        Assert.That(toRemove.Parent, Is.Null);
+
+        var sourceContainer = new MockContainerBlock();
+        sourceContainer.Add(new ParagraphBlock { Column = 3 });
+        sourceContainer.Add(new ParagraphBlock { Column = 4 });
+        root.Add(sourceContainer);
+
+        var replacement = new MockContainerBlock();
+        sourceContainer.ReplaceBy(replacement);
+
+        Assert.That(root[0], Is.SameAs(replacement));
+        Assert.That(sourceContainer.Parent, Is.Null);
+        Assert.That(sourceContainer.Count, Is.EqualTo(0));
+        Assert.That(replacement.Count, Is.EqualTo(2));
+        Assert.That(replacement[0].Column, Is.EqualTo(3));
+        Assert.That(replacement[1].Column, Is.EqualTo(4));
+    }
 }

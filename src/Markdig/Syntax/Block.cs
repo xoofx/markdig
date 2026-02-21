@@ -154,6 +154,56 @@ public abstract class Block : MarkdownObject, IBlock
         ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
     }
 
+    /// <summary>
+    /// Removes this block from its parent container.
+    /// </summary>
+    public void Remove()
+    {
+        Parent?.Remove(this);
+    }
+
+    /// <summary>
+    /// Replaces this block with <paramref name="replacement"/> in its parent container.
+    /// </summary>
+    /// <param name="replacement">The replacement block.</param>
+    /// <param name="moveChildren">
+    /// <c>true</c> to transfer children when both this block and <paramref name="replacement"/> are containers.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="replacement"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="replacement"/> is already attached to a parent container.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if this block has no parent container.</exception>
+    /// <remarks>
+    /// This method does not recompute spans or trivia. Callers are responsible for updating those values
+    /// if a transform requires exact source information after replacement.
+    /// </remarks>
+    public void ReplaceBy(Block replacement, bool moveChildren = true)
+    {
+        if (replacement is null) ThrowHelper.ArgumentNullException(nameof(replacement));
+        if (replacement.Parent is not null)
+        {
+            ThrowHelper.ArgumentException("Cannot replace with a block that is already attached to another container (replacement.Parent != null)", nameof(replacement));
+        }
+
+        var parent = Parent;
+        if (parent is null)
+        {
+            ThrowHelper.InvalidOperationException("Cannot replace a block that has no parent");
+        }
+
+        int index = parent.IndexOf(this);
+        if (index < 0)
+        {
+            ThrowHelper.InvalidOperationException("Cannot replace a block that is not attached to its parent container");
+        }
+
+        parent[index] = replacement;
+
+        if (moveChildren && this is ContainerBlock sourceContainer && replacement is ContainerBlock destinationContainer)
+        {
+            sourceContainer.TransferChildrenTo(destinationContainer);
+        }
+    }
+
     internal static Block FindRootMostContainerParent(Block block)
     {
         while (true)

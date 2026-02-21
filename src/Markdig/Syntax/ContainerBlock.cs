@@ -119,6 +119,39 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         Count = 0;
     }
 
+    /// <summary>
+    /// Transfers all children from this container to <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null.</exception>
+    /// <remarks>
+    /// Child order is preserved. This method does not recompute source or destination spans/trivia.
+    /// </remarks>
+    public void TransferChildrenTo(ContainerBlock destination)
+    {
+        if (destination is null)
+        {
+            ThrowHelper.ArgumentNullException(nameof(destination));
+        }
+
+        if (ReferenceEquals(this, destination))
+        {
+            return;
+        }
+
+        var children = _children;
+        int count = Count;
+        for (int i = 0; i < count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+            child.Parent = null;
+            children[i] = default;
+            destination.Add(child);
+        }
+
+        Count = 0;
+    }
+
     public bool Contains(Block item)
     {
         return IndexOf(item) >= 0;
